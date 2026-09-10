@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liên Hệ & Kết Nối - DR SOLUTIONS</title>
+  <title>Liên Hệ & Kết Nối - Wisdom Vietnam Network</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
@@ -26,16 +27,12 @@
       background-color: var(--bg-page);
       line-height: 1.6;
     }
-    body {
-      padding-top: 72px; /* Khoảng trống bù cho menu cố định */
-    }
+    body { padding-top: 72px; }
 
-    /* Menu CỐ ĐỊNH */
+    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       width: 100%;
       z-index: 9999;
       background: rgba(255, 255, 255, 0.98);
@@ -45,88 +42,75 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
     .nav-container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.85rem 1.5rem;
+      padding: 0.8rem 1.5rem;
     }
-    .brand-wrap { text-decoration: none; display: flex; flex-direction: column; gap: 2px; }
+
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
     .brand-title {
-      font-size: 1.25rem;
-      font-weight: 800;
+      font-size: 1.18rem; font-weight: 800;
       background: var(--blue-grad-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.2;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; }
-    .nav-links a {
-      margin-left: 1.8rem;
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 700; }
-    
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+
     .btn {
-      background: var(--blue-grad-btn);
-      color: var(--white);
-      padding: 0.65rem 1.4rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
-      transition: all 0.2s;
+      background: var(--blue-grad-btn); color: var(--white);
+      padding: 0.65rem 1.4rem; border-radius: 8px; font-weight: 600;
+      cursor: pointer; border: none; text-decoration: none; display: inline-block;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
     }
-    .btn:hover {
-      background: var(--blue-grad-btn-hover);
-      transform: translateY(-1px);
-    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Hero Banner */
-    .hero-contact {
-      background: var(--blue-grad-hero);
-      color: var(--white);
-      padding: 4rem 1.5rem 3.5rem;
-      text-align: center;
+    /* Hero Banner Đồng Bộ */
+    .hero-wrapper {
+      width: 100%; background: var(--blue-grad-hero);
+      padding: 4rem 1.5rem 4.5rem; color: var(--white); text-align: center;
     }
-    .hero-contact h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.8px;
-      margin-bottom: 0.6rem;
+    .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25);
     }
-    .hero-contact p {
-      max-width: 650px;
-      margin: 0 auto;
-      font-size: 1.05rem;
-      color: #e0f2fe;
-    }
+    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
-    /* Bố cục trang liên hệ 2 cột */
+    /* Bố cục trang liên hệ 2 cột mở rộng chuẩn 1240px */
     .contact-container {
-      max-width: 1150px;
-      margin: 3.5rem auto 5rem;
+      max-width: 1240px;
+      margin: -2rem auto 5rem auto;
       padding: 0 1.5rem;
       display: grid;
       grid-template-columns: 1fr 1.25fr;
       gap: 3rem;
+      position: relative;
+      z-index: 10;
     }
 
     /* Cột thông tin liên hệ */
     .contact-info-card {
       background: #ffffff;
-      padding: 2.5rem 2rem;
+      padding: 2.8rem 2.4rem;
       border-radius: 20px;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06);
       height: fit-content;
     }
     .info-title {
@@ -137,26 +121,27 @@
     }
     .info-item {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      gap: 1.2rem;
+      margin-bottom: 1.6rem;
       align-items: flex-start;
     }
     .info-icon {
       font-size: 1.2rem;
       background: #f0f9ff;
       color: #0284c7;
-      padding: 0.6rem;
-      border-radius: 10px;
+      padding: 0.7rem;
+      border-radius: 12px;
       border: 1px solid #e0f2fe;
+      flex-shrink: 0;
     }
     .info-text h4 {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: #0f172a;
       margin-bottom: 0.2rem;
     }
     .info-text p, .info-text a {
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       color: #475569;
       text-decoration: none;
       line-height: 1.5;
@@ -166,10 +151,10 @@
     /* Cột Form gửi tin nhắn */
     .contact-form-card {
       background: #ffffff;
-      padding: 2.5rem 2.8rem;
+      padding: 2.8rem 3rem;
       border-radius: 20px;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06);
     }
     .form-title {
       font-size: 1.4rem;
@@ -182,9 +167,7 @@
       color: #64748b;
       margin-bottom: 2rem;
     }
-    .form-group {
-      margin-bottom: 1.4rem;
-    }
+    .form-group { margin-bottom: 1.4rem; }
     .form-group label {
       display: block;
       font-size: 0.9rem;
@@ -194,28 +177,29 @@
     }
     .form-control {
       width: 100%;
-      padding: 0.85rem 1.1rem;
+      padding: 0.9rem 1.1rem;
       border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 0.95rem;
       font-family: inherit;
       outline: none;
       transition: all 0.2s;
+      background: #f8fafc;
     }
     .form-control:focus {
       border-color: #0284c7;
+      background: #fff;
       box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
     }
     textarea.form-control {
-      min-height: 140px;
+      min-height: 145px;
       resize: vertical;
     }
 
-    /* Trạng thái thông báo */
     #statusAlert {
       display: none;
       padding: 1rem 1.2rem;
-      border-radius: 8px;
+      border-radius: 10px;
       margin-bottom: 1.5rem;
       font-size: 0.92rem;
       font-weight: 600;
@@ -227,17 +211,19 @@
       color: #cbd5e1;
       padding: 4rem 1.5rem 2rem;
       font-size: 0.92rem;
+      text-align: center;
     }
     .footer-grid {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 2.5rem;
+      text-align: left;
     }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; }
     .footer-bottom {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 3rem auto 0;
       padding-top: 1.5rem;
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -246,35 +232,49 @@
       color: #94a3b8;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 960px) {
       .contact-container { grid-template-columns: 1fr; gap: 2rem; }
       .contact-form-card { padding: 2rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-title { font-size: 2.2rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Menu ghim cố định -->
+  <!-- Menu Cố Định Đồng Bộ -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
-        <span class="brand-title">Wisdom Vietnam Network</span>
-        <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Wisdom Vietnam Network</span>
+          <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
+        </div>
       </a>
       <nav class="nav-links">
-        <a href="index.html">Trang Chủ</a>
+        <a href="index.html#tru-cot">Trụ Cột</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
         <a href="lien-he.html" class="active">Liên Hệ</a>
       </nav>
-      <a href="index.html" class="btn">Về Trang Chủ</a>
+      <button class="btn" onclick="alert('Mở cửa sổ quyên góp')">Quyên Góp</button>
     </div>
   </header>
 
-  <!-- Banner -->
-  <section class="hero-contact">
-    <h1>Liên Hệ & Hợp Tác Giáo Dục</h1>
-    <p>Chúng tôi luôn sẵn sàng lắng nghe mọi đóng góp, phản hồi và ý tưởng đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+  <!-- Hero Banner -->
+  <section class="hero-wrapper">
+    <div class="hero-badge">KẾT NỐI & HỢP TÁC</div>
+    <h1 class="hero-title">Liên Hệ Với Ban Điều Phối</h1>
+    <p class="hero-desc">Chúng tôi luôn sẵn sàng lắng nghe mọi đóng góp, phản hồi và ý tưởng đồng hành vì cơ hội học tập công bằng.</p>
   </section>
 
   <!-- Thân trang liên hệ 2 cột -->
@@ -285,7 +285,7 @@
       <h2 class="info-title">Thông Tin Tiếp Nhận</h2>
       
       <div class="info-item">
-        <div class="info-icon">📍</div>
+        <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
         <div class="info-text">
           <h4>Địa chỉ trụ sở</h4>
           <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Cầu Giấy, Hà Nội.</p>
@@ -293,7 +293,7 @@
       </div>
 
       <div class="info-item">
-        <div class="info-icon">✉️</div>
+        <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
         <div class="info-text">
           <h4>Email tiếp nhận chính thức</h4>
           <p><a href="mailto:hotro@wvn.vn">hotro@wvn.vn</a></p>
@@ -302,7 +302,7 @@
       </div>
 
       <div class="info-item">
-        <div class="info-icon">🛡️</div>
+        <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
         <div class="info-text">
           <h4>Tư cách pháp nhân</h4>
           <p>CÔNG TY TNHH DR SOLUTIONS</p>
@@ -311,30 +311,25 @@
       </div>
 
       <div class="info-item">
-        <div class="info-icon">⏱️</div>
+        <div class="info-icon"><i class="fa-solid fa-clock"></i></div>
         <div class="info-text">
           <h4>Thời gian phản hồi</h4>
           <p>Thứ Hai - Thứ Bảy: 08:30 - 18:00</p>
-          <p>Mọi thư từ đối soát và đề xuất hợp tác sẽ được phản hồi trong vòng 24 giờ làm việc.</p>
+          <p>Mọi thư từ đối soát sẽ được phản hồi trong vòng 24 giờ làm việc.</p>
         </div>
       </div>
     </div>
 
-    <!-- Cột Form gửi tin nhắn tự động -->
+    <!-- Cột Form gửi tin nhắn -->
     <div class="contact-form-card">
       <h2 class="form-title">Gửi Lời Nhắn Đến Ban Điều Phối</h2>
-      <p class="form-subtitle">Điền thông tin bên dưới, tin nhắn sẽ được chuyển tiếp tức thì đến hộp thư điều phối của DR SOLUTIONS.</p>
+      <p class="form-subtitle">Điền thông tin bên dưới, tin nhắn sẽ được chuyển tiếp tức thì đến hộp thư điều phối.</p>
 
-      <!-- Hộp thông báo trạng thái -->
       <div id="statusAlert"></div>
 
-      <!-- Form sử dụng dịch vụ formspree chuẩn cho web tĩnh -->
       <form id="contactForm" action="https://formsubmit.co/hotro@wvn.vn" method="POST">
-        <!-- Tự động CC sang cskh@dr.com -->
         <input type="hidden" name="_cc" value="cskh@dr.com">
-        <!-- Tiêu đề email nhận được -->
         <input type="hidden" name="_subject" value="[Website DRS] Lời nhắn liên hệ mới từ người dùng">
-        <!-- Chống spam captcha -->
         <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_template" value="table">
 
@@ -369,7 +364,7 @@
           <textarea id="message" name="message" class="form-control" placeholder="Vui lòng chia sẻ chi tiết nội dung bạn muốn gửi tới ban điều phối..." required></textarea>
         </div>
 
-        <button type="submit" id="btnSubmit" class="btn" style="width: 100%; padding: 0.9rem; font-size: 1rem;">
+        <button type="submit" id="btnSubmit" class="btn" style="width: 100%; padding: 0.95rem; font-size: 1rem;">
           Gửi Lời Nhắn Ngay
         </button>
       </form>
@@ -400,7 +395,6 @@
     </div>
   </footer>
 
-  <!-- Script xử lý gửi form mượt mà bằng Ajax (Không bị nhảy sang trang khác) -->
   <script>
     const form = document.getElementById('contactForm');
     const alertBox = document.getElementById('statusAlert');
@@ -417,9 +411,7 @@
         const response = await fetch(form.action, {
           method: 'POST',
           body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
+          headers: { 'Accept': 'application/json' }
         });
 
         if (response.ok) {
@@ -427,7 +419,7 @@
           alertBox.style.background = '#f0fdf4';
           alertBox.style.color = '#15803d';
           alertBox.style.border = '1px solid #86efac';
-          alertBox.innerHTML = '✅ Cảm ơn bạn! Lời nhắn đã được gửi thành công đến <strong>hotro@wvn.vn</strong> và <strong>cskh@dr.com</strong>. Chúng tôi sẽ phản hồi sớm nhất.';
+          alertBox.innerHTML = '✅ Cảm ơn bạn! Lời nhắn đã được gửi thành công đến ban điều phối. Chúng tôi sẽ phản hồi sớm nhất.';
           form.reset();
         } else {
           throw new Error('Gửi thất bại');
