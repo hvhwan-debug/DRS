@@ -72,15 +72,39 @@
     .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
     .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
+    /* Container chung */
+    .container { max-width: 1100px; margin: 3rem auto; padding: 0 1.5rem; position: relative; }
+
+    /* Hộp gửi hoạt động nhanh */
+    .submit-activity-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 3.5rem;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .submit-activity-content h3 { font-size: 1.35rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .submit-activity-content p { font-size: 0.95rem; color: var(--text-muted); }
+    .btn-submit-action {
+      background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%);
+      color: #fff; padding: 0.8rem 1.8rem; border-radius: 12px; font-weight: 700;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.25); transition: transform 0.2s;
+    }
+    .btn-submit-action:hover { transform: translateY(-2px); }
+
     /* Timeline Container */
     .timeline-container {
-      max-width: 1000px;
-      margin: 4rem auto;
       position: relative;
       padding: 2rem 0;
     }
 
-    /* Đường trục dọc ở giữa */
     .timeline-container::before {
       content: '';
       position: absolute;
@@ -91,7 +115,6 @@
       border-radius: 4px;
     }
 
-    /* Tiêu đề gốc mốc lịch sử */
     .timeline-root-node {
       text-align: center;
       position: relative;
@@ -112,7 +135,6 @@
       letter-spacing: 1px;
     }
 
-    /* Mốc node trên trục */
     .timeline-item {
       display: flex;
       justify-content: space-between;
@@ -125,7 +147,6 @@
       flex-direction: row-reverse;
     }
 
-    /* Điểm dấu chấm trên trục giữa có hiệu ứng động (Pulse) */
     .timeline-dot {
       position: absolute;
       left: 50%;
@@ -141,18 +162,11 @@
     }
 
     @keyframes pulseDot {
-      0% {
-        box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4);
-      }
-      70% {
-        box-shadow: 0 0 0 12px rgba(2, 132, 199, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(2, 132, 199, 0);
-      }
+      0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(2, 132, 199, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
     }
 
-    /* Khung nội dung mốc thời gian */
     .timeline-content {
       width: 44%;
       background: #ffffff;
@@ -190,50 +204,36 @@
     }
 
     .timeline-content h3 {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-dark);
-      margin-bottom: 0.5rem;
+      font-size: 1.25rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;
     }
-
     .timeline-content p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 1rem;
+      font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;
     }
-
     .btn-detail {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #0284c7;
-      font-weight: 700;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem; color: #0284c7; font-weight: 700; text-decoration: none; font-size: 0.9rem;
     }
     .btn-detail:hover { color: #0369a1; text-decoration: underline; }
 
-    /* Phần xem thêm các năm trước (Ẩn mặc định) */
+    /* Nút bấm xem thêm hoạt động các năm trước */
     .history-toggle-box {
       text-align: center;
-      margin: 3rem 0;
+      margin: 4rem 0 2rem 0;
     }
     .btn-history {
       background: #ffffff; color: #0284c7; border: 2px solid #bae6fd;
-      padding: 0.85rem 2.5rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
+      padding: 0.9rem 2.8rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
       cursor: pointer; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.1); transition: all 0.2s;
       display: inline-flex; align-items: center; gap: 0.75rem; font-family: inherit;
     }
     .btn-history:hover { background: #f0f9ff; border-color: #0284c7; transform: translateY(-2px); }
 
+    /* Khu vực lịch sử các năm trước (Ẩn hoàn toàn cho đến khi bấm nút) */
     .history-section {
       display: none;
-      margin-top: 2rem;
+      margin-top: 3rem;
       animation: fadeIn 0.4s ease-in-out;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
@@ -284,11 +284,24 @@
     <p class="hero-desc">Theo dòng sự kiện và các cột mốc triển khai dự án phi lợi nhuận nổi bật qua các năm.</p>
   </section>
 
-  <!-- Timeline Mốc Hoạt Động -->
+  <!-- Container chính -->
   <div class="container">
+    
+    <!-- Hộp Gửi Hoạt Động Mới -->
+    <div class="submit-activity-box">
+      <div class="submit-activity-content">
+        <h3>Bạn có đề xuất hoặc ý tưởng hoạt động mới?</h3>
+        <p>Gửi thông tin chương trình thiện nguyện hoặc dự án cộng đồng để ban điều phối tiếp nhận và triển khai.</p>
+      </div>
+      <a href="lien-he.html" class="btn-submit-action">
+        <i class="fa-solid fa-paper-plane"></i> Gửi hoạt động ngay
+      </a>
+    </div>
+
+    <!-- Timeline Mốc Hoạt Động -->
     <div class="timeline-container">
       
-      <!-- Cột mốc năm 2026 (Hiển thị tối đa 10 hoạt động tiêu biểu) -->
+      <!-- Cột mốc năm 2026 -->
       <div class="timeline-root-node">
         <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện 2026</div>
       </div>
@@ -299,16 +312,16 @@
         </div>
       </div>
 
-      <!-- Nút bấm xem thêm lịch sử các năm trước -->
+      <!-- Nút bấm bắt buộc người dùng phải chủ động bấm để xem hoạt động năm trước -->
       <div class="history-toggle-box" id="historyToggleBox" style="display: none;">
         <button class="btn-history" onclick="toggleHistory()">
-          <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm hoạt động các năm trước <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
+          <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm các hoạt động của năm trước <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
         </button>
       </div>
 
-      <!-- Khu vực lịch sử các năm trước (Ẩn mặc định) -->
+      <!-- Khu vực lịch sử các năm trước (Bắt buộc phải bấm nút mới mở ra) -->
       <div id="historySection" class="history-section">
-        <div class="timeline-root-node" style="margin-top: 3rem;">
+        <div class="timeline-root-node" style="margin-top: 2rem;">
           <div class="timeline-root-badge" style="background: linear-gradient(135deg, #475569 0%, #0f172a 100%);"><i class="fa-solid fa-box-archive"></i> Lịch Sử Các Năm Trước</div>
         </div>
         <div id="timelineHistory"></div>
@@ -322,7 +335,6 @@
   </footer>
 
   <script>
-    // Kho dữ liệu 10 hoạt động 2026 và các năm trước
     const sampleAllPosts = [
       { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2026" },
       { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2026" },
@@ -389,7 +401,6 @@
       let list2026 = [];
       let listHistory = [];
 
-      // Giới hạn tối đa 10 hoạt động cho năm 2026
       allPosts.forEach(post => {
         const itemHTML = `
           <div class="timeline-item">
@@ -411,12 +422,12 @@
         }
       });
 
-      // Hiển thị tối đa 10 bài cho 2026
+      // Hiển thị tối đa 10 hoạt động cho năm 2026
       container2026.innerHTML = list2026.slice(0, 10).join('') || '<div style="text-align:center; padding:1.5rem;">Chưa có mốc sự kiện 2026.</div>';
 
       if (listHistory.length > 0) {
         containerHistory.innerHTML = listHistory.join('');
-        historyToggleBox.style.display = 'block'; // Hiện nút bấm xem thêm các năm trước
+        historyToggleBox.style.display = 'block'; // Hiển thị nút bấm để người dùng chủ động click
       }
     }
 
@@ -426,7 +437,7 @@
       if (historySec.style.display === 'block') {
         historySec.style.display = 'none';
         icon.className = 'fa-solid fa-chevron-down';
-        window.scrollTo({ top: 400, behavior: 'smooth' });
+        window.scrollTo({ top: 300, behavior: 'smooth' });
       } else {
         historySec.style.display = 'block';
         icon.className = 'fa-solid fa-chevron-up';
