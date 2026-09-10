@@ -61,71 +61,72 @@
 
     /* Hero Banner */
     .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 3.5rem 1.5rem 4rem; color: var(--white); text-align: center;
+      width: 100%; background: var(--blue-grad-hero); padding: 4rem 1.5rem 4.5rem; color: var(--white); text-align: center;
     }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.5px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25);
     }
-    .hero-title { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
-    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
-    /* Container chính */
-    .container { max-width: 950px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; font-family: inherit; }
+    /* Container chính mở rộng đồng bộ 1240px với trang chủ */
+    .container { max-width: 1240px; margin: -2rem auto 5rem auto; padding: 0 1.5rem; position: relative; z-index: 10; font-family: inherit; }
 
-    /* Tiêu đề nhóm mốc thời gian */
+    /* Tiêu đề nhóm mốc thời gian cải tiến thẩm mỹ */
     .section-title-group {
       display: flex; justify-content: space-between; align-items: center;
-      margin: 2rem 0 1.25rem 0; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;
+      margin: 2.5rem 0 1.5rem 0; border-bottom: 2px solid var(--border); padding-bottom: 0.75rem;
     }
-    .section-title-group h2 { font-size: 1.35rem; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; font-family: inherit; }
-    .section-title-group h2 i { color: #0284c7; }
+    .section-title-group h2 { font-size: 1.5rem; color: var(--text-dark); display: flex; align-items: center; gap: 0.75rem; font-family: inherit; font-weight: 800; }
+    .section-title-group h2 i { color: #0284c7; background: #e0f2fe; padding: 0.5rem; border-radius: 10px; font-size: 1.2rem; }
 
-    /* Thẻ bài viết trực quan (Visual Card) */
+    /* Thẻ bài viết dạng Timeline/Column visual cao cấp */
     .post-card {
-      background: #ffffff; padding: 1.5rem; border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 1.5rem;
-      display: flex; gap: 1.5rem; align-items: flex-start; border: 1px solid var(--border);
-      transition: transform 0.2s, box-shadow 0.2s; position: relative;
+      background: #ffffff; padding: 1.8rem; border-radius: 20px;
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06); margin-bottom: 1.8rem;
+      display: flex; gap: 2rem; align-items: center; border: 1px solid var(--border);
+      transition: transform 0.25s, box-shadow 0.25s; position: relative;
     }
-    .post-card:hover { transform: translateY(-3px); box-shadow: 0 20px 30px -5px rgba(2, 132, 199, 0.1); }
+    .post-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -8px rgba(2, 132, 199, 0.12); }
     .post-card img {
-      width: 220px; height: 140px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #e2e8f0;
+      width: 280px; height: 180px; object-fit: cover; border-radius: 14px; flex-shrink: 0; background: #e2e8f0;
     }
     .post-info { flex-grow: 1; font-family: inherit; }
-    .post-info h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.2rem; color: var(--text-dark); font-weight: 700; font-family: inherit; }
+    .post-info h3 { margin-top: 0; margin-bottom: 0.75rem; font-size: 1.35rem; color: var(--text-dark); font-weight: 800; font-family: inherit; }
     .post-info h3 a { color: inherit; text-decoration: none; transition: color 0.2s; }
     .post-info h3 a:hover { color: #0284c7; }
-    .meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; display: flex; gap: 1rem; font-family: inherit; }
-    .post-info p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; font-family: inherit; }
+    .meta { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem; display: flex; gap: 1rem; font-family: inherit; font-weight: 600; }
+    .post-info p { color: var(--text-muted); font-size: 1rem; line-height: 1.7; margin-bottom: 1.25rem; font-family: inherit; }
     
     .btn-readmore {
       display: inline-flex; align-items: center; gap: 0.5rem; background: #0284c7; color: #fff;
-      padding: 0.5rem 1.1rem; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; font-family: inherit;
+      padding: 0.6rem 1.3rem; border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: background 0.2s; font-family: inherit;
     }
     .btn-readmore:hover { background: #0369a1; }
 
-    /* Nút Xem thêm các năm trước */
-    .history-toggle-box { text-align: center; margin: 2.5rem 0 1rem 0; }
+    /* Nút Lịch sử các năm trước */
+    .history-toggle-box { text-align: center; margin: 3rem 0 1rem 0; }
     .btn-history {
       background: #ffffff; color: #0284c7; border: 2px solid #bae6fd;
-      padding: 0.75rem 2rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem;
-      cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08); transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 0.5rem; font-family: inherit;
+      padding: 0.85rem 2.5rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
+      cursor: pointer; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.1); transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 0.75rem; font-family: inherit;
     }
     .btn-history:hover { background: #f0f9ff; border-color: #0284c7; transform: translateY(-2px); }
 
-    .history-section { display: none; margin-top: 1rem; animation: fadeIn 0.4s ease-in-out; }
+    .history-section { display: none; margin-top: 1.5rem; animation: fadeIn 0.4s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; font-family: inherit; }
 
-    @media (max-width: 768px) {
-      .post-card { flex-direction: column; }
-      .post-card img { width: 100%; height: 180px; }
+    @media (max-width: 850px) {
+      .post-card { flex-direction: column; align-items: stretch; }
+      .post-card img { width: 100%; height: 200px; }
       .nav-links { display: none; }
+      .hero-title { font-size: 2.2rem; }
     }
   </style>
 </head>
@@ -163,20 +164,20 @@
   <section class="hero-wrapper">
     <div class="hero-badge">BẢN TIN CỘNG ĐỒNG</div>
     <h1 class="hero-title">Hoạt Động & Sự Kiện Triển Khai</h1>
-    <p class="hero-desc">Cập nhật các mốc sự kiện tiêu biểu năm 2026 và hành trình gieo mầm tri thức qua các năm.</p>
+    <p class="hero-desc">Cập nhật các cột mốc sự kiện tiêu biểu trong năm 2026 và hành trình gieo mầm tri thức bền vững qua các năm.</p>
   </section>
 
-  <!-- Container Danh Sách Bài Viết -->
+  <!-- Container chính -->
   <div class="container">
     
     <!-- Nhóm 2026 Tiêu Biểu -->
     <div class="section-title-group" style="margin-top: 1rem;">
       <h2><i class="fa-solid fa-star"></i> Mốc Hoạt Động Tiêu Biểu 2026</h2>
-      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Mới nhất</span>
+      <span style="font-size: 0.9rem; color: #0284c7; font-weight: 700; background: #e0f2fe; padding: 0.3rem 0.9rem; border-radius: 20px;">Mới nhất</span>
     </div>
     <div id="posts-2026">
-      <div style="background: #fff; padding: 2.5rem; border-radius: 16px; text-align: center; color: var(--text-muted); border: 1px solid var(--border);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.3rem; color: #0284c7; margin-bottom: 0.5rem; display: block;"></i>
+      <div style="background: #fff; padding: 3rem; border-radius: 20px; text-align: center; color: var(--text-muted); border: 1px solid var(--border);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7; margin-bottom: 0.75rem; display: block;"></i>
         Đang tải mốc hoạt động 2026...
       </div>
     </div>
@@ -205,7 +206,6 @@
   </footer>
 
   <script>
-    // Dữ liệu mẫu 10 bài viết (gồm cả 2026 và các năm trước) để giao diện luôn hiển thị phong phú và bắt mắt
     const samplePosts = [
       { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè 2026", date: "2026-07-15", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80" },
       { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1/2026", date: "2026-05-10", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80" },
@@ -262,10 +262,9 @@
           }
         }
       } catch (e) {
-        console.log("Dùng dữ liệu mẫu tích hợp sẵn");
+        console.log("Dùng dữ liệu mẫu");
       }
 
-      // Nếu trên GitHub chưa có bài nào, dùng bộ 10 bài viết mẫu để hiển thị trực quan tuyệt đẹp
       if (allPosts.length === 0) {
         allPosts = samplePosts;
       }
@@ -276,14 +275,14 @@
       allPosts.forEach(post => {
         const cardHTML = `
           <div class="post-card">
-            ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}">` : '<img src="https://via.placeholder.com/220x140?text=DRS+News" alt="Default">'}
+            ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}">` : '<img src="https://via.placeholder.com/280x180?text=DRS+News" alt="Default">'}
             <div class="post-info">
               <h3><a href="chi-tiet.html?post=${post.filename}">${post.title}</a></h3>
               <div class="meta">
                 <span><i class="fa-regular fa-calendar"></i> ${post.date}</span>
               </div>
               <p>${post.description ? post.description : 'Bấm xem chi tiết để đọc nội dung đầy đủ của chương trình...'}</p>
-              <a href="chi-tiet.html?post=${post.filename}" class="btn-readmore">Xem thêm <i class="fa-solid fa-arrow-right"></i></a>
+              <a href="chi-tiet.html?post=${post.filename}" class="btn-readmore">Chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
             </div>
           </div>
         `;
