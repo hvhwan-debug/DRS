@@ -6,199 +6,474 @@
   <title>DR SOLUTIONS - Vì Cơ Hội Học Tập Công Bằng</title>
   <style>
     :root {
-      /* Dải Gradient Xanh chủ đạo */
-      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      --blue-grad-card: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
-      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
-      
-      --text-dark: #0f172a;
-      --text-muted: #475569;
-      --white: #ffffff;
-      --border: #e2e8f0;
-      --bg-page: #f8fafc;
+      --bg-cream: #fbf9f5;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --coral-primary: #f06a4b;
+      --coral-hover: #e05839;
+      --border-soft: #e2e8f0;
+      --card-bg: #ffffff;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6; }
-    
-    /* Header Thanh Điều Hướng */
-    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-    .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem; }
-    .brand { font-size: 1.3rem; font-weight: 800; background: var(--blue-grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
-    .nav-links a { margin-left: 1.5rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: #0284c7; }
-    
-    /* Nút bấm Gradient Xanh */
-    .btn { background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; }
-    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35); }
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-cream);
+      line-height: 1.6;
+    }
 
-    /* Hero Banner Gradient */
-    .hero { background: var(--blue-grad-hero); padding: 4.5rem 1rem 3rem; text-align: center; color: var(--white); }
-    .hero h1 { font-size: 2.3rem; margin-bottom: 1rem; font-weight: 800; letter-spacing: -0.5px; }
-    .hero p { max-width: 720px; margin: 0 auto 1.8rem auto; font-size: 1.15rem; color: #e0f2fe; line-height: 1.7; }
-    .btn-light { background: #ffffff; color: #0369a1; box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
-    .btn-light:hover { background: #f0f9ff; color: #075985; }
+    /* Thanh điều hướng */
+    header {
+      width: 100%;
+      background: rgba(251, 249, 245, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 1.5rem;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+    }
+    .brand-icon {
+      font-size: 1.35rem;
+      background: #fff;
+      padding: 0.3rem 0.55rem;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    }
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #475569;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--coral-primary); }
 
-    /* Khung ảnh nổi bật trang chủ */
-    .hero-image-wrap { max-width: 1000px; margin: -2rem auto 2.5rem; padding: 0 1rem; }
-    .hero-banner-img { width: 100%; height: auto; max-height: 440px; object-fit: cover; border-radius: 16px; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15); border: 4px solid #ffffff; }
+    .btn-coral {
+      background-color: var(--coral-primary);
+      color: #ffffff;
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-coral:hover {
+      background-color: var(--coral-hover);
+      transform: translateY(-1px);
+    }
 
-    /* Nội dung & Grid */
-    .container { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1rem; }
-    .section-title { text-align: center; margin-bottom: 2.5rem; }
-    .section-title h2 { font-size: 1.8rem; margin-bottom: 0.5rem; color: #0f172a; }
-    .section-title p { color: var(--text-muted); }
+    /* Hero Section 2 cột tràn viền tự nhiên */
+    .hero-wrapper {
+      width: 100%;
+      background: radial-gradient(circle at 12% 28%, #d1f4e0 0%, #fbf9f5 55%),
+                  radial-gradient(circle at 92% 22%, #ffd9cc 0%, rgba(251,249,245,0) 52%);
+      padding: 4.5rem 1.5rem 5.5rem;
+    }
+    .hero-grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: #e2f6eb;
+      color: #0f766e;
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #bbf7d0;
+    }
+    .hero-title {
+      font-size: 3.3rem;
+      font-weight: 900;
+      line-height: 1.15;
+      color: #0f172a;
+      letter-spacing: -1.2px;
+      margin-bottom: 1.6rem;
+    }
+    .hero-desc {
+      font-size: 1.15rem;
+      color: #334155;
+      line-height: 1.7;
+      margin-bottom: 2.2rem;
+      max-width: 620px;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .hero-link {
+      color: #334155;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .tag-item {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #e2e8f0;
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: #475569;
+      font-weight: 600;
+    }
 
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-    .card { background: var(--blue-grad-card); padding: 1.6rem; border-radius: 12px; border: 1px solid #e0f2fe; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.06); transition: transform 0.2s; }
-    .card:hover { transform: translateY(-3px); }
-    .card h3 { font-size: 1.15rem; margin-bottom: 0.75rem; color: #0369a1; }
-    .card p { font-size: 0.95rem; color: var(--text-muted); }
+    /* Khung ảnh bo tròn mềm mại */
+    .hero-media { position: relative; }
+    .media-card {
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 36px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(255,255,255,0.9);
+    }
+    .media-img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      border-radius: 26px;
+      display: block;
+    }
 
-    /* Khung Pháp lý minh bạch */
-    .legal-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7; padding: 1.8rem; margin: 2rem 0; border-radius: 8px; }
+    /* 4 Trụ Cột Hoạt Động */
+    .section-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-header h2 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.6rem;
+    }
+    .section-header p {
+      color: #64748b;
+      font-size: 1.05rem;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .pillar-card {
+      background: #ffffff;
+      padding: 2rem 1.8rem;
+      border-radius: 18px;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pillar-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+    }
+    .pillar-card h3 {
+      font-size: 1.25rem;
+      color: var(--coral-primary);
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+    .pillar-card p {
+      color: #64748b;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
 
-    /* Modal VietQR */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
-    .modal-content { background: var(--white); padding: 2rem; border-radius: 12px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
-    .modal-banner { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 8px; border: 1px solid var(--border); }
+    /* Khung hoạt động cộng đồng */
+    .activities-box {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      margin-top: 3rem;
+    }
 
-    /* Footer Gradient tối */
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 3.5rem 1rem 1.5rem; font-size: 0.9rem; }
-    .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
-    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1100px; margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    /* Khung Pháp lý */
+    .legal-card {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 5px solid #10b981;
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin: 3.5rem 0 1rem;
+    }
+
+    /* Modal Quyên Góp VietQR */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .modal-box {
+      background: #ffffff;
+      padding: 2.2rem;
+      border-radius: 24px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .modal-banner {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin: 1rem 0;
+    }
+    .modal-qr {
+      width: 100%;
+      max-width: 230px;
+      margin: 0.8rem auto;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Footer */
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 4rem 1.5rem 2rem;
+      font-size: 0.92rem;
+    }
+    .footer-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2.5rem;
+    }
+    .footer-inner h4 {
+      color: #ffffff;
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+    .footer-bottom {
+      max-width: 1240px;
+      margin: 3rem auto 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-title { font-size: 2.4rem; }
+      .nav-links { display: none; }
+      .media-img { height: 350px; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Thanh điều hướng -->
   <header>
-    <div class="nav-container">
-      <a href="index.html" class="brand">DR SOLUTIONS</a>
+    <div class="nav-inner">
+      <a href="index.html" class="brand-wrap">
+        <span class="brand-icon">🌱</span>
+        <span class="brand-title">Vì cơ hội học tập công bằng</span>
+      </a>
       <nav class="nav-links">
-        <a href="#tru-cot">Trụ Cột</a>
-        <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-        <a href="#phap-ly">Pháp Lý & Minh Bạch</a>
+        <a href="#tru-cot">Sứ mệnh</a>
+        <a href="#cau-chuyen">Câu chuyện tổ chức</a>
+        <a href="hoat-dong.html">Hoạt động cộng đồng</a>
+        <a href="sao-ke.html">Tra cứu sao kê</a>
       </nav>
-      <button class="btn" onclick="openModal()">Quyên Góp</button>
+      <button class="btn-coral" onclick="openModal()">Theo dõi hoạt động</button>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Vì Cơ Hội Học Tập Công Bằng</h1>
-    <p>DR SOLUTIONS đồng hành vì giáo dục công bằng và cơ hội học tập xứng đáng cho mọi người. Chúng tôi vận hành các chương trình phi lợi nhuận, kết nối nguồn lực xã hội để tạo tác động bền vững cho cộng đồng.</p>
-    <button class="btn btn-light" style="font-size: 1.05rem; padding: 0.8rem 2.2rem;" onclick="openModal()">Chung Tay Ủng Hộ</button>
+  <!-- Hero Section 2 cột -->
+  <section class="hero-wrapper">
+    <div class="hero-grid">
+      
+      <!-- Cột trái: Nội dung sứ mệnh -->
+      <div>
+        <div class="hero-badge">SỨ MỆNH VÌ CỘNG ĐỒNG</div>
+        <h1 class="hero-title">
+          DR SOLUTIONS<br>
+          đồng hành vì giáo<br>
+          dục công bằng và<br>
+          cơ hội học tập xứng<br>
+          đáng cho mọi<br>
+          người.
+        </h1>
+        <p class="hero-desc">
+          Chúng tôi vận hành các chương trình phi lợi nhuận, kết nối nguồn lực xã hội để hỗ trợ học tập, nuôi dưỡng sự tự tin và tạo tác động bền vững cho trẻ em, thanh niên và gia đình trong cộng đồng.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-coral" onclick="openModal()">Theo dõi cập nhật hoạt động</button>
+          <a href="#tru-cot" class="hero-link">Tìm hiểu sứ mệnh của chúng tôi</a>
+        </div>
+        <div class="hero-tags">
+          <span class="tag-item">Minh bạch</span>
+          <span class="tag-item">Đồng hành</span>
+          <span class="tag-item">Tác động bền vững</span>
+        </div>
+      </div>
+
+      <!-- Cột phải: Hình ảnh bo tròn mềm mại -->
+      <div class="hero-media">
+        <div class="media-card">
+          <img src="banner-drs.png.png" alt="Ươm mầm tri thức cộng đồng" class="media-img">
+        </div>
+      </div>
+
+    </div>
   </section>
 
-  <!-- Banner hình ảnh minh họa chủ đạo (Đã khớp đúng tên banner-drs.png.png) -->
-  <div class="hero-image-wrap">
-    <img src="banner-drs.png.png" alt="Ươm mầm tri thức - DR SOLUTIONS" class="hero-banner-img">
-  </div>
-
   <!-- 4 Trụ Cột Hoạt Động -->
-  <section class="container" id="tru-cot">
-    <div class="section-title">
+  <main class="section-wrap" id="tru-cot">
+    <div class="section-header">
       <h2>4 Trụ Cột Hoạt Động Phi Lợi Nhuận</h2>
-      <p>Hành động thiết thực hỗ trợ cộng đồng mở rộng cơ hội học tập</p>
+      <p>Hành động thiết thực hỗ trợ cộng đồng mở rộng cơ hội học tập lâu dài</p>
     </div>
-    <div class="grid-4">
-      <div class="card">
+    <div class="pillars-grid">
+      <div class="pillar-card">
         <h3>Hỗ trợ tại chỗ</h3>
-        <p>Kết nối nguồn lực với các nhóm địa phương để hỗ trợ kịp thời những nhu cầu học tập và phát triển cơ bản.</p>
+        <p>Kết nối nguồn lực với các nhóm địa phương để hỗ trợ kịp thời những nhu cầu học tập và phát triển cơ bản nhất.</p>
       </div>
-      <div class="card">
+      <div class="pillar-card">
         <h3>Lan tỏa tiếp cận</h3>
-        <p>Mở rộng cơ hội đến với trẻ em và người học dễ bị bỏ lại phía sau thông qua các chương trình tặng học liệu.</p>
+        <p>Mở rộng cơ hội đến với trẻ em và người học dễ bị bỏ lại phía sau thông qua các chương trình tặng sách và học liệu.</p>
       </div>
-      <div class="card">
+      <div class="pillar-card">
         <h3>Nâng cao nhận thức</h3>
-        <p>Chia sẻ kiến thức dễ hiểu về giáo dục công bằng, khơi gợi tinh thần trách nhiệm xã hội trong khu dân cư.</p>
+        <p>Chia sẻ kiến thức dễ hiểu về giáo dục công bằng, khơi gợi tinh thần trách nhiệm xã hội trong từng khu dân cư.</p>
       </div>
-      <div class="card">
+      <div class="pillar-card">
         <h3>Đồng hành bền vững</h3>
         <p>Duy trì mạng lưới tình nguyện viên và đối tác xã hội để theo dõi tác động thực tế và nuôi dưỡng giá trị dài hạn.</p>
       </div>
     </div>
-  </section>
 
-  <!-- Nhịp hoạt động xã hội -->
-  <section class="container" id="hoat-dong" style="background:#fff; border-radius:12px; border:1px solid #e2e8f0;">
-    <div class="section-title">
-      <h2>Nhịp Hoạt Động Xã Hội</h2>
-      <p>Các chương trình phi lợi nhuận đang diễn ra mỗi tuần</p>
-    </div>
-    <div class="grid-4">
-      <div class="card" style="background:#f8fafc;">
-        <h4 style="color:#0284c7;">Buổi sinh hoạt khu dân cư</h4>
-        <p style="margin-top:0.5rem;">Cùng phụ huynh tổ chức học nhóm, giúp các em củng cố kiến thức và rèn luyện kỹ năng đọc hiểu tại nhà văn hóa.</p>
+    <!-- Nhịp hoạt động xã hội -->
+    <div class="activities-box" id="cau-chuyen">
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <h2>Nhịp Hoạt Động Xã Hội</h2>
+        <p>Các chương trình đang diễn ra thường kỳ mỗi tuần</p>
       </div>
-      <div class="card" style="background:#f8fafc;">
-        <h4 style="color:#0284c7;">Tủ học liệu lưu động</h4>
-        <p style="margin-top:0.5rem;">Mang sách tham khảo và đồ dùng học tập đến điểm sinh hoạt chung cho học sinh mượn theo tuần.</p>
+      <div class="pillars-grid">
+        <div class="pillar-card" style="background:#f8fafc; border:none;">
+          <h4 style="color:#0284c7; margin-bottom: 0.5rem;">Buổi sinh hoạt khu dân cư</h4>
+          <p>Cùng phụ huynh tổ chức học nhóm, giúp các em củng cố kiến thức và rèn luyện kỹ năng đọc hiểu tại nhà văn hóa.</p>
+        </div>
+        <div class="pillar-card" style="background:#f8fafc; border:none;">
+          <h4 style="color:#0284c7; margin-bottom: 0.5rem;">Tủ học liệu lưu động</h4>
+          <p>Mang sách tham khảo và dụng cụ học tập đến điểm sinh hoạt chung cho học sinh mượn theo tuần hoàn toàn miễn phí.</p>
+        </div>
+        <div class="pillar-card" style="background:#f8fafc; border:none;">
+          <h4 style="color:#0284c7; margin-bottom: 0.5rem;">Đồng hành cùng gia đình</h4>
+          <p>Chuỗi gặp gỡ giúp phụ huynh chia sẻ khó khăn và nhận hỗ trợ cụ thể để đồng hành cùng con tự học tại nhà.</p>
+        </div>
       </div>
-      <div class="card" style="background:#f8fafc;">
-        <h4 style="color:#0284c7;">Đồng hành cùng gia đình</h4>
-        <p style="margin-top:0.5rem;">Chuỗi gặp gỡ giúp phụ huynh chia sẻ khó khăn và nhận hướng dẫn thực tế để cùng con học tập tích cực tại nhà.</p>
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="hoat-dong.html" class="btn-coral" style="background-color: #0f172a;">Xem tất cả bài viết hoạt động →</a>
       </div>
     </div>
-    <div style="text-align: center; margin-top: 2rem;">
-      <a href="hoat-dong.html" class="btn">Xem Tất Cả Hoạt Động & Tin Tức →</a>
-    </div>
-  </section>
 
-  <!-- Cam kết Pháp lý & Minh bạch -->
-  <section class="container" id="phap-ly">
-    <div class="legal-box">
-      <h3 style="margin-bottom:0.75rem; color:#0369a1;">Cam Kết Pháp Lý & Minh Bạch Phi Lợi Nhuận</h3>
-      <p style="font-size:0.95rem; margin-bottom:0.6rem;">
-        Tổ chức hoạt động theo mô hình doanh nghiệp xã hội phi lợi nhuận, đặt mục tiêu xã hội và lợi ích cộng đồng làm trung tâm.
+    <!-- Cam kết Pháp lý & Minh bạch -->
+    <div class="legal-card">
+      <h3 style="margin-bottom: 0.6rem; color: #065f46;">Cam Kết Pháp Lý & Minh Bạch Phi Lợi Nhuận</h3>
+      <p style="font-size: 0.95rem; margin-bottom: 0.5rem;">
+        Tổ chức hoạt động theo mô hình doanh nghiệp xã hội phi lợi nhuận, lấy mục tiêu cộng đồng làm trọng tâm.
       </p>
-      <p style="font-size:0.95rem; margin-bottom:0.6rem;">
-        <strong>Cam kết điều lệ:</strong> Sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; không phân chia lợi tức hoặc cổ tức cho bất kỳ cá nhân hay tổ chức nào.
+      <p style="font-size: 0.95rem; margin-bottom: 0.5rem;">
+        <strong>Cam kết điều lệ:</strong> Sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; không phân chia lợi tức hoặc cổ tức cho cá nhân hay tổ chức.
       </p>
-      <p style="font-size:0.9rem; color: var(--text-muted);">
-        • Mã số pháp lý (MST): <strong>0111291749</strong> | Giữ vững báo cáo tác động xã hội và trách nhiệm giải trình định kỳ.
+      <p style="font-size: 0.9rem; color: #047857;">
+        • Mã số pháp lý (MST): <strong>0111291749</strong> | Giữ vững trách nhiệm giải trình và công khai sao kê định kỳ.
       </p>
     </div>
-  </section>
+  </main>
 
   <!-- Modal Quyên góp VietQR -->
   <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <h3 style="color:#0369a1;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      
-      <!-- Ảnh minh họa trong popup (Đã khớp đúng tên banner-drs.png.png) -->
-      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
-      
-      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      
-      <!-- Mã VietQR tự động -->
-      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" 
-           alt="Mã VietQR Quyên góp" 
-           class="modal-qr">
-           
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung chuyển khoản: <strong>DRS DONG HANH</strong></p>
-      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    <div class="modal-box">
+      <h3 style="color: #0f172a; font-size: 1.4rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="DR SOLUTIONS" class="modal-banner">
+      <p style="font-size: 0.92rem; color: #64748b;">Quét mã VietQR bằng app ngân hàng để chung tay cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR" class="modal-qr">
+      <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
+      <button class="btn-coral" style="width: 100%; background: #64748b;" onclick="closeModal()">Đóng cửa sổ</button>
     </div>
   </div>
 
-  <!-- Footer Minh Bạch, Tự Nhiên -->
+  <!-- Footer -->
   <footer>
-    <div class="footer-grid">
+    <div class="footer-inner">
       <div>
         <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
         <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
-        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+        <p style="margin-top: 0.6rem;">Mã số doanh nghiệp: 0111291749</p>
       </div>
       <div>
         <h4>Địa Chỉ Trụ Sở</h4>
         <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top: 0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
       </div>
       <div>
         <h4>Cam Kết Xã Hội</h4>
@@ -213,9 +488,9 @@
   <script>
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(event) {
-      let modal = document.getElementById('donateModal');
-      if (event.target == modal) { modal.style.display = 'none'; }
+    window.onclick = function(e) {
+      const modal = document.getElementById('donateModal');
+      if (e.target === modal) modal.style.display = 'none';
     }
   </script>
 </body>
