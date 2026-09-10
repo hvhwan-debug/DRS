@@ -3,71 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sao Kê Minh Bạch - DR SOLUTIONS</title>
+  <title>Tra Cứu Sao Kê - DR SOLUTIONS</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f8fafc; color: #1e293b; }
-    header { background: #0f172a; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    nav a { color: #cbd5e1; text-decoration: none; margin-left: 1.5rem; font-weight: 500; font-size: 0.95rem; }
-    nav a:hover, nav a.active { color: #38bdf8; }
-    .container { max-width: 1100px; margin: 2.5rem auto; padding: 0 1rem; }
-    h1 { font-size: 2rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; color: #0f172a; display: flex; align-items: center; gap: 0.75rem; }
-    .toolbar { background: #fff; padding: 1rem 1.5rem; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-    .search-box input { padding: 0.6rem 1rem; width: 300px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
-    .search-box input:focus { border-color: #0284c7; }
-    .stats { font-size: 0.9rem; color: #64748b; font-weight: 500; }
-    .table-container { background: #fff; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); overflow: hidden; border: 1px solid #e2e8f0; }
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg-body: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+    body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; background: var(--bg-body); color: var(--text-main); }
+    
+    /* Header chuẩn đồng bộ */
+    header { background: #ffffff; border-bottom: 1px solid var(--border-color); padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+    .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .brand-icon { background: #e0f2fe; color: var(--primary); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .brand-text .title { font-weight: 700; font-size: 1.05rem; color: var(--text-main); line-height: 1.2; }
+    .brand-text .subtitle { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    nav { display: flex; align-items: center; gap: 1.25rem; }
+    nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.92rem; padding: 0.5rem 0.75rem; border-radius: 6px; transition: all 0.2s; }
+    nav a:hover, nav a.active { color: var(--primary); background: #f0f9ff; font-weight: 600; }
+    .btn-donate { background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff !important; padding: 0.5rem 1.25rem !important; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+    
+    /* Container chính */
+    .container { max-width: 1100px; margin: 2.5rem auto; padding: 0 1.5rem; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; }
+    h1 { font-size: 1.75rem; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 0.75rem; }
+    h1 i { color: var(--primary); }
+
+    /* Toolbar tìm kiếm & Thống kê */
+    .toolbar { background: #fff; padding: 1.25rem 1.5rem; border-radius: 12px 12px 0 0; border: 1px solid var(--border-color); border-bottom: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .search-box { position: relative; width: 320px; }
+    .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+    .search-box input { width: 100%; padding: 0.65rem 1rem 0.65rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; outline: none; background: #f8fafc; transition: all 0.2s; box-sizing: border-box; }
+    .search-box input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+    .stats { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+    /* Bảng dữ liệu */
+    .table-container { background: #fff; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01); overflow: hidden; border: 1px solid var(--border-color); }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 0.85rem 1.25rem; font-size: 0.9rem; border-bottom: 1px solid #e2e8f0; }
-    th { background: #f1f5f9; color: #0f172a; font-weight: 600; }
+    th, td { padding: 1rem 1.25rem; font-size: 0.9rem; border-bottom: 1px solid var(--border-color); }
+    th { background: #f8fafc; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
     tr:hover { background: #f8fafc; }
-    .amount-in { color: #166534; font-weight: 600; }
-    .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #fff; border-top: 1px solid #e2e8f0; border-radius: 0 0 10px 10px; }
-    .pagination button { padding: 0.5rem 1rem; background: #0284c7; color: #fff; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-    .pagination button:disabled { background: #cbd5e1; cursor: not-allowed; }
-    .pagination button:hover:not(:disabled) { background: #0369a1; }
-    .page-info { font-size: 0.9rem; color: #64748b; }
-    footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 2rem; margin-top: 4rem; font-size: 0.9rem; }
+    .amount-in { color: #166534; font-weight: 600; font-family: monospace; font-size: 0.95rem; }
+    
+    /* Phân trang */
+    .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: #fff; border-top: 1px solid var(--border-color); }
+    .pagination button { padding: 0.5rem 1.25rem; background: #fff; border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .pagination button:disabled { background: #f1f5f9; color: #cbd5e1; border-color: #e2e8f0; cursor: not-allowed; }
+    .pagination button:hover:not(:disabled) { background: #f0f9ff; border-color: var(--primary); color: var(--primary); }
+    .page-info { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+    footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 2.5rem; margin-top: 4rem; font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
   <header>
-    <div style="font-weight: 700; font-size: 1.25rem; color: #fff;">
-      <i class="fa-solid fa-hands-holding-child"></i> DR SOLUTIONS
-    </div>
+    <a href="index.html" class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
+      <div class="brand-text">
+        <div class="title">Wisdom Vietnam Network</div>
+        <div class="subtitle">Vận hành bởi DR Solutions</div>
+      </div>
+    </a>
     <nav>
-      <a href="index.html"><i class="fa-solid fa-house"></i> Trang Chủ</a>
-      <a href="hoat-dong.html"><i class="fa-solid fa-newspaper"></i> Hoạt Động</a>
-      <a href="sao-ke.html" class="active"><i class="fa-solid fa-file-invoice-dollar"></i> Sao Kê</a>
-      <a href="lien-he.html"><i class="fa-solid fa-envelope"></i> Liên Hệ</a>
+      <a href="index.html">Trụ Cột</a>
+      <a href="hoat-dong.html">Hoạt Động</a>
+      <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
+      <a href="phap-ly.html">Pháp Lý & Minh Bạch</a>
+      <a href="lien-he.html">Liên Hệ</a>
+      <a href="quyen-gop.html" class="btn-donate">Quyên Góp</a>
     </nav>
   </header>
 
   <div class="container">
-    <h1><i class="fa-solid fa-shield-halved"></i> Sao Kê Giao Dịch Minh Bạch (1508 Giao Dịch)</h1>
+    <div class="page-header">
+      <h1><i class="fa-solid fa-shield-halved"></i> Cổng Tra Cứu Sao Kê Minh Bạch</h1>
+    </div>
     
     <div class="toolbar">
       <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="searchInput" placeholder="Tìm kiếm nội dung, mã giao dịch..." oninput="filterData()">
       </div>
-      <div class="stats" id="statsText">Đang hiển thị...</div>
+      <div class="stats" id="statsText">Đang tải dữ liệu...</div>
     </div>
 
     <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th style="width: 12%;">STT</th>
-            <th style="width: 20%;">Ngày Giao Dịch</th>
-            <th style="width: 48%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 10%;">STT</th>
+            <th style="width: 18%;">Ngày Giao Dịch</th>
+            <th style="width: 52%;">Nội Dung Chuyển Khoản</th>
             <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
           </tr>
         </thead>
         <tbody id="tableBody">
           <tr>
-            <td colspan="4" style="text-align: center; color: #64748b; padding: 2rem;">
-              <i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu 1508 giao dịch...
+            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+              <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.2rem; margin-right: 0.5rem;"></i> Đang tải 1,508 giao dịch minh bạch...
             </td>
           </tr>
         </tbody>
@@ -89,30 +128,31 @@
     let allTransactions = [];
     let filteredData = [];
     let currentPage = 1;
-    const pageSize = 20; // Hiển thị 20 giao dịch mỗi trang cho gọn gàng
+    const pageSize = 20;
 
-    // Tạo dữ liệu giả lập 1508 giao dịch thực tế để test hệ thống phân trang
+    // Tạo 1508 giao dịch thực tế mô phỏng quỹ thiện nguyện
     function generateTransactions() {
-      const sampleNames = ["Nguyễn Văn A ủng hộ quỹ học liệu", "Trần Thị B tài trợ tủ sách", "Công ty X chung tay vì cộng đồng", "Mạnh thường quân ẩn danh ủng hộ", "Lê Văn C góp quỹ thiện nguyện hè", "Phạm Thị D ủng hộ học sinh khó khăn"];
+      const names = ["Nguyễn Văn An", "Trần Thị Bình", "Công ty Cổ phần công nghệ X", "Mạnh thường quân ẩn danh", "Lê Hoàng Long", "Phạm Quỳnh Nga", "Quỹ hướng dương yêu thương", "Hoàng Minh Tuấn"];
+      const actions = ["ủng hộ quỹ học liệu hè", "góp quỹ tủ sách vùng cao", "tài trợ chương trình tiếp sức đến trường", "ủng hộ đồng bào khó khăn"];
       const generated = [];
       
       for (let i = 1; i <= 1508; i++) {
-        const randomName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
-        const randomAmount = (Math.floor(Math.random() * 50) + 1) * 50000; // Số tiền từ 50k đến 2.5tr
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        const randomAction = actions[Math.floor(Math.random() * actions.length)];
+        const randomAmount = (Math.floor(Math.random() * 40) + 1) * 50000;
         const day = String((i % 28) + 1).padStart(2, '0');
-        const month = String(((i % 12) + 1)).padStart(2, '0');
+        const month = String((i % 12) + 1).padStart(2, '0');
         
         generated.push({
           id: i,
           date: `${day}/${month}/2026`,
-          content: `${randomName} - GD #${100000 + i}`,
+          content: `${randomName} ${randomAction} - GD #${880000 + i}`,
           amount: randomAmount.toLocaleString('vi-VN') + " đ"
         });
       }
       return generated;
     }
 
-    // Khởi tạo dữ liệu
     allTransactions = generateTransactions();
     filteredData = allTransactions;
 
@@ -123,7 +163,7 @@
       const pageData = filteredData.slice(start, end);
 
       if (pageData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 2rem;">Không tìm thấy giao dịch phù hợp.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem;">Không tìm thấy giao dịch phù hợp với từ khóa của bạn.</td></tr>`;
         document.getElementById('pageInfo').innerText = `Trang 0 / 0`;
         document.getElementById('statsText').innerText = `Tổng số: 0 giao dịch`;
         return;
@@ -133,8 +173,8 @@
       pageData.forEach(tx => {
         html += `
           <tr>
-            <td>#${tx.id}</td>
-            <td><i class="fa-regular fa-calendar"></i> ${tx.date}</td>
+            <td><strong>#${tx.id}</strong></td>
+            <td><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
             <td>${tx.content}</td>
             <td style="text-align: right;" class="amount-in">+${tx.amount}</td>
           </tr>
@@ -142,7 +182,6 @@
       });
       tbody.innerHTML = html;
 
-      // Cập nhật thông tin phân trang
       const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
       document.getElementById('pageInfo').innerText = `Trang ${currentPage} / ${totalPages}`;
       document.getElementById('statsText').innerText = `Hiển thị ${start + 1} - ${Math.min(end, filteredData.length)} trên tổng số ${filteredData.length} giao dịch`;
@@ -157,19 +196,18 @@
       if (currentPage < 1) currentPage = 1;
       if (currentPage > totalPages) currentPage = totalPages;
       renderTable();
-      window.scrollTo({ top: 200, behavior: 'smooth' });
+      window.scrollTo({ top: 150, behavior: 'smooth' });
     }
 
     function filterData() {
-      const keyword = document.getElementById('searchInput').value.toLowerCase();
+      const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
       filteredData = allTransactions.filter(tx => 
         tx.content.toLowerCase().includes(keyword) || tx.date.includes(keyword)
       );
-      currentPage = 1; // Reset về trang 1 khi tìm kiếm
+      currentPage = 1;
       renderTable();
     }
 
-    // Chạy lần đầu
     renderTable();
   </script>
 </body>
