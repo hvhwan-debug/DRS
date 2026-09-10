@@ -4,20 +4,34 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trang Quản Trị Bài Viết - DR SOLUTIONS</title>
-  <script>
-    // Kiểm tra và yêu cầu nhập token nếu chưa lưu phiên đăng nhập
-    (function() {
-      const authKey = 'decap-cms-user';
-      if (!localStorage.getItem(authKey)) {
-        const token = prompt('Vui lòng dán mã Personal Access Token (ghp_...) của bạn:');
-        if (token && token.trim() !== '') {
-          localStorage.setItem(authKey, JSON.stringify({ token: token.trim(), backendName: 'github' }));
-        }
-      }
-    })();
-  </script>
 </head>
 <body>
+  <div id="token-box" style="display:none; position:fixed; inset:0; background:#f8fafc; z-index:99999; display:flex; align-items:center; justify-content:center; font-family:sans-serif;">
+    <div style="background:#ffffff; padding:2rem; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:100%; max-width:400px; text-align:center;">
+      <h3 style="margin-bottom:1rem; color:#0f172a;">Đăng Nhập Quản Trị</h3>
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1rem;">Dán Personal Access Token (ghp_...) của bạn vào bên dưới:</p>
+      <input type="password" id="pat-input" placeholder="ghp_..." style="width:100%; padding:0.6rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; box-sizing:border-box;">
+      <button onclick="saveToken()" style="width:100%; padding:0.6rem; background:#0284c7; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Đăng Nhập</button>
+    </div>
+  </div>
+
+  <script>
+    const userStr = localStorage.getItem('decap-cms-user');
+    if (!userStr || !JSON.parse(userStr).token) {
+      document.getElementById('token-box').style.display = 'flex';
+    } else {
+      document.getElementById('token-box').style.display = 'none';
+    }
+
+    function saveToken() {
+      const val = document.getElementById('pat-input').value.trim();
+      if (val) {
+        localStorage.setItem('decap-cms-user', JSON.stringify({ token: val, backendName: 'github' }));
+        document.getElementById('token-box').style.display = 'none';
+        location.reload();
+      }
+    }
+  </script>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
