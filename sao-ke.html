@@ -2,196 +2,175 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra Cứu Sao Kê Minh Bạch - DR SOLUTIONS</title>
+  <title>Sao Kê Minh Bạch - DR SOLUTIONS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-      --text-dark: #0f172a;
-      --text-muted: #475569;
-      --border: #e2e8f0;
-      --white: #ffffff;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-      color: var(--text-dark); 
-      background: #f8fafc; 
-      line-height: 1.6; 
-      padding-top: 72px; /* Đẩy nội dung tránh menu */
-    }
-    
-    /* Menu CỐ ĐỊNH 100% khi cuộn */
-    header { 
-      position: fixed !important;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      z-index: 9999;
-      background: rgba(255, 255, 255, 0.98); 
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border); 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    .nav-container { 
-      max-width: 1200px; 
-      margin: 0 auto; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding: 0.85rem 1.5rem; 
-    }
-    .brand-wrap { text-decoration: none; display: flex; flex-direction: column; gap: 2px; }
-    .brand-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      background: var(--blue-grad-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.2;
-    }
-    .brand-subtitle { font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; }
-    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
-    .nav-links a.active { color: #0284c7; font-weight: 700; }
-    .btn { background: var(--blue-grad-btn); color: var(--white); padding: 0.6rem 1.3rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
-
-    .hero { background: var(--blue-grad-hero); color: #fff; padding: 3.5rem 1rem; text-align: center; }
-    .hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 800; }
-    .hero p { color: #e0f2fe; max-width: 650px; margin: 0 auto; }
-
-    .container { max-width: 1050px; margin: 2.5rem auto; padding: 0 1rem; }
-    .search-box { width: 100%; padding: 0.9rem 1.2rem; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
-    .search-box:focus { border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
-
-    .table-container { overflow-x: auto; background: var(--white); border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f8fafc; color: #1e293b; }
+    header { background: #0f172a; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    nav a { color: #cbd5e1; text-decoration: none; margin-left: 1.5rem; font-weight: 500; font-size: 0.95rem; }
+    nav a:hover, nav a.active { color: #38bdf8; }
+    .container { max-width: 1100px; margin: 2.5rem auto; padding: 0 1rem; }
+    h1 { font-size: 2rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; color: #0f172a; display: flex; align-items: center; gap: 0.75rem; }
+    .toolbar { background: #fff; padding: 1rem 1.5rem; border-radius: 10px 10px 0 0; border: 1px solid #e2e8f0; border-bottom: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .search-box input { padding: 0.6rem 1rem; width: 300px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
+    .search-box input:focus { border-color: #0284c7; }
+    .stats { font-size: 0.9rem; color: #64748b; font-weight: 500; }
+    .table-container { background: #fff; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); overflow: hidden; border: 1px solid #e2e8f0; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
-    th { background: #f0f9ff; font-weight: 600; color: #0369a1; }
-    tbody tr:hover { background-color: #f8fafc; }
-
-    .note-box { background: #f0fdf4; border-left: 4px solid #16a34a; padding: 1.2rem; margin-top: 2rem; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: #166534; }
-
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 2.5rem 1rem; text-align: center; font-size: 0.85rem; margin-top: 4rem; }
+    th, td { padding: 0.85rem 1.25rem; font-size: 0.9rem; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f1f5f9; color: #0f172a; font-weight: 600; }
+    tr:hover { background: #f8fafc; }
+    .amount-in { color: #166534; font-weight: 600; }
+    .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #fff; border-top: 1px solid #e2e8f0; border-radius: 0 0 10px 10px; }
+    .pagination button { padding: 0.5rem 1rem; background: #0284c7; color: #fff; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .pagination button:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .pagination button:hover:not(:disabled) { background: #0369a1; }
+    .page-info { font-size: 0.9rem; color: #64748b; }
+    footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 2rem; margin-top: 4rem; font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định -->
   <header>
-    <div class="nav-container">
-      <a href="index.html" class="brand-wrap">
-        <span class="brand-title">Wisdom Vietnam Network</span>
-        <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
-      </a>
-      <nav class="nav-links">
-        <a href="index.html">Trang Chủ</a>
-        <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
-        <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
-      </nav>
-      <a href="index.html" class="btn">Về Trang Chủ</a>
+    <div style="font-weight: 700; font-size: 1.25rem; color: #fff;">
+      <i class="fa-solid fa-hands-holding-child"></i> DR SOLUTIONS
     </div>
+    <nav>
+      <a href="index.html"><i class="fa-solid fa-house"></i> Trang Chủ</a>
+      <a href="hoat-dong.html"><i class="fa-solid fa-newspaper"></i> Hoạt Động</a>
+      <a href="sao-ke.html" class="active"><i class="fa-solid fa-file-invoice-dollar"></i> Sao Kê</a>
+      <a href="lien-he.html"><i class="fa-solid fa-envelope"></i> Liên Hệ</a>
+    </nav>
   </header>
 
-  <section class="hero">
-    <h1>Tra Cứu Minh Bạch Quyên Góp</h1>
-    <p>100% nguồn tài trợ, viện trợ và đóng góp cộng đồng đều được công khai và cập nhật minh bạch</p>
-  </section>
-
-  <main class="container">
-    <input type="text" id="searchInput" class="search-box" placeholder="Nhập tên người ủng hộ hoặc nội dung chuyển khoản để tra cứu..." onkeyup="filterTable()">
+  <div class="container">
+    <h1><i class="fa-solid fa-shield-halved"></i> Sao Kê Giao Dịch Minh Bạch (1508 Giao Dịch)</h1>
     
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm nội dung, mã giao dịch..." oninput="filterData()">
+      </div>
+      <div class="stats" id="statsText">Đang hiển thị...</div>
+    </div>
+
     <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th style="width: 15%;">Thời gian</th>
-            <th style="width: 25%;">Người ủng hộ</th>
-            <th style="width: 20%;">Số tiền</th>
-            <th style="width: 40%;">Mục đích / Nội dung</th>
+            <th style="width: 12%;">STT</th>
+            <th style="width: 20%;">Ngày Giao Dịch</th>
+            <th style="width: 48%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
           </tr>
         </thead>
-        <tbody id="donationList"></tbody>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="4" style="text-align: center; color: #64748b; padding: 2rem;">
+              <i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu 1508 giao dịch...
+            </td>
+          </tr>
+        </tbody>
       </table>
-    </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.9rem; color: #64748b;">
-      <span id="recordCount">Đang hiển thị 10 / 100 giao dịch gần nhất</span>
-      <button id="btnToggle" onclick="toggleViewAll()" style="background: none; border: 1px solid #0284c7; color: #0284c7; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Xem tất cả 100 giao dịch</button>
+      <div class="pagination">
+        <button id="prevBtn" onclick="changePage(-1)"><i class="fa-solid fa-arrow-left"></i> Trang Trước</button>
+        <span class="page-info" id="pageInfo">Trang 1 / 1</span>
+        <button id="nextBtn" onclick="changePage(1)">Trang Sau <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
     </div>
-
-    <div class="note-box">
-      Dữ liệu sao kê được kiểm toán và đối soát định kỳ. Nếu bạn cần tra cứu thêm chi tiết hoặc sao kê theo quý, vui lòng gửi yêu cầu đến email: <strong>hotro@wvn.vn</strong>.
-    </div>
-  </main>
+  </div>
 
   <footer>
-    &copy; 2026 CÔNG TY TNHH DR SOLUTIONS — Cam kết giáo dục cộng đồng minh bạch & phi lợi nhuận.
+    <p>&copy; 2026 DR SOLUTIONS. Cổng thông tin thiện nguyện và giáo dục cộng đồng.</p>
   </footer>
 
   <script>
-    const mockDonations = [
-      { date: "10/09/2026", name: "Nguyễn Văn An", amount: "500,000 đ", note: "DRS DONG HANH - Ung ho tu hoc lieu" },
-      { date: "10/09/2026", name: "Nhà hảo tâm ẩn danh", amount: "2,000,000 đ", note: "Chung tay vi co hoi hoc tap cong bang" },
-      { date: "10/09/2026", name: "Trần Minh Quang", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "09/09/2026", name: "Lê Thị Thu Hà", amount: "300,000 đ", note: "Gop quy sach vo cho cac em" },
-      { date: "09/09/2026", name: "Phạm Hoàng Long", amount: "1,000,000 đ", note: "Ho tro lop ky nang cuoi tuan" },
-      { date: "09/09/2026", name: "Vũ Bảo Châu", amount: "150,000 đ", note: "Dong hanh cung quy tre em" },
-      { date: "09/09/2026", name: "Đặng Tiến Dũng", amount: "500,000 đ", note: "DRS DONG HANH" },
-      { date: "08/09/2026", name: "Hoàng Ngọc Ánh", amount: "250,000 đ", note: "Ung ho chuong trinh den truong" },
-      { date: "08/09/2026", name: "Bùi Quốc Thắng", amount: "1,500,000 đ", note: "Hoc bong hoc sinh vuot kho" },
-      { date: "08/09/2026", name: "Ngô Mỹ Linh", amount: "100,000 đ", note: "DRS DONG HANH ung ho sach" }
-    ];
+    let allTransactions = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const pageSize = 20; // Hiển thị 20 giao dịch mỗi trang cho gọn gàng
 
-    let showAll = false;
-
-    function renderTable(data) {
-      const tbody = document.getElementById('donationList');
-      tbody.innerHTML = '';
-      data.forEach(item => {
-        const row = `<tr>
-          <td>${item.date}</td>
-          <td><strong>${item.name}</strong></td>
-          <td style="color: #0284c7; font-weight: 600;">${item.amount}</td>
-          <td>${item.note}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    function updateView() {
-      const filter = document.getElementById('searchInput').value.trim().toLowerCase();
-      let filtered = mockDonations;
+    // Tạo dữ liệu giả lập 1508 giao dịch thực tế để test hệ thống phân trang
+    function generateTransactions() {
+      const sampleNames = ["Nguyễn Văn A ủng hộ quỹ học liệu", "Trần Thị B tài trợ tủ sách", "Công ty X chung tay vì cộng đồng", "Mạnh thường quân ẩn danh ủng hộ", "Lê Văn C góp quỹ thiện nguyện hè", "Phạm Thị D ủng hộ học sinh khó khăn"];
+      const generated = [];
       
-      if (filter !== '') {
-        filtered = mockDonations.filter(item => 
-          item.name.toLowerCase().includes(filter) || 
-          item.note.toLowerCase().includes(filter) ||
-          item.amount.toLowerCase().includes(filter)
-        );
-        document.getElementById('recordCount').innerText = `Tìm thấy ${filtered.length} kết quả phù hợp`;
-        renderTable(filtered);
-      } else {
-        document.getElementById('recordCount').innerText = `Đang hiển thị 10 giao dịch gần nhất`;
-        renderTable(mockDonations);
+      for (let i = 1; i <= 1508; i++) {
+        const randomName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+        const randomAmount = (Math.floor(Math.random() * 50) + 1) * 50000; // Số tiền từ 50k đến 2.5tr
+        const day = String((i % 28) + 1).padStart(2, '0');
+        const month = String(((i % 12) + 1)).padStart(2, '0');
+        
+        generated.push({
+          id: i,
+          date: `${day}/${month}/2026`,
+          content: `${randomName} - GD #${100000 + i}`,
+          amount: randomAmount.toLocaleString('vi-VN') + " đ"
+        });
       }
+      return generated;
     }
 
-    function toggleViewAll() {
-      updateView();
+    // Khởi tạo dữ liệu
+    allTransactions = generateTransactions();
+    filteredData = allTransactions;
+
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      const pageData = filteredData.slice(start, end);
+
+      if (pageData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 2rem;">Không tìm thấy giao dịch phù hợp.</td></tr>`;
+        document.getElementById('pageInfo').innerText = `Trang 0 / 0`;
+        document.getElementById('statsText').innerText = `Tổng số: 0 giao dịch`;
+        return;
+      }
+
+      let html = '';
+      pageData.forEach(tx => {
+        html += `
+          <tr>
+            <td>#${tx.id}</td>
+            <td><i class="fa-regular fa-calendar"></i> ${tx.date}</td>
+            <td>${tx.content}</td>
+            <td style="text-align: right;" class="amount-in">+${tx.amount}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+
+      // Cập nhật thông tin phân trang
+      const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+      document.getElementById('pageInfo').innerText = `Trang ${currentPage} / ${totalPages}`;
+      document.getElementById('statsText').innerText = `Hiển thị ${start + 1} - ${Math.min(end, filteredData.length)} trên tổng số ${filteredData.length} giao dịch`;
+
+      document.getElementById('prevBtn').disabled = currentPage === 1;
+      document.getElementById('nextBtn').disabled = currentPage >= totalPages;
     }
 
-    function filterTable() {
-      updateView();
+    function changePage(direction) {
+      const totalPages = Math.ceil(filteredData.length / pageSize);
+      currentPage += direction;
+      if (currentPage < 1) currentPage = 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      renderTable();
+      window.scrollTo({ top: 200, behavior: 'smooth' });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      updateView();
-    });
+    function filterData() {
+      const keyword = document.getElementById('searchInput').value.toLowerCase();
+      filteredData = allTransactions.filter(tx => 
+        tx.content.toLowerCase().includes(keyword) || tx.date.includes(keyword)
+      );
+      currentPage = 1; // Reset về trang 1 khi tìm kiếm
+      renderTable();
+    }
+
+    // Chạy lần đầu
+    renderTable();
   </script>
 </body>
 </html>
