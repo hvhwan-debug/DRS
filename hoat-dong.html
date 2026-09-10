@@ -1,126 +1,19 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hoạt Động - DR SOLUTIONS</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f8fafc; color: #1e293b; }
-    header { background: #0f172a; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    nav a { color: #cbd5e1; text-decoration: none; margin-left: 1.5rem; font-weight: 500; font-size: 0.95rem; }
-    nav a:hover, nav a.active { color: #38bdf8; }
-    .container { max-width: 900px; margin: 2.5rem auto; padding: 0 1rem; }
-    h1 { font-size: 2rem; margin-bottom: 2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; color: #0f172a; display: flex; align-items: center; gap: 0.75rem; }
-    .post-card { background: #fff; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); margin-bottom: 1.5rem; display: flex; gap: 1.5rem; align-items: flex-start; border: 1px solid #e2e8f0; transition: transform 0.2s; }
-    .post-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
-    .post-card img { width: 220px; height: 140px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
-    .post-info { flex-grow: 1; }
-    .post-info h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.25rem; color: #0f172a; }
-    .post-info h3 a { color: inherit; text-decoration: none; }
-    .post-info h3 a:hover { color: #0284c7; }
-    .meta { font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; display: flex; gap: 1rem; }
-    .post-info p { color: #475569; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem; }
-    .btn-readmore { display: inline-flex; align-items: center; gap: 0.5rem; background: #0284c7; color: #fff; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: background 0.2s; }
-    .btn-readmore:hover { background: #0369a1; }
-    footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 2rem; margin-top: 4rem; font-size: 0.9rem; }
-  </style>
-</head>
-<body>
-
-  <header>
-    <div style="font-weight: 700; font-size: 1.25rem; color: #fff;">
-      <i class="fa-solid fa-hands-holding-child"></i> DR SOLUTIONS
+<header style="background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;">
+  <div style="display: flex; align-items: center; gap: 0.75rem;">
+    <div style="background: #e0f2fe; color: #0284c7; padding: 0.5rem; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+      <i class="fa-solid fa-book-open" style="font-size: 1.25rem;"></i>
     </div>
-    <nav>
-      <a href="index.html"><i class="fa-solid fa-house"></i> Trang Chủ</a>
-      <a href="hoat-dong.html" class="active"><i class="fa-solid fa-newspaper"></i> Hoạt Động</a>
-      <a href="sao-ke.html"><i class="fa-solid fa-file-invoice-dollar"></i> Sao Kê</a>
-      <a href="lien-he.html"><i class="fa-solid fa-envelope"></i> Liên Hệ</a>
-    </nav>
-  </header>
-
-  <div class="container">
-    <h1><i class="fa-solid fa-bullhorn"></i> Bản Tin Hoạt Động Cộng Đồng</h1>
-    <div id="posts-container">
-      <p style="color: #64748b; text-align: center; padding: 2rem;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách bài viết...</p>
+    <div>
+      <div style="font-weight: 700; font-size: 1.1rem; color: #0f172a; letter-spacing: -0.2px;">Wisdom Vietnam Network</div>
+      <div style="font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Vận hành bởi DR Solutions</div>
     </div>
   </div>
-
-  <footer>
-    <p>&copy; 2026 DR SOLUTIONS. Cổng thông tin thiện nguyện và giáo dục cộng đồng.</p>
-  </footer>
-
-  <script>
-    // Tự động quét và hiển thị tối đa 10 bài viết từ GitHub API
-    async function loadPosts() {
-      const container = document.getElementById('posts-container');
-      const repo = 'hvhwan-debug/DRS';
-      const apiURL = `https://api.github.com/repos/${repo}/contents/content/posts`;
-
-      try {
-        const response = await fetch(apiURL);
-        if (!response.ok) throw new Error('Không thể tải danh sách bài viết');
-        
-        const files = await response.json();
-        // Lọc các file markdown (.md) và lấy tối đa 10 bài mới nhất
-        const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse().slice(0, 10);
-
-        if (mdFiles.length === 0) {
-          container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">Chưa có bài viết nào được đăng.</p>';
-          return;
-        }
-
-        let htmlContent = '';
-        for (const file of mdFiles) {
-          const fileRes = await fetch(file.download_url);
-          const text = await fileRes.text();
-          
-          // Đọc Front Matter (YAML metadata cơ bản)
-          const parts = text.split('---');
-          let title = 'Bài viết không tiêu đề';
-          let date = '';
-          let desc = '';
-          let thumbnail = '';
-
-          if (parts.length >= 3) {
-            const yamlMeta = parts[1];
-            const titleMatch = yamlMeta.match(/title:\s*"?(.*?)"?$/m);
-            const dateMatch = yamlMeta.match(/date:\s*"?(.*?)"?$/m);
-            const descMatch = yamlMeta.match(/description:\s*"?(.*?)"?$/m);
-            const thumbMatch = yamlMeta.match(/thumbnail:\s*"?(.*?)"?$/m);
-
-            if (titleMatch) title = titleMatch[1].replace(/["']/g, '');
-            if (dateMatch) date = dateMatch[1].replace(/["']/g, '');
-            if (descMatch) desc = descMatch[1].replace(/["']/g, '');
-            if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
-          }
-
-          // Tạo card tóm lược cho từng bài
-          htmlContent += `
-            <div class="post-card">
-              ${thumbnail ? `<img src="${thumbnail}" alt="${title}">` : '<img src="https://via.placeholder.com/220x140?text=DRS+News" alt="Default">'}
-              <div class="post-info">
-                <h3><a href="chi-tiet.html?post=${file.name}">${title}</a></h3>
-                <div class="meta">
-                  ${date ? `<span><i class="fa-regular fa-calendar"></i> ${date}</span>` : ''}
-                </div>
-                <p>${desc ? desc : 'Bấm xem chi tiết để đọc nội dung đầy đủ của chương trình thiện nguyện...'}</p>
-                <a href="chi-tiet.html?post=${file.name}" class="btn-readmore">Xem thêm <i class="fa-solid fa-arrow-right"></i></a>
-              </div>
-            </div>
-          `;
-        }
-
-        container.innerHTML = htmlContent;
-      } catch (error) {
-        console.error(error);
-        container.innerHTML = '<p style="color: #ef4444; text-align: center;">Không thể tải dữ liệu bài viết lúc này.</p>';
-      }
-    }
-
-    loadPosts();
-  </script>
-</body>
-</html>
+  <nav style="display: flex; align-items: center; gap: 1.5rem;">
+    <a href="index.html" style="color: #475569; text-decoration: none; font-weight: 500; font-size: 0.95rem;">Trụ Cột</a>
+    <a href="hoat-dong.html" style="color: #0284c7; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Hoạt Động</a>
+    <a href="sao-ke.html" style="color: #475569; text-decoration: none; font-weight: 500; font-size: 0.95rem;">Tra Cứu Sao Kê</a>
+    <a href="phap-ly.html" style="color: #475569; text-decoration: none; font-weight: 500; font-size: 0.95rem;">Pháp Lý & Minh Bạch</a>
+    <a href="lien-he.html" style="color: #475569; text-decoration: none; font-weight: 500; font-size: 0.95rem;">Liên Hệ</a>
+    <a href="quyen-gop.html" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; padding: 0.5rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">Quyên Góp</a>
+  </nav>
+</header>
