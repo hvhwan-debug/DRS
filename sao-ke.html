@@ -1,4 +1,76 @@
-<div class="table-container">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tra Cứu Sao Kê Minh Bạch - DR SOLUTIONS</title>
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--text-dark); background: #f8fafc; line-height: 1.6; }
+    
+    header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem; }
+    .brand { font-size: 1.3rem; font-weight: 800; background: var(--blue-grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .nav-links a { margin-left: 1.5rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+    .nav-links a.active { color: #0284c7; font-weight: 700; }
+    .btn { background: var(--blue-grad-btn); color: var(--white); padding: 0.6rem 1.3rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
+
+    .hero { background: var(--blue-grad-hero); color: #fff; padding: 3.5rem 1rem; text-align: center; }
+    .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 800; }
+    .hero p { color: #e0f2fe; max-width: 650px; margin: 0 auto; }
+
+    .container { max-width: 1050px; margin: 2.5rem auto; padding: 0 1rem; }
+    .search-box { width: 100%; padding: 0.9rem 1.2rem; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; transition: border-color 0.2s; }
+    .search-box:focus { border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
+
+    .table-container { overflow-x: auto; background: var(--white); border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    th { background: #f0f9ff; font-weight: 600; color: #0369a1; }
+    tbody tr:hover { background-color: #f8fafc; }
+
+    .note-box { background: #f0fdf4; border-left: 4px solid #16a34a; padding: 1.2rem; margin-top: 2rem; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: #166534; }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 2.5rem 1rem; text-align: center; font-size: 0.85rem; margin-top: 4rem; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">DR SOLUTIONS</a>
+      <nav class="nav-links">
+        <a href="index.html">Trang Chủ</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
+        <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
+      </nav>
+      <a href="index.html" class="btn">Về Trang Chủ</a>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="hero">
+    <h1>Tra Cứu Minh Bạch Quyên Góp</h1>
+    <p>100% nguồn tài trợ, viện trợ và đóng góp cộng đồng đều được công khai và cập nhật minh bạch</p>
+  </section>
+
+  <!-- Nội dung tra cứu -->
+  <main class="container">
+    <input type="text" id="searchInput" class="search-box" placeholder="Nhập tên người ủng hộ hoặc nội dung chuyển khoản để tra cứu..." onkeyup="filterTable()">
+    
+    <div class="table-container">
       <table>
         <thead>
           <tr>
@@ -13,12 +85,22 @@
         </tbody>
       </table>
     </div>
-    
+
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.9rem; color: #64748b;">
       <span id="recordCount">Đang hiển thị 10 / 100 giao dịch gần nhất</span>
       <button id="btnToggle" onclick="toggleViewAll()" style="background: none; border: 1px solid #0284c7; color: #0284c7; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Xem tất cả 100 giao dịch</button>
     </div>
-    <script>
+
+    <div class="note-box">
+      Dữ liệu sao kê được kiểm toán và đối soát định kỳ. Nếu bạn cần tra cứu thêm chi tiết hoặc sao kê theo quý, vui lòng gửi yêu cầu đến email: <strong>hotro@wvn.vn</strong>.
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 CÔNG TY TNHH DR SOLUTIONS — Cam kết giáo dục cộng đồng minh bạch & phi lợi nhuận.
+  </footer>
+
+  <script>
     // Kho 100 dữ liệu giao dịch mẫu thực tế
     const mockDonations = [
       { date: "10/09/2026", name: "Nguyễn Văn An", amount: "500,000 đ", note: "DRS DONG HANH - Ung ho tu hoc lieu" },
@@ -173,8 +255,10 @@
       updateView();
     }
 
-    // Khởi tạo hiển thị 10 dòng đầu tiên khi tải trang
+    // Khởi chạy hiển thị 10 dòng khi load trang
     document.addEventListener('DOMContentLoaded', () => {
       updateView();
     });
   </script>
+</body>
+</html>
