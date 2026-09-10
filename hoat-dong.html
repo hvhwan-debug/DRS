@@ -202,7 +202,7 @@
         </div>
       </a>
       <nav class="nav-links" id="navLinks">
-        <a href="index.html#tru-cot">Trụ Cột</a>
+        <a href="index.html#tru-cot">Sứ Mệnh</a>
         <a href="hoat-dong.html" class="active">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
@@ -306,14 +306,14 @@
     }
 
     const sampleAllPosts = [
-      { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2026" },
-      { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2026" },
-      { filename: "bai-3.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", thumbnail: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80", year: "2026" },
-      { filename: "bai-4.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80", year: "2026" },
-      { filename: "bai-5.md", title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.", thumbnail: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80", year: "2026" },
-      { filename: "bai-6.md", title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 01 / 2025", description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.", thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80", year: "2025" },
-      { filename: "bai-7.md", title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2025" },
-      { filename: "bai-8.md", title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 12 / 2024", description: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2024" }
+      { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202607 },
+      { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202605 },
+      { filename: "bai-3.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", thumbnail: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202603 },
+      { filename: "bai-4.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202602 },
+      { filename: "bai-5.md", title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.", thumbnail: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202601 },
+      { filename: "bai-6.md", title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 01 / 2025", description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.", thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80", year: "2025", sortWeight: 202501 },
+      { filename: "bai-7.md", title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2025", sortWeight: 202511 },
+      { filename: "bai-8.md", title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 12 / 2024", description: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2024", sortWeight: 202412 }
     ];
 
     async function loadTimelineData() {
@@ -330,7 +330,7 @@
         const response = await fetch(apiURL);
         if (response.ok) {
           const files = await response.json();
-          const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse();
+          const mdFiles = files.filter(f => f.name.endsWith('.md'));
           
           if (mdFiles.length > 0) {
             for (const file of mdFiles) {
@@ -338,7 +338,7 @@
               const text = await fileRes.text();
               const parts = text.split('---');
               let title = 'Bài viết hoạt động';
-              let date = '2026';
+              let date = 'Tháng 01 / 2026';
               let desc = '';
               let thumbnail = '';
 
@@ -355,8 +355,21 @@
                 if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
               }
 
-              let year = date.includes('2025') ? '2025' : (date.includes('2024') ? '2024' : '2026');
-              allPosts.push({ filename: file.name, title, date, description: desc, thumbnail, year });
+              let year = '2026';
+              let monthNum = 1;
+              
+              if (date.includes('2025')) year = '2025';
+              else if (date.includes('2024')) year = '2024';
+              else if (date.includes('2026')) year = '2026';
+
+              const monthMatch = date.match(/Tháng\s*0?([0-9]+)/i);
+              if (monthMatch) {
+                monthNum = parseInt(monthMatch[1], 10);
+              }
+
+              let sortWeight = parseInt(year, 10) * 100 + monthNum;
+
+              allPosts.push({ filename: file.name, title, date, description: desc, thumbnail, year, sortWeight });
             }
           }
         }
@@ -367,6 +380,9 @@
       if (allPosts.length === 0) {
         allPosts = sampleAllPosts;
       }
+
+      // Sắp xếp giảm dần: Bài viết có tháng/năm mới nhất sẽ nằm ở đầu danh sách
+      allPosts.sort((a, b) => b.sortWeight - a.sortWeight);
 
       let list2026 = [];
       let listHistory = [];
