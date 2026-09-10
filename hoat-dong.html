@@ -75,7 +75,7 @@
     /* Container chung */
     .container { max-width: 1100px; margin: 3rem auto; padding: 0 1.5rem; position: relative; }
 
-    /* Hộp gửi hoạt động nhanh */
+    /* Hộp gửi hoạt động mới */
     .submit-activity-box {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -214,26 +214,66 @@
     }
     .btn-detail:hover { color: #0369a1; text-decoration: underline; }
 
-    /* Nút bấm xem thêm hoạt động các năm trước */
+    /* Nút xem thêm hoạt động các năm trước */
     .history-toggle-box {
       text-align: center;
       margin: 4rem 0 2rem 0;
+      position: relative;
+      z-index: 20;
     }
     .btn-history {
       background: #ffffff; color: #0284c7; border: 2px solid #bae6fd;
       padding: 0.9rem 2.8rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
-      cursor: pointer; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.1); transition: all 0.2s;
+      cursor: pointer; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12); transition: all 0.2s;
       display: inline-flex; align-items: center; gap: 0.75rem; font-family: inherit;
     }
     .btn-history:hover { background: #f0f9ff; border-color: #0284c7; transform: translateY(-2px); }
 
-    /* Khu vực lịch sử các năm trước (Ẩn hoàn toàn cho đến khi bấm nút) */
+    /* Khu vực lịch sử các năm trước */
     .history-section {
       display: none;
       margin-top: 3rem;
       animation: fadeIn 0.4s ease-in-out;
     }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Modal Quyên góp VietQR */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white);
+      padding: 2.2rem;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 0.8rem 0;
+      border: 1px solid var(--border);
+    }
+    .modal-qr {
+      width: 100%;
+      max-width: 230px;
+      margin: 0.8rem auto;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
 
     /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
@@ -273,7 +313,7 @@
         <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
-      <button class="btn" onclick="alert('Mở cửa sổ quyên góp')">Quyên Góp</button>
+      <button class="btn" onclick="openModal()">Quyên Góp</button>
     </div>
   </header>
 
@@ -312,14 +352,14 @@
         </div>
       </div>
 
-      <!-- Nút bấm bắt buộc người dùng phải chủ động bấm để xem hoạt động năm trước -->
+      <!-- Nút bấm xem thêm hoạt động các năm trước -->
       <div class="history-toggle-box" id="historyToggleBox" style="display: none;">
         <button class="btn-history" onclick="toggleHistory()">
-          <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm các hoạt động của năm trước <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
+          <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm hoạt động các năm trước <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
         </button>
       </div>
 
-      <!-- Khu vực lịch sử các năm trước (Bắt buộc phải bấm nút mới mở ra) -->
+      <!-- Khu vực lịch sử các năm trước -->
       <div id="historySection" class="history-section">
         <div class="timeline-root-node" style="margin-top: 2rem;">
           <div class="timeline-root-badge" style="background: linear-gradient(135deg, #475569 0%, #0f172a 100%);"><i class="fa-solid fa-box-archive"></i> Lịch Sử Các Năm Trước</div>
@@ -330,11 +370,30 @@
     </div>
   </div>
 
+  <!-- Modal Quyên góp VietQR -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
   <footer>
     <p>&copy; 2026 CÔNG TY TRÁCH NHIỆM HỮU HẠN DR SOLUTIONS. Mọi quyền được bảo lưu.</p>
   </footer>
 
   <script>
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(event) {
+      let modal = document.getElementById('donateModal');
+      if (event.target == modal) { modal.style.display = 'none'; }
+    }
+
     const sampleAllPosts = [
       { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2026" },
       { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2026" },
@@ -422,12 +481,11 @@
         }
       });
 
-      // Hiển thị tối đa 10 hoạt động cho năm 2026
       container2026.innerHTML = list2026.slice(0, 10).join('') || '<div style="text-align:center; padding:1.5rem;">Chưa có mốc sự kiện 2026.</div>';
 
       if (listHistory.length > 0) {
         containerHistory.innerHTML = listHistory.join('');
-        historyToggleBox.style.display = 'block'; // Hiển thị nút bấm để người dùng chủ động click
+        historyToggleBox.style.display = 'block';
       }
     }
 
