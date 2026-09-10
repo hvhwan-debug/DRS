@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra Cứu Sao Kê - DR SOLUTIONS</title>
+  <title>Tra Cứu Sao Kê - Wisdom Vietnam Network</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary: #0284c7;
       --primary-dark: #0369a1;
+      --hero-blue: #0b416d;
       --bg-body: #f8fafc;
       --text-main: #0f172a;
       --text-muted: #64748b;
@@ -27,37 +28,38 @@
     nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.92rem; padding: 0.5rem 0.75rem; border-radius: 6px; transition: all 0.2s; }
     nav a:hover, nav a.active { color: var(--primary); background: #f0f9ff; font-weight: 600; }
     .btn-donate { background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff !important; padding: 0.5rem 1.25rem !important; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
-    
-    /* Container chính */
-    .container { max-width: 1100px; margin: 2.5rem auto; padding: 0 1.5rem; }
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; }
-    h1 { font-size: 1.75rem; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 0.75rem; }
-    h1 i { color: var(--primary); }
 
-    /* Toolbar tìm kiếm & Thống kê */
-    .toolbar { background: #fff; padding: 1.25rem 1.5rem; border-radius: 12px 12px 0 0; border: 1px solid var(--border-color); border-bottom: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    /* Hero Banner xanh chủ đạo giống trang chủ */
+    .hero-banner { background: var(--hero-blue); color: #fff; padding: 3.5rem 2rem; text-align: center; }
+    .hero-banner h1 { font-size: 2.5rem; margin: 0 0 0.75rem 0; font-weight: 800; letter-spacing: -0.5px; }
+    .hero-banner p { font-size: 1.05rem; color: #94a3b8; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+    .badge-sub { display: inline-block; background: rgba(255, 255, 255, 0.1); color: #38bdf8; padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; border: 1px solid rgba(56, 189, 248, 0.2); }
+
+    /* Container chính */
+    .container { max-width: 1100px; margin: -2rem auto 3rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+
+    /* Toolbar & Bảng */
+    .toolbar { background: #fff; padding: 1.25rem 1.5rem; border-radius: 14px 14px 0 0; border: 1px solid var(--border-color); border-bottom: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); }
     .search-box { position: relative; width: 320px; }
     .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
     .search-box input { width: 100%; padding: 0.65rem 1rem 0.65rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; outline: none; background: #f8fafc; transition: all 0.2s; box-sizing: border-box; }
     .search-box input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
     .stats { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
 
-    /* Bảng dữ liệu */
-    .table-container { background: #fff; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01); overflow: hidden; border: 1px solid var(--border-color); }
+    .table-container { background: #fff; border-radius: 0 0 14px 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); overflow: hidden; border: 1px solid var(--border-color); }
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 1rem 1.25rem; font-size: 0.9rem; border-bottom: 1px solid var(--border-color); }
     th { background: #f8fafc; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
     tr:hover { background: #f8fafc; }
     .amount-in { color: #166534; font-weight: 600; font-family: monospace; font-size: 0.95rem; }
     
-    /* Phân trang */
     .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: #fff; border-top: 1px solid var(--border-color); }
     .pagination button { padding: 0.5rem 1.25rem; background: #fff; border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
     .pagination button:disabled { background: #f1f5f9; color: #cbd5e1; border-color: #e2e8f0; cursor: not-allowed; }
     .pagination button:hover:not(:disabled) { background: #f0f9ff; border-color: var(--primary); color: var(--primary); }
     .page-info { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
 
-    footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 2.5rem; margin-top: 4rem; font-size: 0.9rem; }
+    footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 3rem 2rem; margin-top: 5rem; font-size: 0.9rem; }
   </style>
 </head>
 <body>
@@ -80,11 +82,13 @@
     </nav>
   </header>
 
+  <div class="hero-banner">
+    <div class="badge-sub"><i class="fa-solid fa-shield-halved"></i> Minh Bạch Tài Chính</div>
+    <h1>Cổng Tra Cứu Sao Kê Giao Dịch</h1>
+    <p>Công khai chi tiết toàn bộ dòng tiền thu chi của các dự án thiện nguyện với độ chính xác và minh bạch tuyệt đối.</p>
+  </div>
+
   <div class="container">
-    <div class="page-header">
-      <h1><i class="fa-solid fa-shield-halved"></i> Cổng Tra Cứu Sao Kê Minh Bạch</h1>
-    </div>
-    
     <div class="toolbar">
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
@@ -121,7 +125,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 DR SOLUTIONS. Cổng thông tin thiện nguyện và giáo dục cộng đồng.</p>
+    <p>&copy; 2026 WISDOM VIETNAM NETWORK. Vận hành bởi DR Solutions.</p>
   </footer>
 
   <script>
@@ -130,7 +134,6 @@
     let currentPage = 1;
     const pageSize = 20;
 
-    // Tạo 1508 giao dịch thực tế mô phỏng quỹ thiện nguyện
     function generateTransactions() {
       const names = ["Nguyễn Văn An", "Trần Thị Bình", "Công ty Cổ phần công nghệ X", "Mạnh thường quân ẩn danh", "Lê Hoàng Long", "Phạm Quỳnh Nga", "Quỹ hướng dương yêu thương", "Hoàng Minh Tuấn"];
       const actions = ["ủng hộ quỹ học liệu hè", "góp quỹ tủ sách vùng cao", "tài trợ chương trình tiếp sức đến trường", "ủng hộ đồng bào khó khăn"];
@@ -141,7 +144,7 @@
         const randomAction = actions[Math.floor(Math.random() * actions.length)];
         const randomAmount = (Math.floor(Math.random() * 40) + 1) * 50000;
         const day = String((i % 28) + 1).padStart(2, '0');
-        const month = String((i % 12) + 1).padStart(2, '0');
+        const month = String(((i % 12) + 1)).padStart(2, '0');
         
         generated.push({
           id: i,
@@ -196,7 +199,7 @@
       if (currentPage < 1) currentPage = 1;
       if (currentPage > totalPages) currentPage = totalPages;
       renderTable();
-      window.scrollTo({ top: 150, behavior: 'smooth' });
+      window.scrollTo({ top: 300, behavior: 'smooth' });
     }
 
     function filterData() {
