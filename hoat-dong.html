@@ -91,7 +91,7 @@
       border-radius: 4px;
     }
 
-    /* Tiêu đề gốc mốc lịch sử 2026 */
+    /* Tiêu đề gốc mốc lịch sử */
     .timeline-root-node {
       text-align: center;
       position: relative;
@@ -125,21 +125,34 @@
       flex-direction: row-reverse;
     }
 
-    /* Điểm giọt nước trên trục giữa */
+    /* Điểm dấu chấm trên trục giữa có hiệu ứng động (Pulse) */
     .timeline-dot {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       background: #0284c7;
       border: 4px solid #fff;
       border-radius: 50%;
       box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
       z-index: 5;
+      animation: pulseDot 2s infinite;
     }
 
-    /* Khung nội dung mốc thời gian (Hexagon card mô phỏng phong cách Karofi) */
+    @keyframes pulseDot {
+      0% {
+        box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 12px rgba(2, 132, 199, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(2, 132, 199, 0);
+      }
+    }
+
+    /* Khung nội dung mốc thời gian */
     .timeline-content {
       width: 44%;
       background: #ffffff;
@@ -202,6 +215,26 @@
     }
     .btn-detail:hover { color: #0369a1; text-decoration: underline; }
 
+    /* Phần xem thêm các năm trước (Ẩn mặc định) */
+    .history-toggle-box {
+      text-align: center;
+      margin: 3rem 0;
+    }
+    .btn-history {
+      background: #ffffff; color: #0284c7; border: 2px solid #bae6fd;
+      padding: 0.85rem 2.5rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
+      cursor: pointer; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.1); transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 0.75rem; font-family: inherit;
+    }
+    .btn-history:hover { background: #f0f9ff; border-color: #0284c7; transform: translateY(-2px); }
+
+    .history-section {
+      display: none;
+      margin-top: 2rem;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
     /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
 
@@ -247,20 +280,40 @@
   <!-- Hero Banner -->
   <section class="hero-wrapper">
     <div class="hero-badge">BẢN TIN CỘNG ĐỒNG</div>
-    <h1 class="hero-title">Hành Trình & Mốc Hoạt Động 2026</h1>
-    <p class="hero-desc">Theo dòng sự kiện và các cột mốc triển khai dự án phi lợi nhuận nổi bật trong năm.</p>
+    <h1 class="hero-title">Hành Trình & Mốc Hoạt Động</h1>
+    <p class="hero-desc">Theo dòng sự kiện và các cột mốc triển khai dự án phi lợi nhuận nổi bật qua các năm.</p>
   </section>
 
-  <!-- Timeline Mốc Hoạt Động 2026 -->
+  <!-- Timeline Mốc Hoạt Động -->
   <div class="container">
-    <div class="timeline-container" id="timelineContainer">
+    <div class="timeline-container">
+      
+      <!-- Cột mốc năm 2026 (Hiển thị tối đa 10 hoạt động tiêu biểu) -->
       <div class="timeline-root-node">
         <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện 2026</div>
       </div>
-      <!-- Dữ liệu mốc thời gian sẽ được nạp tự động vào đây -->
-      <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7;"></i> Đang tải các mốc hoạt động...
+      
+      <div id="timeline2026">
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7;"></i> Đang tải các mốc hoạt động 2026...
+        </div>
       </div>
+
+      <!-- Nút bấm xem thêm lịch sử các năm trước -->
+      <div class="history-toggle-box" id="historyToggleBox" style="display: none;">
+        <button class="btn-history" onclick="toggleHistory()">
+          <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm hoạt động các năm trước <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
+        </button>
+      </div>
+
+      <!-- Khu vực lịch sử các năm trước (Ẩn mặc định) -->
+      <div id="historySection" class="history-section">
+        <div class="timeline-root-node" style="margin-top: 3rem;">
+          <div class="timeline-root-badge" style="background: linear-gradient(135deg, #475569 0%, #0f172a 100%);"><i class="fa-solid fa-box-archive"></i> Lịch Sử Các Năm Trước</div>
+        </div>
+        <div id="timelineHistory"></div>
+      </div>
+
     </div>
   </div>
 
@@ -269,20 +322,27 @@
   </footer>
 
   <script>
-    // Dữ liệu mẫu các mốc hoạt động 2026 tiêu biểu
-    const default2026Posts = [
-      { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè 2026", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-3.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", thumbnail: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-4.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80" }
+    // Kho dữ liệu 10 hoạt động 2026 và các năm trước
+    const sampleAllPosts = [
+      { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2026" },
+      { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2026" },
+      { filename: "bai-3.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", thumbnail: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80", year: "2026" },
+      { filename: "bai-4.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80", year: "2026" },
+      { filename: "bai-5.md", title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.", thumbnail: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80", year: "2026" },
+      { filename: "bai-6.md", title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 01 / 2025", description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.", thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80", year: "2025" },
+      { filename: "bai-7.md", title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2025" },
+      { filename: "bai-8.md", title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 12 / 2024", description: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2024" }
     ];
 
-    async function loadTimeline() {
-      const container = document.getElementById('timelineContainer');
+    async function loadTimelineData() {
+      const container2026 = document.getElementById('timeline2026');
+      const containerHistory = document.getElementById('timelineHistory');
+      const historyToggleBox = document.getElementById('historyToggleBox');
+      
       const repo = 'hvhwan-debug/DRS';
       const apiURL = `https://api.github.com/repos/${repo}/contents/content/posts`;
 
-      let posts2026 = [];
+      let allPosts = [];
 
       try {
         const response = await fetch(apiURL);
@@ -312,30 +372,26 @@
                 if (descMatch) desc = descMatch[1].replace(/["']/g, '');
                 if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
               }
-              // Chỉ lấy các bài thuộc năm 2026
-              if (date.includes('2026')) {
-                posts2026.push({ filename: file.name, title, date, description: desc, thumbnail });
-              }
+
+              let year = date.includes('2025') ? '2025' : (date.includes('2024') ? '2024' : '2026');
+              allPosts.push({ filename: file.name, title, date, description: desc, thumbnail, year });
             }
           }
         }
       } catch (e) {
-        console.log("Lỗi tải từ GitHub, dùng dữ liệu mẫu");
+        console.log("Dùng dữ liệu mẫu");
       }
 
-      // Nếu không có bài nào trên GitHub hoặc chưa có bài 2026, dùng dữ liệu mẫu
-      if (posts2026.length === 0) {
-        posts2026 = default2026Posts;
+      if (allPosts.length === 0) {
+        allPosts = sampleAllPosts;
       }
 
-      let html = `
-        <div class="timeline-root-node">
-          <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện 2026</div>
-        </div>
-      `;
+      let list2026 = [];
+      let listHistory = [];
 
-      posts2026.forEach((post, index) => {
-        html += `
+      // Giới hạn tối đa 10 hoạt động cho năm 2026
+      allPosts.forEach(post => {
+        const itemHTML = `
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div class="timeline-content">
@@ -347,12 +403,38 @@
             </div>
           </div>
         `;
+
+        if (post.year === '2026') {
+          list2026.push(itemHTML);
+        } else {
+          listHistory.push(itemHTML);
+        }
       });
 
-      container.innerHTML = html;
+      // Hiển thị tối đa 10 bài cho 2026
+      container2026.innerHTML = list2026.slice(0, 10).join('') || '<div style="text-align:center; padding:1.5rem;">Chưa có mốc sự kiện 2026.</div>';
+
+      if (listHistory.length > 0) {
+        containerHistory.innerHTML = listHistory.join('');
+        historyToggleBox.style.display = 'block'; // Hiện nút bấm xem thêm các năm trước
+      }
     }
 
-    loadTimeline();
+    function toggleHistory() {
+      const historySec = document.getElementById('historySection');
+      const icon = document.getElementById('historyIcon');
+      if (historySec.style.display === 'block') {
+        historySec.style.display = 'none';
+        icon.className = 'fa-solid fa-chevron-down';
+        window.scrollTo({ top: 400, behavior: 'smooth' });
+      } else {
+        historySec.style.display = 'block';
+        icon.className = 'fa-solid fa-chevron-up';
+        historySec.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    loadTimelineData();
   </script>
 </body>
 </html>
