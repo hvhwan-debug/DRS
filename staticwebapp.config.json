@@ -1,6 +1,6 @@
 {
-  "mimeTypes": {
-    ".yml": "text/yaml",
-    ".yaml": "text/yaml"
+  "navigationFallback": {
+    "rewrite": "/404.html",
+    "exclude": ["/images/*", "/css/*", "/js/*"]
   }
 }
