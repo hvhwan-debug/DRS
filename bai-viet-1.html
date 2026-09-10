@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khánh Thành Tủ Học Liệu Lưu Động Số 03 - DR SOLUTIONS</title>
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark);
+      background-color: var(--bg-page);
+      line-height: 1.8;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.5rem;
+    }
+    .brand-wrap { text-decoration: none; display: flex; flex-direction: column; gap: 2px; }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: var(--blue-grad-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+    .brand-subtitle { font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; }
+    .nav-links a {
+      margin-left: 1.8rem;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .nav-links a:hover { color: #0284c7; }
+    .btn {
+      background: var(--blue-grad-btn);
+      color: var(--white);
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Bố cục bài viết chi tiết */
+    .article-wrap {
+      max-width: 820px;
+      margin: 3rem auto 5rem;
+      background: #fff;
+      padding: 3rem 2.5rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+    }
+    .breadcrumb {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: #0284c7; text-decoration: none; }
+    .article-tag {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .post-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
+    }
+    .post-meta {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .featured-img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .post-body p {
+      font-size: 1.05rem;
+      color: #334155;
+      margin-bottom: 1.5rem;
+    }
+    .post-body h3 {
+      font-size: 1.4rem;
+      color: #0f172a;
+      margin: 2rem 0 1rem;
+      font-weight: 700;
+    }
+    .impact-box {
+      background: #f0f9ff;
+      border-left: 4px solid #0284c7;
+      padding: 1.3rem 1.6rem;
+      border-radius: 0 10px 10px 0;
+      margin: 2rem 0;
+      font-size: 1rem;
+    }
+    .quote-box {
+      background: #f0fdf4;
+      border: 1px dashed #86efac;
+      padding: 1.5rem 1.8rem;
+      border-radius: 12px;
+      font-style: italic;
+      color: #166534;
+      margin: 2rem 0;
+    }
+    .quote-author {
+      display: block;
+      margin-top: 0.6rem;
+      font-weight: 700;
+      font-style: normal;
+      color: #15803d;
+      font-size: 0.9rem;
+    }
+    .back-btn-wrap {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer {
+      background: var(--blue-grad-primary);
+      color: #cbd5e1;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <span class="brand-title">Wisdom Vietnam Network</span>
+        <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Trang Chủ</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
+      </nav>
+      <a href="index.html" class="btn">Về Trang Chủ</a>
+    </div>
+  </header>
+
+  <!-- Thân bài viết -->
+  <main class="article-wrap">
+    <div class="breadcrumb">
+      <a href="index.html">Trang chủ</a> &rsaquo; <a href="hoat-dong.html">Hoạt động</a> &rsaquo; <span>Tin tức chi tiết</span>
+    </div>
+
+    <span class="article-tag">Dự Án Học Liệu</span>
+    <h1 class="post-title">Khánh Thành "Tủ Học Liệu Lưu Động Số 03": Tiếp Sức Hơn 150 Học Sinh Bước Vào Năm Học Mới</h1>
+    
+    <div class="post-meta">
+      <span>📅 Ngày đăng: 05/09/2026</span> &bull; 
+      <span>📍 Địa điểm: Phường Nghĩa Đô, Cầu Giấy, Hà Nội</span> &bull; 
+      <span>✍️ Ban Truyền thông DRS</span>
+    </div>
+
+    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&auto=format&fit=crop&q=80" alt="Tủ học liệu lưu động" class="featured-img">
+
+    <div class="post-body">
+      <p>
+        Hòa trong không khí phấn khởi của ngày tựu trường, đại diện doanh nghiệp xã hội DR SOLUTIONS cùng mạng lưới tình nguyện viên Wisdom Vietnam Network đã chính thức tổ chức lễ bàn giao và đưa vào hoạt động mô hình <strong>"Tủ học liệu lưu động số 03"</strong> đặt tại điểm sinh hoạt văn hóa dân cư số 5, Phường Nghĩa Đô, Hà Nội.
+      </p>
+
+      <h3>Mục tiêu và phương thức vận hành</h3>
+      <p>
+        Khu vực triển khai lần này tập trung nhiều gia đình lao động tự do, công nhân thuê trọ có thu nhập bấp bênh. Với nhiều phụ huynh, việc chuẩn bị đầy đủ sách giáo khoa, sách bài tập nâng cao và đồ dùng học tập đầu năm là một gánh nặng tài chính không nhỏ.
+      </p>
+      <p>
+        Mô hình "Tủ học liệu lưu động" ra đời như một thư viện thu nhỏ, vận hành mở hoàn toàn 100% phi thương mại. Học sinh trong khu vực chỉ cần đăng ký mã định danh đơn giản là có thể mượn sách tham khảo theo tuần, đổi sách bài học và sử dụng không gian bàn học tập trung tại nhà văn hóa hoàn toàn miễn phí.
+      </p>
+
+      <div class="impact-box">
+        <strong>📊 Kết quả tiếp nhận và bàn giao đợt 1:</strong>
+        <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+          <li><strong>420 đầu sách:</strong> Bao gồm sách giáo khoa mới, sách tham khảo toán - văn - ngoại ngữ, truyện tranh khoa học và sách phát triển kỹ năng tư duy.</li>
+          <li><strong>150 phần quà học tập:</strong> Cặp sách, bút thước, vở viết chất lượng cao được trao tận tay các em học sinh có hoàn cảnh đặc biệt khó khăn.</li>
+          <li><strong>85 thẻ đọc thành viên:</strong> Được cấp phát cho các em học sinh tiểu học và THCS trong tổ dân phố.</li>
+        </ul>
+      </div>
+
+      <h3>Gắn kết cộng đồng và theo dõi tác động dài hạn</h3>
+      <p>
+        Điểm khác biệt của dự án do DR SOLUTIONS thực hiện là không chỉ dừng lại ở việc trao tặng sách rồi rời đi, mà thiết lập một cơ chế tự vận hành tại địa phương. Ban đại diện phụ huynh và nhóm học sinh nòng cốt sẽ cùng phân loại, bảo quản và ghi nhận số lượt mượn sách hàng tuần.
+      </p>
+
+      <div class="quote-box">
+        "Nhiều gia đình ở đây bố mẹ đi làm ca kíp cả ngày, không có điều kiện mua thêm sách tham khảo nâng cao cho con. Tủ sách được đặt ngay nhà văn hóa gần nhà giúp các cháu vừa có chỗ ngồi học yên tĩnh, vừa có sách tốt để đọc mỗi buổi chiều."
+        <span class="quote-author">— Bác Lê Văn Dũng (Đại diện Tổ dân phố & Ban Phụ huynh địa phương)</span>
+      </div>
+
+      <p>
+        Trong giai đoạn tiếp theo của năm 2026, DR SOLUTIONS cam kết sẽ tiếp tục bổ sung thêm máy tính tra cứu học liệu số mở và tổ chức các buổi gia sư tình nguyện cuối tuần để hỗ trợ các em ôn tập hiệu quả nhất.
+      </p>
+    </div>
+
+    <div class="back-btn-wrap">
+      <a href="hoat-dong.html" style="color: #0284c7; text-decoration: none; font-weight: 600;">&larr; Quay lại danh sách hoạt động</a>
+      <a href="sao-ke.html" style="color: #64748b; text-decoration: none; font-size: 0.95rem;">Tra cứu sao kê kinh phí &rarr;</a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2026 CÔNG TY TNHH DR SOLUTIONS — Đồng hành vì cơ hội học tập công bằng cho cộng đồng.
+  </footer>
+
+</body>
+</html>
