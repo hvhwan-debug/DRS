@@ -16,21 +16,55 @@
       --white: #ffffff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--text-dark); background: #f8fafc; line-height: 1.6; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      color: var(--text-dark); 
+      background: #f8fafc; 
+      line-height: 1.6; 
+      padding-top: 72px; /* Đẩy nội dung tránh menu */
+    }
     
-    header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-    .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem; }
-    .brand { font-size: 1.3rem; font-weight: 800; background: var(--blue-grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
-    .nav-links a { margin-left: 1.5rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+    /* Menu CỐ ĐỊNH 100% khi cuộn */
+    header { 
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); 
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .nav-container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 0.85rem 1.5rem; 
+    }
+    .brand-wrap { text-decoration: none; display: flex; flex-direction: column; gap: 2px; }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: var(--blue-grad-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+    .brand-subtitle { font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
     .nav-links a.active { color: #0284c7; font-weight: 700; }
     .btn { background: var(--blue-grad-btn); color: var(--white); padding: 0.6rem 1.3rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
 
     .hero { background: var(--blue-grad-hero); color: #fff; padding: 3.5rem 1rem; text-align: center; }
-    .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 800; }
+    .hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 800; }
     .hero p { color: #e0f2fe; max-width: 650px; margin: 0 auto; }
 
     .container { max-width: 1050px; margin: 2.5rem auto; padding: 0 1rem; }
-    .search-box { width: 100%; padding: 0.9rem 1.2rem; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; transition: border-color 0.2s; }
+    .search-box { width: 100%; padding: 0.9rem 1.2rem; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
     .search-box:focus { border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
 
     .table-container { overflow-x: auto; background: var(--white); border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
@@ -46,10 +80,13 @@
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Menu Cố Định -->
   <header>
     <div class="nav-container">
-      <a href="index.html" class="brand">DR SOLUTIONS</a>
+      <a href="index.html" class="brand-wrap">
+        <span class="brand-title">Wisdom Vietnam Network</span>
+        <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
+      </a>
       <nav class="nav-links">
         <a href="index.html">Trang Chủ</a>
         <a href="hoat-dong.html">Hoạt Động</a>
@@ -60,13 +97,11 @@
     </div>
   </header>
 
-  <!-- Banner -->
   <section class="hero">
     <h1>Tra Cứu Minh Bạch Quyên Góp</h1>
     <p>100% nguồn tài trợ, viện trợ và đóng góp cộng đồng đều được công khai và cập nhật minh bạch</p>
   </section>
 
-  <!-- Nội dung tra cứu -->
   <main class="container">
     <input type="text" id="searchInput" class="search-box" placeholder="Nhập tên người ủng hộ hoặc nội dung chuyển khoản để tra cứu..." onkeyup="filterTable()">
     
@@ -80,9 +115,7 @@
             <th style="width: 40%;">Mục đích / Nội dung</th>
           </tr>
         </thead>
-        <tbody id="donationList">
-          <!-- 10 dòng sẽ được tự động render tại đây -->
-        </tbody>
+        <tbody id="donationList"></tbody>
       </table>
     </div>
 
@@ -101,7 +134,6 @@
   </footer>
 
   <script>
-    // Kho 100 dữ liệu giao dịch mẫu thực tế
     const mockDonations = [
       { date: "10/09/2026", name: "Nguyễn Văn An", amount: "500,000 đ", note: "DRS DONG HANH - Ung ho tu hoc lieu" },
       { date: "10/09/2026", name: "Nhà hảo tâm ẩn danh", amount: "2,000,000 đ", note: "Chung tay vi co hoi hoc tap cong bang" },
@@ -112,97 +144,7 @@
       { date: "09/09/2026", name: "Đặng Tiến Dũng", amount: "500,000 đ", note: "DRS DONG HANH" },
       { date: "08/09/2026", name: "Hoàng Ngọc Ánh", amount: "250,000 đ", note: "Ung ho chuong trinh den truong" },
       { date: "08/09/2026", name: "Bùi Quốc Thắng", amount: "1,500,000 đ", note: "Hoc bong hoc sinh vuot kho" },
-      { date: "08/09/2026", name: "Ngô Mỹ Linh", amount: "100,000 đ", note: "DRS DONG HANH ung ho sach" },
-      { date: "08/09/2026", name: "Đỗ Tuấn Kiệt", amount: "500,000 đ", note: "Chung tay ung ho DRS" },
-      { date: "07/09/2026", name: "Nguyễn Hải Đăng", amount: "300,000 đ", note: "DRS DONG HANH - Lop hoc cong dong" },
-      { date: "07/09/2026", name: "Dương Thùy Trang", amount: "200,000 đ", note: "Gop chut tam long" },
-      { date: "07/09/2026", name: "Nhà hảo tâm giấu tên", amount: "5,000,000 đ", note: "Tai tro thiet bi phong hoc" },
-      { date: "07/09/2026", name: "Phan Đình Trọng", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "06/09/2026", name: "Lý Gia Hưng", amount: "400,000 đ", note: "Dong hanh cung DR Solutions" },
-      { date: "06/09/2026", name: "Võ Thị Bích Ngọc", amount: "150,000 đ", note: "Ung ho tu sach luu dong" },
-      { date: "06/09/2026", name: "Trịnh Công Minh", amount: "1,000,000 đ", note: "DRS DONG HANH" },
-      { date: "06/09/2026", name: "Mai Phương Thảo", amount: "500,000 đ", note: "Chuc cac em hoc tot" },
-      { date: "05/09/2026", name: "Đinh Trọng Phúc", amount: "200,000 đ", note: "Tiep suc den truong nam hoc moi" },
-      { date: "05/09/2026", name: "Tạ Thị Thanh Mai", amount: "350,000 đ", note: "DRS DONG HANH" },
-      { date: "05/09/2026", name: "Hồ Xuân Hùng", amount: "800,000 đ", note: "Ho tro hoat dong giao duc co so" },
-      { date: "05/09/2026", name: "Đoàn Khánh Vy", amount: "100,000 đ", note: "Gop yeu thuong" },
-      { date: "04/09/2026", name: "Cao Văn Đức", amount: "500,000 đ", note: "DRS DONG HANH" },
-      { date: "04/09/2026", name: "Lâm Quỳnh Chi", amount: "250,000 đ", note: "Gop sach giao khoa va vo viet" },
-      { date: "04/09/2026", name: "Nhà hảo tâm MBBank", amount: "1,000,000 đ", note: "Ung ho quy khuyen hoc DRS" },
-      { date: "04/09/2026", name: "Lê Quốc Bảo", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "03/09/2026", name: "Nguyễn Thảo Nguyên", amount: "300,000 đ", note: "Ung ho chuong trinh doc sach" },
-      { date: "03/09/2026", name: "Trần Hữu Phước", amount: "500,000 đ", note: "Dong hanh cung cac em nho" },
-      { date: "03/09/2026", name: "Phạm Minh Khôi", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "03/09/2026", name: "Hoàng Yến Nhi", amount: "150,000 đ", note: "Chung tay vi cong dong" },
-      { date: "02/09/2026", name: "Nguyễn Đức Trí", amount: "1,000,000 đ", note: "Mung quoc khanh - Lan toa tri thuc" },
-      { date: "02/09/2026", name: "Vũ Đình Nam", amount: "500,000 đ", note: "DRS DONG HANH" },
-      { date: "02/09/2026", name: "Đặng Thu Huyền", amount: "200,000 đ", note: "Gop quy phat trien hoc lieu" },
-      { date: "02/09/2026", name: "Bùi Thị Lan Hương", amount: "300,000 đ", note: "Ung ho hoat dong thien nguyen" },
-      { date: "01/09/2026", name: "Lê Thành Đạt", amount: "500,000 đ", note: "DRS DONG HANH" },
-      { date: "01/09/2026", name: "Trương Hoài Nam", amount: "2,000,000 đ", note: "Hoc bong tiep suc tuong lai" },
-      { date: "01/09/2026", name: "Nguyễn Kiều Oanh", amount: "100,000 đ", note: "Gop mot phan nho" },
-      { date: "01/09/2026", name: "Phan Văn Huy", amount: "250,000 đ", note: "DRS DONG HANH" },
-      { date: "31/08/2026", name: "Nhà hảo tâm Techcombank", amount: "500,000 đ", note: "Ung ho quy DR Solutions" },
-      { date: "31/08/2026", name: "Đỗ Kim Ngân", amount: "200,000 đ", note: "Chung tay mua sach vo" },
-      { date: "31/08/2026", name: "Trần Anh Quân", amount: "1,000,000 đ", note: "Dong hanh vi co hoi hoc tap" },
-      { date: "30/08/2026", name: "Võ Hoàng Yến", amount: "300,000 đ", note: "DRS DONG HANH" },
-      { date: "30/08/2026", name: "Lý Văn Toàn", amount: "500,000 đ", note: "Ho tro diem sinh hoat van hoa" },
-      { date: "30/08/2026", name: "Nguyễn Thị Cẩm Tú", amount: "150,000 đ", note: "Gop sach cho tu hoc lieu" },
-      { date: "29/08/2026", name: "Dương Minh Nhật", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "29/08/2026", name: "Tô Ánh Nguyệt", amount: "400,000 đ", note: "Dong hanh cung tre em vung kho" },
-      { date: "29/08/2026", name: "Mai Văn Hậu", amount: "1,000,000 đ", note: "DRS DONG HANH" },
-      { date: "28/08/2026", name: "Hoàng Thu Thủy", amount: "250,000 đ", note: "Tiep buoc den truong" },
-      { date: "28/08/2026", name: "Lê Quang Vinh", amount: "500,000 đ", note: "Ung ho du an giao duc cong dong" },
-      { date: "28/08/2026", name: "Đinh Phương Nam", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "27/08/2026", name: "Nhà hảo tâm giấu tên", amount: "3,000,000 đ", note: "Tai tro ban ghe diem hoc" },
-      { date: "27/08/2026", name: "Phạm Thị Hồng Hạnh", amount: "300,000 đ", note: "DRS DONG HANH" },
-      { date: "27/08/2026", name: "Trần Đình Trọng", amount: "150,000 đ", note: "Ung ho hoat dong cuoi tuan" },
-      { date: "26/08/2026", name: "Bùi Văn Khoa", amount: "500,000 đ", note: "Gop quy phat trien ky nang" },
-      { date: "26/08/2026", name: "Nguyễn Hải Yến", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "26/08/2026", name: "Đoàn Mạnh Thắng", amount: "1,000,000 đ", note: "Chung tay vi giao duc binh dang" },
-      { date: "25/08/2026", name: "Vũ Thu Trang", amount: "350,000 đ", note: "Ung ho do dung hoc tap" },
-      { date: "25/08/2026", name: "Lâm Gia Bảo", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "25/08/2026", name: "Tống Thanh Hải", amount: "500,000 đ", note: "Dong hanh cung du an DRS" },
-      { date: "24/08/2026", name: "Ngô Nhật Minh", amount: "150,000 đ", note: "Gop chut yeu thuong" },
-      { date: "24/08/2026", name: "Đặng Tuyết Mai", amount: "300,000 đ", note: "DRS DONG HANH" },
-      { date: "24/08/2026", name: "Hà Văn Cường", amount: "700,000 đ", note: "Ho tro tu sach cong dong" },
-      { date: "23/08/2026", name: "Trương Bích Diệp", amount: "200,000 đ", note: "Chung tay vi the he tuong lai" },
-      { date: "23/08/2026", name: "Nguyễn Văn Hùng", amount: "500,000 đ", note: "DRS DONG HANH" },
-      { date: "23/08/2026", name: "Phan Thị Ngọc Ánh", amount: "100,000 đ", note: "Ung ho cac em nho" },
-      { date: "22/08/2026", name: "Cao Minh Tuấn", amount: "1,200,000 đ", note: "Hoc bong ban ngheo vuot kho" },
-      { date: "22/08/2026", name: "Lê Hoàng Phúc", amount: "250,000 đ", note: "DRS DONG HANH" },
-      { date: "22/08/2026", name: "Trịnh Thùy Linh", amount: "400,000 đ", note: "Gop them mot cuon sach hay" },
-      { date: "21/08/2026", name: "Nhà hảo tâm Vietcombank", amount: "500,000 đ", note: "Dong hanh cung DRS" },
-      { date: "21/08/2026", name: "Võ Minh Thông", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "21/08/2026", name: "Đinh Khánh Huyền", amount: "300,000 đ", note: "Ung ho chuong trinh hoc tap" },
-      { date: "20/08/2026", name: "Nguyễn Thanh Tùng", amount: "600,000 đ", note: "Ho tro lop hoc mien phi" },
-      { date: "20/08/2026", name: "Bùi Mỹ Duyên", amount: "150,000 đ", note: "DRS DONG HANH" },
-      { date: "20/08/2026", name: "Phạm Tấn Tài", amount: "500,000 đ", note: "Dong hanh vi co hoi hoc tap" },
-      { date: "19/08/2026", name: "Dương Quốc Cường", amount: "1,000,000 đ", note: "Tai tro hoat dong xa hoi DRS" },
-      { date: "19/08/2026", name: "Trần Thúy An", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "19/08/2026", name: "Lê Nhật Quang", amount: "350,000 đ", note: "Gop kinh phi lam tu hoc lieu" },
-      { date: "18/08/2026", name: "Hoàng Văn Nam", amount: "500,000 đ", note: "Chung tay xay dung thu vien" },
-      { date: "18/08/2026", name: "Đặng Thị Phương Thảo", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "18/08/2026", name: "Vũ Trọng Nghĩa", amount: "800,000 đ", note: "Ho tro chuong trinh sinh hoat" },
-      { date: "17/08/2026", name: "Nhà hảo tâm BIDV", amount: "500,000 đ", note: "Ung ho DRS vi hoc sinh" },
-      { date: "17/08/2026", name: "Nguyễn Mai Chi", amount: "150,000 đ", note: "DRS DONG HANH" },
-      { date: "17/08/2026", name: "Đỗ Quốc Việt", amount: "300,000 đ", note: "Gop gach xay tuong lai" },
-      { date: "16/08/2026", name: "Mai Thị Hường", amount: "200,000 đ", note: "Dong hanh cung cac em" },
-      { date: "16/08/2026", name: "Phan Hữu Thắng", amount: "1,000,000 đ", note: "DRS DONG HANH" },
-      { date: "16/08/2026", name: "Trần Bảo Ngọc", amount: "400,000 đ", note: "Ung ho thiet bi hoc tap" },
-      { date: "15/08/2026", name: "Lý Thế Dân", amount: "500,000 đ", note: "Chung tay vi cong dong hoc tap" },
-      { date: "15/08/2026", name: "Ngô Thanh Vân", amount: "200,000 đ", note: "DRS DONG HANH" },
-      { date: "15/08/2026", name: "Đoàn Tấn Lợi", amount: "300,000 đ", note: "Gop sach vo dau nam hoc" },
-      { date: "14/08/2026", name: "Tạ Minh Châu", amount: "250,000 đ", note: "DRS DONG HANH" },
-      { date: "14/08/2026", name: "Nguyễn Đức Huy", amount: "1,500,000 đ", note: "Hoc bong hoc tap DRS 2026" },
-      { date: "14/08/2026", name: "Bùi Thị Lan", amount: "100,000 đ", note: "Chuc cac em vui khoe" },
-      { date: "13/08/2026", name: "Trịnh Gia Huy", amount: "500,000 đ", note: "DRS DONG HANH" },
-      { date: "13/08/2026", name: "Hồ Diệu Linh", amount: "200,000 đ", note: "Tiep buoc den truong" },
-      { date: "13/08/2026", name: "Võ Thành Long", amount: "350,000 đ", note: "Ung ho lop hoc yeu thuong" },
-      { date: "12/08/2026", name: "Đinh Xuân Trường", amount: "500,000 đ", note: "DRS DONG HANH" },
-      { date: "12/08/2026", name: "Nhà hảo tâm ACB", amount: "1,000,000 đ", note: "Dong hanh vi co hoi hoc tap cong bang" },
-      { date: "12/08/2026", name: "Lâm Thị Thu Trang", amount: "200,000 đ", note: "Gop chut tam tinh" },
-      { date: "11/08/2026", name: "Phạm Đình Duy", amount: "500,000 đ", note: "DRS DONG HANH - Tri an" }
+      { date: "08/09/2026", name: "Ngô Mỹ Linh", amount: "100,000 đ", note: "DRS DONG HANH ung ho sach" }
     ];
 
     let showAll = false;
@@ -234,20 +176,12 @@
         document.getElementById('recordCount').innerText = `Tìm thấy ${filtered.length} kết quả phù hợp`;
         renderTable(filtered);
       } else {
-        if (showAll) {
-          document.getElementById('recordCount').innerText = `Đang hiển thị toàn bộ 100 / 100 giao dịch`;
-          document.getElementById('btnToggle').innerText = 'Thu gọn về 10 dòng';
-          renderTable(mockDonations);
-        } else {
-          document.getElementById('recordCount').innerText = `Đang hiển thị 10 / 100 giao dịch gần nhất`;
-          document.getElementById('btnToggle').innerText = 'Xem tất cả 100 giao dịch';
-          renderTable(mockDonations.slice(0, 10));
-        }
+        document.getElementById('recordCount').innerText = `Đang hiển thị 10 giao dịch gần nhất`;
+        renderTable(mockDonations);
       }
     }
 
     function toggleViewAll() {
-      showAll = !showAll;
       updateView();
     }
 
@@ -255,7 +189,6 @@
       updateView();
     }
 
-    // Khởi chạy hiển thị 10 dòng khi load trang
     document.addEventListener('DOMContentLoaded', () => {
       updateView();
     });
