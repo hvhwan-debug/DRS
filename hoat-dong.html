@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoạt Động Cộng Đồng - DR SOLUTIONS</title>
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-card: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text-dark); background: #f8fafc; line-height: 1.6; }
+    
+    header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem; }
+    .brand { font-size: 1.3rem; font-weight: 800; background: var(--blue-grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .nav-links a { margin-left: 1.5rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+    .nav-links a.active { color: #0284c7; font-weight: 700; }
+
+    .hero { background: var(--blue-grad-hero); color: #fff; padding: 3.5rem 1rem; text-align: center; }
+    .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .hero p { color: #e0f2fe; max-width: 650px; margin: 0 auto; }
+
+    .container { max-width: 1100px; margin: 3rem auto; padding: 0 1rem; }
+    .article-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+    .article-card { background: var(--blue-grad-card); border: 1px solid #e0f2fe; border-radius: 12px; padding: 1.8rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.05); }
+    .article-tag { font-size: 0.8rem; font-weight: 700; color: #0284c7; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .article-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: #0f172a; line-height: 1.4; }
+    .article-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
+    
+    .btn-read { color: #0284c7; text-decoration: none; font-weight: 600; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.3rem; }
+    .btn-read:hover { color: #0369a1; text-decoration: underline; }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 2.5rem 1rem; text-align: center; font-size: 0.85rem; margin-top: 4rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">DR SOLUTIONS</a>
+      <nav class="nav-links">
+        <a href="index.html">Trang Chủ</a>
+        <a href="hoat-dong.html" class="active">Hoạt Động</a>
+        <a href="index.html#minh-bach">Tra Cứu Sao Kê</a>
+        <a href="index.html#phap-ly">Pháp Lý</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Hoạt Động & Tin Tức Cộng Đồng</h1>
+    <p>Cập nhật liên tục những dự án hỗ trợ học tập, lớp kỹ năng và nhịp sống thiện nguyện của DR SOLUTIONS</p>
+  </section>
+
+  <main class="container">
+    <div class="article-grid">
+      
+      <!-- Bài 1 -->
+      <div class="article-card">
+        <div>
+          <div class="article-tag">Học Liệu • Tháng 09/2026</div>
+          <h2 class="article-title">Tủ học liệu lưu động đến gần hơn với học sinh cần thêm điều kiện tự học</h2>
+          <p class="article-desc">Đưa sách tham khảo và đồ dùng học tập thiết yếu đến điểm sinh hoạt nhà văn hóa khu dân cư cho các em mượn đọc hàng tuần.</p>
+        </div>
+        <a href="bai-viet-tu-sach-luu-dong.html" class="btn-read">Đọc toàn bộ bài viết →</a>
+      </div>
+
+      <!-- Bài 2 -->
+      <div class="article-card">
+        <div>
+          <div class="article-tag">Kết Nối • Cuối tuần qua</div>
+          <h2 class="article-title">Buổi sinh hoạt học tập tại khu dân cư mở ra không gian an toàn</h2>
+          <p class="article-desc">Đội ngũ tình nguyện viên phối hợp cùng phụ huynh tổ chức hỗ trợ củng cố bài vở và rèn luyện kỹ năng đặt câu hỏi cho các em.</p>
+        </div>
+        <a href="#" class="btn-read">Đọc toàn bộ bài viết →</a>
+      </div>
+
+      <!-- Bài 3 -->
+      <div class="article-card">
+        <div>
+          <div class="article-tag">Đồng Hành • Hằng tuần</div>
+          <h2 class="article-title">Chuỗi gặp gỡ phụ huynh và học sinh lan tỏa kỹ năng học tập tích cực</h2>
+          <p class="article-desc">Chia sẻ phương pháp đồng hành cùng con tại nhà, kỹ năng quản lý thời gian và phản hồi tích cực trong học tập.</p>
+        </div>
+        <a href="#" class="btn-read">Đọc toàn bộ bài viết →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 CÔNG TY TNHH DR SOLUTIONS — Cam kết giáo dục cộng đồng minh bạch & phi lợi nhuận.
+  </footer>
+
+</body>
+</html>
