@@ -108,6 +108,7 @@
       width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
       border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem;
       outline: none; background: #f8fafc; transition: all 0.2s;
+      font-family: inherit; /* Đồng bộ font chữ trong ô nhập */
     }
     .search-box input:focus {
       border-color: #0284c7; background: #fff;
@@ -119,16 +120,41 @@
       box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); overflow: hidden; border: 1px solid var(--border);
     }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 1rem 1.25rem; font-size: 0.92rem; border-bottom: 1px solid var(--border); }
-    th { background: #f8fafc; color: var(--text-dark); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+    th, td { 
+      padding: 1rem 1.25rem; 
+      font-size: 0.92rem; 
+      border-bottom: 1px solid var(--border); 
+      font-family: inherit; /* Đồng bộ toàn bộ phông chữ bảng */
+    }
+    th { 
+      background: #f8fafc; 
+      color: var(--text-dark); 
+      font-weight: 600; 
+      text-transform: uppercase; 
+      font-size: 0.75rem; 
+      letter-spacing: 0.5px; 
+    }
     tr:hover { background: #f8fafc; }
-    .amount-in { color: #166534; font-weight: 700; font-family: monospace; font-size: 1rem; }
+    
+    /* Đồng bộ phông chữ thuần nhất cho số thứ tự và nội dung */
+    .stt-cell {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-family: inherit;
+    }
+    .amount-in { 
+      color: #166534; 
+      font-weight: 700; 
+      font-family: inherit; /* Dùng chung phông chữ chuẩn, không ép kiểu monospace lệch font */
+      font-size: 0.98rem; 
+    }
     
     .notice-footer {
       padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border);
       text-align: center; color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+      font-family: inherit;
     }
-    .stats { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; }
+    .stats { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; font-family: inherit; }
 
     /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
@@ -251,7 +277,7 @@
       dataToShow.forEach((tx) => {
         html += `
           <tr>
-            <td><strong>#${tx.id}</strong></td>
+            <td class="stt-cell">${tx.id}</td>
             <td><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
             <td>${tx.content}</td>
             <td style="text-align: right;" class="amount-in">+${tx.amount}</td>
