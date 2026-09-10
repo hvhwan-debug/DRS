@@ -82,7 +82,6 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Nút Menu Hamburger cho điện thoại */
     .mobile-menu-btn {
       display: none;
       background: none;
@@ -106,10 +105,9 @@
     .hero-title { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
     .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 600px; margin: 0 auto; line-height: 1.6; }
 
-    /* Container & Bảng Sao Kê */
+    /* Container & Bảng Sao Kê tinh gọn */
     .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
     
-    /* Toolbar căn giữa ô tìm kiếm */
     .toolbar {
       background: #ffffff; padding: 1.25rem 1.5rem;
       border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none;
@@ -121,8 +119,7 @@
     .search-box input {
       width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
       border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem;
-      outline: none; background: #f8fafc; transition: all 0.2s;
-      font-family: inherit;
+      outline: none; background: #f8fafc; transition: all 0.2s; font-family: inherit;
     }
     .search-box input:focus {
       border-color: #0284c7; background: #fff;
@@ -131,11 +128,11 @@
 
     .table-container {
       background: #ffffff; border-radius: 0 0 16px 16px;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); overflow-x: auto; border: 1px solid var(--border);
     }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 650px; }
     th, td { 
-      padding: 1rem 1.25rem; 
+      padding: 1.1rem 1.25rem; 
       font-size: 0.92rem; 
       border-bottom: 1px solid var(--border); 
       font-family: inherit; 
@@ -143,7 +140,7 @@
     th { 
       background: #f8fafc; 
       color: var(--text-dark); 
-      font-weight: 600; 
+      font-weight: 700; 
       text-transform: uppercase; 
       font-size: 0.75rem; 
       letter-spacing: 0.5px; 
@@ -152,81 +149,55 @@
     
     .stt-cell {
       font-weight: 700;
+      color: #64748b;
+      text-align: center;
+    }
+    .date-cell {
+      white-space: nowrap;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .content-cell {
       color: var(--text-dark);
-      font-family: inherit;
+      font-weight: 500;
     }
     .amount-in { 
       color: #166534; 
-      font-weight: 700; 
-      font-family: inherit; 
+      font-weight: 800; 
       font-size: 0.98rem; 
+      white-space: nowrap;
+      text-align: right;
     }
     
     .notice-footer {
-      padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border);
-      text-align: center; color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
-      font-family: inherit;
+      padding: 1.1rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
     }
-    .stats { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; font-family: inherit; }
+    .stats { font-size: 0.88rem; color: #0284c7; font-weight: 700; }
 
-    /* Modal VietQR */
+    /* Modal Quyên góp VietQR */
     .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px);
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 1rem;
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
     }
     .modal-content {
-      background: var(--white);
-      padding: 2.2rem;
-      border-radius: 16px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
-    .modal-banner {
-      width: 100%;
-      height: 130px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin: 0.8rem 0;
-      border: 1px solid var(--border);
-    }
-    .modal-qr {
-      width: 100%;
-      max-width: 230px;
-      margin: 0.8rem auto;
-      display: block;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
       .nav-links {
-        display: none;
-        position: absolute;
-        top: 72px; left: 0; right: 0;
-        background: #ffffff;
-        flex-direction: column;
-        padding: 1.5rem;
-        border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        text-align: center;
-        gap: 1rem;
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-title { font-size: 2.2rem; }
+      .hero-title { font-size: 2.1rem; }
     }
   </style>
 </head>
@@ -285,9 +256,9 @@
       <table>
         <thead>
           <tr>
-            <th style="width: 10%;">STT</th>
+            <th style="width: 8%; text-align: center;">STT</th>
             <th style="width: 20%;">Ngày Giao Dịch</th>
-            <th style="width: 50%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 52%;">Nội Dung Chuyển Khoản</th>
             <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
           </tr>
         </thead>
@@ -383,9 +354,9 @@
         html += `
           <tr>
             <td class="stt-cell">${tx.id}</td>
-            <td><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
-            <td>${tx.content}</td>
-            <td style="text-align: right;" class="amount-in">+${tx.amount}</td>
+            <td class="date-cell"><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
+            <td class="content-cell">${tx.content}</td>
+            <td class="amount-in">+${tx.amount}</td>
           </tr>
         `;
       });
@@ -395,8 +366,8 @@
         document.getElementById('statsText').innerText = `Kết quả: ${dataToShow.length} giao dịch`;
         document.getElementById('noticeText').innerText = `Đang hiển thị các giao dịch phù hợp với từ khóa tìm kiếm.`;
       } else {
-        document.getElementById('statsText').innerText = `Tổng kho dữ liệu: 1,508 giao dịch`;
-        document.getElementById('noticeText').innerText = `Hiển thị 10 giao dịch gần đây nhất. Nhập từ khóa ở trên để tra cứu toàn hệ thống.`;
+        document.getElementById('statsText').innerText = `Tổng kho: 1,508 giao dịch`;
+        document.getElementById('noticeText').innerText = `Hiển thị 10 giao dịch gần đây nhất. Nhập từ khóa ở trên để tra cứu.`;
       }
     }
 
