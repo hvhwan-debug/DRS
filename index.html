@@ -580,23 +580,23 @@
     </div>
   </section>
 
-  <!-- Thước đo tác động (Impact Numbers) -->
+  <!-- Thước đo tác động (Impact Numbers) với hiệu ứng chuyển động nhảy số -->
   <section class="metrics-strip">
     <div class="metrics-grid">
       <div>
-        <div class="metric-number">100%</div>
+        <div class="metric-number" data-target="100" data-suffix="%">0%</div>
         <div class="metric-label">Lợi nhuận tái đầu tư xã hội</div>
       </div>
       <div>
-        <div class="metric-number">420+</div>
+        <div class="metric-number" data-target="420" data-suffix="+">0+</div>
         <div class="metric-label">Sách & Học liệu đã trao tặng</div>
       </div>
       <div>
-        <div class="metric-number">0 đ</div>
+        <div class="metric-number" data-target="0" data-suffix=" đ">0 đ</div>
         <div class="metric-label">Chi phí mượn đọc cho trẻ em</div>
       </div>
       <div>
-        <div class="metric-number">24/7</div>
+        <div class="metric-number" data-target="24" data-suffix="/7">0/7</div>
         <div class="metric-label">Công khai sao kê minh bạch</div>
       </div>
     </div>
@@ -759,6 +759,62 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
+
+    // Hiệu ứng chạy số nhảy liên tục gây chú ý trước khi chốt giá trị thực
+    function animateCounters() {
+      const counters = document.querySelectorAll('.metric-number');
+      const speed = 35; 
+
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        const suffix = counter.getAttribute('data-suffix') || '';
+        let count = 0;
+
+        if (target === 0) {
+          counter.innerText = '0' + suffix;
+          return;
+        }
+
+        const updateCount = () => {
+          if (count < target) {
+            let increment = Math.ceil(target / speed);
+            count += increment;
+            if (count > target) count = target;
+            
+            let displayVal = (count < target && target > 30) ? Math.floor(Math.random() * (target * 1.5)) : count;
+            if (displayVal > target && count === target) displayVal = target;
+
+            counter.innerText = displayVal + suffix;
+            setTimeout(updateCount, 35);
+          } else {
+            counter.innerText = target + suffix;
+          }
+        };
+
+        updateCount();
+      });
+    }
+
+    let animated = false;
+    window.addEventListener('scroll', function() {
+      const strip = document.querySelector('.metrics-strip');
+      if (!strip) return;
+      const position = strip.getBoundingClientRect().top;
+      const screenPosition = window.innerHeight / 1.15;
+
+      if (position < screenPosition && !animated) {
+        animateCounters();
+        animated = true;
+      }
+    });
+
+    window.addEventListener('load', function() {
+      const strip = document.querySelector('.metrics-strip');
+      if (strip && strip.getBoundingClientRect().top < window.innerHeight) {
+        animateCounters();
+        animated = true;
+      }
+    });
   </script>
 </body>
 </html>
