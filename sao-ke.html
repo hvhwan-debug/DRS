@@ -68,14 +68,14 @@
     }
     .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
 
-    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
     .btn {
       background: var(--blue-grad-btn); color: var(--white);
       padding: 0.65rem 1.4rem; border-radius: 8px; font-weight: 600;
       cursor: pointer; border: none; text-decoration: none; display: inline-block;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
@@ -108,7 +108,7 @@
       width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
       border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem;
       outline: none; background: #f8fafc; transition: all 0.2s;
-      font-family: inherit; /* Đồng bộ font chữ trong ô nhập */
+      font-family: inherit;
     }
     .search-box input:focus {
       border-color: #0284c7; background: #fff;
@@ -124,7 +124,7 @@
       padding: 1rem 1.25rem; 
       font-size: 0.92rem; 
       border-bottom: 1px solid var(--border); 
-      font-family: inherit; /* Đồng bộ toàn bộ phông chữ bảng */
+      font-family: inherit; 
     }
     th { 
       background: #f8fafc; 
@@ -136,7 +136,6 @@
     }
     tr:hover { background: #f8fafc; }
     
-    /* Đồng bộ phông chữ thuần nhất cho số thứ tự và nội dung */
     .stt-cell {
       font-weight: 700;
       color: var(--text-dark);
@@ -145,7 +144,7 @@
     .amount-in { 
       color: #166534; 
       font-weight: 700; 
-      font-family: inherit; /* Dùng chung phông chữ chuẩn, không ép kiểu monospace lệch font */
+      font-family: inherit; 
       font-size: 0.98rem; 
     }
     
@@ -155,6 +154,44 @@
       font-family: inherit;
     }
     .stats { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; font-family: inherit; }
+
+    /* Modal VietQR */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white);
+      padding: 2.2rem;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 0.8rem 0;
+      border: 1px solid var(--border);
+    }
+    .modal-qr {
+      width: 100%;
+      max-width: 230px;
+      margin: 0.8rem auto;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
 
     /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
@@ -186,7 +223,7 @@
         <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
-      <button class="btn" onclick="alert('Mở cửa sổ quyên góp')">Quyên Góp</button>
+      <button class="btn" onclick="openModal()">Quyên Góp</button>
     </div>
   </header>
 
@@ -232,11 +269,30 @@
     </div>
   </div>
 
+  <!-- Modal Quyên góp VietQR -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
   <footer>
     <p>&copy; 2026 CÔNG TY TRÁCH NHIỆM HỮU HẠN DR SOLUTIONS. Mọi quyền được bảo lưu.</p>
   </footer>
 
   <script>
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(event) {
+      let modal = document.getElementById('donateModal');
+      if (event.target == modal) { modal.style.display = 'none'; }
+    }
+
     let allTransactions = [];
 
     function generateTransactions() {
