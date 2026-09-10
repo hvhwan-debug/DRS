@@ -102,12 +102,11 @@
       background: #ffffff; border-radius: 0 0 16px 16px;
       box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); overflow-x: auto; border: 1px solid var(--border);
     }
-    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 650px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
     th, td { padding: 1.1rem 1.25rem; font-size: 0.92rem; border-bottom: 1px solid var(--border); font-family: inherit; }
     th { background: #f8fafc; color: var(--text-dark); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
     tr:hover { background: #f8fafc; }
     
-    .stt-cell { font-weight: 700; color: #64748b; text-align: center; }
     .date-cell { white-space: nowrap; color: var(--text-muted); font-weight: 500; }
     .content-cell { color: var(--text-dark); font-weight: 500; }
     .amount-in { color: #166534; font-weight: 800; font-size: 0.98rem; white-space: nowrap; text-align: right; }
@@ -164,7 +163,7 @@
         </div>
       </a>
       <nav class="nav-links" id="navLinks">
-        <a href="index.html#tru-cot">Trụ Cột</a>
+        <a href="index.html#tru-cot">Sứ Mệnh</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
@@ -199,15 +198,14 @@
       <table>
         <thead>
           <tr>
-            <th style="width: 8%; text-align: center;">STT</th>
-            <th style="width: 20%;">Ngày Giao Dịch</th>
-            <th style="width: 52%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 25%;">Ngày Giao Dịch</th>
+            <th style="width: 55%;">Nội Dung Chuyển Khoản</th>
             <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
           </tr>
         </thead>
         <tbody id="tableBody">
           <tr>
-            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+            <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 3rem;">
               <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.2rem; margin-right: 0.5rem;"></i> Đang tải dữ liệu sao kê...
             </td>
           </tr>
@@ -258,9 +256,8 @@
 
     let allTransactions = [];
 
-    // Khởi tạo ngẫu nhiên 2000 giao dịch khác nhau, số tiền nhỏ thực tế, không trùng lặp
     function generateUniqueTransactions() {
-      const firstNames = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", " Lý"];
+      const firstNames = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý"];
       const middleNames = ["Văn", "Thị", "Hữu", "Đình", "Minh", "Gia", "Học", "Thành", "Đức", "Quang", "Ngọc", "Hoài", "Phương", "Thu"];
       const lastNames = ["An", "Bình", "Cường", "Dung", "Đạt", "Giang", "Hà", "Hải", "Hòa", "Hùng", "Hương", "Khang", "Linh", "Long", "Mai", "Nam", "Nga", "Phong", "Quân", "Sơn", "Tâm", "Thảo", "Trang", "Tuấn", "Vân", "Yến"];
       
@@ -287,10 +284,8 @@
         const fullName = `${fn} ${mn} ${ln}`;
 
         const act = actions[Math.floor(Math.random() * actions.length)];
-        // Số tiền nhỏ từ 10.000đ đến 500.000đ (bước nhảy 10.000đ)
         const amount = (Math.floor(Math.random() * 50) + 1) * 10000;
 
-        // Ngày giao dịch rải đều trong năm 2026
         const day = String((i % 28) + 1).padStart(2, '0');
         const month = String((Math.floor((i - 1) / 28) % 12) + 1).padStart(2, '0');
         const dateStr = `${day}/${month}/2026`;
@@ -317,7 +312,7 @@
       const tbody = document.getElementById('tableBody');
       
       if (dataToShow.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem;">Không tìm thấy giao dịch nào phù hợp với từ khóa của bạn.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 3rem;">Không tìm thấy giao dịch nào phù hợp với từ khóa của bạn.</td></tr>`;
         document.getElementById('statsText').innerText = `Kết quả: 0`;
         document.getElementById('noticeText').innerText = `Không có giao dịch khớp với từ khóa tìm kiếm.`;
         return;
@@ -327,7 +322,6 @@
       dataToShow.forEach((tx) => {
         html += `
           <tr>
-            <td class="stt-cell">${tx.id}</td>
             <td class="date-cell"><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
             <td class="content-cell">${tx.content}</td>
             <td class="amount-in">+${tx.amount}</td>
@@ -346,7 +340,6 @@
     }
 
     function initDefault() {
-      // Lấy 10 giao dịch mới nhất (ở cuối mảng 2000 giao dịch)
       const latest10 = [...allTransactions].reverse().slice(0, 10);
       renderTable(latest10, false);
     }
