@@ -19,7 +19,6 @@
 
     let allTransactions = [];
 
-    // Hàm tự động sinh giao dịch rải đều từ đầu năm đến đúng ngày hôm nay
     function generateDynamicTransactions() {
       const firstNames = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý"];
       const middleNames = ["Văn", "Thị", "Hữu", "Đình", "Minh", "Gia", "Học", "Thành", "Đức", "Quang", "Ngọc", "Hoài", "Phương", "Thu"];
@@ -38,21 +37,21 @@
         "ho tro bua an ban tru"
       ];
 
-      // Lấy thời gian thực tế của ngày hôm nay
+      // Lấy đúng ngày hiện tại thực tế của hệ thống
       const today = new Date();
       const startOfYear = new Date(today.getFullYear(), 0, 1);
       
-      // Tính số ngày đã trôi qua kể từ đầu năm đến nay
+      // Tính chính xác số ngày từ đầu năm đến nay
       const diffTime = Math.abs(today - startOfYear);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
-      // Mỗi ngày hệ thống tự sinh khoảng 12 giao dịch cập nhật
-      const totalEstimatedTx = diffDays * 12; 
 
       const generated = [];
       const usedContents = new Set();
 
-      for (let i = 1; i <= totalEstimatedTx; i++) {
+      // Chỉ sinh dữ liệu tính từ đầu năm đến đúng số ngày đã trôi qua
+      const totalTx = diffDays * 10;
+
+      for (let i = 1; i <= totalTx; i++) {
         let seed = (i * 9301 + 49297) % 233280;
         let rnd1 = seed / 233280;
         let rnd2 = ((i * 3271 + 12345) % 233280) / 233280;
@@ -67,8 +66,9 @@
         const act = actions[Math.floor(rnd4 * actions.length)];
         const amount = (Math.floor(rnd1 * 50) + 1) * 10000;
 
-        // Phân bổ ngày giao dịch từ đầu năm đến sát ngày hôm nay
-        let txDate = new Date(startOfYear.getTime() + (i % diffDays) * (24 * 60 * 60 * 1000));
+        // Phân bổ ngày giao dịch tuyệt đối không vượt quá ngày hôm nay
+        let dayOffset = i % diffDays;
+        let txDate = new Date(startOfYear.getTime() + dayOffset * (24 * 60 * 60 * 1000));
         if (txDate > today) txDate = today;
 
         const dd = String(txDate.getDate()).padStart(2, '0');
@@ -85,11 +85,14 @@
         generated.push({
           id: i,
           date: dateStr,
+          rawDate: txDate, // Lưu mốc thời gian gốc để sắp xếp chuẩn xác
           content: content,
           amount: amount.toLocaleString('vi-VN') + " đ"
         });
       }
 
+      // Sắp xếp các giao dịch theo thời gian từ cũ đến mới
+      generated.sort((a, b) => a.rawDate - b.rawDate);
       return generated;
     }
 
@@ -122,12 +125,12 @@
         document.getElementById('noticeText').innerText = `Đang hiển thị các giao dịch phù hợp với từ khóa tìm kiếm.`;
       } else {
         document.getElementById('statsText').innerText = `Hệ thống minh bạch trực tuyến`;
-        document.getElementById('noticeText').innerText = `Hiển thị 10 giao dịch mới nhất cập nhật tính đến hôm nay.`;
+        document.getElementById('noticeText').innerText = `Hiển thị 10 giao dịch mới nhất tính đến hôm nay.`;
       }
     }
 
     function initDefault() {
-      // Lấy 10 giao dịch mới nhất tính đến thời điểm hiện tại
+      // Lấy đúng 10 giao dịch mới nhất cập nhật sát với thời điểm hiện tại
       const latest10 = [...allTransactions].reverse().slice(0, 10);
       renderTable(latest10, false);
     }
