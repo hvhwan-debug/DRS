@@ -1,0 +1,23 @@
+backend:
+  name: github
+  repo: hvhwan-debug/DRS
+  branch: main
+  auth_type: implicit
+
+media_folder: "images/uploads"
+public_folder: "images/uploads"
+
+collections:
+  - name: "posts"
+    label: "Bài Viết Hoạt Động"
+    folder: "content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Tiêu Đề Bài Viết", name: "title", widget: "string" }
+      - { label: "Ngày Đăng", name: "date", widget: "datetime", format: "DD/MM/YYYY" }
+      - { label: "Chuyên Mục", name: "category", widget: "select", options: ["Dự Án Học Liệu", "Kỹ Năng & Hướng Nghiệp", "Đồng Hành Gia Đình", "Tin Tức Chung"] }
+      - { label: "Địa Điểm Diễn Ra", name: "location", widget: "string" }
+      - { label: "Ảnh Bìa Đại Diện", name: "thumbnail", widget: "image" }
+      - { label: "Mô Tả Ngắn (Lead)", name: "description", widget: "text" }
+      - { label: "Nội Dung Bài Viết", name: "body", widget: "markdown" }
