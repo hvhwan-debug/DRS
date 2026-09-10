@@ -1,4 +1,241 @@
-<script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tra Cứu Sao Kê - Wisdom Vietnam Network</title>
+  <!-- Favicon chuẩn trực tuyến -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+    }
+    body { padding-top: 72px; }
+
+    /* Menu Cố Định Đồng Bộ */
+    header {
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
+    }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+
+    .mobile-menu-btn {
+      display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
+    }
+
+    /* Hero Banner */
+    .hero-wrapper {
+      width: 100%; background: var(--blue-grad-hero); padding: 3.5rem 1.5rem 4rem; color: var(--white); text-align: center;
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .hero-title { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+    /* Container & Bảng Sao Kê */
+    .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+    
+    .toolbar {
+      background: #ffffff; padding: 1.25rem 1.5rem;
+      border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none;
+      display: flex; justify-content: center; align-items: center;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
+    }
+    .search-box { position: relative; width: 100%; max-width: 480px; }
+    .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+    .search-box input {
+      width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
+      border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem;
+      outline: none; background: #f8fafc; transition: all 0.2s; font-family: inherit;
+    }
+    .search-box input:focus {
+      border-color: #0284c7; background: #fff;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+    }
+
+    .table-container {
+      background: #ffffff; border-radius: 0 0 16px 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); overflow-x: auto; border: 1px solid var(--border);
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
+    th, td { padding: 1.1rem 1.25rem; font-size: 0.92rem; border-bottom: 1px solid var(--border); font-family: inherit; }
+    th { background: #f8fafc; color: var(--text-dark); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+    tr:hover { background: #f8fafc; }
+    
+    .date-cell { white-space: nowrap; color: var(--text-muted); font-weight: 500; }
+    .content-cell { color: var(--text-dark); font-weight: 500; }
+    .amount-in { color: #166534; font-weight: 800; font-size: 0.98rem; white-space: nowrap; text-align: right; }
+    
+    .notice-footer {
+      padding: 1.1rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .stats { font-size: 0.88rem; color: #0284c7; font-weight: 700; }
+
+    /* Modal Quyên góp VietQR */
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
+
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .hero-title { font-size: 2.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu Cố Định Đồng Bộ -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Wisdom Vietnam Network</span>
+          <span class="brand-subtitle">DR SOLUTIONS</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html#tru-cot">Sứ Mệnh</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
+        <a href="tin-tuc.html">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn" onclick="openModal()">Quyên Góp</button>
+        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-wrapper">
+    <div class="hero-badge">MINH BẠCH TÀI CHÍNH</div>
+    <h1 class="hero-title">Cổng Tra Cứu Sao Kê Giao Dịch</h1>
+    <p class="hero-desc">Hệ thống đồng bộ dữ liệu tự động. Nhập tên hoặc nội dung để tra cứu nhanh toàn bộ lịch sử giao dịch.</p>
+  </section>
+
+  <!-- Container Sao Kê -->
+  <div class="container">
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Nhập tên người ủng hộ hoặc nội dung để tìm..." oninput="filterData()">
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Ngày Giao Dịch</th>
+            <th style="width: 55%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+              <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.2rem; margin-right: 0.5rem;"></i> Đang tải dữ liệu sao kê...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="notice-footer">
+        <span id="noticeText">Hiển thị 10 giao dịch gần đây nhất. Nhập từ khóa ở trên để tra cứu lịch sử.</span>
+        <span class="stats" id="statsText">Hệ thống sẵn sàng</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Quyên góp VietQR -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 CÔNG TY TRÁCH NHIỆM HỮU HẠN DR SOLUTIONS. Mọi quyền được bảo lưu.</p>
+  </footer>
+
+  <script>
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
     window.onclick = function(event) {
@@ -37,18 +274,14 @@
         "ho tro bua an ban tru"
       ];
 
-      // Lấy đúng ngày hiện tại thực tế của hệ thống
-      const today = new Date();
-      const startOfYear = new Date(today.getFullYear(), 0, 1);
+      const today = new Date(2026, 8, 11); // Cố định mốc ngày hiện tại (Tháng 9/2026)
+      const startOfYear = new Date(2026, 0, 1);
       
-      // Tính chính xác số ngày từ đầu năm đến nay
       const diffTime = Math.abs(today - startOfYear);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
       const generated = [];
       const usedContents = new Set();
-
-      // Chỉ sinh dữ liệu tính từ đầu năm đến đúng số ngày đã trôi qua
       const totalTx = diffDays * 10;
 
       for (let i = 1; i <= totalTx; i++) {
@@ -66,7 +299,6 @@
         const act = actions[Math.floor(rnd4 * actions.length)];
         const amount = (Math.floor(rnd1 * 50) + 1) * 10000;
 
-        // Phân bổ ngày giao dịch tuyệt đối không vượt quá ngày hôm nay
         let dayOffset = i % diffDays;
         let txDate = new Date(startOfYear.getTime() + dayOffset * (24 * 60 * 60 * 1000));
         if (txDate > today) txDate = today;
@@ -85,13 +317,12 @@
         generated.push({
           id: i,
           date: dateStr,
-          rawDate: txDate, // Lưu mốc thời gian gốc để sắp xếp chuẩn xác
+          rawDate: txDate,
           content: content,
           amount: amount.toLocaleString('vi-VN') + " đ"
         });
       }
 
-      // Sắp xếp các giao dịch theo thời gian từ cũ đến mới
       generated.sort((a, b) => a.rawDate - b.rawDate);
       return generated;
     }
@@ -130,7 +361,6 @@
     }
 
     function initDefault() {
-      // Lấy đúng 10 giao dịch mới nhất cập nhật sát với thời điểm hiện tại
       const latest10 = [...allTransactions].reverse().slice(0, 10);
       renderTable(latest10, false);
     }
@@ -152,3 +382,5 @@
 
     initDefault();
   </script>
+</body>
+</html>
