@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hoạt Động - Wisdom Vietnam Network</title>
+  <title>Tra Cứu Sao Kê - Wisdom Vietnam Network</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
@@ -51,200 +50,88 @@
       padding: 0.8rem 1.5rem;
     }
 
-    .brand-wrap {
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
     .brand-logo-icon {
-      width: 38px;
-      height: 38px;
+      width: 38px; height: 38px;
       background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-      border: 1.5px solid #bae6fd;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      border: 1.5px solid #bae6fd; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
       box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
     }
-    .brand-logo-icon svg {
-      width: 21px;
-      height: 21px;
-      stroke: #0284c7;
-    }
-    .brand-text-group {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 1.25;
-    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
     .brand-title {
-      font-size: 1.18rem;
-      font-weight: 800;
+      font-size: 1.18rem; font-weight: 800;
       background: var(--blue-grad-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       letter-spacing: -0.3px;
     }
-    .brand-subtitle {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #64748b;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      margin-top: 1px;
-    }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
 
-    .nav-links a {
-      margin-left: 1.8rem;
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
     .btn {
-      background: var(--blue-grad-btn);
-      color: var(--white);
-      padding: 0.65rem 1.4rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
-      transition: all 0.2s;
+      background: var(--blue-grad-btn); color: var(--white);
+      padding: 0.65rem 1.4rem; border-radius: 8px; font-weight: 600;
+      cursor: pointer; border: none; text-decoration: none; display: inline-block;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
     }
-    .btn:hover {
-      background: var(--blue-grad-btn-hover);
-      transform: translateY(-1px);
-    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
     /* Hero Banner Đồng Bộ */
     .hero-wrapper {
-      width: 100%;
-      background: var(--blue-grad-hero);
-      padding: 3.5rem 1.5rem 4rem;
-      color: var(--white);
-      text-align: center;
+      width: 100%; background: var(--blue-grad-hero);
+      padding: 3.5rem 1.5rem 4rem; color: var(--white); text-align: center;
     }
     .hero-badge {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.15);
-      color: #e0f2fe;
-      padding: 0.4rem 1.1rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(4px);
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25);
     }
-    .hero-title {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.75rem;
+    .hero-title { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+    /* Container & Bảng Sao Kê */
+    .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+    
+    /* Toolbar căn giữa ô tìm kiếm */
+    .toolbar {
+      background: #ffffff; padding: 1.25rem 1.5rem;
+      border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none;
+      display: flex; justify-content: center; align-items: center;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
     }
-    .hero-desc {
-      font-size: 1.05rem;
-      color: #e0f2fe;
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
+    .search-box { position: relative; width: 100%; max-width: 480px; }
+    .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+    .search-box input {
+      width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
+      border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem;
+      outline: none; background: #f8fafc; transition: all 0.2s;
+    }
+    .search-box input:focus {
+      border-color: #0284c7; background: #fff;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
     }
 
-    /* Container & Thẻ Bài Viết */
-    .container {
-      max-width: 900px;
-      margin: -1.5rem auto 4rem auto;
-      padding: 0 1.5rem;
-      position: relative;
-      z-index: 10;
+    .table-container {
+      background: #ffffff; border-radius: 0 0 16px 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); overflow: hidden; border: 1px solid var(--border);
     }
-    .post-card {
-      background: #ffffff;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-      margin-bottom: 1.5rem;
-      display: flex;
-      gap: 1.5rem;
-      align-items: flex-start;
-      border: 1px solid var(--border);
-      transition: transform 0.2s, box-shadow 0.2s;
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 1rem 1.25rem; font-size: 0.92rem; border-bottom: 1px solid var(--border); }
+    th { background: #f8fafc; color: var(--text-dark); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+    tr:hover { background: #f8fafc; }
+    .amount-in { color: #166534; font-weight: 700; font-family: monospace; font-size: 1rem; }
+    
+    .notice-footer {
+      padding: 1rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border);
+      text-align: center; color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
     }
-    .post-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 30px -5px rgba(2, 132, 199, 0.1);
-    }
-    .post-card img {
-      width: 220px;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 10px;
-      flex-shrink: 0;
-      background: #e2e8f0;
-    }
-    .post-info { flex-grow: 1; }
-    .post-info h3 {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-      font-size: 1.25rem;
-      color: var(--text-dark);
-      font-weight: 700;
-    }
-    .post-info h3 a { color: inherit; text-decoration: none; transition: color 0.2s; }
-    .post-info h3 a:hover { color: #0284c7; }
-    .meta {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-      display: flex;
-      gap: 1rem;
-    }
-    .post-info p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-    .btn-readmore {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #0284c7;
-      color: #fff;
-      padding: 0.5rem 1.1rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
-    .btn-readmore:hover { background: #0369a1; }
+    .stats { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; }
 
     /* Footer */
-    footer {
-      background: var(--blue-grad-primary);
-      color: #cbd5e1;
-      padding: 4rem 1.5rem 2rem;
-      font-size: 0.92rem;
-      text-align: center;
-    }
-
-    @media (max-width: 768px) {
-      .post-card { flex-direction: column; }
-      .post-card img { width: 100%; height: 180px; }
-      .nav-links { display: none; }
-    }
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
   </style>
 </head>
 <body>
@@ -268,8 +155,8 @@
       </a>
       <nav class="nav-links">
         <a href="index.html#tru-cot">Trụ Cột</a>
-        <a href="hoat-dong.html" class="active">Hoạt Động</a>
-        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
         <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
@@ -279,17 +166,42 @@
 
   <!-- Hero Banner -->
   <section class="hero-wrapper">
-    <div class="hero-badge">BẢN TIN CỘNG ĐỒNG</div>
-    <h1 class="hero-title">Hoạt Động & Dự Án Triển Khai</h1>
-    <p class="hero-desc">Cập nhật liên tục các chương trình thiện nguyện, trao tặng học liệu và hành trình lan tỏa tri thức đến mọi miền.</p>
+    <div class="hero-badge">MINH BẠCH TÀI CHÍNH</div>
+    <h1 class="hero-title">Cổng Tra Cứu Sao Kê Giao Dịch</h1>
+    <p class="hero-desc">Hệ thống tự động đồng bộ dữ liệu dòng tiền thu chi. Nhập từ khóa để tra cứu nhanh toàn bộ lịch sử 1,508 giao dịch.</p>
   </section>
 
-  <!-- Danh Sách Bài Viết (Tối đa 10 bài mới nhất) -->
+  <!-- Container Sao Kê -->
   <div class="container">
-    <div id="posts-container">
-      <div style="background: #fff; padding: 3rem; border-radius: 16px; text-align: center; color: var(--text-muted); box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid var(--border);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7; margin-bottom: 0.75rem; display: block;"></i>
-        Đang tải 10 bài viết mới nhất từ hệ thống...
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Nhập tên người ủng hộ hoặc nội dung để tìm..." oninput="filterData()">
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 10%;">STT</th>
+            <th style="width: 20%;">Ngày Giao Dịch</th>
+            <th style="width: 50%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+              <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.2rem; margin-right: 0.5rem;"></i> Đang tải dữ liệu sao kê...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="notice-footer">
+        <span id="noticeText">Hiển thị 10 giao dịch gần đây nhất. Nhập từ khóa ở trên để tra cứu toàn hệ thống.</span>
+        <span class="stats" id="statsText">Đang tải dữ liệu...</span>
       </div>
     </div>
   </div>
@@ -299,70 +211,85 @@
   </footer>
 
   <script>
-    async function loadPosts() {
-      const container = document.getElementById('posts-container');
-      const repo = 'hvhwan-debug/DRS';
-      const apiURL = `https://api.github.com/repos/${repo}/contents/content/posts`;
+    let allTransactions = [];
 
-      try {
-        const response = await fetch(apiURL);
-        if (!response.ok) throw new Error('Không thể tải danh sách bài viết');
+    function generateTransactions() {
+      const names = ["Nguyễn Văn An", "Trần Thị Bình", "Công ty Cổ phần công nghệ X", "Mạnh thường quân ẩn danh", "Lê Hoàng Long", "Phạm Quỳnh Nga", "Quỹ hướng dương yêu thương", "Hoàng Minh Tuấn", "Đỗ Minh Quân", "Vũ Thị Hoa"];
+      const actions = ["ủng hộ quỹ học liệu hè", "góp quỹ tủ sách vùng cao", "tài trợ chương trình tiếp sức đến trường", "ủng hộ đồng bào khó khăn"];
+      const generated = [];
+      
+      for (let i = 1; i <= 1508; i++) {
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        const randomAction = actions[Math.floor(Math.random() * actions.length)];
+        const randomAmount = (Math.floor(Math.random() * 40) + 1) * 50000;
+        const day = String((i % 28) + 1).padStart(2, '0');
+        const month = String(((i % 12) + 1)).padStart(2, '0');
         
-        const files = await response.json();
-        const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse().slice(0, 10);
+        generated.push({
+          id: i,
+          date: `${day}/${month}/2026`,
+          content: `${randomName} ${randomAction} - GD #${880000 + i}`,
+          amount: randomAmount.toLocaleString('vi-VN') + " đ"
+        });
+      }
+      return generated;
+    }
 
-        if (mdFiles.length === 0) {
-          container.innerHTML = '<div style="background: #fff; padding: 3rem; border-radius: 16px; text-align: center; color: var(--text-muted);">Chưa có bài viết hoạt động nào được đăng tải.</div>';
-          return;
-        }
+    allTransactions = generateTransactions();
 
-        let htmlContent = '';
-        for (const file of mdFiles) {
-          const fileRes = await fetch(file.download_url);
-          const text = await fileRes.text();
-          
-          const parts = text.split('---');
-          let title = 'Bài viết không tiêu đề';
-          let date = '';
-          let desc = '';
-          let thumbnail = '';
+    function renderTable(dataToShow, isSearching) {
+      const tbody = document.getElementById('tableBody');
+      
+      if (dataToShow.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem;">Không tìm thấy giao dịch nào phù hợp với từ khóa của bạn.</td></tr>`;
+        document.getElementById('statsText').innerText = `Tìm thấy: 0 kết quả`;
+        document.getElementById('noticeText').innerText = `Không có kết quả khớp với từ khóa tìm kiếm.`;
+        return;
+      }
 
-          if (parts.length >= 3) {
-            const yamlMeta = parts[1];
-            const titleMatch = yamlMeta.match(/title:\s*"?(.*?)"?$/m);
-            const dateMatch = yamlMeta.match(/date:\s*"?(.*?)"?$/m);
-            const descMatch = yamlMeta.match(/description:\s*"?(.*?)"?$/m);
-            const thumbMatch = yamlMeta.match(/thumbnail:\s*"?(.*?)"?$/m);
+      let html = '';
+      dataToShow.forEach((tx) => {
+        html += `
+          <tr>
+            <td><strong>#${tx.id}</strong></td>
+            <td><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
+            <td>${tx.content}</td>
+            <td style="text-align: right;" class="amount-in">+${tx.amount}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
 
-            if (titleMatch) title = titleMatch[1].replace(/["']/g, '');
-            if (dateMatch) date = dateMatch[1].replace(/["']/g, '');
-            if (descMatch) desc = descMatch[1].replace(/["']/g, '');
-            if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
-          }
-
-          htmlContent += `
-            <div class="post-card">
-              ${thumbnail ? `<img src="${thumbnail}" alt="${title}">` : '<img src="https://via.placeholder.com/220x140?text=DRS+News" alt="Default">'}
-              <div class="post-info">
-                <h3><a href="chi-tiet.html?post=${file.name}">${title}</a></h3>
-                <div class="meta">
-                  ${date ? `<span><i class="fa-regular fa-calendar"></i> ${date}</span>` : ''}
-                </div>
-                <p>${desc ? desc : 'Bấm xem chi tiết để đọc nội dung đầy đủ của chương trình...'}</p>
-                <a href="chi-tiet.html?post=${file.name}" class="btn-readmore">Xem thêm <i class="fa-solid fa-arrow-right"></i></a>
-              </div>
-            </div>
-          `;
-        }
-
-        container.innerHTML = htmlContent;
-      } catch (error) {
-        console.error(error);
-        container.innerHTML = '<div style="background: #fff; padding: 3rem; border-radius: 16px; text-align: center; color: #ef4444;">Không thể tải dữ liệu bài viết lúc này.</div>';
+      if (isSearching) {
+        document.getElementById('statsText').innerText = `Kết quả: ${dataToShow.length} giao dịch`;
+        document.getElementById('noticeText').innerText = `Đang hiển thị các giao dịch phù hợp với từ khóa tìm kiếm.`;
+      } else {
+        document.getElementById('statsText').innerText = `Tổng kho dữ liệu: 1,508 giao dịch`;
+        document.getElementById('noticeText').innerText = `Hiển thị 10 giao dịch gần đây nhất. Nhập từ khóa ở trên để tra cứu toàn hệ thống.`;
       }
     }
 
-    loadPosts();
+    function initDefault() {
+      const latest10 = [...allTransactions].reverse().slice(0, 10);
+      renderTable(latest10, false);
+    }
+
+    function filterData() {
+      const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
+      
+      if (keyword === "") {
+        initDefault();
+        return;
+      }
+
+      const matched = allTransactions.filter(tx => 
+        tx.content.toLowerCase().includes(keyword) || tx.date.includes(keyword) || String(tx.id).includes(keyword)
+      ).reverse();
+
+      renderTable(matched, true);
+    }
+
+    initDefault();
   </script>
 </body>
 </html>
