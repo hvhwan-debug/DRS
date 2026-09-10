@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Bài Viết - Wisdom Vietnam Network</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.7;
+    }
+    body { padding-top: 72px; }
+
+    /* Menu Cố Định */
+    header {
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
+    }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+
+    .mobile-menu-btn {
+      display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
+    }
+
+    /* Nội dung chi tiết bài viết */
+    .article-container {
+      max-width: 820px;
+      margin: 3rem auto 5rem auto;
+      padding: 0 1.5rem;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: #0284c7; text-decoration: none; font-weight: 600; margin-bottom: 2rem; font-size: 0.95rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .article-card {
+      background: #ffffff;
+      padding: 3rem 2.5rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    }
+    .article-date {
+      font-size: 0.9rem; color: #0284c7; font-weight: 700; margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .article-title {
+      font-size: 2.2rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+    .article-thumb {
+      width: 100%; height: 380px; object-fit: cover; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--border);
+    }
+    .article-body h3 {
+      font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-top: 2rem; margin-bottom: 0.75rem;
+    }
+    .article-body p {
+      font-size: 1.05rem; color: #334155; margin-bottom: 1.25rem; line-height: 1.8;
+    }
+    .article-body ul {
+      margin-bottom: 1.25rem; padding-left: 1.5rem; color: #334155; font-size: 1.05rem;
+    }
+    .article-body li {
+      margin-bottom: 0.5rem; line-height: 1.7;
+    }
+
+    /* Modal Quyên góp */
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; }
+    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .article-title { font-size: 1.8rem; }
+      .article-thumb { height: 240px; }
+      .article-card { padding: 1.8rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu Cố Định -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Wisdom Vietnam Network</span>
+          <span class="brand-subtitle">DR SOLUTIONS</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html#tru-cot">Trụ Cột</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="tin-tuc.html" class="active">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn" onclick="openModal()">Quyên Góp</button>
+        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container bài viết chi tiết -->
+  <main class="article-container">
+    <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
+    
+    <div class="article-card" id="articleContent">
+      <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7; margin-bottom: 0.5rem;"></i><br>Đang tải nội dung bài viết...
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Quyên góp -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+      </div>
+      <div>
+        <h4>Cam Kết Xã Hội</h4>
+        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 CÔNG TY TRÁCH NHIỆM HỮU HẠN DR SOLUTIONS. Mọi quyền được bảo lưu.
+    </div>
+  </footer>
+
+  <script>
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(event) {
+      let modal = document.getElementById('donateModal');
+      if (event.target == modal) { modal.style.display = 'none'; }
+    }
+
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.getElementById('menuBtn');
+      navLinks.classList.toggle('active');
+      if (navLinks.classList.contains('active')) {
+        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      } else {
+        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    }
+
+    async function loadArticle() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const postFile = urlParams.get('post');
+      const card = document.getElementById('articleContent');
+
+      if (!postFile) {
+        card.innerHTML = `<h2>Không tìm thấy bài viết</h2><p>Đường dẫn không hợp lệ.</p>`;
+        return;
+      }
+
+      const repo = 'hvhwan-debug/DRS';
+      const fileURL = `https://raw.githubusercontent.com/${repo}/main/content/posts/${postFile}`;
+
+      try {
+        const res = await fetch(fileURL);
+        if (!res.ok) throw new Error('Không tải được file bài viết');
+        const text = await res.text();
+
+        const parts = text.split('---');
+        let title = 'Bài viết chi tiết';
+        let date = '2026';
+        let thumbnail = '';
+        let markdownBody = text;
+
+        if (parts.length >= 3) {
+          const yamlMeta = parts[1];
+          const titleMatch = yamlMeta.match(/title:\s*"?(.*?)"?$/m);
+          const dateMatch = yamlMeta.match(/date:\s*"?(.*?)"?$/m);
+          const thumbMatch = yamlMeta.match(/thumbnail:\s*"?(.*?)"?$/m);
+
+          if (titleMatch) title = titleMatch[1].replace(/["']/g, '');
+          if (dateMatch) date = dateMatch[1].replace(/["']/g, '');
+          if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
+
+          markdownBody = parts.slice(2).join('---').trim();
+        }
+
+        // Chuyển đổi cú pháp markdown cơ bản sang HTML hiển thị mượt mà
+        let htmlBody = markdownBody
+          .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+          .replace(/^- (.*$)/gm, '<li>$1</li>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .split('\n\n').map(p => p.startsWith('<h') || p.startsWith('<li') ? p : `<p>${p}</p>`).join('');
+
+        card.innerHTML = `
+          <div class="article-date"><i class="fa-regular fa-calendar"></i> ${date}</div>
+          <h1 class="article-title">${title}</h1>
+          ${thumbnail ? `<img src="${thumbnail}" alt="${title}" class="article-thumb">` : ''}
+          <div class="article-body">${htmlBody}</div>
+        `;
+      } catch (err) {
+        card.innerHTML = `<h2>Lỗi tải bài viết</h2><p>Không thể kết nối đến kho lưu trữ hoặc file bài viết không tồn tại.</p>`;
+      }
+    }
+
+    loadArticle();
+  </script>
+</body>
+</html>
