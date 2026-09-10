@@ -64,13 +64,7 @@
 
     /* Nút Menu Hamburger cho điện thoại */
     .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.4rem;
-      color: var(--text-dark);
-      cursor: pointer;
-      padding: 0.4rem;
+      display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
     }
 
     /* Hero Banner */
@@ -90,90 +84,42 @@
 
     /* Hộp gửi hoạt động mới */
     .submit-activity-box {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2.5rem;
-      margin-bottom: 3.5rem;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
+      background: #ffffff; border: 1px solid var(--border); border-radius: 20px;
+      padding: 2.5rem; margin-bottom: 3.5rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap;
     }
     .submit-activity-content h3 { font-size: 1.35rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; }
     .submit-activity-content p { font-size: 0.95rem; color: var(--text-muted); }
     .btn-submit-action {
-      background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%);
-      color: #fff; padding: 0.8rem 1.8rem; border-radius: 12px; font-weight: 700;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+      background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%); color: #fff; padding: 0.8rem 1.8rem;
+      border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
       box-shadow: 0 4px 15px rgba(2, 132, 199, 0.25); transition: transform 0.2s;
     }
     .btn-submit-action:hover { transform: translateY(-2px); }
 
     /* Timeline Container */
-    .timeline-container {
-      position: relative;
-      padding: 2rem 0;
-    }
-
+    .timeline-container { position: relative; padding: 2rem 0; }
     .timeline-container::before {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0; left: 50%;
-      width: 4px;
+      content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
       background: linear-gradient(to bottom, #0284c7, #38bdf8, #bae6fd);
-      transform: translateX(-50%);
-      border-radius: 4px;
+      transform: translateX(-50%); border-radius: 4px;
     }
-
-    .timeline-root-node {
-      text-align: center;
-      position: relative;
-      z-index: 10;
-      margin-bottom: 3.5rem;
-    }
+    .timeline-root-node { text-align: center; position: relative; z-index: 10; margin-bottom: 3.5rem; }
     .timeline-root-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%);
-      color: #fff;
-      padding: 1.2rem 2.5rem;
-      border-radius: 50px;
-      font-size: 1.4rem;
-      font-weight: 800;
-      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3);
-      border: 3px solid #fff;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      display: inline-block; background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%);
+      color: #fff; padding: 1.2rem 2.5rem; border-radius: 50px; font-size: 1.4rem; font-weight: 800;
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3); border: 3px solid #fff;
+      text-transform: uppercase; letter-spacing: 1px;
     }
 
-    .timeline-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4rem;
-      position: relative;
-      width: 100%;
-    }
-    .timeline-item:nth-child(odd) {
-      flex-direction: row-reverse;
-    }
+    .timeline-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; position: relative; width: 100%; }
+    .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
 
     .timeline-dot {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 26px;
-      height: 26px;
-      background: #0284c7;
-      border: 4px solid #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
-      z-index: 5;
-      animation: pulseDot 2s infinite;
+      position: absolute; left: 50%; transform: translateX(-50%); width: 26px; height: 26px;
+      background: #0284c7; border: 4px solid #fff; border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2); z-index: 5; animation: pulseDot 2s infinite;
     }
-
     @keyframes pulseDot {
       0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4); }
       70% { box-shadow: 0 0 0 12px rgba(2, 132, 199, 0); }
@@ -181,112 +127,41 @@
     }
 
     .timeline-content {
-      width: 44%;
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
-      border: 2px solid #bae6fd;
-      position: relative;
-      transition: transform 0.3s, box-shadow 0.3s;
+      width: 44%; background: #ffffff; padding: 2rem; border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08); border: 2px solid #bae6fd;
+      position: relative; transition: transform 0.3s, box-shadow 0.3s;
     }
-    .timeline-content:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(2, 132, 199, 0.15);
-      border-color: #0284c7;
-    }
+    .timeline-content:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.15); border-color: #0284c7; }
 
-    .timeline-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border);
-    }
-
-    .timeline-year {
-      display: inline-block;
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 0.3rem 0.9rem;
-      border-radius: 20px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .timeline-content h3 {
-      font-size: 1.25rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;
-    }
-    .timeline-content p {
-      font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;
-    }
-    .btn-detail {
-      display: inline-flex; align-items: center; gap: 0.5rem; color: #0284c7; font-weight: 700; text-decoration: none; font-size: 0.9rem;
-    }
+    .timeline-img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--border); }
+    .timeline-year { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.75rem; }
+    .timeline-content h3 { font-size: 1.25rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; }
+    .timeline-content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
+    .btn-detail { display: inline-flex; align-items: center; gap: 0.5rem; color: #0284c7; font-weight: 700; text-decoration: none; font-size: 0.9rem; }
     .btn-detail:hover { color: #0369a1; text-decoration: underline; }
 
-    /* Nút xem thêm hoạt động các năm trước */
-    .history-toggle-box {
-      text-align: center;
-      margin: 4rem 0 2rem 0;
-      position: relative;
-      z-index: 20;
-    }
+    .history-toggle-box { text-align: center; margin: 4rem 0 2rem 0; position: relative; z-index: 20; }
     .btn-history {
-      background: #ffffff; color: #0284c7; border: 2px solid #bae6fd;
-      padding: 0.9rem 2.8rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
-      cursor: pointer; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12); transition: all 0.2s;
+      background: #ffffff; color: #0284c7; border: 2px solid #bae6fd; padding: 0.9rem 2.8rem;
+      border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer;
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12); transition: all 0.2s;
       display: inline-flex; align-items: center; gap: 0.75rem; font-family: inherit;
     }
     .btn-history:hover { background: #f0f9ff; border-color: #0284c7; transform: translateY(-2px); }
 
-    /* Khu vực lịch sử các năm trước */
-    .history-section {
-      display: none;
-      margin-top: 3rem;
-      animation: fadeIn 0.4s ease-in-out;
-    }
+    .history-section { display: none; margin-top: 3rem; animation: fadeIn 0.4s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Modal Quyên góp VietQR */
     .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px);
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 1rem;
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
     }
     .modal-content {
-      background: var(--white);
-      padding: 2.2rem;
-      border-radius: 16px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
-    .modal-banner {
-      width: 100%;
-      height: 130px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin: 0.8rem 0;
-      border: 1px solid var(--border);
-    }
-    .modal-qr {
-      width: 100%;
-      max-width: 230px;
-      margin: 0.8rem auto;
-      display: block;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
     /* Footer */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
@@ -294,16 +169,9 @@
     @media (max-width: 768px) {
       .mobile-menu-btn { display: block; }
       .nav-links {
-        display: none;
-        position: absolute;
-        top: 72px; left: 0; right: 0;
-        background: #ffffff;
-        flex-direction: column;
-        padding: 1.5rem;
-        border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        text-align: center;
-        gap: 1rem;
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
@@ -330,14 +198,14 @@
         </div>
         <div class="brand-text-group">
           <span class="brand-title">Wisdom Vietnam Network</span>
-          <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
+          <span class="brand-subtitle">DR SOLUTIONS</span>
         </div>
       </a>
       <nav class="nav-links" id="navLinks">
         <a href="index.html#tru-cot">Trụ Cột</a>
         <a href="hoat-dong.html" class="active">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-        <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
+        <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
@@ -504,7 +372,6 @@
       let listHistory = [];
 
       allPosts.forEach(post => {
-        // Kiểm tra nếu chưa có file bài viết (.md) hoặc tên file mẫu thì trỏ về trang hoạt động, ngược lại trỏ về chi-tiet.html
         let detailLink = (post.filename && post.filename.endsWith('.md') && !post.filename.startsWith('bai-')) 
           ? `chi-tiet.html?post=${post.filename}` 
           : `hoat-dong.html`;
