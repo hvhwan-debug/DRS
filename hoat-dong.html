@@ -504,6 +504,11 @@
       let listHistory = [];
 
       allPosts.forEach(post => {
+        // Kiểm tra nếu chưa có file bài viết (.md) hoặc tên file mẫu thì trỏ về trang hoạt động, ngược lại trỏ về chi-tiet.html
+        let detailLink = (post.filename && post.filename.endsWith('.md') && !post.filename.startsWith('bai-')) 
+          ? `chi-tiet.html?post=${post.filename}` 
+          : `hoat-dong.html`;
+
         const itemHTML = `
           <div class="timeline-item">
             <div class="timeline-dot"></div>
@@ -512,7 +517,7 @@
               <span class="timeline-year"><i class="fa-regular fa-calendar"></i> ${post.date}</span>
               <h3>${post.title}</h3>
               <p>${post.description ? post.description : 'Chi tiết hoạt động cộng đồng...'}</p>
-              <a href="chi-tiet.html?post=${post.filename}" class="btn-detail">Xem chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
+              <a href="${detailLink}" class="btn-detail">Xem chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
             </div>
           </div>
         `;
