@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hoạt Động - Wisdom Vietnam Network</title>
+  <title>Hoạt Động & Sự Kiện - Wisdom Vietnam Network</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
@@ -21,232 +21,107 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      width: 100%;
-      overflow-x: hidden;
+      width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark);
-      background-color: var(--bg-page);
-      line-height: 1.6;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
     }
-    body {
-      padding-top: 72px;
-    }
+    body { padding-top: 72px; }
 
     /* Menu Cố Định Đồng Bộ */
     header {
-      position: fixed !important;
-      top: 0; left: 0; right: 0;
-      width: 100%;
-      z-index: 9999;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-    .nav-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.8rem 1.5rem;
-    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; }
 
-    .brand-wrap {
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
     .brand-logo-icon {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-      border: 1.5px solid #bae6fd;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
     }
-    .brand-logo-icon svg {
-      width: 21px;
-      height: 21px;
-      stroke: #0284c7;
-    }
-    .brand-text-group {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 1.25;
-    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
     .brand-title {
-      font-size: 1.18rem;
-      font-weight: 800;
-      background: var(--blue-grad-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -0.3px;
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #64748b;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      margin-top: 1px;
-    }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
 
-    .nav-links a {
-      margin-left: 1.8rem;
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
     .btn {
-      background: var(--blue-grad-btn);
-      color: var(--white);
-      padding: 0.65rem 1.4rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
-      transition: all 0.2s;
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
     }
-    .btn:hover {
-      background: var(--blue-grad-btn-hover);
-      transform: translateY(-1px);
-    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Hero Banner Đồng Bộ */
+    /* Hero Banner */
     .hero-wrapper {
-      width: 100%;
-      background: var(--blue-grad-hero);
-      padding: 3.5rem 1.5rem 4rem;
-      color: var(--white);
-      text-align: center;
+      width: 100%; background: var(--blue-grad-hero); padding: 3.5rem 1.5rem 4rem; color: var(--white); text-align: center;
     }
     .hero-badge {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.15);
-      color: #e0f2fe;
-      padding: 0.4rem 1.1rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(4px);
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25);
     }
-    .hero-title {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.75rem;
-    }
-    .hero-desc {
-      font-size: 1.05rem;
-      color: #e0f2fe;
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
+    .hero-title { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 600px; margin: 0 auto; line-height: 1.6; }
 
-    /* Container & Thẻ Bài Viết */
-    .container {
-      max-width: 900px;
-      margin: -1.5rem auto 4rem auto;
-      padding: 0 1.5rem;
-      position: relative;
-      z-index: 10;
+    /* Container chính */
+    .container { max-width: 950px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+
+    /* Tiêu đề nhóm mốc thời gian */
+    .section-title-group {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 2rem 0 1.25rem 0; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;
     }
+    .section-title-group h2 { font-size: 1.35rem; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; }
+    .section-title-group h2 i { color: #0284c7; }
+
+    /* Thẻ bài viết trực quan (Visual Card) */
     .post-card {
-      background: #ffffff;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-      margin-bottom: 1.5rem;
-      display: flex;
-      gap: 1.5rem;
-      align-items: flex-start;
-      border: 1px solid var(--border);
-      transition: transform 0.2s, box-shadow 0.2s;
+      background: #ffffff; padding: 1.5rem; border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 1.5rem;
+      display: flex; gap: 1.5rem; align-items: flex-start; border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s; position: relative;
     }
-    .post-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 30px -5px rgba(2, 132, 199, 0.1);
-    }
+    .post-card:hover { transform: translateY(-3px); box-shadow: 0 20px 30px -5px rgba(2, 132, 199, 0.1); }
     .post-card img {
-      width: 220px;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 10px;
-      flex-shrink: 0;
-      background: #e2e8f0;
+      width: 220px; height: 140px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #e2e8f0;
     }
-    .post-info {
-      flex-grow: 1;
-    }
-    .post-info h3 {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-      font-size: 1.25rem;
-      color: var(--text-dark);
-      font-weight: 700;
-    }
-    .post-info h3 a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    .post-info { flex-grow: 1; }
+    .post-info h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.2rem; color: var(--text-dark); font-weight: 700; }
+    .post-info h3 a { color: inherit; text-decoration: none; transition: color 0.2s; }
     .post-info h3 a:hover { color: #0284c7; }
-    .meta {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-      display: flex;
-      gap: 1rem;
-    }
-    .post-info p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
+    .meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; display: flex; gap: 1rem; }
+    .post-info p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+    
     .btn-readmore {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #0284c7;
-      color: #fff;
-      padding: 0.5rem 1.1rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: background 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem; background: #0284c7; color: #fff;
+      padding: 0.5rem 1.1rem; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: background 0.2s;
     }
     .btn-readmore:hover { background: #0369a1; }
 
-    /* Footer */
-    footer {
-      background: var(--blue-grad-primary);
-      color: #cbd5e1;
-      padding: 4rem 1.5rem 2rem;
-      font-size: 0.92rem;
-      text-align: center;
+    /* Nút Xem thêm các năm trước */
+    .history-toggle-box { text-align: center; margin: 2.5rem 0 1rem 0; }
+    .btn-history {
+      background: #ffffff; color: #0284c7; border: 2px solid #bae6fd;
+      padding: 0.75rem 2rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08); transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
     }
+    .btn-history:hover { background: #f0f9ff; border-color: #0284c7; transform: translateY(-2px); }
+
+    .history-section { display: none; margin-top: 1rem; animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Footer */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
 
     @media (max-width: 768px) {
       .post-card { flex-direction: column; }
@@ -263,8 +138,10 @@
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
         </div>
         <div class="brand-text-group">
@@ -286,18 +163,42 @@
   <!-- Hero Banner -->
   <section class="hero-wrapper">
     <div class="hero-badge">BẢN TIN CỘNG ĐỒNG</div>
-    <h1 class="hero-title">Hoạt Động & Dự Án Triển Khai</h1>
-    <p class="hero-desc">Cập nhật liên tục các chương trình thiện nguyện, trao tặng học liệu và hành trình lan tỏa tri thức đến mọi miền.</p>
+    <h1 class="hero-title">Hoạt Động & Sự Kiện Triển Khai</h1>
+    <p class="hero-desc">Cập nhật các mốc sự kiện tiêu biểu năm 2026 và hành trình gieo mầm tri thức qua các năm.</p>
   </section>
 
-  <!-- Danh Sách Bài Viết (Tối đa 10 bài mới nhất) -->
+  <!-- Container Danh Sách Bài Viết -->
   <div class="container">
-    <div id="posts-container">
-      <div style="background: #fff; padding: 3rem; border-radius: 16px; text-align: center; color: var(--text-muted); box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid var(--border);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7; margin-bottom: 0.75rem; display: block;"></i>
-        Đang tải 10 bài viết mới nhất từ hệ thống...
+    
+    <!-- Nhóm 2026 Tiêu Biểu -->
+    <div class="section-title-group" style="margin-top: 1rem;">
+      <h2><i class="fa-solid fa-star"></i> Mốc Hoạt Động Tiêu Biểu 2026</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Mới nhất</span>
+    </div>
+    <div id="posts-2026">
+      <div style="background: #fff; padding: 2.5rem; border-radius: 16px; text-align: center; color: var(--text-muted); border: 1px solid var(--border);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.3rem; color: #0284c7; margin-bottom: 0.5rem; display: block;"></i>
+        Đang tải mốc hoạt động 2026...
       </div>
     </div>
+
+    <!-- Nút bấm xem thêm lịch sử các năm trước -->
+    <div class="history-toggle-box" id="historyToggleContainer" style="display: none;">
+      <button class="btn-history" onclick="toggleHistory()">
+        <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm hoạt động các năm trước <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
+      </button>
+    </div>
+
+    <!-- Nhóm Lịch sử các năm trước -->
+    <div id="historySection" class="history-section">
+      <div class="section-title-group">
+        <h2><i class="fa-solid fa-box-archive"></i> Lịch Sử Hoạt Động Các Năm Trước</h2>
+      </div>
+      <div id="posts-history">
+        <!-- Chứa các bài viết cũ hơn năm 2026 -->
+      </div>
+    </div>
+
   </div>
 
   <footer>
@@ -305,8 +206,11 @@
   </footer>
 
   <script>
-    async function loadPosts() {
-      const container = document.getElementById('posts-container');
+    async function loadActivities() {
+      const container2026 = document.getElementById('posts-2026');
+      const containerHistory = document.getElementById('posts-history');
+      const historyToggleBox = document.getElementById('historyToggleContainer');
+      
       const repo = 'hvhwan-debug/DRS';
       const apiURL = `https://api.github.com/repos/${repo}/contents/content/posts`;
 
@@ -315,22 +219,23 @@
         if (!response.ok) throw new Error('Không thể tải danh sách bài viết');
         
         const files = await response.json();
-        // Lọc file markdown (.md), đảo ngược để lấy bài mới nhất và giới hạn tối đa 10 bài
-        const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse().slice(0, 10);
+        const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse();
 
         if (mdFiles.length === 0) {
-          container.innerHTML = '<div style="background: #fff; padding: 3rem; border-radius: 16px; text-align: center; color: var(--text-muted);">Chưa có bài viết hoạt động nào được đăng tải.</div>';
+          container2026.innerHTML = '<div style="background: #fff; padding: 2.5rem; border-radius: 16px; text-align: center; color: var(--text-muted);">Chưa có bài viết hoạt động nào được đăng tải.</div>';
           return;
         }
 
-        let htmlContent = '';
+        let list2026 = [];
+        let listHistory = [];
+
         for (const file of mdFiles) {
           const fileRes = await fetch(file.download_url);
           const text = await fileRes.text();
           
           const parts = text.split('---');
           let title = 'Bài viết không tiêu đề';
-          let date = '';
+          let date = '2026-01-01';
           let desc = '';
           let thumbnail = '';
 
@@ -347,29 +252,63 @@
             if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
           }
 
-          htmlContent += `
+          const cardHTML = `
             <div class="post-card">
               ${thumbnail ? `<img src="${thumbnail}" alt="${title}">` : '<img src="https://via.placeholder.com/220x140?text=DRS+News" alt="Default">'}
               <div class="post-info">
                 <h3><a href="chi-tiet.html?post=${file.name}">${title}</a></h3>
                 <div class="meta">
-                  ${date ? `<span><i class="fa-regular fa-calendar"></i> ${date}</span>` : ''}
+                  <span><i class="fa-regular fa-calendar"></i> ${date}</span>
                 </div>
                 <p>${desc ? desc : 'Bấm xem chi tiết để đọc nội dung đầy đủ của chương trình...'}</p>
                 <a href="chi-tiet.html?post=${file.name}" class="btn-readmore">Xem thêm <i class="fa-solid fa-arrow-right"></i></a>
               </div>
             </div>
           `;
+
+          // Phân loại năm 2026 và các năm trước
+          if (date.startsWith('2026')) {
+            list2026.push(cardHTML);
+          } else {
+            listHistory.push(cardHTML);
+          }
         }
 
-        container.innerHTML = htmlContent;
+        // Đổ dữ liệu năm 2026 lên đầu
+        if (list2026.length > 0) {
+          container2026.innerHTML = list2026.join('');
+        } else {
+          container2026.innerHTML = '<div style="background: #fff; padding: 2rem; border-radius: 12px; text-align: center; color: var(--text-muted);">Chưa có mốc hoạt động nào trong năm 2026. (Các bài viết cũ hơn được ẩn bên dưới).</div>';
+        }
+
+        // Xử lý hiển thị kho lịch sử các năm trước
+        if (listHistory.length > 0) {
+          containerHistory.innerHTML = listHistory.join('');
+          historyToggleBox.style.display = 'block'; // Hiện nút bấm "Xem thêm các năm trước"
+        }
+
       } catch (error) {
         console.error(error);
-        container.innerHTML = '<div style="background: #fff; padding: 3rem; border-radius: 16px; text-align: center; color: #ef4444;">Không thể tải dữ liệu bài viết lúc này.</div>';
+        container2026.innerHTML = '<div style="background: #fff; padding: 2.5rem; border-radius: 16px; text-align: center; color: #ef4444;">Không thể tải dữ liệu bài viết lúc này.</div>';
       }
     }
 
-    loadPosts();
+    // Hiệu ứng bấm mở rộng/thu gọn lịch sử các năm trước
+    function toggleHistory() {
+      const historySec = document.getElementById('historySection');
+      const icon = document.getElementById('historyIcon');
+      if (historySec.style.display === 'block') {
+        historySec.style.display = 'none';
+        icon.className = 'fa-solid fa-chevron-down';
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+      } else {
+        historySec.style.display = 'block';
+        icon.className = 'fa-solid fa-chevron-up';
+        historySec.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    loadActivities();
   </script>
 </body>
 </html>
