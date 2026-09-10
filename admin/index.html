@@ -4,6 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trang Quản Trị Bài Viết - DR SOLUTIONS</title>
+  <script>
+    // Kiểm tra và yêu cầu nhập token nếu chưa lưu phiên đăng nhập
+    (function() {
+      const authKey = 'decap-cms-user';
+      if (!localStorage.getItem(authKey)) {
+        const token = prompt('Vui lòng dán mã Personal Access Token (ghp_...) của bạn:');
+        if (token && token.trim() !== '') {
+          localStorage.setItem(authKey, JSON.stringify({ token: token.trim(), backendName: 'github' }));
+        }
+      }
+    })();
+  </script>
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
