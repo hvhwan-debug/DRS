@@ -3,102 +3,477 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hoạt Động Cộng Đồng - DR SOLUTIONS</title>
+  <title>Tin Tức & Hoạt Động Cộng Đồng - DR SOLUTIONS</title>
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
       --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      --blue-grad-card: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      
       --text-dark: #0f172a;
       --text-muted: #475569;
       --white: #ffffff;
       --border: #e2e8f0;
+      --bg-page: #f8fafc;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text-dark); background: #f8fafc; line-height: 1.6; }
-    
-    header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-    .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem; }
-    .brand { font-size: 1.3rem; font-weight: 800; background: var(--blue-grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
-    .nav-links a { margin-left: 1.5rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
-    .nav-links a.active { color: #0284c7; font-weight: 700; }
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark);
+      background-color: var(--bg-page);
+      line-height: 1.7;
+    }
 
-    .hero { background: var(--blue-grad-hero); color: #fff; padding: 3.5rem 1rem; text-align: center; }
-    .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    .hero p { color: #e0f2fe; max-width: 650px; margin: 0 auto; }
+    /* Header đồng bộ trang chủ */
+    header {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.5rem;
+    }
+    .brand-wrap {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: var(--blue-grad-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .brand-subtitle {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .nav-links a {
+      margin-left: 1.8rem;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 700; }
 
-    .container { max-width: 1100px; margin: 3rem auto; padding: 0 1rem; }
-    .article-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
-    .article-card { background: var(--blue-grad-card); border: 1px solid #e0f2fe; border-radius: 12px; padding: 1.8rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.05); }
-    .article-tag { font-size: 0.8rem; font-weight: 700; color: #0284c7; text-transform: uppercase; margin-bottom: 0.5rem; }
-    .article-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: #0f172a; line-height: 1.4; }
-    .article-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
-    
-    .btn-read { color: #0284c7; text-decoration: none; font-weight: 600; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.3rem; }
-    .btn-read:hover { color: #0369a1; text-decoration: underline; }
+    .btn {
+      background: var(--blue-grad-btn);
+      color: var(--white);
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: var(--blue-grad-btn-hover);
+      transform: translateY(-1px);
+    }
 
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 2.5rem 1rem; text-align: center; font-size: 0.85rem; margin-top: 4rem; }
+    /* Hero Banner trang Hoạt Động */
+    .hero-news {
+      background: var(--blue-grad-hero);
+      color: var(--white);
+      padding: 4.5rem 1.5rem 4rem;
+      text-align: center;
+    }
+    .hero-news h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-bottom: 0.8rem;
+    }
+    .hero-news p {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      color: #e0f2fe;
+    }
+
+    /* Khung danh sách bài viết */
+    .news-wrapper {
+      max-width: 1050px;
+      margin: 3.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Từng bài viết phóng sự dạng thẻ lớn */
+    .article-card {
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+      margin-bottom: 3.5rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-banner {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .article-body {
+      padding: 2.5rem 2.8rem;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 0.88rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .meta-tag {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.25rem 0.85rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .article-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.35;
+      margin-bottom: 1.2rem;
+    }
+
+    .lead-text {
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 1.2rem;
+      line-height: 1.7;
+    }
+
+    .article-content p {
+      margin-bottom: 1.2rem;
+      color: #475569;
+      font-size: 1rem;
+    }
+
+    /* Khung thống kê nhanh tác động */
+    .impact-stat-box {
+      background: #f8fafc;
+      border-left: 4px solid #0284c7;
+      padding: 1.2rem 1.6rem;
+      margin: 1.5rem 0;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.95rem;
+      color: #0f172a;
+    }
+
+    /* Khung trích dẫn cảm nghĩ */
+    .quote-box {
+      background: #f0fdf4;
+      border: 1px dashed #86efac;
+      padding: 1.3rem 1.8rem;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+      font-style: italic;
+      color: #166534;
+      font-size: 0.95rem;
+    }
+    .quote-author {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: 700;
+      font-style: normal;
+      color: #15803d;
+      font-size: 0.85rem;
+    }
+
+    /* Modal Quyên góp VietQR */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white);
+      padding: 2.2rem;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 0.8rem 0;
+      border: 1px solid var(--border);
+    }
+    .modal-qr {
+      width: 100%;
+      max-width: 230px;
+      margin: 0.8rem auto;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--blue-grad-primary);
+      color: #cbd5e1;
+      padding: 4rem 1.5rem 2rem;
+      font-size: 0.92rem;
+    }
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2.5rem;
+    }
+    .footer-grid h4 {
+      color: var(--white);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 3rem auto 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 768px) {
+      .article-banner { height: 260px; }
+      .article-body { padding: 1.8rem 1.2rem; }
+      .article-title { font-size: 1.4rem; }
+      .hero-news h1 { font-size: 2rem; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Header Điều Hướng -->
   <header>
     <div class="nav-container">
-      <a href="index.html" class="brand">DR SOLUTIONS</a>
+      <a href="index.html" class="brand-wrap">
+        <span class="brand-title">Wisdom Vietnam Network</span>
+        <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
+      </a>
       <nav class="nav-links">
         <a href="index.html">Trang Chủ</a>
         <a href="hoat-dong.html" class="active">Hoạt Động</a>
-        <a href="index.html#minh-bach">Tra Cứu Sao Kê</a>
-        <a href="index.html#phap-ly">Pháp Lý</a>
+        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="index.html#phap-ly">Pháp Lý & Minh Bạch</a>
       </nav>
+      <button class="btn" onclick="openModal()">Quyên Góp</button>
     </div>
   </header>
 
-  <section class="hero">
-    <h1>Hoạt Động & Tin Tức Cộng Đồng</h1>
-    <p>Cập nhật liên tục những dự án hỗ trợ học tập, lớp kỹ năng và nhịp sống thiện nguyện của DR SOLUTIONS</p>
+  <!-- Hero Banner -->
+  <section class="hero-news">
+    <h1>Nhịp Hoạt Động & Tác Động Xã Hội</h1>
+    <p>Ghi nhận trung thực hành trình mang tri thức, học liệu và cơ hội học tập bình đẳng đến với các em học sinh có hoàn cảnh khó khăn.</p>
   </section>
 
-  <main class="container">
-    <div class="article-grid">
-      
-      <!-- Bài 1 -->
-      <div class="article-card">
-        <div>
-          <div class="article-tag">Học Liệu • Tháng 09/2026</div>
-          <h2 class="article-title">Tủ học liệu lưu động đến gần hơn với học sinh cần thêm điều kiện tự học</h2>
-          <p class="article-desc">Đưa sách tham khảo và đồ dùng học tập thiết yếu đến điểm sinh hoạt nhà văn hóa khu dân cư cho các em mượn đọc hàng tuần.</p>
-        </div>
-        <a href="bai-viet-tu-sach-luu-dong.html" class="btn-read">Đọc toàn bộ bài viết →</a>
-      </div>
+  <!-- Danh Sách Bài Viết Phóng Sự Hoạt Động -->
+  <main class="news-wrapper">
 
-      <!-- Bài 2 -->
-      <div class="article-card">
-        <div>
-          <div class="article-tag">Kết Nối • Cuối tuần qua</div>
-          <h2 class="article-title">Buổi sinh hoạt học tập tại khu dân cư mở ra không gian an toàn</h2>
-          <p class="article-desc">Đội ngũ tình nguyện viên phối hợp cùng phụ huynh tổ chức hỗ trợ củng cố bài vở và rèn luyện kỹ năng đặt câu hỏi cho các em.</p>
+    <!-- BÀI BÁO SỐ 1 -->
+    <article class="article-card">
+      <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&auto=format&fit=crop&q=80" alt="Trao tặng tủ sách học liệu" class="article-banner">
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="meta-tag">Dự Án Học Liệu</span>
+          <span>📅 Ngày 05/09/2026</span>
+          <span>📍 Địa điểm: Điểm sinh hoạt cộng đồng Phường Nghĩa Đô, Cầu Giấy, Hà Nội</span>
         </div>
-        <a href="#" class="btn-read">Đọc toàn bộ bài viết →</a>
-      </div>
+        <h2 class="article-title">Khánh Thành "Tủ Học Liệu Lưu Động Số 03": Tiếp Sức Hơn 150 Học Sinh Bước Vào Năm Học Mới</h2>
+        
+        <p class="lead-text">
+          Nhân dịp khai giảng năm học 2026 - 2027, đội ngũ điều phối DR SOLUTIONS cùng các bạn tình nguyện viên đã chính thức bàn giao mô hình "Tủ học liệu lưu động" tại điểm sinh hoạt văn hóa dân cư số 5.
+        </p>
 
-      <!-- Bài 3 -->
-      <div class="article-card">
-        <div>
-          <div class="article-tag">Đồng Hành • Hằng tuần</div>
-          <h2 class="article-title">Chuỗi gặp gỡ phụ huynh và học sinh lan tỏa kỹ năng học tập tích cực</h2>
-          <p class="article-desc">Chia sẻ phương pháp đồng hành cùng con tại nhà, kỹ năng quản lý thời gian và phản hồi tích cực trong học tập.</p>
+        <div class="article-content">
+          <p>
+            Mô hình tủ học liệu lưu động được xây dựng nhằm giải quyết bài toán thiếu hụt tài liệu tham khảo chất lượng và sách phát triển tư duy cho con em các gia đình công nhân, lao động tự do tại các khu dân cư đông đúc. Tủ sách được bố trí mở hoàn toàn, không thu phí mượn và được vận hành trực tiếp bởi ban đại diện phụ huynh cùng nhóm tình nguyện viên trẻ.
+          </p>
+
+          <div class="impact-stat-box">
+            📊 <strong>Kết quả tiếp nhận đợt 1:</strong> Trao tặng <strong>420 đầu sách</strong> giáo khoa và sách khoa học thiếu nhi; <strong>150 bộ đồ dùng học tập</strong> cơ bản; cấp thẻ mượn đọc miễn phí định kỳ cho <strong>85 học sinh tiểu học và THCS</strong>.
+          </div>
+
+          <p>
+            Bên cạnh việc cung cấp sách, chương trình còn tổ chức các buổi hướng dẫn các em cách bảo quản tập vở, lập kế hoạch tự học hằng tuần và kỹ năng đọc hiểu tóm tắt kiến thức.
+          </p>
+
+          <div class="quote-box">
+            "Nhiều gia đình ở đây bố mẹ đi làm ca kíp cả ngày, không có điều kiện mua thêm sách tham khảo nâng cao cho con. Tủ sách được đặt ngay nhà văn hóa gần nhà giúp các cháu vừa có chỗ ngồi học yên tĩnh, vừa có sách tốt để đọc mỗi buổi chiều."
+            <span class="quote-author">— Bác Lê Văn Dũng (Đại diện Tổ dân phố & Ban Phụ huynh)</span>
+          </div>
         </div>
-        <a href="#" class="btn-read">Đọc toàn bộ bài viết →</a>
       </div>
+    </article>
 
-    </div>
+    <!-- BÀI BÁO SỐ 2 -->
+    <article class="article-card">
+      <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1200&auto=format&fit=crop&q=80" alt="Lớp học kỹ năng cuối tuần" class="article-banner">
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="meta-tag">Kỹ Năng & Hướng Nghiệp</span>
+          <span>📅 Ngày 28/08/2026</span>
+          <span>📍 Điểm hỗ trợ thanh thiếu niên quận Ba Đình & Tây Hồ</span>
+        </div>
+        <h2 class="article-title">Chuỗi Lớp Kỹ Năng Cuối Tuần: Khơi Dậy Đam Mê Đọc Sách Và Tư Duy Số Cho Học Sinh Yếu Thế</h2>
+        
+        <p class="lead-text">
+          Khép lại tháng 8/2026, chuỗi 08 buổi học bổ trợ cuối tuần do mạng lưới chuyên gia tình nguyện viên của Wisdom Vietnam Network phụ trách đã hoàn thành chặng 1 với sự tham gia của gần 60 học sinh THCS.
+        </p>
+
+        <div class="article-content">
+          <p>
+            Khác với các lớp học thêm truyền thống tập trung vào luyện giải bài tập thi cử, chuỗi sinh hoạt kỹ năng của DR SOLUTIONS tập trung trang bị những năng lực học tập cốt lõi của thế kỷ 21: kỹ năng tư duy phản biện, phương pháp tự nghiên cứu qua tài liệu số mở và khả năng trình bày trước đám đông.
+          </p>
+
+          <div class="impact-stat-box">
+            📈 <strong>Tác động sau 2 tháng triển khai:</strong> 100% học sinh tham gia hoàn thành dự án đọc sách cá nhân; 85% các em thể hiện sự tự tin rõ rệt khi phát biểu nhóm; hỗ trợ 1-1 cho 12 em học sinh có biểu hiện tự ti và gặp khó khăn học tập hòa nhập.
+          </div>
+
+          <p>
+            Mỗi buổi học chỉ kéo dài 90 phút vào sáng thứ Bảy, kết hợp trò chơi vận động và các bài tập tình huống thực tế, tạo không gian học tập cởi mở, không áp lực điểm số.
+          </p>
+
+          <div class="quote-box">
+            "Mục tiêu lớn nhất của chúng tôi là xóa tan rào cản mặc cảm tự ti của các em nhỏ yếu thế. Khi được hướng dẫn phương pháp học đúng đắn và cảm nhận được sự tôn trọng, các em đều bộc lộ tiềm năng trí tuệ và sự sáng tạo rất đáng kinh ngạc."
+            <span class="quote-author">— Thầy Nguyễn Hoàng Minh (Điều phối viên Ban Đào tạo Kỹ năng)</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- BÀI BÁO SỐ 3 -->
+    <article class="article-card">
+      <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&auto=format&fit=crop&q=80" alt="Đồng hành cùng phụ huynh" class="article-banner">
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="meta-tag">Đồng Hành Gia Đình</span>
+          <span>📅 Ngày 15/08/2026</span>
+          <span>📍 Tọa đàm trực tuyến & Trực tiếp tại Thư viện Cộng đồng</span>
+        </div>
+        <h2 class="article-title">Tọa Đàm "Cùng Con Kiến Tạo Tương Lai": Gỡ Rối Nỗi Lo Giáo Dục Cho Phụ Huynh Lao Động</h2>
+        
+        <p class="lead-text">
+          Chương trình gặp gỡ định kỳ số thứ tư đã thu hút hơn 70 phụ huynh tham dự, cùng lắng nghe các chuyên gia tâm lý học đường chia sẻ về cách thấu hiểu con cái trong giai đoạn chuyển cấp.
+        </p>
+
+        <div class="article-content">
+          <p>
+            Trong bối cảnh áp lực kinh tế và sự bùng nổ của mạng xã hội, nhiều phụ huynh là người lao động phổ thông bày tỏ sự bối rối khi không biết cách quản lý thời gian sử dụng điện thoại hay định hướng thái độ học tập cho con. Diễn đàn đã đóng vai trò là cầu nối tin cậy giúp phụ huynh trút bỏ áp lực và nhận những lời khuyên khoa học nhưng dễ áp dụng tại nhà.
+          </p>
+
+          <div class="impact-stat-box">
+            🤝 <strong>Hỗ trợ sau tọa đàm:</strong> Phát hành miễn phí <strong>200 cẩm nang</strong> "Đồng hành học tập cùng con"; thiết lập nhóm hỗ trợ hỏi-đáp tâm lý học đường 24/7 do các chuyên gia xã hội tình nguyện giải đáp.
+          </div>
+
+          <p>
+            Trong quý tới, DR SOLUTIONS sẽ tiếp tục mở rộng mô hình này tới các khu công nghiệp ngoại thành nhằm tiếp cận nhiều hơn nữa những gia đình cần trợ lực giáo dục kịp thời.
+          </p>
+
+          <div class="quote-box">
+            "Trước đây tôi hay quát mắng mỗi khi thấy con không chịu học bài. Sau buổi chia sẻ, tôi hiểu ra rằng chính sự lắng nghe và thói quen ngồi cùng con 15 phút mỗi tối mới là chìa khóa giúp cháu thích học hơn."
+            <span class="quote-author">— Chị Trần Thị Mai (Phụ huynh tham gia tọa đàm)</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
   </main>
 
+  <!-- Modal Quyên góp VietQR -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
+  <!-- Footer Đồng Bộ -->
   <footer>
-    &copy; 2026 CÔNG TY TNHH DR SOLUTIONS — Cam kết giáo dục cộng đồng minh bạch & phi lợi nhuận.
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+      </div>
+      <div>
+        <h4>Cam Kết Xã Hội</h4>
+        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 CÔNG TY TRÁCH NHIỆM HỮU HẠN DR SOLUTIONS. Mọi quyền được bảo lưu.
+    </div>
   </footer>
 
+  <script>
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(event) {
+      let modal = document.getElementById('donateModal');
+      if (event.target == modal) { modal.style.display = 'none'; }
+    }
+  </script>
 </body>
 </html>
