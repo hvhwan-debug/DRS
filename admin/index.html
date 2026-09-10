@@ -6,32 +6,31 @@
   <title>Trang Quản Trị Bài Viết - DR SOLUTIONS</title>
 </head>
 <body>
-  <div id="token-box" style="display:none; position:fixed; inset:0; background:#f8fafc; z-index:99999; display:flex; align-items:center; justify-content:center; font-family:sans-serif;">
-    <div style="background:#ffffff; padding:2rem; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:100%; max-width:400px; text-align:center;">
-      <h3 style="margin-bottom:1rem; color:#0f172a;">Đăng Nhập Quản Trị</h3>
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1rem;">Dán Personal Access Token (ghp_...) của bạn vào bên dưới:</p>
-      <input type="password" id="pat-input" placeholder="ghp_..." style="width:100%; padding:0.6rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; box-sizing:border-box;">
-      <button onclick="saveToken()" style="width:100%; padding:0.6rem; background:#0284c7; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Đăng Nhập</button>
+  <div id="token-login-box" style="position:fixed; inset:0; background:#f1f5f9; z-index:999999; display:flex; align-items:center; justify-content:center; font-family:system-ui, sans-serif;">
+    <div style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:90%; max-width:400px; text-align:center;">
+      <h2 style="margin-top:0; color:#0f172a; font-size:1.25rem;">Đăng Nhập Quản Trị</h2>
+      <p style="color:#64748b; font-size:0.9rem; margin-bottom:1.5rem;">Dán Personal Access Token (ghp_...) để vào viết bài:</p>
+      <input type="password" id="token-input" placeholder="ghp_..." style="width:100%; padding:0.75rem; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box; margin-bottom:1rem; font-size:0.95rem;">
+      <button onclick="submitToken()" style="width:100%; padding:0.75rem; background:#2563eb; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.95rem;">Vào Trang Quản Trị</button>
     </div>
   </div>
 
   <script>
-    const userStr = localStorage.getItem('decap-cms-user');
-    if (!userStr || !JSON.parse(userStr).token) {
-      document.getElementById('token-box').style.display = 'flex';
-    } else {
-      document.getElementById('token-box').style.display = 'none';
+    const savedAuth = localStorage.getItem('decap-cms-user');
+    if (savedAuth && JSON.parse(savedAuth).token) {
+      document.getElementById('token-login-box').style.display = 'none';
     }
 
-    function saveToken() {
-      const val = document.getElementById('pat-input').value.trim();
+    function submitToken() {
+      const val = document.getElementById('token-input').value.trim();
       if (val) {
         localStorage.setItem('decap-cms-user', JSON.stringify({ token: val, backendName: 'github' }));
-        document.getElementById('token-box').style.display = 'none';
-        location.reload();
+        document.getElementById('token-login-box').style.display = 'none';
+        window.location.reload();
       }
     }
   </script>
+
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
