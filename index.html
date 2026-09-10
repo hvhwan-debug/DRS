@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DR SOLUTIONS - Vì Cơ Hội Học Tập Công Bằng</title>
+  <title>Wisdom Vietnam Network - Vận hành bởi DR SOLUTIONS</title>
   <style>
     :root {
       /* Dải Gradient Xanh chủ đạo */
@@ -46,16 +46,29 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 1.5rem;
+      padding: 0.85rem 1.5rem;
     }
-    .brand {
-      font-size: 1.35rem;
+    .brand-wrap {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand-title {
+      font-size: 1.25rem;
       font-weight: 800;
       background: var(--blue-grad-primary);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-decoration: none;
       letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .brand-subtitle {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
     }
     .nav-links a {
       margin-left: 1.8rem;
@@ -326,10 +339,13 @@
 </head>
 <body>
 
-  <!-- Header Menu chuẩn ban đầu -->
+  <!-- Header Menu nguyên bản với Logo chuẩn 2 dòng -->
   <header>
     <div class="nav-container">
-      <a href="index.html" class="brand">DR SOLUTIONS</a>
+      <a href="index.html" class="brand-wrap">
+        <span class="brand-title">Wisdom Vietnam Network</span>
+        <span class="brand-subtitle">Vận hành bởi DR SOLUTIONS</span>
+      </a>
       <nav class="nav-links">
         <a href="#tru-cot">Trụ Cột</a>
         <a href="hoat-dong.html">Hoạt Động</a>
