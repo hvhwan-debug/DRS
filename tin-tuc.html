@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tin Tức & Báo Cáo - Wisdom Vietnam Network</title>
+  <title>Liên Hệ & Đóng Góp Ý Kiến - Wisdom Vietnam Network</title>
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -65,7 +65,7 @@
       display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
     }
 
-    /* Hero Banner thân thiện di động */
+    /* Hero Banner */
     .hero-wrapper {
       width: 100%; background: var(--blue-grad-hero); padding: 3.5rem 1rem 4rem; color: var(--white); text-align: center;
     }
@@ -77,89 +77,85 @@
     .hero-title { font-size: 2.4rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; line-height: 1.2; }
     .hero-desc { font-size: 1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; padding: 0 0.5rem; }
 
-    /* Main Container & News Grid */
-    .container { max-width: 1240px; margin: 2.5rem auto 4rem auto; padding: 0 1rem; }
+    /* Main Container */
+    .container { max-width: 1100px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
     
-    .news-grid {
+    .contact-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2.5rem;
+      align-items: start;
     }
-    .news-card {
-      background: #ffffff;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-      transition: transform 0.25s, box-shadow 0.25s;
-      display: flex;
-      flex-direction: column;
-    }
-    .news-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 25px rgba(2, 132, 199, 0.1);
-    }
-    .news-img-box {
-      width: 100%; height: 180px; overflow: hidden; position: relative;
-    }
-    .news-img-box img {
-      width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;
-    }
-    .news-card:hover .news-img-box img { transform: scale(1.05); }
-    .news-content {
-      padding: 1.4rem; flex-grow: 1; display: flex; flex-direction: column;
-    }
-    .news-date {
-      font-size: 0.8rem; color: #0284c7; font-weight: 700; margin-bottom: 0.4rem;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .news-content h3 {
-      font-size: 1.12rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; line-height: 1.35;
-    }
-    .news-content p {
-      font-size: 0.9rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1rem; flex-grow: 1;
-    }
-    .news-link {
-      font-weight: 700; color: #0284c7; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;
-    }
-    .news-link:hover { color: #0369a1; text-decoration: underline; }
 
-    /* Pagination (9 bài/trang, tối ưu di động) */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.4rem;
-      margin-top: 2.5rem;
-      flex-wrap: wrap;
-    }
-    .page-btn {
+    .contact-info-card {
       background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 20px;
       border: 1px solid var(--border);
-      color: var(--text-dark);
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-      font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
     }
-    .page-btn:hover:not(:disabled) {
-      background: #f0f9ff;
-      border-color: #0284c7;
+    .contact-info-card h3 {
+      font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1rem;
+    }
+    .contact-info-card p {
+      font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.8rem; line-height: 1.6;
+    }
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .info-item i {
+      font-size: 1.2rem;
       color: #0284c7;
+      margin-top: 0.2rem;
     }
-    .page-btn.active {
-      background: var(--blue-grad-btn);
-      color: #ffffff;
-      border-color: transparent;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    .info-item div strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      margin-bottom: 0.2rem;
     }
-    .page-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+    .info-item div span {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .contact-form-card {
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    }
+    .contact-form-card h3 {
+      font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;
+    }
+    .contact-form-card p {
+      font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block; font-size: 0.9rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem;
+    }
+    .form-control {
+      width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 10px;
+      font-size: 0.95rem; outline: none; background: #f8fafc; transition: all 0.2s; font-family: inherit;
+    }
+    .form-control:focus {
+      border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+    }
+    textarea.form-control {
+      resize: vertical; min-height: 120px;
+    }
+
+    .success-alert {
+      display: none; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534;
+      padding: 1rem; border-radius: 10px; font-weight: 600; margin-bottom: 1rem; text-align: center;
     }
 
     /* Modal Quyên góp VietQR */
@@ -188,8 +184,8 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.05rem; padding: 0.4rem 0; }
+      .contact-grid { grid-template-columns: 1fr; }
       .hero-title { font-size: 2rem; }
-      .news-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -216,8 +212,8 @@
         <a href="index.html#tru-cot">Sứ Mệnh</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-        <a href="tin-tuc.html" class="active">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>
+        <a href="tin-tuc.html">Tin Tức</a>
+        <a href="lien-he.html" class="active">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn" onclick="openModal()">Quyên Góp</button>
@@ -230,21 +226,98 @@
 
   <!-- Hero Banner -->
   <section class="hero-wrapper">
-    <div class="hero-badge">CỔNG THÔNG TIN CẬP NHẬT</div>
-    <h1 class="hero-title">Tin Tức & Báo Cáo Hoạt Động</h1>
-    <p class="hero-desc">Tổng hợp các thông báo, bản tin định kỳ, cam kết pháp lý và các chương trình hành động vì cộng đồng.</p>
+    <div class="hero-badge">KẾT NỐI VÀ CHIA SẺ</div>
+    <h1 class="hero-title">Liên Hệ & Đóng Góp Ý Kiến</h1>
+    <p class="hero-desc">Chúng tôi luôn sẵn sàng lắng nghe mọi ý kiến đóng góp, đề xuất hoạt động hoặc đồng hành từ quý đối tác và cộng đồng.</p>
   </section>
 
   <!-- Main Container -->
   <main class="container">
-    <div class="news-grid" id="newsGrid">
-      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7; margin-bottom: 0.5rem;"></i><br>Đang tải kho tin tức...
-      </div>
-    </div>
+    <div class="contact-grid">
+      
+      <!-- Thông tin tổ chức -->
+      <div class="contact-info-card">
+        <h3>Thông Tin Tổ Chức</h3>
+        <p>Wisdom Vietnam Network được vận hành bởi CÔNG TY TNHH DR SOLUTIONS theo mô hình doanh nghiệp xã hội phi lợi nhuận.</p>
+        
+        <div class="info-item">
+          <i class="fa-solid fa-building"></i>
+          <div>
+            <strong>Đơn vị vận hành</strong>
+            <span>CÔNG TY TNHH DR SOLUTIONS</span>
+          </div>
+        </div>
 
-    <!-- Phân trang -->
-    <div class="pagination" id="paginationBox"></div>
+        <div class="info-item">
+          <i class="fa-solid fa-id-card"></i>
+          <div>
+            <strong>Mã số doanh nghiệp (MST)</strong>
+            <span>0111291749</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>Trụ sở chính</strong>
+            <span>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <strong>Thư điện tử (Email)</strong>
+            <span>hotro@wvn.vn | cskh@dr.com</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="fa-solid fa-clock"></i>
+          <div>
+            <strong>Thời gian làm việc</strong>
+            <span>Thứ Hai - Thứ Bảy: 08:00 - 17:30</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu mẫu gửi lời nhắn -->
+      <div class="contact-form-card">
+        <h3>Gửi Lời Nhắn Trực Tuyến</h3>
+        <p>Điền thông tin của bạn vào biểu mẫu dưới đây để gửi ý kiến trực tiếp đến ban điều phối.</p>
+        
+        <div class="success-alert" id="successAlert">
+          <i class="fa-solid fa-circle-check"></i> Cảm ơn bạn đã gửi thông tin! Ban điều phối sẽ phản hồi trong thời gian sớm nhất.
+        </div>
+
+        <form id="contactForm" onsubmit="handleFormSubmit(event)">
+          <div class="form-group">
+            <label for="fullName">Họ và tên của bạn</label>
+            <input type="text" id="fullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Địa chỉ Email</label>
+            <input type="email" id="email" class="form-control" placeholder="Ví dụ: email@domain.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Số điện thoại liên hệ</label>
+            <input type="tel" id="phone" class="form-control" placeholder="Ví dụ: 0912345678">
+          </div>
+
+          <div class="form-group">
+            <label for="message">Nội dung / Ý kiến đóng góp</label>
+            <textarea id="message" class="form-control" placeholder="Nhập nội dung đề xuất hoạt động hoặc lời nhắn của bạn..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn" style="width: 100%; padding: 0.85rem; font-size: 1rem;">
+            <i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i> Gửi Lời Nhắn Ngay
+          </button>
+        </form>
+      </div>
+
+    </div>
   </main>
 
   <!-- Modal Quyên góp VietQR -->
@@ -301,127 +374,16 @@
       }
     }
 
-    const sampleNews = [
-      { filename: "bai-1.md", title: "Cam kết pháp lý & Mô hình hoạt động phi lợi nhuận", date: "Tháng 07 / 2026", description: "Chi tiết về điều lệ sử dụng 100% lợi nhuận sau thuế tái đầu tư cho giáo dục cộng đồng theo mã số doanh nghiệp.", thumbnail: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-2.md", title: "Báo cáo minh bạch tài chính Quý II / 2026", date: "Tháng 06 / 2026", description: "Tổng kết toàn bộ số liệu thu chi, sao kê dòng tiền ủng hộ và các hạng mục đã giải ngân trong quý.", thumbnail: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-3.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-4.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-5.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", thumbnail: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-6.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-7.md", title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.", thumbnail: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-8.md", title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 01 / 2025", description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.", thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" },
-      { filename: "bai-9.md", title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80" }
-    ];
-
-    let allPosts = [];
-    let currentPage = 1;
-    const itemsPerPage = 9; // Hiển thị đúng 9 bài viết mỗi trang
-
-    async function fetchNews() {
-      const repo = 'hvhwan-debug/DRS';
-      const apiURL = `https://api.github.com/repos/${repo}/contents/content/posts`;
-
-      try {
-        const response = await fetch(apiURL);
-        if (response.ok) {
-          const files = await response.json();
-          const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse();
-          
-          if (mdFiles.length > 0) {
-            for (const file of mdFiles) {
-              const fileRes = await fetch(file.download_url);
-              const text = await fileRes.text();
-              const parts = text.split('---');
-              let title = 'Bài viết thông tin';
-              let date = '2026';
-              let desc = '';
-              let thumbnail = '';
-
-              if (parts.length >= 3) {
-                const yamlMeta = parts[1];
-                const titleMatch = yamlMeta.match(/title:\s*"?(.*?)"?$/m);
-                const dateMatch = yamlMeta.match(/date:\s*"?(.*?)"?$/m);
-                const descMatch = yamlMeta.match(/description:\s*"?(.*?)"?$/m);
-                const thumbMatch = yamlMeta.match(/thumbnail:\s*"?(.*?)"?$/m);
-
-                if (titleMatch) title = titleMatch[1].replace(/["']/g, '');
-                if (dateMatch) date = dateMatch[1].replace(/["']/g, '');
-                if (descMatch) desc = descMatch[1].replace(/["']/g, '');
-                if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
-              }
-              allPosts.push({ filename: file.name, title, date, description: desc, thumbnail });
-            }
-          }
-        }
-      } catch (e) {
-        console.log("Sử dụng dữ liệu mẫu");
-      }
-
-      if (allPosts.length === 0) {
-        allPosts = sampleNews;
-      }
-
-      renderPage(currentPage);
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const alertBox = document.getElementById('successAlert');
+      alertBox.style.display = 'block';
+      document.getElementById('contactForm').reset();
+      window.scrollTo({ top: 200, behavior: 'smooth' });
+      setTimeout(() => {
+        alertBox.style.display = 'none';
+      }, 6000);
     }
-
-    function renderPage(page) {
-      currentPage = page;
-      const grid = document.getElementById('newsGrid');
-      const paginationBox = document.getElementById('paginationBox');
-
-      const start = (page - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      const paginatedItems = allPosts.slice(start, end);
-
-      if (paginatedItems.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">Không có tin tức nào.</div>`;
-        paginationBox.innerHTML = '';
-        return;
-      }
-
-      let html = '';
-      paginatedItems.forEach(post => {
-        let detailLink = (post.filename && post.filename.endsWith('.md') && !post.filename.startsWith('bai-')) 
-          ? `chi-tiet.html?post=${post.filename}` 
-          : `tin-tuc.html`;
-
-        html += `
-          <div class="news-card">
-            <div class="news-img-box">
-              <img src="${post.thumbnail || 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80'}" alt="${post.title}">
-            </div>
-            <div class="news-content">
-              <span class="news-date"><i class="fa-regular fa-calendar"></i> ${post.date}</span>
-              <h3>${post.title}</h3>
-              <p>${post.description || 'Cập nhật thông tin chi tiết từ ban điều phối dự án...'}</p>
-              <a href="${detailLink}" class="news-link">Đọc chi tiết <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-          </div>
-        `;
-      });
-      grid.innerHTML = html;
-
-      // Tạo nút phân trang
-      const totalPages = Math.ceil(allPosts.length / itemsPerPage);
-      if (totalPages <= 1) {
-        paginationBox.innerHTML = '';
-        return;
-      }
-
-      let pagHTML = '';
-      pagHTML += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="renderPage(${currentPage - 1})"><i class="fa-solid fa-chevron-left"></i></button>`;
-      
-      for (let i = 1; i <= totalPages; i++) {
-        pagHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="renderPage(${i})">${i}</button>`;
-      }
-
-      pagHTML += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="renderPage(${currentPage + 1})"><i class="fa-solid fa-chevron-right"></i></button>`;
-      paginationBox.innerHTML = pagHTML;
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    fetchNews();
   </script>
 </body>
 </html>
