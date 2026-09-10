@@ -65,8 +65,9 @@
 
     /* Modal VietQR */
     .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
-    .modal-content { background: var(--white); padding: 2rem; border-radius: 12px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    .modal-content img { width: 100%; max-width: 250px; margin: 1.2rem auto; display: block; border-radius: 8px; border: 1px solid var(--border); }
+    .modal-content { background: var(--white); padding: 2rem; border-radius: 12px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+    .modal-banner { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 8px; border: 1px solid var(--border); }
 
     /* Footer Gradient tối */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 3.5rem 1rem 1.5rem; font-size: 0.9rem; }
@@ -80,10 +81,10 @@
   <!-- Navigation -->
   <header>
     <div class="nav-container">
-      <a href="#" class="brand">DR SOLUTIONS</a>
+      <a href="index.html" class="brand">DR SOLUTIONS</a>
       <nav class="nav-links">
         <a href="#tru-cot">Trụ Cột</a>
-        <a href="#hoat-dong">Hoạt Động</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
         <a href="#minh-bach">Tra Cứu Sao Kê</a>
         <a href="#phap-ly">Pháp Lý & Minh Bạch</a>
       </nav>
@@ -143,6 +144,9 @@
         <h4 style="color:#0284c7;">Đồng hành cùng gia đình</h4>
         <p style="margin-top:0.5rem;">Chuỗi gặp gỡ giúp phụ huynh chia sẻ khó khăn và nhận hướng dẫn thực tế để cùng con học tập tích cực tại nhà.</p>
       </div>
+    </div>
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="hoat-dong.html" class="btn">Xem Tất Cả Hoạt Động & Tin Tức →</a>
     </div>
   </section>
 
@@ -204,15 +208,25 @@
     </div>
   </section>
 
-  <!-- Modal Quyên góp VietQR -->
+  <!-- Modal Quyên góp VietQR kèm Ảnh minh họa -->
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <h3 style="color:#0369a1;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      <p style="font-size:0.9rem; color:var(--text-muted); margin-top:0.5rem;">Quét mã VietQR bằng app ngân hàng để chung tay cùng quỹ:</p>
-      <!-- Link VietQR tự động -->
-      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp">
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
-      <button class="btn" style="background:#64748b; width:100%;" onclick="closeModal()">Đóng Cửa Sổ</button>
+      
+      <!-- Hình ảnh minh họa hoạt động giáo dục -->
+      <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&auto=format&fit=crop&q=80" 
+           alt="Cơ hội học tập công bằng" 
+           class="modal-banner">
+      
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      
+      <!-- Mã VietQR tự động -->
+      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" 
+           alt="Mã VietQR Quyên góp" 
+           class="modal-qr">
+           
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung chuyển khoản: <strong>DRS DONG HANH</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
     </div>
   </div>
 
