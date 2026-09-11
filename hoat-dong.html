@@ -174,6 +174,26 @@
     .timeline-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; position: relative; width: 100%; z-index: 3; }
     .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
 
+    /* Hiệu ứng xuất hiện dần khi cuộn tới (thêm class .in-view bằng JS/IntersectionObserver) */
+    .timeline-item {
+      opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .timeline-item.in-view { opacity: 1; transform: translateY(0); }
+    .timeline-item:nth-child(odd) .timeline-content { transform: translateX(-10px); }
+    .timeline-item:nth-child(even) .timeline-content { transform: translateX(10px); }
+    .timeline-item.in-view .timeline-content { transform: translateX(0); }
+
+    /* Trạng thái tải / rỗng / lỗi cho timeline */
+    .timeline-status { text-align: center; padding: 3rem 1.5rem; color: var(--text-muted); position: relative; z-index: 10; }
+    .timeline-status i { font-size: 1.6rem; color: #0284c7; display: block; margin-bottom: 0.8rem; }
+
+    /* Badge chuyên mục nhỏ trên mỗi thẻ mốc thời gian, tạo thêm điểm nhấn màu sắc */
+    .timeline-tag {
+      display: inline-flex; align-items: center; gap: 0.4rem; background: #fef3c7; color: #b45309;
+      padding: 0.28rem 0.8rem; border-radius: 999px; font-weight: 700; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.3px; margin-left: 0.6rem; vertical-align: middle;
+    }
+
     /* Chấm tròn với hiệu ứng tỏa sóng (Pulse Waves) */
     .timeline-dot {
       position: absolute; left: 50%; transform: translateX(-50%); width: 24px; height: 24px;
@@ -257,10 +277,8 @@
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
           </svg>
         </div>
         <div class="brand-text-group">
@@ -276,7 +294,7 @@
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn" onclick="openModal()">Quyên Góp</button>
+        <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -322,7 +340,7 @@
             <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
           </div>
           <div class="upcoming-actions">
-            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <button class="btn btn-donate-glow" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
             <a href="lien-he.html" class="btn-secondary">Đăng ký tham gia</a>
           </div>
         </div>
@@ -334,7 +352,7 @@
             <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
           </div>
           <div class="upcoming-actions">
-            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <button class="btn btn-donate-glow" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
             <a href="lien-he.html" class="btn-secondary">Tìm hiểu thêm</a>
           </div>
         </div>
@@ -348,10 +366,15 @@
       <div class="timeline-progress-line" id="timelineProgress"></div>
       
       <div class="timeline-root-node">
-        <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện Nổi Bật 2026</div>
+        <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện Nổi Bật <span id="timelineRootYear">2026</span></div>
       </div>
       
-      <div id="timeline2026"></div>
+      <div id="timeline2026">
+        <div class="timeline-status" id="timelineLoading">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          Đang tải các cột mốc hoạt động từ bài viết thực tế...
+        </div>
+      </div>
 
       <!-- Nút bấm xem thêm hoạt động các năm trước -->
       <div class="history-toggle-box" id="historyToggleBox" style="display: none;">
@@ -407,70 +430,258 @@
   </footer>
 
   <script>
-    const vietnameseImagePool = [
-      "images/uploads/2-onl-16997056815001293662280.jpg",
-      "images/uploads/48591585757_7be64177d0_o.jpg",
-      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
-      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
-      "images/uploads/images (1).jfif",
-      "images/uploads/images (2).jfif",
-      "images/uploads/images (3).jfif",
-      "images/uploads/images (4).jfif"
+    // ==== CẤU HÌNH NGUỒN DỮ LIỆU THẬT ====
+    const GITHUB_OWNER = "hvhwan-debug";
+    const GITHUB_REPO = "DRS";
+    const GITHUB_BRANCH = "main";
+
+    // Danh sách dự phòng (dùng khi không gọi được GitHub API). Bài viết mới thêm vào
+    // content/posts sẽ tự động được lấy qua API, không bắt buộc phải cập nhật mảng này.
+    const FALLBACK_SLUGS = [
+      "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuân",
+      "buc-tranh-20-11-2025-ha-giang",
+      "day-hoc-tinh-nguyen-dien-bien-22-04-2026",
+      "giao-duc-vung-cao",
+      "hanh-trinh-2-9-thap-sang-tuong-lai-vung-cao",
+      "ho-tro-tre-em-ha-giang",
+      "hoat-dong-thu-vien-va-tu-sach-vung-cao",
+      "hoi-thao-ky-nang-giao-duc-cho-tre-vung-cao",
+      "hoi-thao-mua-dong-tinh-nguyen-thang-11-2025",
+      "khanh-thanh-tu-sach-son-la-thang-4-2026",
+      "kho-khan-khi-den-truong-ha-giang",
+      "mang-tri-thuc-thai-nguyen-bac-kan-thang-11-2025",
+      "minh-bach-trong-tu-thien",
+      "mua-cải-ven-song-mua-dong-am-ap-thang-12-2025",
+      "su-menh-cao-bang-thang-4-2026",
+      "su-menh-va-gia-tri-cot-loi-drs",
+      "tap-huan-ky-nang-giang-day-noi-bo-drs",
+      "thien-nguyen-ha-giang-11-2026",
+      "thien-nguyen-lao-cai-thang-5-2026",
+      "ung-ho-100-trieu-cong-ty-abc"
     ];
 
-    function getRandomImage() {
-      return vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
+    const FALLBACK_IMG = "images/uploads/2-onl-16997056815001293662280.jpg";
+    const FALLBACK_UPLOADED_IMAGES = [
+      "2-onl-16997056815001293662280.jpg",
+      "48591585757_7be64177d0_o.jpg",
+      "Ban-Sao-Luong-Giao-V.jpg",
+      "cac-phuong-phap-day-hoc-tich-cuc-1.png",
+      "images (1).jfif",
+      "images (2).jfif",
+      "images (3).jfif",
+      "images (4).jfif"
+    ];
+
+    let uploadedImagePool = [];
+
+    async function fetchAllPostSlugs() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/content/posts?ref=${GITHUB_BRANCH}`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error("GitHub API lỗi");
+        const files = await res.json();
+        const slugs = files
+          .filter(f => f.type === "file" && f.name.toLowerCase().endsWith(".md"))
+          .map(f => f.name.replace(/\.md$/i, ""));
+        if (slugs.length === 0) throw new Error("Không có bài viết nào");
+        return slugs;
+      } catch (e) {
+        console.warn("Không lấy được danh sách bài viết từ GitHub, dùng danh sách dự phòng.", e);
+        return FALLBACK_SLUGS;
+      }
     }
 
-    const sampleAllPosts = [
-      { filename: "bai-1.md", title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", date: "Tháng 11 / 2026", description: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến tổ chức nhằm hỗ trợ điều kiện học tập.", year: "2026", sortWeight: 202611, thumbnail: getRandomImage() },
-      { filename: "bai-2.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", year: "2026", sortWeight: 202607, thumbnail: getRandomImage() },
-      { filename: "bai-3.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", year: "2026", sortWeight: 202605, thumbnail: getRandomImage() },
-      { filename: "bai-4.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", year: "2026", sortWeight: 202603, thumbnail: getRandomImage() },
-      { filename: "bai-5.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", year: "2026", sortWeight: 202602, thumbnail: getRandomImage() },
-      { filename: "bai-6.md", title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.", year: "2026", sortWeight: 202601, thumbnail: getRandomImage() },
-      { filename: "bai-7.md", title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.", year: "2025", sortWeight: 202512, thumbnail: getRandomImage() },
-      { filename: "bai-8.md", title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.", year: "2025", sortWeight: 202511, thumbnail: getRandomImage() },
-      { filename: "bai-9.md", title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", description: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.", year: "2025", sortWeight: 202510, thumbnail: getRandomImage() },
-      { filename: "bai-10.md", title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", description: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.", year: "2025", sortWeight: 202509, thumbnail: getRandomImage() }
+    async function fetchUploadedImages() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/images/uploads?ref=${GITHUB_BRANCH}`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error("GitHub API lỗi");
+        const files = await res.json();
+        const imageExtRegex = /\.(jpe?g|png|gif|webp|jfif|avif)$/i;
+        const names = files.filter(f => f.type === "file" && imageExtRegex.test(f.name)).map(f => f.name);
+        if (names.length === 0) throw new Error("Không có ảnh nào trong kho");
+        return names;
+      } catch (e) {
+        console.warn("Không lấy được danh sách ảnh từ GitHub, dùng danh sách dự phòng.", e);
+        return FALLBACK_UPLOADED_IMAGES;
+      }
+    }
+
+    function getRandomUploadedImage() {
+      if (!uploadedImagePool.length) return FALLBACK_IMG;
+      const name = uploadedImagePool[Math.floor(Math.random() * uploadedImagePool.length)];
+      return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
+    }
+
+    // Phân tích Front Matter YAML đơn giản ở đầu file markdown
+    function parseFrontMatter(raw) {
+      const result = { title: "", date: "", image: "", excerpt: "", body: raw, valid: false };
+      const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
+      if (!match) return result;
+      result.valid = true;
+      const yamlBlock = match[1];
+      result.body = match[2];
+      yamlBlock.split(/\r?\n/).forEach(line => {
+        const kv = line.match(/^([a-zA-Z0-9_]+)\s*:\s*(.*)$/);
+        if (!kv) return;
+        const key = kv[1].trim().toLowerCase();
+        let value = kv[2].trim();
+        value = value.replace(/^["']|["']$/g, "");
+        if (key in result || key === "title" || key === "date" || key === "image" || key === "thumbnail" || key === "excerpt" || key === "description") {
+          if (key === "description") result.excerpt = result.excerpt || value;
+          else if (key === "thumbnail") result.image = result.image || value;
+          else result[key] = value;
+        }
+      });
+      return result;
+    }
+
+    function slugToTitle(slug) {
+      return slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function firstParagraph(body) {
+      const clean = body
+        .replace(/^#.*$/gm, "")
+        .replace(/!\[.*?\]\(.*?\)/g, "")
+        .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+        .replace(/[*_`>]/g, "")
+        .trim();
+      const para = clean.split(/\r?\n\s*\r?\n/).find(p => p.trim().length > 0) || "";
+      return para.trim().slice(0, 150);
+    }
+
+    // Chuyển "Tháng MM / YYYY" (hoặc ngày ISO) thành số có thể so sánh để sắp đúng
+    // thứ tự thời gian thực tế, và tách được năm để nhóm mốc sự kiện theo năm.
+    function parseDateInfo(dateStr) {
+      if (!dateStr) return { sortWeight: -Infinity, year: null };
+      const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
+      if (viMatch) {
+        const month = parseInt(viMatch[1], 10);
+        const year = parseInt(viMatch[2], 10);
+        return { sortWeight: year * 12 + month, year };
+      }
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) return { sortWeight: d.getFullYear() * 12 + (d.getMonth() + 1), year: d.getFullYear() };
+      return { sortWeight: -Infinity, year: null };
+    }
+
+    // Vài nhãn chuyên mục xoay vòng để mỗi mốc thời gian có một điểm nhấn màu sắc,
+    // vì phần lớn bài viết hiện chưa khai báo category trong front matter.
+    const TIMELINE_TAGS = [
+      { label: "Tủ sách & học liệu", bg: "#e0f2fe", color: "#0369a1" },
+      { label: "Thiện nguyện", bg: "#fef3c7", color: "#b45309" },
+      { label: "Hội thảo & tập huấn", bg: "#e0e7ff", color: "#4338ca" },
+      { label: "Đồng hành cộng đồng", bg: "#f0fdf4", color: "#166534" }
     ];
 
-    function loadTimelineData() {
+    function renderTimelineItem(post, index) {
+      const tag = TIMELINE_TAGS[index % TIMELINE_TAGS.length];
+      return `
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <img src="${post.image}" alt="${post.title}" class="timeline-img" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+            <span class="timeline-year"><i class="fa-regular fa-calendar"></i> ${post.date || "Chưa rõ thời gian"}</span>
+            <span class="timeline-tag" style="background:${tag.bg}; color:${tag.color};">${tag.label}</span>
+            <h3>${post.title}</h3>
+            <p>${post.excerpt}</p>
+            <a href="chi-tiet.html?slug=${encodeURIComponent(post.slug)}" class="btn-detail">Xem chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadTimelineData() {
       const container2026 = document.getElementById('timeline2026');
       const containerHistory = document.getElementById('timelineHistory');
       const historyToggleBox = document.getElementById('historyToggleBox');
 
-      let list2026 = [];
-      let listHistory = [];
+      try {
+        const [slugs, images] = await Promise.all([fetchAllPostSlugs(), fetchUploadedImages()]);
+        uploadedImagePool = images;
 
-      sampleAllPosts.sort((a, b) => b.sortWeight - a.sortWeight);
+        const results = await Promise.all(slugs.map(async slug => {
+          try {
+            const res = await fetch(`content/posts/${slug}.md`);
+            if (!res.ok) throw new Error("not found");
+            const raw = await res.text();
+            const fm = parseFrontMatter(raw);
+            if (!fm.valid) {
+              console.warn(`Bỏ qua bài viết lỗi định dạng (thiếu front matter): ${slug}.md`);
+              return null;
+            }
+            const dateInfo = parseDateInfo(fm.date);
+            return {
+              slug,
+              title: fm.title || slugToTitle(slug),
+              date: fm.date || "",
+              sortWeight: dateInfo.sortWeight,
+              year: dateInfo.year,
+              image: getRandomUploadedImage(),
+              excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
+            };
+          } catch (e) {
+            return null;
+          }
+        }));
 
-      sampleAllPosts.forEach(post => {
-        const itemHTML = `
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <img src="${post.thumbnail}" alt="${post.title}" class="timeline-img">
-              <span class="timeline-year"><i class="fa-regular fa-calendar"></i> ${post.date}</span>
-              <h3>${post.title}</h3>
-              <p>${post.description}</p>
-              <a href="tin-tuc.html" class="btn-detail">Xem chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-          </div>
-        `;
+        const posts = results.filter(Boolean).sort((a, b) => b.sortWeight - a.sortWeight);
 
-        if (post.year === '2026') {
-          list2026.push(itemHTML);
-        } else {
-          listHistory.push(itemHTML);
+        if (posts.length === 0) {
+          container2026.innerHTML = `
+            <div class="timeline-status">
+              <i class="fa-solid fa-circle-info"></i>
+              Chưa có bài viết nào để hiển thị trên dòng thời gian.
+            </div>`;
+          return;
         }
-      });
 
-      container2026.innerHTML = list2026.join('');
-      if (listHistory.length > 0) {
-        containerHistory.innerHTML = listHistory.join('');
-        historyToggleBox.style.display = 'block';
+        const highlightYear = Math.max(...posts.map(p => p.year || 0));
+        document.getElementById('timelineRootYear').textContent = highlightYear || new Date().getFullYear();
+
+        const list2026 = [];
+        const listHistory = [];
+
+        posts.forEach((post, index) => {
+          const html = renderTimelineItem(post, index);
+          if (post.year === highlightYear) list2026.push(html);
+          else listHistory.push(html);
+        });
+
+        container2026.innerHTML = list2026.join('');
+        if (listHistory.length > 0) {
+          containerHistory.innerHTML = listHistory.join('');
+          historyToggleBox.style.display = 'block';
+        }
+
+        initScrollReveal();
+      } catch (err) {
+        console.error(err);
+        container2026.innerHTML = `
+          <div class="timeline-status">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Không thể tải dữ liệu hoạt động lúc này. Vui lòng thử lại sau.
+          </div>`;
       }
+    }
+
+    // Hiệu ứng xuất hiện dần cho từng mốc thời gian khi cuộn tới, giúp trang sinh động hơn.
+    function initScrollReveal() {
+      const items = document.querySelectorAll('.timeline-item');
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(el => el.classList.add('in-view'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+      items.forEach(el => observer.observe(el));
     }
 
     function toggleHistory() {
