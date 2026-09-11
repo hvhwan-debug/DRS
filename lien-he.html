@@ -92,6 +92,24 @@
     }
     .hero-title { font-size: 3rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
     .hero-desc { font-size: 1.15rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với trang Tra Cứu Sao Kê */
+    .hero-dove {
+      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      pointer-events: none; z-index: 5;
+      animation: doveFloat 9s ease-in-out infinite;
+      transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0%   { transform: translate(0, 0) rotate(-4deg); }
+      25%  { transform: translate(-14px, -18px) rotate(2deg); }
+      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
+      75%  { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 640px) {
+      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
+    }
 
     /* Main Container & Grid liên hệ */
     .container { max-width: 1200px; margin: -3.5rem auto 5rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
@@ -236,6 +254,7 @@
 
   <!-- Hero Section -->
   <section class="hero-wrapper">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">KẾT NỐI & HỢP TÁC</div>
     <h1 class="hero-title">Liên Hệ Với Chúng Tôi</h1>
     <p class="hero-desc">Mọi thắc mắc, đóng góp ý kiến hoặc mong muốn đồng hành cùng các chương trình giáo dục cộng đồng xin vui lòng gửi về cho chúng tôi.</p>
