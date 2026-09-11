@@ -197,14 +197,13 @@
         </div>
       </a>
       <nav class="nav-links" id="navLinks">
-        <a href="index.html#tru-cot">Sứ Mệnh</a>
+        <a href="su-menh.html">Sứ Mệnh</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html" class="active">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 8px;">
-        <!-- Sử dụng class .btn-donate-glow riêng biệt để tránh xung đột trắng trang -->
         <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
           <i class="fa-solid fa-bars"></i>
@@ -280,7 +279,14 @@
       }
     }
 
+    // Kho dữ liệu tổng hợp toàn bộ bài viết (bao gồm cả bài Giáo dục vùng cao và Minh bạch từ thiện mới nhất)
     const allPosts = [
+      { 
+        title: "Giáo dục vùng cao: Khi một cơ hội đến trường có thể mở ra một tương lai khác", 
+        date: "Tháng 09 / 2026", 
+        description: "Có những nơi, việc một đứa trẻ được đến trường mỗi ngày tưởng như là điều rất bình thường. Nhưng ở một số khu vực vùng cao, để duy trì việc học lại là một hành trình...", 
+        thumbnail: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80" 
+      },
       { 
         title: "Minh bạch trong từ thiện: Đừng chỉ nói về lòng tốt, hãy nói về cách sử dụng nguồn lực", 
         date: "Tháng 09 / 2026", 
