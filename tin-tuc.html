@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tin Tức & Hoạt Động - Wisdom Vietnam Network</title>
+  <title>Tin Tức & Hoạt Động - Wisdom Vietnam Network - DR SOLUTIONS</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -53,9 +53,9 @@
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
     .btn {
-      background: var(--blue-grad-btn); color: var(--white); padding: 0.6rem 1.3rem;
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit; font-size: 0.88rem;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
@@ -164,10 +164,8 @@
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
           </svg>
         </div>
         <div class="brand-text-group">
@@ -292,8 +290,8 @@
 
       let html = '';
       currentPosts.forEach(post => {
-        // Đã sửa thành bai-viet-1.html để khớp với trang chi tiết đang chạy đúng
-        let link = `bai-viet-1.html?post=${post.filename}`;
+        // Gắn chính xác tham số ?post=${post.filename} để trang chi tiết nhận biết đúng bài viết
+        let link = `chi-tiet.html?post=${post.filename}`;
         html += `
           <div class="news-card">
             ${post.tag ? `<div class="card-tag">${post.tag}</div>` : ''}
