@@ -141,7 +141,7 @@
       height: 62px; display: flex; align-items: center; justify-content: center; font-size: 1.55rem; color: #fff;
     }
     .upcoming-card-body { padding: 1.4rem 1.3rem 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
-    .upcoming-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem; }
+    .upcoming-meta { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 0.9rem; gap: 0.5rem; }
 
     .badge-tag {
       display: inline-block; background: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem;
@@ -363,7 +363,7 @@
       <div class="upcoming-grid" id="upcomingGrid">
 
         <div class="upcoming-card">
-          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);">
             <i class="fa-solid fa-mitten"></i>
           </div>
           <div class="upcoming-card-body">
@@ -802,19 +802,38 @@
       }
     }
 
-    // Tính số ngày còn lại cho mỗi sự kiện sắp tới, hiển thị dạng "Còn X ngày"
-    function initUpcomingCountdowns() {
+    // Tính số ngày + giờ còn lại cho mỗi sự kiện sắp tới, hiển thị dạng "Còn X ngày Y giờ",
+    // tự cập nhật mỗi phút để tạo cảm giác đang chạy sống động thay vì con số đứng yên.
+    function updateUpcomingCountdowns() {
       const now = new Date();
-      now.setHours(0, 0, 0, 0);
       document.querySelectorAll('.countdown-chip[data-event-date]').forEach(chip => {
         const eventDate = new Date(chip.getAttribute('data-event-date') + 'T00:00:00');
         if (isNaN(eventDate.getTime())) { chip.textContent = ''; return; }
-        const diffDays = Math.round((eventDate - now) / (1000 * 60 * 60 * 24));
-        if (diffDays > 1) chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Còn ${diffDays} ngày`;
-        else if (diffDays === 1) chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Còn 1 ngày`;
-        else if (diffDays === 0) chip.innerHTML = `<i class="fa-solid fa-star"></i> Diễn ra hôm nay`;
-        else chip.innerHTML = `<i class="fa-solid fa-check"></i> Đang diễn ra`;
+
+        const diffMs = eventDate - now;
+        if (diffMs <= 0) {
+          const isToday = eventDate.toDateString() === now.toDateString();
+          chip.innerHTML = isToday
+            ? `<i class="fa-solid fa-star"></i> Diễn ra hôm nay`
+            : `<i class="fa-solid fa-check"></i> Đang diễn ra`;
+          return;
+        }
+
+        const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const days = Math.floor(totalHours / 24);
+        const hours = totalHours % 24;
+
+        let label;
+        if (days > 0) label = `Còn ${days} ngày ${hours} giờ`;
+        else label = `Còn ${hours} giờ`;
+
+        chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> ${label}`;
       });
+    }
+
+    function initUpcomingCountdowns() {
+      updateUpcomingCountdowns();
+      setInterval(updateUpcomingCountdowns, 60 * 1000);
     }
 
     // Hiệu ứng đường kẻ dọc chạy theo cuộn trang
