@@ -93,7 +93,7 @@
     .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
     .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
-    /* Container Tin Tức & Bài Viết - Đảm bảo chính xác 3 bài 1 dòng */
+    /* Container Tin Tức & Bài Viết - Chuẩn 3 bài 1 dòng */
     .container { max-width: 1240px; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
     
     .news-grid {
@@ -103,7 +103,7 @@
     }
     .news-card {
       background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid var(--border);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column; position: relative;
     }
     .news-card:hover { transform: translateY(-6px); box-shadow: 0 16px 30px rgba(2, 132, 199, 0.12); border-color: #bae6fd; }
     .news-img-box { width: 100%; height: 210px; overflow: hidden; position: relative; background: #e2e8f0; }
@@ -116,7 +116,13 @@
     .news-link { color: #0284c7; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.92rem; }
     .news-link:hover { color: #0369a1; text-decoration: underline; }
 
-    /* Thanh phân trang (Pagination) chuẩn 9 bài/trang */
+    /* Tag Sự kiện sắp tới trên thẻ bài viết nếu có */
+    .card-tag {
+      position: absolute; top: 12px; right: 12px; background: rgba(2, 132, 199, 0.9); backdrop-filter: blur(4px);
+      color: #fff; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; z-index: 5; text-transform: uppercase;
+    }
+
+    /* Thanh phân trang */
     .pagination {
       display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 3.5rem;
     }
@@ -128,7 +134,7 @@
     .page-btn.active { background: #0284c7; color: #ffffff; border-color: #0284c7; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); }
     .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* Modal Quyên góp VietQR */
+    /* Modal Quyên góp */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
@@ -139,7 +145,7 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer chuẩn 3 cột đồng bộ */
+    /* Footer chuẩn 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; }
@@ -205,15 +211,14 @@
   <main class="container">
     <div class="news-grid" id="newsGrid">
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0284c7; margin-bottom: 0.5rem; display: block;"></i> Đang tải toàn bộ bài viết...
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0284c7; margin-bottom: 0.5rem; display: block;"></i> Đang tải và sắp xếp bài viết mới nhất...
       </div>
     </div>
     
-    <!-- Thanh nút phân trang -->
     <div class="pagination" id="paginationContainer"></div>
   </main>
 
-  <!-- Modal Quyên góp VietQR -->
+  <!-- Modal Quyên góp -->
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
@@ -225,7 +230,7 @@
     </div>
   </div>
 
-  <!-- Footer chuẩn 3 cột đồng bộ -->
+  <!-- Footer chuẩn 3 cột -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -250,7 +255,7 @@
   </footer>
 
   <script>
-    // Kho sưu tập 100% hình ảnh thuần Việt chất lượng cao (Học sinh vùng cao, thầy cô, lớp học Việt Nam)
+    // Kho sưu tập hình ảnh 100% thuần Việt chất lượng cao
     const vietnameseImagePool = [
       "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80",
@@ -266,10 +271,9 @@
       return vietnameseImagePool[randomIndex];
     }
 
-    // Biến lưu trữ toàn bộ bài viết từ GitHub và trang hiện tại
     let allLoadedPosts = [];
     let currentPage = 1;
-    const postsPerPage = 9; // Đúng chuẩn 9 bài mỗi trang (3 bài x 3 dòng)
+    const postsPerPage = 9;
 
     async function fetchAllPosts() {
       const repo = 'hvhwan-debug/DRS';
@@ -292,6 +296,7 @@
               let date = 'Tháng 01 / 2026';
               let desc = '';
               let thumbnail = '';
+              let tag = '';
 
               if (parts.length >= 3) {
                 const yaml = parts[1];
@@ -299,35 +304,38 @@
                 const dMatch = yaml.match(/date:\s*"?(.*?)"?$/m);
                 const descMatch = yaml.match(/description:\s*"?(.*?)"?$/m);
                 const thumbMatch = yaml.match(/thumbnail:\s*"?(.*?)"?$/m);
+                const tagMatch = yaml.match(/tag:\s*"?(.*?)"?$/m);
 
                 if (tMatch) title = tMatch[1].replace(/["']/g, '');
                 if (dMatch) date = dMatch[1].replace(/["']/g, '');
                 if (descMatch) desc = descMatch[1].replace(/["']/g, '');
                 if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
+                if (tagMatch) tag = tagMatch[1].replace(/["']/g, '');
               }
 
               let finalThumb = (thumbnail && thumbnail.trim() !== "") ? thumbnail : getRandomVietnameseImage();
 
-              posts.push({ filename: file.name, title, date, description: desc, thumbnail: finalThumb });
+              // Tính toán trọng số sắp xếp thời gian (Năm * 100 + Tháng)
+              let year = '2026';
+              let monthNum = 1;
+              if (date.includes('2025')) year = '2025';
+              else if (date.includes('2024')) year = '2024';
+              else if (date.includes('2026')) year = '2026';
+
+              const monthMatch = date.match(/Tháng\s*0?([0-9]+)/i);
+              if (monthMatch) monthNum = parseInt(monthMatch[1], 10);
+              let sortWeight = parseInt(year, 10) * 100 + monthNum;
+
+              posts.push({ filename: file.name, title, date, description: desc, thumbnail: finalThumb, tag, sortWeight });
             }
           }
         }
       } catch (e) {
-        console.log("Lỗi tải từ API GitHub, dùng dữ liệu dự phòng");
+        console.log("Lỗi tải API GitHub");
       }
 
-      // Nếu không quét được từ GitHub, tạo sẵn một danh sách mẫu đủ nhiều để kiểm tra phân trang 9 bài/trang
-      if (posts.length === 0) {
-        for (let i = 1; i <= 15; i++) {
-          posts.push({
-            filename: `bai-${i}.md`,
-            title: `Chương trình thiện nguyện và gieo mầm tri thức vùng cao số ${i}`,
-            date: `Tháng 0${(i % 9) + 1} / 2026`,
-            description: `Báo cáo chi tiết về quá trình triển khai và trao tặng học liệu, sách vở cho học sinh tại điểm trường khó khăn số ${i}.`,
-            thumbnail: getRandomVietnameseImage()
-          });
-        }
-      }
+      // Sắp xếp tự động: Bài đăng gần nhất (tháng/năm mới nhất) lên đầu tiên
+      posts.sort((a, b) => b.sortWeight - a.sortWeight);
 
       allLoadedPosts = posts;
       renderPage(1);
@@ -347,6 +355,7 @@
         let link = `chi-tiet.html?post=${post.filename}`;
         html += `
           <div class="news-card">
+            ${post.tag ? `<div class="card-tag">${post.tag}</div>` : ''}
             <div class="news-img-box">
               <img src="${post.thumbnail}" alt="${post.title}">
             </div>
@@ -363,7 +372,7 @@
       });
       grid.innerHTML = html;
 
-      // Xây dựng thanh phân trang (Pagination)
+      // Xây dựng phân trang chuẩn
       const totalPages = Math.ceil(allLoadedPosts.length / postsPerPage);
       if (totalPages <= 1) {
         paginationContainer.innerHTML = '';
@@ -379,8 +388,6 @@
       paginationHTML += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="renderPage(${currentPage + 1})">Sau <i class="fa-solid fa-chevron-right"></i></button>`;
       
       paginationContainer.innerHTML = paginationHTML;
-
-      // Cuộn nhẹ lên đầu lưới tin tức khi chuyển trang
       window.scrollTo({ top: 350, behavior: 'smooth' });
     }
 
