@@ -638,8 +638,18 @@
       { label: "Đồng hành cộng đồng", bg: "#ccfbf1", color: "#0f766e", dot: "#0d9488", icon: "fa-people-group" }
     ];
 
+    // Gán nhãn chuyên mục dựa trên TỪ KHÓA THẬT trong tiêu đề/mô tả bài viết (không phải
+    // gán ngẫu nhiên theo vị trí), để nhãn màu luôn phản ánh đúng nội dung thực tế của bài viết.
+    function classifyPostTag(post) {
+      const text = `${post.title} ${post.excerpt}`.toLowerCase();
+      if (/tủ sách|sách|học liệu|thư viện|đọc sách/.test(text)) return TIMELINE_TAGS[0]; // Tủ sách & học liệu
+      if (/hội thảo|tập huấn|đào tạo|workshop|giảng dạy|kỹ năng giáo dục/.test(text)) return TIMELINE_TAGS[2]; // Hội thảo & tập huấn
+      if (/thiện nguyện|tình nguyện|ủng hộ|quyên góp|trao tặng|gây quỹ|áo ấm|học bổng/.test(text)) return TIMELINE_TAGS[1]; // Thiện nguyện
+      return TIMELINE_TAGS[3]; // Đồng hành cộng đồng (mặc định cho các bài còn lại)
+    }
+
     function renderTimelineItem(post, index) {
-      const tag = TIMELINE_TAGS[index % TIMELINE_TAGS.length];
+      const tag = classifyPostTag(post);
       return `
         <div class="timeline-item">
           <div class="timeline-dot" style="--dot-color: ${tag.dot};"><i class="fa-solid ${tag.icon}"></i></div>
