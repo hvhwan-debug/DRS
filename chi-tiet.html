@@ -27,7 +27,6 @@
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -75,54 +74,19 @@
       100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
     }
 
-    .mobile-menu-btn {
-      display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
-    }
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Nội dung chi tiết bài viết */
-    .article-container {
-      max-width: 820px;
-      margin: 3rem auto 5rem auto;
-      padding: 0 1.5rem;
-    }
-    .back-link {
-      display: inline-flex; align-items: center; gap: 8px;
-      color: #0284c7; text-decoration: none; font-weight: 600; margin-bottom: 2rem; font-size: 0.95rem;
-    }
+    .article-container { max-width: 820px; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: #0284c7; text-decoration: none; font-weight: 600; margin-bottom: 2rem; font-size: 0.95rem; }
     .back-link:hover { text-decoration: underline; }
 
-    .article-card {
-      background: #ffffff;
-      padding: 3rem 2.5rem;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-    }
-    .article-date {
-      font-size: 0.9rem; color: #0284c7; font-weight: 700; margin-bottom: 0.75rem;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .article-title {
-      font-size: 2.2rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 1.5rem;
-      letter-spacing: -0.5px;
-    }
-    .article-thumb {
-      width: 100%; height: 380px; object-fit: cover; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--border);
-    }
-    .article-body h3 {
-      font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-top: 2rem; margin-bottom: 0.75rem;
-    }
-    .article-body p {
-      font-size: 1.05rem; color: #334155; margin-bottom: 1.25rem; line-height: 1.8;
-    }
-    .article-body ul {
-      margin-bottom: 1.25rem; padding-left: 1.5rem; color: #334155; font-size: 1.05rem;
-    }
-    .article-body li {
-      margin-bottom: 0.5rem; line-height: 1.7;
-    }
+    .article-card { background: #ffffff; padding: 3rem 2.5rem; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
+    .article-date { font-size: 0.9rem; color: #0284c7; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 6px; }
+    .article-title { font-size: 2.2rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 1.5rem; letter-spacing: -0.5px; }
+    .article-thumb { width: 100%; height: 380px; object-fit: cover; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--border); }
+    .article-body h3 { font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-top: 2rem; margin-bottom: 0.75rem; }
+    .article-body p { font-size: 1.05rem; color: #334155; margin-bottom: 1.25rem; line-height: 1.8; }
 
-    /* Modal Quyên góp */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
@@ -133,7 +97,6 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer chuẩn 3 cột đồng bộ */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; }
@@ -156,7 +119,6 @@
 </head>
 <body>
 
-  <!-- Menu Cố Định Đồng Bộ -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
@@ -189,7 +151,6 @@
     </div>
   </header>
 
-  <!-- Container bài viết chi tiết -->
   <main class="article-container">
     <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
     
@@ -200,7 +161,6 @@
     </div>
   </main>
 
-  <!-- Modal Quyên góp -->
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
@@ -212,7 +172,6 @@
     </div>
   </div>
 
-  <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -237,77 +196,103 @@
   </footer>
 
   <script>
-    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(event) {
-      let modal = document.getElementById('donateModal');
-      if (event.target == modal) { modal.style.display = 'none'; }
+    const vietnameseImagePool = [
+      "images/uploads/2-onl-16997056815001293662280.jpg",
+      "images/uploads/48591585757_7be64177d0_o.jpg",
+      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
+      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
+      "images/uploads/images (1).jfif",
+      "images/uploads/images (2).jfif",
+      "images/uploads/images (3).jfif",
+      "images/uploads/images (4).jfif"
+    ];
+
+    function getRandomImage() {
+      return vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
     }
 
-    function toggleMobileMenu() {
-      const navLinks = document.getElementById('navLinks');
-      const menuBtn = document.getElementById('menuBtn');
-      navLinks.classList.toggle('active');
-      if (navLinks.classList.contains('active')) {
-        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-      } else {
-        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+    // Kho lưu trữ dữ liệu chi tiết của tất cả các bài viết
+    const articlesDB = {
+      "bai-1.md": {
+        title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang",
+        date: "Tháng 11 / 2026",
+        content: `Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn. Các hoạt động dự kiến tập trung vào việc trao tặng những phần quà, vật dụng cần thiết phục vụ học tập và sinh hoạt cho trẻ em tại khu vực còn nhiều khó khăn.<br><br>Hà Giang là địa bàn miền núi với nhiều khu vực vùng cao, đời sống của một bộ phận người dân còn gặp không ít trở ngại. Đối với trẻ em, điều kiện học tập, đi lại và sinh hoạt vẫn là những vấn đề cần được cộng đồng quan tâm và đồng hành.`
+      },
+      "bai-2.md": {
+        title: "Chương trình Gieo Mầm Tri Thức Mùa Hè",
+        date: "Tháng 07 / 2026",
+        content: `Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.<br><br>Chương trình mùa hè năm nay tập trung vào việc xây dựng các góc đọc sách tại lớp học, tổ chức các hoạt động sinh hoạt ngoại khóa giúp học sinh rèn luyện kỹ năng sống và khơi dậy niềm đam mê đọc sách.`
+      },
+      "bai-3.md": {
+        title: "Khánh thành Tủ Sách Vùng Cao Đợt 1",
+        date: "Tháng 05 / 2026",
+        content: `Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức được chắt lọc kỹ lưỡng, mang lại không gian giải trí và học tập bổ ích sau giờ lên lớp cho các em nhỏ.`
+      },
+      "bai-4.md": {
+        title: "Chuỗi lớp học kỹ năng mềm và tư duy",
+        date: "Tháng 03 / 2026",
+        content: `Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện, kỹ năng làm việc nhóm và cách bảo vệ bản thân.`
+      },
+      "bai-5.md": {
+        title: "Hành trình Tiếp Sức Đến Trường",
+        date: "Tháng 02 / 2026",
+        content: `Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường và tiếp tục theo đuổi ước mơ tri thức.`
+      },
+      "bai-6.md": {
+        title: "Ký kết hợp tác mở rộng mạng lưới giáo dục",
+        date: "Tháng 01 / 2026",
+        content: `Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động, đưa tri thức đến gần hơn với hàng ngàn học sinh vùng sâu vùng xa.`
+      },
+      "bai-7.md": {
+        title: "Tổng kết chiến dịch Tết Chia Sẻ",
+        date: "Tháng 12 / 2025",
+        content: `Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học.`
+      },
+      "bai-8.md": {
+        title: "Hội thảo giáo dục cộng đồng toàn quốc",
+        date: "Tháng 11 / 2025",
+        content: `Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục tại các vùng đặc biệt khó khăn.`
+      },
+      "bai-9.md": {
+        title: "Trao học bổng Thắp Sáng Ước Mơ",
+        date: "Tháng 10 / 2025",
+        content: `Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt và học tập cho các em có hoàn cảnh đặc biệt khó khăn.`
+      },
+      "bai-10.md": {
+        title: "Phát động chiến dịch mùa đông ấm cho em",
+        date: "Tháng 09 / 2025",
+        content: `Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao.`
       }
-    }
+    };
 
-    async function loadArticle() {
+    function loadArticle() {
       const urlParams = new URLSearchParams(window.location.search);
-      const postFile = urlParams.get('post');
+      const postFile = urlParams.get('post') || 'bai-1.md';
       const card = document.getElementById('articleContent');
 
-      if (!postFile) {
-        card.innerHTML = `<h2>Không tìm thấy bài viết</h2><p>Đường dẫn không hợp lệ.</p>`;
-        return;
-      }
+      const article = articlesDB[postFile] || {
+        title: "Chi Tiết Hoạt Động Cộng Đồng",
+        date: "Tháng 2026",
+        content: "Nội dung chi tiết bài viết đang được cập nhật và hoàn thiện..."
+      };
 
-      const repo = 'hvhwan-debug/DRS';
-      const fileURL = `https://raw.githubusercontent.com/${repo}/main/content/posts/${postFile}`;
+      const randomImg = getRandomImage();
 
-      try {
-        const res = await fetch(fileURL);
-        if (!res.ok) throw new Error('Không tải được file bài viết');
-        const text = await res.text();
+      card.innerHTML = `
+        <div class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</div>
+        <h1 class="article-title">${article.title}</h1>
+        <img src="${randomImg}" alt="${article.title}" class="article-thumb">
+        <div class="article-body">
+          <p>${article.content}</p>
+        </div>
+      `;
+    }
 
-        const parts = text.split('---');
-        let title = 'Bài viết chi tiết';
-        let date = '2026';
-        let thumbnail = '';
-        let markdownBody = text;
-
-        if (parts.length >= 3) {
-          const yamlMeta = parts[1];
-          const titleMatch = yamlMeta.match(/title:\s*"?(.*?)"?$/m);
-          const dateMatch = yamlMeta.match(/date:\s*"?(.*?)"?$/m);
-          const thumbMatch = yamlMeta.match(/thumbnail:\s*"?(.*?)"?$/m);
-
-          if (titleMatch) title = titleMatch[1].replace(/["']/g, '');
-          if (dateMatch) date = dateMatch[1].replace(/["']/g, '');
-          if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
-
-          markdownBody = parts.slice(2).join('---').trim();
-        }
-
-        let htmlBody = markdownBody
-          .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
-          .replace(/^- (.*$)/gm, '<li>$1</li>')
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .split('\n\n').map(p => p.startsWith('<h') || p.startsWith('<li') ? p : `<p>${p}</p>`).join('');
-
-        card.innerHTML = `
-          <div class="article-date"><i class="fa-regular fa-calendar"></i> ${date}</div>
-          <h1 class="article-title">${title}</h1>
-          ${thumbnail ? `<img src="${thumbnail}" alt="${title}" class="article-thumb">` : ''}
-          <div class="article-body">${htmlBody}</div>
-        `;
-      } catch (err) {
-        card.innerHTML = `<h2>Lỗi tải bài viết</h2><p>Không thể kết nối đến kho lưu trữ hoặc file bài viết không tồn tại.</p>`;
-      }
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(e) { if (e.target == document.getElementById('donateModal')) closeModal(); }
+    function toggleMobileMenu() {
+      document.getElementById('navLinks').classList.toggle('active');
     }
 
     loadArticle();
