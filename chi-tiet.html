@@ -3,2249 +3,676 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết bài viết | Wisdom Vietnam Network</title>
 
-  <title>Chi tiết bài viết - Wisdom Vietnam Network</title>
-  <meta name="description" content="Wisdom Vietnam Network - Tin tức, hoạt động và các chương trình vì cơ hội học tập cộng đồng.">
-
-  <!-- FAVICON GIỮ THEO TRANG CHỦ -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
-
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='%230d8df0'/%3E%3Cpath d='M18 18h19c5 0 9 4 9 9v22H27c-5 0-9-4-9-9V18z' fill='white'/%3E%3Cpath d='M27 18v31' stroke='%230d8df0' stroke-width='3'/%3E%3Cpath d='M32 24h9M32 30h9M32 36h9' stroke='%230d8df0' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 
   <style>
-    :root {
-      --blue-grad-primary: linear-gradient(
-        135deg,
-        #0f172a 0%,
-        #1e3a8a 50%,
-        #0284c7 100%
-      );
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      color:#17233c;
+      background:#f5f8fc;
+      line-height:1.75;
+    }
+    a{text-decoration:none;color:inherit}
 
-      --blue-grad-btn: linear-gradient(
-        135deg,
-        #0284c7 0%,
-        #2563eb 100%
-      );
+    /* ===== HEADER ===== */
+    .site-header{
+      height:72px;
+      background:#fff;
+      border-bottom:1px solid #e7edf5;
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+    .header-inner{
+      max-width:1140px;
+      height:72px;
+      margin:0 auto;
+      padding:0 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:25px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:max-content;
+    }
+    .brand-icon{
+      width:34px;
+      height:34px;
+      border-radius:9px;
+      background:linear-gradient(145deg,#0b8ff2,#0875cf);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 3px 9px rgba(0,126,220,.22);
+      flex:none;
+    }
+    .brand-icon svg{width:24px;height:24px}
+    .brand-name{
+      color:#075fa9;
+      font-size:17px;
+      font-weight:800;
+      line-height:1.1;
+    }
+    .brand-sub{
+      color:#7a879a;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.8px;
+      margin-top:2px;
+    }
+    .main-nav{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:29px;
+      margin-left:auto;
+    }
+    .main-nav a{
+      position:relative;
+      color:#42526a;
+      font-size:14px;
+      font-weight:600;
+      padding:27px 0 22px;
+      white-space:nowrap;
+    }
+    .main-nav a:hover{color:#0785e8}
+    .main-nav a.active{color:#0785e8}
+    .main-nav a.active::after{
+      content:"";
+      position:absolute;
+      height:3px;
+      border-radius:3px 3px 0 0;
+      background:#0785e8;
+      left:0;
+      right:0;
+      bottom:0;
+    }
+    .donate-btn{
+      background:linear-gradient(135deg,#087fe0,#128de9);
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+      padding:10px 21px;
+      border-radius:9px;
+      box-shadow:0 7px 18px rgba(0,132,230,.25);
+      white-space:nowrap;
+      transition:.2s;
+    }
+    .donate-btn:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(0,132,230,.32)}
 
-      --blue-grad-btn-hover: linear-gradient(
-        135deg,
-        #0369a1 0%,
-        #1d4ed8 100%
-      );
-
-      --text-dark: #0f172a;
-      --text-muted: #475569;
-      --white: #ffffff;
-      --border: #e2e8f0;
-      --bg-page: #f8fafc;
+    /* ===== HERO ===== */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      min-height:215px;
+      background:linear-gradient(110deg,#086aa8 0%,#087fca 50%,#1ea4e7 100%);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:45px 20px 52px;
+    }
+    .hero::before,.hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,.10);
+      pointer-events:none;
+    }
+    .hero::before{width:230px;height:230px;left:-80px;top:-130px}
+    .hero::after{width:230px;height:230px;right:-95px;bottom:-150px}
+    .hero-inner{position:relative;z-index:1}
+    .hero-label{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      border:1px solid rgba(255,255,255,.28);
+      background:rgba(255,255,255,.10);
+      padding:6px 13px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:14px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:40px;
+      line-height:1.18;
+      letter-spacing:-1px;
+      font-weight:800;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    /* ===== ARTICLE ===== */
+    .article-wrap{
+      max-width:720px;
+      margin:-32px auto 65px;
+      position:relative;
+      z-index:2;
+      padding:0 15px;
+    }
+    .article-card{
+      background:#fff;
+      border:1px solid #e1e8f0;
+      border-radius:16px;
+      box-shadow:0 12px 35px rgba(26,62,96,.10);
+      overflow:hidden;
+    }
+    .article{
+      padding:42px 55px 50px;
+    }
+    .post-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px 18px;
+      color:#738197;
+      font-size:13px;
+      margin-bottom:24px;
+      padding-bottom:17px;
+      border-bottom:1px solid #edf1f5;
+    }
+    .post-meta strong{color:#4a5a70}
+    .post-thumbnail{
+      display:block;
+      width:100%;
+      max-height:430px;
+      object-fit:cover;
+      border-radius:12px;
+      margin:0 0 30px;
+      box-shadow:0 5px 18px rgba(30,55,80,.12);
+    }
+    .article-content{
+      font-size:16px;
+      color:#26364d;
+    }
+    .article-content h1{
+      font-size:32px;
+      line-height:1.28;
+      color:#15233a;
+      margin:0 0 24px;
+    }
+    .article-content h2{
+      font-size:24px;
+      line-height:1.35;
+      color:#13243b;
+      margin:34px 0 13px;
+    }
+    .article-content h3{
+      font-size:19px;
+      line-height:1.4;
+      color:#17304e;
+      margin:27px 0 10px;
+    }
+    .article-content p{margin:0 0 20px}
+    .article-content ul,.article-content ol{
+      margin:0 0 22px;
+      padding-left:25px;
+    }
+    .article-content li{margin:6px 0}
+    .article-content blockquote{
+      margin:25px 0;
+      padding:15px 20px;
+      border-left:4px solid #0a8de8;
+      background:#f2f8fd;
+      border-radius:0 9px 9px 0;
+      color:#40536c;
+    }
+    .article-content img{
+      max-width:100%;
+      height:auto;
+      border-radius:12px;
+      margin:10px 0 22px;
+    }
+    .article-content a{
+      color:#087fdc;
+      text-decoration:underline;
+    }
+    .article-content strong{color:#182a42}
+    .article-content hr{
+      border:0;
+      border-top:1px solid #e7edf3;
+      margin:30px 0;
+    }
+    .article-content table{
+      width:100%;
+      border-collapse:collapse;
+      margin:20px 0 28px;
+      font-size:14px;
+    }
+    .article-content th,.article-content td{
+      border:1px solid #dfe7ef;
+      padding:9px 11px;
+      text-align:left;
+      vertical-align:top;
+    }
+    .article-content th{background:#f4f8fb}
+    .article-content code{
+      background:#f0f3f6;
+      padding:2px 5px;
+      border-radius:4px;
+    }
+    .article-content pre{
+      overflow:auto;
+      background:#17212f;
+      color:#fff;
+      padding:16px;
+      border-radius:9px;
     }
 
-    html,
-    body {
-      width: 100%;
-      overflow-x: hidden;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-
-      color: var(--text-dark);
-      background-color: var(--bg-page);
-      line-height: 1.6;
+    .error-box{
+      margin:10px 0 30px;
+      padding:22px;
+      border:1px solid #ffd2d2;
+      background:#fff7f7;
+      color:#b94a48;
+      border-radius:10px;
+      text-align:center;
+    }
+    .error-box strong{display:block;margin-bottom:6px;color:#b13e3c}
+    .loading{
+      text-align:center;
+      color:#6f7d91;
+      padding:50px 0;
     }
 
-    body {
-      padding-top: 72px;
+    .article-footer{
+      border-top:1px solid #e8edf3;
+      padding-top:22px;
+      margin-top:35px;
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      font-size:14px;
+      font-weight:700;
     }
+    .article-footer a{color:#087fdc}
+    .article-footer a:hover{text-decoration:underline}
 
-    /* =========================================================
-       HEADER - GIỮ NGUYÊN THEO INDEX
-    ========================================================= */
-
-    header {
-      position: fixed !important;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      z-index: 9999;
-
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /* ===== FOOTER ===== */
+    .site-footer{
+      background:#0b466e;
+      color:#fff;
+      padding:39px 0 44px;
     }
-
-    .nav-container {
-      max-width: 1240px;
-      margin: 0 auto;
-
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      padding: 0.8rem 1.5rem;
-      position: relative;
+    .footer-inner{
+      max-width:1140px;
+      margin:0 auto;
+      padding:0 18px;
+      display:grid;
+      grid-template-columns:1.5fr 1fr 1fr;
+      gap:55px;
     }
-
-    .brand-wrap {
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .footer-title{
+      font-size:16px;
+      font-weight:800;
+      margin-bottom:13px;
     }
-
-    .brand-logo-icon {
-      width: 38px;
-      height: 38px;
-
-      background: linear-gradient(
-        135deg,
-        #e0f2fe 0%,
-        #f0f9ff 100%
-      );
-
-      border: 1.5px solid #bae6fd;
-      border-radius: 10px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      flex-shrink: 0;
-
-      box-shadow:
-        0 2px 6px rgba(2, 132, 199, 0.12);
+    .footer-text,.footer-links a{
+      color:#b9d0e0;
+      font-size:13px;
+      line-height:1.8;
     }
-
-    .brand-logo-icon svg {
-      width: 21px;
-      height: 21px;
-      stroke: #0284c7;
+    .footer-links{
+      display:flex;
+      flex-direction:column;
+      gap:5px;
     }
+    .footer-links a:hover{color:#fff}
 
-    .brand-text-group {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 1.25;
+    @media(max-width:900px){
+      .main-nav{gap:16px}
+      .main-nav a{font-size:13px}
+      .header-inner{gap:12px}
+      .donate-btn{padding:9px 14px}
     }
-
-    .brand-title {
-      font-size: 1.18rem;
-      font-weight: 800;
-
-      background: var(--blue-grad-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-
-      letter-spacing: -0.3px;
-    }
-
-    .brand-subtitle {
-      font-size: 0.7rem;
-      font-weight: 600;
-
-      color: #64748b;
-      letter-spacing: 0.3px;
-
-      text-transform: uppercase;
-      margin-top: 1px;
-    }
-
-    .nav-links a {
-      margin-left: 1.8rem;
-
-      text-decoration: none;
-      color: var(--text-muted);
-
-      font-size: 0.95rem;
-      font-weight: 500;
-
-      transition: color 0.2s;
-      font-family: inherit;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: #0284c7;
-      font-weight: 600;
-    }
-
-    /* =========================================================
-       BUTTON
-    ========================================================= */
-
-    .btn {
-      background: var(--blue-grad-btn);
-      color: var(--white);
-
-      padding: 0.65rem 1.4rem;
-      border-radius: 8px;
-
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-
-      text-decoration: none;
-      display: inline-block;
-
-      box-shadow:
-        0 4px 12px rgba(2, 132, 199, 0.25);
-
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    .btn:hover {
-      background: var(--blue-grad-btn-hover);
-      transform: translateY(-1px);
-    }
-
-    .btn-donate-glow {
-      position: relative;
-      overflow: hidden;
-
-      animation: pulseGlow 2.5s infinite ease-in-out;
-    }
-
-    .btn-donate-glow::after {
-      content: '';
-
-      position: absolute;
-      top: -50%;
-      left: -50%;
-
-      width: 200%;
-      height: 200%;
-
-      background:
-        linear-gradient(
-          to right,
-          rgba(255,255,255,0) 0%,
-          rgba(255,255,255,0.5) 50%,
-          rgba(255,255,255,0) 100%
-        );
-
-      transform: rotate(30deg);
-
-      animation:
-        shineLine 2.8s infinite linear;
-    }
-
-    @keyframes shineLine {
-      0% {
-        left: -100%;
-        top: -100%;
+    @media(max-width:700px){
+      .site-header,.header-inner{height:auto;min-height:68px}
+      .header-inner{flex-wrap:wrap;padding:12px 16px}
+      .main-nav{
+        order:3;
+        width:100%;
+        overflow-x:auto;
+        justify-content:flex-start;
+        gap:22px;
       }
-
-      100% {
-        left: 100%;
-        top: 100%;
-      }
-    }
-
-    @keyframes pulseGlow {
-      0% {
-        box-shadow:
-          0 4px 12px rgba(2, 132, 199, 0.3);
-        transform: scale(1);
-      }
-
-      50% {
-        box-shadow:
-          0 4px 22px rgba(2, 132, 199, 0.7),
-          0 0 12px rgba(56, 189, 248, 0.6);
-
-        transform: scale(1.04);
-      }
-
-      100% {
-        box-shadow:
-          0 4px 12px rgba(2, 132, 199, 0.3);
-        transform: scale(1);
-      }
-    }
-
-    .mobile-menu-btn {
-      display: none;
-
-      background: none;
-      border: none;
-
-      font-size: 1.4rem;
-      color: var(--text-dark);
-
-      cursor: pointer;
-      padding: 0.4rem;
-    }
-
-    /* =========================================================
-       ARTICLE - CHỈ PHẦN NỘI DUNG KHÁC INDEX
-    ========================================================= */
-
-    .article-page {
-      background: var(--bg-page);
-      min-height: calc(100vh - 72px);
-      padding: 4rem 1.5rem 5rem;
-    }
-
-    .article-container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .article-card {
-      background: #ffffff;
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      padding: 3rem 3.5rem;
-
-      box-shadow:
-        0 8px 30px rgba(15, 23, 42, 0.06);
-    }
-
-    .article-kicker {
-      display: inline-block;
-
-      background: #e0f2fe;
-      color: #0369a1;
-
-      border: 1px solid #bae6fd;
-
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-
-      font-size: 0.8rem;
-      font-weight: 700;
-
-      margin-bottom: 1rem;
-    }
-
-    .article-title {
-      font-size: clamp(2rem, 4vw, 3rem);
-
-      line-height: 1.2;
-      font-weight: 900;
-
-      color: #0f172a;
-
-      letter-spacing: -1px;
-
-      margin-bottom: 1rem;
-    }
-
-    .article-meta {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-
-      color: #64748b;
-      font-size: 0.9rem;
-
-      padding-bottom: 1.5rem;
-      margin-bottom: 1.5rem;
-
-      border-bottom: 1px solid var(--border);
-    }
-
-    .article-cover {
-      width: 100%;
-      max-height: 540px;
-
-      object-fit: cover;
-
-      border-radius: 16px;
-
-      display: block;
-
-      margin: 0 auto 2.2rem;
-
-      box-shadow:
-        0 10px 28px rgba(15, 23, 42, 0.10);
-    }
-
-    /* =========================================================
-       NỘI DUNG MARKDOWN
-    ========================================================= */
-
-    .article-content {
-      font-size: 1.05rem;
-      color: #334155;
-
-      line-height: 1.85;
-    }
-
-    .article-content h1,
-    .article-content h2,
-    .article-content h3,
-    .article-content h4,
-    .article-content h5,
-    .article-content h6 {
-      color: #075b99;
-
-      line-height: 1.35;
-
-      margin-top: 2.2rem;
-      margin-bottom: 0.9rem;
-
-      font-weight: 800;
-    }
-
-    .article-content h1 {
-      font-size: 2rem;
-    }
-
-    .article-content h2 {
-      font-size: 1.65rem;
-    }
-
-    .article-content h3 {
-      font-size: 1.35rem;
-    }
-
-    .article-content h4 {
-      font-size: 1.15rem;
-    }
-
-    .article-content p {
-      margin-bottom: 1.2rem;
-    }
-
-    .article-content strong {
-      color: #173f61;
-      font-weight: 800;
-    }
-
-    .article-content em {
-      color: #475569;
-    }
-
-    .article-content a {
-      color: #0284c7;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .article-content a:hover {
-      color: #075985;
-    }
-
-    .article-content ul,
-    .article-content ol {
-      padding-left: 2rem;
-      margin: 0.8rem 0 1.4rem;
-    }
-
-    .article-content li {
-      margin: 0.45rem 0;
-    }
-
-    .article-content blockquote {
-      margin: 1.5rem 0;
-
-      padding: 1rem 1.3rem;
-
-      border-left: 4px solid #0284c7;
-
-      background: #f0f9ff;
-
-      border-radius: 0 10px 10px 0;
-
-      color: #475569;
-    }
-
-    .article-content hr {
-      border: 0;
-
-      border-top: 1px solid var(--border);
-
-      margin: 2rem 0;
-    }
-
-    .article-content img {
-      max-width: 100%;
-      height: auto;
-
-      display: block;
-
-      margin: 1.8rem auto;
-
-      border-radius: 14px;
-
-      box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.08);
-    }
-
-    .article-content code {
-      background: #f1f5f9;
-
-      color: #075985;
-
-      padding: 0.15rem 0.4rem;
-
-      border-radius: 5px;
-
-      font-size: 0.9em;
-    }
-
-    .article-content pre {
-      background: #0f172a;
-      color: #e2e8f0;
-
-      padding: 1.2rem;
-
-      border-radius: 10px;
-
-      overflow-x: auto;
-
-      margin: 1.5rem 0;
-    }
-
-    .article-content pre code {
-      background: none;
-      color: inherit;
-      padding: 0;
-    }
-
-    .article-content table {
-      width: 100%;
-
-      border-collapse: collapse;
-
-      margin: 1.5rem 0;
-
-      overflow: hidden;
-    }
-
-    .article-content th,
-    .article-content td {
-      border: 1px solid #dce7f0;
-
-      padding: 0.7rem 0.8rem;
-
-      text-align: left;
-    }
-
-    .article-content th {
-      background: #f0f9ff;
-      color: #075b99;
-    }
-
-    /* =========================================================
-       LOADING / ERROR
-    ========================================================= */
-
-    .status {
-      text-align: center;
-
-      padding: 3rem 1rem;
-
-      color: #64748b;
-    }
-
-    .status i {
-      font-size: 2rem;
-
-      color: #0284c7;
-
-      margin-bottom: 0.8rem;
-    }
-
-    .error-box {
-      background: #fff4f4;
-
-      border: 1px solid #ffd7d7;
-
-      color: #a33b3b;
-
-      border-radius: 12px;
-
-      padding: 1.2rem;
-
-      margin-bottom: 1.5rem;
-    }
-
-    /* =========================================================
-       BACK BUTTON
-    ========================================================= */
-
-    .article-navigation {
-      display: flex;
-
-      justify-content: space-between;
-
-      gap: 1rem;
-
-      margin-top: 3rem;
-
-      padding-top: 1.5rem;
-
-      border-top: 1px solid var(--border);
-    }
-
-    .article-navigation a {
-      color: #0284c7;
-
-      text-decoration: none;
-
-      font-weight: 700;
-
-      transition: 0.2s;
-    }
-
-    .article-navigation a:hover {
-      color: #075985;
-
-      transform: translateX(2px);
-    }
-
-    /* =========================================================
-       MODAL QUYÊN GÓP - GIỮ THEO INDEX
-    ========================================================= */
-
-    .modal {
-      display: none;
-
-      position: fixed;
-
-      inset: 0;
-
-      background: rgba(15, 23, 42, 0.7);
-
-      backdrop-filter: blur(4px);
-
-      align-items: center;
-      justify-content: center;
-
-      z-index: 10000;
-
-      padding: 1rem;
-    }
-
-    .modal-content {
-      background: var(--white);
-
-      padding: 2.2rem;
-
-      border-radius: 16px;
-
-      max-width: 440px;
-
-      width: 100%;
-
-      text-align: center;
-
-      box-shadow:
-        0 20px 40px rgba(0,0,0,0.25);
-
-      position: relative;
-    }
-
-    .modal-content h3 {
-      color: #0369a1;
-
-      margin-bottom: 0.5rem;
-    }
-
-    .modal-banner {
-      width: 100%;
-
-      height: 130px;
-
-      object-fit: cover;
-
-      border-radius: 10px;
-
-      margin: 0.8rem 0;
-
-      border: 1px solid var(--border);
-    }
-
-    .modal-qr {
-      width: 100%;
-
-      max-width: 230px;
-
-      margin: 0.8rem auto;
-
-      display: block;
-
-      border-radius: 10px;
-
-      border: 1px solid var(--border);
-    }
-
-    .modal-close {
-      position: absolute;
-
-      right: 12px;
-      top: 8px;
-
-      border: none;
-
-      background: transparent;
-
-      font-size: 1.6rem;
-
-      color: #64748b;
-
-      cursor: pointer;
-    }
-
-    /* =========================================================
-       FOOTER - GIỮ NGUYÊN THEO INDEX
-    ========================================================= */
-
-    footer {
-      background: var(--blue-grad-primary);
-
-      color: #cbd5e1;
-
-      padding: 4rem 1.5rem 2rem;
-
-      font-size: 0.92rem;
-    }
-
-    .footer-grid {
-      max-width: 1240px;
-
-      margin: 0 auto;
-
-      display: grid;
-
-      grid-template-columns:
-        repeat(auto-fit, minmax(260px, 1fr));
-
-      gap: 2.5rem;
-
-      text-align: left;
-    }
-
-    .footer-grid h4 {
-      color: var(--white);
-
-      margin-bottom: 1rem;
-
-      font-size: 1.05rem;
-    }
-
-    .footer-grid p {
-      color: #cbd5e1;
-
-      line-height: 1.7;
-    }
-
-    .footer-grid a {
-      color: #38bdf8;
-
-      text-decoration: none;
-    }
-
-    .footer-grid a:hover {
-      color: #ffffff;
-    }
-
-    .footer-bottom {
-      max-width: 1240px;
-
-      margin: 3rem auto 0;
-
-      padding-top: 1.5rem;
-
-      border-top:
-        1px solid rgba(255,255,255,0.1);
-
-      text-align: center;
-
-      font-size: 0.85rem;
-
-      color: #94a3b8;
-    }
-
-    /* =========================================================
-       RESPONSIVE
-    ========================================================= */
-
-    @media (max-width: 960px) {
-
-      .mobile-menu-btn {
-        display: block;
-      }
-
-      .nav-links {
-        display: none;
-
-        position: absolute;
-
-        top: 72px;
-
-        left: 0;
-        right: 0;
-
-        background: #ffffff;
-
-        flex-direction: column;
-
-        padding: 1.5rem;
-
-        border-bottom:
-          1px solid var(--border);
-
-        box-shadow:
-          0 10px 25px rgba(0,0,0,0.1);
-
-        text-align: center;
-
-        gap: 1rem;
-      }
-
-      .nav-links.active {
-        display: flex;
-      }
-
-      .nav-links a {
-        margin-left: 0 !important;
-
-        font-size: 1.1rem;
-
-        padding: 0.5rem 0;
-      }
-
-      .article-card {
-        padding: 2.5rem;
-      }
-    }
-
-    @media (max-width: 680px) {
-
-      body {
-        padding-top: 68px;
-      }
-
-      .nav-container {
-        padding:
-          0.75rem 1rem;
-      }
-
-      .brand-title {
-        font-size: 0.95rem;
-      }
-
-      .brand-subtitle {
-        font-size: 0.58rem;
-      }
-
-      .brand-logo-icon {
-        width: 35px;
-        height: 35px;
-      }
-
-      .brand-logo-icon svg {
-        width: 19px;
-        height: 19px;
-      }
-
-      .article-page {
-        padding:
-          2rem 0.9rem 3rem;
-      }
-
-      .article-card {
-        padding:
-          1.4rem 1.1rem;
-
-        border-radius: 14px;
-      }
-
-      .article-title {
-        font-size: 1.8rem;
-
-        letter-spacing: -0.5px;
-      }
-
-      .article-content {
-        font-size: 0.98rem;
-
-        line-height: 1.75;
-      }
-
-      .article-content h2 {
-        font-size: 1.45rem;
-      }
-
-      .article-content h3 {
-        font-size: 1.2rem;
-      }
-
-      .article-navigation {
-        flex-direction: column;
-
-        gap: 1rem;
-      }
-
-      .modal-content {
-        padding: 1.5rem;
-      }
-
-      footer {
-        padding:
-          3rem 1.2rem 1.5rem;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr;
-
-        gap: 2rem;
-      }
+      .main-nav a{padding:8px 0 10px}
+      .main-nav a.active::after{bottom:2px}
+      .hero{min-height:185px;padding:38px 15px 48px}
+      .hero h1{font-size:30px}
+      .article-wrap{margin:-22px auto 45px}
+      .article{padding:30px 22px 35px}
+      .article-content{font-size:15px}
+      .article-content h1{font-size:27px}
+      .article-content h2{font-size:22px}
+      .footer-inner{grid-template-columns:1fr;gap:25px}
     }
   </style>
 </head>
 
 <body>
-
-  <!-- =====================================================
-       HEADER GIỮ NGUYÊN THEO INDEX
-  ====================================================== -->
-
-  <header>
-
-    <div class="nav-container">
-
-      <a href="index.html"
-         class="brand-wrap"
-         aria-label="Wisdom Vietnam Network">
-
-        <div class="brand-logo-icon">
-
-          <svg viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2"
-               stroke-linecap="round"
-               stroke-linejoin="round">
-
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Wisdom Vietnam Network">
+        <span class="brand-icon">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M7 7h10c4.4 0 8 3.6 8 8v10H15c-4.4 0-8-3.6-8-8V7z" fill="none" stroke="#fff" stroke-width="2.5"/>
+            <path d="M15 7v18" stroke="#fff" stroke-width="2.5"/>
+            <path d="M19 12h4M19 16h4M19 20h4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
-
-        </div>
-
-        <div class="brand-text-group">
-
-          <span class="brand-title">
-            Wisdom Vietnam Network
-          </span>
-
-          <span class="brand-subtitle">
-            DR SOLUTIONS
-          </span>
-
-        </div>
-
+        </span>
+        <span>
+          <span class="brand-name">Wisdom Vietnam Network</span>
+          <span class="brand-sub">DR SOLUTIONS</span>
+        </span>
       </a>
 
-
-      <nav class="nav-links"
-           id="navLinks"
-           aria-label="Điều hướng chính">
-
-        <a href="su-menh.html">
-          Sứ Mệnh
-        </a>
-
-        <a href="hoat-dong.html">
-          Hoạt Động
-        </a>
-
-        <a href="sao-ke.html">
-          Tra Cứu Sao Kê
-        </a>
-
-        <a href="tin-tuc.html"
-           class="active">
-          Tin Tức
-        </a>
-
-        <a href="lien-he.html">
-          Liên Hệ
-        </a>
-
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        <a href="su-menh.html">Sứ Mệnh</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html">Tra Cứ Sao Kê</a>
+        <a href="tin-tuc.html" class="active">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
       </nav>
 
-
-      <div style="display:flex;align-items:center;gap:10px;">
-
-        <button
-          class="btn btn-donate-glow"
-          onclick="openModal()">
-
-          Quyên Góp
-
-        </button>
-
-
-        <button
-          class="mobile-menu-btn"
-          id="menuBtn"
-          onclick="toggleMobileMenu()"
-          aria-label="Mở menu">
-
-          <i class="fa-solid fa-bars"></i>
-
-        </button>
-
-      </div>
-
+      <a class="donate-btn" href="ung-ho.html">Quyên Góp</a>
     </div>
-
   </header>
 
-
-  <!-- =====================================================
-       NỘI DUNG BÀI VIẾT
-       Đây là phần duy nhất khác với INDEX
-  ====================================================== -->
-
-  <main class="article-page">
-
-    <div class="article-container">
-
-      <article class="article-card">
-
-        <div
-          id="articleStatus"
-          class="status">
-
-          <i class="fa-solid fa-spinner fa-spin"></i>
-
-          <div>
-            Đang tải nội dung bài viết...
-          </div>
-
-        </div>
-
-
-        <div id="articleData"
-             style="display:none;">
-
-          <div class="article-kicker">
-
-            <i class="fa-solid fa-newspaper"></i>
-
-            TIN TỨC & HOẠT ĐỘNG
-
-          </div>
-
-
-          <h1
-            id="articleTitle"
-            class="article-title">
-          </h1>
-
-
-          <div
-            id="articleMeta"
-            class="article-meta">
-          </div>
-
-
-          <img
-            id="articleCover"
-            class="article-cover"
-            alt=""
-            style="display:none;">
-
-
-          <div
-            id="articleContent"
-            class="article-content">
-          </div>
-
-
-          <div class="article-navigation">
-
-            <a href="tin-tuc.html">
-
-              <i class="fa-solid fa-arrow-left"></i>
-
-              Quay lại Tin Tức
-
-            </a>
-
-
-            <a href="index.html">
-
-              Về trang chủ
-
-              <i class="fa-solid fa-arrow-right"></i>
-
-            </a>
-
-          </div>
-
-        </div>
-
-      </article>
-
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-label">▣ &nbsp; TIN TỨC &amp; HOẠT ĐỘNG</div>
+      <h1 id="pageTitle">Chi tiết bài viết</h1>
     </div>
+  </section>
 
+  <main class="article-wrap">
+    <article class="article-card">
+      <div class="article">
+        <div id="postMeta" class="post-meta" hidden></div>
+        <div id="postError" hidden></div>
+        <div id="postContent" class="article-content">
+          <div class="loading">Đang tải nội dung bài viết…</div>
+        </div>
+
+        <div class="article-footer">
+          <a href="tin-tuc.html">← Quay lại Tin Tức</a>
+          <a href="index.html">Về trang chủ →</a>
+        </div>
+      </div>
+    </article>
   </main>
 
-
-  <!-- =====================================================
-       MODAL QUYÊN GÓP - GIỮ NGUYÊN
-  ====================================================== -->
-
-  <div
-    id="donateModal"
-    class="modal"
-    onclick="if(event.target===this) closeModal()">
-
-    <div class="modal-content">
-
-      <button
-        class="modal-close"
-        onclick="closeModal()"
-        aria-label="Đóng">
-
-        &times;
-
-      </button>
-
-
-      <h3>
-        Ủng Hộ Vì Cơ Hội Học Tập
-      </h3>
-
-
-      <img
-        src="banner-drs.png.png"
-        alt="Cơ hội học tập công bằng"
-        class="modal-banner">
-
-
-      <p style="font-size:0.9rem;color:var(--text-muted);">
-
-        Mở ứng dụng ngân hàng quét mã QR
-        để đồng hành cùng quỹ:
-
-      </p>
-
-
-      <img
-        src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH"
-        alt="Mã VietQR Quyên góp"
-        class="modal-qr">
-
-
-      <p style="
-        font-size:0.85rem;
-        color:#64748b;
-        margin-bottom:1.2rem;
-      ">
-
-        Nội dung:
-        <strong>DRS DONG HANH</strong>
-
-      </p>
-
-
-      <button
-        class="btn"
-        style="
-          background:#64748b;
-          width:100%;
-          box-shadow:none;
-        "
-        onclick="closeModal()">
-
-        Đóng Cửa Sổ
-
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       FOOTER GIỮ NGUYÊN THEO INDEX
-  ====================================================== -->
-
-  <footer>
-
-    <div class="footer-grid">
-
+  <footer class="site-footer">
+    <div class="footer-inner">
       <div>
-
-        <h4>
-          CÔNG TY TNHH DR SOLUTIONS
-        </h4>
-
-        <p>
-          Doanh nghiệp xã hội đồng hành vì
-          cơ hội học tập công bằng cho cộng đồng.
-        </p>
-
-        <p style="margin-top:0.6rem;">
-
-          Mã số doanh nghiệp:
-          0111291749
-
-        </p>
-
+        <div class="footer-title">Wisdom Vietnam Network</div>
+        <div class="footer-text">
+          Đồng hành vì giáo dục công bằng và cơ hội học tập xứng đáng cho mọi người.
+        </div>
       </div>
-
-
       <div>
-
-        <h4>
-          Địa Chỉ Trụ Sở
-        </h4>
-
-        <p>
-          Số 6, Ngách 29 ngõ 27,
-          đường Võ Chí Công,
-          Phường Nghĩa Đô,
-          Thành phố Hà Nội,
-          Việt Nam.
-        </p>
-
-        <p style="margin-top:0.6rem;">
-
-          Email:
-          hotro@wvn.vn |
-          cskh@dr.com
-
-        </p>
-
-        <p style="margin-top:0.4rem;">
-
-          <a
-            href="lien-he.html"
-            style="
-              color:#38bdf8;
-              text-decoration:none;
-              font-weight:600;
-            ">
-
-            &rarr; Gửi lời nhắn trực tuyến
-
-          </a>
-
-        </p>
-
+        <div class="footer-title">Điều hướng</div>
+        <div class="footer-links">
+          <a href="su-menh.html">Sứ Mệnh</a>
+          <a href="hoat-dong.html">Hoạt Động</a>
+          <a href="sao-ke.html">Tra Cứ Sao Kê</a>
+        </div>
       </div>
-
-
       <div>
-
-        <h4>
-          Cam Kết Xã Hội
-        </h4>
-
-        <p>
-          100% lợi nhuận sau thuế tái đầu tư
-          cho các chương trình giáo dục và
-          phát triển cộng đồng.
-        </p>
-
+        <div class="footer-title">Kết nối</div>
+        <div class="footer-links">
+          <a href="lien-he.html">Liên Hệ</a>
+          <a href="mailto:hotro@wvn.vn">hotro@wvn.vn</a>
+          <a href="https://wvn.vn/">wvn.vn</a>
+        </div>
       </div>
-
     </div>
-
-
-    <div class="footer-bottom">
-
-      &copy; 2026 Wisdom Vietnam Network.
-      Mọi quyền được bảo lưu.
-
-    </div>
-
   </footer>
 
+  <!-- Markdown renderer -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <script>
+    /*
+      QUAN TRỌNG:
+      Bài viết được lấy trực tiếp từ GitHub:
+      hvhwan-debug/DRS/main/content/posts/<tên-file>.md
 
-    /* =====================================================
-       QUYÊN GÓP
-    ====================================================== */
+      Ví dụ:
+      chi-tiet.html?post=bai-2.md
+      => content/posts/bai-2.md
+    */
 
-    function openModal() {
+    const REPO_PATH = "content/posts/";
+    const SOURCES = [
+      // jsDelivr thường ổn định hơn khi GitHub Raw bị chậm/bị chặn.
+      (name) => "https://cdn.jsdelivr.net/gh/hvhwan-debug/DRS@main/content/posts/" + encodeURIComponent(name),
+      // Fallback trực tiếp từ GitHub.
+      (name) => "https://raw.githubusercontent.com/hvhwan-debug/DRS/main/content/posts/" + encodeURIComponent(name),
+      // Fallback GitHub API.
+      (name) => "https://api.github.com/repos/hvhwan-debug/DRS/contents/content/posts/" + encodeURIComponent(name) + "?ref=main"
+    ];
 
-      const modal =
-        document.getElementById('donateModal');
-
-      modal.style.display = 'flex';
-
-    }
-
-
-    function closeModal() {
-
-      const modal =
-        document.getElementById('donateModal');
-
-      modal.style.display = 'none';
-
-    }
-
-
-    /* =====================================================
-       MOBILE MENU
-    ====================================================== */
-
-    function toggleMobileMenu() {
-
-      const navLinks =
-        document.getElementById('navLinks');
-
-      const menuBtn =
-        document.getElementById('menuBtn');
-
-      navLinks.classList.toggle('active');
-
-
-      if (navLinks.classList.contains('active')) {
-
-        menuBtn.innerHTML =
-          '<i class="fa-solid fa-xmark"></i>';
-
-      } else {
-
-        menuBtn.innerHTML =
-          '<i class="fa-solid fa-bars"></i>';
-
+    async function fetchWithTimeout(url, timeoutMs = 12000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        return await fetch(url, {
+          method: "GET",
+          cache: "no-store",
+          signal: controller.signal,
+          headers: { "Accept": "text/plain, application/json" }
+        });
+      } finally {
+        clearTimeout(timer);
       }
-
     }
 
+    const params = new URLSearchParams(window.location.search);
+    let post = params.get("post") || "";
 
-    /* =====================================================
-       LẤY TÊN FILE BÀI VIẾT TỪ URL
-       
-       Ví dụ:
-       chi-tiet.html?post=bai-2.md
-       
-       hoặc:
-       chi-tiet.html?post=khanh-thanh-tu-sach-son-la-thang-4-2026.md
-    ====================================================== */
+    // Chỉ cho phép tên file .md, tránh nhận đường dẫn ngoài thư mục posts.
+    post = post.split("/").pop().trim();
 
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
+    const titleEl = document.getElementById("pageTitle");
+    const contentEl = document.getElementById("postContent");
+    const errorEl = document.getElementById("postError");
+    const metaEl = document.getElementById("postMeta");
 
-    const requestedPost =
-      params.get('post');
-
-
-    /* =====================================================
-       ESCAPE HTML
-    ====================================================== */
-
-    function escapeHtml(value) {
-
-      return String(value ?? '')
-        .replace(/[&<>"']/g, ch => ({
-
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;'
-
-        }[ch]));
-
+    function showError(message, detail) {
+      contentEl.innerHTML = "";
+      errorEl.hidden = false;
+      errorEl.className = "error-box";
+      errorEl.innerHTML =
+        "<strong>" + escapeHtml(message) + "</strong>" +
+        "<div>" + escapeHtml(detail || "") + "</div>";
     }
 
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, function(ch) {
+        return ({
+          "&":"&amp;","<":"&lt;",">":"&gt;",
+          '"':"&quot;","'":"&#039;"
+        })[ch];
+      });
+    }
 
-    /* =====================================================
-       PARSE FRONT MATTER
-       
-       Hỗ trợ:
+    function stripFrontMatter(md) {
+      // Hỗ trợ YAML front matter nếu có.
+      if (md.startsWith("---")) {
+        const end = md.indexOf("\n---", 3);
+        if (end !== -1) {
+          return md.slice(end + 4).replace(/^\s+/, "");
+        }
+      }
+      return md;
+    }
 
-       ---
-       title: Tên bài viết
-       date: Tháng 07 / 2026
-       description: Mô tả
-       thumbnail: ...
-       ---
+    function getTitleFromMarkdown(md) {
+      // Ưu tiên heading đầu tiên.
+      const m = md.match(/^\s*#\s+(.+)$/m);
+      if (m) return m[1].trim();
 
-    ====================================================== */
+      // Nếu file có bảng metadata title | ...
+      const t = md.match(/title\s*\|\s*([^\n|]+)/i);
+      if (t) return t[1].trim();
 
-    function parseFrontMatter(md) {
+      return "";
+    }
 
+    function getMetaFromMarkdown(md) {
       const data = {};
-
-      const match =
-        md.match(
-          /^\uFEFF?---\s*\n([\s\S]*?)\n---\s*\n?/
-        );
-
-
-      if (match) {
-
-        match[1]
-          .split('\n')
-          .forEach(row => {
-
-            const x =
-              row.match(
-                /^([A-Za-zÀ-ỹ0-9_-]+)\s*:\s*(.*)$/
-              );
-
-            if (x) {
-
-              data[
-                x[1]
-                  .trim()
-                  .toLowerCase()
-              ] =
-                x[2]
-                  .trim()
-                  .replace(
-                    /^['"]|['"]$/g,
-                    ''
-                  );
-
-            }
-
-          });
-
-      }
-
-
-      return {
-
-        data: data,
-
-        content:
-          match
-            ? md.slice(match[0].length)
-            : md
-
-      };
-
+      const title = md.match(/title\s*\|\s*([^\n|]+)/i);
+      const date = md.match(/date\s*\|\s*([^\n|]+)/i);
+      const desc = md.match(/description\s*\|\s*([^\n|]+)/i);
+      if (title) data.title = title[1].trim();
+      if (date) data.date = date[1].trim();
+      if (desc) data.description = desc[1].trim();
+      return data;
     }
-
-
-    /* =====================================================
-       CHUẨN HÓA TÊN FILE
-    ====================================================== */
-
-    function normalisePostName(value) {
-
-      let filename =
-        decodeURIComponent(
-          value || ''
-        ).trim();
-
-
-      filename =
-        filename.replace(
-          /\\/g,
-          '/'
-        );
-
-
-      filename =
-        filename
-          .split('/')
-          .pop();
-
-
-      /*
-       * Cho phép chữ tiếng Việt,
-       * dấu chấm, gạch ngang,
-       * gạch dưới.
-       */
-
-      if (
-        !/^[a-zA-ZÀ-ỹ0-9._-]+\.md$/i
-          .test(filename)
-      ) {
-
-        throw new Error(
-          'Tên file bài viết không hợp lệ.'
-        );
-
-      }
-
-
-      return filename;
-
-    }
-
-
-    /* =====================================================
-       TẢI MARKDOWN TRỰC TIẾP TỪ GITHUB
-       
-       QUAN TRỌNG:
-       Không dùng fetch("content/posts/...")
-
-       mà dùng raw.githubusercontent.com
-       để tránh lỗi đường dẫn GitHub Pages.
-    ====================================================== */
-
-    async function fetchMarkdown(filename) {
-
-      const encoded =
-        filename
-          .split('/')
-          .map(
-            encodeURIComponent
-          )
-          .join('/');
-
-
-      const rawUrl =
-        'https://raw.githubusercontent.com/' +
-        'hvhwan-debug/DRS/main/content/posts/' +
-        encoded;
-
-
-      const response =
-        await fetch(
-          rawUrl,
-          {
-            cache: 'no-store'
-          }
-        );
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          `HTTP ${response.status}`
-        );
-
-      }
-
-
-      return await response.text();
-
-    }
-
-
-    /* =====================================================
-       INLINE MARKDOWN
-    ====================================================== */
-
-    function inlineMarkdown(text) {
-
-      let s =
-        escapeHtml(text);
-
-
-      /*
-       * Ảnh Markdown
-       * ![alt](url)
-       */
-
-      s =
-        s.replace(
-          /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
-
-          '<img src="$2" alt="$1" loading="lazy">'
-        );
-
-
-      /*
-       * Link Markdown
-       */
-
-      s =
-        s.replace(
-          /\[([^\]]+)\]\(([^)\s]+)\)/g,
-
-          '<a href="$2" target="_blank" rel="noopener">$1</a>'
-        );
-
-
-      /*
-       * Bold
-       */
-
-      s =
-        s.replace(
-          /\*\*([^*]+)\*\*/g,
-          '<strong>$1</strong>'
-        );
-
-
-      s =
-        s.replace(
-          /__([^_]+)__/g,
-          '<strong>$1</strong>'
-        );
-
-
-      /*
-       * Italic
-       */
-
-      s =
-        s.replace(
-          /\*([^*]+)\*/g,
-          '<em>$1</em>'
-        );
-
-
-      s =
-        s.replace(
-          /_([^_]+)_/g,
-          '<em>$1</em>'
-        );
-
-
-      /*
-       * Inline code
-       */
-
-      s =
-        s.replace(
-          /`([^`]+)`/g,
-          '<code>$1</code>'
-        );
-
-
-      return s;
-
-    }
-
-
-    /* =====================================================
-       MARKDOWN -> HTML
-       
-       Hỗ trợ:
-       # H1
-       ## H2
-       ### H3
-       - danh sách
-       1. danh sách số
-       > quote
-       ![ảnh](url)
-       [link](url)
-       **bold**
-       *italic*
-       `code`
-       ```
-       code block
-       ```
-       ---
-    ====================================================== */
-
-    function markdownToHtml(md) {
-
-      /*
-       * Loại front matter nếu còn.
-       */
-
-      md =
-        md.replace(
-          /^\uFEFF?---\s*\n[\s\S]*?\n---\s*\n?/,
-          ''
-        );
-
-
-      const lines =
-        md
-          .replace(/\r\n?/g, '\n')
-          .split('\n');
-
-
-      let out = '';
-
-      let inCode = false;
-
-      let code = [];
-
-      let listType = null;
-
-
-      function closeList() {
-
-        if (listType) {
-
-          out +=
-            '</' +
-            listType +
-            '>';
-
-          listType = null;
-
-        }
-
-      }
-
-
-      for (
-        let i = 0;
-        i < lines.length;
-        i++
-      ) {
-
-        const line =
-          lines[i];
-
-
-        /* CODE BLOCK */
-
-        if (
-          line.trim()
-            .startsWith('```')
-        ) {
-
-          if (!inCode) {
-
-            closeList();
-
-            inCode = true;
-
-            code = [];
-
-          } else {
-
-            out +=
-              '<pre><code>' +
-              escapeHtml(
-                code.join('\n')
-              ) +
-              '</code></pre>';
-
-            inCode = false;
-
-          }
-
-          continue;
-
-        }
-
-
-        if (inCode) {
-
-          code.push(line);
-
-          continue;
-
-        }
-
-
-        /* DÒNG TRỐNG */
-
-        if (!line.trim()) {
-
-          closeList();
-
-          continue;
-
-        }
-
-
-        let m;
-
-
-        /* HEADING */
-
-        if (
-          (m =
-            line.match(
-              /^#{1,6}\s+(.+)$/
-            ))
-        ) {
-
-          closeList();
-
-          const level =
-            m[0]
-              .match(/^#+/)[0]
-              .length;
-
-
-          out +=
-            `<h${level}>` +
-            inlineMarkdown(m[1]) +
-            `</h${level}>`;
-
-          continue;
-
-        }
-
-
-        /* HR */
-
-        if (
-          /^---+$/.test(
-            line.trim()
-          ) ||
-          /^\*\*\*+$/.test(
-            line.trim()
-          )
-        ) {
-
-          closeList();
-
-          out += '<hr>';
-
-          continue;
-
-        }
-
-
-        /* BLOCKQUOTE */
-
-        if (
-          (m =
-            line.match(
-              /^\s*>\s?(.*)$/
-            ))
-        ) {
-
-          closeList();
-
-          let quote =
-            [m[1]];
-
-
-          while (
-            i + 1 < lines.length &&
-            /^\s*>\s?/.test(
-              lines[i + 1]
-            )
-          ) {
-
-            i++;
-
-            quote.push(
-              lines[i]
-                .replace(
-                  /^\s*>\s?/,
-                  ''
-                )
-            );
-
-          }
-
-
-          out +=
-            '<blockquote>' +
-            quote
-              .map(
-                inlineMarkdown
-              )
-              .join('<br>') +
-            '</blockquote>';
-
-
-          continue;
-
-        }
-
-
-        /* UNORDERED LIST */
-
-        if (
-          (m =
-            line.match(
-              /^\s*[-*+]\s+(.+)$/
-            ))
-        ) {
-
-          if (
-            listType !== 'ul'
-          ) {
-
-            closeList();
-
-            out += '<ul>';
-
-            listType = 'ul';
-
-          }
-
-
-          out +=
-            '<li>' +
-            inlineMarkdown(
-              m[1]
-            ) +
-            '</li>';
-
-
-          continue;
-
-        }
-
-
-        /* ORDERED LIST */
-
-        if (
-          (m =
-            line.match(
-              /^\s*\d+\.\s+(.+)$/
-            ))
-        ) {
-
-          if (
-            listType !== 'ol'
-          ) {
-
-            closeList();
-
-            out += '<ol>';
-
-            listType = 'ol';
-
-          }
-
-
-          out +=
-            '<li>' +
-            inlineMarkdown(
-              m[1]
-            ) +
-            '</li>';
-
-
-          continue;
-
-        }
-
-
-        /* ẢNH ĐỨNG RIÊNG */
-
-        if (
-          (m =
-            line.match(
-              /^\s*!\[([^\]]*)\]\(([^)]+)\)\s*$/
-            ))
-        ) {
-
-          closeList();
-
-          out +=
-            `<img src="${m[2]}" ` +
-            `alt="${m[1]}" ` +
-            `loading="lazy">`;
-
-          continue;
-
-        }
-
-
-        /* PARAGRAPH */
-
-        closeList();
-
-
-        let paragraph =
-          [line];
-
-
-        while (
-          i + 1 < lines.length &&
-          lines[i + 1].trim() &&
-          !/^\s*(#{1,6}\s|[-*+]\s+|\d+\.\s+|>\s?|```|!\[)/
-            .test(
-              lines[i + 1]
-            )
-        ) {
-
-          i++;
-
-          paragraph.push(
-            lines[i]
-          );
-
-        }
-
-
-        out +=
-          '<p>' +
-          paragraph
-            .map(
-              inlineMarkdown
-            )
-            .join('<br>') +
-          '</p>';
-
-      }
-
-
-      if (inCode) {
-
-        out +=
-          '<pre><code>' +
-          escapeHtml(
-            code.join('\n')
-          ) +
-          '</code></pre>';
-
-      }
-
-
-      closeList();
-
-
-      return out;
-
-    }
-
-
-    /* =====================================================
-       LOAD POST
-    ====================================================== */
 
     async function loadPost() {
-
-      const status =
-        document.getElementById(
-          'articleStatus'
+      if (!post) {
+        titleEl.textContent = "Không có bài viết";
+        showError(
+          "Không xác định được bài viết.",
+          "URL phải có dạng: chi-tiet.html?post=ten-bai-viet.md"
         );
-
-
-      const articleData =
-        document.getElementById(
-          'articleData'
-        );
-
-
-      const title =
-        document.getElementById(
-          'articleTitle'
-        );
-
-
-      const meta =
-        document.getElementById(
-          'articleMeta'
-        );
-
-
-      const content =
-        document.getElementById(
-          'articleContent'
-        );
-
-
-      const cover =
-        document.getElementById(
-          'articleCover'
-        );
-
-
-      /* KHÔNG CÓ ?post= */
-
-      if (!requestedPost) {
-
-        title.textContent =
-          'Không tìm thấy bài viết';
-
-
-        status.innerHTML = `
-          <div class="error-box">
-            <strong>
-              Không xác định được bài viết.
-            </strong>
-
-            <br><br>
-
-            Đường dẫn cần có dạng:
-
-            <code>
-              chi-tiet.html?post=bai-2.md
-            </code>
-          </div>
-        `;
-
         return;
-
       }
 
-
-      let filename;
-
-
-      /* CHUẨN HÓA TÊN FILE */
-
-      try {
-
-        filename =
-          normalisePostName(
-            requestedPost
-          );
-
-      } catch (error) {
-
-        title.textContent =
-          'Bài viết không hợp lệ';
-
-
-        status.innerHTML = `
-          <div class="error-box">
-
-            <strong>
-              Đường dẫn bài viết không hợp lệ.
-            </strong>
-
-          </div>
-        `;
-
+      if (!/^[^?#]+\.md$/i.test(post)) {
+        titleEl.textContent = "Bài viết không hợp lệ";
+        showError(
+          "Tên bài viết không hợp lệ.",
+          "Hãy truyền đúng tên file .md trong thư mục content/posts/."
+        );
         return;
-
       }
 
+      let markdown = "";
+      let lastError = null;
 
       try {
+        // Thử lần lượt 3 nguồn. Mỗi nguồn tối đa 12 giây, nên sẽ không còn quay vô hạn.
+        for (const makeUrl of SOURCES) {
+          const url = makeUrl(post);
+          try {
+            const response = await fetchWithTimeout(url, 12000);
+            if (!response.ok) {
+              throw new Error("HTTP " + response.status);
+            }
 
-        /* TẢI FILE MD */
+            if (url.includes("api.github.com")) {
+              const data = await response.json();
+              if (!data.content) throw new Error("GitHub API không trả về content");
+              const binary = atob(data.content.replace(/\s/g, ""));
+              const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+              markdown = new TextDecoder("utf-8").decode(bytes);
+            } else {
+              markdown = await response.text();
+            }
 
-        const md =
-          await fetchMarkdown(
-            filename
-          );
-
-
-        /*
-         * Tách Front Matter
-         */
-
-        const parsed =
-          parseFrontMatter(
-            md
-          );
-
-
-        const fm =
-          parsed.data;
-
-
-        const clean =
-          parsed.content;
-
-
-        /*
-         * Lấy tiêu đề
-         */
-
-        const h1 =
-          clean.match(
-            /^\s*#\s+(.+)$/m
-          );
-
-
-        const postTitle =
-          fm.title ||
-          (
-            h1
-              ? h1[1]
-                  .replace(
-                    /[*_`]/g,
-                    ''
-                  )
-              : filename
-                  .replace(
-                    /\.md$/i,
-                    ''
-                  )
-                  .replace(
-                    /[-_]/g,
-                    ' '
-                  )
-          );
-
-
-        title.textContent =
-          postTitle;
-
-
-        /*
-         * Ngày đăng
-         */
-
-        const date =
-          fm.date ||
-          fm.ngay ||
-          '';
-
-
-        meta.innerHTML =
-          (
-            date
-              ? `
-                <span>
-                  <i class="fa-regular fa-calendar"></i>
-                  ${escapeHtml(date)}
-                </span>
-              `
-              : ''
-          ) +
-
-          `
-            <span>
-              <i class="fa-solid fa-building"></i>
-              Wisdom Vietnam Network
-            </span>
-          `;
-
-
-        /*
-         * Render TOÀN BỘ bài viết
-         */
-
-        content.innerHTML =
-          markdownToHtml(
-            clean
-          );
-
-
-        /*
-         * Lấy ảnh đầu tiên làm cover.
-         *
-         * Sau đó xóa ảnh đầu tiên
-         * khỏi phần nội dung để không
-         * bị hiển thị 2 lần.
-         */
-
-        const firstImg =
-          content.querySelector(
-            'img'
-          );
-
-
-        if (firstImg) {
-
-          cover.src =
-            firstImg.src;
-
-          cover.alt =
-            firstImg.alt ||
-            postTitle;
-
-          cover.style.display =
-            'block';
-
-
-          firstImg.remove();
-
+            if (markdown.trim()) break;
+            throw new Error("EMPTY");
+          } catch (e) {
+            lastError = e;
+          }
         }
+
+        if (!markdown.trim()) {
+          throw lastError || new Error("EMPTY");
+        }
+
+        if (!markdown.trim()) {
+          throw new Error("EMPTY");
+        }
+
+        const meta = getMetaFromMarkdown(markdown);
+        const cleanMarkdown = stripFrontMatter(markdown);
+
+        const title =
+          meta.title ||
+          getTitleFromMarkdown(cleanMarkdown) ||
+          post.replace(/\.md$/i, "").replace(/[-_]+/g, " ");
+
+        titleEl.textContent = title;
+        document.title = title + " | Wisdom Vietnam Network";
+
+        if (meta.date || meta.description) {
+          metaEl.hidden = false;
+          metaEl.innerHTML =
+            (meta.date ? "<span><strong>Ngày:</strong> " + escapeHtml(meta.date) + "</span>" : "") +
+            (meta.description ? "<span>" + escapeHtml(meta.description) + "</span>" : "");
+        }
+
+        if (typeof marked === "undefined") {
+          // Trường hợp CDN Markdown chưa tải được.
+          contentEl.innerHTML =
+            "<pre style='white-space:pre-wrap;line-height:1.7'>" +
+            escapeHtml(cleanMarkdown) +
+            "</pre>";
+          return;
+        }
+
+        marked.setOptions({
+          gfm: true,
+          breaks: true
+        });
+
+        contentEl.innerHTML = marked.parse(cleanMarkdown);
+
+        // Nếu Markdown không có H1 thì tiêu đề vẫn hiện ở hero.
+        // Đổi đường dẫn ảnh tương đối trong bài về GitHub raw.
+        contentEl.querySelectorAll("img").forEach(function(img) {
+          const src = img.getAttribute("src");
+          if (!src) return;
+
+          if (
+            !src.startsWith("http://") &&
+            !src.startsWith("https://") &&
+            !src.startsWith("//") &&
+            !src.startsWith("data:")
+          ) {
+            const normalized = src.replace(/^\.?\//, "");
+            img.src =
+              "https://cdn.jsdelivr.net/gh/hvhwan-debug/DRS@main/" +
+              normalized;
+          }
+        });
+
+        // Mở liên kết ngoài ở tab mới.
+        contentEl.querySelectorAll("a").forEach(function(a) {
+          const href = a.getAttribute("href") || "";
+          if (/^https?:\/\//i.test(href)) {
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+          }
+        });
+
+      } catch (err) {
+        console.error("Không tải được bài viết:", err);
+
+        titleEl.textContent = "Không tải được bài viết";
+        showError(
+          "Không thể tải nội dung bài viết.",
+          "Đang tìm: content/posts/" + post +
+          ". Kiểm tra đúng tên file .md trên GitHub (kể cả dấu gạch ngang) và bảo đảm file đã được commit."
+        );
+      }
+    }
+
+    loadPost();
+  </script>
+</body>
+</html>
