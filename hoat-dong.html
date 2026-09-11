@@ -102,7 +102,7 @@
     /* Container chính */
     .container { max-width: 1000px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
 
-    /* SỰ KIỆN SẮP TỚI - THIẾT KẾ CARD SANG TRỌNG & TINH TẾ */
+    /* SỰ KIỆN SẮP TỚI */
     .upcoming-section-card {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -146,13 +146,23 @@
     .upcoming-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.55; }
     .upcoming-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
-    /* Timeline Container (Sự kiện đã diễn ra) */
+    /* TIMELINE HIỆU ỨNG ĐƯỜNG KẺ CHẠY THEO CUỘN TRANG & CHẤM TRÒN TỎA SÓNG */
     .timeline-container { position: relative; padding: 2rem 0; }
+    
+    /* Đường kẻ nền màu xám nhạt */
     .timeline-container::before {
       content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
-      background: linear-gradient(to bottom, #0284c7, #38bdf8, #bae6fd);
-      transform: translateX(-50%); border-radius: 4px;
+      background: #e2e8f0; transform: translateX(-50%); border-radius: 4px; z-index: 1;
     }
+
+    /* Thanh đường kẻ sáng màu xanh chạy theo cuộn trang */
+    .timeline-progress-line {
+      position: absolute; top: 0; left: 50%; width: 4px; height: 0%;
+      background: linear-gradient(to bottom, #0284c7, #38bdf8);
+      transform: translateX(-50%); border-radius: 4px; z-index: 2;
+      transition: height 0.1s ease-out;
+    }
+
     .timeline-root-node { text-align: center; position: relative; z-index: 10; margin-bottom: 3.5rem; }
     .timeline-root-badge {
       display: inline-block; background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%);
@@ -161,13 +171,22 @@
       text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    .timeline-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; position: relative; width: 100%; }
+    .timeline-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; position: relative; width: 100%; z-index: 3; }
     .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
 
+    /* Chấm tròn với hiệu ứng tỏa sóng (Pulse Waves) */
     .timeline-dot {
-      position: absolute; left: 50%; transform: translateX(-50%); width: 26px; height: 26px;
+      position: absolute; left: 50%; transform: translateX(-50%); width: 24px; height: 24px;
       background: #0284c7; border: 4px solid #fff; border-radius: 50%;
-      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2); z-index: 5;
+      box-shadow: 0 0 15px rgba(2, 132, 199, 0.8); z-index: 5;
+    }
+    .timeline-dot::after {
+      content: ''; position: absolute; inset: -8px; border-radius: 50%;
+      border: 2px solid rgba(2, 132, 199, 0.6); animation: pulseWave 2s infinite ease-out;
+    }
+    @keyframes pulseWave {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2.2); opacity: 0; }
     }
 
     .timeline-content {
@@ -222,7 +241,7 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .timeline-container::before { left: 24px; }
+      .timeline-container::before, .timeline-progress-line { left: 24px; }
       .timeline-dot { left: 24px; }
       .timeline-item, .timeline-item:nth-child(odd) { flex-direction: column; align-items: flex-end; }
       .timeline-content { width: calc(100% - 60px); }
@@ -275,7 +294,7 @@
   <!-- Container chính -->
   <div class="container">
       
-    <!-- HỘP SỰ KIỆN SẮP TỚI - THIẾT KẾ PHẲNG SANG TRỌNG -->
+    <!-- HỘP SỰ KIỆN SẮP TỚI -->
     <div class="upcoming-section-card">
       <div class="upcoming-header" onclick="toggleUpcomingGrid()">
         <h3><i class="fa-solid fa-calendar-star" style="color: #0284c7;"></i> Sự Kiện Sắp Tới & Kế Hoạch Gây Quỹ</h3>
@@ -323,18 +342,16 @@
       </div>
     </div>
 
-    <!-- Timeline Mốc Hoạt Động (Đã diễn ra) -->
-    <div class="timeline-container">
+    <!-- Timeline Mốc Hoạt Động có đường kẻ chạy theo cuộn trang & chấm tròn tỏa sóng -->
+    <div class="timeline-container" id="timelineContainer">
+      <!-- Thanh đường kẻ sáng chạy theo cuộn trang -->
+      <div class="timeline-progress-line" id="timelineProgress"></div>
       
       <div class="timeline-root-node">
         <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện Nổi Bật 2026</div>
       </div>
       
-      <div id="timeline2026">
-        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
-          <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7;"></i> Đang tải các mốc hoạt động 2026...
-        </div>
-      </div>
+      <div id="timeline2026"></div>
 
       <!-- Nút bấm xem thêm hoạt động các năm trước -->
       <div class="history-toggle-box" id="historyToggleBox" style="display: none;">
@@ -366,7 +383,6 @@
     </div>
   </div>
 
-  <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -391,131 +407,54 @@
   </footer>
 
   <script>
-    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(event) {
-      let modal = document.getElementById('donateModal');
-      if (event.target == modal) { modal.style.display = 'none'; }
-    }
+    const vietnameseImagePool = [
+      "images/uploads/2-onl-16997056815001293662280.jpg",
+      "images/uploads/48591585757_7be64177d0_o.jpg",
+      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
+      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
+      "images/uploads/images (1).jfif",
+      "images/uploads/images (2).jfif",
+      "images/uploads/images (3).jfif",
+      "images/uploads/images (4).jfif"
+    ];
 
-    function toggleMobileMenu() {
-      const navLinks = document.getElementById('navLinks');
-      const menuBtn = document.getElementById('menuBtn');
-      navLinks.classList.toggle('active');
-      if (navLinks.classList.contains('active')) {
-        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-      } else {
-        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-      }
-    }
-
-    function toggleUpcomingGrid() {
-      const grid = document.getElementById('upcomingGrid');
-      const toggleText = document.getElementById('upcomingToggleText');
-      const icon = document.getElementById('upcomingIcon');
-      grid.classList.toggle('show');
-      if (grid.classList.contains('show')) {
-        toggleText.innerHTML = 'Thu gọn <i class="fa-solid fa-chevron-up" id="upcomingIcon" style="margin-left: 4px; transition: transform 0.3s;"></i>';
-      } else {
-        toggleText.innerHTML = 'Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="margin-left: 4px; transition: transform 0.3s;"></i>';
-      }
+    function getRandomImage() {
+      return vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
     }
 
     const sampleAllPosts = [
-      { filename: "bai-1.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202607 },
-      { filename: "bai-2.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202605 },
-      { filename: "bai-3.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", thumbnail: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202603 },
-      { filename: "bai-4.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202602 },
-      { filename: "bai-5.md", title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.", thumbnail: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80", year: "2026", sortWeight: 202601 },
-      { filename: "bai-6.md", title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 01 / 2025", description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.", thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80", year: "2025", sortWeight: 202501 },
-      { filename: "bai-7.md", title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.", thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80", year: "2025", sortWeight: 202511 },
-      { filename: "bai-8.md", title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 12 / 2024", description: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.", thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80", year: "2024", sortWeight: 202412 }
+      { filename: "bai-1.md", title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", date: "Tháng 11 / 2026", description: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến tổ chức nhằm hỗ trợ điều kiện học tập.", year: "2026", sortWeight: 202611, thumbnail: getRandomImage() },
+      { filename: "bai-2.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", year: "2026", sortWeight: 202607, thumbnail: getRandomImage() },
+      { filename: "bai-3.md", title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.", year: "2026", sortWeight: 202605, thumbnail: getRandomImage() },
+      { filename: "bai-4.md", title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.", year: "2026", sortWeight: 202603, thumbnail: getRandomImage() },
+      { filename: "bai-5.md", title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.", year: "2026", sortWeight: 202602, thumbnail: getRandomImage() },
+      { filename: "bai-6.md", title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.", year: "2026", sortWeight: 202601, thumbnail: getRandomImage() },
+      { filename: "bai-7.md", title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.", year: "2025", sortWeight: 202512, thumbnail: getRandomImage() },
+      { filename: "bai-8.md", title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.", year: "2025", sortWeight: 202511, thumbnail: getRandomImage() },
+      { filename: "bai-9.md", title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", description: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.", year: "2025", sortWeight: 202510, thumbnail: getRandomImage() },
+      { filename: "bai-10.md", title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", description: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.", year: "2025", sortWeight: 202509, thumbnail: getRandomImage() }
     ];
 
-    async function loadTimelineData() {
+    function loadTimelineData() {
       const container2026 = document.getElementById('timeline2026');
       const containerHistory = document.getElementById('timelineHistory');
       const historyToggleBox = document.getElementById('historyToggleBox');
-      
-      const repo = 'hvhwan-debug/DRS';
-      const apiURL = `https://api.github.com/repos/${repo}/contents/content/posts`;
-
-      let allPosts = [];
-
-      try {
-        const response = await fetch(apiURL);
-        if (response.ok) {
-          const files = await response.json();
-          const mdFiles = files.filter(f => f.name.endsWith('.md'));
-          
-          if (mdFiles.length > 0) {
-            for (const file of mdFiles) {
-              const fileRes = await fetch(file.download_url);
-              const text = await fileRes.text();
-              const parts = text.split('---');
-              let title = 'Bài viết hoạt động';
-              let date = 'Tháng 01 / 2026';
-              let desc = '';
-              let thumbnail = '';
-
-              if (parts.length >= 3) {
-                const yamlMeta = parts[1];
-                const titleMatch = yamlMeta.match(/title:\s*"?(.*?)"?$/m);
-                const dateMatch = yamlMeta.match(/date:\s*"?(.*?)"?$/m);
-                const descMatch = yamlMeta.match(/description:\s*"?(.*?)"?$/m);
-                const thumbMatch = yamlMeta.match(/thumbnail:\s*"?(.*?)"?$/m);
-
-                if (titleMatch) title = titleMatch[1].replace(/["']/g, '');
-                if (dateMatch) date = dateMatch[1].replace(/["']/g, '');
-                if (descMatch) desc = descMatch[1].replace(/["']/g, '');
-                if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
-              }
-
-              let year = '2026';
-              let monthNum = 1;
-              
-              if (date.includes('2025')) year = '2025';
-              else if (date.includes('2024')) year = '2024';
-              else if (date.includes('2026')) year = '2026';
-
-              const monthMatch = date.match(/Tháng\s*0?([0-9]+)/i);
-              if (monthMatch) {
-                monthNum = parseInt(monthMatch[1], 10);
-              }
-
-              let sortWeight = parseInt(year, 10) * 100 + monthNum;
-
-              allPosts.push({ filename: file.name, title, date, description: desc, thumbnail, year, sortWeight });
-            }
-          }
-        }
-      } catch (e) {
-        console.log("Dùng dữ liệu mẫu");
-      }
-
-      if (allPosts.length === 0) {
-        allPosts = sampleAllPosts;
-      }
-
-      allPosts.sort((a, b) => b.sortWeight - a.sortWeight);
 
       let list2026 = [];
       let listHistory = [];
 
-      allPosts.forEach(post => {
-        let detailLink = (post.filename && post.filename.endsWith('.md') && !post.filename.startsWith('bai-')) 
-          ? `chi-tiet.html?post=${post.filename}` 
-          : `tin-tuc.html`;
+      sampleAllPosts.sort((a, b) => b.sortWeight - a.sortWeight);
 
+      sampleAllPosts.forEach(post => {
         const itemHTML = `
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div class="timeline-content">
-              ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}" class="timeline-img">` : ''}
+              <img src="${post.thumbnail}" alt="${post.title}" class="timeline-img">
               <span class="timeline-year"><i class="fa-regular fa-calendar"></i> ${post.date}</span>
               <h3>${post.title}</h3>
-              <p>${post.description ? post.description : 'Chi tiết hoạt động cộng đồng...'}</p>
-              <a href="${detailLink}" class="btn-detail">Xem chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
+              <p>${post.description}</p>
+              <a href="tin-tuc.html" class="btn-detail">Xem chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
             </div>
           </div>
         `;
@@ -527,8 +466,7 @@
         }
       });
 
-      container2026.innerHTML = list2026.slice(0, 10).join('') || '<div style="text-align:center; padding:1.5rem;">Chưa có mốc sự kiện 2026.</div>';
-
+      container2026.innerHTML = list2026.join('');
       if (listHistory.length > 0) {
         containerHistory.innerHTML = listHistory.join('');
         historyToggleBox.style.display = 'block';
@@ -549,7 +487,38 @@
       }
     }
 
+    function toggleUpcomingGrid() {
+      const grid = document.getElementById('upcomingGrid');
+      const toggleText = document.getElementById('upcomingToggleText');
+      grid.classList.toggle('show');
+      if (grid.classList.contains('show')) {
+        toggleText.innerHTML = 'Thu gọn <i class="fa-solid fa-chevron-up" style="margin-left: 4px;"></i>';
+      } else {
+        toggleText.innerHTML = 'Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" style="margin-left: 4px;"></i>';
+      }
+    }
+
+    // Hiệu ứng đường kẻ dọc chạy theo cuộn trang
+    window.addEventListener('scroll', () => {
+      const container = document.getElementById('timelineContainer');
+      const progressBar = document.getElementById('timelineProgress');
+      if (!container || !progressBar) return;
+
+      const rect = container.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      let scrollPercent = (windowHeight - rect.top) / (rect.height + windowHeight);
+      scrollPercent = Math.max(0, Math.min(1, scrollPercent));
+      progressBar.style.height = `${scrollPercent * 100}%`;
+    });
+
     loadTimelineData();
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(e) { if (e.target == document.getElementById('donateModal')) closeModal(); }
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      navLinks.classList.toggle('active');
+    }
   </script>
 </body>
 </html>
