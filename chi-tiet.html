@@ -316,16 +316,25 @@ function escapeHtml(value){
   }[ch]));
 }
 
+function resolveUrl(url){
+  url = String(url || '').trim();
+  if(!url) return url;
+  if(/^(?:https?:|data:|mailto:|#|\/)/i.test(url)) return url;
+
+  return 'https://raw.githubusercontent.com/hvhwan-debug/DRS/main/' +
+         url.replace(/^\.?\//,'');
+}
+
 function inlineMarkdown(text){
   let s = escapeHtml(text);
 
-  // Images: ![alt](url)
   s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
-    '<img src="$2" alt="$1" loading="lazy">');
+    (_, alt, url) => '<img src="' + escapeHtml(resolveUrl(url)) +
+    '" alt="' + escapeHtml(alt) + '" loading="lazy">');
 
-  // Links
   s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
-    '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    (_, label, url) => '<a href="' + escapeHtml(resolveUrl(url)) +
+    '" target="_blank" rel="noopener">' + label + '</a>');
 
   s = s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
   s = s.replace(/__([^_]+)__/g,'<strong>$1</strong>');
@@ -337,28 +346,34 @@ function inlineMarkdown(text){
 }
 
 function markdownToHtml(md){
-  // Remove YAML front matter if a post uses it.
   md = md.replace(/^\uFEFF?---\s*\n[\s\S]*?\n---\s*\n?/,'');
   const lines = md.replace(/\r\n?/g,'\n').split('\n');
-  let out = '', inCode = false, code = [], listType = null;
+
+  let out='', inCode=false, code=[], listType=null;
 
   function closeList(){
-    if(listType){ out += '</' + listType + '>'; listType = null; }
+    if(listType){
+      out += '</'+listType+'>';
+      listType=null;
+    }
   }
 
   for(let i=0;i<lines.length;i++){
-    const line = lines[i];
+    const line=lines[i];
 
     if(line.trim().startsWith('```')){
       if(!inCode){
-        closeList(); inCode=true; code=[];
+        closeList();
+        inCode=true;
+        code=[];
       }else{
-        out += '<pre><code>' + escapeHtml(code.join('\n')) + '</code></pre>';
+        out += '<pre><code>'+escapeHtml(code.join('\n'))+'</code></pre>';
         inCode=false;
       }
       continue;
     }
-    if(inCode){ code.push(line); continue; }
+
+    if(inCode){code.push(line);continue;}
 
     if(!line.trim()){
       closeList();
@@ -366,55 +381,123 @@ function markdownToHtml(md){
     }
 
     let m;
+
     if((m=line.match(/^#{1,6}\s+(.+)$/))){
       closeList();
       const level=m[0].match(/^#+/)[0].length;
       out += `<h${level}>${inlineMarkdown(m[1])}</h${level}>`;
       continue;
     }
+
     if(/^---+$/.test(line.trim()) || /^\*\*\*+$/.test(line.trim())){
-      closeList(); out += '<hr>'; continue;
+      closeList();
+      out += '<hr>';
+      continue;
     }
+
     if((m=line.match(/^\s*>\s?(.*)$/))){
       closeList();
       let q=[m[1]];
       while(i+1<lines.length && /^\s*>\s?/.test(lines[i+1])){
-        i++; q.push(lines[i].replace(/^\s*>\s?/,''));
+        i++;
+        q.push(lines[i].replace(/^\s*>\s?/,''));
       }
-      out += '<blockquote>' + q.map(inlineMarkdown).join('<br>') + '</blockquote>';
-      continue;
-    }
-    if((m=line.match(/^\s*[-*+]\s+(.+)$/))){
-      if(listType!=='ul'){ closeList(); out += '<ul>'; listType='ul'; }
-      out += '<li>' + inlineMarkdown(m[1]) + '</li>';
-      continue;
-    }
-    if((m=line.match(/^\s*\d+\.\s+(.+)$/))){
-      if(listType!=='ol'){ closeList(); out += '<ol>'; listType='ol'; }
-      out += '<li>' + inlineMarkdown(m[1]) + '</li>';
+      out += '<blockquote>'+q.map(inlineMarkdown).join('<br>')+'</blockquote>';
       continue;
     }
 
-    // Standalone markdown image
+    if((m=line.match(/^\s*[-*+]\s+(.+)$/))){
+      if(listType!=='ul'){
+        closeList();
+        out += '<ul>';
+        listType='ul';
+      }
+      out += '<li>'+inlineMarkdown(m[1])+'</li>';
+      continue;
+    }
+
+    if((m=line.match(/^\s*\d+\.\s+(.+)$/))){
+      if(listType!=='ol'){
+        closeList();
+        out += '<ol>';
+        listType='ol';
+      }
+      out += '<li>'+inlineMarkdown(m[1])+'</li>';
+      continue;
+    }
+
     if((m=line.match(/^\s*!\[([^\]]*)\]\(([^)]+)\)\s*$/))){
       closeList();
-      out += `<img src="${m[2]}" alt="${m[1]}" loading="lazy">`;
+      out += `<img src="${escapeHtml(resolveUrl(m[2]))}" alt="${escapeHtml(m[1])}" loading="lazy">`;
       continue;
     }
 
     closeList();
     let paragraph=[line];
-    while(i+1<lines.length &&
-          lines[i+1].trim() &&
-          !/^\s*(#{1,6}\s|[-*+]\s+|\d+\.\s+|>\s?|```|!\[)/.test(lines[i+1])){
-      i++; paragraph.push(lines[i]);
+
+    while(
+      i+1<lines.length &&
+      lines[i+1].trim() &&
+      !/^\s*(#{1,6}\s|[-*+]\s+|\d+\.\s+|>\s?|```|!\[)/.test(lines[i+1])
+    ){
+      i++;
+      paragraph.push(lines[i]);
     }
-    out += '<p>' + paragraph.map(inlineMarkdown).join('<br>') + '</p>';
+
+    out += '<p>'+paragraph.map(inlineMarkdown).join('<br>')+'</p>';
   }
 
-  if(inCode) out += '<pre><code>' + escapeHtml(code.join('\n')) + '</code></pre>';
+  if(inCode)
+    out += '<pre><code>'+escapeHtml(code.join('\n'))+'</code></pre>';
+
   closeList();
   return out;
+}
+
+function parseFrontMatter(md){
+  const fm={};
+  const front=md.match(/^\uFEFF?---\s*\n([\s\S]*?)\n---\s*\n?/);
+
+  if(front){
+    front[1].split('\n').forEach(row=>{
+      const x=row.match(/^([A-Za-zÀ-ỹ0-9_-]+)\s*:\s*(.*)$/);
+      if(x){
+        fm[x[1].trim().toLowerCase()] =
+          x[2].trim().replace(/^['"]|['"]$/g,'');
+      }
+    });
+  }
+
+  return {
+    data:fm,
+    content:front ? md.slice(front[0].length) : md
+  };
+}
+
+function normalisePostName(value){
+  let filename=decodeURIComponent(value || '').trim();
+  filename=filename.replace(/\\/g,'/');
+  filename=filename.split('/').pop();
+
+  if(!/^[a-zA-Z0-9À-ỹ._-]+\.md$/i.test(filename))
+    throw new Error('Tên file bài viết không hợp lệ.');
+
+  return filename;
+}
+
+async function fetchMarkdown(filename){
+  const encoded=filename.split('/').map(encodeURIComponent).join('/');
+
+  const rawUrl=
+    'https://raw.githubusercontent.com/hvhwan-debug/DRS/main/content/posts/' +
+    encoded;
+
+  const response=await fetch(rawUrl,{cache:'no-store'});
+
+  if(!response.ok)
+    throw new Error(`HTTP ${response.status}`);
+
+  return await response.text();
 }
 
 async function loadPost(){
@@ -425,73 +508,72 @@ async function loadPost(){
   const cover=document.getElementById('articleCover');
 
   if(!requestedPost){
-    status.innerHTML='<div class="error-box"><strong>Không xác định được bài viết.</strong><br>Đường dẫn cần có dạng <code>chi-tiet.html?post=bai-20.md</code>.</div>';
+    status.innerHTML=
+      '<div class="error-box"><strong>Không xác định được bài viết.</strong><br>'+
+      'Đường dẫn cần có dạng <code>chi-tiet.html?post=ten-bai-viet.md</code>.</div>';
     title.textContent='Không tìm thấy bài viết';
     return;
   }
 
-  // Chỉ cho phép đọc file .md trong content/posts, tránh đường dẫn ngoài thư mục.
-  const filename=decodeURIComponent(requestedPost).split('/').pop();
-  if(!/^[a-zA-Z0-9._-]+\.md$/.test(filename)){
-    status.innerHTML='<div class="error-box"><strong>Đường dẫn bài viết không hợp lệ.</strong></div>';
+  let filename;
+
+  try{
+    filename=normalisePostName(requestedPost);
+  }catch(error){
+    status.innerHTML=
+      '<div class="error-box"><strong>Đường dẫn bài viết không hợp lệ.</strong></div>';
     title.textContent='Bài viết không hợp lệ';
     return;
   }
 
   try{
-    const response=await fetch(`content/posts/${encodeURIComponent(filename)}`,{
-      cache:'no-cache'
-    });
+    const md=await fetchMarkdown(filename);
+    const parsed=parseFrontMatter(md);
+    const fm=parsed.data;
+    const clean=parsed.content;
 
-    if(!response.ok) throw new Error(`HTTP ${response.status}`);
-    const md=await response.text();
-
-    // Lấy title/date từ front matter nếu có.
-    let clean=md;
-    let fm={};
-    const front=md.match(/^\uFEFF?---\s*\n([\s\S]*?)\n---\s*\n?/);
-    if(front){
-      front[1].split('\n').forEach(row=>{
-        const x=row.match(/^([A-Za-zÀ-ỹ0-9_-]+)\s*:\s*(.*)$/);
-        if(x) fm[x[1].trim().toLowerCase()]=x[2].trim().replace(/^['"]|['"]$/g,'');
-      });
-      clean=md.slice(front[0].length);
-    }
-
-    // Nếu markdown có tiêu đề H1, dùng nó làm tiêu đề trang.
     const h1=clean.match(/^\s*#\s+(.+)$/m);
-    const postTitle=fm.title || (h1 ? h1[1].replace(/[*_`]/g,'') : filename.replace(/\.md$/i,'').replace(/[-_]/g,' '));
+    const postTitle=
+      fm.title ||
+      (h1 ? h1[1].replace(/[*_`]/g,'') :
+      filename.replace(/\.md$/i,'').replace(/[-_]/g,' '));
+
     title.textContent=postTitle;
 
     const date=fm.date || fm.ngay || '';
-    meta.innerHTML=(date ? `<i class="fa-regular fa-calendar"></i> ${escapeHtml(date)} &nbsp;` : '') +
-                   `<span>Wisdom Vietnam Network</span>`;
+    meta.innerHTML=
+      (date ? `<i class="fa-regular fa-calendar"></i> ${escapeHtml(date)} &nbsp;` : '')+
+      `<span>Wisdom Vietnam Network</span>`;
 
-    // Render markdown.
+    // Hiển thị TOÀN BỘ nội dung Markdown của bài viết.
     content.innerHTML=markdownToHtml(clean);
 
-    // Dùng ảnh đầu tiên trong nội dung làm ảnh cover, đồng thời giữ nó trong bài.
+    // Ảnh đầu tiên làm ảnh cover, nhưng vẫn giữ các ảnh còn lại trong bài.
     const firstImg=content.querySelector('img');
     if(firstImg){
       cover.src=firstImg.src;
       cover.alt=firstImg.alt || postTitle;
       cover.style.display='block';
-      firstImg.style.display='none';
+      firstImg.remove();
     }
 
     status.style.display='none';
-    document.title=postTitle + ' | Wisdom Vietnam Network';
+    document.title=postTitle+' | Wisdom Vietnam Network';
 
   }catch(error){
     console.error('Không tải được bài viết:',error);
+
     title.textContent='Không tải được bài viết';
     meta.textContent='';
+
     status.innerHTML=`
       <div class="error-box">
         <strong>Không thể tải nội dung bài viết.</strong><br>
         Đang tìm: <code>content/posts/${escapeHtml(filename)}</code><br><br>
-        Hãy kiểm tra file <code>${escapeHtml(filename)}</code> có nằm đúng trong thư mục
-        <code>content/posts/</code> trên GitHub hay chưa.
+        Kiểm tra chính xác tên file <code>${escapeHtml(filename)}</code>
+        trong thư mục <code>content/posts/</code> trên GitHub.
+        <br><br>
+        Nếu file vừa mới cập nhật, hãy chờ GitHub Pages deploy xong rồi tải lại trang.
       </div>`;
   }
 }
