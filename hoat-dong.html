@@ -101,25 +101,24 @@
     .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
     /* Container chính */
-    .container { max-width: 1100px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
+    .container { max-width: 900px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
 
-    /* HỘP SỰ KIỆN SẮP TỚI - HIỆU ỨNG LINE SÁNG CHẠY QUANH VIỀN CỰC KỲ GÂY CHÚ Ý */
+    /* HỘP SỰ KIỆN SẮP TỚI - THIẾT KẾ TINH TẾ, CÂN ĐỐI VÀ CÓ LINE SÁNG CHẠY VIỀN */
     .upcoming-section-card {
       position: relative;
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      border-radius: 20px;
-      padding: 1.8rem 2.2rem;
+      background: #ffffff;
+      border-radius: 18px;
       margin-bottom: 3.5rem;
       box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
       z-index: 1;
       overflow: hidden;
     }
-    /* Tạo lớp viền sáng chuyển động chạy quanh khung */
+    /* Hiệu ứng line sáng chạy quanh viền */
     .upcoming-section-card::before {
       content: '';
       position: absolute;
       inset: -2px;
-      border-radius: 22px;
+      border-radius: 20px;
       background: linear-gradient(90deg, #0284c7, #38bdf8, #60a5fa, #0284c7);
       background-size: 300% 300%;
       z-index: -1;
@@ -130,37 +129,36 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    /* Che bên trong để tạo hiệu ứng viền sáng mỏng sắc nét */
     .upcoming-inner-bg {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      border-radius: 18px;
-      padding: 0.2rem;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.6rem 2rem;
     }
 
     .upcoming-header {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; cursor: pointer; user-select: none;
     }
-    .upcoming-header h3 { font-size: 1.25rem; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 0.75rem; }
-    .upcoming-header span { font-size: 0.85rem; color: #0284c7; background: #ffffff; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 600; border: 1px solid #bae6fd; box-shadow: 0 2px 5px rgba(2,132,199,0.1); }
+    .upcoming-header h3 { font-size: 1.15rem; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 0.75rem; }
+    .upcoming-header span { font-size: 0.85rem; color: #0284c7; background: #f0f9ff; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 600; border: 1px solid #bae6fd; box-shadow: 0 2px 5px rgba(2,132,199,0.05); }
 
     .upcoming-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.8rem; display: none;
+      display: grid; grid-template-columns: 1fr; gap: 1.2rem; margin-top: 1.5rem; display: none;
     }
     .upcoming-grid.show { display: grid; animation: fadeIn 0.4s ease-in-out; }
     
     .upcoming-card {
-      background: #ffffff; border: 1px solid #e0f2fe; border-radius: 16px; padding: 1.6rem;
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.5rem;
       display: flex; flex-direction: column; justify-content: space-between;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03); transition: transform 0.25s, box-shadow 0.25s;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02); transition: transform 0.25s, box-shadow 0.25s;
     }
-    .upcoming-card:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(2, 132, 199, 0.12); border-color: #0284c7; }
+    .upcoming-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(2, 132, 199, 0.08); border-color: #0284c7; }
     
     .badge-tag {
       display: inline-block; background: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem;
-      border-radius: 999px; font-weight: 700; font-size: 0.75rem; margin-bottom: 0.7rem; text-transform: uppercase;
+      border-radius: 999px; font-weight: 700; font-size: 0.75rem; margin-bottom: 0.6rem; text-transform: uppercase;
     }
-    .upcoming-card h4 { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; line-height: 1.35; }
-    .upcoming-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.55; }
+    .upcoming-card h4 { font-size: 1.05rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; line-height: 1.35; }
+    .upcoming-card p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
     .upcoming-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
     /* Timeline Container (Sự kiện đã diễn ra) */
@@ -241,7 +239,7 @@
       .timeline-dot { left: 24px; }
       .timeline-item, .timeline-item:nth-child(odd) { flex-direction: column; align-items: flex-end; }
       .timeline-content { width: calc(100% - 60px); }
-      .upcoming-section-card { padding: 1.2rem; }
+      .upcoming-inner-bg { padding: 1.2rem; }
     }
   </style>
 </head>
@@ -290,7 +288,7 @@
   <!-- Container chính -->
   <div class="container">
       
-    <!-- HỘP SỰ KIỆN SẮP TỚI CÓ LINE SÁNG CHẠY QUANH VIỀN GÂY CHÚ Ý -->
+    <!-- HỘP SỰ KIỆN SẮP TỚI CÓ LINE SÁNG CHẠY VIỀN & CÂN ĐỐI GỌN GÀNG -->
     <div class="upcoming-section-card">
       <div class="upcoming-inner-bg">
         <div class="upcoming-header" onclick="toggleUpcomingGrid()">
