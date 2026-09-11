@@ -123,10 +123,27 @@
       display: inline-block;
       box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
       transition: all 0.2s;
+      font-family: inherit;
     }
     .btn:hover {
       background: var(--blue-grad-btn-hover);
       transform: translateY(-1px);
+    }
+
+    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp */
+    .btn-donate-glow {
+      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
     }
 
     /* Nút Menu Hamburger cho điện thoại */
@@ -523,7 +540,7 @@
       </a>
 
       <nav class="nav-links" id="navLinks">
-        <a href="#tru-cot">Sứ Mệnh</a>
+        <a href="su-menh.html">Sứ Mệnh</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
@@ -531,7 +548,7 @@
       </nav>
 
       <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn" onclick="openModal()">Quyên Góp</button>
+        <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -559,7 +576,7 @@
         </p>
         <div class="hero-actions">
           <button class="btn-light" onclick="openModal()">Chung Tay Ủng Hộ</button>
-          <a href="#tru-cot" class="hero-link">Tìm hiểu sứ mệnh hoạt động</a>
+          <a href="su-menh.html" class="hero-link">Tìm hiểu sứ mệnh hoạt động</a>
         </div>
       </div>
 
