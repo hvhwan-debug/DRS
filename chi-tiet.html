@@ -211,58 +211,28 @@
       return vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
     }
 
-    // Kho lưu trữ dữ liệu chi tiết của tất cả các bài viết
+    // Kho cơ sở dữ liệu đầy đủ tất cả 20 bài viết
     const articlesDB = {
-      "bai-1.md": {
-        title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang",
-        date: "Tháng 11 / 2026",
-        content: `Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn. Các hoạt động dự kiến tập trung vào việc trao tặng những phần quà, vật dụng cần thiết phục vụ học tập và sinh hoạt cho trẻ em tại khu vực còn nhiều khó khăn.<br><br>Hà Giang là địa bàn miền núi với nhiều khu vực vùng cao, đời sống của một bộ phận người dân còn gặp không ít trở ngại. Đối với trẻ em, điều kiện học tập, đi lại và sinh hoạt vẫn là những vấn đề cần được cộng đồng quan tâm và đồng hành.`
-      },
-      "bai-2.md": {
-        title: "Chương trình Gieo Mầm Tri Thức Mùa Hè",
-        date: "Tháng 07 / 2026",
-        content: `Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.<br><br>Chương trình mùa hè năm nay tập trung vào việc xây dựng các góc đọc sách tại lớp học, tổ chức các hoạt động sinh hoạt ngoại khóa giúp học sinh rèn luyện kỹ năng sống và khơi dậy niềm đam mê đọc sách.`
-      },
-      "bai-3.md": {
-        title: "Khánh thành Tủ Sách Vùng Cao Đợt 1",
-        date: "Tháng 05 / 2026",
-        content: `Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức được chắt lọc kỹ lưỡng, mang lại không gian giải trí và học tập bổ ích sau giờ lên lớp cho các em nhỏ.`
-      },
-      "bai-4.md": {
-        title: "Chuỗi lớp học kỹ năng mềm và tư duy",
-        date: "Tháng 03 / 2026",
-        content: `Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện, kỹ năng làm việc nhóm và cách bảo vệ bản thân.`
-      },
-      "bai-5.md": {
-        title: "Hành trình Tiếp Sức Đến Trường",
-        date: "Tháng 02 / 2026",
-        content: `Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường và tiếp tục theo đuổi ước mơ tri thức.`
-      },
-      "bai-6.md": {
-        title: "Ký kết hợp tác mở rộng mạng lưới giáo dục",
-        date: "Tháng 01 / 2026",
-        content: `Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động, đưa tri thức đến gần hơn với hàng ngàn học sinh vùng sâu vùng xa.`
-      },
-      "bai-7.md": {
-        title: "Tổng kết chiến dịch Tết Chia Sẻ",
-        date: "Tháng 12 / 2025",
-        content: `Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học.`
-      },
-      "bai-8.md": {
-        title: "Hội thảo giáo dục cộng đồng toàn quốc",
-        date: "Tháng 11 / 2025",
-        content: `Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục tại các vùng đặc biệt khó khăn.`
-      },
-      "bai-9.md": {
-        title: "Trao học bổng Thắp Sáng Ước Mơ",
-        date: "Tháng 10 / 2025",
-        content: `Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt và học tập cho các em có hoàn cảnh đặc biệt khó khăn.`
-      },
-      "bai-10.md": {
-        title: "Phát động chiến dịch mùa đông ấm cho em",
-        date: "Tháng 09 / 2025",
-        content: `Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao.`
-      }
+      "bai-1.md": { title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", date: "Tháng 11 / 2026", content: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn." },
+      "bai-2.md": { title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", content: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.<br><br>Chương trình mùa hè năm nay tập trung vào việc xây dựng các góc đọc sách tại lớp học, tổ chức các hoạt động sinh hoạt ngoại khóa." },
+      "bai-3.md": { title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", content: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức mang lại không gian giải trí và học tập bổ ích." },
+      "bai-4.md": { title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", content: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện và kỹ năng làm việc nhóm." },
+      "bai-5.md": { title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", content: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường." },
+      "bai-6.md": { title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", content: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động, đưa tri thức đến gần hơn với học sinh." },
+      "bai-7.md": { title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", content: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học." },
+      "bai-8.md": { title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", content: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục tại các vùng đặc biệt khó khăn." },
+      "bai-9.md": { title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", content: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt cho các em có hoàn cảnh đặc biệt khó khăn." },
+      "bai-10.md": { title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", content: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao." },
+      "bai-11.md": { title: "Ngày hội đọc sách và tri thức buôn làng", date: "Tháng 08 / 2025", content: "Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.<br><br>Sự kiện thu hút đông đảo thanh thiếu niên tham gia các hoạt động giao lưu văn hóa đọc." },
+      "bai-12.md": { title: "Tọa đàm đổi mới phương pháp giảng dạy", date: "Tháng 06 / 2025", content: "Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.<br><br>Nâng cao năng lực chuyên môn và phương pháp sư phạm cho đội ngũ nhà giáo." },
+      "bai-13.md": { title: "Hành trình xe buýt tri thức lăn bánh", date: "Tháng 04 / 2025", content: "Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.<br><br>Giúp các em học sinh tiếp cận hàng trăm đầu sách phong phú mỗi tuần." },
+      "bai-14.md": { title: "Trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", content: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.<br><br>Mở rộng tầm nhìn và cơ hội học tập công nghệ cho thế hệ trẻ vùng cao." },
+      "bai-15.md": { title: "Hỗ trợ bữa ăn dinh dưỡng học đường", date: "Tháng 02 / 2025", content: "Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.<br><br>Chung tay chăm lo sức khỏe và sự phát triển toàn diện cho học sinh." },
+      "bai-16.md": { title: "Khởi động dự án Xây trường vùng cao", date: "Tháng 01 / 2025", content: "Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.<br><br>Kiến tạo không gian học tập an toàn, khang trang cho thầy và trò." },
+      "bai-17.md": { title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", content: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.<br><br>Cam kết thực hiện nghiêm túc nguyên tắc minh bạch và trách nhiệm giải trình trước cộng đồng." },
+      "bai-18.md": { title: "Giải bóng đá thiện nguyện kết nối thanh niên", date: "Tháng 10 / 2024", content: "Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.<br><br>Thắt chặt tình đoàn kết và lan tỏa lối sống đẹp trong cộng đồng trẻ." },
+      "bai-19.md": { title: "Lớp học tình thương cuối tuần", date: "Tháng 08 / 2024", content: "Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.<br><br>Bồi dưỡng kiến thức cơ bản và thắp sáng niềm tin vào tương lai cho các em." },
+      "bai-20.md": { title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", content: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.<br><br>Xây dựng đội ngũ tình nguyện viên chuyên nghiệp, sẵn sàng hỗ trợ các dự án lớn." }
     };
 
     function loadArticle() {
@@ -270,10 +240,11 @@
       const postFile = urlParams.get('post') || 'bai-1.md';
       const card = document.getElementById('articleContent');
 
+      // Dự phòng thông minh nếu không tìm thấy key chính xác
       const article = articlesDB[postFile] || {
-        title: "Chi Tiết Hoạt Động Cộng Đồng",
+        title: "Báo cáo hoạt động và tin tức cộng đồng",
         date: "Tháng 2026",
-        content: "Nội dung chi tiết bài viết đang được cập nhật và hoàn thiện..."
+        content: "Nội dung chi tiết của bài viết đang được cập nhật và tổng hợp từ ban biên tập Wisdom Vietnam Network.<br><br>Mọi thông tin chi tiết về chương trình xin vui lòng liên hệ trực tiếp qua cổng thông tin điện tử của tổ chức."
       };
 
       const randomImg = getRandomImage();
