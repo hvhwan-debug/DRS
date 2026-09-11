@@ -267,7 +267,7 @@
       { filename: "bai-11.md", title: "Ngày hội đọc sách và tri thức buôn làng", date: "Tháng 08 / 2025", description: "Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.", tag: "", sortWeight: 202508, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-12.md", title: "Tọa đàm đổi mới phương pháp giảng dạy", date: "Tháng 06 / 2025", description: "Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.", tag: "", sortWeight: 202506, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-13.md", title: "Hành trình xe buýt tri thức lăn bánh", date: "Tháng 04 / 2025", description: "Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.", tag: "", sortWeight: 202504, thumbnail: getRandomVietnameseImage() },
-      { filename: "bai-14.md", title: "Trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", description: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.", tag: "", sortWeight: 202503, thumbnail: getRandomVietnameseImage() },
+      { filename: "bai-14.md", title: "Thay mặt trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", description: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.", tag: "", sortWeight: 202503, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-15.md", title: "Hỗ trợ bữa ăn dinh dưỡng học đường", date: "Tháng 02 / 2025", description: "Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.", tag: "", sortWeight: 202502, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-16.md", title: "Khởi động dự án Xây trường vùng cao", date: "Tháng 01 / 2025", description: "Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.", tag: "", sortWeight: 202501, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-17.md", title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", description: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.", tag: "", sortWeight: 202412, thumbnail: getRandomVietnameseImage() },
@@ -292,7 +292,8 @@
 
       let html = '';
       currentPosts.forEach(post => {
-        let link = `chi-tiet.html?post=${post.filename}`;
+        // Đã sửa thành bai-viet-1.html để khớp với trang chi tiết đang chạy đúng
+        let link = `bai-viet-1.html?post=${post.filename}`;
         html += `
           <div class="news-card">
             ${post.tag ? `<div class="card-tag">${post.tag}</div>` : ''}
@@ -325,7 +326,7 @@
       }
 
       paginationHTML += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="renderPage(${currentPage + 1})">Sau <i class="fa-solid fa-chevron-right"></i></button>`;
-      
+  
       paginationContainer.innerHTML = paginationHTML;
       window.scrollTo({ top: 350, behavior: 'smooth' });
     }
