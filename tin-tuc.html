@@ -320,6 +320,48 @@
 
     const FALLBACK_IMG = "images/uploads/2-onl-16997056815001293662280.jpg";
 
+    // Danh sách ảnh dự phòng lấy trong kho images/uploads (dùng khi không gọi được GitHub API).
+    // Ảnh minh họa của mỗi bài viết sẽ được CHỌN NGẪU NHIÊN từ chính kho ảnh này,
+    // không dùng ảnh cố định khai báo trong front matter của bài viết nữa.
+    const FALLBACK_UPLOADED_IMAGES = [
+      "2-onl-16997056815001293662280.jpg",
+      "48591585757_7be64177d0_o.jpg",
+      "Ban-Sao-Luong-Giao-V.jpg",
+      "cac-phuong-phap-day-hoc-tich-cuc-1.png",
+      "images (1).jfif",
+      "images (2).jfif",
+      "images (3).jfif",
+      "images (4).jfif"
+    ];
+
+    let uploadedImagePool = [];
+
+    // Lấy toàn bộ tên file ảnh thật trong images/uploads qua GitHub API,
+    // nhờ vậy ảnh mới upload lên kho sẽ tự động được đưa vào vòng quay ngẫu nhiên.
+    async function fetchUploadedImages() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/images/uploads?ref=${GITHUB_BRANCH}`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error("GitHub API lỗi");
+        const files = await res.json();
+        const imageExtRegex = /\.(jpe?g|png|gif|webp|jfif|avif)$/i;
+        const names = files
+          .filter(f => f.type === "file" && imageExtRegex.test(f.name))
+          .map(f => f.name);
+        if (names.length === 0) throw new Error("Không có ảnh nào trong kho");
+        return names;
+      } catch (e) {
+        console.warn("Không lấy được danh sách ảnh từ GitHub, dùng danh sách dự phòng.", e);
+        return FALLBACK_UPLOADED_IMAGES;
+      }
+    }
+
+    function getRandomUploadedImage() {
+      if (!uploadedImagePool.length) return FALLBACK_IMG;
+      const name = uploadedImagePool[Math.floor(Math.random() * uploadedImagePool.length)];
+      return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
+    }
+
     // Lấy toàn bộ tên file .md trong content/posts qua GitHub API.
     // Nhờ vậy có bài viết mới là tự hiện lên trang, không cần sửa code.
     async function fetchAllPostSlugs() {
@@ -389,7 +431,8 @@
 
     async function loadPosts() {
       const grid = document.getElementById("newsGrid");
-      const postSlugs = await fetchAllPostSlugs();
+      const [postSlugs, images] = await Promise.all([fetchAllPostSlugs(), fetchUploadedImages()]);
+      uploadedImagePool = images;
       const results = await Promise.all(postSlugs.map(async slug => {
         try {
           const res = await fetch(`content/posts/${slug}.md`);
@@ -404,7 +447,7 @@
             slug,
             title: fm.title || slugToTitle(slug),
             date: fm.date || "",
-            image: fm.image || FALLBACK_IMG,
+            image: getRandomUploadedImage(),
             excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
           };
         } catch (e) {
@@ -412,8 +455,24 @@
         }
       }));
 
-      allPosts = results.filter(Boolean).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+      allPosts = results.filter(Boolean).sort((a, b) => parseDateForSort(b.date) - parseDateForSort(a.date));
       renderPosts(allPosts);
+    }
+
+    // Chuyển chuỗi ngày dạng "Tháng MM / YYYY" (hoặc ngày ISO) thành một số có thể so sánh
+    // để sắp xếp đúng thứ tự thời gian thực tế, thay vì so sánh chuỗi ký tự (dễ sai khi
+    // khác năm, ví dụ "Tháng 09 / 2026" bị xếp trước "Tháng 12 / 2025" nếu so sánh chuỗi).
+    function parseDateForSort(dateStr) {
+      if (!dateStr) return -Infinity;
+      const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
+      if (viMatch) {
+        const month = parseInt(viMatch[1], 10);
+        const year = parseInt(viMatch[2], 10);
+        return year * 12 + month;
+      }
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) return d.getFullYear() * 12 + (d.getMonth() + 1);
+      return -Infinity;
     }
 
     function formatDate(dateStr) {
