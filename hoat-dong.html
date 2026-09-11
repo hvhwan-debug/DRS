@@ -61,7 +61,6 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Nút Quyên Góp hiệu ứng quét line */
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
@@ -101,48 +100,34 @@
     .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
     /* Container chính */
-    .container { max-width: 900px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
+    .container { max-width: 1000px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
 
-    /* HỘP SỰ KIỆN SẮP TỚI - THIẾT KẾ TINH TẾ, CÂN ĐỐI VÀ CÓ LINE SÁNG CHẠY VIỀN */
+    /* BLOCK SỰ KIỆN SẮP TỚI - THIẾT KẾ PHẲNG SANG TRỌNG & TỰ NHIÊN */
     .upcoming-section-card {
-      position: relative;
       background: #ffffff;
-      border-radius: 18px;
-      margin-bottom: 3.5rem;
-      box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
-      z-index: 1;
-      overflow: hidden;
-    }
-    /* Hiệu ứng line sáng chạy quanh viền */
-    .upcoming-section-card::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: 20px;
-      background: linear-gradient(90deg, #0284c7, #38bdf8, #60a5fa, #0284c7);
-      background-size: 300% 300%;
-      z-index: -1;
-      animation: borderGlowAnimation 4s ease infinite;
-    }
-    @keyframes borderGlowAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .upcoming-inner-bg {
-      background: #ffffff;
+      border: 1px solid var(--border);
+      border-left: 5px solid #0284c7;
       border-radius: 16px;
       padding: 1.6rem 2rem;
+      margin-bottom: 3.5rem;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+      transition: all 0.3s ease;
+    }
+    .upcoming-section-card:hover {
+      box-shadow: 0 15px 35px rgba(2, 132, 199, 0.08);
+      border-color: #bae6fd;
+      border-left-color: #0369a1;
     }
 
     .upcoming-header {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; cursor: pointer; user-select: none;
     }
-    .upcoming-header h3 { font-size: 1.15rem; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 0.75rem; }
-    .upcoming-header span { font-size: 0.85rem; color: #0284c7; background: #f0f9ff; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 600; border: 1px solid #bae6fd; box-shadow: 0 2px 5px rgba(2,132,199,0.05); }
+    .upcoming-header h3 { font-size: 1.18rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 0.75rem; }
+    .upcoming-header span { font-size: 0.85rem; color: #0284c7; background: #f0f9ff; padding: 0.35rem 1rem; border-radius: 20px; font-weight: 600; border: 1px solid #bae6fd; transition: background 0.2s; }
+    .upcoming-header span:hover { background: #e0f2fe; }
 
     .upcoming-grid {
-      display: grid; grid-template-columns: 1fr; gap: 1.2rem; margin-top: 1.5rem; display: none;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.8rem; display: none;
     }
     .upcoming-grid.show { display: grid; animation: fadeIn 0.4s ease-in-out; }
     
@@ -155,10 +140,10 @@
     
     .badge-tag {
       display: inline-block; background: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem;
-      border-radius: 999px; font-weight: 700; font-size: 0.75rem; margin-bottom: 0.6rem; text-transform: uppercase;
+      border-radius: 999px; font-weight: 700; font-size: 0.75rem; margin-bottom: 0.7rem; text-transform: uppercase;
     }
-    .upcoming-card h4 { font-size: 1.05rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; line-height: 1.35; }
-    .upcoming-card p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
+    .upcoming-card h4 { font-size: 1.05rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; line-height: 1.35; }
+    .upcoming-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.55; }
     .upcoming-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
     /* Timeline Container (Sự kiện đã diễn ra) */
@@ -239,7 +224,7 @@
       .timeline-dot { left: 24px; }
       .timeline-item, .timeline-item:nth-child(odd) { flex-direction: column; align-items: flex-end; }
       .timeline-content { width: calc(100% - 60px); }
-      .upcoming-inner-bg { padding: 1.2rem; }
+      .upcoming-section-card { padding: 1.2rem; }
     }
   </style>
 </head>
@@ -288,53 +273,51 @@
   <!-- Container chính -->
   <div class="container">
       
-    <!-- HỘP SỰ KIỆN SẮP TỚI CÓ LINE SÁNG CHẠY VIỀN & CÂN ĐỐI GỌN GÀNG -->
+    <!-- HỘP SỰ KIỆN SẮP TỚI - THIẾT KẾ PHẲNG SANG TRỌNG -->
     <div class="upcoming-section-card">
-      <div class="upcoming-inner-bg">
-        <div class="upcoming-header" onclick="toggleUpcomingGrid()">
-          <h3><i class="fa-solid fa-calendar-star" style="color: #0284c7;"></i> Sự Kiện Sắp Tới & Kế Hoạch Gây Quỹ</h3>
-          <span id="upcomingToggleText">Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="margin-left: 5px; transition: transform 0.3s;"></i></span>
+      <div class="upcoming-header" onclick="toggleUpcomingGrid()">
+        <h3><i class="fa-solid fa-calendar-star" style="color: #0284c7;"></i> Sự Kiện Sắp Tới & Kế Hoạch Gây Quỹ</h3>
+        <span id="upcomingToggleText">Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="margin-left: 4px; transition: transform 0.3s;"></i></span>
+      </div>
+
+      <div class="upcoming-grid" id="upcomingGrid">
+        
+        <div class="upcoming-card">
+          <div>
+            <span class="badge-tag">Sắp diễn ra</span>
+            <h4>Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h4>
+            <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
+          </div>
+          <div class="upcoming-actions">
+            <button class="btn btn-donate-glow" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <a href="lien-he.html" class="btn-secondary">Đồng hành</a>
+          </div>
         </div>
 
-        <div class="upcoming-grid" id="upcomingGrid">
-          
-          <div class="upcoming-card">
-            <div>
-              <span class="badge-tag">Sắp diễn ra</span>
-              <h4>Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h4>
-              <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
-            </div>
-            <div class="upcoming-actions">
-              <button class="btn btn-donate-glow" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
-              <a href="lien-he.html" class="btn-secondary">Đồng hành</a>
-            </div>
+        <div class="upcoming-card">
+          <div>
+            <span class="badge-tag" style="background:#fef3c7; color:#d97706;">Đang nhận đăng ký</span>
+            <h4>Hội thảo phương pháp học tập số</h4>
+            <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
           </div>
-
-          <div class="upcoming-card">
-            <div>
-              <span class="badge-tag" style="background:#fef3c7; color:#d97706;">Đang nhận đăng ký</span>
-              <h4>Hội thảo phương pháp học tập số</h4>
-              <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
-            </div>
-            <div class="upcoming-actions">
-              <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
-              <a href="lien-he.html" class="btn-secondary">Đăng ký tham gia</a>
-            </div>
+          <div class="upcoming-actions">
+            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <a href="lien-he.html" class="btn-secondary">Đăng ký tham gia</a>
           </div>
-
-          <div class="upcoming-card">
-            <div>
-              <span class="badge-tag" style="background:#e0e7ff; color:#4338ca;">Kế hoạch quý IV</span>
-              <h4>Phát động Học Bổng Ươm Mầm</h4>
-              <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
-            </div>
-            <div class="upcoming-actions">
-              <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
-              <a href="lien-he.html" class="btn-secondary">Tìm hiểu thêm</a>
-            </div>
-          </div>
-
         </div>
+
+        <div class="upcoming-card">
+          <div>
+            <span class="badge-tag" style="background:#e0e7ff; color:#4338ca;">Kế hoạch quý IV</span>
+            <h4>Phát động Học Bổng Ươm Mầm</h4>
+            <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
+          </div>
+          <div class="upcoming-actions">
+            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <a href="lien-he.html" class="btn-secondary">Tìm hiểu thêm</a>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -411,9 +394,9 @@
       const icon = document.getElementById('upcomingIcon');
       grid.classList.toggle('show');
       if (grid.classList.contains('show')) {
-        toggleText.innerHTML = 'Thu gọn <i class="fa-solid fa-chevron-up" id="upcomingIcon" style="margin-left: 5px; transition: transform 0.3s;"></i>';
+        toggleText.innerHTML = 'Thu gọn <i class="fa-solid fa-chevron-up" id="upcomingIcon" style="margin-left: 4px; transition: transform 0.3s;"></i>';
       } else {
-        toggleText.innerHTML = 'Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="margin-left: 5px; transition: transform 0.3s;"></i>';
+        toggleText.innerHTML = 'Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="margin-left: 4px; transition: transform 0.3s;"></i>';
       }
     }
 
