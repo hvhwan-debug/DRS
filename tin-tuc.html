@@ -296,7 +296,7 @@
     // Bài viết mới thêm vào content/posts sẽ tự động được lấy qua API bên dưới,
     // không bắt buộc phải cập nhật mảng này, nhưng nên cập nhật để đảm bảo vẫn hiển thị đủ khi API lỗi.
     const FALLBACK_SLUGS = [
-      "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuan",
+      "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuân",
       "buc-tranh-20-11-2025-ha-giang",
       "day-hoc-tinh-nguyen-dien-bien-22-04-2026",
       "giao-duc-vung-cao",
@@ -309,7 +309,7 @@
       "kho-khan-khi-den-truong-ha-giang",
       "mang-tri-thuc-thai-nguyen-bac-kan-thang-11-2025",
       "minh-bach-trong-tu-thien",
-      "mua-cai-ven-song-mua-dong-am-ap-thang-12-2025",
+      "mua-cải-ven-song-mua-dong-am-ap-thang-12-2025",
       "su-menh-cao-bang-thang-4-2026",
       "su-menh-va-gia-tri-cot-loi-drs",
       "tap-huan-ky-nang-giang-day-noi-bo-drs",
@@ -347,9 +347,10 @@
     // excerpt: "..."
     // ---
     function parseFrontMatter(raw) {
-      const result = { title: "", date: "", image: "", excerpt: "", body: raw };
+      const result = { title: "", date: "", image: "", excerpt: "", body: raw, valid: false };
       const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
       if (!match) return result;
+      result.valid = true;
       const yamlBlock = match[1];
       result.body = match[2];
       yamlBlock.split(/\r?\n/).forEach(line => {
@@ -358,8 +359,9 @@
         const key = kv[1].trim().toLowerCase();
         let value = kv[2].trim();
         value = value.replace(/^["']|["']$/g, "");
-        if (key in result || key === "title" || key === "date" || key === "image" || key === "excerpt" || key === "description") {
+        if (key in result || key === "title" || key === "date" || key === "image" || key === "thumbnail" || key === "excerpt" || key === "description") {
           if (key === "description") result.excerpt = result.excerpt || value;
+          else if (key === "thumbnail") result.image = result.image || value;
           else result[key] = value;
         }
       });
@@ -394,6 +396,10 @@
           if (!res.ok) throw new Error("not found");
           const raw = await res.text();
           const fm = parseFrontMatter(raw);
+          if (!fm.valid) {
+            console.warn(`Bỏ qua bài viết lỗi định dạng (thiếu front matter): ${slug}.md`);
+            return null;
+          }
           return {
             slug,
             title: fm.title || slugToTitle(slug),
