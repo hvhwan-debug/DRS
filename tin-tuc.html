@@ -253,7 +253,6 @@
       return vietnameseImagePool[randomIndex];
     }
 
-    // Danh sách đầy đủ 20 bài viết hoạt động xã hội
     const allLoadedPosts = [
       { filename: "bai-1.md", title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", date: "Tháng 11 / 2026", description: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến tổ chức nhằm hỗ trợ điều kiện học tập.", tag: "Sự kiện sắp tới", sortWeight: 202611, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-2.md", title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.", tag: "", sortWeight: 202607, thumbnail: getRandomVietnameseImage() },
@@ -274,13 +273,12 @@
       { filename: "bai-17.md", title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", description: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.", tag: "", sortWeight: 202412, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-18.md", title: "Giải bóng đá thiện nguyện kết nối thanh niên", date: "Tháng 10 / 2024", description: "Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.", tag: "", sortWeight: 202410, thumbnail: getRandomVietnameseImage() },
       { filename: "bai-19.md", title: "Lớp học tình thương cuối tuần", date: "Tháng 08 / 2024", description: "Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.", tag: "", sortWeight: 202408, thumbnail: getRandomVietnameseImage() },
-      { filename: "bai-20.md", title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", description: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.", tag: "", sortWeight: 202405, thumbnail: getRandomVietnameseImage() }
+      { filename: "bai-20.md", title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", content: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.", tag: "", sortWeight: 202405, thumbnail: getRandomVietnameseImage() }
     ];
 
     let currentPage = 1;
     const postsPerPage = 9;
 
-    // Tự động sắp xếp ưu tiên bài viết gần nhất lên đầu
     allLoadedPosts.sort((a, b) => b.sortWeight - a.sortWeight);
 
     function renderPage(page) {
@@ -294,7 +292,8 @@
 
       let html = '';
       currentPosts.forEach(post => {
-        let link = `chi-tiet.html?post=${post.filename}`;
+        // Đã trỏ thẳng sang file mới bai-viet.html để tránh hoàn toàn cache cũ
+        let link = `bai-viet.html?post=${post.filename}`;
         html += `
           <div class="news-card">
             ${post.tag ? `<div class="card-tag">${post.tag}</div>` : ''}
