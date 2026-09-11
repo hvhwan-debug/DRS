@@ -133,6 +133,15 @@
       position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.75); color: #fff;
       padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(3px);
     }
+    /* Tag "Chưa diễn ra" ở góc đối diện, dành cho bài viết có ngày tháng nằm ở tương lai
+       so với thời điểm người xem truy cập trang, giúp phân biệt rõ với các bài viết
+       tường thuật hoạt động đã thực sự diễn ra */
+    .news-upcoming-badge {
+      position: absolute; top: 12px; right: 12px; background: #f59e0b; color: #fff;
+      padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
     .news-content { padding: 1.5rem 1.4rem; flex-grow: 1; display: flex; flex-direction: column; }
     .news-content h3 { font-size: 1.15rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; line-height: 1.35; }
     .news-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; flex-grow: 1; margin-bottom: 1rem; }
@@ -298,6 +307,7 @@
     const FALLBACK_SLUGS = [
       "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuân",
       "buc-tranh-20-11-2025-ha-giang",
+      "chuyen-nghiep-hoa-hoat-dong-thien-nguyen",
       "day-hoc-tinh-nguyen-dien-bien-22-04-2026",
       "giao-duc-vung-cao",
       "hanh-trinh-2-9-thap-sang-tuong-lai-vung-cao",
@@ -305,11 +315,13 @@
       "hoat-dong-thu-vien-va-tu-sach-vung-cao",
       "hoi-thao-ky-nang-giao-duc-cho-tre-vung-cao",
       "hoi-thao-mua-dong-tinh-nguyen-thang-11-2025",
+      "hoi-thao-phuong-phap-hoc-tap-so",
       "khanh-thanh-tu-sach-son-la-thang-4-2026",
       "kho-khan-khi-den-truong-ha-giang",
       "mang-tri-thuc-thai-nguyen-bac-kan-thang-11-2025",
       "minh-bach-trong-tu-thien",
       "mua-cải-ven-song-mua-dong-am-ap-thang-12-2025",
+      "phat-dong-hoc-bong-uom-mam",
       "su-menh-cao-bang-thang-4-2026",
       "su-menh-va-gia-tri-cot-loi-drs",
       "tap-huan-ky-nang-giang-day-noi-bo-drs",
@@ -363,12 +375,6 @@
     }
 
     // ==== ẢNH NGƯỜI VIỆT NAM NGẪU NHIÊN TỪ INTERNET (Unsplash Source) ====
-    // LƯU Ý: source.unsplash.com là dịch vụ đã ngừng phát triển (deprecated) từ 2021.
-    // Unsplash xác nhận các use case đang chạy vẫn tiếp tục hoạt động, nhưng không đảm bảo
-    // uptime lâu dài và có thể ngừng bất cứ lúc nào không báo trước. Vì trang này không có
-    // server riêng để giấu API key chính thức, đây là cách duy nhất lấy ảnh ngẫu nhiên theo
-    // từ khóa mà không cần đăng ký khóa API. Nếu ảnh lỗi, thẻ sẽ tự động rơi về ảnh thật
-    // trong kho images/uploads/ (xem onerror ở renderPosts).
     const VN_PHOTO_KEYWORDS = "vietnamese,vietnam,people,portrait";
     function getRandomVietnamPhoto() {
       const seed = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -488,6 +494,17 @@
       return -Infinity;
     }
 
+    // Xác định một bài viết có mang ngày tháng NẰM Ở TƯƠNG LAI so với thời điểm người xem
+    // đang truy cập trang hay không, để gắn nhãn "Chưa diễn ra" cho đúng — dùng độ chính
+    // xác theo THÁNG (khớp với định dạng "Tháng MM/YYYY" phổ biến trong front matter).
+    function isUpcomingPost(dateStr) {
+      const postMonthValue = parseDateForSort(dateStr);
+      if (postMonthValue === -Infinity) return false;
+      const now = new Date();
+      const currentMonthValue = now.getFullYear() * 12 + (now.getMonth() + 1);
+      return postMonthValue > currentMonthValue;
+    }
+
     function formatDate(dateStr) {
       if (!dateStr) return "";
       const d = new Date(dateStr);
@@ -522,6 +539,7 @@
           <div class="news-img-box">
             <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.onerror=null; this.src=getRandomUploadedImage();">
             ${p.date ? `<span class="news-date-badge">${formatDate(p.date)}</span>` : ""}
+            ${isUpcomingPost(p.date) ? `<span class="news-upcoming-badge"><i class="fa-solid fa-clock"></i> Chưa diễn ra</span>` : ""}
           </div>
           <div class="news-content">
             <h3>${p.title}</h3>
