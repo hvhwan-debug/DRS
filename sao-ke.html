@@ -88,6 +88,20 @@
     .hero-wrapper::before {
       content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
     }
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật, tượng trưng cho lòng tin & minh bạch */
+    .hero-dove {
+      position: absolute; top: 8%; right: 4%; width: 130px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      transform: rotate(-6deg); pointer-events: none; z-index: 1;
+      animation: doveFloat 6s ease-in-out infinite;
+    }
+    @keyframes doveFloat {
+      0%, 100% { transform: translateY(0) rotate(-6deg); }
+      50% { transform: translateY(-14px) rotate(-3deg); }
+    }
+    @media (max-width: 640px) {
+      .hero-dove { width: 80px; top: 4%; right: 3%; opacity: 0.35; }
+    }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
       padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
@@ -218,6 +232,7 @@
 
   <!-- Hero Banner -->
   <section class="hero-wrapper">
+    <img src="images/uploads/bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">MINH BẠCH TÀI CHÍNH</div>
     <h1 class="hero-title">Cổng Tra Cứu Sao Kê Giao Dịch</h1>
     <p class="hero-desc">Nhập chính xác mã giao dịch để tra cứu thông tin chi tiết của giao dịch tương ứng.</p>
