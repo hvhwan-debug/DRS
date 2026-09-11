@@ -10,7 +10,6 @@
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
       --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
       --text-dark: #0f172a;
@@ -79,13 +78,51 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Section 2 Cột */
+    /* HERO SECTION VỚI VIDEO NỀN CHẠY MỜ MỜ ẢO */
     .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 5rem 1.5rem 5.5rem; color: var(--white);
+      position: relative;
+      width: 100%;
+      min-height: 550px;
+      padding: 5rem 1.5rem 5.5rem;
+      color: var(--white);
+      overflow: hidden;
+      background-color: #0f172a; /* Màu nền dự phòng nếu video chưa tải kịp */
     }
+
+    /* Thẻ video ẩn phía sau */
+    .hero-bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0.35; /* Độ mờ ảo hoàn hảo để làm nổi bật chữ */
+    }
+
+    /* Lớp phủ gradient để tăng độ tương phản và giữ tông màu thương hiệu */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.85) 0%, rgba(3, 105, 161, 0.8) 40%, rgba(15, 23, 42, 0.9) 100%);
+      z-index: 2;
+    }
+
     .hero-grid {
-      max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3.5rem; align-items: center;
+      position: relative;
+      z-index: 3; /* Nằm trên video và lớp phủ */
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3.5rem;
+      align-items: center;
     }
+
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
       padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
@@ -164,7 +201,7 @@
     .section-header h2 { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; letter-spacing: -0.5px; }
     .section-header p { color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
 
-    /* 4 Trụ Cột (Thay bằng ảnh học sinh & trường học Việt Nam thuần túy) */
+    /* 4 Trụ Cột */
     .pillars-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.8rem; }
     .pillar-visual-card {
       background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid var(--border);
@@ -178,7 +215,7 @@
     .pillar-content h3 { font-size: 1.25rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; }
     .pillar-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; }
 
-    /* Thư Viện Hình Ảnh Hoạt Động (Việt Nam) */
+    /* Thư Viện Hình Ảnh Hoạt Động */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .gallery-item { position: relative; border-radius: 16px; overflow: hidden; height: 250px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
@@ -260,12 +297,20 @@
     </div>
   </header>
 
-  <!-- Hero Section 2 Cột Visual Marketing -->
+  <!-- Hero Section với Video Nền Chạy Mờ Ảo -->
   <section class="hero-wrapper">
+    <!-- Thẻ Video nền (Tự động phát, lặp lại, tắt tiếng để không phiền người xem) -->
+    <video autoplay muted loop playsinline class="hero-bg-video">
+      <source src="bg-video.mp4" type="video/mp4">
+      Trình duyệt của bạn không hỗ trợ video HTML5.
+    </video>
+    <!-- Lớp phủ mờ màu xanh thương hiệu -->
+    <div class="hero-overlay"></div>
+
     <div class="hero-grid">
       
       <!-- Cột trái: Thông điệp hành động -->
-      <div>
+      <div style="position: relative; z-index: 3;">
         <div class="hero-badge">SỨ MỆNH VÌ CỘNG ĐỒNG</div>
         <h1 class="hero-title">
           DR SOLUTIONS<br>
@@ -285,10 +330,9 @@
       </div>
 
       <!-- Cột phải: Khung ảnh mầm cây BẤM VÀO ĐỂ XEM VIDEO NỤ CƯỜI HỌC TẬP -->
-      <div class="hero-media-wrapper" onclick="openVideoModal()" title="Bấm để xem video: Những nụ cười học tập chạm trái tim">
+      <div class="hero-media-wrapper" onclick="openVideoModal()" title="Bấm để xem video: Những nụ cười học tập chạm trái tim" style="position: relative; z-index: 3;">
         <div class="hero-media-card">
           <img src="banner-drs.png.png" alt="Ươm mầm tri thức cộng đồng" class="hero-main-img">
-          <!-- Hiệu ứng nút Play khi di chuột vào ảnh -->
           <div class="play-video-overlay">
             <div class="play-icon-circle"><i class="fa-solid fa-play"></i></div>
             <div class="play-text">Xem video: Những nụ cười học tập chạm trái tim</div>
@@ -341,7 +385,7 @@
     </div>
   </section>
 
-  <!-- 4 Trụ Cột: Thay thế ảnh bằng hình ảnh học sinh, trường học vùng cao Việt Nam -->
+  <!-- 4 Trụ Cột -->
   <main class="section-wrap" id="tru-cot">
     <div class="section-header">
       <h2>4 Trụ Cột Hành Động Phi Lợi Nhuận</h2>
@@ -350,7 +394,6 @@
 
     <div class="pillars-visual-grid">
       
-      <!-- Trụ cột 1 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
           <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" alt="Hỗ trợ tại chỗ vùng cao">
@@ -361,7 +404,6 @@
         </div>
       </div>
 
-      <!-- Trụ cột 2 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
           <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80" alt="Lan tỏa tiếp cận sách">
@@ -372,7 +414,6 @@
         </div>
       </div>
 
-      <!-- Trụ cột 3 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
           <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80" alt="Nâng cao nhận thức trẻ em">
@@ -383,7 +424,6 @@
         </div>
       </div>
 
-      <!-- Trụ cột 4 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
           <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80" alt="Đồng hành bền vững vùng cao">
@@ -397,7 +437,7 @@
     </div>
   </main>
 
-  <!-- Thư Viện Hình Ảnh Hoạt Động (Photo Impact Gallery) -->
+  <!-- Thư Viện Hình Ảnh Hoạt Động -->
   <section style="background: #ffffff; padding: 5rem 1.5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
     <div style="max-width: 1240px; margin: 0 auto;">
       <div class="section-header">
