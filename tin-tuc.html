@@ -1,833 +1,444 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Wisdom Vietnam Network - Tin tức, hoạt động xã hội và các chương trình giáo dục cộng đồng.">
-<title>Tin Tức | Wisdom Vietnam Network</title>
+/* =========================================================
+   TIN TỨC - CSS HOÀN CHỈNH
+   ========================================================= */
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230284c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/%3E%3Cpath d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+/* ===== KHU VỰC DANH SÁCH TIN TỨC ===== */
 
-<style>
-:root{
-  --blue:#0284c7;
-  --dark:#0f172a;
-  --muted:#64748b;
-  --line:#e2e8f0;
-  --bg:#f8fafc;
-  --grad:linear-gradient(135deg,#0f172a,#075985 48%,#0284c7);
-  --hero:linear-gradient(135deg,#0284c7 0%,#0369a1 45%,#0f172a 100%);
-  --btn:linear-gradient(135deg,#0284c7,#2563eb);
+.news-section {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 70px 24px;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-
-html,body{
-  width:100%;
-  overflow-x:hidden;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  color:var(--dark);
-  background:var(--bg);
-  line-height:1.6;
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
 }
 
-body{padding-top:72px}
-a{text-decoration:none;color:inherit}
+/* ===== THẺ BÀI VIẾT ===== */
 
-/* HEADER */
-header{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  width:100%;
-  z-index:9999;
-  background:rgba(255,255,255,.98);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);
-  box-shadow:0 2px 10px rgba(0,0,0,.05);
+.news-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.07);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.nav{
-  max-width:1240px;
-  margin:auto;
-  min-height:72px;
-  padding:.8rem 1.5rem;
-  display:flex;
-  align-items:center;
-  gap:25px;
-  position:relative;
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex:1;
+/* ===== ẢNH BÀI VIẾT ===== */
+
+.news-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
 }
 
-.logo{
-  width:38px;
-  height:38px;
-  background:linear-gradient(135deg,#e0f2fe 0%,#f0f9ff 100%);
-  border:1.5px solid #bae6fd;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  box-shadow:0 2px 6px rgba(2,132,199,.12);
+.news-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
 }
 
-.logo svg{width:21px;height:21px;stroke:#0284c7}
+/* ===== NỘI DUNG THẺ ===== */
 
-.brand-text{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  line-height:1.25;
+.news-card-body {
+    padding: 22px;
 }
 
-.brand-name{
-  font-size:1.18rem;
-  font-weight:800;
-  background:var(--grad);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  letter-spacing:-.3px;
+.news-date {
+    display: block;
+    margin-bottom: 9px;
+    color: #0284c7;
+    font-size: 13px;
+    font-weight: 700;
 }
 
-.brand-sub{
-  font-size:.7rem;
-  font-weight:600;
-  color:#64748b;
-  letter-spacing:.3px;
-  text-transform:uppercase;
-  margin-top:1px;
+.news-card h2,
+.news-card h3 {
+    margin: 0 0 12px;
+    color: #0f3f70;
+    font-size: 20px;
+    line-height: 1.35;
+    font-weight: 800;
 }
 
-.menu{
-  display:flex;
-  align-items:center;
+.news-card p {
+    margin: 0 0 18px;
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.7;
 }
 
-.menu a{
-  margin-left:1.8rem;
-  color:#475569;
-  font-size:.95rem;
-  font-weight:500;
-  transition:color .2s;
+/* ===== NÚT XEM CHI TIẾT ===== */
+
+.btn-detail {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 17px;
+    border-radius: 8px;
+    background: linear-gradient(
+        135deg,
+        #0284c7,
+        #2563eb
+    );
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.25s ease;
 }
 
-.menu a:hover,
-.menu a.active{
-  color:#0284c7;
-  font-weight:600;
+.btn-detail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(2, 132, 199, 0.25);
 }
 
-.donate{
-  background:var(--btn);
-  color:#fff;
-  padding:.65rem 1.4rem;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
-  border:none;
-  display:inline-block;
-  box-shadow:0 4px 12px rgba(2,132,199,.25);
-  transition:all .2s;
-  font-family:inherit;
-  position:relative;
-  overflow:hidden;
+
+/* =========================================================
+   TRANG CHI TIẾT BÀI VIẾT
+   ========================================================= */
+
+.post-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 70px 24px;
 }
 
-.donate:hover{
-  transform:translateY(-1px);
+.post-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 70px;
+    color: #334155;
+    font-size: 17px;
+    line-height: 1.8;
+    background: #ffffff;
 }
 
-.donate::after{
-  content:'';
-  position:absolute;
-  top:-50%;
-  left:-100%;
-  width:200%;
-  height:200%;
-  background:linear-gradient(to right,transparent,rgba(255,255,255,.5),transparent);
-  transform:rotate(30deg);
-  animation:shine 2.8s infinite linear;
+/* ===== TIÊU ĐỀ ===== */
+
+.post-content h1 {
+    margin: 0 0 25px;
+    color: #0f3f70;
+    font-size: 2.4rem;
+    line-height: 1.25;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
-@keyframes shine{
-  0%{left:-100%;top:-100%}
-  100%{left:100%;top:100%}
+.post-content h2 {
+    margin: 35px 0 15px;
+    color: #075985;
+    font-size: 1.7rem;
+    line-height: 1.3;
+    font-weight: 750;
 }
 
-.mobile{
-  display:none;
-  background:none;
-  border:none;
-  font-size:1.4rem;
-  color:var(--dark);
-  cursor:pointer;
-  padding:.4rem;
+.post-content h3 {
+    margin: 28px 0 12px;
+    color: #0f4c81;
+    font-size: 1.3rem;
+    line-height: 1.4;
+    font-weight: 700;
 }
 
-/* HERO */
-.hero{
-  width:100%;
-  background:var(--hero);
-  color:#fff;
-  padding:4rem 1.5rem 4.5rem;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+.post-content h4 {
+    margin: 24px 0 10px;
+    color: #0f3f70;
+    font-size: 1.1rem;
 }
 
-.hero::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  opacity:.08;
-  background-image:radial-gradient(#fff 1px,transparent 1px);
-  background-size:24px 24px;
+
+/* ===== ĐOẠN VĂN ===== */
+
+.post-content p {
+    margin: 0 0 18px;
 }
 
-.hero-inner{
-  max-width:1240px;
-  margin:auto;
-  position:relative;
-  z-index:1;
+.post-content strong {
+    color: #0f172a;
+    font-weight: 700;
 }
 
-.eyebrow{
-  display:inline-block;
-  background:rgba(255,255,255,.15);
-  color:#e0f2fe;
-  padding:.4rem 1.2rem;
-  border-radius:999px;
-  font-size:.82rem;
-  font-weight:700;
-  letter-spacing:.8px;
-  margin-bottom:1rem;
-  border:1px solid rgba(255,255,255,.25);
+.post-content em {
+    color: #475569;
 }
 
-.hero h1{
-  font-size:clamp(2.5rem,5vw,3.7rem);
-  font-weight:900;
-  color:#fff;
-  letter-spacing:-.8px;
-  margin-bottom:.75rem;
+
+/* ===== LINK ===== */
+
+.post-content a {
+    color: #0284c7;
+    text-decoration: underline;
 }
 
-.hero p{
-  font-size:1.1rem;
-  color:#e0f2fe;
-  max-width:700px;
-  margin:0 auto;
-  line-height:1.6;
+.post-content a:hover {
+    color: #075985;
 }
 
-/* NEWS */
-.container{
-  max-width:1240px;
-  margin:3rem auto 5rem;
-  padding:0 1.5rem;
+
+/* ===== DANH SÁCH ===== */
+
+.post-content ul,
+.post-content ol {
+    margin: 15px 0 20px 28px;
+    padding: 0;
 }
 
-.news-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:2rem;
+.post-content li {
+    margin-bottom: 8px;
 }
 
-.news-card{
-  background:#fff;
-  border-radius:18px;
-  overflow:hidden;
-  border:1px solid var(--line);
-  box-shadow:0 4px 16px rgba(15,23,42,.04);
-  transition:transform .25s,box-shadow .25s,border-color .25s;
-  display:flex;
-  flex-direction:column;
-  position:relative;
+
+/* ===== TRÍCH DẪN ===== */
+
+.post-content blockquote {
+    margin: 25px 0;
+    padding: 18px 22px;
+    border-left: 4px solid #0284c7;
+    border-radius: 0 10px 10px 0;
+    background: #f0f9ff;
+    color: #475569;
 }
 
-.news-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 16px 30px rgba(2,132,199,.12);
-  border-color:#bae6fd;
+
+/* ===== ẢNH TRONG BÀI ===== */
+
+.post-content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 25px auto;
+    border-radius: 14px;
 }
 
-.news-img-box{
-  width:100%;
-  height:210px;
-  overflow:hidden;
-  position:relative;
-  background:#e2e8f0;
+
+/* ===== CHÚ THÍCH ẢNH ===== */
+
+.post-content figure {
+    margin: 30px 0;
 }
 
-.news-img-box img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition:transform .3s;
+.post-content figcaption {
+    margin-top: 8px;
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
 }
 
-.news-card:hover .news-img-box img{transform:scale(1.05)}
 
-.news-content{
-  padding:1.8rem;
-  flex-grow:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+/* ===== CODE ===== */
+
+.post-content code {
+    padding: 3px 6px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #0f3f70;
+    font-size: 0.9em;
 }
 
-.news-date{
-  font-size:.82rem;
-  color:#0284c7;
-  font-weight:700;
-  text-transform:uppercase;
-  margin-bottom:.5rem;
-  display:flex;
-  align-items:center;
-  gap:6px;
+.post-content pre {
+    overflow-x: auto;
+    margin: 20px 0;
+    padding: 18px;
+    border-radius: 10px;
+    background: #0f172a;
+    color: #ffffff;
 }
 
-.news-content h3{
-  font-size:1.2rem;
-  color:#0f172a;
-  margin-bottom:.75rem;
-  font-weight:800;
-  line-height:1.4;
+.post-content pre code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
 }
 
-.news-content p{
-  font-size:.94rem;
-  color:#475569;
-  line-height:1.6;
-  margin-bottom:1.2rem;
+
+/* ===== ĐƯỜNG KẺ ===== */
+
+.post-content hr {
+    margin: 35px 0;
+    border: 0;
+    border-top: 1px solid #e2e8f0;
 }
 
-.news-link{
-  color:#0284c7;
-  font-weight:700;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  font-size:.92rem;
+
+/* ===== BẢNG ===== */
+
+.post-content table {
+    width: 100%;
+    margin: 25px 0;
+    border-collapse: collapse;
+    overflow: hidden;
+    font-size: 15px;
 }
 
-.news-link:hover{
-  color:#0369a1;
-  text-decoration:underline;
+.post-content th,
+.post-content td {
+    padding: 11px 13px;
+    border: 1px solid #e2e8f0;
+    text-align: left;
 }
 
-.card-tag{
-  position:absolute;
-  top:12px;
-  right:12px;
-  background:rgba(2,132,199,.92);
-  backdrop-filter:blur(4px);
-  color:#fff;
-  padding:.25rem .75rem;
-  border-radius:999px;
-  font-size:.75rem;
-  font-weight:700;
-  z-index:5;
-  text-transform:uppercase;
+.post-content th {
+    background: #f0f9ff;
+    color: #075985;
+    font-weight: 700;
 }
 
-/* PAGINATION */
-.pagination{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:3.5rem;
+
+/* =========================================================
+   TIÊU ĐỀ + NGÀY CỦA TRANG CHI TIẾT
+   ========================================================= */
+
+.post-header {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 20px 20px;
 }
 
-.page-btn{
-  background:#fff;
-  border:1px solid var(--line);
-  color:var(--dark);
-  padding:.6rem 1rem;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all .2s;
-  font-family:inherit;
+.post-header h1 {
+    margin: 0 0 12px;
+    color: #0f3f70;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.2;
+    font-weight: 800;
 }
 
-.page-btn:hover{
-  background:#f0f9ff;
-  border-color:#0284c7;
-  color:#0284c7;
+.post-header .post-date {
+    color: #0284c7;
+    font-size: 14px;
+    font-weight: 700;
 }
 
-.page-btn.active{
-  background:#0284c7;
-  color:#fff;
-  border-color:#0284c7;
-  box-shadow:0 4px 12px rgba(2,132,199,.25);
+
+/* =========================================================
+   NÚT QUAY LẠI
+   ========================================================= */
+
+.back-news {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 25px;
+    color: #0284c7;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
 }
 
-.page-btn:disabled{
-  opacity:.4;
-  cursor:not-allowed;
+.back-news:hover {
+    color: #075985;
 }
 
-/* CTA */
-.cta{
-  max-width:1240px;
-  margin:0 auto;
-  padding:0 1.5rem 5rem;
+
+/* =========================================================
+   TRẠNG THÁI LOADING / LỖI
+   ========================================================= */
+
+.post-loading {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 16px;
 }
 
-.cta-box{
-  background:var(--grad);
-  border-radius:24px;
-  padding:45px;
-  color:#fff;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:25px;
+.post-error {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 25px;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    background: #fef2f2;
+    color: #991b1b;
 }
 
-.cta-box h2{
-  font-size:2rem;
-  line-height:1.15;
-  margin-bottom:8px;
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 960px) {
+
+    .news-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .news-section {
+        padding: 55px 20px;
+    }
+
+    .post-container {
+        padding: 55px 20px;
+    }
+
 }
 
-.cta-box p{
-  color:#dbeafe;
-  max-width:750px;
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .news-section {
+        padding: 40px 16px;
+    }
+
+    .news-card img,
+    .news-image {
+        height: 200px;
+    }
+
+    .news-card-body {
+        padding: 18px;
+    }
+
+    .news-card h2,
+    .news-card h3 {
+        font-size: 18px;
+    }
+
+    .post-container {
+        padding: 35px 16px;
+    }
+
+    .post-content {
+        padding: 25px 5px 50px;
+        font-size: 16px;
+        line-height: 1.75;
+    }
+
+    .post-content h1 {
+        font-size: 2rem;
+    }
+
+    .post-content h2 {
+        font-size: 1.45rem;
+    }
+
+    .post-content h3 {
+        font-size: 1.2rem;
+    }
+
+    .post-content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
 }
-
-.cta-box a{
-  background:#fff;
-  color:#075985;
-  padding:13px 20px;
-  border-radius:9px;
-  font-weight:900;
-  white-space:nowrap;
-}
-
-/* MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.7);
-  backdrop-filter:blur(4px);
-  align-items:center;
-  justify-content:center;
-  z-index:10000;
-  padding:1rem;
-}
-
-.modal.open{display:flex}
-
-.modal-content{
-  background:#fff;
-  padding:2.2rem;
-  border-radius:16px;
-  max-width:440px;
-  width:100%;
-  text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
-}
-
-.modal-banner{
-  width:100%;
-  height:130px;
-  object-fit:cover;
-  border-radius:10px;
-  margin:.8rem 0;
-  border:1px solid var(--line);
-}
-
-.modal-qr{
-  width:100%;
-  max-width:230px;
-  margin:.8rem auto;
-  display:block;
-  border-radius:10px;
-  border:1px solid var(--line);
-}
-
-.modal-close{
-  background:#64748b;
-  color:#fff;
-  width:100%;
-  padding:.7rem 1rem;
-  border:0;
-  border-radius:8px;
-  font-weight:700;
-  cursor:pointer;
-  font-family:inherit;
-}
-
-/* FOOTER */
-footer{
-  background:var(--grad);
-  color:#cbd5e1;
-  padding:4rem 1.5rem 2rem;
-  font-size:.92rem;
-}
-
-.footer-grid{
-  max-width:1240px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:2.5rem;
-  text-align:left;
-}
-
-.footer-grid h4{
-  color:#fff;
-  margin-bottom:1rem;
-  font-size:1.05rem;
-}
-
-.footer-grid p{line-height:1.6}
-.footer-grid a{color:#7dd3fc}
-
-.footer-bottom{
-  max-width:1240px;
-  margin:3rem auto 0;
-  padding-top:1.5rem;
-  border-top:1px solid rgba(255,255,255,.1);
-  text-align:center;
-  font-size:.85rem;
-  color:#94a3b8;
-}
-
-/* RESPONSIVE */
-@media(max-width:960px){
-  .menu{
-    display:none;
-    position:absolute;
-    top:72px;
-    left:0;
-    right:0;
-    background:#fff;
-    flex-direction:column;
-    padding:1.5rem;
-    border-bottom:1px solid var(--line);
-    box-shadow:0 10px 25px rgba(0,0,0,.1);
-    text-align:center;
-    gap:1rem;
-  }
-
-  .menu.open{display:flex}
-  .menu a{margin-left:0;font-size:1.1rem;padding:.5rem 0}
-  .mobile{display:block}
-  .news-grid{grid-template-columns:1fr}
-  .footer-grid{grid-template-columns:1fr}
-  .cta-box{flex-direction:column;align-items:flex-start}
-}
-
-@media(max-width:560px){
-  .nav{padding:.8rem 15px}
-  .brand-name{font-size:1rem}
-  .donate{padding:.6rem 1rem}
-  .hero{padding:3.1rem 18px 3.7rem}
-  .hero h1{font-size:2.35rem}
-  .container{padding:0 18px}
-  .news-content{padding:1.4rem}
-  .cta{padding-left:18px;padding-right:18px}
-  .cta-box{padding:32px 24px}
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <div class="nav">
-
-    <a class="brand" href="index.html">
-      <div class="logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-        </svg>
-      </div>
-
-      <div class="brand-text">
-        <span class="brand-name">Wisdom Vietnam Network</span>
-        <span class="brand-sub">DR SOLUTIONS</span>
-      </div>
-    </a>
-
-    <nav class="menu" id="menu">
-      <a href="su-menh.html">Sứ Mệnh</a>
-      <a href="hoat-dong.html">Hoạt Động</a>
-      <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-      <a href="tin-tuc.html" class="active">Tin Tức</a>
-      <a href="lien-he.html">Liên Hệ</a>
-    </nav>
-
-    <button class="donate" onclick="openModal()">Quyên Góp</button>
-
-    <button class="mobile" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-
-  </div>
-</header>
-
-<main>
-
-<section class="hero">
-  <div class="hero-inner">
-    <div class="eyebrow">BẢN TIN CỘNG ĐỒNG</div>
-    <h1>Tin Tức & Hoạt Động Xã Hội</h1>
-    <p>
-      Cập nhật các thông tin, chương trình giáo dục,
-      hoạt động cộng đồng và những câu chuyện đồng hành cùng trẻ em.
-    </p>
-  </div>
-</section>
-
-<section class="container">
-
-  <div class="news-grid" id="newsGrid"></div>
-
-  <div class="pagination" id="paginationContainer"></div>
-
-</section>
-
-<section class="cta">
-  <div class="cta-box">
-    <div>
-      <h2>Cùng nhau tạo thêm cơ hội học tập.</h2>
-      <p>
-        Mỗi sự đồng hành đều góp phần đưa học liệu,
-        kiến thức và những cơ hội tốt hơn đến gần hơn với cộng đồng.
-      </p>
-    </div>
-
-    <a href="hoat-dong.html">Xem hoạt động →</a>
-  </div>
-</section>
-
-</main>
-
-<div id="donateModal" class="modal" onclick="if(event.target===this)closeModal()">
-  <div class="modal-content">
-    <h3 style="color:#0369a1;margin-bottom:.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-
-    <img src="banner-drs.png.png"
-         alt="Cơ hội học tập công bằng"
-         class="modal-banner">
-
-    <p style="font-size:.9rem;color:#475569;">
-      Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng chương trình:
-    </p>
-
-    <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH"
-         alt="Mã VietQR Quyên góp"
-         class="modal-qr">
-
-    <p style="font-size:.85rem;color:#64748b;margin-bottom:1.2rem;">
-      Nội dung: <strong>DRS DONG HANH</strong>
-    </p>
-
-    <button class="modal-close" onclick="closeModal()">Đóng Cửa Sổ</button>
-  </div>
-</div>
-
-<footer>
-  <div class="footer-grid">
-
-    <div>
-      <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
-      <p>
-        Doanh nghiệp xã hội đồng hành vì cơ hội học tập
-        công bằng cho cộng đồng.
-      </p>
-      <p style="margin-top:.6rem;">
-        Mã số doanh nghiệp: <strong style="color:#fff;">0111291749</strong>
-      </p>
-    </div>
-
-    <div>
-      <h4>Địa Chỉ Trụ Sở</h4>
-      <p>
-        Số 6, Ngách 29 ngõ 27, đường Võ Chí Công,
-        Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.
-      </p>
-      <p style="margin-top:.6rem;">
-        Email:
-        <a href="mailto:hotro@wvn.vn">hotro@wvn.vn</a>
-      </p>
-      <p style="margin-top:.4rem;">
-        <a href="lien-he.html">→ Gửi lời nhắn trực tuyến</a>
-      </p>
-    </div>
-
-    <div>
-      <h4>Cam Kết Xã Hội</h4>
-      <p>
-        100% lợi nhuận sau thuế tái đầu tư cho các chương trình
-        giáo dục và phát triển cộng đồng.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="footer-bottom">
-    © 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
-  </div>
-</footer>
-
-<script>
-const vietnameseImagePool = [
-  "images/uploads/2-onl-16997056815001293662280.jpg",
-  "images/uploads/48591585757_7be64177d0_o.jpg",
-  "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
-  "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
-  "images/uploads/images (1).jfif",
-  "images/uploads/images (2).jfif",
-  "images/uploads/images (3).jfif",
-  "images/uploads/images (4).jfif"
-];
-
-function getRandomVietnameseImage(){
-  return vietnameseImagePool[
-    Math.floor(Math.random()*vietnameseImagePool.length)
-  ];
-}
-
-const allLoadedPosts = [
-  {filename:"bai-1.md",title:"Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang",date:"Tháng 11 / 2026",description:"Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến tổ chức nhằm hỗ trợ điều kiện học tập.",tag:"Sự kiện sắp tới",sortWeight:202611},
-  {filename:"bai-2.md",title:"Chương trình Gieo Mầm Tri Thức Mùa Hè",date:"Tháng 07 / 2026",description:"Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.",tag:"",sortWeight:202607},
-  {filename:"bai-3.md",title:"Khánh thành Tủ Sách Vùng Cao Đợt 1",date:"Tháng 05 / 2026",description:"Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.",tag:"",sortWeight:202605},
-  {filename:"bai-4.md",title:"Chuỗi lớp học kỹ năng mềm và tư duy",date:"Tháng 03 / 2026",description:"Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.",tag:"",sortWeight:202603},
-  {filename:"bai-5.md",title:"Hành trình Tiếp Sức Đến Trường",date:"Tháng 02 / 2026",description:"Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.",tag:"",sortWeight:202602},
-  {filename:"bai-6.md",title:"Ký kết hợp tác mở rộng mạng lưới giáo dục",date:"Tháng 01 / 2026",description:"Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.",tag:"",sortWeight:202601},
-  {filename:"bai-7.md",title:"Tổng kết chiến dịch Tết Chia Sẻ",date:"Tháng 12 / 2025",description:"Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.",tag:"",sortWeight:202512},
-  {filename:"bai-8.md",title:"Hội thảo giáo dục cộng đồng toàn quốc",date:"Tháng 11 / 2025",description:"Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.",tag:"",sortWeight:202511},
-  {filename:"bai-9.md",title:"Trao học bổng Thắp Sáng Ước Mơ",date:"Tháng 10 / 2025",description:"Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.",tag:"",sortWeight:202510},
-  {filename:"bai-10.md",title:"Phát động chiến dịch mùa đông ấm cho em",date:"Tháng 09 / 2025",description:"Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.",tag:"",sortWeight:202509},
-  {filename:"bai-11.md",title:"Ngày hội đọc sách và tri thức buôn làng",date:"Tháng 08 / 2025",description:"Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.",tag:"",sortWeight:202508},
-  {filename:"bai-12.md",title:"Tọa đàm đổi mới phương pháp giảng dạy",date:"Tháng 06 / 2025",description:"Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.",tag:"",sortWeight:202506},
-  {filename:"bai-13.md",title:"Hành trình xe buýt tri thức lăn bánh",date:"Tháng 04 / 2025",description:"Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.",tag:"",sortWeight:202504},
-  {filename:"bai-14.md",title:"Thay mặt trao tặng thiết bị tin học cho điểm trường",date:"Tháng 03 / 2025",description:"Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.",tag:"",sortWeight:202503},
-  {filename:"bai-15.md",title:"Hỗ trợ bữa ăn dinh dưỡng học đường",date:"Tháng 02 / 2025",description:"Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.",tag:"",sortWeight:202502},
-  {filename:"bai-16.md",title:"Khởi động dự án Xây trường vùng cao",date:"Tháng 01 / 2025",description:"Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.",tag:"",sortWeight:202501},
-  {filename:"bai-17.md",title:"Báo cáo minh bạch tài chính quý IV",date:"Tháng 12 / 2024",description:"Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.",tag:"",sortWeight:202412},
-  {filename:"bai-18.md",title:"Giải bóng đá thiện nguyện kết nối thanh niên",date:"Tháng 10 / 2024",description:"Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.",tag:"",sortWeight:202410},
-  {filename:"bai-19.md",title:"Lớp học tình thương cuối tuần",date:"Tháng 08 / 2024",description:"Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.",tag:"",sortWeight:202408},
-  {filename:"bai-20.md",title:"Thành lập mạng lưới tình nguyện viên toàn quốc",date:"Tháng 05 / 2024",description:"Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.",tag:"",sortWeight:202405}
-];
-
-allLoadedPosts.sort((a,b)=>b.sortWeight-a.sortWeight);
-
-allLoadedPosts.forEach(post=>{
-  post.thumbnail=getRandomVietnameseImage();
-});
-
-let currentPage=1;
-const postsPerPage=9;
-
-function renderPage(page){
-  currentPage=page;
-
-  const grid=document.getElementById("newsGrid");
-  const pagination=document.getElementById("paginationContainer");
-
-  const start=(page-1)*postsPerPage;
-  const currentPosts=allLoadedPosts.slice(start,start+postsPerPage);
-
-  grid.innerHTML=currentPosts.map(post=>`
-    <article class="news-card">
-      ${post.tag ? `<div class="card-tag">${post.tag}</div>` : ""}
-      <div class="news-img-box">
-        <img src="${post.thumbnail}" alt="${post.title}" loading="lazy">
-      </div>
-      <div class="news-content">
-        <div>
-          <span class="news-date">
-            <i class="fa-regular fa-calendar"></i>
-            ${post.date}
-          </span>
-          <h3>${post.title}</h3>
-          <p>${post.description}</p>
-        </div>
-        <a href="chi-tiet.html?post=${encodeURIComponent(post.filename)}" class="news-link">
-          Đọc bài viết chi tiết
-          <i class="fa-solid fa-arrow-right"></i>
-        </a>
-      </div>
-    </article>
-  `).join("");
-
-  const totalPages=Math.ceil(allLoadedPosts.length/postsPerPage);
-
-  let paginationHTML=`
-    <button class="page-btn" ${page===1?"disabled":""}
-      onclick="renderPage(${page-1})">
-      <i class="fa-solid fa-chevron-left"></i> Trước
-    </button>
-  `;
-
-  for(let i=1;i<=totalPages;i++){
-    paginationHTML+=`
-      <button class="page-btn ${i===page?"active":""}"
-        onclick="renderPage(${i})">${i}</button>
-    `;
-  }
-
-  paginationHTML+=`
-    <button class="page-btn" ${page===totalPages?"disabled":""}
-      onclick="renderPage(${page+1})">
-      Sau <i class="fa-solid fa-chevron-right"></i>
-    </button>
-  `;
-
-  pagination.innerHTML=paginationHTML;
-
-  if(page>1){
-    window.scrollTo({top:350,behavior:"smooth"});
-  }
-}
-
-function openModal(){
-  document.getElementById("donateModal").classList.add("open");
-}
-
-function closeModal(){
-  document.getElementById("donateModal").classList.remove("open");
-}
-
-function toggleMobileMenu(){
-  const menu=document.getElementById("menu");
-  const btn=document.getElementById("menuBtn");
-
-  menu.classList.toggle("open");
-
-  btn.innerHTML=menu.classList.contains("open")
-    ? '<i class="fa-solid fa-xmark"></i>'
-    : '<i class="fa-solid fa-bars"></i>';
-}
-
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape") closeModal();
-});
-
-renderPage(1);
-</script>
-
-</body>
-</html>
