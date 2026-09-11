@@ -35,30 +35,29 @@
       -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; position: relative; }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
 
-    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
     .brand-logo-icon {
-      width: 36px; height: 36px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
       border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
     }
-    .brand-logo-icon svg { width: 20px; height: 20px; stroke: #0284c7; }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
     .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
     .brand-title {
-      font-size: 1.05rem; font-weight: 800; background: var(--blue-grad-primary);
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.65rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
 
-    .nav-links { display: flex; align-items: center; }
-    .nav-links a { margin-left: 1.5rem; text-decoration: none; color: var(--text-muted); font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
     .btn {
-      background: var(--blue-grad-btn); color: var(--white); padding: 0.55rem 1.2rem;
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-size: 0.9rem; font-family: inherit;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
@@ -78,22 +77,22 @@
       100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
     }
 
-    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.3rem; color: var(--text-dark); cursor: pointer; padding: 0.3rem; }
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
     /* Hero Banner */
     .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 4rem 1rem 4.5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+      width: 100%; background: var(--blue-grad-hero); padding: 4.5rem 1.5rem 5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
     .hero-wrapper::before {
       content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
     }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+      padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
       letter-spacing: 0.8px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25); text-transform: uppercase;
     }
-    .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; line-height: 1.2; }
-    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 750px; margin: 0 auto; line-height: 1.65; padding: 0 0.5rem; }
+    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
     /* Quote Banner */
     .mission-quote-box {
@@ -128,27 +127,27 @@
       backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
     }
     .modal-content {
-      background: var(--white); padding: 2rem; border-radius: 16px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
-    .modal-banner { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; margin: 0.6rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 200px; margin: 0.6rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer */
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.9rem; text-align: center; }
-    .footer-bottom { max-width: 1240px; margin: 2rem auto 0; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.82rem; color: #94a3b8; }
+    /* Footer chuẩn 3 cột */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
       .nav-links {
         display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
-        flex-direction: column; padding: 1.2rem; border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 0.8rem;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
       }
       .nav-links.active { display: flex; }
-      .nav-links a { margin-left: 0 !important; font-size: 1.05rem; padding: 0.4rem 0; }
-      .hero-title { font-size: 2.1rem; }
-      .quote-card { padding: 1.8rem; }
-      .quote-card p { font-size: 1.02rem; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .hero-title { font-size: 2.4rem; }
       .mission-story-block { padding: 1.5rem; }
     }
   </style>
@@ -161,10 +160,8 @@
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
           </svg>
         </div>
         <div class="brand-text-group">
@@ -179,7 +176,7 @@
         <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
-      <div style="display: flex; align-items: center; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
           <i class="fa-solid fa-bars"></i>
@@ -260,10 +257,28 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
-    <p>&copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.</p>
-    <div class="footer-bottom">Doanh nghiệp xã hội hoạt động vì sự phát triển giáo dục cộng đồng theo MST: 0111291749</div>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4>Cam Kết Xã Hội</h4>
+        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
+    </div>
   </footer>
 
   <script>
