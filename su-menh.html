@@ -87,6 +87,24 @@
     .hero-wrapper::before {
       content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;
     }
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
+    .hero-dove {
+      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      pointer-events: none; z-index: 5;
+      animation: doveFloat 9s ease-in-out infinite;
+      transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0%   { transform: translate(0, 0) rotate(-4deg); }
+      25%  { transform: translate(-14px, -18px) rotate(2deg); }
+      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
+      75%  { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 640px) {
+      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
+    }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
       padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
@@ -146,6 +164,8 @@
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
@@ -198,6 +218,7 @@
 
   <!-- Hero Banner Sang Trọng -->
   <section class="hero-wrapper">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">ĐỊNH HƯỚNG CHIẾN LƯỢC CỘNG ĐỒNG</div>
     <h1 class="hero-title">Sứ Mệnh & Tầm Nhìn Chiến Lược</h1>
     <p class="hero-desc">Đồng hành bền bỉ cùng giáo dục vùng cao, mang tri thức mở và cơ hội phát triển công bằng đến với từng em nhỏ trên mọi miền đất nước.</p>
@@ -267,8 +288,9 @@
       <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
       <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
       <p style="font-size:0.88rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
-      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
+      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
+      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
       <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
     </div>
   </div>
@@ -293,7 +315,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
+      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html">Chính Sách Bảo Mật & Điều Khoản Sử Dụng</a>
     </div>
   </footer>
 
