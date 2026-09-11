@@ -18,7 +18,6 @@
       --white: #ffffff;
       --border: #e2e8f0;
       --bg-page: #f8fafc;
-      --primary: #0284c7;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,7 +61,12 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Nút Menu Hamburger cho điện thoại */
+    .btn-secondary {
+      background: #f1f5f9; color: #0f172a; padding: 0.65rem 1.4rem; border-radius: 8px; font-weight: 600;
+      cursor: pointer; border: 1px solid #cbd5e1; text-decoration: none; display: inline-block; transition: all 0.2s; font-family: inherit;
+    }
+    .btn-secondary:hover { background: #e2e8f0; transform: translateY(-1px); }
+
     .mobile-menu-btn {
       display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
     }
@@ -79,25 +83,31 @@
     .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
     .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
-    /* Container chung */
-    .container { max-width: 1100px; margin: 3rem auto; padding: 0 1.5rem; position: relative; }
+    /* Container chính */
+    .container { max-width: 1100px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
 
-    /* Hộp gửi hoạt động mới */
-    .submit-activity-box {
-      background: #ffffff; border: 1px solid var(--border); border-radius: 20px;
-      padding: 2.5rem; margin-bottom: 3.5rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-      display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap;
+    /* Hộp sự kiện sắp tới (Có thể ẩn/hiện) */
+    .upcoming-section-card {
+      background: #ffffff; border: 1px solid #bae6fd; border-radius: 20px;
+      padding: 2rem; margin-bottom: 3.5rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.06);
     }
-    .submit-activity-content h3 { font-size: 1.35rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; }
-    .submit-activity-content p { font-size: 0.95rem; color: var(--text-muted); }
-    .btn-submit-action {
-      background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%); color: #fff; padding: 0.8rem 1.8rem;
-      border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
-      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.25); transition: transform 0.2s;
+    .upcoming-header {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; cursor: pointer;
     }
-    .btn-submit-action:hover { transform: translateY(-2px); }
+    .upcoming-header h3 { font-size: 1.3rem; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 0.5rem; }
+    .upcoming-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.8rem; display: none;
+    }
+    .upcoming-grid.show { display: grid; animation: fadeIn 0.4s ease-in-out; }
+    .upcoming-card {
+      background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .upcoming-card h4 { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; }
+    .upcoming-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.5; }
+    .upcoming-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
-    /* Timeline Container */
+    /* Timeline Container (Chỉ sự kiện nổi bật / đã diễn ra) */
     .timeline-container { position: relative; padding: 2rem 0; }
     .timeline-container::before {
       content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
@@ -118,12 +128,7 @@
     .timeline-dot {
       position: absolute; left: 50%; transform: translateX(-50%); width: 26px; height: 26px;
       background: #0284c7; border: 4px solid #fff; border-radius: 50%;
-      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2); z-index: 5; animation: pulseDot 2s infinite;
-    }
-    @keyframes pulseDot {
-      0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4); }
-      70% { box-shadow: 0 0 0 12px rgba(2, 132, 199, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
+      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2); z-index: 5;
     }
 
     .timeline-content {
@@ -226,24 +231,60 @@
 
   <!-- Container chính -->
   <div class="container">
-    
-    <!-- Hộp Gửi Hoạt Động Mới -->
-    <div class="submit-activity-box">
-      <div class="submit-activity-content">
-        <h3>Bạn có đề xuất hoặc ý tưởng hoạt động mới?</h3>
-        <p>Gửi thông tin chương trình thiện nguyện hoặc dự án cộng đồng để ban điều phối tiếp nhận và triển khai.</p>
+      
+    <!-- Hộp Sự Kiện Sắp Tới (Bấm vào để xem) -->
+    <div class="upcoming-section-card">
+      <div class="upcoming-header" onclick="toggleUpcomingGrid()">
+        <h3><i class="fa-solid fa-calendar-days" style="color: #0284c7;"></i> Sự Kiện Sắp Tới & Kế Hoạch Gây Quỹ (Bấm để xem)</h3>
+        <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="color: #0284c7; font-size: 1.1rem; transition: transform 0.3s;"></i>
       </div>
-      <a href="lien-he.html" class="btn-submit-action">
-        <i class="fa-solid fa-paper-plane"></i> Gửi hoạt động ngay
-      </a>
+
+      <div class="upcoming-grid" id="upcomingGrid">
+        
+        <div class="upcoming-card">
+          <div>
+            <span class="timeline-year"><i class="fa-regular fa-clock"></i> Tháng 11 / 2026</span>
+            <h4>Chiến dịch Áo Ấm Vùng Cao</h4>
+            <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập chuẩn bị cho mùa đông tại các điểm trường Hà Giang.</p>
+          </div>
+          <div class="upcoming-actions">
+            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <a href="lien-he.html" class="btn-secondary">Đăng ký góp sức</a>
+          </div>
+        </div>
+
+        <div class="upcoming-card">
+          <div>
+            <span class="timeline-year"><i class="fa-regular fa-clock"></i> Tháng 10 / 2026</span>
+            <h4>Hội thảo phương pháp học tập</h4>
+            <p>Tổ chức buổi hội thảo trực tuyến miễn phí chia sẻ kinh nghiệm và kỹ năng tự học dành cho học sinh THPT.</p>
+          </div>
+          <div class="upcoming-actions">
+            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <a href="lien-he.html" class="btn-secondary">Đăng ký tham gia</a>
+          </div>
+        </div>
+
+        <div class="upcoming-card">
+          <div>
+            <span class="timeline-year"><i class="fa-regular fa-clock"></i> Cuối Tháng 9 / 2026</span>
+            <h4>Phát động Học Bổng Ươm Mầm</h4>
+            <p>Chính thức nhận hồ sơ xét duyệt học bổng dành cho các em học sinh có hoàn cảnh đặc biệt khó khăn hiếu học.</p>
+          </div>
+          <div class="upcoming-actions">
+            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+            <a href="lien-he.html" class="btn-secondary">Tìm hiểu thêm</a>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <!-- Timeline Mốc Hoạt Động -->
+    <!-- Timeline Mốc Hoạt Động (Sự kiện nổi bật / đã diễn ra) -->
     <div class="timeline-container">
       
-      <!-- Cột mốc năm 2026 -->
       <div class="timeline-root-node">
-        <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện 2026</div>
+        <div class="timeline-root-badge"><i class="fa-solid fa-flag-checkered"></i> Dòng Sự Kiện Nổi Bật 2026</div>
       </div>
       
       <div id="timeline2026">
@@ -302,6 +343,17 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
       } else {
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    }
+
+    function toggleUpcomingGrid() {
+      const grid = document.getElementById('upcomingGrid');
+      const icon = document.getElementById('upcomingIcon');
+      grid.classList.toggle('show');
+      if (grid.classList.contains('show')) {
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        icon.style.transform = 'rotate(0deg)';
       }
     }
 
@@ -381,7 +433,6 @@
         allPosts = sampleAllPosts;
       }
 
-      // Sắp xếp giảm dần: Bài viết có tháng/năm mới nhất sẽ nằm ở đầu danh sách
       allPosts.sort((a, b) => b.sortWeight - a.sortWeight);
 
       let list2026 = [];
@@ -390,7 +441,7 @@
       allPosts.forEach(post => {
         let detailLink = (post.filename && post.filename.endsWith('.md') && !post.filename.startsWith('bai-')) 
           ? `chi-tiet.html?post=${post.filename}` 
-          : `hoat-dong.html`;
+          : `tin-tuc.html`;
 
         const itemHTML = `
           <div class="timeline-item">
