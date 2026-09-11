@@ -24,7 +24,7 @@
     html, body {
       width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.7;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.75;
     }
     body { padding-top: 72px; }
 
@@ -80,7 +80,7 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.3rem; color: var(--text-dark); cursor: pointer; padding: 0.3rem; }
 
-    /* Hero Banner Truyền Cảm Hứng */
+    /* Hero Banner */
     .hero-wrapper {
       width: 100%; background: var(--blue-grad-hero); padding: 4rem 1rem 4.5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
@@ -95,7 +95,7 @@
     .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; line-height: 1.2; }
     .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 750px; margin: 0 auto; line-height: 1.65; padding: 0 0.5rem; }
 
-    /* Quote Banner Truyền Cảm Hứng */
+    /* Quote Banner */
     .mission-quote-box {
       max-width: 900px; margin: -2.5rem auto 3.5rem auto; padding: 0 1rem; position: relative; z-index: 10;
     }
@@ -107,17 +107,23 @@
     .quote-card p { font-size: 1.15rem; font-weight: 600; color: var(--text-dark); line-height: 1.7; font-style: italic; }
     .quote-card span { display: block; margin-top: 1rem; font-size: 0.88rem; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* Nội dung chi tiết sứ mệnh (Storytelling section) */
-    .container { max-width: 1200px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
-    
-    .story-section {
-      background: #ffffff; border-radius: 20px; padding: 3rem; border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03); margin-bottom: 4rem;
-    }
-    .story-section h2 { font-size: 1.8rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1.2rem; }
-    .story-section p { font-size: 1.02rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+    /* Main Container & Story Sections */
+    .container { max-width: 1000px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
 
-    /* 4 Trụ Cột Visual */
+    .mission-story-block {
+      background: #ffffff; border-radius: 20px; padding: 3rem; border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03); margin-bottom: 3rem;
+    }
+    .mission-story-block h2 {
+      font-size: 1.6rem; font-weight: 800; color: #0369a1; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .mission-story-block h2 i { font-size: 1.3rem; color: #0284c7; }
+    .mission-story-block p { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+    .mission-story-block p:last-child { margin-bottom: 0; }
+
+    /* 4 Trụ Cột Visual Grid */
+    .pillars-container { max-width: 1240px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
     .section-header { text-align: center; margin-bottom: 3.5rem; }
     .section-header h2 { font-size: 2.2rem; font-weight: 900; color: var(--text-dark); margin-bottom: 0.6rem; letter-spacing: -0.5px; }
     .section-header p { font-size: 1.05rem; color: var(--text-muted); max-width: 650px; margin: 0 auto; line-height: 1.6; }
@@ -172,7 +178,7 @@
       .hero-title { font-size: 2.1rem; }
       .quote-card { padding: 1.8rem; }
       .quote-card p { font-size: 1.02rem; }
-      .story-section { padding: 1.5rem; }
+      .mission-story-block { padding: 1.5rem; }
     }
   </style>
 </head>
@@ -214,7 +220,7 @@
   <!-- Hero Banner -->
   <section class="hero-wrapper">
     <div class="hero-badge">ĐỊNH HƯỚNG CHIẾN LƯỢC CỘNG ĐỒNG</div>
-    <h1 class="hero-title">Kiến Tạo Tri Thức & Gieo Hạt Tương Lai</h1>
+    <h1 class="hero-title">Sứ Mệnh & Tầm Nhìn Chiến Lược</h1>
     <p class="hero-desc">Đồng hành bền bỉ cùng giáo dục vùng cao, mang tri thức mở và cơ hội phát triển công bằng đến với từng em nhỏ trên mọi miền đất nước.</p>
   </section>
 
@@ -227,16 +233,62 @@
     </div>
   </div>
 
-  <!-- Main Container -->
+  <!-- Main Container: Nội dung chi tiết sứ mệnh đánh trúng tâm lý -->
   <main class="container">
     
-    <!-- Đoạn văn bản định vị sứ mệnh đánh trúng tâm lý -->
-    <div class="story-section">
-      <h2>Vì Sao Chúng Tôi Ra Đời?</h2>
-      <p>Có những nơi, việc một đứa trẻ được đến trường, có đủ sách vở và một không gian học tập an toàn là điều hiển nhiên. Nhưng ở nhiều vùng cao xa xôi, hành trình ấy là một thử thách đòi hỏi sự nỗ lực phi thường của cả gia đình, thầy cô và các em nhỏ.</p>
-      <p>Tại <strong>Wisdom Vietnam Network (DR Solutions)</strong>, chúng tôi tin rằng lòng tốt là điểm khởi đầu, nhưng sự <strong>minh bạch và thấu hiểu đúng nhu cầu</strong> mới là nền tảng để tạo ra thay đổi thực chất. Chúng tôi không chỉ trao đi những món quà ngẫu nhiên, mà xây dựng những chương trình đồng hành dài hạn—nơi mỗi cuốn sách, mỗi thiết bị hay mỗi lớp học đều được đặt đúng chỗ cần, phục vụ đúng người và mang lại giá trị bền vững cho thế hệ tương lai.</p>
+    <!-- Phần 1 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-heart-circle-check"></i> Cơ hội học tập nên thuộc về mọi trẻ em</h2>
+      <p>Chúng tôi tin rằng một đứa trẻ không nên có ít cơ hội học tập hơn chỉ vì em sinh ra ở một nơi còn nhiều khó khăn.</p>
+      <p>Ở những vùng còn thiếu thốn về điều kiện kinh tế, cơ sở vật chất và nguồn lực giáo dục, hành trình đến trường của trẻ em có thể gặp nhiều trở ngại. Một bộ sách chưa đầy đủ, một thiết bị học tập còn thiếu, một lớp học chưa có đủ điều kiện hay khoảng cách địa lý xa xôi đều có thể trở thành những rào cản đối với việc học.</p>
+      <p>Nhưng phía sau mỗi khó khăn đó là một điều quan trọng hơn cần được nhìn thấy: mỗi đứa trẻ đều có nhu cầu được học, được phát triển và được lựa chọn tương lai của mình.</p>
+      <p>Vì vậy, chúng tôi lựa chọn tập trung vào một mục tiêu giản dị nhưng lâu dài: <strong>mở rộng cơ hội học tập cho những trẻ em và cộng đồng còn gặp hạn chế trong việc tiếp cận các nguồn lực giáo dục.</strong></p>
     </div>
 
+    <!-- Phần 2 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-seedling"></i> Từ hỗ trợ trước mắt đến cơ hội lâu dài</h2>
+      <p>Một hoạt động hỗ trợ giáo dục có thể bắt đầu từ những điều rất cụ thể: đó có thể là một bộ sách đến đúng lúc, một chiếc máy tính giúp học sinh tiếp cận tri thức, một thiết bị hỗ trợ lớp học, một chương trình học tập, hay sự hỗ trợ để một em nhỏ có thể tiếp tục đến trường.</p>
+      <p>Những điều đó tuy nhỏ, nhưng có thể tạo ra sự khác biệt trong một hoàn cảnh cụ thể. Tuy nhiên, chúng tôi không xem những hỗ trợ ấy là đích đến. Mục tiêu cuối cùng không phải là trao được bao nhiêu phần quà, mà là tạo thêm điều kiện để trẻ em có thể tự mình học tập, phát triển năng lực và mở rộng những lựa chọn cho tương lai.</p>
+      <p>Bởi một món quà có thể được sử dụng trong một thời gian, nhưng <strong>một cơ hội học tập có thể tạo ra giá trị trong nhiều năm.</strong></p>
+    </div>
+
+    <!-- Phần 3 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-compass-drafting"></i> Hiểu đúng nhu cầu trước khi hỗ trợ</h2>
+      <p>Không phải mọi cộng đồng đều cần cùng một loại hỗ trợ. Ở một nơi, điều cần thiết có thể là sách và tài liệu học tập. Ở nơi khác, học sinh có thể cần thiết bị công nghệ, điều kiện học trực tuyến hoặc những nguồn lực phục vụ việc học.</p>
+      <p>Vì vậy, chúng tôi hướng tới cách tiếp cận dựa trên nhu cầu thực tế. Trước khi triển khai một hoạt động, chúng tôi tìm hiểu hoàn cảnh của người học, trao đổi với nhà trường và những người trực tiếp làm giáo dục tại địa phương, từ đó xác định nguồn lực nào thực sự cần thiết.</p>
+      <p><strong>Hỗ trợ đúng nhu cầu quan trọng không kém việc hỗ trợ đủ nguồn lực.</strong></p>
+    </div>
+
+    <!-- Phần 4 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-shield-halved"></i> Minh bạch trong từng nguồn lực được trao đi</h2>
+      <p>Cơ hội học tập chỉ có thể được mở rộng một cách bền vững khi cộng đồng có niềm tin vào cách nguồn lực được sử dụng. Vì vậy, hoạt động của chúng tôi hướng tới sự minh bạch từ quá trình tiếp nhận nguồn lực, xác định nhu cầu, triển khai hỗ trợ cho đến việc ghi nhận kết quả.</p>
+      <p>Mỗi đóng góp, dù lớn hay nhỏ, đều là một nguồn lực được cộng đồng tin tưởng trao gửi. Điều đó đi kèm với trách nhiệm giải trình: nguồn lực được sử dụng vào đâu, hỗ trợ ai, đạt được kết quả gì và những điều gì cần tiếp tục thực hiện.</p>
+      <p>Minh bạch không phải để làm cho hoạt động trở nên phức tạp hơn, mà là để người đóng góp có thể nhìn thấy giá trị chân thực mà nguồn lực của họ tạo ra.</p>
+    </div>
+
+    <!-- Phần 5 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-infinity"></i> Không chỉ dành cho một chuyến đi</h2>
+      <p>Giáo dục là một hành trình dài. Một chương trình có thể kết thúc sau một ngày, nhưng nhu cầu học tập của một đứa trẻ vẫn tiếp tục vào ngày hôm sau, tháng sau và những năm tiếp theo.</p>
+      <p>Vì thế, chúng tôi mong muốn xây dựng những hoạt động có khả năng tạo ra giá trị lâu dài: kết nối nguồn lực với nhu cầu giáo dục, hỗ trợ những sáng kiến phù hợp tại cộng đồng và từng bước tạo ra thêm những điều kiện để người học có thể chủ động tiếp cận tri thức.</p>
+      <p>Điều quan trọng không phải là chúng ta có thể thay đổi cuộc sống của một đứa trẻ trong bao lâu, mà là <strong>chúng ta có thể giúp em có thêm những lựa chọn nào cho tương lai.</strong></p>
+    </div>
+
+    <!-- Phần 6 -->
+    <div class="mission-story-block" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-color: #bae6fd;">
+      <h2 style="color: #0284c7;"><i class="fa-solid fa-hand-holding-heart"></i> Một cơ hội có thể bắt đầu từ hôm nay</h2>
+      <p>Có thể chúng ta không thể giải quyết tất cả những khó khăn của giáo dục trong một ngày, nhưng chúng ta có thể bắt đầu bằng một cơ hội: một cuốn sách, một thiết bị, một lớp học, một sự kết nối hay một đóng góp được sử dụng đúng nơi.</p>
+      <p>Chúng tôi tin rằng giáo dục không chỉ là kiến thức được truyền đạt trong một lớp học, mà còn là khả năng tiếp cận tri thức, phát triển năng lực và có quyền lựa chọn tương lai của chính mình.</p>
+      <p style="font-weight: 700; color: #0f172a; margin-top: 1rem;">Và đó là lý do chúng tôi tồn tại: Vì cơ hội học tập nên được mở rộng đến nhiều người hơn, đặc biệt là những người đang có ít điều kiện tiếp cận nó nhất.</p>
+    </div>
+
+  </main>
+
+  <!-- 4 Trụ Cột Hành Động -->
+  <div class="pillars-container">
     <div class="section-header">
       <h2>4 Trụ Cột Hành Động Phi Lợi Nuận</h2>
       <p>Hệ thống giải pháp thực tiễn được thiết kế chuyên sâu nhằm tạo ra tác động thay đổi tích cực và bền vững tại từng điểm trường.</p>
@@ -291,7 +343,7 @@
         </div>
       </div>
     </div>
-  </main>
+  </div>
 
   <!-- Modal Quyên góp -->
   <div id="donateModal" class="modal">
