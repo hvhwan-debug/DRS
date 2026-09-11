@@ -78,51 +78,17 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* HERO SECTION VỚI VIDEO NỀN CHẠY MỜ MỜ ẢO */
+    /* Hero Section Gradient Động */
     .hero-wrapper {
-      position: relative;
-      width: 100%;
-      min-height: 550px;
-      padding: 5rem 1.5rem 5.5rem;
-      color: var(--white);
-      overflow: hidden;
-      background-color: #0f172a; /* Màu nền dự phòng nếu video chưa tải kịp */
+      position: relative; width: 100%; padding: 5rem 1.5rem 5.5rem; color: var(--white); overflow: hidden;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite;
     }
-
-    /* Thẻ video ẩn phía sau */
-    .hero-bg-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translate(-50%, -50%);
-      object-fit: cover;
-      z-index: 1;
-      opacity: 0.35; /* Độ mờ ảo hoàn hảo để làm nổi bật chữ */
-    }
-
-    /* Lớp phủ gradient để tăng độ tương phản và giữ tông màu thương hiệu */
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(2, 132, 199, 0.85) 0%, rgba(3, 105, 161, 0.8) 40%, rgba(15, 23, 42, 0.9) 100%);
-      z-index: 2;
-    }
+    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
     .hero-grid {
-      position: relative;
-      z-index: 3; /* Nằm trên video và lớp phủ */
-      max-width: 1240px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 3.5rem;
-      align-items: center;
+      max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3.5rem; align-items: center; position: relative; z-index: 2;
     }
-
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
       padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
@@ -138,7 +104,7 @@
     .btn-light:hover { background: #f0f9ff; color: #075985; transform: translateY(-1px); }
     .hero-link { color: #ffffff; font-weight: 600; font-size: 0.95rem; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; opacity: 0.9; }
 
-    /* Khung ảnh Hero có hiệu ứng bấm mở Video */
+    /* Khung ảnh Hero */
     .hero-media-wrapper { position: relative; cursor: pointer; }
     .hero-media-card {
       background: rgba(255, 255, 255, 0.25); padding: 12px; border-radius: 30px;
@@ -148,7 +114,6 @@
     .hero-media-wrapper:hover .hero-media-card { transform: scale(1.02); }
     .hero-main-img { width: 100%; height: 440px; object-fit: cover; border-radius: 22px; display: block; }
     
-    /* Nút Play ẩn hiện trên ảnh */
     .play-video-overlay {
       position: absolute; inset: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 22px;
       display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
@@ -161,7 +126,6 @@
     }
     .play-text { color: #fff; font-weight: 700; font-size: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
-    /* Thẻ chỉ số nổi trên ảnh */
     .floating-badge {
       position: absolute; bottom: -20px; left: -20px; background: #ffffff; color: #0f172a;
       padding: 1rem 1.4rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -189,7 +153,7 @@
     .close-video-btn { background: none; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; }
     .close-video-btn:hover { color: #fff; }
 
-    /* Khung Thống Kê Nhanh (Impact Numbers) */
+    /* Thước đo tác động (Impact Numbers) */
     .metrics-strip { background: #ffffff; border-bottom: 1px solid var(--border); padding: 2.5rem 1.5rem; }
     .metrics-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; text-align: center; }
     .metric-number { font-size: 2.4rem; font-weight: 900; color: #0284c7; line-height: 1.1; margin-bottom: 0.3rem; }
@@ -201,7 +165,7 @@
     .section-header h2 { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; letter-spacing: -0.5px; }
     .section-header p { color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
 
-    /* 4 Trụ Cột */
+    /* 4 Trụ Cột thuần Việt */
     .pillars-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.8rem; }
     .pillar-visual-card {
       background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid var(--border);
@@ -215,7 +179,7 @@
     .pillar-content h3 { font-size: 1.25rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; }
     .pillar-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; }
 
-    /* Thư Viện Hình Ảnh Hoạt Động */
+    /* Thư Viện Hình Ảnh Hoạt Động (Tự động quét từ thư mục uploads hoặc dùng ảnh thuần Việt) */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .gallery-item { position: relative; border-radius: 16px; overflow: hidden; height: 250px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
@@ -241,9 +205,9 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer */
+    /* Footer 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
 
@@ -297,20 +261,11 @@
     </div>
   </header>
 
-  <!-- Hero Section với Video Nền Chạy Mờ Ảo -->
+  <!-- Hero Section -->
   <section class="hero-wrapper">
-    <!-- Thẻ Video nền (Tự động phát, lặp lại, tắt tiếng để không phiền người xem) -->
-    <video autoplay muted loop playsinline class="hero-bg-video">
-      <source src="bg-video.mp4" type="video/mp4">
-      Trình duyệt của bạn không hỗ trợ video HTML5.
-    </video>
-    <!-- Lớp phủ mờ màu xanh thương hiệu -->
-    <div class="hero-overlay"></div>
-
     <div class="hero-grid">
       
-      <!-- Cột trái: Thông điệp hành động -->
-      <div style="position: relative; z-index: 3;">
+      <div>
         <div class="hero-badge">SỨ MỆNH VÌ CỘNG ĐỒNG</div>
         <h1 class="hero-title">
           DR SOLUTIONS<br>
@@ -329,10 +284,9 @@
         </div>
       </div>
 
-      <!-- Cột phải: Khung ảnh mầm cây BẤM VÀO ĐỂ XEM VIDEO NỤ CƯỜI HỌC TẬP -->
-      <div class="hero-media-wrapper" onclick="openVideoModal()" title="Bấm để xem video: Những nụ cười học tập chạm trái tim" style="position: relative; z-index: 3;">
+      <div class="hero-media-wrapper" onclick="openVideoModal()" title="Bấm để xem video: Những nụ cười học tập chạm trái tim">
         <div class="hero-media-card">
-          <img src="banner-drs.png.png" alt="Ươm mầm tri thức cộng đồng" class="hero-main-img">
+          <img src="banner-drs.png.png" alt="Ươm mầm tri thức cộng đồng" class="hero-main-img" id="heroDynamicImg">
           <div class="play-video-overlay">
             <div class="play-icon-circle"><i class="fa-solid fa-play"></i></div>
             <div class="play-text">Xem video: Những nụ cười học tập chạm trái tim</div>
@@ -385,7 +339,7 @@
     </div>
   </section>
 
-  <!-- 4 Trụ Cột -->
+  <!-- 4 Trụ Cột Thuần Việt -->
   <main class="section-wrap" id="tru-cot">
     <div class="section-header">
       <h2>4 Trụ Cột Hành Động Phi Lợi Nhuận</h2>
@@ -396,7 +350,7 @@
       
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" alt="Hỗ trợ tại chỗ vùng cao">
+          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" alt="Hỗ trợ tại chỗ vùng cao" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Hỗ trợ tại chỗ</h3>
@@ -406,7 +360,7 @@
 
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80" alt="Lan tỏa tiếp cận sách">
+          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80" alt="Lan tỏa tiếp cận sách" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Lan tỏa tiếp cận</h3>
@@ -416,7 +370,7 @@
 
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80" alt="Nâng cao nhận thức trẻ em">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80" alt="Nâng cao nhận thức trẻ em" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Nâng cao nhận thức</h3>
@@ -426,7 +380,7 @@
 
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80" alt="Đồng hành bền vững vùng cao">
+          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80" alt="Đồng hành bền vững vùng cao" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Đồng hành bền vững</h3>
@@ -437,7 +391,7 @@
     </div>
   </main>
 
-  <!-- Thư Viện Hình Ảnh Hoạt Động -->
+  <!-- Thư Viện Hình Ảnh Hoạt Động (Tự động lấy ảnh thuần Việt ngẫu nhiên) -->
   <section style="background: #ffffff; padding: 5rem 1.5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
     <div style="max-width: 1240px; margin: 0 auto;">
       <div class="section-header">
@@ -445,17 +399,17 @@
         <p>Hình ảnh chân thực ghi nhận từ các buổi sinh hoạt văn hóa, trao tặng học liệu và lớp kỹ năng cộng đồng</p>
       </div>
 
-      <div class="gallery-grid">
+      <div class="gallery-grid" id="dynamicGalleryGrid">
         <div class="gallery-item">
-          <img src="banner-drs.png.png" alt="Ươm mầm tri thức">
+          <img src="banner-drs.png.png" alt="Ươm mầm tri thức" class="vn-img-item">
           <div class="gallery-overlay">Chung tay vì thế hệ tương lai</div>
         </div>
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80" alt="Niềm vui học tập của học sinh">
+          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80" alt="Niềm vui học tập của học sinh" class="vn-img-item">
           <div class="gallery-overlay">Nụ cười và sự tự tin trong từng trang sách mới</div>
         </div>
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80" alt="Lớp học cộng đồng vùng cao">
+          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80" alt="Lớp học cộng đồng vùng cao" class="vn-img-item">
           <div class="gallery-overlay">Lớp học kỹ năng cuối tuần không áp lực điểm số</div>
         </div>
       </div>
@@ -496,7 +450,7 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer 3 Cột -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -521,6 +475,29 @@
   </footer>
 
   <script>
+    // Kho chứa các hình ảnh thuần Việt chất lượng cao (Học sinh vùng cao, thầy cô, lớp học Việt Nam)
+    const vietnameseImagePool = [
+      "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80"
+    ];
+
+    // Tự động quét và thay thế ngẫu nhiên các ảnh thuần Việt khi tải trang
+    window.addEventListener('DOMContentLoaded', () => {
+      const allVnImages = document.querySelectorAll('.vn-img-item');
+      allVnImages.forEach(img => {
+        const randomIndex = Math.floor(Math.random() * vietnameseImagePool.length);
+        // Ưu tiên giữ lại ảnh độc quyền nếu có, ngược lại hệ thống bốc ngẫu nhiên ảnh chuẩn Việt
+        if(!img.src.includes('banner-drs')) {
+          img.src = vietnameseImagePool[randomIndex];
+        }
+      });
+    });
+
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
     
