@@ -362,6 +362,19 @@
       return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
     }
 
+    // ==== ẢNH NGƯỜI VIỆT NAM NGẪU NHIÊN TỪ INTERNET (Unsplash Source) ====
+    // LƯU Ý: source.unsplash.com là dịch vụ đã ngừng phát triển (deprecated) từ 2021.
+    // Unsplash xác nhận các use case đang chạy vẫn tiếp tục hoạt động, nhưng không đảm bảo
+    // uptime lâu dài và có thể ngừng bất cứ lúc nào không báo trước. Vì trang này không có
+    // server riêng để giấu API key chính thức, đây là cách duy nhất lấy ảnh ngẫu nhiên theo
+    // từ khóa mà không cần đăng ký khóa API. Nếu ảnh lỗi, thẻ sẽ tự động rơi về ảnh thật
+    // trong kho images/uploads/ (xem onerror ở renderPosts).
+    const VN_PHOTO_KEYWORDS = "vietnamese,vietnam,people,portrait";
+    function getRandomVietnamPhoto() {
+      const seed = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      return `https://source.unsplash.com/600x400/?${VN_PHOTO_KEYWORDS}&sig=${seed}`;
+    }
+
     // Lấy toàn bộ tên file .md trong content/posts qua GitHub API.
     // Nhờ vậy có bài viết mới là tự hiện lên trang, không cần sửa code.
     async function fetchAllPostSlugs() {
@@ -447,7 +460,7 @@
             slug,
             title: fm.title || slugToTitle(slug),
             date: fm.date || "",
-            image: getRandomUploadedImage(),
+            image: getRandomVietnamPhoto(),
             excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
           };
         } catch (e) {
@@ -507,7 +520,7 @@
       grid.innerHTML = pagePosts.map(p => `
         <a class="news-card" href="chi-tiet.html?slug=${encodeURIComponent(p.slug)}">
           <div class="news-img-box">
-            <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+            <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.onerror=null; this.src=getRandomUploadedImage();">
             ${p.date ? `<span class="news-date-badge">${formatDate(p.date)}</span>` : ""}
           </div>
           <div class="news-content">
