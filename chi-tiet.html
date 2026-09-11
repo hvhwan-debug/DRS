@@ -6,8 +6,6 @@
   <title>Chi Tiết Bài Viết - Wisdom Vietnam Network - DR SOLUTIONS</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Thư viện marked.js để dịch file Markdown sang HTML tự động -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
@@ -25,7 +23,7 @@
     html, body {
       width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.7;
     }
     body { padding-top: 72px; }
 
@@ -92,9 +90,8 @@
     
     .article-body { font-size: 1.08rem; color: #334155; line-height: 1.8; }
     .article-body p { margin-bottom: 1.5rem; text-align: justify; }
-    .article-body h2 { font-size: 1.6rem; color: #0f172a; margin: 2rem 0 1rem; font-weight: 800; }
-    .article-body h3 { font-size: 1.3rem; color: #1e3a8a; margin: 1.5rem 0 0.8rem; font-weight: 700; }
-    .article-body ul, .article-body ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+    .article-body h2 { font-size: 1.5rem; color: #0f172a; margin: 2rem 0 1rem; font-weight: 800; }
+    .article-body ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
     .article-body li { margin-bottom: 0.5rem; }
 
     .modal {
@@ -105,7 +102,7 @@
       background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+    .modal-qr { width: 100% ; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
@@ -162,7 +159,7 @@
   <main class="article-container">
     <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
     <div class="article-card" id="articleContent">
-      <div style="text-align: center; padding: 3rem; color: var(--text-muted);">Đang tải nội dung bài viết từ hệ thống...</div>
+      <div style="text-align: center; padding: 3rem; color: var(--text-muted);">Đang tải nội dung bài viết...</div>
     </div>
   </main>
 
@@ -212,48 +209,66 @@
       "images/uploads/images (4).jfif"
     ];
 
-    async function loadArticle() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const postFile = urlParams.get('post') || 'thien-nguyen-ha-giang-11-2026.md';
-      const randomImg = vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
+    // Kho lưu trữ nội dung chi tiết đầy đủ dài mạch lạc cho từng bài viết
+    const articlesDB = {
+      "bai-1.md": { 
+        title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", 
+        date: "Tháng 11 / 2026", 
+        content: `Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>
+        Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn. Hơn bao giờ hết, sự sẻ chia từ cộng đồng chính là nguồn động lực to lớn giúp thắp sáng ước mơ học tập cho các em nhỏ nơi tuyến đầu Tổ quốc.<br><br>
+        <h2>Các hoạt động trọng tâm của chương trình:</h2>
+        <ul>
+          <li><strong>Trao tặng áo ấm và học cụ:</strong> Cung cấp đầy đủ áo khoác mùa đông, chăn bông ấm áp và balo, sách vở cho 100% học sinh điểm trường.</li>
+          <li><strong>Xây dựng tủ sách tri thức:</strong> Lắp đặt các tủ sách thiếu nhi với hàng trăm đầu sách phong phú, tạo không gian đọc sách sau giờ lên lớp.</li>
+          <li><strong>Bữa ăn dinh dưỡng học đường:</strong> Tổ chức các bữa ăn phụ bổ sung dinh dưỡng, góp phần cải thiện thể chất cho học sinh nội trú.</li>
+        </ul>
+        <br>Chúng tôi kêu gọi các mạnh thường quân, tình nguyện viên cùng chung tay đồng hành để chuyến hành trình đến với Hà Giang diễn ra trọn vẹn và lan tỏa yêu thương sâu sắc.` 
+      },
+      "bai-2.md": { 
+        title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", 
+        date: "Tháng 07 / 2026", 
+        content: `Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.<br><br>
+        Chương trình mùa hè năm nay tập trung vào việc xây dựng các góc đọc sách tại lớp học, tổ chức các hoạt động sinh hoạt ngoại khóa giúp học sinh rèn luyện kỹ năng sống và khơi dậy niềm đam mê đọc sách.<br><br>
+        <h2>Ý nghĩa và tác động mang lại:</h2>
+        <ul>
+          <li>Lan tỏa văn hóa đọc sách đến tận các thôn bản vùng sâu vùng xa.</li>
+          <li>Rèn luyện kỹ năng tự học, tư duy sáng tạo thông qua các trò chơi tương tác giáo dục.</li>
+          <li>Kết nối những tấm lòng nhân ái từ khắp mọi miền đất nước hướng về thế hệ trẻ tương lai.</li>
+        </ul>` 
+      },
+      "bai-3.md": { title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", content: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức mang lại không gian giải trí và học tập bổ ích sau giờ lên lớp cho các em nhỏ." },
+      "bai-4.md": { title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", content: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện, kỹ năng làm việc nhóm." },
+      "bai-5.md": { title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", content: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường." },
+      "bai-6.md": { title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", content: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động giáo dục cộng đồng." },
+      "bai-7.md": { title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", content: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học." },
+      "bai-8.md": { title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", content: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục vùng cao." },
+      "bai-9.md": { title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", content: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt cho học sinh nghèo." },
+      "bai-10.md": { title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", content: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao." },
+      "bai-11.md": { title: "Ngày hội đọc sách và tri thức buôn làng", date: "Tháng 08 / 2025", content: "Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.<br><br>Sự kiện thu hút đông đảo thanh thiếu niên tham gia các hoạt động giao lưu văn hóa đọc." },
+      "bai-12.md": { title: "Tọa đàm đổi mới phương pháp giảng dạy", date: "Tháng 06 / 2025", content: "Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.<br><br>Nâng cao năng lực chuyên môn và phương pháp sư phạm cho đội ngũ nhà giáo." },
+      "bai-13.md": { title: "Hành trình xe buýt tri thức lăn bánh", date: "Tháng 04 / 2025", content: "Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.<br><br>Giúp các em học sinh tiếp cận hàng trăm đầu sách phong phú mỗi tuần." },
+      "bai-14.md": { title: "Trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", content: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.<br><br>Mở rộng tầm nhìn và cơ hội học tập công nghệ cho thế hệ trẻ vùng cao." },
+      "bai-15.md": { title: "Hỗ trợ bữa ăn dinh dưỡng học đường", date: "Tháng 02 / 2025", content: "Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.<br><br>Chung tay chăm lo sức khỏe và sự phát triển toàn diện cho học sinh." },
+      "bai-16.md": { title: "Khởi động dự án Xây trường vùng cao", date: "Tháng 01 / 2025", content: "Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.<br><br>Kiến tạo không gian học tập an toàn, khang trang cho thầy và trò." },
+      "bai-17.md": { title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", content: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.<br><br>Cam kết thực hiện nghiêm túc nguyên tắc minh bạch và trách nhiệm giải trình." },
+      "bai-18.md": { title: "Giải bóng đá thiện nguyện kết nối thanh niên", date: "Tháng 10 / 2024", content: "Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.<br><br>Thắt chặt tình đoàn kết và lan tỏa lối sống đẹp trong cộng đồng trẻ." },
+      "bai-19.md": { title: "Lớp học tình thương cuối tuần", date: "Tháng 08 / 2024", content: "Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.<br><br>Bồi dưỡng kiến thức cơ bản và thắp sáng niềm tin vào tương lai." },
+      "bai-20.md": { title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", content: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.<br><br>Xây dựng đội ngũ tình nguyện viên chuyên nghiệp trên khắp cả nước." }
+    };
 
-      try {
-        const response = await fetch(`content/posts/${postFile}`);
-        if (!response.ok) throw new Error('Không tìm thấy file bài viết');
-        const markdownText = await response.text();
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('post') || 'bai-1.md';
+    const article = articlesDB[postId] || articlesDB['bai-1.md'];
+    const randomImg = vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
 
-        // Tách tiêu đề từ dòng đầu tiên của Markdown (nếu có dạng # Tiêu đề) hoặc dùng tên file
-        let title = "Chi Tiết Hoạt Động Cộng Đồng";
-        let contentMarkdown = markdownText;
-
-        if (markdownText.startsWith('# ')) {
-          const lines = markdownText.split('\n');
-          title = lines[0].replace('# ', '').trim();
-          contentMarkdown = lines.slice(1).join('\n');
-        }
-
-        const htmlContent = marked.parse(contentMarkdown);
-
-        document.getElementById('articleContent').innerHTML = `
-          <div class="article-date"><i class="fa-regular fa-calendar"></i> Tháng 11 / 2026</div>
-          <h1 class="article-title">${title}</h1>
-          <img src="${randomImg}" alt="${title}" class="article-thumb">
-          <div class="article-body">
-            ${htmlContent}
-          </div>
-        `;
-      } catch (error) {
-        document.getElementById('articleContent').innerHTML = `
-          <div style="text-align: center; padding: 2rem;">
-            <h3>Không thể tải nội dung bài viết</h3>
-            <p style="color: var(--text-muted); margin-top: 0.5rem;">Vui lòng quay lại danh sách tin tức và chọn lại bài viết.</p>
-            <a href="tin-tuc.html" class="btn" style="margin-top: 1.5rem; display: inline-block;">Quay lại Tin Tức</a>
-          </div>
-        `;
-      }
-    }
-
-    loadArticle();
+    document.getElementById('articleContent').innerHTML = `
+      <div class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</div>
+      <h1 class="article-title">${article.title}</h1>
+      <img src="${randomImg}" alt="${article.title}" class="article-thumb">
+      <div class="article-body">
+        <p>${article.content}</p>
+      </div>
+    `;
 
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
