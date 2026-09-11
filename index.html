@@ -95,20 +95,16 @@
       letter-spacing: 0.5px; margin-bottom: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
     }
     .hero-title {
-      font-size: 3.2rem; font-weight: 900; line-height: 1.15; color: #ffffff; letter-spacing: -1px; margin-bottom: 1.5rem;
-      position: relative;
+      font-size: 3.2rem; font-weight: 900; line-height: 1.15; letter-spacing: -1px; margin-bottom: 1.5rem;
+      background: linear-gradient(100deg, #ffffff 35%, #0f172a 50%, #ffffff 65%);
+      background-size: 280% 100%;
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+      animation: heroTitleShine 4s ease-in-out infinite;
     }
-    /* Hiệu ứng lóe sáng lướt qua chữ Hero, lặp lại định kỳ, thuần CSS không cần thư viện ngoài */
-    .hero-title::after {
-      content: ''; position: absolute; top: 0; left: -75%; width: 45%; height: 100%;
-      background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.75) 50%, transparent 100%);
-      mix-blend-mode: overlay; pointer-events: none;
-      animation: heroTitleShine 6s ease-in-out infinite;
-    }
+    /* Hiệu ứng "nháy" đổi màu chữ lướt qua, cùng phong cách với hiệu ứng nút Quyên Góp, thuần CSS */
     @keyframes heroTitleShine {
-      0% { left: -75%; }
-      35% { left: 130%; }
-      100% { left: 130%; }
+      0% { background-position: 200% 0; }
+      100% { background-position: -80% 0; }
     }
     .hero-desc { font-size: 1.15rem; color: #e0f2fe; line-height: 1.7; margin-bottom: 2.2rem; max-width: 600px; }
     .hero-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2.2rem; }
