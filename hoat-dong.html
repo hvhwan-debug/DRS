@@ -102,7 +102,7 @@
     /* Container chính */
     .container { max-width: 1000px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
 
-    /* BLOCK SỰ KIỆN SẮP TỚI - THIẾT KẾ PHẲNG SANG TRỌNG & TỰ NHIÊN */
+    /* SỰ KIỆN SẮP TỚI - THIẾT KẾ CARD SANG TRỌNG & TINH TẾ */
     .upcoming-section-card {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -207,9 +207,11 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer */
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
-    .footer-bottom { max-width: 1240px; margin: 2rem auto 0; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.82rem; color: #94a3b8; }
+    /* Footer chuẩn 3 cột đồng bộ */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
 
     @media (max-width: 768px) {
       .mobile-menu-btn { display: block; }
@@ -364,9 +366,28 @@
     </div>
   </div>
 
+  <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
-    <p>&copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.</p>
-    <div class="footer-bottom">Doanh nghiệp xã hội hoạt động vì sự phát triển giáo dục cộng đồng theo MST: 0111291749</div>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4>Cam Kết Xã Hội</h4>
+        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
+    </div>
   </footer>
 
   <script>
