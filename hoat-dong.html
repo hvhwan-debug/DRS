@@ -103,18 +103,45 @@
     /* Container chính */
     .container { max-width: 1100px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
 
-    /* Hộp Sự Kiện Sắp Tới (Có thể bấm để thu gọn / mở rộng sang trọng) */
+    /* HỘP SỰ KIỆN SẮP TỚI - HIỆU ỨNG LINE SÁNG CHẠY QUANH VIỀN CỰC KỲ GÂY CHÚ Ý */
     .upcoming-section-card {
+      position: relative;
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      border: 1px solid #bae6fd; border-radius: 20px;
-      padding: 1.8rem 2.2rem; margin-bottom: 3.5rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.06);
-      transition: all 0.3s ease;
+      border-radius: 20px;
+      padding: 1.8rem 2.2rem;
+      margin-bottom: 3.5rem;
+      box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
+      z-index: 1;
+      overflow: hidden;
     }
+    /* Tạo lớp viền sáng chuyển động chạy quanh khung */
+    .upcoming-section-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      background: linear-gradient(90deg, #0284c7, #38bdf8, #60a5fa, #0284c7);
+      background-size: 300% 300%;
+      z-index: -1;
+      animation: borderGlowAnimation 4s ease infinite;
+    }
+    @keyframes borderGlowAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Che bên trong để tạo hiệu ứng viền sáng mỏng sắc nét */
+    .upcoming-inner-bg {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 18px;
+      padding: 0.2rem;
+    }
+
     .upcoming-header {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; cursor: pointer; user-select: none;
     }
     .upcoming-header h3 { font-size: 1.25rem; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 0.75rem; }
-    .upcoming-header span { font-size: 0.85rem; color: #0284c7; background: #ffffff; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 600; border: 1px solid #bae6fd; }
+    .upcoming-header span { font-size: 0.85rem; color: #0284c7; background: #ffffff; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 600; border: 1px solid #bae6fd; box-shadow: 0 2px 5px rgba(2,132,199,0.1); }
 
     .upcoming-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.8rem; display: none;
@@ -263,51 +290,53 @@
   <!-- Container chính -->
   <div class="container">
       
-    <!-- Hộp Sự Kiện Sắp Tới (Có thể bấm để xem / thu gọn cực kỳ sang trọng) -->
+    <!-- HỘP SỰ KIỆN SẮP TỚI CÓ LINE SÁNG CHẠY QUANH VIỀN GÂY CHÚ Ý -->
     <div class="upcoming-section-card">
-      <div class="upcoming-header" onclick="toggleUpcomingGrid()">
-        <h3><i class="fa-solid fa-calendar-star" style="color: #0284c7;"></i> Sự Kiện Sắp Tới & Kế Hoạch Gây Quỹ</h3>
-        <span id="upcomingToggleText">Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="margin-left: 5px; transition: transform 0.3s;"></i></span>
-      </div>
-
-      <div class="upcoming-grid" id="upcomingGrid">
-        
-        <div class="upcoming-card">
-          <div>
-            <span class="badge-tag">Sắp diễn ra</span>
-            <h4>Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h4>
-            <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
-          </div>
-          <div class="upcoming-actions">
-            <button class="btn btn-donate-glow" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
-            <a href="lien-he.html" class="btn-secondary">Đồng hành</a>
-          </div>
+      <div class="upcoming-inner-bg">
+        <div class="upcoming-header" onclick="toggleUpcomingGrid()">
+          <h3><i class="fa-solid fa-calendar-star" style="color: #0284c7;"></i> Sự Kiện Sắp Tới & Kế Hoạch Gây Quỹ</h3>
+          <span id="upcomingToggleText">Bấm để xem chi tiết <i class="fa-solid fa-chevron-down" id="upcomingIcon" style="margin-left: 5px; transition: transform 0.3s;"></i></span>
         </div>
 
-        <div class="upcoming-card">
-          <div>
-            <span class="badge-tag" style="background:#fef3c7; color:#d97706;">Đang nhận đăng ký</span>
-            <h4>Hội thảo phương pháp học tập số</h4>
-            <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
+        <div class="upcoming-grid" id="upcomingGrid">
+          
+          <div class="upcoming-card">
+            <div>
+              <span class="badge-tag">Sắp diễn ra</span>
+              <h4>Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h4>
+              <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
+            </div>
+            <div class="upcoming-actions">
+              <button class="btn btn-donate-glow" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+              <a href="lien-he.html" class="btn-secondary">Đồng hành</a>
+            </div>
           </div>
-          <div class="upcoming-actions">
-            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
-            <a href="lien-he.html" class="btn-secondary">Đăng ký tham gia</a>
-          </div>
-        </div>
 
-        <div class="upcoming-card">
-          <div>
-            <span class="badge-tag" style="background:#e0e7ff; color:#4338ca;">Kế hoạch quý IV</span>
-            <h4>Phát động Học Bổng Ươm Mầm</h4>
-            <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
+          <div class="upcoming-card">
+            <div>
+              <span class="badge-tag" style="background:#fef3c7; color:#d97706;">Đang nhận đăng ký</span>
+              <h4>Hội thảo phương pháp học tập số</h4>
+              <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
+            </div>
+            <div class="upcoming-actions">
+              <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+              <a href="lien-he.html" class="btn-secondary">Đăng ký tham gia</a>
+            </div>
           </div>
-          <div class="upcoming-actions">
-            <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
-            <a href="lien-he.html" class="btn-secondary">Tìm hiểu thêm</a>
-          </div>
-        </div>
 
+          <div class="upcoming-card">
+            <div>
+              <span class="badge-tag" style="background:#e0e7ff; color:#4338ca;">Kế hoạch quý IV</span>
+              <h4>Phát động Học Bổng Ươm Mầm</h4>
+              <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
+            </div>
+            <div class="upcoming-actions">
+              <button class="btn" onclick="openModal()"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
+              <a href="lien-he.html" class="btn-secondary">Tìm hiểu thêm</a>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 
