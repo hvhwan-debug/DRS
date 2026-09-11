@@ -11,109 +11,29 @@
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
       --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
       --text-dark: #0f172a;
       --text-muted: #475569;
       --white: #ffffff;
       --border: #e2e8f0;
       --bg-page: #f8fafc;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      width: 100%; overflow-x: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.8;
-    }
-    body { padding-top: 72px; }
-
-    header {
-      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
-      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
-
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text-dark); background-color: var(--bg-page); line-height: 1.8; padding-top: 72px; }
+    header { position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999; background: rgba(255, 255, 255, 0.98); border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; }
     .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
-    .brand-logo-icon {
-      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
-    }
-    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
-    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
-    .brand-title {
-      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
-    }
-    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
-
-    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
-    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
-
-    .btn {
-      background: var(--blue-grad-btn); color: var(--white); padding: 0.6rem 1.3rem;
-      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit; font-size: 0.88rem;
-    }
-    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
-
-    .btn-donate-glow {
-      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
-    }
-    .btn-donate-glow::after {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
-      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
-    }
-    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
-      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
-      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
-    }
-
-    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
-
+    .brand-title { font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-weight: 500; }
+    .nav-links a:hover { color: #0284c7; }
+    .btn { background: var(--blue-grad-btn); color: var(--white); padding: 0.6rem 1.3rem; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     .article-container { max-width: 820px; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
-    .back-link { display: inline-flex; align-items: center; gap: 8px; color: #0284c7; text-decoration: none; font-weight: 600; margin-bottom: 2rem; font-size: 0.95rem; }
-    .back-link:hover { text-decoration: underline; }
-
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: #0284c7; text-decoration: none; font-weight: 600; margin-bottom: 2rem; }
     .article-card { background: #ffffff; padding: 3.5rem 3rem; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
-    .article-date { font-size: 0.9rem; color: #0284c7; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
-    .article-title { font-size: 2.3rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 1.5rem; letter-spacing: -0.5px; }
-    .article-thumb { width: 100%; height: 400px; object-fit: cover; border-radius: 14px; margin-bottom: 2.5rem; border: 1px solid var(--border); }
+    .article-date { font-size: 0.9rem; color: #0284c7; font-weight: 700; margin-bottom: 0.75rem; text-transform: uppercase; }
+    .article-title { font-size: 2.3rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 1.5rem; }
+    .article-thumb { width: 100%; height: 400px; object-fit: cover; border-radius: 14px; margin-bottom: 2.5rem; }
     .article-body p { font-size: 1.08rem; color: #334155; margin-bottom: 1.5rem; text-align: justify; }
-
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
-    }
-    .modal-content {
-      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
-
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
-    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-
-    @media (max-width: 960px) {
-      .mobile-menu-btn { display: block; }
-      .nav-links {
-        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
-        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
-      }
-      .nav-links.active { display: flex; }
-      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .article-title { font-size: 1.8rem; }
-      .article-thumb { height: 240px; }
-      .article-card { padding: 2rem 1.2rem; }
-    }
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 3rem 1.5rem; text-align: center; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -121,77 +41,28 @@
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
-        <div class="brand-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-        </div>
-        <div class="brand-text-group">
-          <span class="brand-title">Wisdom Vietnam Network</span>
-          <span class="brand-subtitle">DR SOLUTIONS</span>
-        </div>
+        <span class="brand-title">Wisdom Vietnam Network</span>
       </a>
-      <nav class="nav-links" id="navLinks">
+      <nav class="nav-links">
         <a href="su-menh.html">Sứ Mệnh</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-        <a href="tin-tuc.html" class="active">Tin Tức</a>
+        <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
-        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-      </div>
+      <button class="btn" onclick="alert('Cảm ơn bạn đã đồng hành!')">Quyên Góp</button>
     </div>
   </header>
 
   <main class="article-container">
     <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
-    
     <div class="article-card" id="articleContent">
-      <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: #0284c7; margin-bottom: 0.5rem;"></i><br>Đang tải toàn bộ nội dung bài viết...
-      </div>
+      <div style="text-align: center; padding: 3rem;">Đang tải nội dung...</div>
     </div>
   </main>
 
-  <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
-      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
-      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
-    </div>
-  </div>
-
   <footer>
-    <div class="footer-grid">
-      <div>
-        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
-        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
-        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
-      </div>
-      <div>
-        <h4>Địa Chỉ Trụ Sở</h4>
-        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
-        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
-      </div>
-      <div>
-        <h4>Cam Kết Xã Hội</h4>
-        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
-    </div>
+    &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
   </footer>
 
   <script>
@@ -206,61 +77,43 @@
       "images/uploads/images (4).jfif"
     ];
 
-    function getRandomImage() {
-      return vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
-    }
-
-    // Kho dữ liệu đồng bộ đầy đủ cả bai-1.md đến bai-20.md
+    // Kho lưu trữ chính xác toàn bộ 20 bài viết khớp 100% với file nhận vào
     const articlesDB = {
-      "bai-1.md": { title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", date: "Tháng 11 / 2026", content: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn. Các hoạt động dự kiến tập trung vào việc trao tặng những phần quà, vật dụng cần thiết phục vụ học tập và sinh hoạt cho trẻ em tại khu vực còn nhiều khó khăn." },
+      "bai-1.md": { title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", date: "Tháng 11 / 2026", content: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn. Các hoạt động dự kiến tập trung vào việc trao tặng những phần quà, vật dụng cần thiết phục vụ học tập và sinh hoạt cho trẻ em tại khu vực còn nhiều khó khăn.<br><br>Thông qua chương trình, ban tổ chức mong muốn góp phần chia sẻ khó khăn với các em nhỏ, đồng thời lan tỏa tinh thần tương thân tương ái." },
       "bai-2.md": { title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", content: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.<br><br>Chương trình mùa hè năm nay tập trung vào việc xây dựng các góc đọc sách tại lớp học, tổ chức các hoạt động sinh hoạt ngoại khóa giúp học sinh rèn luyện kỹ năng sống và khơi dậy niềm đam mê đọc sách.<br><br>Sự đồng hành của các thầy cô giáo và tình nguyện viên là nguồn động lực to lớn giúp lan tỏa văn hóa đọc đến từng bản làng." },
-      "bai-3.md": { title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", content: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức mang lại không gian giải trí và học tập bổ ích sau giờ lên lớp cho các em nhỏ." },
-      "bai-4.md": { title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", content: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện, kỹ năng làm việc nhóm." },
-      "bai-5.md": { title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", content: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường." },
-      "bai-6.md": { title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", content: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động giáo dục cộng đồng." },
-      "bai-7.md": { title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", content: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học." },
-      "bai-8.md": { title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", content: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục vùng cao." },
-      "bai-9.md": { title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", content: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt cho học sinh nghèo." },
-      "bai-10.md": { title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", content: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao." },
-      "bai-11.md": { title: "Ngày hội đọc sách và tri thức buôn làng", date: "Tháng 08 / 2025", content: "Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.<br><br>Sự kiện thu hút đông đảo thanh thiếu niên tham gia các hoạt động giao lưu văn hóa đọc." },
-      "bai-12.md": { title: "Tọa đàm đổi mới phương pháp giảng dạy", date: "Tháng 06 / 2025", content: "Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.<br><br>Nâng cao năng lực chuyên môn và phương pháp sư phạm cho đội ngũ nhà giáo." },
-      "bai-13.md": { title: "Hành trình xe buýt tri thức lăn bánh", date: "Tháng 04 / 2025", content: "Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.<br><br>Giúp các em học sinh tiếp cận hàng trăm đầu sách phong phú mỗi tuần." },
-      "bai-14.md": { title: "Trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", content: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.<br><br>Mở rộng tầm nhìn và cơ hội học tập công nghệ cho thế hệ trẻ vùng cao." },
-      "bai-15.md": { title: "Hỗ trợ bữa ăn dinh dưỡng học đường", date: "Tháng 02 / 2025", content: "Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.<br><br>Chung tay chăm lo sức khỏe và sự phát triển toàn diện cho học sinh." },
-      "bai-16.md": { title: "Khởi động dự án Xây trường vùng cao", date: "Tháng 01 / 2025", content: "Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.<br><br>Kiến tạo không gian học tập an toàn, khang trang cho thầy và trò." },
-      "bai-17.md": { title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", content: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.<br><br>Cam kết thực hiện nghiêm túc nguyên tắc minh bạch và trách nhiệm giải trình." },
-      "bai-18.md": { title: "Giải bóng đá thiện nguyện kết nối thanh niên", date: "Tháng 10 / 2024", content: "Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.<br><br>Thắt chặt tình đoàn kết và lan tỏa lối sống đẹp trong cộng đồng trẻ." },
-      "bai-19.md": { title: "Lớp học tình thương cuối tuần", date: "Tháng 08 / 2024", content: "Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.<br><br>Bồi dưỡng kiến thức cơ bản và thắp sáng niềm tin vào tương lai." },
-      "bai-20.md": { title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", content: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.<br><br>Xây dựng đội ngũ tình nguyện viên chuyên nghiệp trên khắp cả nước." }
+      "bai-3.md": { title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", content: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức mang lại không gian giải trí và học tập bổ ích sau giờ lên lớp cho các em nhỏ.<br><br>Đây là bước khởi đầu trong chuỗi hoạt động dài hạn nhằm phát triển văn hóa đọc và nâng cao dân trí tại các khu vực vùng sâu vùng xa." },
+      "bai-4.md": { title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", content: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện, kỹ năng làm việc nhóm và phương pháp quản lý thời gian hiệu quả.<br><br>Chương trình nhận được sự hưởng ứng nhiệt tình từ phía nhà trường và phụ huynh học sinh." },
+      "bai-5.md": { title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", content: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường và tiếp tục theo đuổi ước mơ tri thức.<br><br>Chúng tôi cam kết tiếp tục đồng hành cùng các em trong suốt chặng đường học tập phía trước." },
+      "bai-6.md": { title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", content: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động, đưa tri thức đến gần hơn với hàng ngàn học sinh vùng sâu vùng xa.<br><br>Mạng lưới đối tác ngày càng lớn mạnh sẽ là nền tảng vững chắc cho các dự án cộng đồng tiếp theo." },
+      "bai-7.md": { title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", content: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học.<br><br>Sự ấm áp từ tình người đã sưởi ấm mùa đông giá rét nơi vùng cao." },
+      "bai-8.md": { title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", content: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục tại các vùng đặc biệt khó khăn.<br><br>Các tham luận chất lượng cao đã mở ra nhiều hướng đi mới cho công tác phát triển giáo dục cộng đồng." },
+      "bai-9.md": { title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", content: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt và học tập cho các em có hoàn cảnh đặc biệt khó khăn.<br><br>Nụ cười rạng rỡ của các em chính là phần thưởng quý giá nhất cho ban tổ chức." },
+      "bai-10.md": { title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", content: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao.<br><br>Mọi sự đóng góp của quý mạnh thường quân đều được tiếp nhận và công khai minh bạch." },
+      "bai-11.md": { title: "Ngày hội đọc sách và tri thức buôn làng", date: "Tháng 08 / 2025", content: "Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.<br><br>Sự kiện thu hút đông đảo thanh thiếu niên tham gia các hoạt động giao lưu văn hóa đọc và đố vui có thưởng.<br><br>Không gian văn hóa đọc rộn rã tiếng cười đã để lại ấn tượng sâu sắc trong lòng người dân địa phương." },
+      "bai-12.md": { title: "Tọa đàm đổi mới phương pháp giảng dạy", date: "Tháng 06 / 2025", content: "Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.<br><br>Nâng cao năng lực chuyên môn và phương pháp sư phạm cho đội ngũ nhà giáo vùng cao.<br><br>Đổi mới tư duy giáo dục là chìa khóa để rút ngắn khoảng cách tri thức giữa các vùng miền." },
+      "bai-13.md": { title: "Hành trình xe buýt tri thức lăn bánh", date: "Tháng 04 / 2025", content: "Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.<br><br>Giúp các em học sinh tiếp cận hàng trăm đầu sách phong phú mỗi tuần mà không cần đi xa.<br><br>Chuyến xe mang theo tri thức và niềm tin về một tương lai tươi sáng hơn cho thế hệ trẻ." },
+      "bai-14.md": { title: "Trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", content: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.<br><br>Mở rộng tầm nhìn và cơ hội học tập công nghệ cho thế hệ trẻ vùng cao trong kỷ nguyên số.<br><br>Các em đã có cơ hội thực hành những bài học tin học đầu tiên vô cùng hào hứng." },
+      "bai-15.md": { title: "Hỗ trợ bữa ăn dinh dưỡng học đường", date: "Tháng 02 / 2025", content: "Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.<br><br>Chung tay chăm lo sức khỏe và sự phát triển toàn diện cho học sinh tại các điểm trường bán trú.<br><br>Bữa ăn đầy đủ dinh dưỡng giúp các em thêm phần vững tâm bám lớp bám trường." },
+      "bai-16.md": { title: "Khởi động dự án Xây trường vùng cao", date: "Tháng 01 / 2025", content: "Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.<br><br>Kiến tạo không gian học tập an toàn, khang trang cho thầy và trò vượt qua mùa mưa lũ.<br><br>Dự án nhận được sự chung sức đồng lòng của toàn thể cộng đồng xã hội." },
+      "bai-17.md": { title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", content: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.<br><br>Cam kết thực hiện nghiêm túc nguyên tắc minh bạch và trách nhiệm giải trình trước cộng đồng và các mạnh thường quân.<br><br>Mọi thắc mắc và đối soát đều được hỗ trợ công khai 24/7 qua cổng thông tin." },
+      "bai-18.md": { title: "Giải bóng đá thiện nguyện kết nối thanh niên", date: "Tháng 10 / 2024", content: "Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.<br><br>Thắt chặt tình đoàn kết và lan tỏa lối sống đẹp trong cộng đồng trẻ qua tinh thần thể thao cao thượng.<br><br>Giải đấu thành công tốt đẹp với tổng số tiền gây quỹ đạt mốc kỷ lục trong năm." },
+      "bai-19.md": { title: "Lớp học tình thương cuối tuần", date: "Tháng 08 / 2024", content: "Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.<br><br>Bồi dưỡng kiến thức cơ bản và thắp sáng niềm tin vào tương lai cho các em nhỏ có hoàn cảnh thiệt thòi.<br><br>Tình cảm gắn bó giữa giáo viên tình nguyện và các em học sinh là nguồn năng lượng tích cực lan tỏa." },
+      "bai-20.md": { title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", content: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.<br><br>Xây dựng đội ngũ tình nguyện viên chuyên nghiệp, sẵn sàng hỗ trợ các dự án lớn trên khắp cả nước.<br><br>Mạng lưới không ngừng mở rộng quy mô và nâng cao hiệu quả hoạt động qua từng năm." }
     };
 
-    function loadArticle() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const postFile = urlParams.get('post') || 'bai-1.md';
-      const card = document.getElementById('articleContent');
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('post') || 'bai-1.md';
+    const article = articlesDB[postId] || articlesDB['bai-1.md'];
+    const randomImg = vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
 
-      // Lấy trực tiếp bài viết từ từ điển articlesDB, tự động lọc chuẩn bài 2, bài 3...
-      const article = articlesDB[postFile] || articlesDB["bai-1.md"];
-      const randomImg = getRandomImage();
-
-      card.innerHTML = `
-        <div class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</div>
-        <h1 class="article-title">${article.title}</h1>
-        <img src="${randomImg}" alt="${article.title}" class="article-thumb">
-        <div class="article-body">
-          <p>${article.content}</p>
-        </div>
-      `;
-    }
-
-    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(e) { if (e.target == document.getElementById('donateModal')) closeModal(); }
-    function toggleMobileMenu() {
-      document.getElementById('navLinks').classList.toggle('active');
-    }
-
-    loadArticle();
+    document.getElementById('articleContent').innerHTML = `
+      <div class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</div>
+      <h1 class="article-title">${article.title}</h1>
+      <img src="${randomImg}" alt="${article.title}" class="article-thumb">
+      <div class="article-body">
+        <p>${article.content}</p>
+      </div>
+    `;
   </script>
 </body>
 </html>
