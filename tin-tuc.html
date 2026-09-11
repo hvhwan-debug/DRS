@@ -209,9 +209,7 @@
   <!-- Container Danh Sách Bài Viết & Phân Trang -->
   <main class="container">
     <div class="news-grid" id="newsGrid">
-      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0284c7; margin-bottom: 0.5rem; display: block;"></i> Đang tải và sắp xếp bài viết thuần Việt...
-      </div>
+      <!-- Hiển thị tức thì siêu tốc -->
     </div>
     
     <div class="pagination" id="paginationContainer"></div>
@@ -254,7 +252,7 @@
   </footer>
 
   <script>
-    // Kho sưu tập 100% hình ảnh thực tế từ thư mục uploads của bạn
+    // Kho sưu tập 100% hình ảnh thực tế thuần Việt từ thư mục uploads của bạn
     const vietnameseImagePool = [
       "images/uploads/2-onl-16997056815001293662280.jpg",
       "images/uploads/48591585757_7be64177d0_o.jpg",
@@ -271,73 +269,105 @@
       return vietnameseImagePool[randomIndex];
     }
 
-    let allLoadedPosts = [];
-    let currentPage = 1;
-    const postsPerPage = 9;
-
-    async function fetchAllPosts() {
-      const repo = 'hvhwan-debug/DRS';
-      const apiURL = `https://api.github.com/repos/${repo}/contents/content/posts`;
-
-      let posts = [];
-
-      try {
-        const res = await fetch(apiURL);
-        if (res.ok) {
-          const files = await res.json();
-          const mdFiles = files.filter(f => f.name.endsWith('.md'));
-          
-          if (mdFiles.length > 0) {
-            for (const file of mdFiles) {
-              const fileRes = await fetch(file.download_url);
-              const text = await fileRes.text();
-              const parts = text.split('---');
-              let title = 'Bài viết mới';
-              let date = 'Tháng 01 / 2026';
-              let desc = '';
-              let thumbnail = '';
-              let tag = '';
-
-              if (parts.length >= 3) {
-                const yaml = parts[1];
-                const tMatch = yaml.match(/title:\s*"?(.*?)"?$/m);
-                const dMatch = yaml.match(/date:\s*"?(.*?)"?$/m);
-                const descMatch = yaml.match(/description:\s*"?(.*?)"?$/m);
-                const thumbMatch = yaml.match(/thumbnail:\s*"?(.*?)"?$/m);
-                const tagMatch = yaml.match(/tag:\s*"?(.*?)"?$/m);
-
-                if (tMatch) title = tMatch[1].replace(/["']/g, '');
-                if (dMatch) date = dMatch[1].replace(/["']/g, '');
-                if (descMatch) desc = descMatch[1].replace(/["']/g, '');
-                if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
-                if (tagMatch) tag = tagMatch[1].replace(/["']/g, '');
-              }
-
-              // 100% dùng ảnh thực tế từ kho upload nếu thumbnail trống hoặc chứa link ngoài
-              let finalThumb = (thumbnail && thumbnail.trim() !== "" && !thumbnail.includes('unsplash')) ? thumbnail : getRandomVietnameseImage();
-
-              let year = '2026';
-              let monthNum = 1;
-              if (date.includes('2025')) year = '2025';
-              else if (date.includes('2024')) year = '2024';
-              else if (date.includes('2026')) year = '2026';
-
-              const monthMatch = date.match(/Tháng\s*0?([0-9]+)/i);
-              if (monthMatch) monthNum = parseInt(monthMatch[1], 10);
-              let sortWeight = parseInt(year, 10) * 100 + monthNum;
-
-              posts.push({ filename: file.name, title, date, description: desc, thumbnail: finalThumb, tag, sortWeight });
-            }
-          }
-        }
-      } catch (e) {
-        console.log("Lỗi tải API GitHub");
+    // Danh sách bài viết chuẩn với tag, mô tả, tự động sắp xếp và gắn ảnh thực tế thuần Việt
+    const allLoadedPosts = [
+      {
+        filename: "bai-1.md",
+        title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang",
+        date: "Tháng 11 / 2026",
+        description: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức với mục tiêu hỗ trợ học tập.",
+        tag: "Sự kiện sắp tới",
+        sortWeight: 202611,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-2.md",
+        title: "Chương trình Gieo Mầm Tri Thức Mùa Hè",
+        date: "Tháng 07 / 2026",
+        description: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.",
+        tag: "",
+        sortWeight: 202607,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-3.md",
+        title: "Khánh thành Tủ Sách Vùng Cao Đợt 1",
+        date: "Tháng 05 / 2026",
+        description: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.",
+        tag: "",
+        sortWeight: 202605,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-4.md",
+        title: "Chuỗi lớp học kỹ năng mềm và tư duy",
+        date: "Tháng 03 / 2026",
+        description: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.",
+        tag: "",
+        sortWeight: 202603,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-5.md",
+        title: "Hành trình Tiếp Sức Đến Trường",
+        date: "Tháng 02 / 2026",
+        description: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.",
+        tag: "",
+        sortWeight: 202602,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-6.md",
+        title: "Ký kết hợp tác mở rộng mạng lưới giáo dục",
+        date: "Tháng 01 / 2026",
+        description: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.",
+        tag: "",
+        sortWeight: 202601,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-7.md",
+        title: "Tổng kết chiến dịch Tết Chia Sẻ",
+        date: "Tháng 12 / 2025",
+        description: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.",
+        tag: "",
+        sortWeight: 202512,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-8.md",
+        title: "Hội thảo giáo dục cộng đồng toàn quốc",
+        date: "Tháng 11 / 2025",
+        description: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.",
+        tag: "",
+        sortWeight: 202511,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-9.md",
+        title: "Trao học bổng Thắp Sáng Ước Mơ",
+        date: "Tháng 10 / 2025",
+        description: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.",
+        tag: "",
+        sortWeight: 202510,
+        thumbnail: getRandomVietnameseImage()
+      },
+      {
+        filename: "bai-10.md",
+        title: "Phát động chiến dịch mùa đông ấm cho em",
+        date: "Tháng 09 / 2025",
+        description: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.",
+        tag: "",
+        sortWeight: 202509,
+        thumbnail: getRandomVietnameseImage()
       }
+    ];
 
-      posts.sort((a, b) => b.sortWeight - a.sortWeight);
-      allLoadedPosts = posts;
-      renderPage(1);
-    }
+    let currentPage = 1;
+    const postsPerPage = 9; // Đúng chuẩn 9 bài mỗi trang (3 bài x 3 dòng)
+
+    // Sắp xếp tự động bài đăng gần nhất lên đầu tiên
+    allLoadedPosts.sort((a, b) => b.sortWeight - a.sortWeight);
 
     function renderPage(page) {
       currentPage = page;
@@ -361,7 +391,7 @@
               <div>
                 <span class="news-date"><i class="fa-regular fa-calendar"></i> ${post.date}</span>
                 <h3>${post.title}</h3>
-                <p>${post.description || 'Đọc chi tiết các hoạt động và báo cáo cộng đồng mới nhất từ Wisdom Vietnam Network...'}</p>
+                <p>${post.description}</p>
               </div>
               <a href="${link}" class="news-link">Đọc bài viết chi tiết <i class="fa-solid fa-arrow-right"></i></a>
             </div>
@@ -370,6 +400,7 @@
       });
       grid.innerHTML = html;
 
+      // Xây dựng phân trang
       const totalPages = Math.ceil(allLoadedPosts.length / postsPerPage);
       if (totalPages <= 1) {
         paginationContainer.innerHTML = '';
@@ -406,7 +437,8 @@
       }
     }
 
-    fetchAllPosts();
+    // Khởi chạy hiển thị trang 1 tức thì
+    renderPage(1);
   </script>
 </body>
 </html>
