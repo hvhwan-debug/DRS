@@ -252,10 +252,15 @@
       display: inline-flex; align-items: center; gap: 4px; z-index: 2;
     }
 
-    .timeline-img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--border); }
+    .timeline-img { width: 100%; height: 130px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--border); }
     .timeline-year { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 800; font-size: 0.88rem; margin-bottom: 0.75rem; }
     .timeline-content h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; line-height: 1.35; }
-    .timeline-content p { font-size: 0.94rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
+    /* Chỉ hiển thị tối đa 2 dòng mô tả ngắn gọn — đúng tinh thần "dấu ấn nổi bật"
+       cần lướt nhanh nắm được cột mốc, khác với bài viết đầy đủ bên trang Tin Tức */
+    .timeline-content p {
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
     .btn-detail { display: inline-flex; align-items: center; gap: 0.5rem; color: #0284c7; font-weight: 700; text-decoration: none; font-size: 0.9rem; }
     .btn-detail:hover { color: #0369a1; text-decoration: underline; }
 
@@ -666,6 +671,18 @@
       return TIMELINE_TAGS[3];
     }
 
+    // Rút gọn mô tả thành một câu ngắn gọn (khoảng 100 ký tự), giữ đúng tinh thần
+    // "dấu ấn nổi bật" — người xem lướt nhanh nắm được cột mốc, thay vì đọc trọn
+    // một đoạn văn dài như bên trang Tin Tức.
+    function milestoneExcerpt(text, maxLen = 100) {
+      if (!text) return "";
+      const clean = text.trim();
+      if (clean.length <= maxLen) return clean;
+      const cut = clean.slice(0, maxLen);
+      const lastSpace = cut.lastIndexOf(" ");
+      return (lastSpace > 40 ? cut.slice(0, lastSpace) : cut).trim() + "…";
+    }
+
     function renderTimelineItem(post, index) {
       const tag = classifyPostTag(post);
       const upcoming = isUpcomingPost(post.date);
@@ -678,7 +695,7 @@
             <span class="timeline-year"><i class="fa-regular fa-calendar"></i> ${post.date || "Chưa rõ thời gian"}</span>
             <span class="timeline-tag" style="background:${tag.bg}; color:${tag.color};">${tag.label}</span>
             <h3>${post.title}</h3>
-            <p>${post.excerpt}</p>
+            <p>${milestoneExcerpt(post.excerpt)}</p>
             <a href="chi-tiet.html?slug=${encodeURIComponent(post.slug)}" class="btn-detail">Xem chi tiết cột mốc <i class="fa-solid fa-arrow-right"></i></a>
           </div>
         </div>
