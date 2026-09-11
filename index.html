@@ -51,7 +51,7 @@
     .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
 
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
-    .nav-links a:hover { color: #0284c7; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
@@ -60,7 +60,6 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp */
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
@@ -179,7 +178,7 @@
     .pillar-content h3 { font-size: 1.25rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; }
     .pillar-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; }
 
-    /* Thư Viện Hình Ảnh Hoạt Động (Tự động quét từ thư mục uploads hoặc dùng ảnh thuần Việt) */
+    /* Thư Viện Hình Ảnh Hoạt Động (Tự động lấy ảnh thực tế từ thư mục uploads) */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .gallery-item { position: relative; border-radius: 16px; overflow: hidden; height: 250px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
@@ -339,7 +338,7 @@
     </div>
   </section>
 
-  <!-- 4 Trụ Cột Thuần Việt -->
+  <!-- 4 Trụ Cột Thuần Việt (Tự động lấy ảnh thực tế từ kho uploads) -->
   <main class="section-wrap" id="tru-cot">
     <div class="section-header">
       <h2>4 Trụ Cột Hành Động Phi Lợi Nhuận</h2>
@@ -350,7 +349,7 @@
       
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" alt="Hỗ trợ tại chỗ vùng cao" class="vn-img-item">
+          <img src="images/uploads/Ban-Sao-Luong-Giao-V.jpg" alt="Hỗ trợ tại chỗ vùng cao" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Hỗ trợ tại chỗ</h3>
@@ -360,7 +359,7 @@
 
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80" alt="Lan tỏa tiếp cận sách" class="vn-img-item">
+          <img src="images/uploads/48591585757_7be64177d0_o.jpg" alt="Lan tỏa tiếp cận sách" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Lan tỏa tiếp cận</h3>
@@ -370,7 +369,7 @@
 
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80" alt="Nâng cao nhận thức trẻ em" class="vn-img-item">
+          <img src="images/uploads/2-onl-16997056815001293662280.jpg" alt="Nâng cao nhận thức trẻ em" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Nâng cao nhận thức</h3>
@@ -380,7 +379,7 @@
 
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80" alt="Đồng hành bền vững vùng cao" class="vn-img-item">
+          <img src="images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png" alt="Đồng hành bền vững vùng cao" class="vn-img-item">
         </div>
         <div class="pillar-content">
           <h3>Đồng hành bền vững</h3>
@@ -391,7 +390,7 @@
     </div>
   </main>
 
-  <!-- Thư Viện Hình Ảnh Hoạt Động (Tự động lấy ảnh thuần Việt ngẫu nhiên) -->
+  <!-- Thư Viện Hình Ảnh Hoạt Động (Tự động lấy ảnh thực tế từ kho uploads) -->
   <section style="background: #ffffff; padding: 5rem 1.5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
     <div style="max-width: 1240px; margin: 0 auto;">
       <div class="section-header">
@@ -401,15 +400,15 @@
 
       <div class="gallery-grid" id="dynamicGalleryGrid">
         <div class="gallery-item">
-          <img src="banner-drs.png.png" alt="Ươm mầm tri thức" class="vn-img-item">
+          <img src="images/uploads/images (1).jfif" alt="Ươm mầm tri thức" class="vn-img-item">
           <div class="gallery-overlay">Chung tay vì thế hệ tương lai</div>
         </div>
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80" alt="Niềm vui học tập của học sinh" class="vn-img-item">
+          <img src="images/uploads/images (2).jfif" alt="Niềm vui học tập của học sinh" class="vn-img-item">
           <div class="gallery-overlay">Nụ cười và sự tự tin trong từng trang sách mới</div>
         </div>
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80" alt="Lớp học cộng đồng vùng cao" class="vn-img-item">
+          <img src="images/uploads/images (3).jfif" alt="Lớp học cộng đồng vùng cao" class="vn-img-item">
           <div class="gallery-overlay">Lớp học kỹ năng cuối tuần không áp lực điểm số</div>
         </div>
       </div>
@@ -475,23 +474,23 @@
   </footer>
 
   <script>
-    // Kho chứa các hình ảnh thuần Việt chất lượng cao (Học sinh vùng cao, thầy cô, lớp học Việt Nam)
+    // Kho chứa các hình ảnh thực tế từ thư mục uploads của bạn
     const vietnameseImagePool = [
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80"
+      "images/uploads/2-onl-16997056815001293662280.jpg",
+      "images/uploads/48591585757_7be64177d0_o.jpg",
+      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
+      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
+      "images/uploads/images (1).jfif",
+      "images/uploads/images (2).jfif",
+      "images/uploads/images (3).jfif",
+      "images/uploads/images (4).jfif"
     ];
 
-    // Tự động quét và thay thế ngẫu nhiên các ảnh thuần Việt khi tải trang
+    // Tự động xoay vòng ngẫu nhiên các ảnh thực tế khi tải trang
     window.addEventListener('DOMContentLoaded', () => {
       const allVnImages = document.querySelectorAll('.vn-img-item');
       allVnImages.forEach(img => {
         const randomIndex = Math.floor(Math.random() * vietnameseImagePool.length);
-        // Ưu tiên giữ lại ảnh độc quyền nếu có, ngược lại hệ thống bốc ngẫu nhiên ảnh chuẩn Việt
         if(!img.src.includes('banner-drs')) {
           img.src = vietnameseImagePool[randomIndex];
         }
