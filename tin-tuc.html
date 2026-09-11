@@ -116,7 +116,6 @@
     .news-link { color: #0284c7; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.92rem; }
     .news-link:hover { color: #0369a1; text-decoration: underline; }
 
-    /* Tag Sự kiện sắp tới trên thẻ bài viết nếu có */
     .card-tag {
       position: absolute; top: 12px; right: 12px; background: rgba(2, 132, 199, 0.9); backdrop-filter: blur(4px);
       color: #fff; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; z-index: 5; text-transform: uppercase;
@@ -145,10 +144,10 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer chuẩn 3 cột */
+    /* Footer 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
-    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
 
     @media (max-width: 960px) {
@@ -211,7 +210,7 @@
   <main class="container">
     <div class="news-grid" id="newsGrid">
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0284c7; margin-bottom: 0.5rem; display: block;"></i> Đang tải và sắp xếp bài viết mới nhất...
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; color: #0284c7; margin-bottom: 0.5rem; display: block;"></i> Đang tải và sắp xếp bài viết thuần Việt...
       </div>
     </div>
     
@@ -255,15 +254,16 @@
   </footer>
 
   <script>
-    // Kho sưu tập hình ảnh 100% thuần Việt chất lượng cao
+    // Kho sưu tập 100% hình ảnh thực tế từ thư mục uploads của bạn
     const vietnameseImagePool = [
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80"
+      "images/uploads/2-onl-16997056815001293662280.jpg",
+      "images/uploads/48591585757_7be64177d0_o.jpg",
+      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
+      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
+      "images/uploads/images (1).jfif",
+      "images/uploads/images (2).jfif",
+      "images/uploads/images (3).jfif",
+      "images/uploads/images (4).jfif"
     ];
 
     function getRandomVietnameseImage() {
@@ -313,9 +313,9 @@
                 if (tagMatch) tag = tagMatch[1].replace(/["']/g, '');
               }
 
-              let finalThumb = (thumbnail && thumbnail.trim() !== "") ? thumbnail : getRandomVietnameseImage();
+              // 100% dùng ảnh thực tế từ kho upload nếu thumbnail trống hoặc chứa link ngoài
+              let finalThumb = (thumbnail && thumbnail.trim() !== "" && !thumbnail.includes('unsplash')) ? thumbnail : getRandomVietnameseImage();
 
-              // Tính toán trọng số sắp xếp thời gian (Năm * 100 + Tháng)
               let year = '2026';
               let monthNum = 1;
               if (date.includes('2025')) year = '2025';
@@ -334,9 +334,7 @@
         console.log("Lỗi tải API GitHub");
       }
 
-      // Sắp xếp tự động: Bài đăng gần nhất (tháng/năm mới nhất) lên đầu tiên
       posts.sort((a, b) => b.sortWeight - a.sortWeight);
-
       allLoadedPosts = posts;
       renderPage(1);
     }
@@ -372,7 +370,6 @@
       });
       grid.innerHTML = html;
 
-      // Xây dựng phân trang chuẩn
       const totalPages = Math.ceil(allLoadedPosts.length / postsPerPage);
       if (totalPages <= 1) {
         paginationContainer.innerHTML = '';
