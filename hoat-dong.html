@@ -564,6 +564,18 @@
       return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
     }
 
+    // ==== ẢNH NGƯỜI VIỆT NAM NGẪU NHIÊN TỪ INTERNET (Unsplash Source) ====
+    // LƯU Ý: source.unsplash.com là dịch vụ đã ngừng phát triển (deprecated) từ 2021.
+    // Unsplash xác nhận các use case đang chạy vẫn tiếp tục hoạt động, nhưng không đảm bảo
+    // uptime lâu dài. Vì trang không có server riêng để giấu API key chính thức, đây là cách
+    // duy nhất lấy ảnh ngẫu nhiên theo từ khóa mà không cần đăng ký khóa API. Nếu ảnh lỗi,
+    // thẻ sẽ tự động rơi về ảnh thật trong kho images/uploads/ (xem onerror khi render).
+    const VN_PHOTO_KEYWORDS = "vietnamese,vietnam,people,portrait";
+    function getRandomVietnamPhoto() {
+      const seed = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      return `https://source.unsplash.com/600x400/?${VN_PHOTO_KEYWORDS}&sig=${seed}`;
+    }
+
     // Phân tích Front Matter YAML đơn giản ở đầu file markdown
     function parseFrontMatter(raw) {
       const result = { title: "", date: "", image: "", excerpt: "", body: raw, valid: false };
@@ -632,7 +644,7 @@
         <div class="timeline-item">
           <div class="timeline-dot" style="--dot-color: ${tag.dot};"><i class="fa-solid ${tag.icon}"></i></div>
           <div class="timeline-content">
-            <img src="${post.image}" alt="${post.title}" class="timeline-img" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+            <img src="${post.image}" alt="${post.title}" class="timeline-img" loading="lazy" onerror="this.onerror=null; this.src=getRandomUploadedImage();">
             <span class="timeline-year"><i class="fa-regular fa-calendar"></i> ${post.date || "Chưa rõ thời gian"}</span>
             <span class="timeline-tag" style="background:${tag.bg}; color:${tag.color};">${tag.label}</span>
             <h3>${post.title}</h3>
@@ -669,7 +681,7 @@
               date: fm.date || "",
               sortWeight: dateInfo.sortWeight,
               year: dateInfo.year,
-              image: getRandomUploadedImage(),
+              image: getRandomVietnamPhoto(),
               excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
             };
           } catch (e) {
