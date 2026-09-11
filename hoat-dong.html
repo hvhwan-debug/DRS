@@ -148,7 +148,7 @@
       border-radius: 999px; font-weight: 700; font-size: 0.72rem; text-transform: uppercase;
     }
     .countdown-chip {
-      font-size: 0.72rem; font-weight: 800; color: #b45309; background: #fef3c7;
+      font-size: 0.72rem; font-weight: 800; color: #0369a1; background: #e0f2fe;
       padding: 0.25rem 0.7rem; border-radius: 999px; white-space: nowrap;
     }
     .upcoming-card h4 { font-size: 1.02rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; line-height: 1.35; }
@@ -164,10 +164,10 @@
       background: #e2e8f0; transform: translateX(-50%); border-radius: 4px; z-index: 1;
     }
 
-    /* Thanh đường kẻ sáng chạy theo cuộn trang — dải màu rực rỡ theo 4 chuyên mục */
+    /* Thanh đường kẻ sáng chạy theo cuộn trang — dải màu trong cùng họ xanh thương hiệu */
     .timeline-progress-line {
       position: absolute; top: 0; left: 50%; width: 4px; height: 0%;
-      background: linear-gradient(to bottom, #0284c7, #f59e0b, #6366f1, #22c55e);
+      background: linear-gradient(to bottom, #0284c7, #0ea5e9, #1e3a8a, #0d9488);
       transform: translateX(-50%); border-radius: 4px; z-index: 2;
       transition: height 0.1s ease-out;
     }
@@ -198,7 +198,7 @@
 
     /* Badge chuyên mục nhỏ trên mỗi thẻ mốc thời gian, tạo thêm điểm nhấn màu sắc */
     .timeline-tag {
-      display: inline-flex; align-items: center; gap: 0.4rem; background: #fef3c7; color: #b45309;
+      display: inline-flex; align-items: center; gap: 0.4rem; background: #e0f2fe; color: #0369a1;
       padding: 0.28rem 0.8rem; border-radius: 999px; font-weight: 700; font-size: 0.72rem;
       text-transform: uppercase; letter-spacing: 0.3px; margin-left: 0.6rem; vertical-align: middle;
     }
@@ -355,12 +355,12 @@
       <div class="upcoming-grid" id="upcomingGrid">
 
         <div class="upcoming-card">
-          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);">
+          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
             <i class="fa-solid fa-mitten"></i>
           </div>
           <div class="upcoming-card-body">
             <div class="upcoming-meta">
-              <span class="badge-tag" style="background:#ffedd5; color:#c2410c;">Sắp diễn ra</span>
+              <span class="badge-tag" style="background:#e0f2fe; color:#0369a1;">Sắp diễn ra</span>
               <span class="countdown-chip" data-event-date="2026-11-01">Đang tính...</span>
             </div>
             <h4>Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h4>
@@ -373,12 +373,12 @@
         </div>
 
         <div class="upcoming-card">
-          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);">
+          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);">
             <i class="fa-solid fa-laptop-code"></i>
           </div>
           <div class="upcoming-card-body">
             <div class="upcoming-meta">
-              <span class="badge-tag" style="background:#e0e7ff; color:#4338ca;">Đang nhận đăng ký</span>
+              <span class="badge-tag" style="background:#dbeafe; color:#1e40af;">Đang nhận đăng ký</span>
               <span class="countdown-chip" data-event-date="2026-10-20">Đang tính...</span>
             </div>
             <h4>Hội thảo phương pháp học tập số</h4>
@@ -391,12 +391,12 @@
         </div>
 
         <div class="upcoming-card">
-          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
+          <div class="upcoming-card-top" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
             <i class="fa-solid fa-award"></i>
           </div>
           <div class="upcoming-card-body">
             <div class="upcoming-meta">
-              <span class="badge-tag" style="background:#dcfce7; color:#15803d;">Kế hoạch quý IV</span>
+              <span class="badge-tag" style="background:#ccfbf1; color:#0f766e;">Kế hoạch quý IV</span>
               <span class="countdown-chip" data-event-date="2026-12-01">Đang tính...</span>
             </div>
             <h4>Phát động Học Bổng Ươm Mầm</h4>
@@ -617,13 +617,13 @@
       return { sortWeight: -Infinity, year: null };
     }
 
-    // Vài nhãn chuyên mục xoay vòng để mỗi mốc thời gian có một điểm nhấn màu sắc,
-    // vì phần lớn bài viết hiện chưa khai báo category trong front matter.
+    // 4 sắc thái trong CÙNG một họ màu xanh thương hiệu (sky → cyan → navy → teal),
+    // để timeline vẫn có điểm nhấn màu sắc nhưng luôn hài hòa với bộ nhận diện chung.
     const TIMELINE_TAGS = [
       { label: "Tủ sách & học liệu", bg: "#e0f2fe", color: "#0369a1", dot: "#0284c7", icon: "fa-book-open" },
-      { label: "Thiện nguyện", bg: "#fef3c7", color: "#b45309", dot: "#f59e0b", icon: "fa-heart" },
-      { label: "Hội thảo & tập huấn", bg: "#e0e7ff", color: "#4338ca", dot: "#6366f1", icon: "fa-graduation-cap" },
-      { label: "Đồng hành cộng đồng", bg: "#f0fdf4", color: "#166534", dot: "#22c55e", icon: "fa-people-group" }
+      { label: "Thiện nguyện", bg: "#cffafe", color: "#0e7490", dot: "#0ea5e9", icon: "fa-heart" },
+      { label: "Hội thảo & tập huấn", bg: "#dbeafe", color: "#1e40af", dot: "#1e3a8a", icon: "fa-graduation-cap" },
+      { label: "Đồng hành cộng đồng", bg: "#ccfbf1", color: "#0f766e", dot: "#0d9488", icon: "fa-people-group" }
     ];
 
     function renderTimelineItem(post, index) {
