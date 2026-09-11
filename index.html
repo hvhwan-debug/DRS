@@ -125,7 +125,7 @@
 
     /* Thước đo tác động (Impact Numbers) */
     .metrics-strip { background: #ffffff; border-bottom: 1px solid var(--border); padding: 2.5rem 1.5rem; }
-    .metrics-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; text-align: center; }
+    .metrics-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 2rem; text-align: center; }
     .metric-number { font-size: 2.4rem; font-weight: 900; color: #0284c7; line-height: 1.1; margin-bottom: 0.3rem; }
     .metric-label { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
 
@@ -136,7 +136,7 @@
     .section-header p { color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
 
     /* 4 Trụ Cột thuần Việt */
-    .pillars-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.8rem; }
+    .pillars-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1.8rem; }
     .pillar-visual-card {
       background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid var(--border);
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column;
@@ -150,7 +150,7 @@
     .pillar-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; }
 
     /* Thư Viện Hình Ảnh Hoạt Động (Tự động lấy ảnh thực tế từ thư mục uploads) */
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .gallery-item { position: relative; border-radius: 16px; overflow: hidden; height: 250px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
     .gallery-item:hover img { transform: scale(1.08); }
@@ -177,7 +177,7 @@
 
     /* Footer 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
 
