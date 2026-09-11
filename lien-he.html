@@ -123,7 +123,7 @@
     .form-control:focus { outline: none; border-color: #0284c7; background: var(--white); box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1); }
     textarea.form-control { resize: vertical; min-height: 150px; }
 
-    /* Thông báo kết quả gửi form */
+    /* Thông báo kết quả gửi form (hiển thị ngay trong khung form) */
     .form-alert {
       display: none; align-items: flex-start; gap: 0.8rem; padding: 1rem 1.2rem; border-radius: 12px;
       font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.5rem;
@@ -133,6 +133,26 @@
     .form-alert.form-alert-success i { color: #16a34a; }
     .form-alert.form-alert-error { display: flex; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
     .form-alert.form-alert-error i { color: #dc2626; }
+
+    /* Thông báo dạng "toast" nổi cố định góc màn hình — luôn hiện rõ dù người dùng
+       đang cuộn ở bất kỳ vị trí nào trên trang, tránh trường hợp gửi xong mà tưởng
+       không có phản hồi gì vì thông báo trong form bị khuất khỏi màn hình. */
+    .toast-notify {
+      position: fixed; top: 90px; right: 20px; z-index: 30000; max-width: 380px; width: calc(100% - 40px);
+      background: #ffffff; border-radius: 14px; padding: 1rem 1.2rem; display: flex; align-items: flex-start; gap: 0.8rem;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18); border-left: 5px solid #16a34a;
+      transform: translateX(120%); opacity: 0; transition: transform 0.35s ease, opacity 0.35s ease;
+      font-size: 0.92rem; line-height: 1.5;
+    }
+    .toast-notify.show { transform: translateX(0); opacity: 1; }
+    .toast-notify.toast-error { border-left-color: #dc2626; }
+    .toast-notify i.toast-icon { font-size: 1.3rem; margin-top: 0.1rem; flex-shrink: 0; color: #16a34a; }
+    .toast-notify.toast-error i.toast-icon { color: #dc2626; }
+    .toast-notify .toast-close { margin-left: auto; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1rem; padding: 0.1rem; flex-shrink: 0; }
+    .toast-notify .toast-close:hover { color: #475569; }
+    @media (max-width: 480px) {
+      .toast-notify { left: 20px; right: 20px; width: auto; top: 80px; }
+    }
 
     /* Cột thông tin trụ sở */
     .info-list { display: flex; flex-direction: column; gap: 1.8rem; }
@@ -221,6 +241,13 @@
     <p class="hero-desc">Mọi thắc mắc, đóng góp ý kiến hoặc mong muốn đồng hành cùng các chương trình giáo dục cộng đồng xin vui lòng gửi về cho chúng tôi.</p>
   </section>
 
+  <!-- Toast thông báo nổi, luôn hiện dù đang cuộn ở đâu trên trang -->
+  <div id="toastNotify" class="toast-notify" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check toast-icon"></i>
+    <span id="toastMessage"></span>
+    <button type="button" class="toast-close" onclick="hideToast()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
   <!-- Main Grid Content -->
   <main class="container">
     <div class="contact-grid">
@@ -236,23 +263,29 @@
             <input type="hidden" name="_subject" value="Tin nhắn liên hệ mới từ Website Wisdom Vietnam Network">
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_template" value="table">
+            <!-- Email tự động phản hồi lại NGƯỜI GỬI bằng tiếng Việt ngay sau khi họ gửi form,
+                 để họ yên tâm là lời nhắn đã đến nơi kể cả khi chưa kịp xem thông báo trên trang -->
+            <input type="hidden" name="_autoresponse" value="Cảm ơn bạn đã gửi lời nhắn đến Wisdom Vietnam Network - DR Solutions. Chúng tôi đã nhận được nội dung của bạn và sẽ phản hồi qua email này trong thời gian sớm nhất. Trân trọng cảm ơn sự quan tâm và đồng hành của bạn!">
             <!-- Bẫy chống spam vô hình: người dùng thật không thấy, bot rà quét tự động sẽ điền vào
                  và bị formsubmit.co âm thầm loại bỏ lượt gửi đó, không cần captcha gây khó chịu -->
             <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
             <div class="form-group">
               <label>Họ và tên của bạn</label>
-              <input type="text" name="hoten" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+              <!-- Đặt tên trường bằng tiếng Việt có dấu để email thông báo gửi về hộp thư
+                   admin hiển thị đúng nhãn tiếng Việt (Họ và tên / Địa chỉ Email / Nội dung tin nhắn)
+                   thay vì các tên biến kỹ thuật (hoten, email, noidung) khó đọc. -->
+              <input type="text" name="Họ và tên" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
             </div>
 
             <div class="form-group">
               <label>Địa chỉ Email</label>
-              <input type="email" name="email" class="form-control" placeholder="Ví dụ: email@domain.com" required>
+              <input type="email" name="Địa chỉ Email" class="form-control" placeholder="Ví dụ: email@domain.com" required>
             </div>
 
             <div class="form-group">
               <label>Nội dung lời nhắn</label>
-              <textarea name="noidung" class="form-control" placeholder="Nhập nội dung bạn muốn chia sẻ hoặc đề xuất hợp tác..." required></textarea>
+              <textarea name="Nội dung tin nhắn" class="form-control" placeholder="Nhập nội dung bạn muốn chia sẻ hoặc đề xuất hợp tác..." required></textarea>
             </div>
 
             <button type="submit" id="submitBtn" class="btn" style="width: 100%; padding: 1rem; font-size: 1rem; margin-top: 0.5rem;">Gửi Lời Nhắn Đến Ban Quản Trị</button>
@@ -359,8 +392,29 @@
       }
     }
 
+    // ==== Toast thông báo nổi ====
+    let toastTimer = null;
+    function showToast(message, isError) {
+      const toast = document.getElementById('toastNotify');
+      const msgEl = document.getElementById('toastMessage');
+      const icon = toast.querySelector('.toast-icon');
+      msgEl.textContent = message;
+      toast.classList.toggle('toast-error', !!isError);
+      icon.className = 'fa-solid toast-icon ' + (isError ? 'fa-circle-exclamation' : 'fa-circle-check');
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(hideToast, 6000);
+    }
+    function hideToast() {
+      document.getElementById('toastNotify').classList.remove('show');
+      clearTimeout(toastTimer);
+    }
+
     // Gửi form liên hệ bằng AJAX để hiện thông báo ngay trên trang,
     // thay vì chuyển hướng/tải lại trang không rõ ràng như trước.
+    // Thông báo hiện ĐỒNG THỜI ở 2 nơi: khung form (formAlert) và toast nổi cố định
+    // góc màn hình (toastNotify) — để người dùng chắc chắn nhìn thấy kết quả dù
+    // đang cuộn ở vị trí nào, tránh cảm giác "gửi xong không biết có đi hay không".
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
     const formAlert = document.getElementById('formAlert');
@@ -382,19 +436,28 @@
         headers: { 'Accept': 'application/json' },
         body: formData
       })
-        .then(res => res.json())
-        .then(data => {
-          if (data && (data.success === 'true' || data.success === true)) {
-            formAlert.className = 'form-alert form-alert-success';
-            formAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn! Lời nhắn đã được gửi thành công đến Ban Quản Trị. Chúng tôi sẽ phản hồi qua email trong thời gian sớm nhất.</span>';
-            contactForm.reset();
-          } else {
-            throw new Error('Gửi không thành công');
-          }
+        .then(async res => {
+          // Không chỉ dựa vào đúng 1 điều kiện data.success — coi là THÀNH CÔNG
+          // nếu HTTP status trả về là OK (2xx), kể cả khi cấu trúc JSON trả về
+          // có đôi chút khác biệt tuỳ phiên bản dịch vụ formsubmit.co.
+          let data = null;
+          try { data = await res.json(); } catch (e) { /* phản hồi không phải JSON, vẫn xét theo res.ok */ }
+          const isSuccess = res.ok && (!data || data.success === 'true' || data.success === true || data.success === undefined);
+          if (!isSuccess) throw new Error('Gửi không thành công');
+          return data;
+        })
+        .then(() => {
+          const successMsg = 'Cảm ơn bạn! Lời nhắn đã được gửi thành công đến Ban Quản Trị. Chúng tôi sẽ phản hồi qua email trong thời gian sớm nhất.';
+          formAlert.className = 'form-alert form-alert-success';
+          formAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>' + successMsg + '</span>';
+          showToast(successMsg, false);
+          contactForm.reset();
         })
         .catch(() => {
+          const errorMsg = 'Rất tiếc, đã có lỗi xảy ra khi gửi lời nhắn. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.';
           formAlert.className = 'form-alert form-alert-error';
-          formAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra khi gửi lời nhắn. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
+          formAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>' + errorMsg + '</span>';
+          showToast(errorMsg, true);
         })
         .finally(() => {
           submitBtn.disabled = false;
