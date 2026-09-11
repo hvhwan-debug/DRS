@@ -232,15 +232,14 @@
   </footer>
 
   <script>
-    // Kho sưu tập hình ảnh thuần Việt chất lượng cao (Học sinh vùng cao, thầy cô, lớp học Việt Nam)
+    // Kho sưu tập hình ảnh 100% thuần Việt (Học sinh vùng cao, lớp học tại Việt Nam)
     const vietnameseImagePool = [
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80"
     ];
 
     function getRandomVietnameseImage() {
@@ -293,7 +292,7 @@
                 if (thumbMatch) thumbnail = thumbMatch[1].replace(/["']/g, '');
               }
 
-              // Nếu bài viết không có thumbnail hoặc thumbnail trống, tự động bốc ngẫu nhiên 1 ảnh thuần Việt
+              // Nếu bài viết không có thumbnail hoặc thumbnail trống hoặc chứa ảnh cũ, tự động bốc ngẫu nhiên ảnh thuần Việt
               let finalThumb = (thumbnail && thumbnail.trim() !== "") ? thumbnail : getRandomVietnameseImage();
 
               posts.push({ filename: file.name, title, date, description: desc, thumbnail: finalThumb });
