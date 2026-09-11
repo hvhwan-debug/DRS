@@ -28,7 +28,6 @@
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -84,7 +83,6 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Banner */
     .hero-wrapper {
       width: 100%; background: var(--blue-grad-hero); padding: 4rem 1.5rem 4.5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
@@ -99,16 +97,13 @@
     .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
     .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
 
-    /* Dải thống kê động ngay dưới Hero (tính từ dữ liệu bài viết thật) */
     .metrics-strip { background: #ffffff; border-bottom: 1px solid var(--border); padding: 2rem 1.5rem; position: relative; z-index: 10; }
     .metrics-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 1.5rem; text-align: center; }
     .metric-number { font-size: 2.1rem; font-weight: 900; color: #0284c7; line-height: 1.1; margin-bottom: 0.3rem; }
     .metric-label { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; }
 
-    /* Container chính */
     .container { max-width: 1000px; margin: 3rem auto 5rem auto; padding: 0 1rem; }
 
-    /* SỰ KIỆN SẮP TỚI — thiết kế "spotlight" nổi bật, luôn hiển thị sẵn */
     .upcoming-spotlight {
       position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 3.5rem;
       background: var(--blue-grad-hero); padding: 2.4rem 1.8rem 2rem;
@@ -141,30 +136,38 @@
       height: 62px; display: flex; align-items: center; justify-content: center; font-size: 1.55rem; color: #fff;
     }
     .upcoming-card-body { padding: 1.4rem 1.3rem 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
-    .upcoming-meta { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 0.9rem; gap: 0.5rem; }
+    .upcoming-meta { display: flex; flex-direction: column; align-items: center; margin-bottom: 0.9rem; gap: 0.5rem; text-align: center; }
 
     .badge-tag {
       display: inline-block; background: #e0f2fe; color: #0284c7; padding: 0.25rem 0.75rem;
       border-radius: 999px; font-weight: 700; font-size: 0.72rem; text-transform: uppercase;
     }
+    /* Ô đếm ngược: chữ số căn giữa hoàn toàn trong khung, dùng font số đều (tabular-nums)
+       để các chữ số không bị nhảy lệch độ rộng khi đếm chạy từng giây */
     .countdown-chip {
-      font-size: 0.72rem; font-weight: 800; color: #0369a1; background: #e0f2fe;
-      padding: 0.25rem 0.7rem; border-radius: 999px; white-space: nowrap;
+      font-size: 0.74rem; font-weight: 800; color: #0369a1; background: #e0f2fe;
+      padding: 0.32rem 0.9rem; border-radius: 999px; white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      font-variant-numeric: tabular-nums; min-width: 150px; text-align: center;
     }
     .upcoming-card h4 { font-size: 1.02rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; line-height: 1.35; }
     .upcoming-card p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.1rem; line-height: 1.55; flex-grow: 1; }
     .upcoming-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    /* Căn chữ vào chính giữa mỗi nút hành động (Gây Quỹ Ngay / Đồng hành / Đăng ký / Tìm hiểu thêm),
+       và cho 2 nút chia đều chiều rộng bằng nhau thay vì co theo độ dài chữ */
+    .upcoming-actions .btn,
+    .upcoming-actions .btn-secondary {
+      flex: 1 1 130px; text-align: center;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+    }
 
-    /* TIMELINE HIỆU ỨNG ĐƯỜNG KẺ CHẠY THEO CUỘN TRANG & CHẤM TRÒN TỎA SÓNG */
     .timeline-container { position: relative; padding: 2rem 0; }
     
-    /* Đường kẻ nền màu xám nhạt */
     .timeline-container::before {
       content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
       background: #e2e8f0; transform: translateX(-50%); border-radius: 4px; z-index: 1;
     }
 
-    /* Thanh đường kẻ sáng chạy theo cuộn trang — dải màu trong cùng họ xanh thương hiệu */
     .timeline-progress-line {
       position: absolute; top: 0; left: 50%; width: 4px; height: 0%;
       background: linear-gradient(to bottom, #0284c7, #0ea5e9, #1e3a8a, #0d9488);
@@ -183,7 +186,6 @@
     .timeline-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; position: relative; width: 100%; z-index: 3; }
     .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
 
-    /* Hiệu ứng xuất hiện dần khi cuộn tới (thêm class .in-view bằng JS/IntersectionObserver) */
     .timeline-item {
       opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease;
     }
@@ -192,18 +194,15 @@
     .timeline-item:nth-child(even) .timeline-content { transform: translateX(10px); }
     .timeline-item.in-view .timeline-content { transform: translateX(0); }
 
-    /* Trạng thái tải / rỗng / lỗi cho timeline */
     .timeline-status { text-align: center; padding: 3rem 1.5rem; color: var(--text-muted); position: relative; z-index: 10; }
     .timeline-status i { font-size: 1.6rem; color: #0284c7; display: block; margin-bottom: 0.8rem; }
 
-    /* Badge chuyên mục nhỏ trên mỗi thẻ mốc thời gian, tạo thêm điểm nhấn màu sắc */
     .timeline-tag {
       display: inline-flex; align-items: center; gap: 0.4rem; background: #e0f2fe; color: #0369a1;
       padding: 0.28rem 0.8rem; border-radius: 999px; font-weight: 700; font-size: 0.72rem;
       text-transform: uppercase; letter-spacing: 0.3px; margin-left: 0.6rem; vertical-align: middle;
     }
 
-    /* Chấm tròn màu theo chuyên mục, có icon bên trong, với hiệu ứng tỏa sóng (Pulse Waves) */
     .timeline-dot {
       position: absolute; left: 50%; transform: translateX(-50%); width: 34px; height: 34px;
       background: var(--dot-color, #0284c7); border: 4px solid #fff; border-radius: 50%;
@@ -245,7 +244,6 @@
     .history-section { display: none; margin-top: 3rem; animation: fadeIn 0.4s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Modal Quyên góp VietQR */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
@@ -256,7 +254,6 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* Footer chuẩn 3 cột đồng bộ */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
@@ -277,19 +274,15 @@
       .timeline-dot { left: 24px; transform: translateX(-50%); }
       .timeline-item, .timeline-item:nth-child(odd) { flex-direction: column; align-items: flex-end; }
       .timeline-content { width: calc(100% - 60px); }
-      /* Bỏ hiệu ứng trượt ngang trái/phải khi cuộn tới trên mobile (chỉ giữ mờ dần + trượt lên),
-         vì ở màn hình hẹp các thẻ đã xếp dọc thành 1 cột, trượt ngang gây lệch/giật hình không cần thiết */
       .timeline-item:nth-child(odd) .timeline-content,
       .timeline-item:nth-child(even) .timeline-content { transform: translateX(0); }
       .upcoming-spotlight { padding: 1.8rem 1.2rem 1.6rem; }
-      /* Đảm bảo lưới thẻ sự kiện không tràn ngang trên điện thoại màn hình hẹp (~320-360px) */
       .upcoming-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định Đồng Bộ -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
@@ -320,14 +313,12 @@
     </div>
   </header>
 
-  <!-- Hero Banner -->
   <section class="hero-wrapper">
     <div class="hero-badge">BẢN TIN CỘNG ĐỒNG</div>
     <h1 class="hero-title">Hành Trình & Mốc Hoạt Động</h1>
     <p class="hero-desc">Theo dòng sự kiện và các cột mốc triển khai dự án phi lợi nhuận nổi bật qua các năm.</p>
   </section>
 
-  <!-- Dải thống kê động: tính trực tiếp từ số bài viết thật đã tải -->
   <section class="metrics-strip">
     <div class="metrics-grid">
       <div>
@@ -349,10 +340,8 @@
     </div>
   </section>
 
-  <!-- Container chính -->
   <div class="container">
       
-    <!-- SỰ KIỆN SẮP TỚI — Spotlight nổi bật, luôn hiển thị sẵn -->
     <div class="upcoming-spotlight">
       <div class="upcoming-spotlight-header">
         <div class="upcoming-spotlight-badge"><i class="fa-solid fa-bolt"></i> Đang triển khai & sắp tới</div>
@@ -419,9 +408,7 @@
       </div>
     </div>
 
-    <!-- Timeline Mốc Hoạt Động có đường kẻ chạy theo cuộn trang & chấm tròn tỏa sóng -->
     <div class="timeline-container" id="timelineContainer">
-      <!-- Thanh đường kẻ sáng chạy theo cuộn trang -->
       <div class="timeline-progress-line" id="timelineProgress"></div>
       
       <div class="timeline-root-node">
@@ -435,14 +422,12 @@
         </div>
       </div>
 
-      <!-- Nút bấm xem thêm hoạt động các năm trước -->
       <div class="history-toggle-box" id="historyToggleBox" style="display: none;">
         <button class="btn-history" onclick="toggleHistory()">
           <i class="fa-solid fa-clock-rotate-left"></i> Xem thêm hoạt động các năm trước <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
         </button>
       </div>
 
-      <!-- Khu vực lịch sử các năm trước -->
       <div id="historySection" class="history-section">
         <div class="timeline-root-node" style="margin-top: 2rem;">
           <div class="timeline-root-badge" style="background: linear-gradient(135deg, #475569 0%, #0f172a 100%);"><i class="fa-solid fa-box-archive"></i> Lịch Sử Các Năm Trước</div>
@@ -453,7 +438,6 @@
     </div>
   </div>
 
-  <!-- Modal Quyên góp VietQR -->
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
@@ -489,13 +473,10 @@
   </footer>
 
   <script>
-    // ==== CẤU HÌNH NGUỒN DỮ LIỆU THẬT ====
     const GITHUB_OWNER = "hvhwan-debug";
     const GITHUB_REPO = "DRS";
     const GITHUB_BRANCH = "main";
 
-    // Danh sách dự phòng (dùng khi không gọi được GitHub API). Bài viết mới thêm vào
-    // content/posts sẽ tự động được lấy qua API, không bắt buộc phải cập nhật mảng này.
     const FALLBACK_SLUGS = [
       "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuân",
       "buc-tranh-20-11-2025-ha-giang",
@@ -572,19 +553,12 @@
       return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
     }
 
-    // ==== ẢNH NGƯỜI VIỆT NAM NGẪU NHIÊN TỪ INTERNET (Unsplash Source) ====
-    // LƯU Ý: source.unsplash.com là dịch vụ đã ngừng phát triển (deprecated) từ 2021.
-    // Unsplash xác nhận các use case đang chạy vẫn tiếp tục hoạt động, nhưng không đảm bảo
-    // uptime lâu dài. Vì trang không có server riêng để giấu API key chính thức, đây là cách
-    // duy nhất lấy ảnh ngẫu nhiên theo từ khóa mà không cần đăng ký khóa API. Nếu ảnh lỗi,
-    // thẻ sẽ tự động rơi về ảnh thật trong kho images/uploads/ (xem onerror khi render).
     const VN_PHOTO_KEYWORDS = "vietnamese,vietnam,people,portrait";
     function getRandomVietnamPhoto() {
       const seed = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
       return `https://source.unsplash.com/600x400/?${VN_PHOTO_KEYWORDS}&sig=${seed}`;
     }
 
-    // Phân tích Front Matter YAML đơn giản ở đầu file markdown
     function parseFrontMatter(raw) {
       const result = { title: "", date: "", image: "", excerpt: "", body: raw, valid: false };
       const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
@@ -622,8 +596,6 @@
       return para.trim().slice(0, 150);
     }
 
-    // Chuyển "Tháng MM / YYYY" (hoặc ngày ISO) thành số có thể so sánh để sắp đúng
-    // thứ tự thời gian thực tế, và tách được năm để nhóm mốc sự kiện theo năm.
     function parseDateInfo(dateStr) {
       if (!dateStr) return { sortWeight: -Infinity, year: null };
       const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
@@ -637,8 +609,6 @@
       return { sortWeight: -Infinity, year: null };
     }
 
-    // 4 sắc thái trong CÙNG một họ màu xanh thương hiệu (sky → cyan → navy → teal),
-    // để timeline vẫn có điểm nhấn màu sắc nhưng luôn hài hòa với bộ nhận diện chung.
     const TIMELINE_TAGS = [
       { label: "Tủ sách & học liệu", bg: "#e0f2fe", color: "#0369a1", dot: "#0284c7", icon: "fa-book-open" },
       { label: "Thiện nguyện", bg: "#cffafe", color: "#0e7490", dot: "#0ea5e9", icon: "fa-heart" },
@@ -646,14 +616,12 @@
       { label: "Đồng hành cộng đồng", bg: "#ccfbf1", color: "#0f766e", dot: "#0d9488", icon: "fa-people-group" }
     ];
 
-    // Gán nhãn chuyên mục dựa trên TỪ KHÓA THẬT trong tiêu đề/mô tả bài viết (không phải
-    // gán ngẫu nhiên theo vị trí), để nhãn màu luôn phản ánh đúng nội dung thực tế của bài viết.
     function classifyPostTag(post) {
       const text = `${post.title} ${post.excerpt}`.toLowerCase();
-      if (/tủ sách|sách|học liệu|thư viện|đọc sách/.test(text)) return TIMELINE_TAGS[0]; // Tủ sách & học liệu
-      if (/hội thảo|tập huấn|đào tạo|workshop|giảng dạy|kỹ năng giáo dục/.test(text)) return TIMELINE_TAGS[2]; // Hội thảo & tập huấn
-      if (/thiện nguyện|tình nguyện|ủng hộ|quyên góp|trao tặng|gây quỹ|áo ấm|học bổng/.test(text)) return TIMELINE_TAGS[1]; // Thiện nguyện
-      return TIMELINE_TAGS[3]; // Đồng hành cộng đồng (mặc định cho các bài còn lại)
+      if (/tủ sách|sách|học liệu|thư viện|đọc sách/.test(text)) return TIMELINE_TAGS[0];
+      if (/hội thảo|tập huấn|đào tạo|workshop|giảng dạy|kỹ năng giáo dục/.test(text)) return TIMELINE_TAGS[2];
+      if (/thiện nguyện|tình nguyện|ủng hộ|quyên góp|trao tặng|gây quỹ|áo ấm|học bổng/.test(text)) return TIMELINE_TAGS[1];
+      return TIMELINE_TAGS[3];
     }
 
     function renderTimelineItem(post, index) {
@@ -753,8 +721,6 @@
       }
     }
 
-    // Hiệu ứng đếm số chạy dần cho dải thống kê — chỉ dùng requestAnimationFrame thuần,
-    // không thêm thư viện ngoài, nhẹ và phù hợp tiêu chí tốc độ của Google Ad Grants.
     function animateMetricCounter(el, target, duration) {
       if (!el) return;
       duration = duration || 900;
@@ -770,7 +736,6 @@
       requestAnimationFrame(step);
     }
 
-    // Hiệu ứng xuất hiện dần cho từng mốc thời gian khi cuộn tới, giúp trang sinh động hơn.
     function initScrollReveal() {
       const items = document.querySelectorAll('.timeline-item');
       if (!('IntersectionObserver' in window)) {
@@ -802,8 +767,9 @@
       }
     }
 
-    // Tính số ngày + giờ còn lại cho mỗi sự kiện sắp tới, hiển thị dạng "Còn X ngày Y giờ",
-    // tự cập nhật mỗi phút để tạo cảm giác đang chạy sống động thay vì con số đứng yên.
+    // Đếm ngược THẬT theo từng giây (ngày : giờ : phút : giây) cho mỗi sự kiện sắp tới,
+    // cập nhật mỗi 1 giây để tạo cảm giác đồng hồ đang chạy sống động, số hiển thị luôn
+    // căn giữa trong khung nhờ CSS (tabular-nums + flex center).
     function updateUpcomingCountdowns() {
       const now = new Date();
       document.querySelectorAll('.countdown-chip[data-event-date]').forEach(chip => {
@@ -819,13 +785,18 @@
           return;
         }
 
-        const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const days = Math.floor(totalHours / 24);
-        const hours = totalHours % 24;
+        let totalSeconds = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+        const hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
 
-        let label;
-        if (days > 0) label = `Còn ${days} ngày ${hours} giờ`;
-        else label = `Còn ${hours} giờ`;
+        const pad = n => String(n).padStart(2, '0');
+        const label = days > 0
+          ? `${days} ngày ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+          : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 
         chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> ${label}`;
       });
@@ -833,10 +804,9 @@
 
     function initUpcomingCountdowns() {
       updateUpcomingCountdowns();
-      setInterval(updateUpcomingCountdowns, 60 * 1000);
+      setInterval(updateUpcomingCountdowns, 1000);
     }
 
-    // Hiệu ứng đường kẻ dọc chạy theo cuộn trang
     window.addEventListener('scroll', () => {
       const container = document.getElementById('timelineContainer');
       const progressBar = document.getElementById('timelineProgress');
