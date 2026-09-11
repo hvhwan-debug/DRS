@@ -145,6 +145,20 @@
     }
     .news-loading i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
 
+    /* Phân trang */
+    .pagination {
+      display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap;
+    }
+    .pagination button {
+      min-width: 40px; height: 40px; padding: 0 0.8rem; border-radius: 8px; border: 1px solid var(--border);
+      background: #ffffff; color: var(--text-dark); font-weight: 600; font-size: 0.92rem; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+    }
+    .pagination button:hover:not(:disabled):not(.active) { border-color: #0284c7; color: #0284c7; }
+    .pagination button.active { background: var(--blue-grad-btn); color: #fff; border-color: transparent; }
+    .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pagination .dots { color: var(--text-muted); padding: 0 0.3rem; }
+
     /* Khung Pháp lý (dùng lại nếu cần) */
     .legal-card {
       background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7; padding: 2rem; margin: 1rem 0; border-radius: 12px;
@@ -230,6 +244,8 @@
         Đang tải tin tức, vui lòng chờ trong giây lát...
       </div>
     </div>
+
+    <div class="pagination" id="pagination"></div>
   </main>
 
   <!-- Modal Quyên góp VietQR -->
@@ -269,9 +285,17 @@
   </footer>
 
   <script>
-    // Danh sách slug các bài viết (tên file .md trong content/posts, không kèm đuôi .md)
-    // Khi có bài viết mới, chỉ cần thêm slug tương ứng vào mảng này.
-    const POST_SLUGS = [
+    // ==== CẤU HÌNH ====
+    // Repo GitHub chứa website (dùng để tự động liệt kê toàn bộ bài viết trong content/posts)
+    const GITHUB_OWNER = "hvhwan-debug";
+    const GITHUB_REPO = "DRS";
+    const GITHUB_BRANCH = "main";
+    const POSTS_PER_PAGE = 9;
+
+    // Danh sách slug dự phòng (dùng khi không gọi được GitHub API, ví dụ do vượt giới hạn request).
+    // Bài viết mới thêm vào content/posts sẽ tự động được lấy qua API bên dưới,
+    // không bắt buộc phải cập nhật mảng này, nhưng nên cập nhật để đảm bảo vẫn hiển thị đủ khi API lỗi.
+    const FALLBACK_SLUGS = [
       "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuan",
       "buc-tranh-20-11-2025-ha-giang",
       "day-hoc-tinh-nguyen-dien-bien-22-04-2026",
@@ -295,6 +319,25 @@
     ];
 
     const FALLBACK_IMG = "images/uploads/2-onl-16997056815001293662280.jpg";
+
+    // Lấy toàn bộ tên file .md trong content/posts qua GitHub API.
+    // Nhờ vậy có bài viết mới là tự hiện lên trang, không cần sửa code.
+    async function fetchAllPostSlugs() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/content/posts?ref=${GITHUB_BRANCH}`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error("GitHub API lỗi");
+        const files = await res.json();
+        const slugs = files
+          .filter(f => f.type === "file" && f.name.toLowerCase().endsWith(".md"))
+          .map(f => f.name.replace(/\.md$/i, ""));
+        if (slugs.length === 0) throw new Error("Không có bài viết nào");
+        return slugs;
+      } catch (e) {
+        console.warn("Không lấy được danh sách bài viết từ GitHub, dùng danh sách dự phòng.", e);
+        return FALLBACK_SLUGS;
+      }
+    }
 
     // Phân tích Front Matter dạng YAML đơn giản ở đầu file markdown:
     // ---
@@ -339,10 +382,13 @@
     }
 
     let allPosts = [];
+    let filteredPosts = [];
+    let currentPage = 1;
 
     async function loadPosts() {
       const grid = document.getElementById("newsGrid");
-      const results = await Promise.all(POST_SLUGS.map(async slug => {
+      const postSlugs = await fetchAllPostSlugs();
+      const results = await Promise.all(postSlugs.map(async slug => {
         try {
           const res = await fetch(`content/posts/${slug}.md`);
           if (!res.ok) throw new Error("not found");
@@ -371,17 +417,30 @@
       return d.toLocaleDateString("vi-VN");
     }
 
-    function renderPosts(posts) {
+    function renderPosts(posts, page = 1) {
       const grid = document.getElementById("newsGrid");
       const countEl = document.getElementById("newsCount");
+      const paginationEl = document.getElementById("pagination");
+
+      filteredPosts = posts;
+      currentPage = page;
+
       if (posts.length === 0) {
         grid.innerHTML = `<div class="news-empty"><i class="fa-solid fa-circle-info" style="font-size:1.4rem; display:block; margin-bottom:0.6rem;"></i>Không tìm thấy bài viết phù hợp.</div>`;
         countEl.textContent = "0 bài viết";
+        paginationEl.innerHTML = "";
         return;
       }
-      countEl.textContent = `${posts.length} bài viết`;
-      grid.innerHTML = posts.map(p => `
-        <a class="news-card" href="bai-viet.html?slug=${encodeURIComponent(p.slug)}">
+
+      const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const startIdx = (currentPage - 1) * POSTS_PER_PAGE;
+      const pagePosts = posts.slice(startIdx, startIdx + POSTS_PER_PAGE);
+
+      countEl.textContent = `${posts.length} bài viết — Trang ${currentPage}/${totalPages}`;
+
+      grid.innerHTML = pagePosts.map(p => `
+        <a class="news-card" href="chi-tiet.html?slug=${encodeURIComponent(p.slug)}">
           <div class="news-img-box">
             <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
             ${p.date ? `<span class="news-date-badge">${formatDate(p.date)}</span>` : ""}
@@ -393,6 +452,33 @@
           </div>
         </a>
       `).join("");
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      const paginationEl = document.getElementById("pagination");
+      if (totalPages <= 1) { paginationEl.innerHTML = ""; return; }
+
+      let html = "";
+      html += `<button ${currentPage === 1 ? "disabled" : ""} onclick="goToPage(${currentPage - 1})"><i class="fa-solid fa-chevron-left"></i></button>`;
+
+      const pagesToShow = new Set([1, totalPages, currentPage, currentPage - 1, currentPage + 1]);
+      let lastShown = 0;
+      for (let i = 1; i <= totalPages; i++) {
+        if (!pagesToShow.has(i)) continue;
+        if (i - lastShown > 1) html += `<span class="dots">…</span>`;
+        html += `<button class="${i === currentPage ? "active" : ""}" onclick="goToPage(${i})">${i}</button>`;
+        lastShown = i;
+      }
+
+      html += `<button ${currentPage === totalPages ? "disabled" : ""} onclick="goToPage(${currentPage + 1})"><i class="fa-solid fa-chevron-right"></i></button>`;
+      paginationEl.innerHTML = html;
+    }
+
+    function goToPage(page) {
+      renderPosts(filteredPosts, page);
+      document.querySelector(".news-toolbar").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     document.getElementById("newsSearchInput").addEventListener("input", (e) => {
@@ -400,7 +486,7 @@
       const filtered = allPosts.filter(p =>
         p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q)
       );
-      renderPosts(filtered);
+      renderPosts(filtered, 1);
     });
 
     loadPosts();
