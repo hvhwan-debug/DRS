@@ -1,12 +1,15 @@
 <form action="https://formsubmit.co/hotro@wvn.vn" method="POST">
-  <!-- Các ô nhập liệu (input, textarea) của bạn -->
+  <!-- Các ô nhập liệu -->
   <input type="text" name="hoten" placeholder="Họ và tên" required>
   <input type="email" name="email" placeholder="Email của bạn" required>
   <textarea name="noidung" placeholder="Lời nhắn..." required></textarea>
   
-  <!-- Cấu hình tùy chọn sau khi gửi xong (chuyển hướng về trang cảm ơn hoặc hiển thị thông báo) -->
+  <!-- Cấu hình tùy chọn -->
   <input type="hidden" name="_subject" value="Tin nhắn liên hệ mới từ Website Wisdom Vietnam Network">
   <input type="hidden" name="_captcha" value="false">
+  
+  <!-- Thêm dòng này để sau khi gửi xong tự động quay về trang chủ hoặc trang liên hệ -->
+  <input type="hidden" name="_next" value="https://wvn.vn/lien-he.html">
   
   <button type="submit" class="btn">Gửi Lời Nhắn</button>
 </form>
