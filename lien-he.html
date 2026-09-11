@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liên Hệ - Wisdom Vietnam Network - DR SOLUTIONS</title>
+  <title>Chi Tiết Bài Viết - Wisdom Vietnam Network - DR SOLUTIONS</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -76,37 +76,21 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 4rem 1.5rem 4.5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
-    }
-    .hero-wrapper::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
-    }
-    .hero-badge {
-      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.8px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25); text-transform: uppercase;
-    }
-    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
-    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; }
-
-    .container { max-width: 900px; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
+    /* Chi tiết bài viết */
+    .article-container { max-width: 820px; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: #0284c7; text-decoration: none; font-weight: 600; margin-bottom: 2rem; transition: color 0.2s; }
+    .back-link:hover { color: #0369a1; }
     
-    .contact-card {
-      background: #ffffff; padding: 3rem; border-radius: 20px; border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    .article-card { 
+      background: #ffffff; padding: 3.5rem 3rem; border-radius: 20px; 
+      border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); 
     }
-    .contact-card h2 { font-size: 1.8rem; color: #0f172a; margin-bottom: 1.5rem; font-weight: 800; }
-    
-    .form-group { margin-bottom: 1.5rem; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark); }
-    .form-control {
-      width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: 8px;
-      font-size: 1rem; font-family: inherit; color: var(--text-dark); background: #f8fafc; transition: border-color 0.2s;
-    }
-    .form-control:focus { outline: none; border-color: #0284c7; background: #ffffff; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
-    textarea.form-control { resize: vertical; min-height: 140px; }
+    .article-date { font-size: 0.9rem; color: #0284c7; font-weight: 700; margin-bottom: 0.75rem; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .article-title { font-size: 2.3rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 1.5rem; }
+    .article-thumb { width: 100%; height: 400px; object-fit: cover; border-radius: 14px; margin-bottom: 2.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .article-body p { font-size: 1.08rem; color: #334155; margin-bottom: 1.5rem; text-align: justify; line-height: 1.8; }
 
+    /* Modal Quyên góp VietQR */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
@@ -117,6 +101,7 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
+    /* Footer 3 Cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
@@ -131,7 +116,9 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-title { font-size: 2.2rem; }
+      .article-card { padding: 2rem 1.5rem; }
+      .article-title { font-size: 1.8rem; }
+      .article-thumb { height: 260px; }
     }
   </style>
 </head>
@@ -156,7 +143,7 @@
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html" class="active">Liên Hệ</a>
+        <a href="lien-he.html">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
@@ -167,37 +154,10 @@
     </div>
   </header>
 
-  <section class="hero-wrapper">
-    <div class="hero-badge">KẾT NỐI VỚI CHÚNG TÔI</div>
-    <h1 class="hero-title">Liên Hệ & Góp Ý</h1>
-    <p class="hero-desc">Mọi thắc mắc, đóng góp hoặc ý kiến đồng hành xin vui lòng gửi về cho Wisdom Vietnam Network.</p>
-  </section>
-
-  <main class="container">
-    <div class="contact-card">
-      <h2>Gửi Lời Nhắn Trực Tuyến</h2>
-      <form action="https://formsubmit.co/hotro@wvn.vn" method="POST">
-        <input type="hidden" name="_subject" value="Tin nhắn liên hệ mới từ Website Wisdom Vietnam Network">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_next" value="https://wvn.vn/lien-he.html">
-
-        <div class="form-group">
-          <label>Họ và tên</label>
-          <input type="text" name="hoten" class="form-control" placeholder="Nhập họ và tên của bạn" required>
-        </div>
-
-        <div class="form-group">
-          <label>Địa chỉ Email</label>
-          <input type="email" name="email" class="form-control" placeholder="Nhập địa chỉ email của bạn" required>
-        </div>
-
-        <div class="form-group">
-          <label>Nội dung lời nhắn</label>
-          <textarea name="noidung" class="form-control" placeholder="Nhập nội dung bạn muốn chia sẻ..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn" style="width: 100%; padding: 0.9rem; font-size: 1rem;">Gửi Lời Nhắn Đến Ban Quản Trị</button>
-      </form>
+  <main class="article-container">
+    <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
+    <div class="article-card" id="articleContent">
+      <div style="text-align: center; padding: 3rem; color: var(--text-muted);">Đang tải nội dung bài viết...</div>
     </div>
   </main>
 
@@ -236,6 +196,54 @@
   </footer>
 
   <script>
+    const vietnameseImagePool = [
+      "images/uploads/2-onl-16997056815001293662280.jpg",
+      "images/uploads/48591585757_7be64177d0_o.jpg",
+      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
+      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
+      "images/uploads/images (1).jfif",
+      "images/uploads/images (2).jfif",
+      "images/uploads/images (3).jfif",
+      "images/uploads/images (4).jfif"
+    ];
+
+    const articlesDB = {
+      "bai-1.md": { title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", date: "Tháng 11 / 2026", content: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn." },
+      "bai-2.md": { title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", date: "Tháng 07 / 2026", content: "Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.<br><br>Chương trình mùa hè năm nay tập trung vào việc xây dựng các góc đọc sách tại lớp học, tổ chức các hoạt động sinh hoạt ngoại khóa giúp học sinh rèn luyện kỹ năng sống và khơi dậy niềm đam mê đọc sách." },
+      "bai-3.md": { title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", content: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức mang lại không gian giải trí và học tập bổ ích sau giờ lên lớp cho các em nhỏ." },
+      "bai-4.md": { title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", content: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện, kỹ năng làm việc nhóm." },
+      "bai-5.md": { title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", content: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường." },
+      "bai-6.md": { title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", content: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động giáo dục cộng đồng." },
+      "bai-7.md": { title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", content: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học." },
+      "bai-8.md": { title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", content: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục vùng cao." },
+      "bai-9.md": { title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", content: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt cho học sinh nghèo." },
+      "bai-10.md": { title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", content: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao." },
+      "bai-11.md": { title: "Ngày hội đọc sách và tri thức buôn làng", date: "Tháng 08 / 2025", content: "Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.<br><br>Sự kiện thu hút đông đảo thanh thiếu niên tham gia các hoạt động giao lưu văn hóa đọc." },
+      "bai-12.md": { title: "Tọa đàm đổi mới phương pháp giảng dạy", date: "Tháng 06 / 2025", content: "Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.<br><br>Nâng cao năng lực chuyên môn và phương pháp sư phạm cho đội ngũ nhà giáo." },
+      "bai-13.md": { title: "Hành trình xe buýt tri thức lăn bánh", date: "Tháng 04 / 2025", content: "Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.<br><br>Giúp các em học sinh tiếp cận hàng trăm đầu sách phong phú mỗi tuần." },
+      "bai-14.md": { title: "Trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", content: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.<br><br>Mở rộng tầm nhìn và cơ hội học tập công nghệ cho thế hệ trẻ vùng cao." },
+      "bai-15.md": { title: "Hỗ trợ bữa ăn dinh dưỡng học đường", date: "Tháng 02 / 2025", content: "Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.<br><br>Chung tay chăm lo sức khỏe và sự phát triển toàn diện cho học sinh." },
+      "bai-16.md": { title: "Khởi động dự án Xây trường vùng cao", date: "Tháng 01 / 2025", content: "Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.<br><br>Kiến tạo không gian học tập an toàn, khang trang cho thầy và trò." },
+      "bai-17.md": { title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", content: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.<br><br>Cam kết thực hiện nghiêm túc nguyên tắc minh bạch và trách nhiệm giải trình." },
+      "bai-18.md": { title: "Giải bóng đá thiện nguyện kết nối thanh niên", date: "Tháng 10 / 2024", content: "Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.<br><br>Thắt chặt tình đoàn kết và lan tỏa lối sống đẹp trong cộng đồng trẻ." },
+      "bai-19.md": { title: "Lớp học tình thương cuối tuần", date: "Tháng 08 / 2024", content: "Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.<br><br>Bồi dưỡng kiến thức cơ bản và thắp sáng niềm tin vào tương lai." },
+      "bai-20.md": { title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", content: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.<br><br>Xây dựng đội ngũ tình nguyện viên chuyên nghiệp trên khắp cả nước." }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('post') || 'bai-1.md';
+    const article = articlesDB[postId] || articlesDB['bai-1.md'];
+    const randomImg = vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
+
+    document.getElementById('articleContent').innerHTML = `
+      <div class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</div>
+      <h1 class="article-title">${article.title}</h1>
+      <img src="${randomImg}" alt="${article.title}" class="article-thumb">
+      <div class="article-body">
+        <p>${article.content}</p>
+      </div>
+    `;
+
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
     window.onclick = function(event) {
