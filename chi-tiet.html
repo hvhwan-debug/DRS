@@ -27,7 +27,7 @@
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định */
+    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -54,11 +54,26 @@
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
     .btn {
-      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.6rem 1.3rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit; font-size: 0.88rem;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+
+    .btn-donate-glow {
+      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+    }
 
     .mobile-menu-btn {
       display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
@@ -118,7 +133,8 @@
     .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
     .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; text-align: center; }
+    /* Footer chuẩn 3 cột đồng bộ */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
@@ -140,14 +156,16 @@
 </head>
 <body>
 
-  <!-- Menu Cố Định -->
+  <!-- Menu Cố Định Đồng Bộ -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
         </div>
         <div class="brand-text-group">
@@ -156,14 +174,14 @@
         </div>
       </a>
       <nav class="nav-links" id="navLinks">
-        <a href="index.html#tru-cot">Trụ Cột</a>
+        <a href="su-menh.html">Sứ Mệnh</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html" class="active">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn" onclick="openModal()">Quyên Góp</button>
+        <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -194,6 +212,7 @@
     </div>
   </div>
 
+  <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -205,6 +224,7 @@
         <h4>Địa Chỉ Trụ Sở</h4>
         <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
         <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
         <h4>Cam Kết Xã Hội</h4>
@@ -212,7 +232,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 CÔNG TY TRÁCH NHIỆM HỮU HẠN DR SOLUTIONS. Mọi quyền được bảo lưu.
+      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
     </div>
   </footer>
 
@@ -272,7 +292,6 @@
           markdownBody = parts.slice(2).join('---').trim();
         }
 
-        // Chuyển đổi cú pháp markdown cơ bản sang HTML hiển thị mượt mà
         let htmlBody = markdownBody
           .replace(/^### (.*$)/gm, '<h3>$1</h3>')
           .replace(/^## (.*$)/gm, '<h2>$1</h2>')
