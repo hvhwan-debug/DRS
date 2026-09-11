@@ -236,6 +236,9 @@
             <input type="hidden" name="_subject" value="Tin nhắn liên hệ mới từ Website Wisdom Vietnam Network">
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_template" value="table">
+            <!-- Bẫy chống spam vô hình: người dùng thật không thấy, bot rà quét tự động sẽ điền vào
+                 và bị formsubmit.co âm thầm loại bỏ lượt gửi đó, không cần captcha gây khó chịu -->
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
             <div class="form-group">
               <label>Họ và tên của bạn</label>
