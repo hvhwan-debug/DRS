@@ -200,6 +200,25 @@
       .toolbar { flex-direction: column; }
       .search-btn { width: 100%; }
     }
+
+    /* Trên điện thoại: chỉ cho phần bảng giao dịch cuộn riêng, thanh thông báo dưới cùng luôn cố định để dễ theo dõi trạng thái */
+    @media (max-width: 640px) {
+      .table-container {
+        max-height: 58vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
+      }
+      table { flex-shrink: 0; }
+      thead th {
+        position: sticky; top: 0; z-index: 4;
+      }
+      .notice-footer {
+        position: sticky; bottom: 0; z-index: 5;
+        margin-top: auto;
+      }
+    }
   </style>
 </head>
 <body>
