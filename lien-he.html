@@ -123,6 +123,17 @@
     .form-control:focus { outline: none; border-color: #0284c7; background: var(--white); box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1); }
     textarea.form-control { resize: vertical; min-height: 150px; }
 
+    /* Thông báo kết quả gửi form */
+    .form-alert {
+      display: none; align-items: flex-start; gap: 0.8rem; padding: 1rem 1.2rem; border-radius: 12px;
+      font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.5rem;
+    }
+    .form-alert i { font-size: 1.1rem; margin-top: 0.1rem; flex-shrink: 0; }
+    .form-alert.form-alert-success { display: flex; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+    .form-alert.form-alert-success i { color: #16a34a; }
+    .form-alert.form-alert-error { display: flex; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .form-alert.form-alert-error i { color: #dc2626; }
+
     /* Cột thông tin trụ sở */
     .info-list { display: flex; flex-direction: column; gap: 1.8rem; }
     .info-item {
@@ -218,10 +229,13 @@
       <div class="contact-card">
         <div>
           <h2>Gửi Lời Nhắn Trực Tuyến</h2>
-          <form action="https://formsubmit.co/hotro@wvn.vn" method="POST">
+
+          <div id="formAlert" class="form-alert"></div>
+
+          <form id="contactForm" action="https://formsubmit.co/hotro@wvn.vn" method="POST">
             <input type="hidden" name="_subject" value="Tin nhắn liên hệ mới từ Website Wisdom Vietnam Network">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://wvn.vn/lien-he.html">
+            <input type="hidden" name="_template" value="table">
 
             <div class="form-group">
               <label>Họ và tên của bạn</label>
@@ -238,7 +252,7 @@
               <textarea name="noidung" class="form-control" placeholder="Nhập nội dung bạn muốn chia sẻ hoặc đề xuất hợp tác..." required></textarea>
             </div>
 
-            <button type="submit" class="btn" style="width: 100%; padding: 1rem; font-size: 1rem; margin-top: 0.5rem;">Gửi Lời Nhắn Đến Ban Quản Trị</button>
+            <button type="submit" id="submitBtn" class="btn" style="width: 100%; padding: 1rem; font-size: 1rem; margin-top: 0.5rem;">Gửi Lời Nhắn Đến Ban Quản Trị</button>
           </form>
         </div>
       </div>
@@ -341,6 +355,50 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
+
+    // Gửi form liên hệ bằng AJAX để hiện thông báo ngay trên trang,
+    // thay vì chuyển hướng/tải lại trang không rõ ràng như trước.
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formAlert = document.getElementById('formAlert');
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const originalBtnHtml = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+      formAlert.className = 'form-alert';
+      formAlert.style.display = 'none';
+
+      const formData = new FormData(contactForm);
+      const recipientEmail = 'hotro@wvn.vn';
+
+      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data && (data.success === 'true' || data.success === true)) {
+            formAlert.className = 'form-alert form-alert-success';
+            formAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn! Lời nhắn đã được gửi thành công đến Ban Quản Trị. Chúng tôi sẽ phản hồi qua email trong thời gian sớm nhất.</span>';
+            contactForm.reset();
+          } else {
+            throw new Error('Gửi không thành công');
+          }
+        })
+        .catch(() => {
+          formAlert.className = 'form-alert form-alert-error';
+          formAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra khi gửi lời nhắn. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+          formAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    });
   </script>
 </body>
 </html>
