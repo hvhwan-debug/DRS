@@ -111,7 +111,7 @@
     .hero-media-wrapper:hover .hero-media-card { transform: scale(1.02); }
     .hero-main-img { width: 100%; height: 440px; object-fit: cover; border-radius: 22px; display: block; }
     
-    /* Nút Play ẩn hiện trên ảnh để gợi ý bấm xem video */
+    /* Nút Play ẩn hiện trên ảnh */
     .play-video-overlay {
       position: absolute; inset: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 22px;
       display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
@@ -143,7 +143,7 @@
       background: #0f172a; border-radius: 20px; max-width: 800px; width: 100%; overflow: hidden;
       box-shadow: 0 25px 50px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); position: relative;
     }
-    .video-container { position: relative; width: 100%; padding-top: 56.25%; /* Tỷ lệ 16:9 */ }
+    .video-container { position: relative; width: 100%; padding-top: 56.25%; }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
     .video-header-bar {
       display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #1e293b; color: #fff;
@@ -164,7 +164,7 @@
     .section-header h2 { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; letter-spacing: -0.5px; }
     .section-header p { color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
 
-    /* 4 Trụ Cột */
+    /* 4 Trụ Cột (Thay bằng ảnh học sinh & trường học Việt Nam thuần túy) */
     .pillars-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.8rem; }
     .pillar-visual-card {
       background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid var(--border);
@@ -178,7 +178,7 @@
     .pillar-content h3 { font-size: 1.25rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; }
     .pillar-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; }
 
-    /* Thư Viện Hình Ảnh Hoạt Động */
+    /* Thư Viện Hình Ảnh Hoạt Động (Việt Nam) */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .gallery-item { position: relative; border-radius: 16px; overflow: hidden; height: 250px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
@@ -314,7 +314,6 @@
         <button class="close-video-btn" onclick="closeVideoModal()"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="video-container">
-        <!-- Bạn có thể thay đổi link nhúng YouTube hoặc video của tổ chức tại đây -->
         <iframe id="youtubeVideo" src="" data-src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="Những nụ cười học tập chạm trái tim" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
@@ -342,7 +341,7 @@
     </div>
   </section>
 
-  <!-- 4 Trụ Cột: Trực Quan Hóa Bằng Hình Ảnh Thực Tế -->
+  <!-- 4 Trụ Cột: Thay thế ảnh bằng hình ảnh học sinh, trường học vùng cao Việt Nam -->
   <main class="section-wrap" id="tru-cot">
     <div class="section-header">
       <h2>4 Trụ Cột Hành Động Phi Lợi Nhuận</h2>
@@ -354,7 +353,7 @@
       <!-- Trụ cột 1 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80" alt="Hỗ trợ tại chỗ">
+          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" alt="Hỗ trợ tại chỗ vùng cao">
         </div>
         <div class="pillar-content">
           <h3>Hỗ trợ tại chỗ</h3>
@@ -365,7 +364,7 @@
       <!-- Trụ cột 2 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80" alt="Lan tỏa tiếp cận">
+          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80" alt="Lan tỏa tiếp cận sách">
         </div>
         <div class="pillar-content">
           <h3>Lan tỏa tiếp cận</h3>
@@ -376,7 +375,7 @@
       <!-- Trụ cột 3 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80" alt="Nâng cao nhận thức">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80" alt="Nâng cao nhận thức trẻ em">
         </div>
         <div class="pillar-content">
           <h3>Nâng cao nhận thức</h3>
@@ -387,7 +386,7 @@
       <!-- Trụ cột 4 -->
       <div class="pillar-visual-card">
         <div class="pillar-img-box">
-          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80" alt="Đồng hành bền vững">
+          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80" alt="Đồng hành bền vững vùng cao">
         </div>
         <div class="pillar-content">
           <h3>Đồng hành bền vững</h3>
@@ -412,11 +411,11 @@
           <div class="gallery-overlay">Chung tay vì thế hệ tương lai</div>
         </div>
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80" alt="Niềm vui học tập">
+          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&auto=format&fit=crop&q=80" alt="Niềm vui học tập của học sinh">
           <div class="gallery-overlay">Nụ cười và sự tự tin trong từng trang sách mới</div>
         </div>
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80" alt="Lớp học cộng đồng">
+          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80" alt="Lớp học cộng đồng vùng cao">
           <div class="gallery-overlay">Lớp học kỹ năng cuối tuần không áp lực điểm số</div>
         </div>
       </div>
@@ -485,17 +484,16 @@
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
     
-    // Điều khiển Modal Video
     function openVideoModal() {
       const modal = document.getElementById('videoModal');
       const iframe = document.getElementById('youtubeVideo');
-      iframe.src = iframe.getAttribute('data-src'); // Tự động phát video khi mở
+      iframe.src = iframe.getAttribute('data-src');
       modal.style.display = 'flex';
     }
     function closeVideoModal() {
       const modal = document.getElementById('videoModal');
       const iframe = document.getElementById('youtubeVideo');
-      iframe.src = ''; // Dừng video khi đóng modal
+      iframe.src = '';
       modal.style.display = 'none';
     }
 
@@ -517,7 +515,6 @@
       }
     }
 
-    // Hiệu ứng chạy số nhảy liên tục
     function animateCounters() {
       const counters = document.querySelectorAll('.metric-number');
       const speed = 35; 
