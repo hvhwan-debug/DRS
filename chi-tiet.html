@@ -265,6 +265,7 @@
         let value = kv[2].trim();
         value = value.replace(/^["']|["']$/g, "");
         if (key === "description") result.excerpt = result.excerpt || value;
+        else if (key === "thumbnail") result.image = result.image || value;
         else result[key] = value;
       });
       return result;
