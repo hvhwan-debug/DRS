@@ -1,290 +1,502 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chi Tiết Bài Viết - Wisdom Vietnam Network - DR SOLUTIONS</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
-      --text-dark: #0f172a;
-      --text-muted: #475569;
-      --white: #ffffff;
-      --border: #e2e8f0;
-      --bg-page: #f8fafc;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết bài viết | Wisdom Vietnam Network</title>
+<meta name="description" content="Wisdom Vietnam Network - Bài viết và hoạt động vì giáo dục cộng đồng.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b84d8'/%3E%3Cpath d='M16 18h20c7 0 12 5 12 12v18H28c-7 0-12-5-12-12V18Z' fill='white'/%3E%3Cpath d='M28 18v30M28 30h20' stroke='%230b84d8' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      width: 100%; overflow-x: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.7;
-    }
-    body { padding-top: 72px; }
+<style>
+:root{
+  --blue:#087fd3;
+  --blue-dark:#07579a;
+  --text:#243b57;
+  --muted:#647891;
+  --bg:#f5f8fc;
+  --line:#e5edf5;
+  --shadow:0 12px 35px rgba(23,72,111,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  line-height:1.75;
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1180px,calc(100% - 40px));margin:auto}
 
-    header {
-      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
-      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+/* HEADER - đồng bộ với giao diện trang chủ */
+.site-header{
+  position:sticky;top:0;z-index:1000;
+  background:#fff;
+  border-bottom:1px solid #e9eef4;
+  box-shadow:0 3px 18px rgba(24,64,98,.07);
+}
+.header-inner{
+  min-height:76px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:30px;
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-logo{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(145deg,#08a5ee,#076fc3);
+  display:grid;place-items:center;color:#fff;
+  box-shadow:0 7px 16px rgba(8,127,211,.22);
+  flex:0 0 auto;
+}
+.brand-logo i{font-size:21px}
+.brand-text{display:flex;flex-direction:column;line-height:1.15}
+.brand-name{font-size:19px;font-weight:800;color:#07579a;white-space:nowrap}
+.brand-sub{font-size:10px;font-weight:600;letter-spacing:.13em;color:#6e8197;margin-top:4px}
+.nav{display:flex;align-items:center;gap:31px}
+.nav a{
+  font-size:15px;font-weight:600;color:#44566e;
+  padding:26px 0;position:relative;
+}
+.nav a:hover,.nav a.active{color:var(--blue)}
+.nav a.active:after{
+  content:"";position:absolute;left:0;right:0;bottom:16px;height:3px;
+  border-radius:10px;background:var(--blue);
+}
+.donate-btn{
+  border:0;cursor:pointer;color:#fff;font-weight:800;font-size:14px;
+  padding:13px 23px;border-radius:10px;
+  background:linear-gradient(135deg,#0789dc,#1671d0);
+  box-shadow:0 8px 18px rgba(8,127,211,.28);
+  transition:.2s;
+}
+.donate-btn:hover{transform:translateY(-2px);box-shadow:0 11px 22px rgba(8,127,211,.35)}
 
-    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
-    .brand-logo-icon {
-      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
-    }
-    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
-    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
-    .brand-title {
-      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
-    }
-    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+/* HERO */
+.article-hero{
+  background:linear-gradient(135deg,#075a91,#087fcf 65%,#31b3eb);
+  color:#fff;padding:72px 20px 82px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.article-hero:before,.article-hero:after{
+  content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.08);
+}
+.article-hero:before{width:310px;height:310px;left:-100px;top:-180px}
+.article-hero:after{width:360px;height:360px;right:-140px;bottom:-250px}
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 17px;border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.10);border-radius:30px;
+  font-size:13px;font-weight:800;letter-spacing:.04em;
+}
+.article-hero h1{
+  position:relative;z-index:1;
+  max-width:920px;margin:20px auto 12px;
+  font-size:clamp(30px,4.4vw,52px);line-height:1.18;
+  letter-spacing:-.025em;
+}
+.hero-meta{position:relative;z-index:1;font-size:14px;opacity:.9}
 
-    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
-    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+/* ARTICLE */
+.article-wrap{padding:52px 0 80px}
+.article-card{
+  width:min(900px,100%);margin:-95px auto 0;position:relative;z-index:2;
+  background:#fff;border:1px solid #e5edf5;border-radius:20px;
+  box-shadow:var(--shadow);padding:42px 54px;
+}
+.article-cover{
+  width:100%;max-height:520px;object-fit:cover;border-radius:14px;
+  display:block;margin:0 auto 35px;
+}
+.article-content{font-size:16px;color:#41556d}
+.article-content h1,.article-content h2,.article-content h3,.article-content h4{
+  color:#075b99;line-height:1.35;margin:30px 0 13px;
+}
+.article-content h1{font-size:32px}
+.article-content h2{font-size:26px}
+.article-content h3{font-size:21px}
+.article-content p{margin:0 0 19px}
+.article-content img{
+  display:block;max-width:100%;height:auto;border-radius:12px;
+  margin:25px auto;box-shadow:0 7px 25px rgba(30,75,110,.10)
+}
+.article-content ul,.article-content ol{padding-left:27px;margin:10px 0 22px}
+.article-content li{margin:6px 0}
+.article-content blockquote{
+  margin:25px 0;padding:15px 20px;border-left:4px solid var(--blue);
+  background:#f2f8fd;border-radius:0 10px 10px 0;color:#526b84
+}
+.article-content a{color:#067dcc;text-decoration:underline}
+.article-content strong{color:#254a6c}
+.article-content hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+.article-content code{
+  background:#f0f4f8;padding:2px 6px;border-radius:5px;font-size:.9em
+}
+.article-content pre{
+  overflow:auto;background:#172534;color:#fff;padding:18px;border-radius:10px
+}
+.article-content table{width:100%;border-collapse:collapse;margin:20px 0}
+.article-content th,.article-content td{border:1px solid #dce7f0;padding:9px 11px;text-align:left}
+.article-content th{background:#f2f7fb;color:#075b99}
 
-    .btn {
-      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
-      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
-    }
-    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+/* loading/error */
+.status{
+  text-align:center;padding:45px 15px;color:var(--muted)
+}
+.status i{font-size:30px;color:var(--blue);margin-bottom:12px}
+.error-box{
+  background:#fff4f4;border:1px solid #ffd7d7;color:#a33b3b;
+  border-radius:12px;padding:20px;margin-bottom:20px
+}
+.back-row{display:flex;justify-content:space-between;gap:12px;margin-top:35px;padding-top:25px;border-top:1px solid var(--line)}
+.back-link{
+  display:inline-flex;align-items:center;gap:8px;color:#087fd3;font-weight:700
+}
 
-    .btn-donate-glow {
-      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
-    }
-    .btn-donate-glow::after {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
-      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
-    }
-    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
-      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
-      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
-    }
+/* DONATE MODAL */
+.modal{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(7,35,57,.62);align-items:center;justify-content:center;
+  padding:20px
+}
+.modal-box{
+  width:min(470px,100%);background:#fff;border-radius:18px;padding:30px;
+  box-shadow:0 25px 70px rgba(0,0,0,.25);position:relative
+}
+.modal-close{
+  position:absolute;right:15px;top:12px;border:0;background:none;
+  font-size:25px;color:#66798e;cursor:pointer
+}
+.modal-box h2{margin:0 0 7px;color:#075b99}
+.modal-box p{margin:0 0 18px;color:#647891}
+.bank{
+  background:#f3f8fc;border-radius:12px;padding:17px 18px;margin-top:12px
+}
+.bank b{color:#075b99}.bank div{margin:5px 0}
 
-    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
+/* FOOTER */
+footer{background:#073e68;color:#dcecf8;margin-top:0}
+.footer-main{padding:48px 0 35px;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:55px}
+.footer-brand{font-size:20px;font-weight:800;color:#fff;margin-bottom:10px}
+.footer-col h4{color:#fff;margin:0 0 13px;font-size:16px}
+.footer-col p,.footer-col a{font-size:14px;color:#bdd1e2}
+.footer-col a{display:block;margin:7px 0}
+.footer-col a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.14);padding:17px 0;text-align:center;font-size:13px;color:#abc3d6}
 
-    .article-container { max-width: 820px; margin: 3rem auto 5rem auto; padding: 0 1.5rem; }
-    .back-link { display: inline-flex; align-items: center; gap: 8px; color: #0284c7; text-decoration: none; font-weight: 600; margin-bottom: 2rem; transition: color 0.2s; }
-    .back-link:hover { color: #0369a1; }
-    
-    .article-card { 
-      background: #ffffff; padding: 3.5rem 3rem; border-radius: 20px; 
-      border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); 
-    }
-    .article-date { font-size: 0.9rem; color: #0284c7; font-weight: 700; margin-bottom: 0.75rem; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
-    .article-title { font-size: 2.3rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 1.5rem; }
-    .article-thumb { width: 100%; height: 400px; object-fit: cover; border-radius: 14px; margin-bottom: 2.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-    
-    .article-body { font-size: 1.08rem; color: #334155; line-height: 1.8; }
-    .article-body p { margin-bottom: 1.5rem; text-align: justify; }
-    .article-body h2 { font-size: 1.5rem; color: #0f172a; margin: 2rem 0 1rem; font-weight: 800; }
-    .article-body ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
-    .article-body li { margin-bottom: 0.5rem; }
-
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
-    }
-    .modal-content {
-      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
-
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
-    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-
-    @media (max-width: 960px) {
-      .mobile-menu-btn { display: block; }
-      .nav-links {
-        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
-        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
-      }
-      .nav-links.active { display: flex; }
-      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .article-card { padding: 2rem 1.5rem; }
-      .article-title { font-size: 1.8rem; }
-      .article-thumb { height: 260px; }
-    }
-  </style>
+@media(max-width:900px){
+  .nav{gap:17px}
+  .nav a{font-size:13px}
+  .donate-btn{padding:11px 15px}
+  .article-card{padding:30px}
+  .footer-main{grid-template-columns:1fr 1fr;gap:30px}
+}
+@media(max-width:680px){
+  .container{width:min(100% - 28px,1180px)}
+  .header-inner{min-height:68px;gap:12px}
+  .brand-name{font-size:15px}
+  .brand-sub{font-size:8px}
+  .brand-logo{width:35px;height:35px}
+  .nav{display:none}
+  .article-hero{padding:52px 15px 70px}
+  .article-hero h1{font-size:31px}
+  .article-card{margin:-55px auto 0;padding:23px 19px;border-radius:15px}
+  .article-content{font-size:15px}
+  .article-wrap{padding-bottom:45px}
+  .footer-main{grid-template-columns:1fr;gap:24px;padding:35px 0}
+}
+</style>
 </head>
+
 <body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Wisdom Vietnam Network">
+      <span class="brand-logo"><i class="fa-solid fa-book-open"></i></span>
+      <span class="brand-text">
+        <span class="brand-name">Wisdom Vietnam Network</span>
+        <span class="brand-sub">DR SOLUTIONS</span>
+      </span>
+    </a>
 
-  <header>
-    <div class="nav-container">
-      <a href="index.html" class="brand-wrap">
-        <div class="brand-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-          </svg>
-        </div>
-        <div class="brand-text-group">
-          <span class="brand-title">Wisdom Vietnam Network</span>
-          <span class="brand-subtitle">DR SOLUTIONS</span>
-        </div>
-      </a>
-      <nav class="nav-links" id="navLinks">
-        <a href="su-menh.html">Sứ Mệnh</a>
-        <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-        <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>
-      </nav>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
-        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()">
-          <i class="fa-solid fa-bars"></i>
-        </button>
+    <nav class="nav" aria-label="Điều hướng chính">
+      <a href="index.html">Sứ Mệnh</a>
+      <a href="hoat-dong.html">Hoạt Động</a>
+      <a href="sao-ke.html">Tra Cứ Sao Kê</a>
+      <a href="tin-tuc.html" class="active">Tin Tức</a>
+      <a href="lien-he.html">Liên Hệ</a>
+    </nav>
+
+    <button class="donate-btn" onclick="openModal()">
+      Quyên Góp
+    </button>
+  </div>
+</header>
+
+<section class="article-hero">
+  <div class="hero-kicker"><i class="fa-regular fa-newspaper"></i> TIN TỨC & HOẠT ĐỘNG</div>
+  <h1 id="articleTitle">Đang tải bài viết...</h1>
+  <div class="hero-meta" id="articleMeta"></div>
+</section>
+
+<main class="article-wrap">
+  <div class="container">
+    <article class="article-card">
+      <div id="articleStatus" class="status">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <div>Đang tải nội dung bài viết...</div>
       </div>
-    </div>
-  </header>
 
-  <main class="article-container">
-    <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
-    <div class="article-card" id="articleContent">
-      <div style="text-align: center; padding: 3rem; color: var(--text-muted);">Đang tải nội dung bài viết...</div>
-    </div>
-  </main>
+      <img id="articleCover" class="article-cover" alt="" style="display:none">
+      <div id="articleContent" class="article-content"></div>
 
-  <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
-      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      <img src="https://img.vietqr.io/image/MB-0111291749-compact2.png?amount=100000&addInfo=DRS%20DONG%20HANH" alt="Mã VietQR Quyên góp" class="modal-qr">
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung: <strong>DRS DONG HANH</strong></p>
-      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+      <div class="back-row">
+        <a class="back-link" href="tin-tuc.html">
+          <i class="fa-solid fa-arrow-left"></i> Quay lại Tin Tức
+        </a>
+        <a class="back-link" href="index.html">
+          Về trang chủ <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-main">
+    <div class="footer-col">
+      <div class="footer-brand">Wisdom Vietnam Network</div>
+      <p>Đồng hành vì giáo dục công bằng và cơ hội học tập xứng đáng cho mọi người.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Điều hướng</h4>
+      <a href="index.html">Sứ Mệnh</a>
+      <a href="hoat-dong.html">Hoạt Động</a>
+      <a href="sao-ke.html">Tra Cứ Sao Kê</a>
+      <a href="tin-tuc.html">Tin Tức</a>
+    </div>
+    <div class="footer-col">
+      <h4>Kết nối</h4>
+      <a href="lien-he.html">Liên Hệ</a>
+      <a href="mailto:hotro@wvn.vn">hotro@wvn.vn</a>
+      <a href="https://wvn.vn">wvn.vn</a>
     </div>
   </div>
+  <div class="footer-bottom">© Wisdom Vietnam Network. Chung tay vì cơ hội học tập.</div>
+</footer>
 
-  <footer>
-    <div class="footer-grid">
-      <div>
-        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
-        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
-        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
-      </div>
-      <div>
-        <h4>Địa Chỉ Trụ Sở</h4>
-        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
-        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
-      </div>
-      <div>
-        <h4>Cam Kết Xã Hội</h4>
-        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
-      </div>
+<div class="modal" id="donateModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Đóng">&times;</button>
+    <h2>Ủng hộ hoạt động giáo dục</h2>
+    <p>Mỗi sự đóng góp đều giúp mở rộng cơ hội học tập cho trẻ em và cộng đồng.</p>
+    <div class="bank">
+      <div><b>Ngân hàng:</b> VietinBank</div>
+      <div><b>Chủ tài khoản:</b> HOANG VAN HOAN</div>
+      <div><b>Số tài khoản:</b> 1010000</div>
+      <div><b>Nội dung:</b> Ủng hộ</div>
     </div>
-    <div class="footer-bottom">
-      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu.
-    </div>
-  </footer>
+  </div>
+</div>
 
-  <script>
-    const vietnameseImagePool = [
-      "images/uploads/2-onl-16997056815001293662280.jpg",
-      "images/uploads/48591585757_7be64177d0_o.jpg",
-      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
-      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
-      "images/uploads/images (1).jfif",
-      "images/uploads/images (2).jfif",
-      "images/uploads/images (3).jfif",
-      "images/uploads/images (4).jfif"
-    ];
+<script>
+function openModal(){document.getElementById('donateModal').style.display='flex'}
+function closeModal(){document.getElementById('donateModal').style.display='none'}
 
-    const articlesDB = {
-      "bai-1.md": { 
-        title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang", 
-        date: "Tháng 11 / 2026", 
-        content: `Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.<br><br>
-        Chương trình được triển khai với sự chung tay của các cá nhân, đơn vị và những người quan tâm đến công tác hỗ trợ trẻ em vùng khó khăn. Hơn bao giờ hết, sự sẻ chia từ cộng đồng chính là nguồn động lực to lớn giúp thắp sáng ước mơ học tập cho các em nhỏ nơi tuyến đầu Tổ quốc.<br><br>
-        <h2>Các hoạt động trọng tâm của chương trình:</h2>
-        <ul>
-          <li><strong>Trao tặng áo ấm và học cụ:</strong> Cung cấp đầy đủ áo khoác mùa đông, chăn bông ấm áp và balo, sách vở cho 100% học sinh điểm trường.</li>
-          <li><strong>Xây dựng tủ sách tri thức:</strong> Lắp đặt các tủ sách thiếu nhi với hàng trăm đầu sách phong phú, tạo không gian đọc sách sau giờ lên lớp.</li>
-          <li><strong>Bữa ăn dinh dưỡng học đường:</strong> Tổ chức các bữa ăn phụ bổ sung dinh dưỡng, góp phần cải thiện thể chất cho học sinh nội trú.</li>
-        </ul>
-        <br>Chúng tôi kêu gọi các mạnh thường quân, tình nguyện viên cùng chung tay đồng hành để chuyến hành trình đến với Hà Giang diễn ra trọn vẹn và lan tỏa yêu thương sâu sắc.` 
-      },
-      "bai-2.md": { 
-        title: "Chương trình Gieo Mầm Tri Thức Mùa Hè", 
-        date: "Tháng 07 / 2026", 
-        content: `Trao tặng hơn 500 đầu sách và học liệu cho các em học sinh vùng cao, mở ra cơ hội tiếp cận tri thức công bằng.<br><br>
-        Chương trình mùa hè năm nay tập trung vào việc xây dựng các góc đọc sách tại lớp học, tổ chức các hoạt động sinh hoạt ngoại khóa giúp học sinh rèn luyện kỹ năng sống và khơi dậy niềm đam mê đọc sách.<br><br>
-        <h2>Ý nghĩa và tác động mang lại:</h2>
-        <ul>
-          <li>Lan tỏa văn hóa đọc sách đến tận các thôn bản vùng sâu vùng xa.</li>
-          <li>Rèn luyện kỹ năng tự học, tư duy sáng tạo thông qua các trò chơi tương tác giáo dục.</li>
-          <li>Kết nối những tấm lòng nhân ái từ khắp mọi miền đất nước hướng về thế hệ trẻ tương lai.</li>
-        </ul>` 
-      },
-      "bai-3.md": { title: "Khánh thành Tủ Sách Vùng Cao Đợt 1", date: "Tháng 05 / 2026", content: "Hoàn thành lắp đặt và bàn giao 5 tủ sách cộng đồng tại các điểm trường tiểu học khó khăn.<br><br>Mỗi tủ sách đi kèm hàng trăm cuốn sách thiếu nhi, sách khoa học thường thức mang lại không gian giải trí và học tập bổ ích sau giờ lên lớp cho các em nhỏ." },
-      "bai-4.md": { title: "Chuỗi lớp học kỹ năng mềm và tư duy", date: "Tháng 03 / 2026", content: "Tổ chức các buổi sinh hoạt ngoại khóa giúp thanh thiếu niên rèn luyện sự tự tin và kỹ năng tự học.<br><br>Thông qua các trò chơi tương tác và bài học thực tế, học sinh được trang bị thêm tư duy phản biện, kỹ năng làm việc nhóm." },
-      "bai-5.md": { title: "Hành trình Tiếp Sức Đến Trường", date: "Tháng 02 / 2026", content: "Hỗ trợ học phí và dụng cụ học tập cho học sinh nghèo vượt khó vươn lên trong học tập.<br><br>Những phần quà đầu năm mới đã kịp thời động viên tinh thần, giúp các em vững bước đến trường." },
-      "bai-6.md": { title: "Ký kết hợp tác mở rộng mạng lưới giáo dục", date: "Tháng 01 / 2026", content: "Hợp tác cùng các tổ chức xã hội để đẩy mạnh phong trào quyên góp sách toàn quốc.<br><br>Sự kiện đánh dấu bước ngoặt quan trọng trong việc mở rộng quy mô hoạt động giáo dục cộng đồng." },
-      "bai-7.md": { title: "Tổng kết chiến dịch Tết Chia Sẻ", date: "Tháng 12 / 2025", content: "Nhìn lại những cột mốc ý nghĩa và các phần quà ấm áp gửi đến đồng bào khó khăn cuối năm.<br><br>Hàng trăm suất quà Tết đã được trao tận tay các hộ gia đình chính sách và học sinh nghèo hiếu học." },
-      "bai-8.md": { title: "Hội thảo giáo dục cộng đồng toàn quốc", date: "Tháng 11 / 2025", content: "Quy tụ các chuyên gia giáo dục thảo luận về mô hình trường học thân thiện và phi lợi nhuận.<br><br>Hội thảo đưa ra nhiều giải pháp thiết thực nhằm nâng cao chất lượng giáo dục vùng cao." },
-      "bai-9.md": { title: "Trao học bổng Thắp Sáng Ước Mơ", date: "Tháng 10 / 2025", content: "Nâng bước hàng trăm học sinh nghèo hiếu học vững bước trên con đường chinh phục tri thức.<br><br>Chương trình trao học bổng định kỳ hỗ trợ chi phí sinh hoạt cho học sinh nghèo." },
-      "bai-10.md": { title: "Phát động chiến dịch mùa đông ấm cho em", date: "Tháng 09 / 2025", content: "Kêu gọi cộng đồng chung tay đóng góp áo ấm và chăn bông chuẩn bị cho mùa đông vùng cao.<br><br>Chương trình mong muốn đem lại sự ấm áp, xua tan cái lạnh giá nơi miền núi cao." },
-      "bai-11.md": { title: "Ngày hội đọc sách và tri thức buôn làng", date: "Tháng 08 / 2025", content: "Đưa hàng ngàn đầu sách hay về với các em nhỏ vùng sâu vùng xa trong dịp hè.<br><br>Sự kiện thu hút đông đảo thanh thiếu niên tham gia các hoạt động giao lưu văn hóa đọc." },
-      "bai-12.md": { title: "Tọa đàm đổi mới phương pháp giảng dạy", date: "Tháng 06 / 2025", content: "Chia sẻ kinh nghiệm giảng dạy ứng dụng công nghệ hiện đại cho giáo viên các điểm trường.<br><br>Nâng cao năng lực chuyên môn và phương pháp sư phạm cho đội ngũ nhà giáo." },
-      "bai-13.md": { title: "Hành trình xe buýt tri thức lăn bánh", date: "Tháng 04 / 2025", content: "Mô hình thư viện lưu động mang niềm vui đọc sách đến từng thôn bản.<br><br>Giúp các em học sinh tiếp cận hàng trăm đầu sách phong phú mỗi tuần." },
-      "bai-14.md": { title: "Trao tặng thiết bị tin học cho điểm trường", date: "Tháng 03 / 2025", content: "Trang bị phòng máy tính kết nối internet giúp học sinh tiếp cận tri thức số.<br><br>Mở rộng tầm nhìn và cơ hội học tập công nghệ cho thế hệ trẻ vùng cao." },
-      "bai-15.md": { title: "Hỗ trợ bữa ăn dinh dưỡng học đường", date: "Tháng 02 / 2025", content: "Góp phần cải thiện thể chất và điều kiện ăn ở nội trú cho các em nhỏ vùng cao.<br><br>Chung tay chăm lo sức khỏe và sự phát triển toàn diện cho học sinh." },
-      "bai-16.md": { title: "Khởi động dự án Xây trường vùng cao", date: "Tháng 01 / 2025", content: "Khảo sát và đặt nền móng xây dựng các điểm trường kiên cố thay thế nhà tạm.<br><br>Kiến tạo không gian học tập an toàn, khang trang cho thầy và trò." },
-      "bai-17.md": { title: "Báo cáo minh bạch tài chính quý IV", date: "Tháng 12 / 2024", content: "Công khai chi tiết các khoản thu chi và sao kê dòng tiền hoạt động của quỹ.<br><br>Cam kết thực hiện nghiêm túc nguyên tắc minh bạch và trách nhiệm giải trình." },
-      "bai-18.md": { title: "Giải bóng đá thiện nguyện kết nối thanh niên", date: "Tháng 10 / 2024", content: "Gây quỹ hỗ trợ học bổng thường niên cho học sinh nghèo vượt khó.<br><br>Thắt chặt tình đoàn kết và lan tỏa lối sống đẹp trong cộng đồng trẻ." },
-      "bai-19.md": { title: "Lớp học tình thương cuối tuần", date: "Tháng 08 / 2024", content: "Duy trì các lớp phụ đạo văn hóa và sinh hoạt ngoại khóa miễn phí cho trẻ em lao động.<br><br>Bồi dưỡng kiến thức cơ bản và thắp sáng niềm tin vào tương lai." },
-      "bai-20.md": { title: "Thành lập mạng lưới tình nguyện viên toàn quốc", date: "Tháng 05 / 2024", content: "Kết nối những trái tim nhiệt huyết cùng chung tay vì sự nghiệp giáo dục cộng đồng.<br><br>Xây dựng đội ngũ tình nguyện viên chuyên nghiệp trên khắp cả nước." }
-    };
+const params = new URLSearchParams(window.location.search);
+const requestedPost = params.get('post');
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const postId = urlParams.get('post') || 'bai-1.md';
-    const article = articlesDB[postId] || articlesDB['bai-1.md'];
-    const randomImg = vietnameseImagePool[Math.floor(Math.random() * vietnameseImagePool.length)];
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[ch]));
+}
 
-    document.getElementById('articleContent').innerHTML = `
-      <div class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</div>
-      <h1 class="article-title">${article.title}</h1>
-      <img src="${randomImg}" alt="${article.title}" class="article-thumb">
-      <div class="article-body">
-        <p>${article.content}</p>
-      </div>
-    `;
+function inlineMarkdown(text){
+  let s = escapeHtml(text);
 
-    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(event) {
-      let modal = document.getElementById('donateModal');
-      if (event.target == modal) { modal.style.display = 'none'; }
-    }
-    function toggleMobileMenu() {
-      const navLinks = document.getElementById('navLinks');
-      const menuBtn = document.getElementById('menuBtn');
-      navLinks.classList.toggle('active');
-      if (navLinks.classList.contains('active')) {
-        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-      } else {
-        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+  // Images: ![alt](url)
+  s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
+    '<img src="$2" alt="$1" loading="lazy">');
+
+  // Links
+  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+  s = s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  s = s.replace(/__([^_]+)__/g,'<strong>$1</strong>');
+  s = s.replace(/\*([^*]+)\*/g,'<em>$1</em>');
+  s = s.replace(/_([^_]+)_/g,'<em>$1</em>');
+  s = s.replace(/`([^`]+)`/g,'<code>$1</code>');
+
+  return s;
+}
+
+function markdownToHtml(md){
+  // Remove YAML front matter if a post uses it.
+  md = md.replace(/^\uFEFF?---\s*\n[\s\S]*?\n---\s*\n?/,'');
+  const lines = md.replace(/\r\n?/g,'\n').split('\n');
+  let out = '', inCode = false, code = [], listType = null;
+
+  function closeList(){
+    if(listType){ out += '</' + listType + '>'; listType = null; }
+  }
+
+  for(let i=0;i<lines.length;i++){
+    const line = lines[i];
+
+    if(line.trim().startsWith('```')){
+      if(!inCode){
+        closeList(); inCode=true; code=[];
+      }else{
+        out += '<pre><code>' + escapeHtml(code.join('\n')) + '</code></pre>';
+        inCode=false;
       }
+      continue;
     }
-  </script>
+    if(inCode){ code.push(line); continue; }
+
+    if(!line.trim()){
+      closeList();
+      continue;
+    }
+
+    let m;
+    if((m=line.match(/^#{1,6}\s+(.+)$/))){
+      closeList();
+      const level=m[0].match(/^#+/)[0].length;
+      out += `<h${level}>${inlineMarkdown(m[1])}</h${level}>`;
+      continue;
+    }
+    if(/^---+$/.test(line.trim()) || /^\*\*\*+$/.test(line.trim())){
+      closeList(); out += '<hr>'; continue;
+    }
+    if((m=line.match(/^\s*>\s?(.*)$/))){
+      closeList();
+      let q=[m[1]];
+      while(i+1<lines.length && /^\s*>\s?/.test(lines[i+1])){
+        i++; q.push(lines[i].replace(/^\s*>\s?/,''));
+      }
+      out += '<blockquote>' + q.map(inlineMarkdown).join('<br>') + '</blockquote>';
+      continue;
+    }
+    if((m=line.match(/^\s*[-*+]\s+(.+)$/))){
+      if(listType!=='ul'){ closeList(); out += '<ul>'; listType='ul'; }
+      out += '<li>' + inlineMarkdown(m[1]) + '</li>';
+      continue;
+    }
+    if((m=line.match(/^\s*\d+\.\s+(.+)$/))){
+      if(listType!=='ol'){ closeList(); out += '<ol>'; listType='ol'; }
+      out += '<li>' + inlineMarkdown(m[1]) + '</li>';
+      continue;
+    }
+
+    // Standalone markdown image
+    if((m=line.match(/^\s*!\[([^\]]*)\]\(([^)]+)\)\s*$/))){
+      closeList();
+      out += `<img src="${m[2]}" alt="${m[1]}" loading="lazy">`;
+      continue;
+    }
+
+    closeList();
+    let paragraph=[line];
+    while(i+1<lines.length &&
+          lines[i+1].trim() &&
+          !/^\s*(#{1,6}\s|[-*+]\s+|\d+\.\s+|>\s?|```|!\[)/.test(lines[i+1])){
+      i++; paragraph.push(lines[i]);
+    }
+    out += '<p>' + paragraph.map(inlineMarkdown).join('<br>') + '</p>';
+  }
+
+  if(inCode) out += '<pre><code>' + escapeHtml(code.join('\n')) + '</code></pre>';
+  closeList();
+  return out;
+}
+
+async function loadPost(){
+  const status=document.getElementById('articleStatus');
+  const title=document.getElementById('articleTitle');
+  const meta=document.getElementById('articleMeta');
+  const content=document.getElementById('articleContent');
+  const cover=document.getElementById('articleCover');
+
+  if(!requestedPost){
+    status.innerHTML='<div class="error-box"><strong>Không xác định được bài viết.</strong><br>Đường dẫn cần có dạng <code>chi-tiet.html?post=bai-20.md</code>.</div>';
+    title.textContent='Không tìm thấy bài viết';
+    return;
+  }
+
+  // Chỉ cho phép đọc file .md trong content/posts, tránh đường dẫn ngoài thư mục.
+  const filename=decodeURIComponent(requestedPost).split('/').pop();
+  if(!/^[a-zA-Z0-9._-]+\.md$/.test(filename)){
+    status.innerHTML='<div class="error-box"><strong>Đường dẫn bài viết không hợp lệ.</strong></div>';
+    title.textContent='Bài viết không hợp lệ';
+    return;
+  }
+
+  try{
+    const response=await fetch(`content/posts/${encodeURIComponent(filename)}`,{
+      cache:'no-cache'
+    });
+
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    const md=await response.text();
+
+    // Lấy title/date từ front matter nếu có.
+    let clean=md;
+    let fm={};
+    const front=md.match(/^\uFEFF?---\s*\n([\s\S]*?)\n---\s*\n?/);
+    if(front){
+      front[1].split('\n').forEach(row=>{
+        const x=row.match(/^([A-Za-zÀ-ỹ0-9_-]+)\s*:\s*(.*)$/);
+        if(x) fm[x[1].trim().toLowerCase()]=x[2].trim().replace(/^['"]|['"]$/g,'');
+      });
+      clean=md.slice(front[0].length);
+    }
+
+    // Nếu markdown có tiêu đề H1, dùng nó làm tiêu đề trang.
+    const h1=clean.match(/^\s*#\s+(.+)$/m);
+    const postTitle=fm.title || (h1 ? h1[1].replace(/[*_`]/g,'') : filename.replace(/\.md$/i,'').replace(/[-_]/g,' '));
+    title.textContent=postTitle;
+
+    const date=fm.date || fm.ngay || '';
+    meta.innerHTML=(date ? `<i class="fa-regular fa-calendar"></i> ${escapeHtml(date)} &nbsp;` : '') +
+                   `<span>Wisdom Vietnam Network</span>`;
+
+    // Render markdown.
+    content.innerHTML=markdownToHtml(clean);
+
+    // Dùng ảnh đầu tiên trong nội dung làm ảnh cover, đồng thời giữ nó trong bài.
+    const firstImg=content.querySelector('img');
+    if(firstImg){
+      cover.src=firstImg.src;
+      cover.alt=firstImg.alt || postTitle;
+      cover.style.display='block';
+      firstImg.style.display='none';
+    }
+
+    status.style.display='none';
+    document.title=postTitle + ' | Wisdom Vietnam Network';
+
+  }catch(error){
+    console.error('Không tải được bài viết:',error);
+    title.textContent='Không tải được bài viết';
+    meta.textContent='';
+    status.innerHTML=`
+      <div class="error-box">
+        <strong>Không thể tải nội dung bài viết.</strong><br>
+        Đang tìm: <code>content/posts/${escapeHtml(filename)}</code><br><br>
+        Hãy kiểm tra file <code>${escapeHtml(filename)}</code> có nằm đúng trong thư mục
+        <code>content/posts/</code> trên GitHub hay chưa.
+      </div>`;
+  }
+}
+
+loadPost();
+</script>
 </body>
 </html>
