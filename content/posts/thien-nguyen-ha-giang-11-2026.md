@@ -2,7 +2,8 @@
 title: "Sắp diễn ra chương trình thiện nguyện vì trẻ em đến trường tại Hà Giang"
 date: "Tháng 11 / 2026"
 description: "Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường."
-thumbnail: "https://images.unsplash.com/photo-1578592829571-d8fb2f9d2d65?w=600&auto=format&fit=crop&q=80"
+thumbnail: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80"
+tag: "Sự kiện sắp tới"
 ---
 
 Một chương trình thiện nguyện hướng tới trẻ em vùng cao Hà Giang dự kiến sẽ được tổ chức trong thời gian tới, với mục tiêu hỗ trợ các em có thêm điều kiện học tập và đến trường.
