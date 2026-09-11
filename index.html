@@ -104,6 +104,14 @@
     .btn-light:hover { background: #f0f9ff; color: #075985; transform: translateY(-1px); }
     .hero-link { color: #ffffff; font-weight: 600; font-size: 0.95rem; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; opacity: 0.9; }
 
+    /* Nút phụ dẫn tới trang Sao Kê minh bạch, ngay màn hình đầu tiên */
+    .btn-outline-light {
+      background: transparent; color: #ffffff; padding: 0.78rem 1.6rem; border-radius: 8px; font-weight: 700;
+      font-size: 0.92rem; border: 1.5px solid rgba(255, 255, 255, 0.55); cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; font-family: inherit;
+    }
+    .btn-outline-light:hover { background: rgba(255, 255, 255, 0.12); border-color: #ffffff; transform: translateY(-1px); }
+
     /* Khung ảnh Hero */
     .hero-media-wrapper { position: relative; }
     .hero-media-card {
@@ -120,6 +128,8 @@
       display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0; z-index: 5;
     }
     .badge-icon { font-size: 1.8rem; }
+    .badge-text { transition: opacity 0.25s ease; }
+    .badge-text.badge-fade { opacity: 0; }
     .badge-text strong { display: block; font-size: 1.1rem; color: #0284c7; line-height: 1.2; }
     .badge-text span { font-size: 0.8rem; color: #64748b; }
 
@@ -129,7 +139,31 @@
     .metric-number { font-size: 2.4rem; font-weight: 900; color: #0284c7; line-height: 1.1; margin-bottom: 0.3rem; }
     .metric-label { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
 
-    /* Section chung */
+    /* Câu chuyện mới nhất — lấy tự động từ bài viết thật mới nhất, không phải nội dung viết cứng */
+    .featured-story-strip { background: #f8fafc; padding: 2.2rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .featured-story-card {
+      max-width: 1100px; margin: 0 auto; background: #ffffff; border-radius: 20px; overflow: hidden;
+      display: grid; grid-template-columns: minmax(240px, 320px) 1fr; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      border: 1px solid var(--border); text-decoration: none; color: inherit; transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .featured-story-card:hover { transform: translateY(-4px); box-shadow: 0 18px 36px rgba(2, 132, 199, 0.12); border-color: #bae6fd; }
+    .featured-story-img-box { position: relative; min-height: 190px; background: #e2e8f0; }
+    .featured-story-img-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .featured-story-body { padding: 1.7rem 2rem; display: flex; flex-direction: column; justify-content: center; }
+    .featured-story-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px; color: #0284c7; font-weight: 800; font-size: 0.76rem;
+      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.7rem;
+    }
+    .featured-story-date { color: #94a3b8; font-size: 0.82rem; margin-bottom: 0.5rem; }
+    .featured-story-body h3 { font-size: 1.28rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; line-height: 1.4; }
+    .featured-story-body p { color: var(--text-muted); font-size: 0.94rem; line-height: 1.6; margin-bottom: 1rem; }
+    .featured-story-cta { color: #0284c7; font-weight: 700; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 6px; }
+    .featured-story-card:hover .featured-story-cta i { transform: translateX(3px); }
+    .featured-story-cta i { transition: transform 0.2s; }
+    @media (max-width: 768px) {
+      .featured-story-card { grid-template-columns: 1fr; }
+      .featured-story-img-box { height: 200px; }
+    }
     .section-wrap { max-width: 1240px; margin: 0 auto; padding: 5rem 1.5rem; }
     .section-header { text-align: center; margin-bottom: 3.5rem; }
     .section-header h2 { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; letter-spacing: -0.5px; }
@@ -250,6 +284,7 @@
         </p>
         <div class="hero-actions">
           <button class="btn-light" onclick="openModal()">Chung Tay Ủng Hộ</button>
+          <a href="sao-ke.html" class="btn-outline-light"><i class="fa-solid fa-magnifying-glass-dollar"></i> Xem Sao Kê Minh Bạch</a>
           <a href="su-menh.html" class="hero-link">Tìm hiểu sứ mệnh hoạt động</a>
         </div>
       </div>
@@ -270,6 +305,22 @@
     </div>
   </section>
 
+  <!-- Câu chuyện mới nhất — lấy tự động từ bài viết thật mới nhất trong content/posts -->
+  <section class="featured-story-strip">
+    <a href="tin-tuc.html" class="featured-story-card" id="featuredStoryCard">
+      <div class="featured-story-img-box">
+        <img id="featuredStoryImg" src="" alt="" style="display:none;">
+      </div>
+      <div class="featured-story-body">
+        <div class="featured-story-eyebrow"><i class="fa-solid fa-bolt"></i> Câu chuyện mới nhất</div>
+        <div class="featured-story-date" id="featuredStoryDate"></div>
+        <h3 id="featuredStoryTitle">Đang tải câu chuyện mới nhất...</h3>
+        <p id="featuredStoryExcerpt">Hệ thống đang lấy bài viết hoạt động gần đây nhất của chúng tôi.</p>
+        <span class="featured-story-cta">Đọc câu chuyện <i class="fa-solid fa-arrow-right"></i></span>
+      </div>
+    </a>
+  </section>
+
   <!-- Thước đo tác động (Impact Numbers) -->
   <section class="metrics-strip">
     <div class="metrics-grid">
@@ -278,8 +329,8 @@
         <div class="metric-label">Lợi nhuận tái đầu tư xã hội</div>
       </div>
       <div>
-        <div class="metric-number" data-target="420" data-suffix="+">0+</div>
-        <div class="metric-label">Sách & Học liệu đã trao tặng</div>
+        <div class="metric-number" id="metricTotalPosts" data-target="0" data-suffix="+">0+</div>
+        <div class="metric-label">Bài viết hoạt động đã đăng tải</div>
       </div>
       <div>
         <div class="metric-number" data-target="0" data-suffix=" đ">0 đ</div>
@@ -524,6 +575,168 @@
         animated = true;
       }
     });
+
+    // ==== CÂU CHUYỆN MỚI NHẤT + SỐ LIỆU SỐNG (lấy thật từ content/posts qua GitHub API) ====
+    const GITHUB_OWNER = "hvhwan-debug";
+    const GITHUB_REPO = "DRS";
+    const GITHUB_BRANCH = "main";
+    const FALLBACK_SLUGS = [
+      "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuân",
+      "buc-tranh-20-11-2025-ha-giang",
+      "day-hoc-tinh-nguyen-dien-bien-22-04-2026",
+      "giao-duc-vung-cao",
+      "hanh-trinh-2-9-thap-sang-tuong-lai-vung-cao",
+      "ho-tro-tre-em-ha-giang",
+      "hoat-dong-thu-vien-va-tu-sach-vung-cao",
+      "hoi-thao-ky-nang-giao-duc-cho-tre-vung-cao",
+      "hoi-thao-mua-dong-tinh-nguyen-thang-11-2025",
+      "khanh-thanh-tu-sach-son-la-thang-4-2026",
+      "kho-khan-khi-den-truong-ha-giang",
+      "mang-tri-thuc-thai-nguyen-bac-kan-thang-11-2025",
+      "minh-bach-trong-tu-thien",
+      "mua-cải-ven-song-mua-dong-am-ap-thang-12-2025",
+      "su-menh-cao-bang-thang-4-2026",
+      "su-menh-va-gia-tri-cot-loi-drs",
+      "tap-huan-ky-nang-giang-day-noi-bo-drs",
+      "thien-nguyen-ha-giang-11-2026",
+      "thien-nguyen-lao-cai-thang-5-2026",
+      "ung-ho-100-trieu-cong-ty-abc"
+    ];
+    const FALLBACK_STORY_IMG = "images/uploads/2-onl-16997056815001293662280.jpg";
+
+    async function fetchAllPostSlugs() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/content/posts?ref=${GITHUB_BRANCH}`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error("GitHub API lỗi");
+        const files = await res.json();
+        const slugs = files.filter(f => f.type === "file" && f.name.toLowerCase().endsWith(".md")).map(f => f.name.replace(/\.md$/i, ""));
+        if (slugs.length === 0) throw new Error("Không có bài viết nào");
+        return slugs;
+      } catch (e) {
+        console.warn("Không lấy được danh sách bài viết từ GitHub, dùng danh sách dự phòng.", e);
+        return FALLBACK_SLUGS;
+      }
+    }
+
+    function parseFrontMatter(raw) {
+      const result = { title: "", date: "", image: "", excerpt: "", body: raw, valid: false };
+      const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
+      if (!match) return result;
+      result.valid = true;
+      result.body = match[2];
+      match[1].split(/\r?\n/).forEach(line => {
+        const kv = line.match(/^([a-zA-Z0-9_]+)\s*:\s*(.*)$/);
+        if (!kv) return;
+        const key = kv[1].trim().toLowerCase();
+        let value = kv[2].trim().replace(/^["']|["']$/g, "");
+        if (key in result || key === "title" || key === "date" || key === "image" || key === "thumbnail" || key === "excerpt" || key === "description") {
+          if (key === "description") result.excerpt = result.excerpt || value;
+          else if (key === "thumbnail") result.image = result.image || value;
+          else result[key] = value;
+        }
+      });
+      return result;
+    }
+
+    function slugToTitle(slug) { return slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()); }
+
+    function firstParagraph(body) {
+      const clean = body.replace(/^#.*$/gm, "").replace(/!\[.*?\]\(.*?\)/g, "").replace(/\[(.*?)\]\(.*?\)/g, "$1").replace(/[*_`>]/g, "").trim();
+      const para = clean.split(/\r?\n\s*\r?\n/).find(p => p.trim().length > 0) || "";
+      return para.trim().slice(0, 150);
+    }
+
+    function parseDateForSort(dateStr) {
+      if (!dateStr) return -Infinity;
+      const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
+      if (viMatch) return parseInt(viMatch[2], 10) * 12 + parseInt(viMatch[1], 10);
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) return d.getFullYear() * 12 + (d.getMonth() + 1);
+      return -Infinity;
+    }
+
+    function renderFeaturedStory(post) {
+      const img = document.getElementById('featuredStoryImg');
+      img.src = post.image;
+      img.alt = post.title;
+      img.style.display = 'block';
+      img.onerror = function () { this.src = FALLBACK_STORY_IMG; };
+      document.getElementById('featuredStoryDate').textContent = post.date || '';
+      document.getElementById('featuredStoryTitle').textContent = post.title;
+      document.getElementById('featuredStoryExcerpt').textContent = post.excerpt || 'Bấm để đọc toàn bộ nội dung bài viết.';
+      document.getElementById('featuredStoryCard').href = `chi-tiet.html?slug=${encodeURIComponent(post.slug)}`;
+    }
+
+    // Vài thông điệp luân phiên trên badge nổi ảnh Hero, thông điệp cuối cùng lấy SỐ THẬT
+    // (chỉ được thêm vào sau khi tải xong dữ liệu bài viết, xem loadHomepageRealData()).
+    const heroBadgeMessages = [
+      { icon: '🌱', title: '100% Phi Lợi Nhuận', sub: 'Tái đầu tư vì giáo dục cộng đồng' },
+      { icon: '🔍', title: 'Minh Bạch 24/7', sub: 'Công khai mọi giao dịch sao kê' }
+    ];
+
+    function initRotatingHeroBadge() {
+      const badgeIcon = document.querySelector('.floating-badge .badge-icon');
+      const badgeText = document.querySelector('.floating-badge .badge-text');
+      const badgeStrong = badgeText.querySelector('strong');
+      const badgeSpan = badgeText.querySelector('span');
+      let idx = 0;
+
+      setInterval(() => {
+        idx = (idx + 1) % heroBadgeMessages.length;
+        badgeText.classList.add('badge-fade');
+        setTimeout(() => {
+          const msg = heroBadgeMessages[idx];
+          badgeIcon.textContent = msg.icon;
+          badgeStrong.textContent = msg.title;
+          badgeSpan.textContent = msg.sub;
+          badgeText.classList.remove('badge-fade');
+        }, 250);
+      }, 4500);
+    }
+
+    async function loadHomepageRealData() {
+      try {
+        const slugs = await fetchAllPostSlugs();
+        const results = await Promise.all(slugs.map(async slug => {
+          try {
+            const res = await fetch(`content/posts/${slug}.md`);
+            if (!res.ok) throw new Error("not found");
+            const raw = await res.text();
+            const fm = parseFrontMatter(raw);
+            if (!fm.valid) return null;
+            return {
+              slug,
+              title: fm.title || slugToTitle(slug),
+              date: fm.date || "",
+              sortWeight: parseDateForSort(fm.date),
+              image: fm.image || FALLBACK_STORY_IMG,
+              excerpt: fm.excerpt || firstParagraph(fm.body)
+            };
+          } catch (e) { return null; }
+        }));
+
+        const posts = results.filter(Boolean).sort((a, b) => b.sortWeight - a.sortWeight);
+        if (posts.length === 0) return;
+
+        // 1) Câu chuyện mới nhất
+        renderFeaturedStory(posts[0]);
+
+        // 2) Số liệu sống: tổng số bài viết hoạt động thật
+        const totalPostsEl = document.getElementById('metricTotalPosts');
+        if (totalPostsEl) totalPostsEl.setAttribute('data-target', posts.length);
+
+        // 3) Thêm thông điệp thật vào vòng quay badge
+        heroBadgeMessages.push({ icon: '📚', title: `${posts.length}+ Bài Hoạt Động`, sub: 'Cập nhật liên tục từ thực tế' });
+      } catch (err) {
+        console.error('Không tải được dữ liệu bài viết cho trang chủ:', err);
+        document.getElementById('featuredStoryTitle').textContent = 'Xem tất cả hoạt động của chúng tôi';
+        document.getElementById('featuredStoryExcerpt').textContent = 'Ghé thăm trang Tin Tức để đọc các câu chuyện hoạt động mới nhất.';
+      }
+    }
+
+    initRotatingHeroBadge();
+    loadHomepageRealData();
   </script>
 </body>
 </html>
