@@ -596,7 +596,7 @@
     }
 
     function parseFrontMatter(raw) {
-      const result = { title: "", date: "", image: "", excerpt: "", body: raw, valid: false };
+      const result = { title: "", date: "", image: "", excerpt: "", loai: "", body: raw, valid: false };
       const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
       if (!match) return result;
       result.valid = true;
@@ -608,9 +608,10 @@
         const key = kv[1].trim().toLowerCase();
         let value = kv[2].trim();
         value = value.replace(/^["']|["']$/g, "");
-        if (key in result || key === "title" || key === "date" || key === "image" || key === "thumbnail" || key === "excerpt" || key === "description") {
+        if (key in result || key === "title" || key === "date" || key === "image" || key === "thumbnail" || key === "excerpt" || key === "description" || key === "loai" || key === "type") {
           if (key === "description") result.excerpt = result.excerpt || value;
           else if (key === "thumbnail") result.image = result.image || value;
+          else if (key === "type") result.loai = result.loai || value;
           else result[key] = value;
         }
       });
@@ -729,6 +730,7 @@
               sortWeight: dateInfo.sortWeight,
               year: dateInfo.year,
               image: getRandomVietnamPhoto(),
+              loai: (fm.loai || "").trim().toLowerCase(),
               excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
             };
           } catch (e) {
@@ -736,7 +738,16 @@
           }
         }));
 
-        const posts = results.filter(Boolean).sort((a, b) => b.sortWeight - a.sortWeight);
+        const allPosts = results.filter(Boolean).sort((a, b) => b.sortWeight - a.sortWeight);
+
+        // Dòng thời gian chỉ hiển thị các CỘT MỐC HOẠT ĐỘNG THẬT (sự kiện, chương trình,
+        // hội thảo...), không hiển thị các bài viết mang tính tin tức/quan điểm chung
+        // (đánh dấu loai: "tin-tuc" trong front matter) — những bài đó chỉ nên xuất hiện
+        // bên trang Tin Tức. Bài không khai báo "loai" mặc định vẫn được coi là cột mốc,
+        // để không ảnh hưởng đến các bài viết cũ đã có từ trước.
+        // Đồng thời, chỉ hiển thị các mốc ĐÃ THỰC SỰ DIỄN RA — các bài có ngày tháng ở
+        // tương lai đã được đại diện bởi khối "Sự Kiện & Kế Hoạch Gây Quỹ" ở phía trên rồi.
+        const posts = allPosts.filter(p => p.loai !== "tin-tuc" && !isUpcomingPost(p.date));
 
         if (posts.length === 0) {
           container2026.innerHTML = `
