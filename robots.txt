@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /dang-bai.html
+
+Sitemap: https://wvn.vn/sitemap.xml
