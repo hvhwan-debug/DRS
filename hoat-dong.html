@@ -590,10 +590,23 @@
       return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
     }
 
-    const VN_PHOTO_KEYWORDS = "vietnamese,vietnam,people,portrait";
-    function getRandomVietnamPhoto() {
-      const seed = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-      return `https://source.unsplash.com/600x400/?${VN_PHOTO_KEYWORDS}&sig=${seed}`;
+    // ==== ẢNH ỔN ĐỊNH CHO TỪNG BÀI VIẾT (thay thế Unsplash không còn ổn định) ====
+    // Mỗi bài viết được gán MỘT ảnh cố định, chọn từ kho ảnh thật images/uploads/ dựa
+    // theo chính tên bài (slug) — trông vẫn "ngẫu nhiên" giữa các bài khác nhau, nhưng
+    // KHÔNG đổi qua đổi lại mỗi lần tải trang, vì cùng 1 slug luôn cho cùng 1 kết quả.
+    function hashSlugToIndex(slug, poolLength) {
+      let hash = 0;
+      for (let i = 0; i < slug.length; i++) {
+        hash = (hash << 5) - hash + slug.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash) % poolLength;
+    }
+    function getStableImageForSlug(slug) {
+      if (!uploadedImagePool.length) return FALLBACK_IMG;
+      const idx = hashSlugToIndex(slug, uploadedImagePool.length);
+      const name = uploadedImagePool[idx];
+      return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
     }
 
     function parseFrontMatter(raw) {
@@ -730,7 +743,7 @@
               date: fm.date || "",
               sortWeight: dateInfo.sortWeight,
               year: dateInfo.year,
-              image: getRandomVietnamPhoto(),
+              image: fm.image || getStableImageForSlug(slug),
               loai: (fm.loai || "").trim().toLowerCase(),
               excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
             };
