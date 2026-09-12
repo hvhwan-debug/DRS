@@ -554,10 +554,17 @@
       if (viMatch) {
         const month = parseInt(viMatch[1], 10);
         const year = parseInt(viMatch[2], 10);
-        return year * 12 + month;
+        // Định dạng "Tháng MM/YYYY" không có thông tin ngày cụ thể, nên chỉ sắp xếp
+        // được tới độ chính xác THÁNG — các bài cùng tháng sẽ giữ nguyên thứ tự
+        // theo tên file. Nhân 31 để cùng thang đo với nhánh có ngày cụ thể bên dưới.
+        return (year * 12 + month) * 31;
       }
       const d = new Date(dateStr);
-      if (!isNaN(d.getTime())) return d.getFullYear() * 12 + (d.getMonth() + 1);
+      if (!isNaN(d.getTime())) {
+        // Định dạng ISO đầy đủ (ví dụ "2026-09-15") có thông tin NGÀY cụ thể,
+        // nên sắp xếp chính xác từng ngày, không chỉ theo tháng như trên.
+        return (d.getFullYear() * 12 + (d.getMonth() + 1)) * 31 + d.getDate();
+      }
       return -Infinity;
     }
 
@@ -565,11 +572,13 @@
     // đang truy cập trang hay không, để gắn nhãn "Chưa diễn ra" cho đúng — dùng độ chính
     // xác theo THÁNG (khớp với định dạng "Tháng MM/YYYY" phổ biến trong front matter).
     function isUpcomingPost(dateStr) {
-      const postMonthValue = parseDateForSort(dateStr);
-      if (postMonthValue === -Infinity) return false;
+      const postSortWeight = parseDateForSort(dateStr);
+      if (postSortWeight === -Infinity) return false;
       const now = new Date();
-      const currentMonthValue = now.getFullYear() * 12 + (now.getMonth() + 1);
-      return postMonthValue > currentMonthValue;
+      // Nhân 31 để khớp thang đo với parseDateForSort ở trên; cộng thêm ngày hiện tại
+      // giúp so sánh chính xác hơn cho các bài dùng định dạng ISO có ngày cụ thể.
+      const currentSortWeight = (now.getFullYear() * 12 + (now.getMonth() + 1)) * 31 + now.getDate();
+      return postSortWeight > currentSortWeight;
     }
 
     function formatDate(dateStr) {
