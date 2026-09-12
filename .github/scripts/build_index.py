@@ -1,17 +1,31 @@
 #!/usr/bin/env python3
 """
-Quét toàn bộ file .md trong content/posts/ và gộp thành 1 file duy nhất
-content/posts-index.json — giúp trang web chỉ cần gọi 1 request để lấy
-danh sách đầy đủ bài viết, thay vì phải gọi riêng từng file (chậm hơn
-rất nhiều khi số bài viết tăng lên). File này được GitHub Actions tự
-động chạy lại mỗi khi có thay đổi trong content/posts/.
+Quét toàn bộ file .md trong content/posts/ và:
+1. Gộp thành file content/posts-index.json (danh sách bài viết, giúp trang tải nhanh).
+2. Tự động sinh file sitemap.xml ở gốc repo, liệt kê mọi trang tĩnh + mọi bài viết,
+   giúp Google tìm và lập chỉ mục đầy đủ, nhanh hơn.
+File này được GitHub Actions tự động chạy lại mỗi khi có thay đổi trong content/posts/.
 """
 import os
 import re
 import json
+from datetime import date
 
 POSTS_DIR = "content/posts"
 OUTPUT_FILE = "content/posts-index.json"
+SITE_URL = "https://wvn.vn"
+SITEMAP_FILE = "sitemap.xml"
+
+# Các trang tĩnh cố định của website (không phải bài viết động)
+STATIC_PAGES = [
+    ("/", "weekly"),
+    ("/su-menh.html", "monthly"),
+    ("/hoat-dong.html", "weekly"),
+    ("/sao-ke.html", "weekly"),
+    ("/tin-tuc.html", "daily"),
+    ("/lien-he.html", "monthly"),
+    ("/chinh-sach-bao-mat.html", "yearly"),
+]
 
 
 def parse_front_matter(raw):
@@ -50,6 +64,30 @@ def slug_to_title(slug):
     return " ".join(w.capitalize() for w in slug.replace("-", " ").split())
 
 
+def generate_sitemap(posts):
+    """Sinh nội dung file sitemap.xml từ danh sách trang tĩnh + toàn bộ bài viết."""
+    today = date.today().isoformat()
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+
+    for path, freq in STATIC_PAGES:
+        lines.append("  <url>")
+        lines.append(f"    <loc>{SITE_URL}{path}</loc>")
+        lines.append(f"    <lastmod>{today}</lastmod>")
+        lines.append(f"    <changefreq>{freq}</changefreq>")
+        lines.append("  </url>")
+
+    for post in posts:
+        # Trang chi tiết bài viết dùng slug làm tham số: chi-tiet.html?slug=...
+        lines.append("  <url>")
+        lines.append(f"    <loc>{SITE_URL}/chi-tiet.html?slug={post['slug']}</loc>")
+        lines.append("    <changefreq>monthly</changefreq>")
+        lines.append("  </url>")
+
+    lines.append("</urlset>")
+    return "\n".join(lines) + "\n"
+
+
 def main():
     posts = []
     if os.path.isdir(POSTS_DIR):
@@ -83,6 +121,12 @@ def main():
         json.dump(posts, f, ensure_ascii=False, indent=2)
 
     print(f"Đã tạo {OUTPUT_FILE} với {len(posts)} bài viết.")
+
+    sitemap_content = generate_sitemap(posts)
+    with open(SITEMAP_FILE, "w", encoding="utf-8") as f:
+        f.write(sitemap_content)
+
+    print(f"Đã tạo {SITEMAP_FILE} với {len(STATIC_PAGES) + len(posts)} đường dẫn.")
 
 
 if __name__ == "__main__":
