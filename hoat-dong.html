@@ -656,10 +656,15 @@
       if (viMatch) {
         const month = parseInt(viMatch[1], 10);
         const year = parseInt(viMatch[2], 10);
-        return { sortWeight: year * 12 + month, year };
+        // Định dạng "Tháng MM/YYYY" không có ngày cụ thể, chỉ chính xác tới THÁNG.
+        // Nhân 31 để dùng chung thang đo với nhánh có ngày cụ thể bên dưới.
+        return { sortWeight: (year * 12 + month) * 31, year };
       }
       const d = new Date(dateStr);
-      if (!isNaN(d.getTime())) return { sortWeight: d.getFullYear() * 12 + (d.getMonth() + 1), year: d.getFullYear() };
+      if (!isNaN(d.getTime())) {
+        // Định dạng ISO đầy đủ (ví dụ "2026-09-15") — sắp xếp chính xác từng ngày.
+        return { sortWeight: (d.getFullYear() * 12 + (d.getMonth() + 1)) * 31 + d.getDate(), year: d.getFullYear() };
+      }
       return { sortWeight: -Infinity, year: null };
     }
 
@@ -670,8 +675,10 @@
       const info = parseDateInfo(dateStr);
       if (info.sortWeight === -Infinity) return false;
       const now = new Date();
-      const currentMonthValue = now.getFullYear() * 12 + (now.getMonth() + 1);
-      return info.sortWeight > currentMonthValue;
+      // Nhân 31 để khớp thang đo với parseDateInfo ở trên; cộng thêm ngày hiện tại
+      // giúp so sánh chính xác hơn cho các bài dùng định dạng ISO có ngày cụ thể.
+      const currentSortWeight = (now.getFullYear() * 12 + (now.getMonth() + 1)) * 31 + now.getDate();
+      return info.sortWeight > currentSortWeight;
     }
 
     const TIMELINE_TAGS = [
