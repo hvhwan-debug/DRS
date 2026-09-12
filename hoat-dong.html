@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hành Trình & Sự Kiện - Wisdom Vietnam Network</title>
+  <meta name="description" content="Dòng thời gian các cột mốc hoạt động, sự kiện gây quỹ và chương trình giáo dục cộng đồng của Wisdom Vietnam Network - DR Solutions dành cho trẻ em vùng cao Việt Nam.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -717,42 +718,76 @@
       `;
     }
 
+    // Cách nhanh: đọc 1 file tổng hợp posts-index.json (GitHub Actions tự động tạo sẵn
+    // mỗi khi có bài viết mới) thay vì gọi riêng từng file .md — tải trang nhanh hơn
+    // đáng kể khi số bài viết tăng lên.
+    async function loadPostsFromIndex() {
+      const res = await fetch("content/posts-index.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("Chưa có posts-index.json");
+      const list = await res.json();
+      if (!Array.isArray(list)) throw new Error("posts-index.json sai định dạng");
+      return list.map(p => {
+        const dateInfo = parseDateInfo(p.date || "");
+        return {
+          slug: p.slug,
+          title: p.title || slugToTitle(p.slug),
+          date: p.date || "",
+          sortWeight: dateInfo.sortWeight,
+          year: dateInfo.year,
+          image: p.image || getStableImageForSlug(p.slug),
+          loai: (p.loai || "").trim().toLowerCase(),
+          excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết."
+        };
+      });
+    }
+
+    // Cách cũ (chậm hơn): dùng khi posts-index.json chưa kịp tạo hoặc gặp sự cố.
+    async function loadPostsSlowFallback() {
+      const slugs = await fetchAllPostSlugs();
+      const results = await Promise.all(slugs.map(async slug => {
+        try {
+          const res = await fetch(`content/posts/${slug}.md`);
+          if (!res.ok) throw new Error("not found");
+          const raw = await res.text();
+          const fm = parseFrontMatter(raw);
+          if (!fm.valid) {
+            console.warn(`Bỏ qua bài viết lỗi định dạng (thiếu front matter): ${slug}.md`);
+            return null;
+          }
+          const dateInfo = parseDateInfo(fm.date);
+          return {
+            slug,
+            title: fm.title || slugToTitle(slug),
+            date: fm.date || "",
+            sortWeight: dateInfo.sortWeight,
+            year: dateInfo.year,
+            image: fm.image || getStableImageForSlug(slug),
+            loai: (fm.loai || "").trim().toLowerCase(),
+            excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
+          };
+        } catch (e) {
+          return null;
+        }
+      }));
+      return results.filter(Boolean);
+    }
+
     async function loadTimelineData() {
       const container2026 = document.getElementById('timeline2026');
       const containerHistory = document.getElementById('timelineHistory');
       const historyToggleBox = document.getElementById('historyToggleBox');
 
       try {
-        const [slugs, images] = await Promise.all([fetchAllPostSlugs(), fetchUploadedImages()]);
-        uploadedImagePool = images;
+        uploadedImagePool = await fetchUploadedImages();
 
-        const results = await Promise.all(slugs.map(async slug => {
-          try {
-            const res = await fetch(`content/posts/${slug}.md`);
-            if (!res.ok) throw new Error("not found");
-            const raw = await res.text();
-            const fm = parseFrontMatter(raw);
-            if (!fm.valid) {
-              console.warn(`Bỏ qua bài viết lỗi định dạng (thiếu front matter): ${slug}.md`);
-              return null;
-            }
-            const dateInfo = parseDateInfo(fm.date);
-            return {
-              slug,
-              title: fm.title || slugToTitle(slug),
-              date: fm.date || "",
-              sortWeight: dateInfo.sortWeight,
-              year: dateInfo.year,
-              image: fm.image || getStableImageForSlug(slug),
-              loai: (fm.loai || "").trim().toLowerCase(),
-              excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
-            };
-          } catch (e) {
-            return null;
-          }
-        }));
-
-        const allPosts = results.filter(Boolean).sort((a, b) => b.sortWeight - a.sortWeight);
+        let allPosts;
+        try {
+          allPosts = await loadPostsFromIndex();
+        } catch (e) {
+          console.warn("Không đọc được posts-index.json, chuyển sang cách tải chậm hơn.", e);
+          allPosts = await loadPostsSlowFallback();
+        }
+        allPosts.sort((a, b) => b.sortWeight - a.sortWeight);
 
         // Dòng thời gian chỉ hiển thị các CỘT MỐC HOẠT ĐỘNG THẬT (sự kiện, chương trình,
         // hội thảo...), không hiển thị các bài viết mang tính tin tức/quan điểm chung
