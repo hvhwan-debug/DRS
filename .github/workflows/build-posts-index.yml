@@ -1,4 +1,4 @@
-name: Build Posts Index
+name: Build Posts Index & Sitemap
 
 # Tự động chạy mỗi khi có file trong content/posts/ được thêm/sửa/xóa,
 # hoặc có thể chạy tay bằng nút "Run workflow" trong tab Actions trên GitHub.
@@ -24,17 +24,17 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Generate posts-index.json
+      - name: Generate posts-index.json and sitemap.xml
         run: python3 .github/scripts/build_index.py
 
       - name: Commit and push if file changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add content/posts-index.json
+          git add content/posts-index.json sitemap.xml
           if git diff --staged --quiet; then
             echo "Không có thay đổi, bỏ qua commit."
           else
-            git commit -m "Tự động cập nhật posts-index.json [skip ci]"
+            git commit -m "Tự động cập nhật posts-index.json và sitemap.xml [skip ci]"
             git push
           fi
