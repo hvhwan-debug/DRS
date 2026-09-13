@@ -50,7 +50,7 @@
       font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
 
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
@@ -125,6 +125,10 @@
       75%  { transform: translate(10px, -14px) rotate(3deg); }
       100% { transform: translate(0, 0) rotate(-4deg); }
     }
+    @media (max-width: 480px) {
+      .brand-title { font-size: 1.02rem; }
+      .brand-subtitle { font-size: 0.6rem; }
+    }
     @media (max-width: 640px) {
       .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
     }
@@ -166,27 +170,63 @@
     .section-header h2 { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; letter-spacing: -0.5px; }
     .section-header p { color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
 
-    .pillars-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1.8rem; }
-    .pillar-visual-card {
-      background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid var(--border);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column;
+    /* ==== Khối "Hoạt Động Sắp Tới" trên trang chủ ====
+       Hiển thị 3 sự kiện sắp tới kèm đếm ngược, đồng bộ với khối "Sự Kiện & Kế Hoạch
+       Gây Quỹ" ở trang Hoạt Động. */
+    .upcoming-home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.8rem; }
+    .upcoming-home-card {
+      background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); transition: transform 0.25s, box-shadow 0.25s;
+      display: flex; flex-direction: column;
     }
-    .pillar-visual-card:hover { transform: translateY(-6px); box-shadow: 0 16px 30px rgba(2, 132, 199, 0.12); }
-    .pillar-img-box { width: 100%; height: 190px; overflow: hidden; position: relative; }
-    .pillar-img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-    .pillar-visual-card:hover .pillar-img-box img { transform: scale(1.05); }
-    .pillar-content { padding: 1.6rem 1.4rem; flex-grow: 1; display: flex; flex-direction: column; }
-    .pillar-content h3 { font-size: 1.25rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; }
-    .pillar-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; }
+    .upcoming-home-card:hover { transform: translateY(-6px); box-shadow: 0 16px 30px rgba(2, 132, 199, 0.12); }
+    .upcoming-home-top {
+      height: 90px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.9rem;
+    }
+    .upcoming-home-body { padding: 1.6rem; flex-grow: 1; display: flex; flex-direction: column; }
+    .upcoming-home-meta { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+    .upcoming-home-tag { padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .upcoming-home-countdown { font-size: 0.8rem; font-weight: 700; color: #0284c7; display: inline-flex; align-items: center; gap: 5px; }
+    .upcoming-home-body h3 { font-size: 1.12rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 800; line-height: 1.35; }
+    .upcoming-home-body p { font-size: 0.92rem; color: #475569; line-height: 1.6; flex-grow: 1; margin-bottom: 1.1rem; }
+    .upcoming-home-link { font-size: 0.9rem; font-weight: 700; color: #0284c7; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+    .upcoming-home-link i { transition: transform 0.2s; }
+    .upcoming-home-card:hover .upcoming-home-link i { transform: translateX(4px); }
 
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-    .gallery-item { position: relative; border-radius: 16px; overflow: hidden; height: 250px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-item:hover img { transform: scale(1.08); }
-    .gallery-overlay {
-      position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0) 60%);
-      display: flex; align-items: flex-end; padding: 1.2rem; color: #ffffff; font-size: 0.95rem; font-weight: 600;
+    /* ==== Khối "Bài Viết Mới Nhất" — bố cục 2 cột đối xứng (ảnh | nội dung),
+       tiêu đề căn giữa, đoạn văn căn đều 2 bên cho cảm giác chuyên nghiệp. ==== */
+    .latest-article-split {
+      display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
+      background: #ffffff; border: 1px solid var(--border); border-radius: 22px; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
     }
+    @media (max-width: 800px) { .latest-article-split { grid-template-columns: 1fr; } }
+    .latest-article-media { position: relative; min-height: 320px; background: #e2e8f0; }
+    .latest-article-media img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 320px; }
+    .latest-article-date-badge {
+      position: absolute; top: 16px; left: 16px; background: rgba(15, 23, 42, 0.75); color: #fff;
+      padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600;
+    }
+    .latest-article-content {
+      padding: 2.8rem 2.6rem; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center;
+    }
+    .latest-article-tag {
+      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.35rem 0.9rem;
+      border-radius: 999px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 1.1rem;
+    }
+    .latest-article-content h3 { font-size: 1.55rem; color: #0369a1; font-weight: 800; line-height: 1.35; margin-bottom: 1.1rem; }
+    .latest-article-content p {
+      font-size: 1rem; color: #475569; line-height: 1.8; text-align: justify; margin-bottom: 1.7rem; max-width: 440px;
+    }
+    .latest-article-cta {
+      background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.8rem; border-radius: 8px; font-weight: 700;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+      transition: all 0.2s;
+    }
+    .latest-article-cta:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .latest-article-status { grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #64748b; }
+    .latest-article-status i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
 
     .legal-card {
       background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7; padding: 2rem; margin: 1rem 0; border-radius: 12px;
@@ -234,8 +274,8 @@
           </svg>
         </div>
         <div class="brand-text-group">
-          <span class="brand-title">Wisdom Vietnam Network</span>
-          <span class="brand-subtitle">DR SOLUTIONS</span>
+          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
         </div>
       </a>
 
@@ -316,82 +356,36 @@
     </div>
   </section>
 
-  <main class="section-wrap" id="tru-cot">
+  <main class="section-wrap" id="hoat-dong-sap-toi">
     <div class="section-header">
-      <h2>4 Trụ Cột Hành Động Phi Lợi Nhuận</h2>
-      <p>Mỗi chương trình đều được thiết kế gắn liền với tác động thực tiễn tại từng khu dân cư và điểm học tập</p>
+      <h2>Hoạt Động Sắp Tới</h2>
+      <p>Đồng hành cùng chúng tôi trong những chiến dịch tiếp theo — mỗi đóng góp đều tạo ra thay đổi thực sự cho trẻ em vùng cao</p>
     </div>
 
-    <div class="pillars-visual-grid">
-      
-      <div class="pillar-visual-card">
-        <div class="pillar-img-box">
-          <img src="images/uploads/Ban-Sao-Luong-Giao-V.jpg" alt="Hỗ trợ tại chỗ vùng cao" class="vn-img-item">
-        </div>
-        <div class="pillar-content">
-          <h3>Hỗ trợ tại chỗ</h3>
-          <p>Kết nối nguồn lực địa phương để hỗ trợ kịp thời nhu cầu dụng cụ học tập, bàn ghế và không gian đọc sách an toàn cho các em nhỏ.</p>
-        </div>
-      </div>
+    <div class="upcoming-home-grid" id="upcomingHomeGrid"></div>
 
-      <div class="pillar-visual-card">
-        <div class="pillar-img-box">
-          <img src="images/uploads/48591585757_7be64177d0_o.jpg" alt="Lan tỏa tiếp cận sách" class="vn-img-item">
-        </div>
-        <div class="pillar-content">
-          <h3>Lan tỏa tiếp cận</h3>
-          <p>Mở rộng cơ hội tiếp cận sách tham khảo chất lượng cao và tri thức mở đến với học sinh có hoàn cảnh khó khăn qua Tủ sách lưu động.</p>
-        </div>
-      </div>
-
-      <div class="pillar-visual-card">
-        <div class="pillar-img-box">
-          <img src="images/uploads/2-onl-16997056815001293662280.jpg" alt="Nâng cao nhận thức trẻ em" class="vn-img-item">
-        </div>
-        <div class="pillar-content">
-          <h3>Nâng cao nhận thức</h3>
-          <p>Tổ chức các chuỗi lớp rèn luyện tư duy phản biện, kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh cho lứa tuổi thanh thiếu niên.</p>
-        </div>
-      </div>
-
-      <div class="pillar-visual-card">
-        <div class="pillar-img-box">
-          <img src="images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png" alt="Đồng hành bền vững vùng cao" class="vn-img-item">
-        </div>
-        <div class="pillar-content">
-          <h3>Đồng hành bền vững</h3>
-          <p>Duy trì sự phối hợp chặt chẽ giữa gia đình, tình nguyện viên và chuyên gia tâm lý giáo dục để bảo trợ tinh thần xuyên suốt cho học sinh.</p>
-        </div>
-      </div>
-
+    <div style="text-align: center; margin-top: 2.5rem;">
+      <a href="hoat-dong.html" class="btn" style="padding: 0.8rem 2.2rem; font-size: 1rem;">Xem Tất Cả Hoạt Động →</a>
     </div>
   </main>
 
   <section style="background: #ffffff; padding: 5rem 1.5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
     <div style="max-width: 1240px; margin: 0 auto;">
       <div class="section-header">
-        <h2>Hành Trình Gieo Mầm Tri Thức</h2>
-        <p>Hình ảnh minh họa cho tinh thần đồng hành cùng giáo dục vùng cao trong từng chương trình của chúng tôi</p>
+        <h2>Bài Viết Mới Nhất</h2>
+        <p>Câu chuyện giáo dục và hành trình thiện nguyện mới nhất từ DR SOLUTIONS</p>
       </div>
 
-      <div class="gallery-grid" id="dynamicGalleryGrid">
-        <div class="gallery-item">
-          <img src="images/uploads/images (1).jfif" alt="Ươm mầm tri thức" class="vn-img-item">
-          <div class="gallery-overlay">Chung tay vì thế hệ tương lai</div>
-        </div>
-        <div class="gallery-item">
-          <img src="images/uploads/images (2).jfif" alt="Niềm vui học tập của học sinh" class="vn-img-item">
-          <div class="gallery-overlay">Nụ cười và sự tự tin trong từng trang sách mới</div>
-        </div>
-        <div class="gallery-item">
-          <img src="images/uploads/images (3).jfif" alt="Không gian học tập vùng cao" class="vn-img-item">
-          <div class="gallery-overlay">Không gian học tập vui vẻ, không áp lực điểm số</div>
+      <div class="latest-article-split" id="latestArticleSplit">
+        <div class="latest-article-status">
+          <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+          Đang tải bài viết mới nhất...
         </div>
       </div>
 
       <div style="text-align: center; margin-top: 2.5rem;">
-        <a href="hoat-dong.html" class="btn" style="padding: 0.8rem 2.2rem; font-size: 1rem;">
-          Xem Phóng Sự Hoạt Động Chi Tiết →
+        <a href="tin-tuc.html" class="btn" style="padding: 0.8rem 2.2rem; font-size: 1rem;">
+          Xem Tất Cả Tin Tức →
         </a>
       </div>
     </div>
@@ -448,27 +442,6 @@
   </footer>
 
   <script>
-    const vietnameseImagePool = [
-      "images/uploads/2-onl-16997056815001293662280.jpg",
-      "images/uploads/48591585757_7be64177d0_o.jpg",
-      "images/uploads/Ban-Sao-Luong-Giao-V.jpg",
-      "images/uploads/cac-phuong-phap-day-hoc-tich-cuc-1.png",
-      "images/uploads/images (1).jfif",
-      "images/uploads/images (2).jfif",
-      "images/uploads/images (3).jfif",
-      "images/uploads/images (4).jfif"
-    ];
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const allVnImages = document.querySelectorAll('.vn-img-item');
-      allVnImages.forEach(img => {
-        const randomIndex = Math.floor(Math.random() * vietnameseImagePool.length);
-        if(!img.src.includes('banner-drs')) {
-          img.src = vietnameseImagePool[randomIndex];
-        }
-      });
-    });
-
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
 
@@ -590,6 +563,171 @@
 
     initRotatingHeroBadge();
     addRealPostCountToBadge();
+
+    // ==============================================================
+    // Khối "Hoạt Động Sắp Tới" — 3 sự kiện tĩnh, đồng bộ với khối
+    // "Sự Kiện & Kế Hoạch Gây Quỹ" ở trang Hoạt Động (cùng ngày, cùng nội dung,
+    // cùng cơ chế đếm ngược). Khi cập nhật/lên lịch sự kiện mới ở trang Hoạt Động,
+    // cập nhật lại danh sách HOME_UPCOMING_EVENTS bên dưới cho khớp.
+    // ==============================================================
+
+    const HOME_UPCOMING_EVENTS = [
+      {
+        date: "2026-10-20",
+        icon: "fa-laptop-code",
+        topBg: "linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)",
+        tag: "Đang nhận đăng ký",
+        tagBg: "#dbeafe", tagColor: "#1e40af",
+        title: "Hội thảo phương pháp học tập số",
+        desc: "Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên."
+      },
+      {
+        date: "2026-11-01",
+        icon: "fa-mitten",
+        topBg: "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)",
+        tag: "Sắp diễn ra",
+        tagBg: "#e0f2fe", tagColor: "#0369a1",
+        title: "Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)",
+        desc: "Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang."
+      },
+      {
+        date: "2026-12-01",
+        icon: "fa-award",
+        topBg: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
+        tag: "Kế hoạch quý IV",
+        tagBg: "#ccfbf1", tagColor: "#0f766e",
+        title: "Phát động Học Bổng Ươm Mầm",
+        desc: "Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập."
+      }
+    ];
+
+    function renderUpcomingHomeCard(ev) {
+      return `
+        <div class="upcoming-home-card">
+          <div class="upcoming-home-top" style="background:${ev.topBg};"><i class="fa-solid ${ev.icon}"></i></div>
+          <div class="upcoming-home-body">
+            <div class="upcoming-home-meta">
+              <span class="upcoming-home-tag" style="background:${ev.tagBg}; color:${ev.tagColor};">${ev.tag}</span>
+              <span class="upcoming-home-countdown" data-home-event-date="${ev.date}">Đang tính...</span>
+            </div>
+            <h3>${ev.title}</h3>
+            <p>${ev.desc}</p>
+            <a class="upcoming-home-link" href="hoat-dong.html">Xem chi tiết <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>`;
+    }
+
+    function updateHomeCountdowns() {
+      const now = new Date();
+      document.querySelectorAll(".upcoming-home-countdown[data-home-event-date]").forEach(chip => {
+        const val = chip.getAttribute("data-home-event-date");
+        const eventDate = new Date(val + "T00:00:00");
+        if (isNaN(eventDate.getTime())) { chip.textContent = ""; return; }
+        const diffMs = eventDate - now;
+        if (diffMs <= 0) {
+          const isToday = eventDate.toDateString() === now.toDateString();
+          chip.innerHTML = isToday ? `<i class="fa-solid fa-star"></i> Diễn ra hôm nay` : `<i class="fa-solid fa-check"></i> Đang diễn ra`;
+          return;
+        }
+        const totalDays = Math.ceil(diffMs / 86400000);
+        chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Còn ${totalDays} ngày`;
+      });
+    }
+
+    function loadUpcomingHomeEvents() {
+      const grid = document.getElementById("upcomingHomeGrid");
+      const events = [...HOME_UPCOMING_EVENTS].sort((a, b) => new Date(a.date) - new Date(b.date));
+      grid.innerHTML = events.map(renderUpcomingHomeCard).join("");
+      updateHomeCountdowns();
+      setInterval(updateHomeCountdowns, 60000);
+    }
+
+    loadUpcomingHomeEvents();
+
+    // ==============================================================
+    // Khối "Bài Viết Mới Nhất" — lấy bài mới nhất thật từ
+    // content/posts-index.json (cùng nguồn dữ liệu với trang Tin Tức),
+    // ưu tiên bài gắn loai:"tin-tuc" đã diễn ra (không phải sự kiện sắp tới).
+    // ==============================================================
+
+    const LATEST_ARTICLE_FALLBACK_IMG = "images/uploads/2-onl-16997056815001293662280.jpg";
+
+    function parseDateForSortLatest(dateStr) {
+      if (!dateStr) return -Infinity;
+      const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
+      if (viMatch) return (parseInt(viMatch[2], 10) * 12 + parseInt(viMatch[1], 10)) * 31;
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? -Infinity : (d.getFullYear() * 12 + (d.getMonth() + 1)) * 31 + d.getDate();
+    }
+
+    function isUpcomingLatest(dateStr) {
+      const weight = parseDateForSortLatest(dateStr);
+      if (weight === -Infinity) return false;
+      const now = new Date();
+      return weight > (now.getFullYear() * 12 + (now.getMonth() + 1)) * 31 + now.getDate();
+    }
+
+    function formatDateLatest(dateStr) {
+      if (!dateStr) return "";
+      if (/th[aá]ng\s*\d{1,2}\s*\/\s*\d{4}/i.test(dateStr)) return dateStr;
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString("vi-VN");
+    }
+
+    function renderLatestArticle(article) {
+      const wrap = document.getElementById("latestArticleSplit");
+      if (!article) {
+        wrap.innerHTML = `
+          <div class="latest-article-status">
+            <i class="fa-solid fa-circle-info"></i>
+            Chưa có bài viết nào để hiển thị. <a href="tin-tuc.html" style="color:#0284c7; font-weight:700;">Xem trang Tin Tức →</a>
+          </div>`;
+        return;
+      }
+      wrap.innerHTML = `
+        <div class="latest-article-media">
+          <img src="${article.image}" alt="${article.title}" loading="lazy" onerror="this.onerror=null; this.src='${LATEST_ARTICLE_FALLBACK_IMG}';">
+          ${article.date ? `<span class="latest-article-date-badge">${formatDateLatest(article.date)}</span>` : ""}
+        </div>
+        <div class="latest-article-content">
+          <span class="latest-article-tag">Mới nhất</span>
+          <h3>${article.title}</h3>
+          <p>${article.excerpt}</p>
+          <a class="latest-article-cta" href="chi-tiet.html?slug=${encodeURIComponent(article.slug)}">Đọc chi tiết <i class="fa-solid fa-arrow-right"></i></a>
+        </div>`;
+    }
+
+    async function loadLatestArticle() {
+      try {
+        const res = await fetch("content/posts-index.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("Chưa có posts-index.json");
+        const list = await res.json();
+        if (!Array.isArray(list)) throw new Error("posts-index.json sai định dạng");
+
+        const posts = list.map(p => ({
+          slug: p.slug,
+          title: p.title || p.slug,
+          date: p.date || "",
+          image: p.image || LATEST_ARTICLE_FALLBACK_IMG,
+          loai: (p.loai || "").trim().toLowerCase(),
+          excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết."
+        })).sort((a, b) => parseDateForSortLatest(b.date) - parseDateForSortLatest(a.date));
+
+        const taggedArticles = posts.filter(p => p.loai === "tin-tuc" && !isUpcomingLatest(p.date));
+        const articlePool = taggedArticles.length > 0 ? taggedArticles : posts.filter(p => !isUpcomingLatest(p.date));
+
+        renderLatestArticle(articlePool[0] || posts[0] || null);
+      } catch (err) {
+        console.error(err);
+        document.getElementById("latestArticleSplit").innerHTML = `
+          <div class="latest-article-status">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Không thể tải bài viết lúc này. <a href="tin-tuc.html" style="color:#0284c7; font-weight:700;">Xem tại trang Tin Tức →</a>
+          </div>`;
+      }
+    }
+
+    loadLatestArticle();
   </script>
 </body>
 </html>
