@@ -173,6 +173,14 @@
 
     /* Footer 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
@@ -281,6 +289,15 @@
       <div>
         <h4>Cam Kết Xã Hội</h4>
         <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+      </div>
+      <div>
+        <h4>Kết Nối Với Chúng Tôi</h4>
+        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của DR SOLUTIONS.</p>
+        <div class="social-links" style="margin-top: 0.8rem;">
+          <a class="social-link" href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+          <a class="social-link" href="#" aria-label="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
