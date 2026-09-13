@@ -246,6 +246,40 @@
     .latest-article-status { grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #64748b; }
     .latest-article-status i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
 
+    /* ==== Khối "Kết Nối & Đồng Hành" — bản tin email + mạng xã hội, đặt trước footer
+       để đa dạng hoá lời kêu gọi hành động thay vì chỉ có nút Quyên Góp. ==== */
+    .connect-band { background: #eff6ff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4rem 1.5rem; }
+    .connect-band-inner { max-width: 560px; margin: 0 auto; text-align: center; }
+
+    .connect-band-inner h3 { font-size: 1.25rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem; }
+    .connect-band-inner p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1.3rem; line-height: 1.6; }
+
+    .newsletter-form { display: flex; gap: 0.7rem; flex-wrap: wrap; justify-content: center; }
+    .newsletter-form input[type="email"] {
+      flex: 1; min-width: 200px; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #fff;
+    }
+    .newsletter-form input[type="email"]:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); }
+    .newsletter-form button {
+      background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700;
+      border: none; cursor: pointer; font-family: inherit; font-size: 0.92rem; white-space: nowrap; transition: all 0.2s;
+    }
+    .newsletter-form button:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .newsletter-form button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .newsletter-alert {
+      display: none; margin-top: 0.9rem; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.86rem; align-items: center; gap: 8px;
+    }
+    .newsletter-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .newsletter-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+
     .legal-card {
       background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7; padding: 2rem; margin: 1rem 0; border-radius: 12px;
     }
@@ -429,6 +463,21 @@
     </div>
   </section>
 
+  <section class="connect-band">
+    <div class="connect-band-inner">
+      <h3>Đăng Ký Nhận Bản Tin</h3>
+      <p>Nhận thông tin về hoạt động mới, sự kiện gây quỹ và câu chuyện giáo dục vùng cao — gửi thẳng tới email của bạn, không spam.</p>
+      <form id="newsletterForm" class="newsletter-form">
+        <input type="hidden" name="_subject" value="Đăng ký nhận bản tin - Website Mạng Lưới Tri Thức Việt Nam">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="email" name="email" id="newsletterEmail" placeholder="Email của bạn" required>
+        <button type="submit" id="newsletterBtn">Đăng Ký</button>
+      </form>
+      <div id="newsletterAlert" class="newsletter-alert"></div>
+    </div>
+  </section>
+
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
@@ -457,6 +506,15 @@
       <div>
         <h4>Cam Kết Xã Hội</h4>
         <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+      </div>
+      <div>
+        <h4>Kết Nối Với Chúng Tôi</h4>
+        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của DR SOLUTIONS.</p>
+        <div class="social-links" style="margin-top: 0.8rem;">
+          <a class="social-link" href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+          <a class="social-link" href="#" aria-label="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
@@ -771,6 +829,53 @@
     }
 
     loadLatestArticle();
+
+    // ==============================================================
+    // Khối "Đăng Ký Nhận Bản Tin" — gửi bằng AJAX qua formsubmit.co
+    // (cùng dịch vụ đang dùng ở form Liên Hệ), hiện thông báo ngay
+    // trên trang thay vì chuyển hướng sang trang khác.
+    // ==============================================================
+    const newsletterForm = document.getElementById("newsletterForm");
+    const newsletterBtn = document.getElementById("newsletterBtn");
+    const newsletterAlert = document.getElementById("newsletterAlert");
+
+    newsletterForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const originalBtnHtml = newsletterBtn.innerHTML;
+      newsletterBtn.disabled = true;
+      newsletterBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      newsletterAlert.className = "newsletter-alert";
+      newsletterAlert.style.display = "none";
+
+      const formData = new FormData(newsletterForm);
+      const recipientEmail = "hotro@wvn.vn";
+
+      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: formData
+      })
+        .then(async res => {
+          let data = null;
+          try { data = await res.json(); } catch (e) { /* phản hồi không phải JSON, vẫn xét theo res.ok */ }
+          const isSuccess = res.ok && (!data || data.success === "true" || data.success === true || data.success === undefined);
+          if (!isSuccess) throw new Error("Đăng ký không thành công");
+        })
+        .then(() => {
+          newsletterAlert.className = "newsletter-alert newsletter-alert-success";
+          newsletterAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi bản tin mới nhất tới email này.</span>';
+          newsletterForm.reset();
+        })
+        .catch(() => {
+          newsletterAlert.className = "newsletter-alert newsletter-alert-error";
+          newsletterAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          newsletterBtn.disabled = false;
+          newsletterBtn.innerHTML = originalBtnHtml;
+        });
+    });
   </script>
 </body>
 </html>
