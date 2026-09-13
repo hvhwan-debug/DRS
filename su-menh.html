@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sứ Mệnh & Tầm Nhìn - Wisdom Vietnam Network</title>
-  <meta name="description" content="Sứ mệnh của Wisdom Vietnam Network & DR Solutions: kết nối nguồn lực xã hội để mang cơ hội học tập công bằng đến trẻ em vùng cao Việt Nam, hoạt động minh bạch và phi lợi nhuận.">
+  <title>Sứ Mệnh & Tầm Nhìn - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Sứ mệnh của Mạng Lưới Tri Thức Việt Nam & DR Solutions: kết nối nguồn lực xã hội để mang cơ hội học tập công bằng đến trẻ em vùng cao Việt Nam, hoạt động minh bạch và phi lợi nhuận.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -167,6 +167,14 @@
 
     /* Footer chuẩn 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
@@ -235,7 +243,7 @@
     <div class="quote-card">
       <i class="fa-solid fa-quote-left"></i>
       <p>“Vì cơ hội học tập không nên phụ thuộc vào hoàn cảnh. Hãy cùng chúng tôi mở thêm một cơ hội.”</p>
-      <span>— Wisdom Vietnam Network (DR Solutions)</span>
+      <span>— Mạng Lưới Tri Thức Việt Nam (Wisdom Vietnam Network | DR Solutions)</span>
     </div>
   </div>
 
@@ -319,9 +327,18 @@
         <h4>Cam Kết Xã Hội</h4>
         <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
       </div>
+      <div>
+        <h4>Kết Nối Với Chúng Tôi</h4>
+        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của DR SOLUTIONS.</p>
+        <div class="social-links" style="margin-top: 0.8rem;">
+          <a class="social-link" href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+          <a class="social-link" href="#" aria-label="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 Wisdom Vietnam Network. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
     </div>
   </footer>
 
