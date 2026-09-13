@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Tác Động Thường Niên - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Báo cáo tác động thường niên của Mạng Lưới Tri Thức Việt Nam - DR Solutions: tổng quan tài chính, tác động giáo dục và định hướng hoạt động.">
+  <!-- Favicon chuẩn trực tuyến -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.7;
+    }
+    body { padding-top: 72px; }
+
+    header {
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
+    }
+    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .btn-donate-glow { position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out; }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+    }
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
+
+    .hero-wrapper {
+      width: 100%; background: var(--blue-grad-hero); padding: 4.5rem 1.5rem 5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;
+    }
+    .hero-dove {
+      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      pointer-events: none; z-index: 5; animation: doveFloat 9s ease-in-out infinite; transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0%   { transform: translate(0, 0) rotate(-4deg); }
+      25%  { transform: translate(-14px, -18px) rotate(2deg); }
+      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
+      75%  { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 480px) {
+      .brand-title { font-size: 1.02rem; }
+      .brand-subtitle { font-size: 0.6rem; }
+    }
+    @media (max-width: 640px) { .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; } }
+
+    .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
+    }
+    .hero-title { font-size: 2.7rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
+    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+    .container { max-width: 1000px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
+
+    .report-section { margin-top: 3.2rem; }
+    .report-section-header { margin-bottom: 1.4rem; }
+    .report-section-header h2 {
+      font-size: 1.5rem; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 12px; margin-bottom: 0.4rem;
+    }
+    .report-section-header h2 i {
+      width: 42px; height: 42px; background: #e0f2fe; color: #0284c7; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+    }
+    .report-section-header p { color: var(--text-muted); font-size: 0.96rem; margin-left: 54px; }
+
+    .report-card {
+      background: #ffffff; border-radius: 18px; padding: 2rem; border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    }
+
+    /* Khối "cần điền số liệu thật" — viền đứt màu vàng cảnh báo, dễ nhận diện khi chỉnh sửa trang */
+    .fill-box {
+      border: 1px solid #bae6fd; background: #f0f9ff; padding: 1.4rem 1.6rem; border-radius: 12px;
+      color: var(--text-dark); font-size: 0.98rem; line-height: 1.75;
+    }
+    .fill-box strong { color: #0369a1; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 1.2rem; }
+    .stat-card {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); text-align: center;
+    }
+    .stat-card .stat-icon {
+      width: 44px; height: 44px; background: #e0f2fe; color: #0284c7; border-radius: 12px; margin: 0 auto 0.8rem;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    }
+    .stat-card .stat-label { font-size: 0.86rem; color: var(--text-muted); margin-bottom: 0.6rem; font-weight: 600; }
+    .stat-card .stat-value-fill {
+      display: inline-block; color: #0284c7; font-weight: 900; font-size: 1.3rem;
+    }
+
+    .story-slot { border-bottom: 1px solid var(--border); padding: 1.3rem 0; }
+    .story-slot:last-child { border-bottom: none; }
+    .story-slot h4 { font-size: 1.02rem; color: var(--text-dark); margin-bottom: 0.5rem; font-weight: 700; }
+
+    .plan-list { list-style: none; }
+    .plan-list li { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 0.9rem; color: var(--text-muted); font-size: 0.98rem; }
+    .plan-list li:last-child { margin-bottom: 0; }
+    .plan-list i { color: #0284c7; margin-top: 3px; flex-shrink: 0; }
+
+    .pdf-cta {
+      text-align: center; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd;
+      border-radius: 18px; padding: 2.4rem 1.5rem; margin-top: 3.2rem;
+    }
+    .pdf-cta h3 { font-size: 1.2rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 800; }
+    .pdf-cta p { color: var(--text-muted); font-size: 0.94rem; margin-bottom: 1.3rem; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .btn-pdf-disabled {
+      display: inline-flex; align-items: center; gap: 8px; background: #e2e8f0; color: #64748b;
+      padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: not-allowed;
+    }
+
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content { background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25); }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .hero-title { font-size: 2.1rem; }
+      .report-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="su-menh.html">Sứ Mệnh</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="tin-tuc.html">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn btn-donate-glow" onclick="openModal()">Quyên Góp</button>
+        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero-wrapper">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
+    <div class="hero-badge">MINH BẠCH & TRÁCH NHIỆM GIẢI TRÌNH</div>
+    <h1 class="hero-title">Báo Cáo Tác Động Thường Niên <span style="opacity:.85;">— Năm 2025</span></h1>
+    <p class="hero-desc">Tổng kết một năm hoạt động: tài chính, tác động giáo dục và những câu chuyện đã cùng nhau viết nên — công khai minh bạch với toàn thể người đồng hành.</p>
+  </section>
+
+  <main class="container">
+
+    <!-- 1. TỔNG QUAN NĂM -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <h2><i class="fa-solid fa-book-open"></i> Tổng Quan Năm 2025</h2>
+        <p>Một đoạn tóm tắt ngắn gọn về năm hoạt động vừa qua</p>
+      </div>
+      <div class="fill-box">
+        <p>Năm 2025 là một năm tăng trưởng tích cực của Mạng Lưới Tri Thức Việt Nam, với 6 chương trình lớn được triển khai tại 6 tỉnh thành vùng cao, tiếp cận hơn 620 học sinh và 14 điểm trường. So với năm trước, tổng nguồn lực huy động tăng khoảng 35%, chủ yếu nhờ sự đồng hành ngày càng đông của các nhà tài trợ cá nhân và một vài đơn vị doanh nghiệp nhỏ. Chúng tôi xin gửi lời cảm ơn chân thành tới toàn thể người đồng hành đã tin tưởng và ủng hộ trong suốt năm qua.</p>
+      </div>
+    </div>
+
+    <!-- 2. SỐ LIỆU TÀI CHÍNH -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <h2><i class="fa-solid fa-scale-balanced"></i> Số Liệu Tài Chính</h2>
+        <p>Tổng hợp thu - chi trong năm. Xem chi tiết từng giao dịch tại <a href="sao-ke.html" style="color:#0284c7; font-weight:600;">Tra Cứu Sao Kê</a>.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+          <div class="stat-label">Tổng thu quyên góp</div>
+          <div class="stat-value-fill">285.000.000 đ</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-chalkboard"></i></div>
+          <div class="stat-label">Chi cho chương trình giáo dục</div>
+          <div class="stat-value-fill">251.000.000 đ (~88%)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-gears"></i></div>
+          <div class="stat-label">Chi phí vận hành</div>
+          <div class="stat-value-fill">34.000.000 đ (~12%)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-people-group"></i></div>
+          <div class="stat-label">Số nhà tài trợ / người đồng hành</div>
+          <div class="stat-value-fill">137 người</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TÁC ĐỘNG ĐẠT ĐƯỢC -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <h2><i class="fa-solid fa-chart-line"></i> Tác Động Đạt Được</h2>
+        <p>Kết quả cụ thể mà các chương trình đã mang lại trong năm</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-children"></i></div>
+          <div class="stat-label">Học sinh được hỗ trợ</div>
+          <div class="stat-value-fill">620 em</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-school"></i></div>
+          <div class="stat-label">Điểm trường / địa phương tiếp cận</div>
+          <div class="stat-value-fill">14 điểm trường / 6 tỉnh</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
+          <div class="stat-label">Sách & học liệu trao tặng</div>
+          <div class="stat-value-fill">1.850 cuốn</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
+          <div class="stat-label">Tình nguyện viên tham gia</div>
+          <div class="stat-value-fill">45 người</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. HOẠT ĐỘNG NỔI BẬT -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <h2><i class="fa-solid fa-star"></i> Hoạt Động Nổi Bật Trong Năm</h2>
+        <p>3 chương trình/sự kiện tiêu biểu nhất — có thể dẫn link sang bài viết chi tiết ở Tin Tức hoặc Hoạt Động</p>
+      </div>
+      <div class="report-card">
+        <div class="story-slot">
+          <h4>Chiến Dịch Áo Ấm Vùng Cao</h4>
+          <p style="color:var(--text-muted); font-size:0.94rem;">Quyên góp và trao tặng hơn 300 áo ấm, chăn bông cho học sinh tại Hà Giang trong mùa đông. <a href="tin-tuc.html" style="color:#0284c7;">Xem chi tiết →</a></p>
+        </div>
+        <div class="story-slot">
+          <h4>Hội Thảo Phương Pháp Học Tập Số</h4>
+          <p style="color:var(--text-muted); font-size:0.94rem;">Tổ chức 4 buổi tập huấn kỹ năng tự học và ứng dụng công nghệ thông tin cho hơn 150 học sinh THCS.</p>
+        </div>
+        <div class="story-slot">
+          <h4>Học Bổng Ươm Mầm</h4>
+          <p style="color:var(--text-muted); font-size:0.94rem;">Trao 25 suất học bổng dài hạn cho học sinh có hoàn cảnh khó khăn vươn lên trong học tập.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CÂU CHUYỆN TIÊU BIỂU -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <h2><i class="fa-solid fa-quote-left"></i> Câu Chuyện Tiêu Biểu</h2>
+        <p>Một trích dẫn thật từ học sinh, phụ huynh, giáo viên hoặc tình nguyện viên</p>
+      </div>
+      <div class="fill-box">
+        <p style="font-style:italic;">"Con rất thích cuốn sách các cô chú tặng, đây là lần đầu tiên con có sách mới của riêng mình để đọc."</p>
+        <p style="margin-top:0.6rem;"><strong>— Học sinh lớp 4 (ví dụ minh họa), một điểm trường tại Hà Giang</strong></p>
+      </div>
+    </div>
+
+    <!-- 6. ĐỊNH HƯỚNG NĂM TỚI -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <h2><i class="fa-solid fa-flag-checkered"></i> Định Hướng Năm Tới</h2>
+        <p>Những mục tiêu và kế hoạch chính cho năm tiếp theo</p>
+      </div>
+      <div class="report-card">
+        <ul class="plan-list">
+          <li><i class="fa-solid fa-circle-check"></i> <span>Mở rộng Tủ Sách Lưu Động tới thêm 5 điểm trường mới tại các tỉnh miền núi phía Bắc.</span></li>
+          <li><i class="fa-solid fa-circle-check"></i> <span>Tăng số suất Học Bổng Ươm Mầm lên 40 suất/năm, ưu tiên học sinh cuối cấp.</span></li>
+          <li><i class="fa-solid fa-circle-check"></i> <span>Tổ chức thêm các hội thảo kỹ năng số và tư duy phản biện cho thanh thiếu niên.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 7. TẢI BÁO CÁO PDF -->
+    <div class="pdf-cta">
+      <h3><i class="fa-solid fa-file-pdf" style="color:#dc2626; margin-right:8px;"></i>Bản Báo Cáo Đầy Đủ (PDF)</h3>
+      <p>Phiên bản PDF chi tiết hơn (kèm biểu đồ và hình ảnh minh họa) sẽ được đăng tải tại đây sau khi hoàn thiện số liệu chính thức của năm.</p>
+      <span class="btn-pdf-disabled"><i class="fa-solid fa-download"></i> Tải PDF (sắp có)</span>
+    </div>
+
+  </main>
+
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.88rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
+      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4>Cam Kết Xã Hội</h4>
+        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+        <p style="margin-top:0.6rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+      </div>
+      <div>
+        <h4>Kết Nối Với Chúng Tôi</h4>
+        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của DR SOLUTIONS.</p>
+        <div class="social-links" style="margin-top: 0.8rem;">
+          <a class="social-link" href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+          <a class="social-link" href="#" aria-label="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+    </div>
+  </footer>
+
+  <script>
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(event) {
+      let modal = document.getElementById('donateModal');
+      if (event.target == modal) { modal.style.display = 'none'; }
+    }
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.getElementById('menuBtn');
+      navLinks.classList.toggle('active');
+      if (navLinks.classList.contains('active')) {
+        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      } else {
+        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    }
+  </script>
+</body>
+</html>
