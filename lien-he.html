@@ -232,6 +232,27 @@
       .container { margin: -2rem 1rem 4rem 1rem; padding: 0 1rem; }
       .contact-card, .info-card { padding: 2rem 1.5rem; }
     }
+
+    /* ==== Khối "Câu Hỏi Thường Gặp" — dạng accordion, đặt cuối trang trước footer ==== */
+    .faq-section { max-width: 900px; margin: 0 auto 5rem; padding: 0 1.5rem; }
+    .faq-section .section-header { text-align: center; margin-bottom: 2.2rem; }
+    .faq-section .section-header h2 { font-size: 1.9rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .faq-section .section-header p { color: #64748b; font-size: 1rem; }
+
+    .faq-item {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 14px;
+      margin-bottom: 0.9rem; overflow: hidden; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+    .faq-item summary {
+      list-style: none; cursor: pointer; padding: 1.1rem 1.4rem; font-weight: 700; color: var(--text-dark);
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.98rem;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+'; font-size: 1.3rem; font-weight: 400; color: #0284c7; flex-shrink: 0; line-height: 1;
+    }
+    .faq-item[open] summary::after { content: '−'; }
+    .faq-item p { padding: 0 1.4rem 1.2rem; color: var(--text-muted); font-size: 0.94rem; line-height: 1.7; }
   </style>
 </head>
 <body>
@@ -371,6 +392,39 @@
 
     </div>
   </main>
+
+  <!-- Câu Hỏi Thường Gặp -->
+  <section class="faq-section">
+    <div class="section-header">
+      <h2>Câu Hỏi Thường Gặp</h2>
+      <p>Một số thắc mắc phổ biến trước khi bạn liên hệ hoặc đồng hành cùng chúng tôi</p>
+    </div>
+
+    <details class="faq-item" open>
+      <summary>Tiền quyên góp được sử dụng như thế nào?</summary>
+      <p>100% lợi nhuận sau thuế được tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng đã đăng ký — không phân chia lợi tức hay cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mọi khoản đóng góp đều được ghi nhận và công khai định kỳ tại trang <a href="sao-ke.html">Tra Cứu Sao Kê</a>.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Làm sao biết tổ chức hoạt động minh bạch?</summary>
+      <p>Chúng tôi công khai sao kê giao dịch quyên góp theo thời gian thực tại trang Tra Cứu Sao Kê, đồng thời hiển thị mã số doanh nghiệp (MST: 0111291749) và các cam kết pháp lý tại trang chủ. Bạn cũng có thể yêu cầu thông tin chi tiết về khoản đóng góp của mình qua email.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Làm thế nào để trở thành tình nguyện viên?</summary>
+      <p>Bạn có thể gửi thông tin qua form liên hệ ở trên, hoặc email trực tiếp tới hotro@wvn.vn, nêu rõ mong muốn tham gia. Chúng tôi sẽ phản hồi và sắp xếp chương trình phù hợp trong các đợt hoạt động sắp tới.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Tổ chức có nhận quyên góp hiện vật (sách, đồ dùng học tập...) không?</summary>
+      <p>Có. Ngoài quyên góp tài chính, chúng tôi luôn hoan nghênh sách, học liệu và dụng cụ học tập còn sử dụng tốt. Vui lòng liên hệ trước qua email hoặc form bên trên để được hướng dẫn cách gửi/bàn giao phù hợp.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Thông tin hoạt động trên website được cập nhật bao lâu một lần?</summary>
+      <p>Trang Tin Tức và Hoạt Động được cập nhật thường xuyên mỗi khi có chương trình hoặc cột mốc mới. Trang Tra Cứu Sao Kê được đối soát và công khai định kỳ để đảm bảo tính minh bạch liên tục.</p>
+    </details>
+  </section>
 
   <!-- Modal Quyên góp VietQR -->
   <div id="donateModal" class="modal">
