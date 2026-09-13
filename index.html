@@ -109,6 +109,18 @@
       100% { background-position: -50% 0; }
     }
     .hero-desc { font-size: 1.15rem; color: #e0f2fe; line-height: 1.7; margin-bottom: 2.2rem; max-width: 600px; }
+    /* 3 viên nhộng "sứ mệnh" — nhấn mạnh 3 giá trị cốt lõi bằng hình viên thuốc bo tròn,
+       tinh thần kính-mờ (glass) đồng bộ với .hero-badge phía trên tiêu đề. */
+    .hero-mission-pills { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 2.2rem; }
+    .hero-mission-pill {
+      display: inline-flex; align-items: center; gap: 9px; background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      color: #f0f9ff; padding: 0.6rem 1.2rem; border-radius: 999px; font-size: 0.88rem; font-weight: 700;
+      letter-spacing: 0.1px; transition: background 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .hero-mission-pill:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.35); transform: translateY(-2px); }
+    .hero-mission-pill i { color: #7dd3fc; font-size: 0.95rem; }
+    @media (max-width: 480px) { .hero-mission-pill { font-size: 0.82rem; padding: 0.55rem 1rem; } }
     /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với trang Tra Cứu Sao Kê,
        tượng trưng cho lòng tin & minh bạch, lượn nhẹ theo đường cong tự nhiên */
     .hero-dove {
@@ -313,6 +325,11 @@
         <p class="hero-desc">
           Chúng tôi vận hành các chương trình phi lợi nhuận, kết nối nguồn lực xã hội để hỗ trợ học tập, trao tặng học liệu và kiến tạo nền tảng tự tin vững bước cho thế hệ tương lai.
         </p>
+        <div class="hero-mission-pills">
+          <span class="hero-mission-pill"><i class="fa-solid fa-scale-balanced"></i> Giáo Dục Công Bằng</span>
+          <span class="hero-mission-pill"><i class="fa-solid fa-magnifying-glass"></i> Minh Bạch Tuyệt Đối</span>
+          <span class="hero-mission-pill"><i class="fa-solid fa-heart"></i> Phi Lợi Nhuận 100%</span>
+        </div>
         <div class="hero-actions">
           <button class="btn-light" onclick="openModal()">Chung Tay Ủng Hộ</button>
           <a href="su-menh.html" class="hero-link">Tìm hiểu sứ mệnh hoạt động</a>
