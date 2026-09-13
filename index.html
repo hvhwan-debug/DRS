@@ -646,8 +646,23 @@
           chip.innerHTML = isToday ? `<i class="fa-solid fa-star"></i> Diễn ra hôm nay` : `<i class="fa-solid fa-check"></i> Đang diễn ra`;
           return;
         }
-        const totalDays = Math.ceil(diffMs / 86400000);
-        chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Còn ${totalDays} ngày`;
+
+        // Đếm ngược thật theo từng giây (ngày : giờ : phút : giây), cập nhật mỗi 1 giây
+        // để tạo cảm giác đồng hồ đang chạy sống động — đồng bộ với trang Hoạt Động.
+        let totalSeconds = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+        const hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        const pad = n => String(n).padStart(2, "0");
+        const label = days > 0
+          ? `${days} ngày ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+          : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+
+        chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> ${label}`;
       });
     }
 
@@ -656,7 +671,7 @@
       const events = [...HOME_UPCOMING_EVENTS].sort((a, b) => new Date(a.date) - new Date(b.date));
       grid.innerHTML = events.map(renderUpcomingHomeCard).join("");
       updateHomeCountdowns();
-      setInterval(updateHomeCountdowns, 60000);
+      setInterval(updateHomeCountdowns, 1000);
     }
 
     loadUpcomingHomeEvents();
