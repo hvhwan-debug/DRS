@@ -59,8 +59,13 @@
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
       display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+      font-size: 0.88rem;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    /* Nút Quyên Góp riêng ở header — giảm mạnh phần đệm trên/dưới (padding dọc) để không
+       còn khoảng xanh thừa phía trên và dưới chữ, chỉ áp dụng cho đúng vị trí này,
+       không ảnh hưởng tới các nút .btn khác trên trang. */
+    .nav-container .btn { padding: 0.4rem 1.1rem; text-align: center; }
 
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
