@@ -155,15 +155,6 @@
     .mission-story-block p:last-child { margin-bottom: 0; }
 
     /* Modal Quyên góp */
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
-    }
-    .modal-content {
-      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
     /* Footer chuẩn 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
@@ -334,19 +325,6 @@
 
   </main>
 
-  <!-- Modal Quyên góp -->
-  <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
-      <p style="font-size:0.88rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
-      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
-      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
-      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
-    </div>
-  </div>
-
   <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
     <div class="footer-grid">
@@ -380,12 +358,6 @@
   </footer>
 
   <script>
-    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(event) {
-      let modal = document.getElementById('donateModal');
-      if (event.target == modal) { modal.style.display = 'none'; }
-    }
 
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
