@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra Cứu Sao Kê - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Tra cứu công khai sao kê giao dịch quyên góp của Mạng Lưới Tri Thức Việt Nam, cam kết minh bạch tài chính vì cộng đồng giáo dục vùng cao.">
+  <title>Giới Thiệu - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Giới thiệu về Mạng Lưới Tri Thức Việt Nam (Wisdom Vietnam Network): nền tảng kết nối nguồn lực xã hội để mở rộng cơ hội học tập và tiếp cận tri thức cho trẻ em Việt Nam, hoạt động minh bạch và phi lợi nhuận.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -27,7 +27,7 @@
     html, body {
       width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.8;
     }
     body { padding-top: 72px; }
 
@@ -64,7 +64,7 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp (đồng bộ toàn site) */
+    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp */
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
@@ -80,26 +80,23 @@
       100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
     }
 
-    .mobile-menu-btn {
-      display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
-    }
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Banner (đồng bộ với hoat-dong.html) */
+    /* Hero Banner Sang Trọng */
     .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 4rem 1.5rem 4.5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+      width: 100%; background: var(--blue-grad-hero); padding: 5rem 1.5rem 6rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
     .hero-wrapper::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
+      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;
     }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật, tượng trưng cho lòng tin & minh bạch */
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
     .hero-dove {
-      position: absolute; top: 10%; right: 6%; width: 120px; height: auto;
-      opacity: 0.55; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
-      pointer-events: none; z-index: 1;
+      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      pointer-events: none; z-index: 5;
       animation: doveFloat 9s ease-in-out infinite;
       transform-origin: center center;
     }
-    /* Đường bay lượn nhẹ nhàng: trôi ngang + nhấp nhô + nghiêng cánh như lượn gió thật, không cứng nhắc */
     @keyframes doveFloat {
       0%   { transform: translate(0, 0) rotate(-4deg); }
       25%  { transform: translate(-14px, -18px) rotate(2deg); }
@@ -112,84 +109,54 @@
       .brand-subtitle { font-size: 0.6rem; }
     }
     @media (max-width: 640px) {
-      .hero-dove { width: 76px; top: 4%; right: 4%; opacity: 0.4; }
+      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
     }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.8px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25); text-transform: uppercase;
-      position: relative; z-index: 1;
+      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
     }
-    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; position: relative; z-index: 1; }
-    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; position: relative; z-index: 1; }
+    .hero-title { font-size: 3rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
+    .hero-desc { font-size: 1.15rem; color: #e0f2fe; max-width: 750px; margin: 0 auto; line-height: 1.7; }
 
-    /* Container & Bảng Sao Kê */
-    .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+    /* Quote Banner Nghệ Thuật */
+    .mission-quote-box {
+      max-width: 950px; margin: -3rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10;
+    }
+    .quote-card {
+      background: #ffffff; border-radius: 24px; padding: 3rem 2.5rem; text-align: center;
+      border: 1px solid #bae6fd; box-shadow: 0 25px 50px rgba(2, 132, 199, 0.12); position: relative;
+    }
+    .quote-card::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--blue-grad-btn); border-radius: 2px;
+    }
+    .quote-card i { font-size: 2.2rem; color: #0284c7; opacity: 0.3; margin-bottom: 1rem; display: block; }
+    .quote-card p { font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.75; font-style: italic; }
+    .quote-card span { display: block; margin-top: 1.2rem; font-size: 0.9rem; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 1px; }
 
-    .toolbar {
-      background: #ffffff; padding: 1.25rem 1.5rem;
-      border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none;
-      display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
-    }
-    .search-box { position: relative; width: 100%; max-width: 480px; }
-    .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-    .search-box input {
-      width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
-      border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem;
-      outline: none; background: #f8fafc; transition: all 0.2s; font-family: inherit;
-      text-transform: uppercase;
-    }
-    .search-box input::placeholder { text-transform: none; }
-    .search-box input:focus {
-      border-color: #0284c7; background: #fff;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
-    }
-    .search-btn {
-      padding: 0.75rem 1.5rem; border-radius: 10px; border: none; background: var(--blue-grad-btn);
-      color: #fff; font-weight: 700; font-size: 0.92rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
-      white-space: nowrap;
-    }
-    .search-btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    /* Main Container & Story Sections Sang Trọng */
+    .container { max-width: 1000px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
 
-    .table-container {
-      background: #ffffff; border-radius: 0 0 16px 16px;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); border: 1px solid var(--border); overflow: hidden;
+    .mission-story-block {
+      background: #ffffff; border-radius: 20px; padding: 3.2rem; border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); margin-bottom: 2.5rem; transition: transform 0.3s, box-shadow 0.3s;
     }
-    .table-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 640px; }
-    th, td { padding: 1.1rem 1.25rem; font-size: 0.92rem; border-bottom: 1px solid var(--border); font-family: inherit; }
-    th { background: #f8fafc; color: var(--text-dark); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
-    tr:hover { background: #f8fafc; }
-
-    .code-cell { font-weight: 800; color: #0369a1; white-space: nowrap; letter-spacing: 0.3px; }
-    .date-cell { white-space: nowrap; color: var(--text-muted); font-weight: 500; }
-    .content-cell { color: var(--text-dark); font-weight: 500; }
-    .amount-in { color: #166534; font-weight: 800; font-size: 0.98rem; white-space: nowrap; text-align: right; }
-
-    .empty-state { text-align: center; color: var(--text-muted); padding: 3.5rem 1.5rem; }
-    .empty-state i { font-size: 2rem; color: #0284c7; opacity: 0.6; display: block; margin-bottom: 1rem; }
-    .empty-state p { max-width: 420px; margin: 0 auto; line-height: 1.6; }
-    .empty-state code { background: #e0f2fe; color: #0369a1; padding: 0.15rem 0.5rem; border-radius: 6px; font-weight: 700; }
-
-    .notice-footer {
-      padding: 1.1rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border);
-      color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    .mission-story-block:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.08); border-color: #bae6fd; }
+    
+    .mission-story-block h2 {
+      font-size: 1.65rem; font-weight: 800; color: #0369a1; margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 12px;
     }
-    .stats { font-size: 0.88rem; color: #0284c7; font-weight: 700; }
-
-    /* Modal Quyên góp VietQR */
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    .mission-story-block h2 i {
+      width: 42px; height: 42px; background: #e0f2fe; color: #0284c7; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
     }
-    .modal-content {
-      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+    .mission-story-block p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.1rem; }
+    .mission-story-block p:last-child { margin-bottom: 0; }
 
-    /* Footer chuẩn 3 cột (đồng bộ toàn site) */
+    /* Modal Quyên góp */
+
+    /* Footer chuẩn 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -199,9 +166,11 @@
     }
     .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
 
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
@@ -212,21 +181,10 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-title { font-size: 2.1rem; }
-      .toolbar { flex-direction: column; }
-      .search-btn { width: 100%; }
-    }
-
-    /* Trên điện thoại: chỉ phần bảng giao dịch cuộn riêng (cả ngang lẫn dọc), thanh thông báo nằm ngoài nên luôn đứng yên, không bị trôi theo khi vuốt */
-    @media (max-width: 640px) {
-      .table-scroll-wrap {
-        max-height: 58vh;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      thead th {
-        position: sticky; top: 0; z-index: 4;
-      }
+      .hero-title { font-size: 2.3rem; }
+      .quote-card { padding: 2rem 1.5rem; }
+      .quote-card p { font-size: 1.05rem; }
+      .mission-story-block { padding: 2rem 1.5rem; }
     }
   </style>
 </head>
@@ -248,9 +206,9 @@
         </div>
       </a>
       <nav class="nav-links" id="navLinks">
-        <a href="su-menh.html">Giới Thiệu</a>
+        <a href="su-menh.html" class="active">Giới Thiệu</a>
         <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
+        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
@@ -263,69 +221,111 @@
     </div>
   </header>
 
-  <!-- Hero Banner -->
+  <!-- Hero Banner Sang Trọng -->
   <section class="hero-wrapper">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-badge">MINH BẠCH TÀI CHÍNH</div>
-    <h1 class="hero-title">Cổng Tra Cứu Sao Kê Giao Dịch</h1>
-    <p class="hero-desc">Nhập chính xác mã giao dịch để tra cứu thông tin chi tiết của giao dịch tương ứng.</p>
+    <div class="hero-badge">VỀ WISDOM VIETNAM NETWORK</div>
+    <h1 class="hero-title">Giới Thiệu Về Chúng Tôi</h1>
+    <p class="hero-desc">Nền tảng hoạt động vì cộng đồng, hướng đến việc mở rộng cơ hội học tập và tiếp cận tri thức cho trẻ em, học sinh và những người còn gặp khó khăn trong tiếp cận các nguồn lực giáo dục.</p>
   </section>
 
-  <!-- Container Sao Kê -->
-  <div class="container">
-    <div class="toolbar">
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Nhập mã giao dịch, ví dụ: GD000123" onkeydown="if(event.key==='Enter'){filterData();}">
-      </div>
-      <button class="search-btn" onclick="filterData()"><i class="fa-solid fa-magnifying-glass"></i> Tra Cứu</button>
-    </div>
-
-    <div class="table-container">
-      <div class="table-scroll-wrap">
-        <table>
-        <thead>
-          <tr>
-            <th style="width: 18%;">Mã Giao Dịch</th>
-            <th style="width: 20%;">Ngày Giao Dịch</th>
-            <th style="width: 42%;">Nội Dung Chuyển Khoản</th>
-            <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <tr>
-            <td colspan="4">
-              <div class="empty-state">
-                <i class="fa-solid fa-spinner fa-spin"></i>
-                <p>Đang khởi tạo dữ liệu sao kê...</p>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-        </table>
-      </div>
-
-      <div class="notice-footer">
-        <span id="noticeText">Vui lòng nhập chính xác mã giao dịch để tra cứu.</span>
-        <span class="stats" id="statsText">Hệ thống sẵn sàng</span>
-      </div>
+  <!-- Quote Banner Nghệ Thuật -->
+  <div class="mission-quote-box">
+    <div class="quote-card">
+      <i class="fa-solid fa-quote-left"></i>
+      <p>“Một cơ hội học tập hôm nay có thể trở thành một cánh cửa mới cho ngày mai.”</p>
+      <span>— Wisdom Vietnam Network (Mạng Lưới Tri Thức Việt Nam)</span>
     </div>
   </div>
 
-  <!-- Modal Quyên góp VietQR -->
-  <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
-      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
-      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
-      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
-    </div>
-  </div>
+  <!-- Main Container -->
+  <main class="container">
 
-  <!-- Footer 3 Cột -->
+    <!-- Phần 1: Giới thiệu -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-circle-info"></i> Giới Thiệu Về Wisdom Vietnam Network</h2>
+      <p>Wisdom Vietnam Network (WVN) là nền tảng hoạt động vì cộng đồng, hướng đến việc mở rộng cơ hội học tập và tiếp cận tri thức cho trẻ em, học sinh và những người còn gặp khó khăn trong tiếp cận các nguồn lực giáo dục.</p>
+      <p>Chúng tôi tin rằng giáo dục không chỉ là việc đến trường. Một cơ hội học tập có ý nghĩa còn bao gồm sách, học liệu, môi trường học tập, kỹ năng, công nghệ và sự đồng hành của cộng đồng.</p>
+      <p>Vì vậy, WVN hướng đến việc kết nối những nguồn lực xã hội có thể đóng góp cho giáo dục và chuyển hóa những nguồn lực đó thành các chương trình hỗ trợ thiết thực.</p>
+    </div>
+
+    <!-- Phần 2: Sứ mệnh -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-heart-circle-check"></i> Sứ Mệnh Của Chúng Tôi</h2>
+      <p>Sứ mệnh của Wisdom Vietnam Network là góp phần xây dựng một môi trường trong đó mọi trẻ em đều có thêm cơ hội tiếp cận tri thức và phát triển năng lực của bản thân.</p>
+      <p>Chúng tôi tập trung vào những vấn đề thiết thực trong giáo dục như:</p>
+      <ul style="list-style: none; margin: 1.2rem 0; padding-left: 0; color: var(--text-muted); font-size: 1.08rem;">
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Cơ hội tiếp cận sách và học liệu.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Hỗ trợ điều kiện học tập cho trẻ em có hoàn cảnh khó khăn.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Phát triển kỹ năng tự học.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Khuyến khích tư duy và khả năng khám phá.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Hỗ trợ trẻ tiếp cận công nghệ phục vụ học tập.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Kết nối cộng đồng với các hoạt động giáo dục.</li>
+      </ul>
+      <p>WVN không xem một chương trình giáo dục chỉ là việc trao tặng một món quà. Điều chúng tôi hướng tới là tạo ra giá trị có khả năng tiếp tục đồng hành với người học trong quá trình phát triển lâu dài.</p>
+    </div>
+
+    <!-- Phần 3: Cách hoạt động -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-seedling"></i> Chúng Tôi Hoạt Động Như Thế Nào?</h2>
+      <p>Các chương trình của WVN được triển khai dựa trên nhu cầu thực tế và khả năng kết nối nguồn lực của cộng đồng.</p>
+      <p>Tùy từng chương trình, nguồn lực có thể được sử dụng để hỗ trợ sách, học liệu, dụng cụ học tập, không gian đọc hoặc các hoạt động phát triển kỹ năng cho trẻ em.</p>
+      <p>Bên cạnh hỗ trợ trực tiếp, WVN cũng xây dựng và chia sẻ các nội dung giáo dục nhằm giúp phụ huynh, giáo viên và cộng đồng có thêm thông tin về việc đồng hành cùng trẻ trong học tập.</p>
+      <p>Đặc biệt, chúng tôi quan tâm đến những chủ đề như tự học, đọc sách, kỹ năng sống, tiếng Anh, công nghệ và AI trong giáo dục.</p>
+    </div>
+
+    <!-- Phần 4: Vì sao chọn giáo dục -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-lightbulb"></i> Vì Sao Chúng Tôi Lựa Chọn Giáo Dục?</h2>
+      <p>Một cuốn sách có thể mở ra một câu hỏi.</p>
+      <p>Một người thầy có thể truyền cảm hứng cho một học sinh.</p>
+      <p>Một thiết bị học tập có thể giúp một em tiếp cận nguồn kiến thức mới.</p>
+      <p>Một cơ hội được học có thể tạo ra những thay đổi lâu dài mà đôi khi chúng ta không thể nhìn thấy ngay lập tức.</p>
+      <p><strong>Chúng tôi tin rằng đầu tư vào giáo dục là đầu tư vào khả năng phát triển của con người.</strong></p>
+      <p>Đó cũng là lý do WVN lựa chọn cơ hội học tập làm một trong những trọng tâm của hoạt động cộng đồng.</p>
+    </div>
+
+    <!-- Phần 5: Minh bạch -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-shield-halved"></i> Minh Bạch Và Trách Nhiệm Với Cộng Đồng</h2>
+      <p>Niềm tin của cộng đồng là nền tảng của mọi hoạt động thiện nguyện.</p>
+      <p>Vì vậy, WVN hướng đến việc công khai thông tin về các chương trình, nguồn lực được tiếp nhận và cách thức sử dụng nguồn lực trong phạm vi phù hợp.</p>
+      <p>Website có khu vực Tra cứu sao kê, thông tin hoạt động và thông tin liên hệ để cộng đồng có thể tìm hiểu về các chương trình của tổ chức. WVN cũng công bố cam kết về việc sử dụng nguồn lực cho các mục tiêu xã hội và giáo dục theo định hướng hoạt động của mình.</p>
+      <p><strong>Minh bạch không chỉ là công bố thông tin. Đó là trách nhiệm giải trình với những người đã tin tưởng và đồng hành cùng các hoạt động vì cộng đồng.</strong></p>
+      <p style="margin-top: 1.3rem;">
+        <a href="sao-ke.html" style="display: inline-flex; align-items: center; gap: 8px; color: #0284c7; font-weight: 700; text-decoration: none;">
+          <i class="fa-solid fa-magnifying-glass-dollar"></i> Tra cứu sao kê giao dịch công khai <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </p>
+    </div>
+
+    <!-- Phần 6: Cùng cộng đồng -->
+    <div class="mission-story-block" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-color: #bae6fd;">
+      <h2 style="color: #0284c7;"><i class="fa-solid fa-hand-holding-heart"></i> Cùng Cộng Đồng Tạo Thêm Cơ Hội Học Tập</h2>
+      <p>Giáo dục không thể được xây dựng bởi một cá nhân hay một tổ chức đơn lẻ:</p>
+      <ul style="list-style: none; margin: 1.2rem 0; padding-left: 0; color: var(--text-muted); font-size: 1.08rem;">
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một giáo viên có kiến thức.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một phụ huynh có sự đồng hành.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một tình nguyện viên có thời gian.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một người đóng góp có nguồn lực.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một cộng đồng có thể kết nối tất cả những điều đó.</li>
+      </ul>
+      <p>WVN mong muốn trở thành một cầu nối giữa những người muốn đóng góp và những cơ hội giáo dục đang cần được hỗ trợ.</p>
+      <p>Mỗi sự đóng góp, dù lớn hay nhỏ, đều có thể trở thành một phần của một hành trình học tập.</p>
+    </div>
+
+    <!-- Phần 7: Định hướng -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-flag-checkered"></i> Định Hướng Của Wisdom Vietnam Network</h2>
+      <p>Trong thời gian tới, WVN hướng đến việc phát triển các hoạt động theo hướng:</p>
+      <p style="font-size: 1.18rem; font-weight: 700; color: var(--text-dark); text-align: center; padding: 1rem; background: #f0f9ff; border-radius: 12px; border: 1px solid #bae6fd;">Hỗ trợ thiết thực – Giáo dục bền vững – Minh bạch – Kết nối cộng đồng.</p>
+      <p>Chúng tôi không chỉ muốn trao đi nguồn lực, mà muốn góp phần tạo ra những môi trường trong đó trẻ em có thể đọc, học, đặt câu hỏi, tự khám phá và phát triển sự tự tin.</p>
+      <p style="font-weight: 800; color: #0f172a; margin-top: 1.5rem; text-align: center; font-size: 1.15rem; background: #ffffff; padding: 1.2rem; border-radius: 12px; border: 1px solid #bae6fd;">Một cơ hội học tập hôm nay có thể trở thành một cánh cửa mới cho ngày mai.<br><span style="color: #0284c7;">Wisdom Vietnam Network – Cùng mở rộng cơ hội học tập, cùng xây dựng một tương lai có nhiều cơ hội hơn cho trẻ em và cộng đồng.</span></p>
+    </div>
+
+  </main>
+
+  <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -358,12 +358,6 @@
   </footer>
 
   <script>
-    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(event) {
-      let modal = document.getElementById('donateModal');
-      if (event.target == modal) { modal.style.display = 'none'; }
-    }
 
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
@@ -375,140 +369,6 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-
-    // ==== DỮ LIỆU THỬ NGHIỆM (2.000 giao dịch ngẫu nhiên) ====
-    // Đây là dữ liệu giả lập để TEST chức năng tra cứu theo mã giao dịch.
-    // Khi triển khai thật, hãy thay hàm generateDynamicTransactions() bằng
-    // việc gọi API / đọc dữ liệu sao kê thật của ngân hàng.
-    const TOTAL_TEST_TRANSACTIONS = 2000;
-    let allTransactions = [];
-
-    function generateDynamicTransactions() {
-      const firstNames = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý"];
-      const middleNames = ["Văn", "Thị", "Hữu", "Đình", "Minh", "Gia", "Học", "Thành", "Đức", "Quang", "Ngọc", "Hoài", "Phương", "Thu"];
-      const lastNames = ["An", "Bình", "Cường", "Dung", "Đạt", "Giang", "Hà", "Hải", "Hòa", "Hùng", "Hương", "Khang", "Linh", "Long", "Mai", "Nam", "Nga", "Phong", "Quân", "Sơn", "Tâm", "Thảo", "Trang", "Tuấn", "Vân", "Yến"];
-
-      const actions = [
-        "ung ho quy hoc lieu vung cao",
-        "gop quy tu sach cho em",
-        "ung ho chuong trinh tiep suc den truong",
-        "dong hanh cung drs",
-        "ung ho sua va sach vo",
-        "gop quy phat trien giao duc",
-        "ung ho tre em ha giang",
-        "ung ho tu sach tinh thuong",
-        "chung tay vi tuong lai tre tho",
-        "ho tro bua an ban tru"
-      ];
-
-      const today = new Date(2026, 8, 11); // Mốc ngày hiện tại (Tháng 9/2026)
-      const startOfYear = new Date(2026, 0, 1);
-      const diffDays = Math.ceil((today - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
-
-      const generated = [];
-
-      for (let i = 1; i <= TOTAL_TEST_TRANSACTIONS; i++) {
-        const rnd1 = ((i * 9301 + 49297) % 233280) / 233280;
-        const rnd2 = ((i * 3271 + 12345) % 233280) / 233280;
-        const rnd3 = ((i * 1231 + 54321) % 233280) / 233280;
-        const rnd4 = ((i * 5437 + 98765) % 233280) / 233280;
-
-        const fn = firstNames[Math.floor(rnd1 * firstNames.length)];
-        const mn = middleNames[Math.floor(rnd2 * middleNames.length)];
-        const ln = lastNames[Math.floor(rnd3 * lastNames.length)];
-        const fullName = `${fn} ${mn} ${ln}`;
-
-        const act = actions[Math.floor(rnd4 * actions.length)];
-        const amount = (Math.floor(rnd1 * 50) + 1) * 10000;
-
-        const dayOffset = i % diffDays;
-        let txDate = new Date(startOfYear.getTime() + dayOffset * (24 * 60 * 60 * 1000));
-        if (txDate > today) txDate = today;
-
-        const dd = String(txDate.getDate()).padStart(2, '0');
-        const mm = String(txDate.getMonth() + 1).padStart(2, '0');
-        const yyyy = txDate.getFullYear();
-        const dateStr = `${dd}/${mm}/${yyyy}`;
-
-        const code = `GD${String(i).padStart(6, '0')}`;
-        const content = `${fullName} ${act} - ${code}`;
-
-        generated.push({
-          code: code,
-          date: dateStr,
-          rawDate: txDate,
-          content: content,
-          amount: amount.toLocaleString('vi-VN') + " đ"
-        });
-      }
-
-      return generated;
-    }
-
-    allTransactions = generateDynamicTransactions();
-
-    function renderEmptyPrompt() {
-      const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="4">
-            <div class="empty-state">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <p>Vui lòng nhập chính xác mã giao dịch (ví dụ: <code>GD000123</code>) rồi bấm <strong>Tra Cứu</strong> hoặc nhấn Enter để xem thông tin.</p>
-            </div>
-          </td>
-        </tr>`;
-      document.getElementById('statsText').innerText = 'Hệ thống sẵn sàng';
-      document.getElementById('noticeText').innerText = 'Vui lòng nhập chính xác mã giao dịch để tra cứu.';
-    }
-
-    function renderNotFound(keyword) {
-      const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="4">
-            <div class="empty-state">
-              <i class="fa-solid fa-circle-exclamation"></i>
-              <p>Không tìm thấy giao dịch nào với mã <code>${keyword}</code>. Vui lòng kiểm tra lại chính xác mã giao dịch.</p>
-            </div>
-          </td>
-        </tr>`;
-      document.getElementById('statsText').innerText = 'Kết quả: 0';
-      document.getElementById('noticeText').innerText = 'Không có giao dịch khớp với mã đã nhập.';
-    }
-
-    function renderResult(tx) {
-      const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = `
-        <tr>
-          <td class="code-cell">${tx.code}</td>
-          <td class="date-cell"><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
-          <td class="content-cell">${tx.content}</td>
-          <td class="amount-in">+${tx.amount}</td>
-        </tr>`;
-      document.getElementById('statsText').innerText = 'Tìm thấy: 1 kết quả';
-      document.getElementById('noticeText').innerText = 'Đã tìm thấy giao dịch khớp với mã đã nhập.';
-    }
-
-    function filterData() {
-      const keyword = document.getElementById('searchInput').value.trim().toUpperCase();
-
-      if (keyword === "") {
-        renderEmptyPrompt();
-        return;
-      }
-
-      // Chỉ hiện kết quả khi mã giao dịch nhập vào KHỚP CHÍNH XÁC
-      const found = allTransactions.find(tx => tx.code === keyword);
-
-      if (found) {
-        renderResult(found);
-      } else {
-        renderNotFound(keyword);
-      }
-    }
-
-    renderEmptyPrompt();
   </script>
 </body>
 </html>
