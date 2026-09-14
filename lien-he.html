@@ -3,16 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liên Hệ & Hợp Tác - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Liên hệ với Mạng Lưới Tri Thức Việt Nam để đóng góp ý kiến, đề xuất hợp tác hoặc đồng hành cùng các chương trình giáo dục vùng cao Việt Nam.">
+  <title id="pageTitle">Bài Viết - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta id="pageDescription" name="description" content="Đọc bài viết từ Mạng Lưới Tri Thức Việt Nam về hành trình giáo dục, thiện nguyện và các chương trình hỗ trợ trẻ em vùng cao Việt Nam.">
+  <meta id="pageOgTitle" property="og:title" content="Bài Viết - Mạng Lưới Tri Thức Việt Nam">
+  <meta id="pageOgDescription" property="og:description" content="Đọc bài viết từ Mạng Lưới Tri Thức Việt Nam về hành trình giáo dục, thiện nguyện và các chương trình hỗ trợ trẻ em vùng cao Việt Nam.">
+  <meta id="pageOgImage" property="og:image" content="banner-drs.jpg">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
       --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
       --text-dark: #0f172a;
@@ -26,11 +29,11 @@
     html, body {
       width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.8;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định Đồng Bộ */
+    /* Menu Cố Định */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -63,7 +66,6 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp */
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
@@ -81,25 +83,30 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Banner Sang Trọng (đồng bộ với su-menh.html / hoat-dong.html) */
-    .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 5rem 1.5rem 6rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
     }
-    .hero-wrapper::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;
+
+    /* Banner bài viết */
+    .article-banner {
+      position: relative; width: 100%; padding: 3rem 1.5rem 3.4rem; color: var(--white); overflow: hidden;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite;
     }
-    .hero-badge {
-      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
-    }
-    .hero-title { font-size: 3rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
-    .hero-desc { font-size: 1.15rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.7; }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với trang Tra Cứu Sao Kê */
+    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .article-banner-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 2; }
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
     .hero-dove {
-      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
+      position: absolute; top: 10%; right: 5%; width: 90px; height: auto;
       opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
-      pointer-events: none; z-index: 5;
+      pointer-events: none; z-index: 1;
       animation: doveFloat 9s ease-in-out infinite;
       transform-origin: center center;
     }
@@ -115,96 +122,47 @@
       .brand-subtitle { font-size: 0.6rem; }
     }
     @media (max-width: 640px) {
-      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
+      .hero-dove { width: 60px; top: 6%; right: 4%; opacity: 0.3; }
     }
+    .breadcrumb { font-size: 0.88rem; color: #e0f2fe; margin-bottom: 1rem; }
+    .breadcrumb a { color: #e0f2fe; text-decoration: none; opacity: 0.85; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article-title { font-size: 2.1rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; line-height: 1.25; }
+    .article-meta { color: #e0f2fe; font-size: 0.92rem; display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    .article-meta span { display: inline-flex; align-items: center; gap: 6px; }
 
-    /* Main Container & Grid liên hệ */
-    .container { max-width: 1200px; margin: -3.5rem auto 5rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+    /* Nội dung bài viết */
+    .article-wrap { max-width: 860px; margin: 0 auto; padding: 3rem 1.5rem 4.5rem; }
+    .article-cover { width: 100%; max-height: 420px; object-fit: cover; border-radius: 18px; margin-bottom: 2.2rem; box-shadow: 0 10px 30px rgba(15,23,42,0.12); }
 
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
-      gap: 2rem;
-      align-items: stretch;
+    .article-body { font-size: 1.05rem; color: #1e293b; line-height: 1.85; }
+    .article-body h1, .article-body h2, .article-body h3 { color: #0369a1; font-weight: 800; margin: 1.8rem 0 0.9rem; line-height: 1.35; }
+    .article-body h1 { font-size: 1.6rem; }
+    .article-body h2 { font-size: 1.4rem; }
+    .article-body h3 { font-size: 1.2rem; }
+    .article-body p { margin-bottom: 1.2rem; text-align: justify; text-justify: inter-word; }
+    .article-body img { max-width: 100%; border-radius: 14px; margin: 1.2rem 0; display: block; box-shadow: 0 6px 18px rgba(15,23,42,0.1); }
+    .article-body ul, .article-body ol { margin: 0 0 1.2rem 1.4rem; }
+    .article-body li { margin-bottom: 0.5rem; }
+    .article-body blockquote {
+      border-left: 4px solid #0284c7; background: #f0f9ff; padding: 1rem 1.4rem; margin: 1.4rem 0;
+      border-radius: 0 10px 10px 0; color: #0369a1; font-style: italic;
     }
+    .article-body a { color: #0284c7; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+    .article-body strong { color: #0f172a; }
+    .article-body hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .article-body code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 6px; font-size: 0.9em; }
 
-    .contact-card, .info-card {
-      background: #ffffff; padding: 3rem; border-radius: 20px; border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); display: flex; flex-direction: column; justify-content: space-between;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .contact-card:hover, .info-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.08); border-color: #bae6fd; }
+    .article-status { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .article-status i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
 
-    .contact-card h2, .info-card h3 {
-      font-size: 1.65rem; color: #0369a1; margin-bottom: 1.8rem; font-weight: 800; letter-spacing: -0.3px;
-    }
+    .article-footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+    .back-link { color: #0284c7; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .back-link:hover { text-decoration: underline; }
 
-    .form-group { margin-bottom: 1.5rem; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 0.55rem; color: var(--text-dark); font-size: 0.92rem; }
-    .form-control {
-      width: 100%; padding: 0.9rem 1.1rem; border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 1rem; font-family: inherit; color: var(--text-dark); background: var(--bg-page); transition: all 0.25s ease;
-    }
-    .form-control:focus { outline: none; border-color: #0284c7; background: var(--white); box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1); }
-    textarea.form-control { resize: vertical; min-height: 150px; }
+    /* Modal Quyên góp VietQR */
 
-    /* Thông báo kết quả gửi form (hiển thị ngay trong khung form) */
-    .form-alert {
-      display: none; align-items: flex-start; gap: 0.8rem; padding: 1rem 1.2rem; border-radius: 12px;
-      font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.5rem;
-    }
-    .form-alert i { font-size: 1.1rem; margin-top: 0.1rem; flex-shrink: 0; }
-    .form-alert.form-alert-success { display: flex; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
-    .form-alert.form-alert-success i { color: #16a34a; }
-    .form-alert.form-alert-error { display: flex; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
-    .form-alert.form-alert-error i { color: #dc2626; }
-
-    /* Thông báo dạng "toast" nổi cố định góc màn hình — luôn hiện rõ dù người dùng
-       đang cuộn ở bất kỳ vị trí nào trên trang, tránh trường hợp gửi xong mà tưởng
-       không có phản hồi gì vì thông báo trong form bị khuất khỏi màn hình. */
-    .toast-notify {
-      position: fixed; top: 90px; right: 20px; z-index: 30000; max-width: 380px; width: calc(100% - 40px);
-      background: #ffffff; border-radius: 14px; padding: 1rem 1.2rem; display: flex; align-items: flex-start; gap: 0.8rem;
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18); border-left: 5px solid #16a34a;
-      transform: translateX(120%); opacity: 0; transition: transform 0.35s ease, opacity 0.35s ease;
-      font-size: 0.92rem; line-height: 1.5;
-    }
-    .toast-notify.show { transform: translateX(0); opacity: 1; }
-    .toast-notify.toast-error { border-left-color: #dc2626; }
-    .toast-notify i.toast-icon { font-size: 1.3rem; margin-top: 0.1rem; flex-shrink: 0; color: #16a34a; }
-    .toast-notify.toast-error i.toast-icon { color: #dc2626; }
-    .toast-notify .toast-close { margin-left: auto; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1rem; padding: 0.1rem; flex-shrink: 0; }
-    .toast-notify .toast-close:hover { color: #475569; }
-    @media (max-width: 480px) {
-      .toast-notify { left: 20px; right: 20px; width: auto; top: 80px; }
-    }
-
-    /* Cột thông tin trụ sở */
-    .info-list { display: flex; flex-direction: column; gap: 1.8rem; }
-    .info-item {
-      display: flex; gap: 1.2rem; align-items: flex-start;
-    }
-    .info-icon {
-      width: 46px; height: 46px; background: #e0f2fe; color: #0284c7; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;
-      transition: transform 0.2s, background 0.2s, color 0.2s;
-    }
-    .info-item:hover .info-icon { transform: scale(1.05); background: #0284c7; color: var(--white); }
-    .info-text h4 { font-size: 1.02rem; color: var(--text-dark); font-weight: 700; margin-bottom: 0.25rem; }
-    .info-text p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; }
-
-    /* Modal Quyên góp VietQR (đồng bộ toàn site) */
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 20000; padding: 1rem;
-    }
-    .modal-content {
-      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
-
-    /* Footer chuẩn 3 cột */
+    /* Footer 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -217,47 +175,22 @@
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
     @media (max-width: 960px) {
-      .contact-grid { grid-template-columns: 1fr; }
-      .mobile-menu-btn { display: block; }
-      .nav-links {
-        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
-        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
-      }
-      .nav-links.active { display: flex; }
-      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-title { font-size: 2.2rem; }
-      .container { margin: -2rem 1rem 4rem 1rem; padding: 0 1rem; }
-      .contact-card, .info-card { padding: 2rem 1.5rem; }
+      .article-title { font-size: 1.6rem; }
     }
-
-    /* ==== Khối "Câu Hỏi Thường Gặp" — dạng accordion, đặt cuối trang trước footer ==== */
-    .faq-section { max-width: 900px; margin: 0 auto 5rem; padding: 0 1.5rem; }
-    .faq-section .section-header { text-align: center; margin-bottom: 2.2rem; }
-    .faq-section .section-header h2 { font-size: 1.9rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: -0.3px; }
-    .faq-section .section-header p { color: #64748b; font-size: 1rem; }
-
-    .faq-item {
-      background: #ffffff; border: 1px solid var(--border); border-radius: 14px;
-      margin-bottom: 0.9rem; overflow: hidden; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    /* Màn hẹp: cột chữ quá nhỏ khiến căn đều 2 bên bị giãn khoảng cách từ xấu,
+       nên chuyển về căn trái để tránh lặp lại vấn đề đã gặp ở khối trang chủ. */
+    @media (max-width: 640px) {
+      .article-body p { text-align: left; }
     }
-    .faq-item summary {
-      list-style: none; cursor: pointer; padding: 1.1rem 1.4rem; font-weight: 700; color: var(--text-dark);
-      display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.98rem;
-    }
-    .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after {
-      content: '+'; font-size: 1.3rem; font-weight: 400; color: #0284c7; flex-shrink: 0; line-height: 1;
-    }
-    .faq-item[open] summary::after { content: '−'; }
-    .faq-item p { padding: 0 1.4rem 1.2rem; color: var(--text-muted); font-size: 0.94rem; line-height: 1.7; }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Menu Cố Định -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
@@ -272,14 +205,16 @@
           <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
         </div>
       </a>
+
       <nav class="nav-links" id="navLinks">
         <a href="su-menh.html">Giới Thiệu</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-        <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html" class="active">Liên Hệ</a>
+        <a href="tin-tuc.html" class="active">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
       </nav>
-      <div style="display: flex; align-items: center; gap: 12px;">
+
+      <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-donate-glow" onclick="window.location.href='quyen-gop.html'">Quyên Góp</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
@@ -288,158 +223,34 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero-wrapper">
+  <!-- Banner bài viết -->
+  <section class="article-banner">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-badge">KẾT NỐI & HỢP TÁC</div>
-    <h1 class="hero-title">Liên Hệ Với Chúng Tôi</h1>
-    <p class="hero-desc">Mọi thắc mắc, đóng góp ý kiến hoặc mong muốn đồng hành cùng các chương trình giáo dục cộng đồng xin vui lòng gửi về cho chúng tôi.</p>
+    <div class="article-banner-inner">
+      <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <a href="tin-tuc.html">Tin tức</a> / <span id="breadcrumbTitle">Đang tải...</span></div>
+      <h1 class="article-title" id="articleTitle">Đang tải bài viết...</h1>
+      <div class="article-meta">
+        <span id="articleDate"><i class="fa-regular fa-calendar"></i></span>
+      </div>
+    </div>
   </section>
 
-  <!-- Toast thông báo nổi, luôn hiện dù đang cuộn ở đâu trên trang -->
-  <div id="toastNotify" class="toast-notify" role="status" aria-live="polite">
-    <i class="fa-solid fa-circle-check toast-icon"></i>
-    <span id="toastMessage"></span>
-    <button type="button" class="toast-close" onclick="hideToast()" aria-label="Đóng thông báo"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-
-  <!-- Main Grid Content -->
-  <main class="container">
-    <div class="contact-grid">
-      
-      <!-- Cột trái: Form liên hệ tinh tế -->
-      <div class="contact-card">
-        <div>
-          <h2>Gửi Lời Nhắn Trực Tuyến</h2>
-
-          <div id="formAlert" class="form-alert"></div>
-
-          <form id="contactForm" action="https://formsubmit.co/hotro@wvn.vn" method="POST">
-            <input type="hidden" name="_subject" value="Tin nhắn liên hệ mới từ Website Mạng Lưới Tri Thức Việt Nam">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
-            <!-- Email tự động phản hồi lại NGƯỜI GỬI bằng tiếng Việt ngay sau khi họ gửi form,
-                 để họ yên tâm là lời nhắn đã đến nơi kể cả khi chưa kịp xem thông báo trên trang -->
-            <input type="hidden" name="_autoresponse" value="Cảm ơn bạn đã gửi lời nhắn đến Mạng Lưới Tri Thức Việt Nam. Chúng tôi đã nhận được nội dung của bạn và sẽ phản hồi qua email này trong thời gian sớm nhất. Trân trọng cảm ơn sự quan tâm và đồng hành của bạn!">
-            <!-- Bẫy chống spam vô hình: người dùng thật không thấy, bot rà quét tự động sẽ điền vào
-                 và bị formsubmit.co âm thầm loại bỏ lượt gửi đó, không cần captcha gây khó chịu -->
-            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-
-            <div class="form-group">
-              <label>Họ và tên của bạn</label>
-              <!-- Đặt tên trường bằng tiếng Việt có dấu để email thông báo gửi về hộp thư
-                   admin hiển thị đúng nhãn tiếng Việt (Họ và tên / Địa chỉ Email / Nội dung tin nhắn)
-                   thay vì các tên biến kỹ thuật (hoten, email, noidung) khó đọc. -->
-              <input type="text" name="Họ và tên" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
-            </div>
-
-            <div class="form-group">
-              <label>Địa chỉ Email</label>
-              <input type="email" name="Địa chỉ Email" class="form-control" placeholder="Ví dụ: email@domain.com" required>
-            </div>
-
-            <div class="form-group">
-              <label>Nội dung lời nhắn</label>
-              <textarea name="Nội dung tin nhắn" class="form-control" placeholder="Nhập nội dung bạn muốn chia sẻ hoặc đề xuất hợp tác..." required></textarea>
-            </div>
-
-            <button type="submit" id="submitBtn" class="btn" style="width: 100%; padding: 1rem; font-size: 1rem; margin-top: 0.5rem;">Gửi Lời Nhắn Đến Ban Quản Trị</button>
-          </form>
-        </div>
+  <!-- Nội dung bài viết -->
+  <main class="article-wrap">
+    <div id="articleContainer">
+      <div class="article-status">
+        <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+        Đang tải nội dung bài viết, vui lòng chờ trong giây lát...
       </div>
+    </div>
 
-      <!-- Cột phải: Thông tin trụ sở sang trọng -->
-      <div class="info-card">
-        <div>
-          <h3>Thông Tin Trụ Sở</h3>
-          <div class="info-list">
-            
-            <div class="info-item">
-              <div class="info-icon"><i class="fa-solid fa-building"></i></div>
-              <div class="info-text">
-                <h4>Đơn vị vận hành</h4>
-                <p>Công ty TNHH DR Solutions<br>Doanh nghiệp xã hội phi lợi nhuận.</p>
-              </div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
-              <div class="info-text">
-                <h4>Địa chỉ trụ sở chính</h4>
-                <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-              </div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
-              <div class="info-text">
-                <h4>Hộp thư điện tử</h4>
-                <p>Hỗ trợ: hotro@wvn.vn<br>CSKH: cskh@dr.com</p>
-              </div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
-              <div class="info-text">
-                <h4>Thông tin pháp lý</h4>
-                <p>MST: 0111291749<br>100% lợi nhuận tái đầu tư giáo dục.</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
+    <div class="article-footer-nav">
+      <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
+      <button class="btn" onclick="window.location.href='quyen-gop.html'">Quyên Góp Ủng Hộ</button>
     </div>
   </main>
 
-  <!-- Câu Hỏi Thường Gặp -->
-  <section class="faq-section">
-    <div class="section-header">
-      <h2>Câu Hỏi Thường Gặp</h2>
-      <p>Một số thắc mắc phổ biến trước khi bạn liên hệ hoặc đồng hành cùng chúng tôi</p>
-    </div>
-
-    <details class="faq-item" open>
-      <summary>Tiền quyên góp được sử dụng như thế nào?</summary>
-      <p>100% lợi nhuận sau thuế được tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng đã đăng ký — không phân chia lợi tức hay cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mọi khoản đóng góp đều được ghi nhận và công khai định kỳ tại trang <a href="sao-ke.html">Tra Cứu Sao Kê</a>.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary>Làm sao biết tổ chức hoạt động minh bạch?</summary>
-      <p>Chúng tôi công khai sao kê giao dịch quyên góp theo thời gian thực tại trang Tra Cứu Sao Kê, đồng thời hiển thị mã số doanh nghiệp (MST: 0111291749) và các cam kết pháp lý tại trang chủ. Bạn cũng có thể yêu cầu thông tin chi tiết về khoản đóng góp của mình qua email.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary>Làm thế nào để trở thành tình nguyện viên?</summary>
-      <p>Bạn có thể gửi thông tin qua form liên hệ ở trên, hoặc email trực tiếp tới hotro@wvn.vn, nêu rõ mong muốn tham gia. Chúng tôi sẽ phản hồi và sắp xếp chương trình phù hợp trong các đợt hoạt động sắp tới.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary>Tổ chức có nhận quyên góp hiện vật (sách, đồ dùng học tập...) không?</summary>
-      <p>Có. Ngoài quyên góp tài chính, chúng tôi luôn hoan nghênh sách, học liệu và dụng cụ học tập còn sử dụng tốt. Vui lòng liên hệ trước qua email hoặc form bên trên để được hướng dẫn cách gửi/bàn giao phù hợp.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary>Thông tin hoạt động trên website được cập nhật bao lâu một lần?</summary>
-      <p>Trang Tin Tức và Hoạt Động được cập nhật thường xuyên mỗi khi có chương trình hoặc cột mốc mới. Trang Tra Cứu Sao Kê được đối soát và công khai định kỳ để đảm bảo tính minh bạch liên tục.</p>
-    </details>
-  </section>
-
-  <!-- Modal Quyên góp VietQR -->
-  <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
-      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
-      <p style="font-size:0.85rem; color:#64748b; margin: 1rem 0 1.2rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
-      <p style="font-size:0.85rem; color:#64748b; margin: 1rem 0 1.2rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
-      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
-    </div>
-  </div>
-
-  <!-- Footer -->
+  <!-- Footer 3 Cột -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -472,12 +283,84 @@
   </footer>
 
   <script>
-    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
-    window.onclick = function(event) {
-      let modal = document.getElementById('donateModal');
-      if (event.target == modal) { modal.style.display = 'none'; }
+    function parseFrontMatter(raw) {
+      const result = { title: "", date: "", image: "", excerpt: "", body: raw };
+      const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
+      if (!match) return result;
+      const yamlBlock = match[1];
+      result.body = match[2];
+      yamlBlock.split(/\r?\n/).forEach(line => {
+        const kv = line.match(/^([a-zA-Z0-9_]+)\s*:\s*(.*)$/);
+        if (!kv) return;
+        const key = kv[1].trim().toLowerCase();
+        let value = kv[2].trim();
+        value = value.replace(/^["']|["']$/g, "");
+        if (key === "description") result.excerpt = result.excerpt || value;
+        else if (key === "thumbnail") result.image = result.image || value;
+        else result[key] = value;
+      });
+      return result;
     }
+
+    function slugToTitle(slug) {
+      return slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return "";
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    }
+
+    async function loadArticle() {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get("slug");
+      const container = document.getElementById("articleContainer");
+
+      if (!slug) {
+        container.innerHTML = `<div class="article-status"><i class="fa-solid fa-circle-exclamation"></i>Không tìm thấy bài viết. Vui lòng quay lại trang Tin Tức.</div>`;
+        document.getElementById("articleTitle").textContent = "Không tìm thấy bài viết";
+        return;
+      }
+
+      try {
+        const res = await fetch(`content/posts/${slug}.md`);
+        if (!res.ok) throw new Error("Không thể tải bài viết");
+        const raw = await res.text();
+        const fm = parseFrontMatter(raw);
+
+        const title = fm.title || slugToTitle(slug);
+        document.title = `${title} - Mạng Lưới Tri Thức Việt Nam`;
+        document.getElementById("pageTitle").textContent = document.title;
+        document.getElementById("articleTitle").textContent = title;
+        document.getElementById("breadcrumbTitle").textContent = title;
+        document.getElementById("articleDate").innerHTML = fm.date
+          ? `<i class="fa-regular fa-calendar"></i> ${formatDate(fm.date)}`
+          : "";
+
+        // Cập nhật thẻ SEO (meta description) và Open Graph theo đúng nội dung bài viết,
+        // giúp trang chi tiết mỗi bài có mô tả riêng thay vì dùng chung 1 mô tả mặc định —
+        // quan trọng cho SEO và khi chia sẻ link bài viết lên mạng xã hội.
+        const seoExcerpt = fm.excerpt || "Đọc bài viết từ Mạng Lưới Tri Thức Việt Nam.";
+        document.getElementById("pageDescription").setAttribute("content", seoExcerpt);
+        document.getElementById("pageOgTitle").setAttribute("content", title);
+        document.getElementById("pageOgDescription").setAttribute("content", seoExcerpt);
+        if (fm.image) document.getElementById("pageOgImage").setAttribute("content", fm.image);
+
+        const htmlBody = (window.marked ? marked.parse(fm.body) : fm.body.replace(/\n/g, "<br>"));
+        const coverImg = fm.image ? `<img src="${fm.image}" alt="${title}" class="article-cover" onerror="this.style.display='none'">` : "";
+
+        container.innerHTML = `${coverImg}<div class="article-body">${htmlBody}</div>`;
+      } catch (err) {
+        container.innerHTML = `<div class="article-status"><i class="fa-solid fa-circle-exclamation"></i>Không thể tải nội dung bài viết này. Vui lòng thử lại sau hoặc quay lại danh sách tin tức.</div>`;
+        document.getElementById("articleTitle").textContent = "Không tải được bài viết";
+        document.getElementById("breadcrumbTitle").textContent = "Lỗi tải bài viết";
+      }
+    }
+
+    loadArticle();
+
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
       const menuBtn = document.getElementById('menuBtn');
@@ -488,80 +371,6 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-
-    // ==== Toast thông báo nổi ====
-    let toastTimer = null;
-    function showToast(message, isError) {
-      const toast = document.getElementById('toastNotify');
-      const msgEl = document.getElementById('toastMessage');
-      const icon = toast.querySelector('.toast-icon');
-      msgEl.textContent = message;
-      toast.classList.toggle('toast-error', !!isError);
-      icon.className = 'fa-solid toast-icon ' + (isError ? 'fa-circle-exclamation' : 'fa-circle-check');
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(hideToast, 6000);
-    }
-    function hideToast() {
-      document.getElementById('toastNotify').classList.remove('show');
-      clearTimeout(toastTimer);
-    }
-
-    // Gửi form liên hệ bằng AJAX để hiện thông báo ngay trên trang,
-    // thay vì chuyển hướng/tải lại trang không rõ ràng như trước.
-    // Thông báo hiện ĐỒNG THỜI ở 2 nơi: khung form (formAlert) và toast nổi cố định
-    // góc màn hình (toastNotify) — để người dùng chắc chắn nhìn thấy kết quả dù
-    // đang cuộn ở vị trí nào, tránh cảm giác "gửi xong không biết có đi hay không".
-    const contactForm = document.getElementById('contactForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const formAlert = document.getElementById('formAlert');
-
-    contactForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const originalBtnHtml = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
-      formAlert.className = 'form-alert';
-      formAlert.style.display = 'none';
-
-      const formData = new FormData(contactForm);
-      const recipientEmail = 'hotro@wvn.vn';
-
-      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
-      })
-        .then(async res => {
-          // Không chỉ dựa vào đúng 1 điều kiện data.success — coi là THÀNH CÔNG
-          // nếu HTTP status trả về là OK (2xx), kể cả khi cấu trúc JSON trả về
-          // có đôi chút khác biệt tuỳ phiên bản dịch vụ formsubmit.co.
-          let data = null;
-          try { data = await res.json(); } catch (e) { /* phản hồi không phải JSON, vẫn xét theo res.ok */ }
-          const isSuccess = res.ok && (!data || data.success === 'true' || data.success === true || data.success === undefined);
-          if (!isSuccess) throw new Error('Gửi không thành công');
-          return data;
-        })
-        .then(() => {
-          const successMsg = 'Cảm ơn bạn! Lời nhắn đã được gửi thành công đến Ban Quản Trị. Chúng tôi sẽ phản hồi qua email trong thời gian sớm nhất.';
-          formAlert.className = 'form-alert form-alert-success';
-          formAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>' + successMsg + '</span>';
-          showToast(successMsg, false);
-          contactForm.reset();
-        })
-        .catch(() => {
-          const errorMsg = 'Rất tiếc, đã có lỗi xảy ra khi gửi lời nhắn. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.';
-          formAlert.className = 'form-alert form-alert-error';
-          formAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>' + errorMsg + '</span>';
-          showToast(errorMsg, true);
-        })
-        .finally(() => {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnHtml;
-          formAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
-    });
   </script>
 </body>
 </html>
