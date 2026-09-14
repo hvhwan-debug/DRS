@@ -62,10 +62,6 @@
       display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit; font-size: 0.88rem;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
-    /* Nút Quyên Góp riêng ở header — giảm mạnh phần đệm trên/dưới (padding dọc) để không
-       còn khoảng xanh thừa phía trên và dưới chữ, chỉ áp dụng cho đúng vị trí này,
-       không ảnh hưởng tới các nút .btn khác trên trang. */
-    .nav-container .btn { padding: 0.4rem 1.1rem; text-align: center; }
 
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
@@ -357,7 +353,7 @@
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
-        <a href="quyen-gop.html" class="btn btn-donate-glow">Quyên Góp</a>
+        <button class="btn btn-donate-glow" onclick="window.location.href='quyen-gop.html'">Quyên Góp</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -416,7 +412,7 @@
             <h4>Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h4>
             <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
             <div class="upcoming-actions">
-              <a href="quyen-gop.html" class="btn btn-donate-glow"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</a>
+              <button class="btn btn-donate-glow" onclick="window.location.href='quyen-gop.html'"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
               <a href="lien-he.html" class="btn-secondary">Đồng hành</a>
             </div>
           </div>
@@ -434,7 +430,7 @@
             <h4>Hội thảo phương pháp học tập số</h4>
             <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
             <div class="upcoming-actions">
-              <a href="quyen-gop.html" class="btn btn-donate-glow"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</a>
+              <button class="btn btn-donate-glow" onclick="window.location.href='quyen-gop.html'"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
               <a href="lien-he.html" class="btn-secondary">Đăng ký tham gia</a>
             </div>
           </div>
@@ -452,7 +448,7 @@
             <h4>Phát động Học Bổng Ươm Mầm</h4>
             <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
             <div class="upcoming-actions">
-              <a href="quyen-gop.html" class="btn btn-donate-glow"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</a>
+              <button class="btn btn-donate-glow" onclick="window.location.href='quyen-gop.html'"><i class="fa-solid fa-heart"></i> Gây Quỹ Ngay</button>
               <a href="lien-he.html" class="btn-secondary">Tìm hiểu thêm</a>
             </div>
           </div>
