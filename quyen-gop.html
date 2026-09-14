@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quyên Góp - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Quyên góp cho Mạng Lưới Tri Thức Việt Nam qua chuyển khoản ngân hàng an toàn, minh bạch — chọn đúng dự án bạn muốn đồng hành: Áo Ấm Vùng Cao, Hội Thảo Học Tập Số, Học Bổng Ươm Mầm.">
+  <!-- Favicon chuẩn trực tuyến -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.7;
+    }
+    body { padding-top: 72px; }
+
+    /* Menu Cố Định Đồng Bộ */
+    header {
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
+    }
+    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+
+    .btn-donate-glow {
+      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+    }
+
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
+
+    /* Hero Banner */
+    .hero-wrapper {
+      width: 100%; background: var(--blue-grad-hero); padding: 4.5rem 1.5rem 5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 26px 26px;
+    }
+    .hero-dove {
+      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      pointer-events: none; z-index: 5;
+      animation: doveFloat 9s ease-in-out infinite;
+      transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0%   { transform: translate(0, 0) rotate(-4deg); }
+      25%  { transform: translate(-14px, -18px) rotate(2deg); }
+      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
+      75%  { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 480px) {
+      .brand-title { font-size: 1.02rem; }
+      .brand-subtitle { font-size: 0.6rem; }
+    }
+    @media (max-width: 640px) {
+      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
+      position: relative; z-index: 1;
+    }
+    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; position: relative; z-index: 1; }
+    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 680px; margin: 0 auto; line-height: 1.7; position: relative; z-index: 1; }
+
+    /* Container chính */
+    .container { max-width: 1100px; margin: -3rem auto 5rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+
+    .section-header { text-align: center; margin-bottom: 2.2rem; }
+    .section-header h2 { font-size: 1.65rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .section-header p { color: #64748b; font-size: 0.98rem; max-width: 620px; margin: 0 auto; }
+
+    /* ==== Khối chọn dự án — mỗi dự án có mã riêng để phân biệt khi tra cứu sao kê ==== */
+    .project-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1.6rem; margin-bottom: 3.5rem;
+    }
+    .project-card {
+      background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06); display: flex; flex-direction: column;
+    }
+    .project-top { height: 78px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; color: #fff; }
+    .project-body { padding: 1.6rem; flex-grow: 1; display: flex; flex-direction: column; }
+    .project-code-tag {
+      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.28rem 0.8rem; border-radius: 999px;
+      font-weight: 800; font-size: 0.76rem; letter-spacing: 0.4px; margin-bottom: 0.8rem; align-self: flex-start;
+    }
+    .project-body h3 { font-size: 1.08rem; color: var(--text-dark); margin-bottom: 0.6rem; font-weight: 800; line-height: 1.35; }
+    .project-body p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.2rem; flex-grow: 1; }
+    .project-qr { text-align: center; margin-bottom: 1rem; }
+    .project-qr img { width: 100%; max-width: 190px; border-radius: 12px; border: 1px solid var(--border); }
+    .project-code-box {
+      background: #f0f9ff; border: 1px dashed #7dd3fc; border-radius: 10px; padding: 0.7rem 0.9rem;
+      text-align: center; font-size: 0.9rem; color: #0369a1;
+    }
+    .project-code-box strong { display: block; font-size: 1rem; letter-spacing: 0.5px; margin-top: 0.2rem; }
+
+    .donate-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch; margin-bottom: 2.5rem;
+    }
+
+    .donate-card {
+      background: #ffffff; border-radius: 22px; padding: 2.6rem; border: 1px solid var(--border);
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.07);
+    }
+    .donate-card h2 {
+      font-size: 1.35rem; color: #0369a1; margin-bottom: 1.4rem; font-weight: 800;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .donate-card h2 i {
+      width: 38px; height: 38px; background: #e0f2fe; color: #0284c7; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+    }
+
+    .qr-box { text-align: center; }
+    .qr-box img { width: 100%; max-width: 260px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 1.2rem; }
+    .bank-info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .bank-info-row:last-child { border-bottom: none; }
+    .bank-info-row span:first-child { color: var(--text-muted); }
+    .bank-info-row span:last-child { font-weight: 700; color: var(--text-dark); text-align: right; }
+
+    .donate-steps { list-style: none; counter-reset: step; }
+    .donate-steps li {
+      counter-increment: step; display: flex; gap: 1rem; margin-bottom: 1.3rem; align-items: flex-start;
+    }
+    .donate-steps li:last-child { margin-bottom: 0; }
+    .donate-steps li::before {
+      content: counter(step); flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+      background: var(--blue-grad-btn); color: #fff; font-weight: 800; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .donate-steps li div { color: var(--text-muted); font-size: 0.96rem; padding-top: 0.3rem; }
+    .donate-steps li strong { color: var(--text-dark); }
+
+    .transparency-band {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd;
+      border-radius: 20px; padding: 2.2rem 2.4rem; margin-bottom: 2.5rem; text-align: center;
+    }
+    .transparency-band i { font-size: 1.8rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
+    .transparency-band h3 { font-size: 1.2rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 800; }
+    .transparency-band p { color: var(--text-dark); font-size: 0.98rem; max-width: 620px; margin: 0 auto 1.2rem; }
+    .transparency-band a.btn { padding: 0.75rem 1.8rem; font-size: 0.95rem; }
+
+    .alt-donate-section { margin-bottom: 2.5rem; }
+    .alt-donate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1.4rem; }
+    .alt-donate-card {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 18px; padding: 1.8rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .alt-donate-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(2, 132, 199, 0.1); }
+    .alt-donate-card .alt-icon {
+      width: 46px; height: 46px; background: #e0f2fe; color: #0284c7; border-radius: 12px; margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .alt-donate-card h4 { font-size: 1.05rem; color: var(--text-dark); margin-bottom: 0.6rem; font-weight: 700; }
+    .alt-donate-card p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .alt-donate-card a { color: #0284c7; font-weight: 700; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .alt-donate-card a:hover { text-decoration: underline; }
+
+    .legal-note {
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7;
+      padding: 1.6rem 1.8rem; border-radius: 14px; font-size: 0.92rem; color: var(--text-muted);
+    }
+    .legal-note strong { color: #0369a1; }
+
+    /* Footer chuẩn 3 cột */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      .donate-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .hero-title { font-size: 2.1rem; }
+      .donate-card { padding: 1.8rem; }
+      .transparency-band { padding: 1.8rem 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu Cố Định Đồng Bộ -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="su-menh.html">Giới Thiệu</a>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="tin-tuc.html">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="quyen-gop.html" class="btn btn-donate-glow">Quyên Góp</a>
+        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-wrapper">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
+    <div class="hero-badge">CHUNG TAY VÌ GIÁO DỤC CÔNG BẰNG</div>
+    <h1 class="hero-title">Quyên Góp Vì Cơ Hội Học Tập</h1>
+    <p class="hero-desc">Mỗi đóng góp của bạn, dù lớn hay nhỏ, đều trực tiếp góp phần mang sách, học liệu và cơ hội học tập tới trẻ em vùng cao Việt Nam. 100% lợi nhuận sau thuế được tái đầu tư cho các chương trình giáo dục.</p>
+  </section>
+
+  <main class="container">
+
+    <!-- Chọn dự án cụ thể -->
+    <div class="section-header">
+      <h2>Chọn Dự Án Bạn Muốn Đồng Hành</h2>
+      <p>Mỗi dự án có mã riêng — ghi đúng mã vào nội dung chuyển khoản để khoản đóng góp của bạn được ghi nhận đúng vào dự án mong muốn.</p>
+    </div>
+
+    <div class="project-grid">
+
+      <div class="project-card">
+        <div class="project-top" style="background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);">
+          <i class="fa-solid fa-mitten"></i>
+        </div>
+        <div class="project-body">
+          <span class="project-code-tag">MÃ DA-001</span>
+          <h3>Chiến Dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h3>
+          <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
+          <div class="project-qr">
+            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Áo Ấm Vùng Cao">
+          </div>
+          <div class="project-code-box">
+            Nội dung chuyển khoản
+            <strong>DA-001 Ao Am Vung Cao</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);">
+          <i class="fa-solid fa-laptop-code"></i>
+        </div>
+        <div class="project-body">
+          <span class="project-code-tag">MÃ DA-002</span>
+          <h3>Hội Thảo Phương Pháp Học Tập Số</h3>
+          <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
+          <div class="project-qr">
+            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-002%20Hoi%20Thao%20Hoc%20Tap%20So&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Hội Thảo Học Tập Số">
+          </div>
+          <div class="project-code-box">
+            Nội dung chuyển khoản
+            <strong>DA-002 Hoi Thao Hoc Tap So</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
+          <i class="fa-solid fa-award"></i>
+        </div>
+        <div class="project-body">
+          <span class="project-code-tag">MÃ DA-003</span>
+          <h3>Phát Động Học Bổng Ươm Mầm</h3>
+          <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
+          <div class="project-qr">
+            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Hoc%20Bong%20Uom%20Mam&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Học Bổng Ươm Mầm">
+          </div>
+          <div class="project-code-box">
+            Nội dung chuyển khoản
+            <strong>DA-003 Hoc Bong Uom Mam</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-header">
+      <h2>Hoặc Ủng Hộ Quỹ Chung</h2>
+      <p>Không chọn dự án cụ thể? Đóng góp vào quỹ chung để chúng tôi phân bổ vào chương trình đang cần nhất.</p>
+    </div>
+
+    <div class="donate-grid">
+
+      <!-- Cột trái: Mã QR & thông tin chuyển khoản -->
+      <div class="donate-card">
+        <h2><i class="fa-solid fa-qrcode"></i> Chuyển Khoản Qua VietQR</h2>
+        <div class="qr-box">
+          <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20Chung%20DRSV&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Quyên góp Mạng Lưới Tri Thức Việt Nam">
+        </div>
+        <div class="bank-info-row">
+          <span>Ngân hàng</span>
+          <span>Techcombank</span>
+        </div>
+        <div class="bank-info-row">
+          <span>Chủ tài khoản</span>
+          <span>CÔNG TY TNHH DR SOLUTIONS</span>
+        </div>
+        <div class="bank-info-row">
+          <span>Số tài khoản</span>
+          <span>30000</span>
+        </div>
+        <div class="bank-info-row">
+          <span>Nội dung chuyển khoản</span>
+          <span>Ung ho Quy Chung DRSV</span>
+        </div>
+      </div>
+
+      <!-- Cột phải: Hướng dẫn các bước -->
+      <div class="donate-card">
+        <h2><i class="fa-solid fa-list-check"></i> Các Bước Thực Hiện</h2>
+        <ol class="donate-steps">
+          <li><div><strong>Mở ứng dụng ngân hàng</strong> của bạn (Techcombank, MoMo, hoặc bất kỳ app hỗ trợ VietQR nào).</div></li>
+          <li><div><strong>Chọn dự án</strong> bạn muốn ủng hộ ở trên, hoặc quét mã Quỹ Chung nếu không có ưu tiên riêng.</div></li>
+          <li><div><strong>Kiểm tra lại nội dung chuyển khoản</strong> đúng với mã dự án đã chọn trước khi xác nhận.</div></li>
+          <li><div><strong>Hoàn tất giao dịch</strong> — mọi khoản đóng góp sẽ được ghi nhận và công khai định kỳ.</div></li>
+          <li><div><strong>Tra cứu giao dịch</strong> của bạn bất cứ lúc nào tại trang Tra Cứu Sao Kê để xác nhận đã được ghi nhận.</div></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <!-- Băng minh bạch -->
+    <div class="transparency-band">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h3>Cam Kết Minh Bạch Tuyệt Đối</h3>
+      <p>Mọi giao dịch quyên góp đều được công khai theo thời gian thực. Bạn có thể tra cứu chính xác giao dịch của mình bằng mã giao dịch từ ngân hàng.</p>
+      <a href="sao-ke.html" class="btn"><i class="fa-solid fa-magnifying-glass-dollar"></i> Tra Cứu Sao Kê Giao Dịch</a>
+    </div>
+
+    <!-- Các hình thức đóng góp khác -->
+    <div class="alt-donate-section">
+      <div class="alt-donate-grid">
+        <div class="alt-donate-card">
+          <div class="alt-icon"><i class="fa-solid fa-book"></i></div>
+          <h4>Quyên góp hiện vật</h4>
+          <p>Sách, học liệu, dụng cụ học tập còn sử dụng tốt đều được tiếp nhận và trao tận tay học sinh vùng cao.</p>
+          <a href="lien-he.html">Liên hệ hướng dẫn gửi <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="alt-donate-card">
+          <div class="alt-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
+          <h4>Trở thành tình nguyện viên</h4>
+          <p>Đồng hành trực tiếp cùng các chương trình giảng dạy, hội thảo và hoạt động cộng đồng của chúng tôi.</p>
+          <a href="lien-he.html">Đăng ký tham gia <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="alt-donate-card">
+          <div class="alt-icon"><i class="fa-solid fa-handshake"></i></div>
+          <h4>Hợp tác doanh nghiệp</h4>
+          <p>Đồng hành dài hạn cùng các chiến dịch gây quỹ, tài trợ chương trình học bổng hoặc sự kiện giáo dục.</p>
+          <a href="lien-he.html">Đề xuất hợp tác <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ghi chú pháp lý -->
+    <div class="legal-note">
+      <p><strong>Cam kết pháp lý:</strong> Mạng Lưới Tri Thức Việt Nam sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; tuyệt đối không phân chia lợi tức hoặc cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mã số doanh nghiệp (MST): <strong>0111291749</strong>.</p>
+    </div>
+
+  </main>
+
+  <!-- Footer 3 Cột -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4>Cam Kết Xã Hội</h4>
+        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
+        <p style="margin-top:0.6rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+      </div>
+      <div>
+        <h4>Kết Nối Với Chúng Tôi</h4>
+        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
+        <div class="social-links" style="margin-top: 0.8rem;">
+          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.getElementById('menuBtn');
+      navLinks.classList.toggle('active');
+      if (navLinks.classList.contains('active')) {
+        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      } else {
+        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    }
+  </script>
+</body>
+</html>
