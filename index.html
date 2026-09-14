@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mạng Lưới Tri Thức Việt Nam - DR SOLUTIONS</title>
-  <meta name="description" content="Mạng Lưới Tri Thức Việt Nam & DR Solutions - doanh nghiệp xã hội phi lợi nhuận kết nối nguồn lực cộng đồng, trao tặng học liệu và kiến tạo cơ hội học tập công bằng cho trẻ em vùng cao Việt Nam.">
+  <title>Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Mạng Lưới Tri Thức Việt Nam - doanh nghiệp xã hội phi lợi nhuận kết nối nguồn lực cộng đồng, trao tặng học liệu và kiến tạo cơ hội học tập công bằng cho trẻ em vùng cao Việt Nam.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -175,6 +175,12 @@
 
     .metrics-strip { background: #ffffff; border-bottom: 1px solid var(--border); padding: 2.5rem 1.5rem; }
     .metrics-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 2rem; text-align: center; }
+    .metric-item { position: relative; }
+    .metric-item::before {
+      content: ''; position: absolute; left: -1rem; top: 8%; bottom: 8%; width: 1px; background: var(--border);
+    }
+    .metric-item:first-child::before { display: none; }
+    @media (max-width: 640px) { .metric-item::before { display: none; } }
     .metric-number { font-size: 2.4rem; font-weight: 900; color: #0284c7; line-height: 1.1; margin-bottom: 0.3rem; }
     .metric-label { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
 
@@ -327,7 +333,7 @@
         </div>
         <div class="brand-text-group">
           <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
-          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+          <span class="brand-subtitle">Wisdom Vietnam Network</span>
         </div>
       </a>
 
@@ -355,7 +361,7 @@
       <div>
         <div class="hero-badge">SỨ MỆNH VÌ CỘNG ĐỒNG</div>
         <h1 class="hero-title">
-          DR SOLUTIONS<br>
+          <a href="https://www.claudeusercontent.com/index.html" style="color: inherit; text-decoration: none;">Mạng Lưới Tri Thức Việt Nam</a><br>
           đồng hành vì giáo<br>
           dục công bằng và<br>
           cơ hội học tập xứng<br>
@@ -394,19 +400,19 @@
 
   <section class="metrics-strip">
     <div class="metrics-grid">
-      <div>
+      <div class="metric-item">
         <div class="metric-number" data-target="100" data-suffix="%">0%</div>
         <div class="metric-label">Lợi nhuận tái đầu tư xã hội</div>
       </div>
-      <div>
+      <div class="metric-item">
         <div class="metric-number" data-target="420" data-suffix="+">0+</div>
         <div class="metric-label">Sách & Học liệu đã trao tặng</div>
       </div>
-      <div>
+      <div class="metric-item">
         <div class="metric-number" data-target="0" data-suffix=" đ">0 đ</div>
         <div class="metric-label">Chi phí mượn đọc cho trẻ em</div>
       </div>
-      <div>
+      <div class="metric-item">
         <div class="metric-number" data-target="24" data-suffix="/7">0/7</div>
         <div class="metric-label">Công khai sao kê minh bạch</div>
       </div>
@@ -430,7 +436,7 @@
     <div style="max-width: 1240px; margin: 0 auto;">
       <div class="section-header">
         <h2>Bài Viết Mới Nhất</h2>
-        <p>Câu chuyện giáo dục và hành trình thiện nguyện mới nhất từ DR SOLUTIONS</p>
+        <p>Câu chuyện giáo dục và hành trình thiện nguyện mới nhất từ <a href="https://www.claudeusercontent.com/index.html" style="color:#0284c7; font-weight:700; text-decoration:none;">Mạng Lưới Tri Thức Việt Nam</a></p>
       </div>
 
       <div class="latest-article-split" id="latestArticleSplit">
@@ -510,11 +516,9 @@
       </div>
       <div>
         <h4>Kết Nối Với Chúng Tôi</h4>
-        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của DR SOLUTIONS.</p>
+        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của <a href="https://www.claudeusercontent.com/index.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">Mạng Lưới Tri Thức Việt Nam</a>.</p>
         <div class="social-links" style="margin-top: 0.8rem;">
-          <a class="social-link" href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
           <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-          <a class="social-link" href="#" aria-label="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
         </div>
       </div>
     </div>
