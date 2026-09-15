@@ -27,7 +27,7 @@
     html, body {
       width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.8;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
     }
     body { padding-top: 72px; }
 
@@ -82,12 +82,12 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Banner Sang Trọng */
+    /* Hero Banner (đồng bộ kích thước với các trang khác trong site) */
     .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 5rem 1.5rem 6rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+      width: 100%; background: var(--blue-grad-hero); padding: 3.6rem 1.5rem 4rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
     .hero-wrapper::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;
+      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
     }
     /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
     .hero-dove {
@@ -113,11 +113,11 @@
     }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
+      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
     }
-    .hero-title { font-size: 3rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
-    .hero-desc { font-size: 1.15rem; color: #e0f2fe; max-width: 750px; margin: 0 auto; line-height: 1.7; }
+    .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
+    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 620px; margin: 0 auto; }
 
     /* Quote Banner Nghệ Thuật */
     .mission-quote-box {
@@ -154,8 +154,6 @@
     .mission-story-block p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.1rem; }
     .mission-story-block p:last-child { margin-bottom: 0; }
 
-    /* Modal Quyên góp */
-
     /* Footer chuẩn 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
@@ -181,7 +179,7 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-title { font-size: 2.3rem; }
+      .hero-title { font-size: 2rem; }
       .quote-card { padding: 2rem 1.5rem; }
       .quote-card p { font-size: 1.05rem; }
       .mission-story-block { padding: 2rem 1.5rem; }
@@ -221,7 +219,7 @@
     </div>
   </header>
 
-  <!-- Hero Banner Sang Trọng -->
+  <!-- Hero Banner -->
   <section class="hero-wrapper">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">VỀ WISDOM VIETNAM NETWORK</div>
@@ -233,7 +231,7 @@
   <div class="mission-quote-box">
     <div class="quote-card">
       <i class="fa-solid fa-quote-left"></i>
-      <p>“Một cơ hội học tập hôm nay có thể trở thành một cánh cửa mới cho ngày mai.”</p>
+      <p>"Một cơ hội học tập hôm nay có thể trở thành một cánh cửa mới cho ngày mai."</p>
       <span>— Wisdom Vietnam Network (Mạng Lưới Tri Thức Việt Nam)</span>
     </div>
   </div>
