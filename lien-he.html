@@ -221,6 +221,35 @@
     }
     .map-wrap iframe { width: 100%; height: 340px; border: 0; display: block; }
 
+    /* Câu hỏi thường gặp (FAQ) */
+    .faq-section { margin-top: 3rem; }
+    .faq-heading { text-align: center; margin-bottom: 2rem; }
+    .faq-heading h2 { color: #0369a1; font-size: 1.55rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .faq-heading p { color: var(--text-muted); font-size: 0.96rem; }
+
+    .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.9rem; }
+    .faq-item {
+      background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; box-shadow: 0 4px 14px rgba(15,23,42,0.04); transition: box-shadow 0.2s;
+    }
+    .faq-item.open { box-shadow: 0 10px 26px rgba(15,23,42,0.08); }
+
+    .faq-question {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.15rem 1.4rem; background: none; border: none; cursor: pointer; text-align: left;
+      font-family: inherit; font-size: 1rem; font-weight: 700; color: var(--text-dark);
+    }
+    .faq-question:hover { color: #0284c7; }
+    .faq-question .faq-icon {
+      flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: #e0f2fe; color: #0284c7;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: transform 0.25s;
+    }
+    .faq-item.open .faq-question .faq-icon { transform: rotate(45deg); background: var(--blue-grad-btn); color: #fff; }
+
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .faq-answer-inner { padding: 0 1.4rem 1.3rem; color: var(--text-muted); font-size: 0.94rem; line-height: 1.75; }
+    .faq-answer-inner a { color: #0284c7; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
     .article-footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
     .back-link { color: #0284c7; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
     .back-link:hover { text-decoration: underline; }
@@ -405,6 +434,76 @@
       </iframe>
     </div>
 
+    <!-- Câu hỏi thường gặp -->
+    <section class="faq-section">
+      <div class="faq-heading">
+        <h2>Câu Hỏi Thường Gặp</h2>
+        <p>Một số thắc mắc phổ biến trước khi bạn liên hệ với chúng tôi.</p>
+      </div>
+
+      <div class="faq-list" id="faqList">
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Làm thế nào để tôi có thể quyên góp ủng hộ chương trình?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Bạn có thể quyên góp trực tiếp qua trang <a href="quyen-gop.html">Quyên Góp</a> trên website, với thông tin chuyển khoản và mã VietQR được cập nhật đầy đủ. Mọi khoản đóng góp đều được ghi nhận minh bạch và có thể tra cứu tại mục <a href="sao-ke.html">Tra Cứu Sao Kê</a>.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Tôi muốn tham gia tình nguyện thì cần liên hệ như thế nào?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Bạn điền vào form liên hệ phía trên, chọn chủ đề "Tham gia tình nguyện" và để lại thông tin cụ thể (kỹ năng, thời gian rảnh, khu vực mong muốn hoạt động). Đội ngũ của chúng tôi sẽ phản hồi và sắp xếp chương trình phù hợp trong thời gian sớm nhất.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Sau khi gửi form liên hệ, bao lâu thì tôi nhận được phản hồi?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Chúng tôi thường phản hồi trong vòng 1-2 ngày làm việc (Thứ 2 - Thứ 6, 8:00 - 17:30 giờ Hà Nội). Với các yêu cầu gấp, bạn có thể gửi email trực tiếp đến <a href="mailto:hotro@wvn.vn">hotro@wvn.vn</a> để được hỗ trợ nhanh hơn.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Tôi có thể xem báo cáo sử dụng tiền quyên góp ở đâu?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Toàn bộ sao kê thu - chi được cập nhật công khai tại trang <a href="sao-ke.html">Tra Cứu Sao Kê</a>. Ngoài ra, Báo Cáo Tác Động Thường Niên tổng hợp chi tiết các hoạt động và kết quả trong năm cũng được đăng tải công khai trên website.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Đơn vị vận hành Mạng Lưới Tri Thức Việt Nam là ai?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Website được vận hành bởi Công Ty TNHH DR Solutions (Mã số doanh nghiệp: 0111291749), một doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng, với 100% lợi nhuận sau thuế được tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="article-footer-nav">
       <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</a>
       <button class="btn" onclick="window.location.href='quyen-gop.html'">Quyên Góp Ủng Hộ</button>
@@ -444,6 +543,34 @@
   </footer>
 
   <script>
+    // Điều khiển đóng/mở các mục Câu Hỏi Thường Gặp (accordion).
+    (function () {
+      const faqItems = document.querySelectorAll('#faqList .faq-item');
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        question.addEventListener('click', () => {
+          const isOpen = item.classList.contains('open');
+
+          // Đóng các mục khác để danh sách gọn gàng hơn.
+          faqItems.forEach(other => {
+            if (other !== item) {
+              other.classList.remove('open');
+              other.querySelector('.faq-answer').style.maxHeight = null;
+            }
+          });
+
+          if (isOpen) {
+            item.classList.remove('open');
+            answer.style.maxHeight = null;
+          } else {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+          }
+        });
+      });
+    })();
+
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
       const menuBtn = document.getElementById('menuBtn');
