@@ -233,6 +233,36 @@
       .impact-item.is-active .impact-dot::after, .impact-item.is-active .impact-dot::before { animation: none; }
       .impact-fill { transition: none; }
     }
+
+    /* Popup mã QR ủng hộ chiến dịch — hiện khi bấm "Ủng hộ chiến dịch này" trên thẻ sự kiện */
+    .qr-modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .qr-modal.active { display: flex; }
+    .qr-modal-content {
+      position: relative; background: #ffffff; padding: 2.2rem; border-radius: 20px; max-width: 400px; width: 100%;
+      text-align: center; box-shadow: 0 24px 50px rgba(15, 23, 42, 0.3);
+    }
+    .qr-modal-close {
+      position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%;
+      background: #f1f5f9; border: none; color: var(--text-muted); font-size: 0.95rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .qr-modal-close:hover { background: #e2e8f0; color: var(--text-dark); }
+    .qr-modal-content h3 { color: #0369a1; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+    .qr-modal-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .qr-modal-img { width: 100%; max-width: 220px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 1.2rem; }
+    .qr-modal-content-box {
+      background: #f0f9ff; border: 1px dashed #7dd3fc; border-radius: 10px; padding: 0.7rem 0.9rem;
+      text-align: center; font-size: 0.88rem; color: #0369a1; margin-bottom: 1.3rem;
+    }
+    .qr-modal-content-box strong { display: block; font-size: 0.98rem; letter-spacing: 0.4px; margin-top: 0.25rem; }
+    .qr-modal-more {
+      font-size: 0.88rem; font-weight: 700; color: #0284c7; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .qr-modal-more:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -352,6 +382,23 @@
     </div>
   </footer>
 
+  <!-- Popup Mã QR Ủng Hộ Chiến Dịch -->
+  <div id="qrModal" class="qr-modal" onclick="if(event.target===this) closeQrModal()">
+    <div class="qr-modal-content">
+      <button class="qr-modal-close" onclick="closeQrModal()" aria-label="Đóng">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 id="qrModalTitle">Ủng Hộ Chiến Dịch</h3>
+      <p id="qrModalSubtitle" class="qr-modal-subtitle">Quét mã VietQR bên dưới bằng ứng dụng ngân hàng để đóng góp trực tiếp.</p>
+      <img id="qrModalImage" src="" alt="Mã VietQR ủng hộ chiến dịch" class="qr-modal-img">
+      <div class="qr-modal-content-box">
+        Nội dung chuyển khoản
+        <strong id="qrModalContent"></strong>
+      </div>
+      <a href="quyen-gop.html" class="qr-modal-more">Xem tất cả các cách ủng hộ khác <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+
   <script>
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
@@ -362,6 +409,27 @@
       } else {
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
+    }
+
+    // ============================================================
+    // Popup mã QR ủng hộ chiến dịch — mở ngay tại trang Hoạt Động
+    // thay vì điều hướng sang trang Quyên Góp, dùng đúng ảnh QR và
+    // nội dung chuyển khoản thật khớp với từng dự án ở quyen-gop.html.
+    // ============================================================
+    function openQrModal(projectCode) {
+      const ev = ACTIVITY_EVENTS_BY_CODE[projectCode];
+      if (!ev) return;
+      document.getElementById('qrModalTitle').textContent = ev.title;
+      document.getElementById('qrModalImage').src = ev.qrImage;
+      document.getElementById('qrModalImage').alt = `Mã VietQR ${ev.title}`;
+      document.getElementById('qrModalContent').textContent = ev.qrContent;
+      document.getElementById('qrModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeQrModal() {
+      document.getElementById('qrModal').classList.remove('active');
+      document.body.style.overflow = '';
     }
 
     // ============================================================
@@ -379,7 +447,9 @@
         tag: "Đang nhận đăng ký",
         tagBg: "#dbeafe", tagColor: "#1e40af",
         title: "Hội thảo phương pháp học tập số",
-        desc: "Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên."
+        desc: "Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.",
+        qrContent: "DA-002 Hoi Thao Hoc Tap So",
+        qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-002%20Hoi%20Thao%20Hoc%20Tap%20So&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
       },
       {
         date: "2026-11-01",
@@ -390,7 +460,9 @@
         tag: "Sắp diễn ra",
         tagBg: "#e0f2fe", tagColor: "#0369a1",
         title: "Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)",
-        desc: "Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang."
+        desc: "Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.",
+        qrContent: "DA-001 Ao Am Vung Cao",
+        qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
       },
       {
         date: "2026-12-01",
@@ -401,9 +473,15 @@
         tag: "Kế hoạch quý IV",
         tagBg: "#ccfbf1", tagColor: "#0f766e",
         title: "Phát động Học Bổng Ươm Mầm",
-        desc: "Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập."
+        desc: "Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.",
+        qrContent: "DA-003 Hoc Bong Uom Mam",
+        qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Hoc%20Bong%20Uom%20Mam&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
       }
     ];
+
+    // Tra cứu nhanh dữ liệu sự kiện theo mã dự án — dùng cho popup QR
+    const ACTIVITY_EVENTS_BY_CODE = {};
+    ACTIVITY_EVENTS.forEach(ev => { ACTIVITY_EVENTS_BY_CODE[ev.projectCode] = ev; });
 
     function renderActivityEventCard(ev) {
       return `
@@ -418,7 +496,7 @@
             <p>${ev.desc}</p>
             <div class="event-project-row">
               <span class="event-project-code">Mã ${ev.projectCode}</span>
-              <button class="event-cta" onclick="window.location.href='quyen-gop.html#${ev.projectCode}'">Ủng hộ chiến dịch này <i class="fa-solid fa-arrow-right"></i></button>
+              <button class="event-cta" onclick="openQrModal('${ev.projectCode}')">Ủng hộ chiến dịch này <i class="fa-solid fa-arrow-right"></i></button>
             </div>
           </div>
         </div>`;
