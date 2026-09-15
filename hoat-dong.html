@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quyên Góp - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Quyên góp cho Mạng Lưới Tri Thức Việt Nam qua chuyển khoản ngân hàng an toàn, minh bạch — chọn đúng dự án bạn muốn đồng hành: Áo Ấm Vùng Cao, Hội Thảo Học Tập Số, Học Bổng Ươm Mầm.">
+  <title>Tra Cứu Sao Kê - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Tra cứu công khai sao kê giao dịch quyên góp của Mạng Lưới Tri Thức Việt Nam - DR Solutions. Nhập đúng họ tên không dấu và mã giao dịch để tra cứu, cam kết minh bạch tài chính vì cộng đồng giáo dục vùng cao.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <style>
+    /* ============================================================
+       CSS DÙNG CHUNG — đồng bộ đúng theo index.html / hoat-dong.html /
+       quyen-gop.html (bản thật hiện tại của site). Không chỉnh sửa.
+       ============================================================ */
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
       --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
@@ -91,24 +95,20 @@
     .hero-dove {
       position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
       opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
-      pointer-events: none; z-index: 5;
-      animation: doveFloat 9s ease-in-out infinite;
-      transform-origin: center center;
+      pointer-events: none; z-index: 1; animation: doveFloat 9s ease-in-out infinite; transform-origin: center center;
     }
     @keyframes doveFloat {
-      0%   { transform: translate(0, 0) rotate(-4deg); }
-      25%  { transform: translate(-14px, -18px) rotate(2deg); }
-      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
-      75%  { transform: translate(10px, -14px) rotate(3deg); }
+      0% { transform: translate(0, 0) rotate(-4deg); }
+      25% { transform: translate(-14px, -18px) rotate(2deg); }
+      50% { transform: translate(-4px, -30px) rotate(-6deg); }
+      75% { transform: translate(10px, -14px) rotate(3deg); }
       100% { transform: translate(0, 0) rotate(-4deg); }
     }
     @media (max-width: 480px) {
       .brand-title { font-size: 1.02rem; }
       .brand-subtitle { font-size: 0.6rem; }
     }
-    @media (max-width: 640px) {
-      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
-    }
+    @media (max-width: 640px) { .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; } }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
       padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
@@ -118,107 +118,65 @@
     .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; position: relative; z-index: 1; }
     .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 620px; margin: 0 auto; position: relative; z-index: 1; }
 
-    /* Container chính */
-    .container { max-width: 1100px; margin: 1.5rem auto 5rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+    /* Container & Bảng Sao Kê */
+    .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
-    .section-header { text-align: center; margin-bottom: 2.2rem; }
-    .section-header h2 { font-size: 1.65rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: -0.3px; }
-    .section-header p { color: #64748b; font-size: 0.98rem; max-width: 620px; margin: 0 auto; }
+    .toolbar {
+      background: #ffffff; padding: 1.5rem 1.5rem 1.25rem; border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
+    }
+    .toolbar-hint { text-align: center; font-size: 0.86rem; color: var(--text-muted); margin-bottom: 1.1rem; }
+    .toolbar-hint code { background: #e0f2fe; color: #0369a1; padding: 0.1rem 0.45rem; border-radius: 5px; font-weight: 700; }
+    .toolbar-fields { display: flex; justify-content: center; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+    .field-group { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 220px; max-width: 320px; }
+    .field-group label { font-size: 0.8rem; font-weight: 700; color: var(--text-dark); }
+    .search-box { position: relative; width: 100%; }
+    .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+    .search-box input {
+      width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
+      border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem;
+      outline: none; background: #f8fafc; transition: all 0.2s; font-family: inherit;
+      text-transform: uppercase;
+    }
+    .search-box input::placeholder { text-transform: none; }
+    .search-box input:focus {
+      border-color: #0284c7; background: #fff;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+    }
+    .search-btn {
+      padding: 0.78rem 1.6rem; border-radius: 10px; border: none; background: var(--blue-grad-btn);
+      color: #fff; font-weight: 700; font-size: 0.92rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .search-btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* ==== Khối chọn dự án — mỗi dự án có mã riêng để phân biệt khi tra cứu sao kê ==== */
-    .project-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1.6rem; margin-bottom: 3.5rem;
+    .table-container {
+      background: #ffffff; border-radius: 0 0 16px 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); border: 1px solid var(--border); overflow: hidden;
     }
-    .project-card {
-      background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06); display: flex; flex-direction: column;
-      scroll-margin-top: 100px;
-    }
-    .project-top { height: 78px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; color: #fff; }
-    .project-body { padding: 1.6rem; flex-grow: 1; display: flex; flex-direction: column; }
-    .project-code-tag {
-      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.28rem 0.8rem; border-radius: 999px;
-      font-weight: 800; font-size: 0.76rem; letter-spacing: 0.4px; margin-bottom: 0.8rem; align-self: flex-start;
-    }
-    .project-body h3 { font-size: 1.08rem; color: var(--text-dark); margin-bottom: 0.6rem; font-weight: 800; line-height: 1.35; }
-    .project-body p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.2rem; flex-grow: 1; }
-    .project-qr { text-align: center; margin-bottom: 1rem; }
-    .project-qr img { width: 100%; max-width: 190px; border-radius: 12px; border: 1px solid var(--border); }
-    .project-code-box {
-      background: #f0f9ff; border: 1px dashed #7dd3fc; border-radius: 10px; padding: 0.7rem 0.9rem;
-      text-align: center; font-size: 0.9rem; color: #0369a1;
-    }
-    .project-code-box strong { display: block; font-size: 1rem; letter-spacing: 0.5px; margin-top: 0.2rem; }
+    .table-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 640px; }
+    th, td { padding: 1.1rem 1.25rem; font-size: 0.92rem; border-bottom: 1px solid var(--border); font-family: inherit; }
+    th { background: #f8fafc; color: var(--text-dark); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+    tr:hover { background: #f8fafc; }
 
-    .donate-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch; margin-bottom: 2.5rem;
-    }
+    .code-cell { font-weight: 800; color: #0369a1; white-space: nowrap; letter-spacing: 0.3px; }
+    .date-cell { white-space: nowrap; color: var(--text-muted); font-weight: 500; }
+    .content-cell { color: var(--text-dark); font-weight: 500; }
+    .amount-in { color: #166534; font-weight: 800; font-size: 0.98rem; white-space: nowrap; text-align: right; }
 
-    .donate-card {
-      background: #ffffff; border-radius: 22px; padding: 2.6rem; border: 1px solid var(--border);
-      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.07);
-    }
-    .donate-card h2 {
-      font-size: 1.35rem; color: #0369a1; margin-bottom: 1.4rem; font-weight: 800;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .donate-card h2 i {
-      width: 38px; height: 38px; background: #e0f2fe; color: #0284c7; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
-    }
+    .empty-state { text-align: center; color: var(--text-muted); padding: 3.5rem 1.5rem; }
+    .empty-state i { font-size: 2rem; color: #0284c7; opacity: 0.6; display: block; margin-bottom: 1rem; }
+    .empty-state p { max-width: 460px; margin: 0 auto; line-height: 1.6; }
+    .empty-state code { background: #e0f2fe; color: #0369a1; padding: 0.15rem 0.5rem; border-radius: 6px; font-weight: 700; }
 
-    .qr-box { text-align: center; }
-    .qr-box img { width: 100%; max-width: 260px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 1.2rem; }
-    .bank-info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
-    .bank-info-row:last-child { border-bottom: none; }
-    .bank-info-row span:first-child { color: var(--text-muted); }
-    .bank-info-row span:last-child { font-weight: 700; color: var(--text-dark); text-align: right; }
+    .notice-footer {
+      padding: 1.1rem 1.5rem; background: #f8fafc; border-top: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .stats { font-size: 0.88rem; color: #0284c7; font-weight: 700; }
 
-    .donate-steps { list-style: none; counter-reset: step; }
-    .donate-steps li {
-      counter-increment: step; display: flex; gap: 1rem; margin-bottom: 1.3rem; align-items: flex-start;
-    }
-    .donate-steps li:last-child { margin-bottom: 0; }
-    .donate-steps li::before {
-      content: counter(step); flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
-      background: var(--blue-grad-btn); color: #fff; font-weight: 800; font-size: 0.9rem;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .donate-steps li div { color: var(--text-muted); font-size: 0.96rem; padding-top: 0.3rem; }
-    .donate-steps li strong { color: var(--text-dark); }
-
-    .transparency-band {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd;
-      border-radius: 20px; padding: 2.2rem 2.4rem; margin-bottom: 2.5rem; text-align: center;
-    }
-    .transparency-band i { font-size: 1.8rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
-    .transparency-band h3 { font-size: 1.2rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 800; }
-    .transparency-band p { color: var(--text-dark); font-size: 0.98rem; max-width: 620px; margin: 0 auto 1.2rem; }
-    .transparency-band a.btn { padding: 0.75rem 1.8rem; font-size: 0.95rem; }
-
-    .alt-donate-section { margin-bottom: 2.5rem; }
-    .alt-donate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1.4rem; }
-    .alt-donate-card {
-      background: #ffffff; border: 1px solid var(--border); border-radius: 18px; padding: 1.8rem;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); transition: transform 0.25s, box-shadow 0.25s;
-    }
-    .alt-donate-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(2, 132, 199, 0.1); }
-    .alt-donate-card .alt-icon {
-      width: 46px; height: 46px; background: #e0f2fe; color: #0284c7; border-radius: 12px; margin-bottom: 1rem;
-      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-    }
-    .alt-donate-card h4 { font-size: 1.05rem; color: var(--text-dark); margin-bottom: 0.6rem; font-weight: 700; }
-    .alt-donate-card p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1rem; }
-    .alt-donate-card a { color: #0284c7; font-weight: 700; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-    .alt-donate-card a:hover { text-decoration: underline; }
-
-    .legal-note {
-      background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7;
-      padding: 1.6rem 1.8rem; border-radius: 14px; font-size: 0.92rem; color: var(--text-muted);
-    }
-    .legal-note strong { color: #0369a1; }
-
-    /* Footer chuẩn 4 cột */
+    /* Footer chuẩn 4 cột (đồng bộ toàn site) */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -227,16 +185,10 @@
       transition: all 0.2s; text-decoration: none;
     }
     .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
-
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-    .footer-bottom a { color: #94a3b8; text-decoration: none; }
-    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
-    @media (max-width: 900px) {
-      .donate-grid { grid-template-columns: 1fr; }
-    }
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
       .nav-links {
@@ -247,8 +199,15 @@
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
       .hero-title { font-size: 2rem; }
-      .donate-card { padding: 1.8rem; }
-      .transparency-band { padding: 1.8rem 1.3rem; }
+      .toolbar-fields { flex-direction: column; align-items: stretch; }
+      .field-group { max-width: none; }
+      .search-btn { width: 100%; }
+    }
+
+    /* Trên điện thoại: chỉ phần bảng giao dịch cuộn riêng (cả ngang lẫn dọc), thanh thông báo nằm ngoài nên luôn đứng yên */
+    @media (max-width: 640px) {
+      .table-scroll-wrap { max-height: 58vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+      thead th { position: sticky; top: 0; z-index: 4; }
     }
   </style>
 </head>
@@ -272,7 +231,7 @@
       <nav class="nav-links" id="navLinks">
         <a href="su-menh.html">Giới Thiệu</a>
         <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
+        <a href="sao-ke.html" class="active">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
@@ -288,160 +247,64 @@
   <!-- Hero Banner -->
   <section class="hero-wrapper">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-badge">CHUNG TAY VÌ GIÁO DỤC CÔNG BẰNG</div>
-    <h1 class="hero-title">Quyên Góp Vì Cơ Hội Học Tập</h1>
-    <p class="hero-desc">Mỗi đóng góp của bạn, dù lớn hay nhỏ, đều trực tiếp góp phần mang sách, học liệu và cơ hội học tập tới trẻ em vùng cao Việt Nam. 100% lợi nhuận sau thuế được tái đầu tư cho các chương trình giáo dục.</p>
+    <div class="hero-badge">MINH BẠCH TÀI CHÍNH</div>
+    <h1 class="hero-title">Cổng Tra Cứu Sao Kê Giao Dịch</h1>
+    <p class="hero-desc">Nhập đúng họ và tên không dấu cùng mã giao dịch tương ứng để tra cứu thông tin chi tiết của khoản đóng góp.</p>
   </section>
 
-  <main class="container">
-
-    <!-- Chọn dự án cụ thể -->
-    <div class="section-header">
-      <h2>Chọn Dự Án Bạn Muốn Đồng Hành</h2>
-      <p>Mỗi dự án có mã riêng — ghi đúng mã vào nội dung chuyển khoản để khoản đóng góp của bạn được ghi nhận đúng vào dự án mong muốn.</p>
-    </div>
-
-    <div class="project-grid">
-
-      <div class="project-card" id="DA-001">
-        <div class="project-top" style="background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);">
-          <i class="fa-solid fa-mitten"></i>
-        </div>
-        <div class="project-body">
-          <span class="project-code-tag">MÃ DA-001</span>
-          <h3>Chiến Dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h3>
-          <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Áo Ấm Vùng Cao">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-001 Ao Am Vung Cao</strong>
+  <!-- Container Sao Kê -->
+  <div class="container">
+    <div class="toolbar">
+      <p class="toolbar-hint">Vui lòng nhập <strong>đúng</strong> cả họ tên không dấu (như trên nội dung chuyển khoản) và mã giao dịch, ví dụ tên <code>NGUYEN VAN AN</code> — mã <code>GD000123</code>.</p>
+      <div class="toolbar-fields">
+        <div class="field-group">
+          <label for="nameInput">Họ và tên (không dấu)</label>
+          <div class="search-box">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="nameInput" placeholder="VD: NGUYEN VAN AN" onkeydown="if(event.key==='Enter'){filterData();}">
           </div>
         </div>
-      </div>
-
-      <div class="project-card" id="DA-002">
-        <div class="project-top" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);">
-          <i class="fa-solid fa-laptop-code"></i>
-        </div>
-        <div class="project-body">
-          <span class="project-code-tag">MÃ DA-002</span>
-          <h3>Hội Thảo Phương Pháp Học Tập Số</h3>
-          <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-002%20Hoi%20Thao%20Hoc%20Tap%20So&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Hội Thảo Học Tập Số">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-002 Hoi Thao Hoc Tap So</strong>
+        <div class="field-group">
+          <label for="searchInput">Mã giao dịch</label>
+          <div class="search-box">
+            <i class="fa-solid fa-hashtag"></i>
+            <input type="text" id="searchInput" placeholder="VD: GD000123" onkeydown="if(event.key==='Enter'){filterData();}">
           </div>
         </div>
-      </div>
-
-      <div class="project-card" id="DA-003">
-        <div class="project-top" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
-          <i class="fa-solid fa-award"></i>
-        </div>
-        <div class="project-body">
-          <span class="project-code-tag">MÃ DA-003</span>
-          <h3>Phát Động Học Bổng Ươm Mầm</h3>
-          <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Hoc%20Bong%20Uom%20Mam&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Học Bổng Ươm Mầm">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-003 Hoc Bong Uom Mam</strong>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="section-header">
-      <h2>Hoặc Ủng Hộ Quỹ Chung</h2>
-      <p>Không chọn dự án cụ thể? Đóng góp vào quỹ chung để chúng tôi phân bổ vào chương trình đang cần nhất.</p>
-    </div>
-
-    <div class="donate-grid">
-
-      <!-- Cột trái: Mã QR & thông tin chuyển khoản -->
-      <div class="donate-card">
-        <h2><i class="fa-solid fa-qrcode"></i> Chuyển Khoản Qua VietQR</h2>
-        <div class="qr-box">
-          <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20Chung%20DRSV&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Quyên góp Mạng Lưới Tri Thức Việt Nam">
-        </div>
-        <div class="bank-info-row">
-          <span>Ngân hàng</span>
-          <span>Techcombank</span>
-        </div>
-        <div class="bank-info-row">
-          <span>Chủ tài khoản</span>
-          <span>CÔNG TY TNHH DR SOLUTIONS</span>
-        </div>
-        <div class="bank-info-row">
-          <span>Số tài khoản</span>
-          <span>30000</span>
-        </div>
-        <div class="bank-info-row">
-          <span>Nội dung chuyển khoản</span>
-          <span>Ung ho Quy Chung DRSV</span>
-        </div>
-      </div>
-
-      <!-- Cột phải: Hướng dẫn các bước -->
-      <div class="donate-card">
-        <h2><i class="fa-solid fa-list-check"></i> Các Bước Thực Hiện</h2>
-        <ol class="donate-steps">
-          <li><div><strong>Mở ứng dụng ngân hàng</strong> của bạn (Techcombank, MoMo, hoặc bất kỳ app hỗ trợ VietQR nào).</div></li>
-          <li><div><strong>Chọn dự án</strong> bạn muốn ủng hộ ở trên, hoặc quét mã Quỹ Chung nếu không có ưu tiên riêng.</div></li>
-          <li><div><strong>Kiểm tra lại nội dung chuyển khoản</strong> đúng với mã dự án đã chọn trước khi xác nhận.</div></li>
-          <li><div><strong>Hoàn tất giao dịch</strong> — mọi khoản đóng góp sẽ được ghi nhận và công khai định kỳ.</div></li>
-          <li><div><strong>Tra cứu giao dịch</strong> của bạn bất cứ lúc nào tại trang Tra Cứu Sao Kê để xác nhận đã được ghi nhận.</div></li>
-        </ol>
-      </div>
-
-    </div>
-
-    <!-- Băng minh bạch -->
-    <div class="transparency-band">
-      <i class="fa-solid fa-shield-halved"></i>
-      <h3>Cam Kết Minh Bạch Tuyệt Đối</h3>
-      <p>Mọi giao dịch quyên góp đều được công khai theo thời gian thực. Bạn có thể tra cứu chính xác giao dịch của mình bằng mã giao dịch từ ngân hàng.</p>
-      <a href="sao-ke.html" class="btn"><i class="fa-solid fa-magnifying-glass-dollar"></i> Tra Cứu Sao Kê Giao Dịch</a>
-    </div>
-
-    <!-- Các hình thức đóng góp khác -->
-    <div class="alt-donate-section">
-      <div class="alt-donate-grid">
-        <div class="alt-donate-card">
-          <div class="alt-icon"><i class="fa-solid fa-book"></i></div>
-          <h4>Quyên góp hiện vật</h4>
-          <p>Sách, học liệu, dụng cụ học tập còn sử dụng tốt đều được tiếp nhận và trao tận tay học sinh vùng cao.</p>
-          <a href="lien-he.html">Liên hệ hướng dẫn gửi <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
-        <div class="alt-donate-card">
-          <div class="alt-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
-          <h4>Trở thành tình nguyện viên</h4>
-          <p>Đồng hành trực tiếp cùng các chương trình giảng dạy, hội thảo và hoạt động cộng đồng của chúng tôi.</p>
-          <a href="lien-he.html">Đăng ký tham gia <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
-        <div class="alt-donate-card">
-          <div class="alt-icon"><i class="fa-solid fa-handshake"></i></div>
-          <h4>Hợp tác doanh nghiệp</h4>
-          <p>Đồng hành dài hạn cùng các chiến dịch gây quỹ, tài trợ chương trình học bổng hoặc sự kiện giáo dục.</p>
-          <a href="lien-he.html">Đề xuất hợp tác <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
+        <button class="search-btn" onclick="filterData()"><i class="fa-solid fa-magnifying-glass"></i> Tra Cứu</button>
       </div>
     </div>
 
-    <!-- Ghi chú pháp lý -->
-    <div class="legal-note">
-      <p><strong>Cam kết pháp lý:</strong> Mạng Lưới Tri Thức Việt Nam sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; tuyệt đối không phân chia lợi tức hoặc cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mã số doanh nghiệp (MST): <strong>0111291749</strong>.</p>
-    </div>
+    <div class="table-container">
+      <div class="table-scroll-wrap">
+        <table>
+        <thead>
+          <tr>
+            <th style="width: 16%;">Mã Giao Dịch</th>
+            <th style="width: 18%;">Ngày Giao Dịch</th>
+            <th style="width: 46%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <p>Đang khởi tạo dữ liệu sao kê...</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
 
-  </main>
+      <div class="notice-footer">
+        <span id="noticeText">Vui lòng nhập đầy đủ họ tên không dấu và mã giao dịch để tra cứu.</span>
+        <span class="stats" id="statsText">Hệ thống sẵn sàng</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer 4 Cột -->
   <footer>
@@ -486,6 +349,176 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
+
+    // ============================================================
+    // DỮ LIỆU THỬ NGHIỆM (300 giao dịch ngẫu nhiên) — mô phỏng đúng
+    // quy chuẩn mã giao dịch (GDxxxxxx) và nội dung chuyển khoản
+    // ngân hàng thật (không dấu, thường viết hoa), khớp đúng các mã
+    // dự án DA-001/DA-002/DA-003 và Quỹ Chung đang dùng ở quyen-gop.html.
+    // Khi triển khai thật, thay hàm generateDynamicTransactions() bằng
+    // việc gọi API / đọc dữ liệu sao kê thật của ngân hàng.
+    // ============================================================
+    const TOTAL_TEST_TRANSACTIONS = 300;
+    let allTransactions = [];
+
+    // Bỏ dấu tiếng Việt — đúng cách ngân hàng chuẩn hoá nội dung chuyển khoản
+    function removeVietnameseTones(str) {
+      return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+        .toUpperCase();
+    }
+
+    function generateDynamicTransactions() {
+      const firstNames = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý"];
+      const middleNames = ["Văn", "Thị", "Hữu", "Đình", "Minh", "Gia", "Học", "Thành", "Đức", "Quang", "Ngọc", "Hoài", "Phương", "Thu"];
+      const lastNames = ["An", "Bình", "Cường", "Dung", "Đạt", "Giang", "Hà", "Hải", "Hòa", "Hùng", "Hương", "Khang", "Linh", "Long", "Mai", "Nam", "Nga", "Phong", "Quân", "Sơn", "Tâm", "Thảo", "Trang", "Tuấn", "Vân", "Yến"];
+
+      // Nội dung theo đúng mã dự án thật đang dùng ở trang Quyên Góp
+      const projectContents = [
+        "DA-001 AO AM VUNG CAO",
+        "DA-002 HOI THAO HOC TAP SO",
+        "DA-003 HOC BONG UOM MAM",
+        "UNG HO QUY CHUNG DRSV"
+      ];
+
+      const today = new Date(2026, 8, 15); // Mốc ngày hiện tại
+      const startOfYear = new Date(2026, 0, 1);
+      const diffDays = Math.ceil((today - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+
+      const generated = [];
+
+      for (let i = 1; i <= TOTAL_TEST_TRANSACTIONS; i++) {
+        const rnd1 = ((i * 9301 + 49297) % 233280) / 233280;
+        const rnd2 = ((i * 3271 + 12345) % 233280) / 233280;
+        const rnd3 = ((i * 1231 + 54321) % 233280) / 233280;
+        const rnd4 = ((i * 5437 + 98765) % 233280) / 233280;
+
+        const fn = firstNames[Math.floor(rnd1 * firstNames.length)];
+        const mn = middleNames[Math.floor(rnd2 * middleNames.length)];
+        const ln = lastNames[Math.floor(rnd3 * lastNames.length)];
+        const fullNameDiacritic = `${fn} ${mn} ${ln}`;
+        const fullNameNoTones = removeVietnameseTones(fullNameDiacritic);
+
+        const project = projectContents[Math.floor(rnd4 * projectContents.length)];
+        const amount = (Math.floor(rnd1 * 50) + 1) * 10000;
+
+        const dayOffset = i % diffDays;
+        let txDate = new Date(startOfYear.getTime() + dayOffset * (24 * 60 * 60 * 1000));
+        if (txDate > today) txDate = today;
+
+        const dd = String(txDate.getDate()).padStart(2, '0');
+        const mm = String(txDate.getMonth() + 1).padStart(2, '0');
+        const yyyy = txDate.getFullYear();
+        const dateStr = `${dd}/${mm}/${yyyy}`;
+
+        const code = `GD${String(i).padStart(6, '0')}`;
+        // Nội dung chuyển khoản đúng chuẩn ngân hàng: không dấu, viết hoa, tên trước - nội dung dự án - mã giao dịch
+        const content = `${fullNameNoTones} ${project} ${code}`;
+
+        generated.push({
+          code: code,
+          date: dateStr,
+          rawDate: txDate,
+          nameNoTones: fullNameNoTones,
+          content: content,
+          amount: amount.toLocaleString('vi-VN') + " đ"
+        });
+      }
+
+      return generated;
+    }
+
+    allTransactions = generateDynamicTransactions();
+
+    function renderEmptyPrompt() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <p>Vui lòng nhập đúng <strong>họ tên không dấu</strong> (ví dụ: <code>NGUYEN VAN AN</code>) và <strong>mã giao dịch</strong> (ví dụ: <code>GD000123</code>) rồi bấm <strong>Tra Cứu</strong> hoặc nhấn Enter.</p>
+            </div>
+          </td>
+        </tr>`;
+      document.getElementById('statsText').innerText = 'Hệ thống sẵn sàng';
+      document.getElementById('noticeText').innerText = 'Vui lòng nhập đầy đủ họ tên không dấu và mã giao dịch để tra cứu.';
+    }
+
+    function renderMissingField() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <p>Vui lòng nhập <strong>đầy đủ cả hai</strong> trường: họ tên không dấu và mã giao dịch để tra cứu.</p>
+            </div>
+          </td>
+        </tr>`;
+      document.getElementById('statsText').innerText = 'Thiếu thông tin';
+      document.getElementById('noticeText').innerText = 'Chưa nhập đủ họ tên và mã giao dịch.';
+    }
+
+    function renderNotFound() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <p>Không tìm thấy giao dịch nào khớp với họ tên và mã giao dịch đã nhập. Vui lòng kiểm tra lại chính xác cả hai thông tin.</p>
+            </div>
+          </td>
+        </tr>`;
+      document.getElementById('statsText').innerText = 'Kết quả: 0';
+      document.getElementById('noticeText').innerText = 'Không có giao dịch khớp với thông tin đã nhập.';
+    }
+
+    function renderResult(tx) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td class="code-cell">${tx.code}</td>
+          <td class="date-cell"><i class="fa-regular fa-calendar" style="color: var(--text-muted); margin-right: 4px;"></i> ${tx.date}</td>
+          <td class="content-cell">${tx.content}</td>
+          <td class="amount-in">+${tx.amount}</td>
+        </tr>`;
+      document.getElementById('statsText').innerText = 'Tìm thấy: 1 kết quả';
+      document.getElementById('noticeText').innerText = 'Đã tìm thấy giao dịch khớp với thông tin đã nhập.';
+    }
+
+    function filterData() {
+      const rawName = document.getElementById('nameInput').value.trim();
+      const rawCode = document.getElementById('searchInput').value.trim().toUpperCase();
+
+      if (rawName === "" && rawCode === "") {
+        renderEmptyPrompt();
+        return;
+      }
+      if (rawName === "" || rawCode === "") {
+        renderMissingField();
+        return;
+      }
+
+      const normalizedName = removeVietnameseTones(rawName);
+
+      // Yêu cầu khớp CHÍNH XÁC mã giao dịch, đồng thời họ tên không dấu phải
+      // xuất hiện đúng trong nội dung chuyển khoản của giao dịch đó.
+      const found = allTransactions.find(tx =>
+        tx.code === rawCode && tx.nameNoTones === normalizedName
+      );
+
+      if (found) {
+        renderResult(found);
+      } else {
+        renderNotFound();
+      }
+    }
+
+    renderEmptyPrompt();
   </script>
 </body>
 </html>
