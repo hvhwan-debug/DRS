@@ -3,18 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra Cứu Sao Kê - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Tra cứu công khai sao kê giao dịch quyên góp của Mạng Lưới Tri Thức Việt Nam - DR Solutions. Nhập đúng họ tên không dấu và mã giao dịch để tra cứu, cam kết minh bạch tài chính vì cộng đồng giáo dục vùng cao.">
+  <title>Tra Cứu Sao Kê - Wisdom Vietnam Network</title>
+  <meta name="description" content="Tra cứu công khai sao kê giao dịch quyên góp của Wisdom Vietnam Network - DR Solutions, cam kết minh bạch tài chính vì cộng đồng giáo dục vùng cao.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <style>
-    /* ============================================================
-       CSS DÙNG CHUNG — đồng bộ đúng theo index.html / hoat-dong.html /
-       quyen-gop.html (bản thật hiện tại của site). Không chỉnh sửa.
-       ============================================================ */
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
       --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
@@ -56,36 +52,10 @@
       font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
 
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
-
-
-
-    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng,
-       đồng bộ trên toàn site (giống charity: water). */
-    .nav-dropdown { position: relative; display: inline-block; }
-    .nav-dropdown > .nav-dropdown-trigger {
-      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
-      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
-      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
-    }
-    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
-    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
-    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
-    .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
-      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-      padding: 0.5rem; z-index: 100; margin-top: 0;
-    }
-    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
-    .nav-dropdown-menu a {
-      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
-      color: var(--text-dark); font-weight: 500;
-    }
-    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
-        .nav-dropdown-trigger.active-page { color: #0284c7; font-weight: 600; }
 
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
@@ -94,6 +64,7 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
+    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp (đồng bộ toàn site) */
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
@@ -109,54 +80,55 @@
       100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
     }
 
-    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
+    .mobile-menu-btn {
+      display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem;
+    }
 
-    /* Hero Banner */
+    /* Hero Banner (đồng bộ với hoat-dong.html) */
     .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 3.6rem 1.5rem 4rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+      width: 100%; background: var(--blue-grad-hero); padding: 4rem 1.5rem 4.5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
     .hero-wrapper::before {
       content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
     }
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật, tượng trưng cho lòng tin & minh bạch */
     .hero-dove {
-      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
-      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
-      pointer-events: none; z-index: 1; animation: doveFloat 9s ease-in-out infinite; transform-origin: center center;
+      position: absolute; top: 10%; right: 6%; width: 120px; height: auto;
+      opacity: 0.55; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+      pointer-events: none; z-index: 1;
+      animation: doveFloat 9s ease-in-out infinite;
+      transform-origin: center center;
     }
+    /* Đường bay lượn nhẹ nhàng: trôi ngang + nhấp nhô + nghiêng cánh như lượn gió thật, không cứng nhắc */
     @keyframes doveFloat {
-      0% { transform: translate(0, 0) rotate(-4deg); }
-      25% { transform: translate(-14px, -18px) rotate(2deg); }
-      50% { transform: translate(-4px, -30px) rotate(-6deg); }
-      75% { transform: translate(10px, -14px) rotate(3deg); }
+      0%   { transform: translate(0, 0) rotate(-4deg); }
+      25%  { transform: translate(-14px, -18px) rotate(2deg); }
+      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
+      75%  { transform: translate(10px, -14px) rotate(3deg); }
       100% { transform: translate(0, 0) rotate(-4deg); }
     }
-    @media (max-width: 480px) {
-      .brand-title { font-size: 1.02rem; }
-      .brand-subtitle { font-size: 0.6rem; }
+    @media (max-width: 640px) {
+      .hero-dove { width: 76px; top: 4%; right: 4%; opacity: 0.4; }
     }
-    @media (max-width: 640px) { .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; } }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
+      padding: 0.4rem 1.2rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.8px; margin-bottom: 1rem; border: 1px solid rgba(255, 255, 255, 0.25); text-transform: uppercase;
       position: relative; z-index: 1;
     }
-    .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; position: relative; z-index: 1; }
-    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 620px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.75rem; position: relative; z-index: 1; }
+    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 700px; margin: 0 auto; line-height: 1.6; position: relative; z-index: 1; }
 
     /* Container & Bảng Sao Kê */
     .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
     .toolbar {
-      background: #ffffff; padding: 1.5rem 1.5rem 1.25rem; border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none;
+      background: #ffffff; padding: 1.25rem 1.5rem;
+      border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none;
+      display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap;
       box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
     }
-    .toolbar-hint { text-align: center; font-size: 0.86rem; color: var(--text-muted); margin-bottom: 1.1rem; }
-    .toolbar-hint code { background: #e0f2fe; color: #0369a1; padding: 0.1rem 0.45rem; border-radius: 5px; font-weight: 700; }
-    .toolbar-fields { display: flex; justify-content: center; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
-    .field-group { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 220px; max-width: 320px; }
-    .field-group label { font-size: 0.8rem; font-weight: 700; color: var(--text-dark); }
-    .search-box { position: relative; width: 100%; }
+    .search-box { position: relative; width: 100%; max-width: 480px; }
     .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
     .search-box input {
       width: 100%; padding: 0.75rem 1rem 0.75rem 2.8rem;
@@ -170,9 +142,9 @@
       box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
     }
     .search-btn {
-      padding: 0.78rem 1.6rem; border-radius: 10px; border: none; background: var(--blue-grad-btn);
+      padding: 0.75rem 1.5rem; border-radius: 10px; border: none; background: var(--blue-grad-btn);
       color: #fff; font-weight: 700; font-size: 0.92rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
-      white-space: nowrap; flex-shrink: 0;
+      white-space: nowrap;
     }
     .search-btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
@@ -193,7 +165,7 @@
 
     .empty-state { text-align: center; color: var(--text-muted); padding: 3.5rem 1.5rem; }
     .empty-state i { font-size: 2rem; color: #0284c7; opacity: 0.6; display: block; margin-bottom: 1rem; }
-    .empty-state p { max-width: 460px; margin: 0 auto; line-height: 1.6; }
+    .empty-state p { max-width: 420px; margin: 0 auto; line-height: 1.6; }
     .empty-state code { background: #e0f2fe; color: #0369a1; padding: 0.15rem 0.5rem; border-radius: 6px; font-weight: 700; }
 
     .notice-footer {
@@ -202,15 +174,19 @@
     }
     .stats { font-size: 0.88rem; color: #0284c7; font-weight: 700; }
 
-    /* Footer chuẩn 4 cột (đồng bộ toàn site) */
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
-    .social-link {
-      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
-      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
-      transition: all 0.2s; text-decoration: none;
+    /* Modal Quyên góp VietQR */
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
     }
-    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+    .modal-content {
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+
+    /* Footer chuẩn 3 cột (đồng bộ toàn site) */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
@@ -224,135 +200,81 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown { display: block; width: 100%; }
-      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
-      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
-      .hero-title { font-size: 2rem; }
-      .toolbar-fields { flex-direction: column; align-items: stretch; }
-      .field-group { max-width: none; }
+      .hero-title { font-size: 2.1rem; }
+      .toolbar { flex-direction: column; }
       .search-btn { width: 100%; }
     }
 
-    /* Trên điện thoại: chỉ phần bảng giao dịch cuộn riêng (cả ngang lẫn dọc), thanh thông báo nằm ngoài nên luôn đứng yên */
+    /* Trên điện thoại: chỉ phần bảng giao dịch cuộn riêng (cả ngang lẫn dọc), thanh thông báo nằm ngoài nên luôn đứng yên, không bị trôi theo khi vuốt */
     @media (max-width: 640px) {
-      .table-scroll-wrap { max-height: 58vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-      thead th { position: sticky; top: 0; z-index: 4; }
+      .table-scroll-wrap {
+        max-height: 58vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      thead th {
+        position: sticky; top: 0; z-index: 4;
+      }
     }
-  
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
+
+    /* Header dropdown - đồng bộ giao diện index.html */
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+      padding: 0.5rem; z-index: 100; margin-top: 0;
+    }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
+      color: var(--text-dark); font-weight: 500;
+    }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+
+    /* Footer UI - đồng bộ giao diện index.html */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
+    .social-links { display: flex; gap: 0.65rem; align-items: center; }
+    .social-link {
+      width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #cbd5e1; border: 1px solid rgba(255,255,255,0.18); text-decoration: none; transition: all 0.2s;
+    }
+    .social-link:hover { color: #ffffff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+    .footer-transparency-strip {
+      max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0;
+      border-top: 1px solid rgba(255,255,255,0.1); text-align: center;
+    }
+    .footer-transparency-strip p { margin: 0.35rem 0; color: #cbd5e1; }
+    .footer-transparency-strip .transparency-claim {
+      color: #7dd3fc; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;
+    }
+    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+
     @media (max-width: 960px) {
+      .nav-dropdown { display: block; width: 100%; }
+      .nav-dropdown > .nav-dropdown-trigger {
+        margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0;
+      }
+      .nav-dropdown-menu {
+        display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center;
+      }
+      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
       .gallery-grid { max-width: 100%; gap: 0.7rem; }
     }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
 
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
-    }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
-    }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
-
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
-  
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
-    @media (max-width: 960px) {
-      .gallery-grid { max-width: 100%; gap: 0.7rem; }
-    }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
-
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
-    }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
-    }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
-
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
   </style>
 </head>
 <body>
 
   <!-- Menu Cố Định Đồng Bộ -->
-  <header>
+    <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
@@ -366,8 +288,9 @@
           <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
         </div>
       </a>
+
       <nav class="nav-links" id="navLinks">
-        <div class="nav-dropdown">
+        <div class="nav-dropdown" id="navDropdownAction">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
@@ -375,21 +298,21 @@
             <a href="lien-he.html">Trở thành nhà tài trợ</a>
             <a href="lien-he.html">Đăng ký tình nguyện viên</a>
           </div>
-
-        <div class="nav-dropdown">
+        </div>
+        <div class="nav-dropdown" id="navDropdownAbout">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
-            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
             <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
             <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
             <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
           </div>
-        </div>        </div>        </div>        </div>
-
+        </div>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>      </nav>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+
       <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
@@ -404,30 +327,17 @@
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">MINH BẠCH TÀI CHÍNH</div>
     <h1 class="hero-title">Cổng Tra Cứu Sao Kê Giao Dịch</h1>
-    <p class="hero-desc">Nhập đúng họ và tên không dấu cùng mã giao dịch tương ứng để tra cứu thông tin chi tiết của khoản đóng góp.</p>
+    <p class="hero-desc">Nhập chính xác mã giao dịch để tra cứu thông tin chi tiết của giao dịch tương ứng.</p>
   </section>
 
   <!-- Container Sao Kê -->
   <div class="container">
     <div class="toolbar">
-      <p class="toolbar-hint">Vui lòng nhập <strong>đúng</strong> cả họ tên không dấu (như trên nội dung chuyển khoản) và mã giao dịch, ví dụ tên <code>NGUYEN VAN AN</code> — mã <code>GD000123</code>.</p>
-      <div class="toolbar-fields">
-        <div class="field-group">
-          <label for="nameInput">Họ và tên (không dấu)</label>
-          <div class="search-box">
-            <i class="fa-solid fa-user"></i>
-            <input type="text" id="nameInput" placeholder="VD: NGUYEN VAN AN" onkeydown="if(event.key==='Enter'){filterData();}">
-          </div>
-        </div>
-        <div class="field-group">
-          <label for="searchInput">Mã giao dịch</label>
-          <div class="search-box">
-            <i class="fa-solid fa-hashtag"></i>
-            <input type="text" id="searchInput" placeholder="VD: GD000123" onkeydown="if(event.key==='Enter'){filterData();}">
-          </div>
-        </div>
-        <button class="search-btn" onclick="filterData()"><i class="fa-solid fa-magnifying-glass"></i> Tra Cứu</button>
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Nhập mã giao dịch, ví dụ: GD000123" onkeydown="if(event.key==='Enter'){filterData();}">
       </div>
+      <button class="search-btn" onclick="filterData()"><i class="fa-solid fa-magnifying-glass"></i> Tra Cứu</button>
     </div>
 
     <div class="table-container">
@@ -435,9 +345,9 @@
         <table>
         <thead>
           <tr>
-            <th style="width: 16%;">Mã Giao Dịch</th>
-            <th style="width: 18%;">Ngày Giao Dịch</th>
-            <th style="width: 46%;">Nội Dung Chuyển Khoản</th>
+            <th style="width: 18%;">Mã Giao Dịch</th>
+            <th style="width: 20%;">Ngày Giao Dịch</th>
+            <th style="width: 42%;">Nội Dung Chuyển Khoản</th>
             <th style="width: 20%; text-align: right;">Số Tiền (VNĐ)</th>
           </tr>
         </thead>
@@ -455,14 +365,27 @@
       </div>
 
       <div class="notice-footer">
-        <span id="noticeText">Vui lòng nhập đầy đủ họ tên không dấu và mã giao dịch để tra cứu.</span>
+        <span id="noticeText">Vui lòng nhập chính xác mã giao dịch để tra cứu.</span>
         <span class="stats" id="statsText">Hệ thống sẵn sàng</span>
       </div>
     </div>
   </div>
 
-  <!-- Footer 4 Cột -->
-  <footer>
+  <!-- Modal Quyên góp VietQR -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
+  <!-- Footer 3 Cột -->
+    <footer>
     <div class="footer-grid">
       <div>
         <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
@@ -477,37 +400,54 @@
         <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
+        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
+      </div>
+      <div>
         <h4>Kết Nối Với Chúng Tôi</h4>
         <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
         <div class="social-links" style="margin-top: 0.8rem;">
           <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
         </div>
       </div>
-      <div>
-        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
-        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
-      </div>
     </div>
 
     <div class="footer-transparency-strip">
       <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('newsletterEmail').focus(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
       </p>
     </div>
 
-    <div class="footer-transparency-strip">
-      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
-      <p>
-        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
-      </p>
-    </div>
     <div class="footer-bottom">
       &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
     </div>
   </footer>
 
   <script>
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(event) {
+      let modal = document.getElementById('donateModal');
+      if (event.target == modal) { modal.style.display = 'none'; }
+    }
+
+
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
       const menuBtn = document.getElementById('menuBtn');
@@ -519,40 +459,32 @@
       }
     }
 
-    // ============================================================
-    // DỮ LIỆU THỬ NGHIỆM (300 giao dịch ngẫu nhiên) — mô phỏng đúng
-    // quy chuẩn mã giao dịch (GDxxxxxx) và nội dung chuyển khoản
-    // ngân hàng thật (không dấu, thường viết hoa), khớp đúng các mã
-    // dự án DA-001/DA-002/DA-003 và Quỹ Chung đang dùng ở quyen-gop.html.
-    // Khi triển khai thật, thay hàm generateDynamicTransactions() bằng
+    // ==== DỮ LIỆU THỬ NGHIỆM (2.000 giao dịch ngẫu nhiên) ====
+    // Đây là dữ liệu giả lập để TEST chức năng tra cứu theo mã giao dịch.
+    // Khi triển khai thật, hãy thay hàm generateDynamicTransactions() bằng
     // việc gọi API / đọc dữ liệu sao kê thật của ngân hàng.
-    // ============================================================
-    const TOTAL_TEST_TRANSACTIONS = 300;
+    const TOTAL_TEST_TRANSACTIONS = 2000;
     let allTransactions = [];
-
-    // Bỏ dấu tiếng Việt — đúng cách ngân hàng chuẩn hoá nội dung chuyển khoản
-    function removeVietnameseTones(str) {
-      return str
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
-        .toUpperCase();
-    }
 
     function generateDynamicTransactions() {
       const firstNames = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý"];
       const middleNames = ["Văn", "Thị", "Hữu", "Đình", "Minh", "Gia", "Học", "Thành", "Đức", "Quang", "Ngọc", "Hoài", "Phương", "Thu"];
       const lastNames = ["An", "Bình", "Cường", "Dung", "Đạt", "Giang", "Hà", "Hải", "Hòa", "Hùng", "Hương", "Khang", "Linh", "Long", "Mai", "Nam", "Nga", "Phong", "Quân", "Sơn", "Tâm", "Thảo", "Trang", "Tuấn", "Vân", "Yến"];
 
-      // Nội dung theo đúng mã dự án thật đang dùng ở trang Quyên Góp
-      const projectContents = [
-        "DA-001 AO AM VUNG CAO",
-        "DA-002 HOI THAO HOC TAP SO",
-        "DA-003 HOC BONG UOM MAM",
-        "UNG HO QUY CHUNG DRSV"
+      const actions = [
+        "ung ho quy hoc lieu vung cao",
+        "gop quy tu sach cho em",
+        "ung ho chuong trinh tiep suc den truong",
+        "dong hanh cung drs",
+        "ung ho sua va sach vo",
+        "gop quy phat trien giao duc",
+        "ung ho tre em ha giang",
+        "ung ho tu sach tinh thuong",
+        "chung tay vi tuong lai tre tho",
+        "ho tro bua an ban tru"
       ];
 
-      const today = new Date(2026, 8, 15); // Mốc ngày hiện tại
+      const today = new Date(2026, 8, 11); // Mốc ngày hiện tại (Tháng 9/2026)
       const startOfYear = new Date(2026, 0, 1);
       const diffDays = Math.ceil((today - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
 
@@ -567,10 +499,9 @@
         const fn = firstNames[Math.floor(rnd1 * firstNames.length)];
         const mn = middleNames[Math.floor(rnd2 * middleNames.length)];
         const ln = lastNames[Math.floor(rnd3 * lastNames.length)];
-        const fullNameDiacritic = `${fn} ${mn} ${ln}`;
-        const fullNameNoTones = removeVietnameseTones(fullNameDiacritic);
+        const fullName = `${fn} ${mn} ${ln}`;
 
-        const project = projectContents[Math.floor(rnd4 * projectContents.length)];
+        const act = actions[Math.floor(rnd4 * actions.length)];
         const amount = (Math.floor(rnd1 * 50) + 1) * 10000;
 
         const dayOffset = i % diffDays;
@@ -583,14 +514,12 @@
         const dateStr = `${dd}/${mm}/${yyyy}`;
 
         const code = `GD${String(i).padStart(6, '0')}`;
-        // Nội dung chuyển khoản đúng chuẩn ngân hàng: không dấu, viết hoa, tên trước - nội dung dự án - mã giao dịch
-        const content = `${fullNameNoTones} ${project} ${code}`;
+        const content = `${fullName} ${act} - ${code}`;
 
         generated.push({
           code: code,
           date: dateStr,
           rawDate: txDate,
-          nameNoTones: fullNameNoTones,
           content: content,
           amount: amount.toLocaleString('vi-VN') + " đ"
         });
@@ -608,42 +537,27 @@
           <td colspan="4">
             <div class="empty-state">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <p>Vui lòng nhập đúng <strong>họ tên không dấu</strong> (ví dụ: <code>NGUYEN VAN AN</code>) và <strong>mã giao dịch</strong> (ví dụ: <code>GD000123</code>) rồi bấm <strong>Tra Cứu</strong> hoặc nhấn Enter.</p>
+              <p>Vui lòng nhập chính xác mã giao dịch (ví dụ: <code>GD000123</code>) rồi bấm <strong>Tra Cứu</strong> hoặc nhấn Enter để xem thông tin.</p>
             </div>
           </td>
         </tr>`;
       document.getElementById('statsText').innerText = 'Hệ thống sẵn sàng';
-      document.getElementById('noticeText').innerText = 'Vui lòng nhập đầy đủ họ tên không dấu và mã giao dịch để tra cứu.';
+      document.getElementById('noticeText').innerText = 'Vui lòng nhập chính xác mã giao dịch để tra cứu.';
     }
 
-    function renderMissingField() {
+    function renderNotFound(keyword) {
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = `
         <tr>
           <td colspan="4">
             <div class="empty-state">
               <i class="fa-solid fa-circle-exclamation"></i>
-              <p>Vui lòng nhập <strong>đầy đủ cả hai</strong> trường: họ tên không dấu và mã giao dịch để tra cứu.</p>
-            </div>
-          </td>
-        </tr>`;
-      document.getElementById('statsText').innerText = 'Thiếu thông tin';
-      document.getElementById('noticeText').innerText = 'Chưa nhập đủ họ tên và mã giao dịch.';
-    }
-
-    function renderNotFound() {
-      const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="4">
-            <div class="empty-state">
-              <i class="fa-solid fa-circle-exclamation"></i>
-              <p>Không tìm thấy giao dịch nào khớp với họ tên và mã giao dịch đã nhập. Vui lòng kiểm tra lại chính xác cả hai thông tin.</p>
+              <p>Không tìm thấy giao dịch nào với mã <code>${keyword}</code>. Vui lòng kiểm tra lại chính xác mã giao dịch.</p>
             </div>
           </td>
         </tr>`;
       document.getElementById('statsText').innerText = 'Kết quả: 0';
-      document.getElementById('noticeText').innerText = 'Không có giao dịch khớp với thông tin đã nhập.';
+      document.getElementById('noticeText').innerText = 'Không có giao dịch khớp với mã đã nhập.';
     }
 
     function renderResult(tx) {
@@ -656,129 +570,28 @@
           <td class="amount-in">+${tx.amount}</td>
         </tr>`;
       document.getElementById('statsText').innerText = 'Tìm thấy: 1 kết quả';
-      document.getElementById('noticeText').innerText = 'Đã tìm thấy giao dịch khớp với thông tin đã nhập.';
+      document.getElementById('noticeText').innerText = 'Đã tìm thấy giao dịch khớp với mã đã nhập.';
     }
 
     function filterData() {
-      const rawName = document.getElementById('nameInput').value.trim();
-      const rawCode = document.getElementById('searchInput').value.trim().toUpperCase();
+      const keyword = document.getElementById('searchInput').value.trim().toUpperCase();
 
-      if (rawName === "" && rawCode === "") {
+      if (keyword === "") {
         renderEmptyPrompt();
         return;
       }
-      if (rawName === "" || rawCode === "") {
-        renderMissingField();
-        return;
-      }
 
-      const normalizedName = removeVietnameseTones(rawName);
-
-      // Yêu cầu khớp CHÍNH XÁC mã giao dịch, đồng thời họ tên không dấu phải
-      // xuất hiện đúng trong nội dung chuyển khoản của giao dịch đó.
-      const found = allTransactions.find(tx =>
-        tx.code === rawCode && tx.nameNoTones === normalizedName
-      );
+      // Chỉ hiện kết quả khi mã giao dịch nhập vào KHỚP CHÍNH XÁC
+      const found = allTransactions.find(tx => tx.code === keyword);
 
       if (found) {
         renderResult(found);
       } else {
-        renderNotFound();
+        renderNotFound(keyword);
       }
     }
 
     renderEmptyPrompt();
-  
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
-    function toggleNavDropdown(btn) {
-      const dropdown = btn.closest('.nav-dropdown');
-      const wasOpen = dropdown.classList.contains('open');
-      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      if (!wasOpen) dropdown.classList.add('open');
-    }
-    document.addEventListener('click', function (e) {
-      if (!e.target.closest('.nav-dropdown')) {
-        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      }
-    });
-
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.
-    const GALLERY_IMAGES = [
-      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
-      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
-      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
-      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
-      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
-      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
-    ];
-    let galleryShuffled = [];
-    let galleryCurrentIndex = 0;
-    function shuffleArray(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-    function renderGalleryGrid() {
-      const grid = document.getElementById("galleryGrid");
-      if (!grid) return;
-      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
-        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
-          <img src="${img.src}" alt="${img.caption}" loading="lazy">
-        </div>
-      `).join("");
-    }
-    function openGalleryModal(startIndex) {
-      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
-      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
-      galleryCurrentIndex = 0;
-      renderGalleryModalImage();
-      document.getElementById("galleryModal").classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-    function renderGalleryModalImage() {
-      const img = galleryShuffled[galleryCurrentIndex];
-      const modalImg = document.getElementById("galleryModalImg");
-      modalImg.src = img.src;
-      modalImg.alt = img.caption;
-      modalImg.classList.remove("zoomed");
-      document.querySelector(".gallery-modal-caption").textContent = img.caption;
-    }
-    function showGalleryImage(direction) {
-      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
-      renderGalleryModalImage();
-    }
-    function closeGalleryModal() {
-      document.getElementById("galleryModal").classList.remove("active");
-      document.body.style.overflow = "";
-    }
-    document.getElementById("galleryModal").addEventListener("click", function (e) {
-      if (e.target === this) closeGalleryModal();
-    });
-    document.addEventListener("keydown", function (e) {
-      const modal = document.getElementById("galleryModal");
-      if (!modal.classList.contains("active")) return;
-      if (e.key === "Escape") closeGalleryModal();
-      if (e.key === "ArrowLeft") showGalleryImage(-1);
-      if (e.key === "ArrowRight") showGalleryImage(1);
-    });
-    renderGalleryGrid();
-
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.</script>
-
-  <div class="gallery-modal" id="galleryModal">
-    <div class="gallery-modal-inner">
-      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
-      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
-      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
-      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
-      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
-    </div>
-  </div>
-  </div>
-
+  </script>
 </body>
 </html>
