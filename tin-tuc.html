@@ -158,24 +158,26 @@
       position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.75); color: #fff;
       padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(3px);
     }
-    /* Tag "Chưa diễn ra" ở góc đối diện, dành cho bài viết có ngày tháng nằm ở tương lai
-       so với thời điểm người xem truy cập trang, giúp phân biệt rõ với các bài viết
-       tường thuật hoạt động đã thực sự diễn ra */
+    /* Nhóm badge góc phải ảnh — xếp chồng dọc khi có cả 2 nhãn (phân loại + chưa diễn ra) */
+    .news-badges-right {
+      position: absolute; top: 12px; right: 12px; z-index: 2;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+    }
     .news-upcoming-badge {
-      position: absolute; top: 12px; right: 12px; background: #f59e0b; color: #fff;
+      background: #f59e0b; color: #fff;
       padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
       display: inline-flex; align-items: center; gap: 4px;
     }
-    /* Nhãn phân loại "Bài Viết" / "Sự Kiện" — đặt ở đầu phần nội dung, phía trên tiêu đề,
-       để phân biệt rõ bài tường thuật/kiến thức với các thông báo về sự kiện cụ thể. */
+    /* Nhãn phân loại "Bài Viết" / "Sự Kiện" — đặt ở góc phải ảnh, cùng nhóm với
+       nhãn "Chưa diễn ra" thay vì nằm trong phần nội dung bên dưới tiêu đề. */
     .news-type-badge {
-      display: inline-flex; align-items: center; gap: 5px; align-self: flex-start;
-      padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.2px; margin-bottom: 0.7rem;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.2px; backdrop-filter: blur(3px); box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    .news-type-badge.type-article { background: #e0f2fe; color: #0369a1; }
-    .news-type-badge.type-event { background: #fef3c7; color: #b45309; }
+    .news-type-badge.type-article { background: rgba(224, 242, 254, 0.95); color: #0369a1; }
+    .news-type-badge.type-event { background: rgba(254, 243, 199, 0.95); color: #b45309; }
     .news-content { padding: 1.5rem 1.4rem; flex-grow: 1; display: flex; flex-direction: column; }
     .news-content h3 { font-size: 1.15rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; line-height: 1.35; }
     .news-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; flex-grow: 1; margin-bottom: 1rem; }
@@ -637,12 +639,14 @@
           <div class="news-img-box">
             <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.onerror=null; this.src=getRandomUploadedImage();">
             ${p.date ? `<span class="news-date-badge">${formatDate(p.date)}</span>` : ""}
-            ${isUpcomingPost(p.date) ? `<span class="news-upcoming-badge"><i class="fa-solid fa-clock"></i> Chưa diễn ra</span>` : ""}
+            <div class="news-badges-right">
+              <span class="news-type-badge type-${typeInfo.key}">
+                <i class="fa-solid ${typeInfo.key === 'event' ? 'fa-calendar-days' : 'fa-newspaper'}"></i> ${typeInfo.label}
+              </span>
+              ${isUpcomingPost(p.date) ? `<span class="news-upcoming-badge"><i class="fa-solid fa-clock"></i> Chưa diễn ra</span>` : ""}
+            </div>
           </div>
           <div class="news-content">
-            <span class="news-type-badge type-${typeInfo.key}">
-              <i class="fa-solid ${typeInfo.key === 'event' ? 'fa-calendar-days' : 'fa-newspaper'}"></i> ${typeInfo.label}
-            </span>
             <h3>${p.title}</h3>
             <p>${p.excerpt}</p>
             <span class="news-readmore">Đọc chi tiết <i class="fa-solid fa-arrow-right"></i></span>
