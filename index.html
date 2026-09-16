@@ -55,6 +55,36 @@
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
+    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — học theo cấu trúc
+       charity: water, giúp nổi bật nhiều lối vào hành động và tư cách minh bạch
+       phi lợi nhuận ngay từ thanh điều hướng, thay vì chỉ liệt kê phẳng. */
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown:hover > .nav-dropdown-trigger, .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+      padding: 0.5rem; z-index: 100; margin-top: 8px;
+    }
+    .nav-dropdown:hover > .nav-dropdown-menu, .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
+      color: var(--text-dark); font-weight: 500;
+    }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+    @media (max-width: 960px) {
+      .nav-dropdown { display: block; width: 100%; }
+      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
+      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
+    }
+
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
@@ -362,6 +392,17 @@
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
 
+    /* Dòng thông điệp minh bạch cuối footer — học theo charity: water, khẳng định
+       lại tư cách phi lợi nhuận và cam kết 100% tái đầu tư ngay trước dòng bản quyền. */
+    .footer-transparency-strip {
+      max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center;
+    }
+    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
+    .footer-transparency-strip .transparency-claim {
+      font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px;
+    }
+    .footer-transparency-strip .transparency-sep { color: #475569; margin: 0 0.6rem; }
+
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
       .nav-links {
@@ -395,9 +436,25 @@
       </a>
 
       <nav class="nav-links" id="navLinks">
-        <a href="su-menh.html">Giới Thiệu</a>
+        <div class="nav-dropdown" id="navDropdownAction">
+          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
+            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
+            <a href="lien-he.html">Trở thành nhà tài trợ</a>
+            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
+          </div>
+        </div>
+        <div class="nav-dropdown" id="navDropdownAbout">
+          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+            <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
+            <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
+            <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
+          </div>
+        </div>
         <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
@@ -455,6 +512,9 @@
     </div>
   </section>
 
+  <!-- Cam Kết Pháp Lý & Minh Bạch Phi Lợi Nhuận — đặt ngay sau Hero để tư cách
+       tổ chức phi lợi nhuận hiển thị rõ ràng ngay khi vào trang, không cần cuộn sâu
+       xuống giữa trang (yêu cầu quan trọng của chính sách Google Ad Grants). -->
   <section class="metrics-strip">
     <div class="metrics-grid">
       <div class="metric-item">
@@ -577,6 +637,16 @@
         </div>
       </div>
     </div>
+
+    <div class="footer-transparency-strip">
+      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+      <p>
+        <a href="index.html#phap-ly" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục vùng cao.</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('newsletterEmail').focus(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+      </p>
+    </div>
+
     <div class="footer-bottom">
       &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
     </div>
@@ -593,6 +663,16 @@
       } else {
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
+    }
+
+    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — trên desktop mở bằng
+    // hover (CSS), trên di động cần bấm để mở/đóng vì không có sự kiện hover thật.
+    function toggleNavDropdown(btn) {
+      if (window.innerWidth > 960) return; // desktop dùng hover, bỏ qua click
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
     }
 
     function animateCounters() {
