@@ -266,7 +266,12 @@
 
     /* ==== "Thư Viện Hình Ảnh" — cột riêng trong footer, cạnh "Kết Nối Với
        Chúng Tôi". Bấm vào ảnh vẫn mở popup phóng to như cũ. ==== */
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 200px; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
+    @media (max-width: 960px) {
+      /* Trên di động, footer-grid xếp thành 1 cột full-width — cho khối ảnh
+         giãn hết chiều rộng màn hình thay vì bị bó hẹp theo giới hạn desktop. */
+      .gallery-grid { max-width: 100%; gap: 0.7rem; }
+    }
     .gallery-thumb {
       position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
       border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
@@ -561,15 +566,15 @@
         <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
+        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
+      </div>
+      <div>
         <h4>Kết Nối Với Chúng Tôi</h4>
         <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
         <div class="social-links" style="margin-top: 0.8rem;">
           <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
         </div>
-      </div>
-      <div>
-        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
-        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
       </div>
     </div>
     <div class="footer-bottom">
