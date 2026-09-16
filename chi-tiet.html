@@ -3,13 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bài Viết Chi Tiết - Wisdom Vietnam Network - DR SOLUTIONS</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <title id="pageTitle">Bài Viết - Wisdom Vietnam Network - DR SOLUTIONS</title>
+  <meta id="pageDescription" name="description" content="Đọc bài viết từ Wisdom Vietnam Network - DR Solutions về hành trình giáo dục, thiện nguyện và các chương trình hỗ trợ trẻ em vùng cao Việt Nam.">
+  <meta id="pageOgTitle" property="og:title" content="Bài Viết - Wisdom Vietnam Network">
+  <meta id="pageOgDescription" property="og:description" content="Đọc bài viết từ Wisdom Vietnam Network - DR Solutions về hành trình giáo dục, thiện nguyện và các chương trình hỗ trợ trẻ em vùng cao Việt Nam.">
+  <meta id="pageOgImage" property="og:image" content="banner-drs.jpg">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js">
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
+  </script>
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
       --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
       --text-dark: #0f172a;
@@ -18,6 +37,7 @@
       --border: #e2e8f0;
       --bg-page: #f8fafc;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; overflow-x: hidden;
@@ -26,13 +46,15 @@
     }
     body { padding-top: 72px; }
 
+    /* Menu Cố Định */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+
     .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
     .brand-logo-icon {
       width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
@@ -46,306 +68,383 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
     .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
-    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
-    .nav-links a:hover { color: #0284c7; font-weight: 600; }
+
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); font-family: inherit;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
     }
-    .btn:hover { background: var(--blue-grad-btn-hover); }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    .article-wrapper { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
-    .back-link {
-      display: inline-flex; align-items: center; gap: 8px; color: #0284c7; font-weight: 600;
-      text-decoration: none; font-size: 0.92rem; margin-bottom: 1.8rem;
+    .btn-donate-glow {
+      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
-    .back-link:hover { text-decoration: underline; }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+    }
 
-    .article-tag {
-      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.3rem 0.9rem;
-      border-radius: 999px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;
-    }
-    .article-date { font-size: 0.85rem; color: #0284c7; font-weight: 700; text-transform: uppercase; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 6px; }
-    .article-title { font-size: 2.1rem; font-weight: 900; color: #0f172a; line-height: 1.3; margin-bottom: 1.6rem; }
-    .article-cover { width: 100%; max-height: 420px; object-fit: cover; border-radius: 14px; margin-bottom: 2rem; border: 1px solid var(--border); }
-
-    .article-body { font-size: 1.05rem; color: #1e293b; }
-    .article-body h2 { font-size: 1.4rem; margin: 2rem 0 0.8rem; color: #0f172a; }
-    .article-body h3 { font-size: 1.15rem; margin: 1.6rem 0 0.6rem; color: #0f172a; }
-    .article-body p { margin-bottom: 1.1rem; }
-    .article-body img { max-width: 100%; border-radius: 10px; margin: 1.2rem 0; }
-    .article-body ul, .article-body ol { margin: 0 0 1.1rem 1.4rem; }
-    .article-body blockquote {
-      border-left: 3px solid #0284c7; background: #f0f9ff; padding: 0.9rem 1.2rem;
-      margin: 1.4rem 0; color: #0369a1; border-radius: 0 8px 8px 0;
-    }
-    .article-body a { color: #0284c7; }
-
-    .state-box { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
-    .state-box i { font-size: 2rem; color: #94a3b8; margin-bottom: 1rem; display: block; }
-
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 3rem 1.5rem 2rem; font-size: 0.9rem; text-align: center; margin-top: 3rem; }
-
-    /* Header dropdown - đồng bộ index.html */
-    .nav-dropdown { position: relative; display: inline-block; }
-    .nav-dropdown > .nav-dropdown-trigger {
-      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
-      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
-      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
-    }
-    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
-    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
-    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
-    .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 1.8rem; background: #fff; min-width: 260px;
-      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-      padding: 0.5rem; z-index: 100; margin-top: 0;
-    }
-    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
-    .nav-dropdown-menu a {
-      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
-      color: var(--text-dark); font-weight: 500;
-    }
-    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
-
-    /* Footer UI - đồng bộ index.html */
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
-    .social-links { display: flex; gap: 0.65rem; align-items: center; }
-    .social-link {
-      width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-      color: #cbd5e1; border: 1px solid rgba(255,255,255,0.18); text-decoration: none; transition: all 0.2s;
-    }
-    .social-link:hover { color: #fff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
-    .footer-transparency-strip {
-      max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0;
-      border-top: 1px solid rgba(255,255,255,0.1); text-align: center;
-    }
-    .footer-transparency-strip p { margin: 0.35rem 0; color: #cbd5e1; }
-    .footer-transparency-strip .transparency-claim {
-      color: #7dd3fc; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;
-    }
-    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
     @media (max-width: 960px) {
-      .nav-container { padding: 0.8rem 1.5rem; }
       .mobile-menu-btn { display: block; }
       .nav-links {
-        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #fff;
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
         flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
         box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
       }
       .nav-links.active { display: flex; }
-      .nav-dropdown { display: block; width: 100%; }
-      .nav-dropdown > .nav-dropdown-trigger {
-        margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0;
-      }
-      .nav-dropdown-menu {
-        display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center;
-      }
-      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .gallery-grid { max-width: 100%; gap: 0.7rem; }
+    }
+
+    /* Banner bài viết */
+    .article-banner {
+      position: relative; width: 100%; padding: 3rem 1.5rem 3.4rem; color: var(--white); overflow: hidden;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite;
+    }
+    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .article-banner-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 2; }
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
+    .hero-dove {
+      position: absolute; top: 10%; right: 5%; width: 90px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      pointer-events: none; z-index: 1;
+      animation: doveFloat 9s ease-in-out infinite;
+      transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0%   { transform: translate(0, 0) rotate(-4deg); }
+      25%  { transform: translate(-14px, -18px) rotate(2deg); }
+      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
+      75%  { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 640px) {
+      .hero-dove { width: 60px; top: 6%; right: 4%; opacity: 0.3; }
+    }
+    .breadcrumb { font-size: 0.88rem; color: #e0f2fe; margin-bottom: 1rem; }
+    .breadcrumb a { color: #e0f2fe; text-decoration: none; opacity: 0.85; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article-title { font-size: 2.1rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; line-height: 1.25; }
+    .article-meta { color: #e0f2fe; font-size: 0.92rem; display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    .article-meta span { display: inline-flex; align-items: center; gap: 6px; }
+
+    /* Nội dung bài viết */
+    .article-wrap { max-width: 860px; margin: 0 auto; padding: 3rem 1.5rem 4.5rem; }
+    .article-cover { width: 100%; max-height: 420px; object-fit: cover; border-radius: 18px; margin-bottom: 2.2rem; box-shadow: 0 10px 30px rgba(15,23,42,0.12); }
+
+    .article-body { font-size: 1.05rem; color: #1e293b; line-height: 1.85; }
+    .article-body h1, .article-body h2, .article-body h3 { color: #0369a1; font-weight: 800; margin: 1.8rem 0 0.9rem; line-height: 1.35; }
+    .article-body h1 { font-size: 1.6rem; }
+    .article-body h2 { font-size: 1.4rem; }
+    .article-body h3 { font-size: 1.2rem; }
+    .article-body p { margin-bottom: 1.2rem; }
+    .article-body img { max-width: 100%; border-radius: 14px; margin: 1.2rem 0; display: block; box-shadow: 0 6px 18px rgba(15,23,42,0.1); }
+    .article-body ul, .article-body ol { margin: 0 0 1.2rem 1.4rem; }
+    .article-body li { margin-bottom: 0.5rem; }
+    .article-body blockquote {
+      border-left: 4px solid #0284c7; background: #f0f9ff; padding: 1rem 1.4rem; margin: 1.4rem 0;
+      border-radius: 0 10px 10px 0; color: #0369a1; font-style: italic;
+    }
+    .article-body a { color: #0284c7; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+    .article-body strong { color: #0f172a; }
+    .article-body hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .article-body code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 6px; font-size: 0.9em; }
+
+    .article-status { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .article-status i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
+
+    .article-footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+    .back-link { color: #0284c7; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .back-link:hover { text-decoration: underline; }
+
+    /* Modal Quyên góp VietQR */
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+
+    /* Footer 3 cột */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+
+    @media (max-width: 960px) {
+      .article-title { font-size: 1.6rem; }
+    }
+  
+    .nav-dropdown { position:relative; display:inline-block; }
+    .nav-dropdown>.nav-dropdown-trigger { margin-left:1.8rem; text-decoration:none; color:var(--text-muted); font-size:.95rem; font-weight:500; font-family:inherit; background:none; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; padding:.4rem 0; transition:color .2s; }
+    .nav-dropdown>.nav-dropdown-trigger i { font-size:.7rem; transition:transform .2s; }
+    .nav-dropdown.open>.nav-dropdown-trigger { color:#0284c7; font-weight:600; }
+    .nav-dropdown.open>.nav-dropdown-trigger i { transform:rotate(180deg); }
+    .nav-dropdown-menu { display:none; position:absolute; top:100%; left:1.8rem; background:#fff; min-width:260px; border-radius:12px; border:1px solid var(--border); box-shadow:0 12px 30px rgba(15,23,42,.12); padding:.5rem; z-index:100; }
+    .nav-dropdown.open>.nav-dropdown-menu { display:block; }
+    .nav-dropdown-menu a { display:block; margin-left:0!important; padding:.65rem .8rem; border-radius:8px; font-size:.9rem; color:var(--text-dark); font-weight:500; }
+    .nav-dropdown-menu a:hover { background:#f0f9ff; color:#0284c7!important; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; max-width:220px; }
+    .social-links { display:flex; gap:.65rem; align-items:center; }
+    .social-link { width:38px; height:38px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#cbd5e1; border:1px solid rgba(255,255,255,.18); text-decoration:none; transition:all .2s; }
+    .social-link:hover { color:#fff; background:rgba(255,255,255,.1); transform:translateY(-2px); }
+    .footer-transparency-strip { max-width:1240px; margin:2.5rem auto 0; padding:1rem 0 0; border-top:1px solid rgba(255,255,255,.1); text-align:center; }
+    .footer-transparency-strip p { margin:.35rem 0; color:#cbd5e1; }
+    .footer-transparency-strip .transparency-claim { color:#7dd3fc; text-decoration:underline; text-underline-offset:2px; font-weight:600; }
+    .footer-transparency-strip .transparency-sep { margin:0 .6rem; color:#64748b; }
+    @media(max-width:960px) {
+      .nav-dropdown { display:block; width:100%; }
+      .nav-dropdown>.nav-dropdown-trigger { margin-left:0; justify-content:center; width:100%; font-size:1.1rem; padding:.5rem 0; }
+      .nav-dropdown-menu { display:none!important; position:static; box-shadow:none; border:none; margin-top:0; text-align:center; }
+      .nav-dropdown.open .nav-dropdown-menu { display:block!important; }
     }
 
   </style>
 </head>
 <body>
 
-    <header>
-    <div class="nav-container">
-      <a href="index.html" class="brand-wrap">
-        <div class="brand-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-          </svg>
+  <!-- Menu Cố Định -->
+  <header>
+  <div class="nav-container">
+    <a href="index.html" class="brand-wrap">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3 3h7z"></path>
+        </svg>
+      </div>
+      <div class="brand-text-group">
+        <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+        <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+      </div>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <div class="nav-dropdown" id="navDropdownAction">
+        <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="nav-dropdown-menu">
+          <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
+          <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
+          <a href="lien-he.html">Trở thành nhà tài trợ</a>
+          <a href="lien-he.html">Đăng ký tình nguyện viên</a>
         </div>
-        <div class="brand-text-group">
-          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
-          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+      </div>
+      <div class="nav-dropdown" id="navDropdownAbout">
+        <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="nav-dropdown-menu">
+          <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+          <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
+          <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
+          <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
         </div>
-      </a>
+      </div>
+      <a href="hoat-dong.html">Hoạt Động</a>
+      <a href="tin-tuc.html">Tin Tức</a>
+      <a href="lien-he.html">Liên Hệ</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
+      <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
+</header>
 
-      <nav class="nav-links" id="navLinks">
-        <div class="nav-dropdown" id="navDropdownAction">
-          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
-          <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
-            <a href="lien-he.html">Trở thành nhà tài trợ</a>
-            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
-          </div>
-        </div>
-        <div class="nav-dropdown" id="navDropdownAbout">
-          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
-          <div class="nav-dropdown-menu">
-            <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
-            <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
-            <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
-            <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
-          </div>
-        </div>
-        <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>
-      </nav>
-
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
-        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
-          <i class="fa-solid fa-bars"></i>
-        </button>
+  <!-- Banner bài viết -->
+  <section class="article-banner">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
+    <div class="article-banner-inner">
+      <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <a href="tin-tuc.html">Tin tức</a> / <span id="breadcrumbTitle">Đang tải...</span></div>
+      <h1 class="article-title" id="articleTitle">Đang tải bài viết...</h1>
+      <div class="article-meta">
+        <span id="articleDate"><i class="fa-regular fa-calendar"></i></span>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main class="article-wrapper" id="articleWrapper">
-    <div class="state-box" id="loadingState">
-      <i class="fa-solid fa-spinner fa-spin"></i>
-      Đang tải bài viết...
+  <!-- Nội dung bài viết -->
+  <main class="article-wrap">
+    <div id="articleContainer">
+      <div class="article-status">
+        <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+        Đang tải nội dung bài viết, vui lòng chờ trong giây lát...
+      </div>
+    </div>
+
+    <div class="article-footer-nav">
+      <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách tin tức</a>
+      <button class="btn" onclick="openModal()">Quyên Góp Ủng Hộ</button>
     </div>
   </main>
 
-    <footer>
-    <div class="footer-grid">
-      <div>
-        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
-        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
-        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
-        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
-      </div>
-      <div>
-        <h4>Địa Chỉ Trụ Sở</h4>
-        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
-        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
-      </div>
-      <div>
-        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
-        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
-      </div>
-      <div>
-        <h4>Kết Nối Với Chúng Tôi</h4>
-        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-        <div class="social-links" style="margin-top: 0.8rem;">
-          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-        </div>
-      </div>
+  <!-- Modal Quyên góp VietQR -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.5rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.9rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
+      <p style="font-size:0.85rem; color:#64748b; margin-bottom:1.2rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
     </div>
+  </div>
 
-    <div class="footer-transparency-strip">
-      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
-      <p>
-        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
-        <span class="transparency-sep">•</span>
-        <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('newsletterEmail').focus(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
-      </p>
+  <!-- Footer 3 Cột -->
+  <footer>
+  <div class="footer-grid">
+    <div>
+      <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+      <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+      <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
     </div>
-
-    <div class="footer-bottom">
-      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+    <div>
+      <h4>Địa Chỉ Trụ Sở</h4>
+      <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+      <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+      <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
     </div>
-  </footer>
+    <div>
+      <h4><i class="fa-solid fa-images" style="font-size:0.85em;margin-right:6px;color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+      <div class="gallery-grid" id="galleryGrid" style="margin-top:0.9rem;"></div>
+    </div>
+    <div>
+      <h4>Kết Nối Với Chúng Tôi</h4>
+      <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
+      <div class="social-links" style="margin-top:0.8rem;">
+        <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-transparency-strip">
+    <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+    <p>
+      <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+      <span class="transparency-sep">•</span>
+      <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('newsletterEmail').focus();return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+    </p>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp;
+    <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+  </div>
+</footer>
 
   <script>
-
-    function toggleNavDropdown(btn) {
-      const dropdown = btn.closest('.nav-dropdown');
-      const wasOpen = dropdown.classList.contains('open');
-      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      if (!wasOpen) dropdown.classList.add('open');
-    }
-
-    document.addEventListener('click', function (e) {
-      if (!e.target.closest('.nav-dropdown')) {
-        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      }
-    });
-
-    // Thư mục chứa các file .md, tính từ vị trí của chi-tiet.html
-    const POSTS_FOLDER = "content/posts/";
-
-    function getPostFilename() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("post");
-    }
-
-    // Tách khối frontmatter dạng:
-    // ---
-    // title: ...
-    // date: ...
-    // thumbnail: ...
-    // tag: ...
-    // ---
-    // Nội dung markdown...
-    function parseFrontmatter(raw) {
-      const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
-      if (!match) {
-        return { meta: {}, body: raw };
-      }
-      const meta = {};
-      match[1].split("\n").forEach(line => {
-        const idx = line.indexOf(":");
-        if (idx === -1) return;
-        const key = line.slice(0, idx).trim();
-        let value = line.slice(idx + 1).trim();
+    function parseFrontMatter(raw) {
+      const result = { title: "", date: "", image: "", excerpt: "", body: raw };
+      const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
+      if (!match) return result;
+      const yamlBlock = match[1];
+      result.body = match[2];
+      yamlBlock.split(/\r?\n/).forEach(line => {
+        const kv = line.match(/^([a-zA-Z0-9_]+)\s*:\s*(.*)$/);
+        if (!kv) return;
+        const key = kv[1].trim().toLowerCase();
+        let value = kv[2].trim();
         value = value.replace(/^["']|["']$/g, "");
-        meta[key] = value;
+        if (key === "description") result.excerpt = result.excerpt || value;
+        else if (key === "thumbnail") result.image = result.image || value;
+        else result[key] = value;
       });
-      return { meta, body: match[2] };
+      return result;
     }
 
-    // Nếu không có frontmatter, cố lấy tiêu đề từ dòng "# ..." đầu tiên
-    function extractFallbackTitle(body) {
-      const m = body.match(/^#\s+(.+)$/m);
-      return m ? m[1].trim() : "Bài viết";
+    function slugToTitle(slug) {
+      return slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return "";
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
     }
 
     async function loadArticle() {
-      const wrapper = document.getElementById("articleWrapper");
-      const filename = getPostFilename();
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get("slug");
+      const container = document.getElementById("articleContainer");
 
-      if (!filename) {
-        wrapper.innerHTML = `
-          <div class="state-box">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            Không tìm thấy bài viết được yêu cầu.
-            <div style="margin-top:1.2rem;"><a class="btn" href="tin-tuc.html">Quay lại Tin Tức</a></div>
-          </div>`;
+      if (!slug) {
+        container.innerHTML = `<div class="article-status"><i class="fa-solid fa-circle-exclamation"></i>Không tìm thấy bài viết. Vui lòng quay lại trang Tin Tức.</div>`;
+        document.getElementById("articleTitle").textContent = "Không tìm thấy bài viết";
         return;
       }
 
       try {
-        const res = await fetch(POSTS_FOLDER + filename, { cache: "no-store" });
-        if (!res.ok) throw new Error("not found");
+        const res = await fetch(`content/posts/${slug}.md`);
+        if (!res.ok) throw new Error("Không thể tải bài viết");
         const raw = await res.text();
+        const fm = parseFrontMatter(raw);
 
-        const { meta, body } = parseFrontmatter(raw);
-        const title = meta.title || extractFallbackTitle(body);
-        const bodyWithoutH1 = body.replace(/^#\s+.+\n/, "");
-        const htmlContent = marked.parse(bodyWithoutH1);
+        const title = fm.title || slugToTitle(slug);
+        document.title = `${title} - Wisdom Vietnam Network - DR SOLUTIONS`;
+        document.getElementById("pageTitle").textContent = document.title;
+        document.getElementById("articleTitle").textContent = title;
+        document.getElementById("breadcrumbTitle").textContent = title;
+        document.getElementById("articleDate").innerHTML = fm.date
+          ? `<i class="fa-regular fa-calendar"></i> ${formatDate(fm.date)}`
+          : "";
 
-        wrapper.innerHTML = `
-          <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại Tin Tức</a>
-          ${meta.tag ? `<span class="article-tag">${meta.tag}</span>` : ""}
-          ${meta.date ? `<div class="article-date"><i class="fa-regular fa-calendar"></i> ${meta.date}</div>` : ""}
-          <h1 class="article-title">${title}</h1>
-          ${meta.thumbnail ? `<img class="article-cover" src="${meta.thumbnail}" alt="${title}">` : ""}
-          <div class="article-body">${htmlContent}</div>
-        `;
-        document.title = title + " - Wisdom Vietnam Network";
+        // Cập nhật thẻ SEO (meta description) và Open Graph theo đúng nội dung bài viết,
+        // giúp trang chi tiết mỗi bài có mô tả riêng thay vì dùng chung 1 mô tả mặc định —
+        // quan trọng cho SEO và khi chia sẻ link bài viết lên mạng xã hội.
+        const seoExcerpt = fm.excerpt || "Đọc bài viết từ Wisdom Vietnam Network - DR Solutions.";
+        document.getElementById("pageDescription").setAttribute("content", seoExcerpt);
+        document.getElementById("pageOgTitle").setAttribute("content", title);
+        document.getElementById("pageOgDescription").setAttribute("content", seoExcerpt);
+        if (fm.image) document.getElementById("pageOgImage").setAttribute("content", fm.image);
+
+        const htmlBody = (window.marked ? marked.parse(fm.body) : fm.body.replace(/\n/g, "<br>"));
+        const coverImg = fm.image ? `<img src="${fm.image}" alt="${title}" class="article-cover" onerror="this.style.display='none'">` : "";
+
+        container.innerHTML = `${coverImg}<div class="article-body">${htmlBody}</div>`;
       } catch (err) {
-        wrapper.innerHTML = `
-          <div class="state-box">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            Không thể tải nội dung bài viết (${filename}).
-            <div style="margin-top:1.2rem;"><a class="btn" href="tin-tuc.html">Quay lại Tin Tức</a></div>
-          </div>`;
+        container.innerHTML = `<div class="article-status"><i class="fa-solid fa-circle-exclamation"></i>Không thể tải nội dung bài viết này. Vui lòng thử lại sau hoặc quay lại danh sách tin tức.</div>`;
+        document.getElementById("articleTitle").textContent = "Không tải được bài viết";
+        document.getElementById("breadcrumbTitle").textContent = "Lỗi tải bài viết";
       }
     }
 
     loadArticle();
+
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+
+    window.onclick = function(event) {
+      let donateModal = document.getElementById('donateModal');
+      if (event.target == donateModal) { donateModal.style.display = 'none'; }
+    }
+
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.getElementById('menuBtn');
+      navLinks.classList.toggle('active');
+      if (navLinks.classList.contains('active')) {
+        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      } else {
+        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    }
   </script>
 </body>
 </html>
