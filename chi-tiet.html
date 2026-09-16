@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chính Sách Bảo Mật & Điều Khoản Sử Dụng - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Chính sách bảo mật thông tin và điều khoản sử dụng website của Mạng Lưới Tri Thức Việt Nam, doanh nghiệp xã hội phi lợi nhuận hoạt động minh bạch vì giáo dục cộng đồng.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <title>Bài Viết Chi Tiết - Wisdom Vietnam Network - DR SOLUTIONS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
@@ -21,12 +18,11 @@
       --border: #e2e8f0;
       --bg-page: #f8fafc;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.7;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
     }
     body { padding-top: 72px; }
 
@@ -36,8 +32,7 @@
       -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
-
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; }
     .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
     .brand-logo-icon {
       width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
@@ -50,15 +45,49 @@
       font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+    .nav-links a:hover { color: #0284c7; font-weight: 600; }
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); }
 
-    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
-    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+    .article-wrapper { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px; color: #0284c7; font-weight: 600;
+      text-decoration: none; font-size: 0.92rem; margin-bottom: 1.8rem;
+    }
+    .back-link:hover { text-decoration: underline; }
 
+    .article-tag {
+      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.3rem 0.9rem;
+      border-radius: 999px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .article-date { font-size: 0.85rem; color: #0284c7; font-weight: 700; text-transform: uppercase; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 6px; }
+    .article-title { font-size: 2.1rem; font-weight: 900; color: #0f172a; line-height: 1.3; margin-bottom: 1.6rem; }
+    .article-cover { width: 100%; max-height: 420px; object-fit: cover; border-radius: 14px; margin-bottom: 2rem; border: 1px solid var(--border); }
 
+    .article-body { font-size: 1.05rem; color: #1e293b; }
+    .article-body h2 { font-size: 1.4rem; margin: 2rem 0 0.8rem; color: #0f172a; }
+    .article-body h3 { font-size: 1.15rem; margin: 1.6rem 0 0.6rem; color: #0f172a; }
+    .article-body p { margin-bottom: 1.1rem; }
+    .article-body img { max-width: 100%; border-radius: 10px; margin: 1.2rem 0; }
+    .article-body ul, .article-body ol { margin: 0 0 1.1rem 1.4rem; }
+    .article-body blockquote {
+      border-left: 3px solid #0284c7; background: #f0f9ff; padding: 0.9rem 1.2rem;
+      margin: 1.4rem 0; color: #0369a1; border-radius: 0 8px 8px 0;
+    }
+    .article-body a { color: #0284c7; }
 
-    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng,
-       đồng bộ trên toàn site (giống charity: water). */
+    .state-box { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
+    .state-box i { font-size: 2rem; color: #94a3b8; margin-bottom: 1rem; display: block; }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 3rem 1.5rem 2rem; font-size: 0.9rem; text-align: center; margin-top: 3rem; }
+
+    /* Header dropdown - đồng bộ index.html */
     .nav-dropdown { position: relative; display: inline-block; }
     .nav-dropdown > .nav-dropdown-trigger {
       margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
@@ -69,7 +98,7 @@
     .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
     .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
     .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #fff; min-width: 260px;
       border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
       padding: 0.5rem; z-index: 100; margin-top: 0;
     }
@@ -79,260 +108,51 @@
       color: var(--text-dark); font-weight: 500;
     }
     .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
-        .nav-dropdown-trigger.active-page { color: #0284c7; font-weight: 600; }
 
-    .btn {
-      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
-      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
-    }
-    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
-
-    .btn-donate-glow {
-      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
-    }
-    .btn-donate-glow::after {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
-      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
-    }
-    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
-      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
-      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
-    }
-
-    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
-
-    /* Banner trang (đồng bộ với các trang phụ khác) */
-    .page-banner {
-      position: relative; width: 100%; padding: 3.6rem 1.5rem 4rem; color: var(--white); overflow: hidden;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite; text-align: center;
-    }
-    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    .page-banner .hero-badge {
-      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
-    }
-    .page-banner h1 { font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
-    .page-banner p { color: #e0f2fe; font-size: 1rem; max-width: 620px; margin: 0 auto; }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác */
-    .hero-dove {
-      position: absolute; top: 8%; right: 5%; width: 100px; height: auto;
-      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
-      pointer-events: none; z-index: 5;
-      animation: doveFloat 9s ease-in-out infinite;
-      transform-origin: center center;
-    }
-    @keyframes doveFloat {
-      0%   { transform: translate(0, 0) rotate(-4deg); }
-      25%  { transform: translate(-14px, -18px) rotate(2deg); }
-      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
-      75%  { transform: translate(10px, -14px) rotate(3deg); }
-      100% { transform: translate(0, 0) rotate(-4deg); }
-    }
-    @media (max-width: 480px) {
-      .brand-title { font-size: 1.02rem; }
-      .brand-subtitle { font-size: 0.6rem; }
-    }
-    @media (max-width: 640px) {
-      .hero-dove { width: 64px; top: 4%; right: 4%; opacity: 0.35; }
-    }
-
-    /* Nội dung chính sách */
-    .container { max-width: 880px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
-
-    .policy-updated {
-      background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; border-radius: 10px;
-      padding: 0.9rem 1.2rem; font-size: 0.9rem; margin: 2.5rem 0 2rem; display: flex; align-items: center; gap: 10px;
-    }
-
-    .policy-toc {
-      background: #ffffff; border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.8rem;
-      margin-bottom: 2.5rem; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
-    }
-    .policy-toc h4 { font-size: 0.95rem; color: var(--text-dark); margin-bottom: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; }
-    .policy-toc ol { padding-left: 1.2rem; }
-    .policy-toc li { margin-bottom: 0.4rem; }
-    .policy-toc a { color: #0284c7; text-decoration: none; font-size: 0.94rem; font-weight: 600; }
-    .policy-toc a:hover { text-decoration: underline; }
-
-    .policy-section {
-      background: #ffffff; border-radius: 18px; padding: 2.2rem 2.4rem; border: 1px solid var(--border);
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04); margin-bottom: 1.6rem; scroll-margin-top: 90px;
-    }
-    .policy-section h2 {
-      font-size: 1.3rem; font-weight: 800; color: #0369a1; margin-bottom: 1rem;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .policy-section h2 i {
-      width: 36px; height: 36px; background: #e0f2fe; color: #0284c7; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0;
-    }
-    .policy-section p { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 0.9rem; }
-    .policy-section p:last-child { margin-bottom: 0; }
-    .policy-section ul { padding-left: 1.3rem; margin-bottom: 0.9rem; }
-    .policy-section li { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 0.5rem; }
-    .policy-section strong { color: var(--text-dark); }
-    .policy-section a { color: #0284c7; font-weight: 600; text-decoration: none; }
-    .policy-section a:hover { text-decoration: underline; }
-
-    .contact-box {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd;
-      border-radius: 14px; padding: 1.6rem 1.8rem; margin-top: 2rem;
-    }
-    .contact-box p { color: var(--text-dark); margin-bottom: 0.4rem; }
-    .contact-box p:last-child { margin-bottom: 0; }
-
-    /* Footer 3 cột */
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    /* Footer UI - đồng bộ index.html */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
+    .social-links { display: flex; gap: 0.65rem; align-items: center; }
     .social-link {
-      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
-      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
-      transition: all 0.2s; text-decoration: none;
+      width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #cbd5e1; border: 1px solid rgba(255,255,255,0.18); text-decoration: none; transition: all 0.2s;
     }
-    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
-
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
-    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-    .footer-bottom a { color: #94a3b8; text-decoration: none; }
-    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+    .social-link:hover { color: #fff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+    .footer-transparency-strip {
+      max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0;
+      border-top: 1px solid rgba(255,255,255,0.1); text-align: center;
+    }
+    .footer-transparency-strip p { margin: 0.35rem 0; color: #cbd5e1; }
+    .footer-transparency-strip .transparency-claim {
+      color: #7dd3fc; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;
+    }
+    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
 
     @media (max-width: 960px) {
+      .nav-container { padding: 0.8rem 1.5rem; }
       .mobile-menu-btn { display: block; }
       .nav-links {
-        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #fff;
         flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
         box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
       }
       .nav-links.active { display: flex; }
-      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
       .nav-dropdown { display: block; width: 100%; }
-      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
+      .nav-dropdown > .nav-dropdown-trigger {
+        margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0;
+      }
+      .nav-dropdown-menu {
+        display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center;
+      }
       .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
-      .page-banner h1 { font-size: 1.8rem; }
-      .policy-section { padding: 1.6rem 1.4rem; }
-    }
-  
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
-    @media (max-width: 960px) {
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
       .gallery-grid { max-width: 100%; gap: 0.7rem; }
     }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
 
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
-    }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
-    }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
-
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
-  
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
-    @media (max-width: 960px) {
-      .gallery-grid { max-width: 100%; gap: 0.7rem; }
-    }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
-
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
-    }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
-    }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
-
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định -->
-  <header>
+    <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
@@ -346,8 +166,9 @@
           <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
         </div>
       </a>
+
       <nav class="nav-links" id="navLinks">
-        <div class="nav-dropdown">
+        <div class="nav-dropdown" id="navDropdownAction">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
@@ -355,21 +176,21 @@
             <a href="lien-he.html">Trở thành nhà tài trợ</a>
             <a href="lien-he.html">Đăng ký tình nguyện viên</a>
           </div>
-
-        <div class="nav-dropdown">
+        </div>
+        <div class="nav-dropdown" id="navDropdownAbout">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
-            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
             <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
             <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
             <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
           </div>
-        </div>        </div>        </div>        </div>
-
+        </div>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>      </nav>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+
       <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
@@ -379,145 +200,14 @@
     </div>
   </header>
 
-  <!-- Banner -->
-  <section class="page-banner">
-    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-badge">MINH BẠCH & TIN CẬY</div>
-    <h1>Chính Sách Bảo Mật & Điều Khoản Sử Dụng</h1>
-    <p>Cam kết của chúng tôi trong việc bảo vệ thông tin cá nhân và sử dụng website một cách minh bạch, an toàn.</p>
-  </section>
-
-  <main class="container">
-
-    <div class="policy-updated">
-      <i class="fa-regular fa-clock"></i>
-      <span>Cập nhật lần gần nhất: Tháng 9/2026</span>
+  <main class="article-wrapper" id="articleWrapper">
+    <div class="state-box" id="loadingState">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Đang tải bài viết...
     </div>
-
-    <div class="policy-toc">
-      <h4>Mục lục</h4>
-      <ol>
-        <li><a href="#thu-thap">Thông tin chúng tôi thu thập</a></li>
-        <li><a href="#muc-dich">Mục đích sử dụng thông tin</a></li>
-        <li><a href="#chia-se">Chia sẻ thông tin với bên thứ ba</a></li>
-        <li><a href="#luu-tru">Lưu trữ và bảo mật dữ liệu</a></li>
-        <li><a href="#cookie">Cookie & công nghệ theo dõi</a></li>
-        <li><a href="#quyen">Quyền của bạn đối với dữ liệu cá nhân</a></li>
-        <li><a href="#dieu-khoan">Điều khoản sử dụng website</a></li>
-        <li><a href="#ban-quyen">Bản quyền nội dung & khiếu nại vi phạm</a></li>
-        <li><a href="#quyen-gop">Chính sách quyên góp & minh bạch tài chính</a></li>
-        <li><a href="#thay-doi">Thay đổi chính sách</a></li>
-        <li><a href="#lien-he">Liên hệ về quyền riêng tư</a></li>
-      </ol>
-    </div>
-
-    <div class="policy-section" id="thu-thap">
-      <h2><i class="fa-solid fa-database"></i> 1. Thông tin chúng tôi thu thập</h2>
-      <p>Mạng Lưới Tri Thức Việt Nam ("chúng tôi") chỉ thu thập những thông tin cá nhân cần thiết, tối thiểu, khi bạn chủ động cung cấp thông qua các biểu mẫu trên website, cụ thể:</p>
-      <ul>
-        <li><strong>Họ và tên, địa chỉ email, nội dung tin nhắn</strong> — khi bạn điền biểu mẫu tại trang Liên Hệ để gửi câu hỏi, góp ý hoặc đề xuất hợp tác.</li>
-        <li><strong>Thông tin giao dịch quyên góp</strong> — được ghi nhận qua hệ thống ngân hàng khi bạn thực hiện chuyển khoản qua mã VietQR, không do website trực tiếp thu thập hay lưu trữ số tài khoản của người quyên góp.</li>
-      </ul>
-      <p>Chúng tôi <strong>không thu thập</strong> thông tin nhạy cảm như số căn cước công dân, mật khẩu, hay dữ liệu tài chính chi tiết của người dùng thông qua website.</p>
-    </div>
-
-    <div class="policy-section" id="muc-dich">
-      <h2><i class="fa-solid fa-bullseye"></i> 2. Mục đích sử dụng thông tin</h2>
-      <p>Thông tin bạn cung cấp qua biểu mẫu liên hệ được sử dụng duy nhất để:</p>
-      <ul>
-        <li>Phản hồi câu hỏi, góp ý hoặc đề xuất hợp tác của bạn qua email.</li>
-        <li>Liên hệ xác nhận trong trường hợp cần trao đổi thêm về nội dung bạn đã gửi.</li>
-      </ul>
-      <p>Chúng tôi không sử dụng thông tin cá nhân của bạn cho mục đích quảng cáo, tiếp thị của bên thứ ba, hoặc bán/cho thuê dữ liệu dưới bất kỳ hình thức nào.</p>
-    </div>
-
-    <div class="policy-section" id="chia-se">
-      <h2><i class="fa-solid fa-share-nodes"></i> 3. Chia sẻ thông tin với bên thứ ba</h2>
-      <p>Chúng tôi không bán, trao đổi hay chuyển giao thông tin cá nhân của bạn cho bên thứ ba vì mục đích thương mại.</p>
-      <p>Biểu mẫu liên hệ trên website được xử lý thông qua dịch vụ trung gian gửi email <strong>FormSubmit</strong> — dữ liệu bạn nhập chỉ được dùng để chuyển tiếp email đến hộp thư của chúng tôi, không được FormSubmit lưu trữ hay sử dụng cho mục đích khác.</p>
-      <p>Chúng tôi chỉ chia sẻ thông tin trong trường hợp pháp luật Việt Nam yêu cầu, hoặc để bảo vệ quyền lợi hợp pháp của tổ chức và cộng đồng.</p>
-    </div>
-
-    <div class="policy-section" id="luu-tru">
-      <h2><i class="fa-solid fa-lock"></i> 4. Lưu trữ và bảo mật dữ liệu</h2>
-      <p>Website được vận hành trên nền tảng GitHub Pages với kết nối <strong>HTTPS mã hóa</strong>, giúp bảo vệ dữ liệu truyền tải giữa trình duyệt của bạn và máy chủ.</p>
-      <p>Thông tin liên hệ bạn gửi qua biểu mẫu được chuyển trực tiếp đến hộp thư điện tử quản trị (hotro@wvn.vn), không được lưu trữ công khai trên website hay cơ sở dữ liệu có thể truy cập từ bên ngoài.</p>
-      <p>Chúng tôi áp dụng các biện pháp hợp lý để bảo vệ thông tin khỏi truy cập, sử dụng hoặc tiết lộ trái phép, tuy nhiên không có phương thức truyền tải qua Internet nào đảm bảo an toàn tuyệt đối 100%.</p>
-    </div>
-
-    <div class="policy-section" id="cookie">
-      <h2><i class="fa-solid fa-cookie-bite"></i> 5. Cookie & công nghệ theo dõi</h2>
-      <p>Website hiện <strong>không sử dụng cookie theo dõi hành vi người dùng</strong> hay các công cụ phân tích quảng cáo bên thứ ba (như Google AdSense).</p>
-      <p>Một số thư viện bên ngoài được tải để hiển thị giao diện (như Font Awesome cho biểu tượng) có thể ghi nhận thông tin kỹ thuật cơ bản (địa chỉ IP, loại trình duyệt) theo chính sách riêng của nhà cung cấp dịch vụ đó, nằm ngoài phạm vi kiểm soát trực tiếp của chúng tôi.</p>
-    </div>
-
-    <div class="policy-section" id="quyen">
-      <h2><i class="fa-solid fa-user-shield"></i> 6. Quyền của bạn đối với dữ liệu cá nhân</h2>
-      <p>Bạn có quyền:</p>
-      <ul>
-        <li>Yêu cầu chúng tôi cung cấp thông tin về dữ liệu cá nhân của bạn mà chúng tôi đang nắm giữ (nếu có).</li>
-        <li>Yêu cầu chỉnh sửa hoặc xóa thông tin cá nhân đã cung cấp qua biểu mẫu liên hệ.</li>
-        <li>Rút lại sự đồng ý cho việc liên hệ qua email vào bất kỳ lúc nào.</li>
-      </ul>
-      <p>Để thực hiện các quyền trên, vui lòng liên hệ trực tiếp qua email được cung cấp ở mục 10 bên dưới.</p>
-    </div>
-
-    <div class="policy-section" id="dieu-khoan">
-      <h2><i class="fa-solid fa-file-contract"></i> 7. Điều khoản sử dụng website</h2>
-      <p>Khi truy cập và sử dụng website này, bạn đồng ý:</p>
-      <ul>
-        <li>Sử dụng nội dung, hình ảnh và thông tin trên website vì mục đích tìm hiểu, tham khảo hợp pháp, không sao chép hoặc sử dụng lại cho mục đích thương mại mà không có sự đồng ý bằng văn bản.</li>
-        <li>Không thực hiện các hành vi gây hại đến hệ thống website (tấn công, khai thác lỗ hổng bảo mật, phát tán mã độc...).</li>
-        <li>Cung cấp thông tin trung thực khi liên hệ hoặc thực hiện quyên góp qua website.</li>
-      </ul>
-      <p>Nội dung trên website (bài viết, hình ảnh hoạt động, số liệu thống kê) được cập nhật thường xuyên và có thể thay đổi mà không cần báo trước, nhằm phản ánh chính xác nhất tình hình hoạt động thực tế của tổ chức.</p>
-    </div>
-
-    <div class="policy-section" id="ban-quyen">
-      <h2><i class="fa-solid fa-copyright"></i> 8. Bản quyền nội dung & khiếu nại vi phạm</h2>
-      <p>Toàn bộ bài viết, hình ảnh hoạt động và tài liệu do Mạng Lưới Tri Thức Việt Nam tự sản xuất, hoặc được sử dụng khi đã có sự cho phép/giấy phép phù hợp, đều được bảo hộ theo <strong>Luật Sở Hữu Trí Tuệ Việt Nam</strong> (Luật số 50/2005/QH11, đã sửa đổi, bổ sung).</p>
-      <p>Chúng tôi tôn trọng quyền sở hữu trí tuệ của bên thứ ba. Trong trường hợp bạn cho rằng có nội dung hoặc hình ảnh trên website này vô tình vi phạm quyền tác giả mà bạn đang sở hữu hợp pháp, vui lòng gửi khiếu nại tới email <strong>hotro@wvn.vn</strong>, kèm theo:</p>
-      <ul>
-        <li>Bằng chứng xác nhận quyền sở hữu hợp pháp đối với nội dung/hình ảnh liên quan.</li>
-        <li>Đường dẫn (URL) cụ thể tới trang có chứa nội dung bị cho là vi phạm.</li>
-        <li>Thông tin liên hệ của người khiếu nại (họ tên, email) để chúng tôi có thể phản hồi.</li>
-      </ul>
-      <p>Sau khi nhận được khiếu nại hợp lệ, chúng tôi cam kết xem xét và phản hồi trong vòng <strong>5-7 ngày làm việc</strong>, đồng thời gỡ bỏ hoặc chỉnh sửa nội dung liên quan nếu xác nhận có vi phạm.</p>
-    </div>
-
-    <div class="policy-section" id="quyen-gop">
-      <h2><i class="fa-solid fa-hand-holding-heart"></i> 9. Chính sách quyên góp & minh bạch tài chính</h2>
-      <p>Mạng Lưới Tri Thức Việt Nam cam kết sử dụng <strong>100% tổng lợi nhuận sau thuế</strong> để tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng đã đăng ký, không phân chia lợi tức cho bất kỳ cá nhân hay tổ chức nào.</p>
-      <p>Mọi giao dịch quyên góp qua mã VietQR đều được thực hiện trực tiếp qua hệ thống ngân hàng, tuân theo quy định bảo mật của ngân hàng liên quan. Chúng tôi công khai định kỳ thông tin sao kê giao dịch tại trang <a href="sao-ke.html">Tra Cứu Sao Kê</a> để đảm bảo tính minh bạch với người đồng hành. Bạn có thể xem chi tiết các dự án đang gây quỹ và cách thức quyên góp tại trang <a href="quyen-gop.html">Quyên Góp</a>.</p>
-      <p>Người quyên góp có quyền yêu cầu thông tin chi tiết về việc sử dụng khoản đóng góp của mình bằng cách liên hệ trực tiếp với chúng tôi.</p>
-    </div>
-
-    <div class="policy-section" id="thay-doi">
-      <h2><i class="fa-solid fa-arrows-rotate"></i> 10. Thay đổi chính sách</h2>
-      <p>Chúng tôi có thể cập nhật Chính Sách Bảo Mật & Điều Khoản Sử Dụng này theo thời gian để phản ánh đúng thực tế vận hành hoặc theo yêu cầu pháp lý. Mọi thay đổi sẽ được cập nhật trực tiếp trên trang này kèm ngày cập nhật gần nhất ở đầu trang.</p>
-      <p>Chúng tôi khuyến khích bạn xem lại trang này định kỳ để nắm được các thay đổi (nếu có).</p>
-    </div>
-
-    <div class="policy-section" id="lien-he">
-      <h2><i class="fa-solid fa-envelope-open-text"></i> 11. Liên hệ về quyền riêng tư</h2>
-      <p>Nếu bạn có bất kỳ câu hỏi, thắc mắc hoặc yêu cầu nào liên quan đến Chính Sách Bảo Mật này, vui lòng liên hệ với chúng tôi qua:</p>
-      <div class="contact-box">
-        <p><i class="fa-solid fa-building" style="color:#0284c7; margin-right:8px;"></i><strong>Đơn vị vận hành:</strong> Công ty TNHH DR Solutions</p>
-        <p><i class="fa-solid fa-envelope" style="color:#0284c7; margin-right:8px;"></i><strong>Email:</strong> hotro@wvn.vn | cskh@dr.com</p>
-        <p><i class="fa-solid fa-location-dot" style="color:#0284c7; margin-right:8px;"></i><strong>Địa chỉ:</strong> Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p><i class="fa-solid fa-id-card" style="color:#0284c7; margin-right:8px;"></i><strong>Mã số doanh nghiệp:</strong> 0111291749</p>
-      </div>
-      <p style="margin-top: 1.3rem;">
-        <a href="lien-he.html" style="display: inline-flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-paper-plane"></i> Gửi lời nhắn trực tuyến <i class="fa-solid fa-arrow-right"></i>
-        </a>
-      </p>
-    </div>
-
   </main>
 
-  <!-- Footer 3 Cột -->
-  <footer>
+    <footer>
     <div class="footer-grid">
       <div>
         <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
@@ -532,138 +222,130 @@
         <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
+        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
+      </div>
+      <div>
         <h4>Kết Nối Với Chúng Tôi</h4>
         <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
         <div class="social-links" style="margin-top: 0.8rem;">
           <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
         </div>
       </div>
-      <div>
-        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
-        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
-      </div>
     </div>
 
     <div class="footer-transparency-strip">
       <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('newsletterEmail').focus(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
       </p>
     </div>
 
-    <div class="footer-transparency-strip">
-      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
-      <p>
-        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
-      </p>
-    </div>
     <div class="footer-bottom">
       &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
     </div>
   </footer>
 
   <script>
-    function toggleMobileMenu() {
-      const navLinks = document.getElementById('navLinks');
-      const menuBtn = document.getElementById('menuBtn');
-      navLinks.classList.toggle('active');
-      if (navLinks.classList.contains('active')) {
-        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-      } else {
-        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-      }
-    }
-  
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
+
     function toggleNavDropdown(btn) {
       const dropdown = btn.closest('.nav-dropdown');
       const wasOpen = dropdown.classList.contains('open');
       document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
       if (!wasOpen) dropdown.classList.add('open');
     }
+
     document.addEventListener('click', function (e) {
       if (!e.target.closest('.nav-dropdown')) {
         document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
       }
     });
 
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.
-    const GALLERY_IMAGES = [
-      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
-      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
-      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
-      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
-      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
-      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
-    ];
-    let galleryShuffled = [];
-    let galleryCurrentIndex = 0;
-    function shuffleArray(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+    // Thư mục chứa các file .md, tính từ vị trí của chi-tiet.html
+    const POSTS_FOLDER = "content/posts/";
+
+    function getPostFilename() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("post");
+    }
+
+    // Tách khối frontmatter dạng:
+    // ---
+    // title: ...
+    // date: ...
+    // thumbnail: ...
+    // tag: ...
+    // ---
+    // Nội dung markdown...
+    function parseFrontmatter(raw) {
+      const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+      if (!match) {
+        return { meta: {}, body: raw };
       }
-      return a;
+      const meta = {};
+      match[1].split("\n").forEach(line => {
+        const idx = line.indexOf(":");
+        if (idx === -1) return;
+        const key = line.slice(0, idx).trim();
+        let value = line.slice(idx + 1).trim();
+        value = value.replace(/^["']|["']$/g, "");
+        meta[key] = value;
+      });
+      return { meta, body: match[2] };
     }
-    function renderGalleryGrid() {
-      const grid = document.getElementById("galleryGrid");
-      if (!grid) return;
-      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
-        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
-          <img src="${img.src}" alt="${img.caption}" loading="lazy">
-        </div>
-      `).join("");
-    }
-    function openGalleryModal(startIndex) {
-      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
-      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
-      galleryCurrentIndex = 0;
-      renderGalleryModalImage();
-      document.getElementById("galleryModal").classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-    function renderGalleryModalImage() {
-      const img = galleryShuffled[galleryCurrentIndex];
-      const modalImg = document.getElementById("galleryModalImg");
-      modalImg.src = img.src;
-      modalImg.alt = img.caption;
-      modalImg.classList.remove("zoomed");
-      document.querySelector(".gallery-modal-caption").textContent = img.caption;
-    }
-    function showGalleryImage(direction) {
-      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
-      renderGalleryModalImage();
-    }
-    function closeGalleryModal() {
-      document.getElementById("galleryModal").classList.remove("active");
-      document.body.style.overflow = "";
-    }
-    document.getElementById("galleryModal").addEventListener("click", function (e) {
-      if (e.target === this) closeGalleryModal();
-    });
-    document.addEventListener("keydown", function (e) {
-      const modal = document.getElementById("galleryModal");
-      if (!modal.classList.contains("active")) return;
-      if (e.key === "Escape") closeGalleryModal();
-      if (e.key === "ArrowLeft") showGalleryImage(-1);
-      if (e.key === "ArrowRight") showGalleryImage(1);
-    });
-    renderGalleryGrid();
 
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.</script>
+    // Nếu không có frontmatter, cố lấy tiêu đề từ dòng "# ..." đầu tiên
+    function extractFallbackTitle(body) {
+      const m = body.match(/^#\s+(.+)$/m);
+      return m ? m[1].trim() : "Bài viết";
+    }
 
-  <div class="gallery-modal" id="galleryModal">
-    <div class="gallery-modal-inner">
-      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
-      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
-      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
-      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
-      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
-    </div>
-  </div>
-  </div>
+    async function loadArticle() {
+      const wrapper = document.getElementById("articleWrapper");
+      const filename = getPostFilename();
 
+      if (!filename) {
+        wrapper.innerHTML = `
+          <div class="state-box">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            Không tìm thấy bài viết được yêu cầu.
+            <div style="margin-top:1.2rem;"><a class="btn" href="tin-tuc.html">Quay lại Tin Tức</a></div>
+          </div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(POSTS_FOLDER + filename, { cache: "no-store" });
+        if (!res.ok) throw new Error("not found");
+        const raw = await res.text();
+
+        const { meta, body } = parseFrontmatter(raw);
+        const title = meta.title || extractFallbackTitle(body);
+        const bodyWithoutH1 = body.replace(/^#\s+.+\n/, "");
+        const htmlContent = marked.parse(bodyWithoutH1);
+
+        wrapper.innerHTML = `
+          <a href="tin-tuc.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại Tin Tức</a>
+          ${meta.tag ? `<span class="article-tag">${meta.tag}</span>` : ""}
+          ${meta.date ? `<div class="article-date"><i class="fa-regular fa-calendar"></i> ${meta.date}</div>` : ""}
+          <h1 class="article-title">${title}</h1>
+          ${meta.thumbnail ? `<img class="article-cover" src="${meta.thumbnail}" alt="${title}">` : ""}
+          <div class="article-body">${htmlContent}</div>
+        `;
+        document.title = title + " - Wisdom Vietnam Network";
+      } catch (err) {
+        wrapper.innerHTML = `
+          <div class="state-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Không thể tải nội dung bài viết (${filename}).
+            <div style="margin-top:1.2rem;"><a class="btn" href="tin-tuc.html">Quay lại Tin Tức</a></div>
+          </div>`;
+      }
+    }
+
+    loadArticle();
+  </script>
 </body>
 </html>
