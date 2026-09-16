@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sứ Mệnh & Giới Thiệu - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Mạng Lưới Tri Thức Việt Nam - doanh nghiệp xã hội phi lợi nhuận kết nối nguồn lực cộng đồng, trao tặng học liệu và kiến tạo cơ hội học tập công bằng cho trẻ em vùng cao Việt Nam.">
+  <title>Sứ Mệnh & Tầm Nhìn - Wisdom Vietnam Network</title>
+  <meta name="description" content="Sứ mệnh của Wisdom Vietnam Network & DR Solutions: kết nối nguồn lực xã hội để mang cơ hội học tập công bằng đến trẻ em vùng cao Việt Nam, hoạt động minh bạch và phi lợi nhuận.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -13,6 +13,7 @@
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
       --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
       --text-dark: #0f172a;
@@ -26,10 +27,11 @@
     html, body {
       width: 100%; overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.8;
     }
     body { padding-top: 72px; }
 
+    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -50,40 +52,10 @@
       font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
 
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
-
-    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — học theo cấu trúc
-       charity: water, giúp nổi bật nhiều lối vào hành động và tư cách minh bạch
-       phi lợi nhuận ngay từ thanh điều hướng, thay vì chỉ liệt kê phẳng. */
-    .nav-dropdown { position: relative; display: inline-block; }
-    .nav-dropdown > .nav-dropdown-trigger {
-      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
-      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
-      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
-    }
-    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
-    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
-    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
-    .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
-      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-      padding: 0.5rem; z-index: 100; margin-top: 0;
-    }
-    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
-    .nav-dropdown-menu a {
-      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
-      color: var(--text-dark); font-weight: 500;
-    }
-    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
-    @media (max-width: 960px) {
-      .nav-dropdown { display: block; width: 100%; }
-      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
-      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
-    }
 
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
@@ -92,6 +64,7 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
+    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp */
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
@@ -109,51 +82,14 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
+    /* Hero Banner Sang Trọng */
     .hero-wrapper {
-      position: relative; width: 100%; padding: 5rem 1.5rem 5.5rem; color: var(--white); overflow: hidden;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite;
+      width: 100%; background: var(--blue-grad-hero); padding: 5rem 1.5rem 6rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
-    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-    .hero-grid {
-      max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3.5rem; align-items: center; position: relative; z-index: 2;
+    .hero-wrapper::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;
     }
-    .hero-badge {
-      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.5px; margin-bottom: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
-    }
-    .hero-title {
-      font-size: 3.2rem; font-weight: 900; line-height: 1.15; letter-spacing: -1px; margin-bottom: 1.5rem;
-      color: #ffffff;
-      background: linear-gradient(100deg, #ffffff 42%, #f0f9ff 48%, #ffffff 54%, #ffffff 100%);
-      background-size: 220% 100%;
-      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-      animation: heroTitleShine 8s ease-in-out infinite;
-    }
-    /* Vệt sáng glint nhẹ nhàng lướt qua chữ, cùng tinh thần với hiệu ứng nút Quyên Góp: chữ luôn trắng, chỉ có ánh sáng thoáng qua chứ không đổi màu */
-    @keyframes heroTitleShine {
-      0%   { background-position: 150% 0; }
-      14%  { background-position: -50% 0; }
-      100% { background-position: -50% 0; }
-    }
-    .hero-desc { font-size: 1.15rem; color: #e0f2fe; line-height: 1.7; margin-bottom: 2.2rem; max-width: 600px; }
-    /* 3 viên nhộng "sứ mệnh" — nhấn mạnh 3 giá trị cốt lõi bằng hình viên thuốc bo tròn,
-       tinh thần kính-mờ (glass) đồng bộ với .hero-badge phía trên tiêu đề. */
-    .hero-mission-pills { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 2.2rem; }
-    .hero-mission-pill {
-      display: inline-flex; align-items: center; gap: 9px; background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      color: #f0f9ff; padding: 0.6rem 1.2rem; border-radius: 999px; font-size: 0.88rem; font-weight: 700;
-      letter-spacing: 0.1px; text-decoration: none; cursor: pointer; white-space: nowrap;
-      transition: background 0.2s, transform 0.2s, border-color 0.2s;
-    }
-    .hero-mission-pill:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.35); transform: translateY(-2px); }
-    .hero-mission-pill i { color: #7dd3fc; font-size: 0.95rem; }
-    @media (max-width: 480px) { .hero-mission-pill { font-size: 0.82rem; padding: 0.55rem 1rem; } }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với trang Tra Cứu Sao Kê,
-       tượng trưng cho lòng tin & minh bạch, lượn nhẹ theo đường cong tự nhiên */
+    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
     .hero-dove {
       position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
       opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
@@ -168,240 +104,70 @@
       75%  { transform: translate(10px, -14px) rotate(3deg); }
       100% { transform: translate(0, 0) rotate(-4deg); }
     }
-    @media (max-width: 480px) {
-      .brand-title { font-size: 1.02rem; }
-      .brand-subtitle { font-size: 0.6rem; }
-    }
     @media (max-width: 640px) {
       .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
     }
-    .hero-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2.2rem; }
-    .btn-light {
-      background: #ffffff; color: #0369a1; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 700;
-      font-size: 0.95rem; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.15); transition: all 0.2s;
+    .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
     }
-    .btn-light:hover { background: #f0f9ff; color: #075985; transform: translateY(-1px); }
-    .hero-link { color: #ffffff; font-weight: 600; font-size: 0.95rem; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; opacity: 0.9; }
+    .hero-title { font-size: 3rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
+    .hero-desc { font-size: 1.15rem; color: #e0f2fe; max-width: 750px; margin: 0 auto; line-height: 1.7; }
 
-    .hero-media-wrapper { position: relative; }
-    .hero-media-card {
-      background: rgba(255, 255, 255, 0.25); padding: 12px; border-radius: 30px;
-      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.25); border: 1px solid rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(8px); transition: transform 0.3s;
+    /* Quote Banner Nghệ Thuật */
+    .mission-quote-box {
+      max-width: 950px; margin: -3rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10;
     }
-    .hero-media-wrapper:hover .hero-media-card { transform: scale(1.02); }
-    .hero-main-img { width: 100%; height: 440px; object-fit: cover; border-radius: 22px; display: block; }
+    .quote-card {
+      background: #ffffff; border-radius: 24px; padding: 3rem 2.5rem; text-align: center;
+      border: 1px solid #bae6fd; box-shadow: 0 25px 50px rgba(2, 132, 199, 0.12); position: relative;
+    }
+    .quote-card::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--blue-grad-btn); border-radius: 2px;
+    }
+    .quote-card i { font-size: 2.2rem; color: #0284c7; opacity: 0.3; margin-bottom: 1rem; display: block; }
+    .quote-card p { font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.75; font-style: italic; }
+    .quote-card span { display: block; margin-top: 1.2rem; font-size: 0.9rem; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 1px; }
 
-    .floating-badge {
-      position: absolute; bottom: -20px; left: -20px; background: #ffffff; color: #0f172a;
-      padding: 1rem 1.4rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0; z-index: 5;
-    }
-    .badge-icon { font-size: 1.8rem; }
-    .badge-text { transition: opacity 0.25s ease; }
-    .badge-text.badge-fade { opacity: 0; }
-    .badge-text strong { display: block; font-size: 1.1rem; color: #0284c7; line-height: 1.2; }
-    .badge-text span { font-size: 0.8rem; color: #64748b; }
+    /* Main Container & Story Sections Sang Trọng */
+    .container { max-width: 1000px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
 
-    .metrics-strip { background: #ffffff; border-bottom: 1px solid var(--border); padding: 2.5rem 1.5rem; }
-    .metrics-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 2rem; text-align: center; }
-    .metric-item { position: relative; }
-    .metric-item::before {
-      content: ''; position: absolute; left: -1rem; top: 8%; bottom: 8%; width: 1px; background: var(--border);
+    .mission-story-block {
+      background: #ffffff; border-radius: 20px; padding: 3.2rem; border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); margin-bottom: 2.5rem; transition: transform 0.3s, box-shadow 0.3s;
     }
-    .metric-item:first-child::before { display: none; }
-    @media (max-width: 640px) { .metric-item::before { display: none; } }
-    .metric-number { font-size: 2.4rem; font-weight: 900; color: #0284c7; line-height: 1.1; margin-bottom: 0.3rem; }
-    .metric-label { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
+    .mission-story-block:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.08); border-color: #bae6fd; }
+    
+    .mission-story-block h2 {
+      font-size: 1.65rem; font-weight: 800; color: #0369a1; margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .mission-story-block h2 i {
+      width: 42px; height: 42px; background: #e0f2fe; color: #0284c7; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+    }
+    .mission-story-block p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.1rem; }
+    .mission-story-block p:last-child { margin-bottom: 0; }
 
-    .section-wrap { max-width: 1240px; margin: 0 auto; padding: 5rem 1.5rem; }
-    .section-header { text-align: center; margin-bottom: 3.5rem; }
-    .section-header h2 { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; letter-spacing: -0.5px; }
-    .section-header p { color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+    /* Modal Quyên góp */
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
 
-    /* ==== Khối "Hoạt Động Sắp Tới" trên trang chủ ====
-       Hiển thị 3 sự kiện sắp tới kèm đếm ngược, đồng bộ với khối "Sự Kiện & Kế Hoạch
-       Gây Quỹ" ở trang Hoạt Động. */
-    .upcoming-home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.8rem; }
-    .upcoming-home-card {
-      background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); transition: transform 0.25s, box-shadow 0.25s;
-      display: flex; flex-direction: column;
-    }
-    .upcoming-home-card:hover { transform: translateY(-6px); box-shadow: 0 16px 30px rgba(2, 132, 199, 0.12); }
-    .upcoming-home-top {
-      height: 130px; display: flex; align-items: flex-end; justify-content: flex-start; color: #fff; font-size: 1.9rem;
-      position: relative; overflow: hidden;
-    }
-    .upcoming-home-top img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-    .upcoming-home-top::before {
-      content: ''; position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(180deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.55) 100%);
-    }
-    .upcoming-home-icon-badge {
-      position: relative; z-index: 2; margin: 0.75rem;
-      width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; border: 1px solid rgba(255,255,255,0.35);
-    }
-    .upcoming-home-body { padding: 1.6rem; flex-grow: 1; display: flex; flex-direction: column; }
-    .upcoming-home-meta { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
-    .upcoming-home-tag { padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
-    .upcoming-home-countdown { font-size: 0.8rem; font-weight: 700; color: #0284c7; display: inline-flex; align-items: center; gap: 5px; }
-    .upcoming-home-body h3 { font-size: 1.12rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 800; line-height: 1.35; }
-    .upcoming-home-body p { font-size: 0.92rem; color: #475569; line-height: 1.6; flex-grow: 1; margin-bottom: 1.1rem; }
-    .upcoming-home-link { font-size: 0.9rem; font-weight: 700; color: #0284c7; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
-    .upcoming-home-link i { transition: transform 0.2s; }
-    .upcoming-home-card:hover .upcoming-home-link i { transform: translateX(4px); }
-
-    /* ==== Khối "Bài Viết Mới Nhất" — bố cục 2 cột đối xứng (ảnh | nội dung),
-       tiêu đề căn giữa, đoạn văn căn đều 2 bên cho cảm giác chuyên nghiệp. ==== */
-    .latest-article-split {
-      display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
-      background: #ffffff; border: 1px solid var(--border); border-radius: 22px; overflow: hidden;
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
-    }
-    @media (max-width: 800px) { .latest-article-split { grid-template-columns: 1fr; } }
-    .latest-article-media {
-      position: relative; min-height: 320px; background: #e2e8f0; display: block; text-decoration: none; overflow: hidden;
-    }
-    .latest-article-media img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 320px; transition: transform 0.3s; }
-    .latest-article-media:hover img { transform: scale(1.04); }
-    .latest-article-date-badge {
-      position: absolute; top: 16px; left: 16px; background: rgba(15, 23, 42, 0.75); color: #fff;
-      padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600;
-    }
-    .latest-article-content {
-      padding: 2.8rem 2.6rem; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; text-align: center;
-    }
-    .latest-article-tag {
-      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.35rem 0.9rem;
-      border-radius: 999px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 1.1rem;
-    }
-    .latest-article-content h3 { font-size: 1.55rem; color: #0369a1; font-weight: 800; line-height: 1.35; margin-bottom: 1.1rem; }
-    .latest-article-content h3 a { color: inherit; text-decoration: none; }
-    .latest-article-content h3 a:hover { text-decoration: underline; }
-    .latest-article-content p {
-      font-size: 1rem; color: #475569; line-height: 1.8; text-align: left; margin-bottom: 1.7rem; max-width: 440px;
-    }
-    .latest-article-cta {
-      background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.8rem; border-radius: 8px; font-weight: 700;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
-      transition: all 0.2s;
-    }
-    .latest-article-cta:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
-    .latest-article-status { grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: #64748b; }
-    .latest-article-status i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
-
-    /* ==== "Thư Viện Hình Ảnh" — cột riêng trong footer, cạnh "Kết Nối Với
-       Chúng Tôi". Bấm vào ảnh vẫn mở popup phóng to như cũ. ==== */
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
-    @media (max-width: 960px) {
-      /* Trên di động, footer-grid xếp thành 1 cột full-width — cho khối ảnh
-         giãn hết chiều rộng màn hình thay vì bị bó hẹp theo giới hạn desktop. */
-      .gallery-grid { max-width: 100%; gap: 0.7rem; }
-    }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
-
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
-    }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
-    }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
-
-    /* ==== Khối "Kết Nối & Đồng Hành" — bản tin email + mạng xã hội, đặt trước footer
-       để đa dạng hoá lời kêu gọi hành động thay vì chỉ có nút Quyên Góp. ==== */
-    .connect-band { background: #eff6ff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4rem 1.5rem; }
-    .connect-band-inner { max-width: 560px; margin: 0 auto; text-align: center; }
-
-    .connect-band-inner h3 { font-size: 1.25rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem; }
-    .connect-band-inner p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1.3rem; line-height: 1.6; }
-
-    .newsletter-form { display: flex; gap: 0.7rem; flex-wrap: wrap; justify-content: center; }
-    .newsletter-form input[type="email"] {
-      flex: 1; min-width: 200px; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border);
-      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #fff;
-    }
-    .newsletter-form input[type="email"]:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); }
-    .newsletter-form button {
-      background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700;
-      border: none; cursor: pointer; font-family: inherit; font-size: 0.92rem; white-space: nowrap; transition: all 0.2s;
-    }
-    .newsletter-form button:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
-    .newsletter-form button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-    .newsletter-alert {
-      display: none; margin-top: 0.9rem; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.86rem; align-items: center; gap: 8px;
-    }
-    .newsletter-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-    .newsletter-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-
-    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
-    .social-link {
-      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
-      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
-      transition: all 0.2s; text-decoration: none;
-    }
-    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
-
-    .legal-card {
-      background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7; padding: 2rem; margin: 1rem 0; border-radius: 12px;
-    }
-
-
+    /* Footer chuẩn 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-
-    /* Dòng thông điệp minh bạch cuối footer — học theo charity: water, khẳng định
-       lại tư cách phi lợi nhuận và cam kết 100% tái đầu tư ngay trước dòng bản quyền. */
-    .footer-transparency-strip {
-      max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center;
-    }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim {
-      font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px;
-    }
-    .footer-transparency-strip .transparency-sep { color: #475569; margin: 0 0.6rem; }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
@@ -412,14 +178,17 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .hero-title { font-size: 2.4rem; }
-      .floating-badge { left: 10px; bottom: -15px; }
+      .hero-title { font-size: 2.3rem; }
+      .quote-card { padding: 2rem 1.5rem; }
+      .quote-card p { font-size: 1.05rem; }
+      .mission-story-block { padding: 2rem 1.5rem; }
     }
   </style>
 </head>
 <body>
-<header>
+
+  <!-- Menu Cố Định Đồng Bộ -->
+  <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
@@ -467,180 +236,87 @@
     </div>
   </header>
 
+  <!-- Hero Banner Sang Trọng -->
   <section class="hero-wrapper">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-grid">
-
-      <div>
-        <div class="hero-badge">SỨ MỆNH VÌ CỘNG ĐỒNG</div>
-        <h1 class="hero-title">
-          Một cơ hội học tập<br>
-          hôm nay có thể trở thành<br>
-          một cánh cửa mới<br>
-          cho ngày mai.
-        </h1>
-        <p class="hero-desc">
-          Wisdom Vietnam Network (WVN) là nền tảng kết nối nguồn lực cộng đồng,
-          hướng tới việc mở rộng cơ hội học tập, tiếp cận tri thức và phát triển
-          năng lực cho những nhóm còn hạn chế về điều kiện giáo dục.
-        </p>
-        <div class="hero-mission-pills">
-          <a class="hero-mission-pill" href="#su-menh"><i class="fa-solid fa-bullseye"></i> Sứ Mệnh</a>
-          <a class="hero-mission-pill" href="#hoat-dong"><i class="fa-solid fa-hands-holding-circle"></i> Hoạt Động</a>
-          <a class="hero-mission-pill" href="#gia-tri"><i class="fa-solid fa-heart"></i> Giá Trị</a>
-        </div>
-        <div class="hero-actions">
-          <button class="btn-light" onclick="window.location.href='hoat-dong.html'">Xem Hoạt Động</button>
-          <a href="#su-menh" class="hero-link">Tìm hiểu sứ mệnh của chúng tôi</a>
-        </div>
-      </div>
-
-      <div class="hero-media-wrapper">
-        <div class="hero-media-card">
-          <img src="banner-drs.jpg" alt="Mạng Lưới Tri Thức Việt Nam đồng hành vì cơ hội học tập" class="hero-main-img">
-        </div>
-        <div class="floating-badge">
-          <div class="badge-icon">🌱</div>
-          <div class="badge-text">
-            <strong>Tri Thức Cho Cộng Đồng</strong>
-            <span>Kết nối nguồn lực vì cơ hội học tập</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <div class="hero-badge">ĐỊNH HƯỚNG CHIẾN LƯỢC CỘNG ĐỒNG</div>
+    <h1 class="hero-title">Sứ Mệnh & Tầm Nhìn Chiến Lược</h1>
+    <p class="hero-desc">Đồng hành bền bỉ cùng giáo dục vùng cao, mang tri thức mở và cơ hội phát triển công bằng đến với từng em nhỏ trên mọi miền đất nước.</p>
   </section>
 
-  <main>
-    <section class="section-wrap" id="su-menh">
-      <div class="section-header">
-        <h2>Sứ Mệnh Của Chúng Tôi</h2>
-        <p>Kết nối nguồn lực xã hội để mở rộng cơ hội tiếp cận tri thức và học tập có ý nghĩa.</p>
-      </div>
+  <!-- Quote Banner Nghệ Thuật -->
+  <div class="mission-quote-box">
+    <div class="quote-card">
+      <i class="fa-solid fa-quote-left"></i>
+      <p>“Vì cơ hội học tập không nên phụ thuộc vào hoàn cảnh. Hãy cùng chúng tôi mở thêm một cơ hội.”</p>
+      <span>— Wisdom Vietnam Network (DR Solutions)</span>
+    </div>
+  </div>
 
-      <div class="legal-card">
-        <h3 style="margin-bottom:0.75rem; color:#0369a1; font-size: 1.3rem;">Một cơ hội học tập hôm nay có thể trở thành một cánh cửa mới cho ngày mai.</h3>
-        <p style="font-size:0.95rem; margin-bottom:0.8rem;">
-          Wisdom Vietnam Network (WVN) được định hướng như một nền tảng kết nối giữa
-          những người có tri thức, nguồn lực, thời gian và mong muốn đóng góp với
-          những cộng đồng đang cần thêm cơ hội học tập và phát triển.
-        </p>
-        <p style="font-size:0.95rem; margin-bottom:0.8rem;">
-          Chúng tôi hướng tới việc biến sự đồng hành thành những chương trình và hoạt động
-          cụ thể, có khả năng tiếp cận đúng đối tượng, sử dụng nguồn lực có trách nhiệm
-          và tạo ra giá trị giáo dục lâu dài.
-        </p>
-        <p style="font-size:0.95rem;">
-          Trọng tâm không chỉ là trao tặng một nguồn lực tại một thời điểm, mà còn là
-          góp phần tạo môi trường để người học có thể tiếp cận học liệu, kỹ năng,
-          phương pháp học tập và những cơ hội phát triển phù hợp.
-        </p>
-      </div>
-    </section>
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Phần 1 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-heart-circle-check"></i> VÌ CƠ HỘI HỌC TẬP</h2>
+      <p style="font-size: 1.18rem; font-weight: 700; color: var(--text-dark);">Mỗi đứa trẻ đều xứng đáng có cơ hội được học</p>
+      <p>Ở đâu đó, vẫn có những em nhỏ muốn được học tập nhưng đang thiếu những điều kiện rất cơ bản: sách vở, thiết bị, môi trường học tập và những nguồn lực cần thiết để tiếp tục đến trường.</p>
+      <p>Chúng tôi tin rằng hoàn cảnh nơi một đứa trẻ sinh ra không nên quyết định cơ hội học tập của em.</p>
+      <p>Vì vậy, chúng tôi hoạt động với một sứ mệnh giản dị: <strong>kết nối nguồn lực xã hội với những nhu cầu giáo dục thực tế</strong>, đặc biệt tại các cộng đồng còn nhiều khó khăn, để trẻ em và người học có thêm điều kiện tiếp cận tri thức.</p>
+    </div>
 
-    <section style="background: #ffffff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-      <div class="section-wrap" id="hoat-dong">
-        <div class="section-header">
-          <h2>WVN Hoạt Động Như Thế Nào?</h2>
-          <p>Một mô hình kết nối nguồn lực theo hướng thiết thực, minh bạch và có khả năng tạo tác động.</p>
-        </div>
+    <!-- Phần 2 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-seedling"></i> Trao đúng điều cần thiết</h2>
+      <p>Một cuốn sách có thể mở thêm một cánh cửa đến tri thức. Một chiếc máy tính có thể đưa một học sinh đến gần hơn với thế giới rộng lớn. Một thiết bị cho lớp học có thể hỗ trợ nhiều thế hệ học sinh.</p>
+      <p>Vì thế, chúng tôi không đặt trọng tâm vào việc trao tặng thật nhiều, mà vào việc trao đúng nhu cầu và tạo ra giá trị thực tế.</p>
+      <p>Các hoạt động được triển khai dựa trên việc tìm hiểu nhu cầu, phối hợp với nhà trường và cộng đồng địa phương, đồng thời hướng tới những giá trị có thể duy trì lâu dài.</p>
+    </div>
 
-        <div class="upcoming-home-grid">
-          <div class="upcoming-home-card">
-            <div class="upcoming-home-body">
-              <div class="upcoming-home-meta">
-                <span class="upcoming-home-tag" style="background:#dbeafe; color:#1e40af;">01</span>
-              </div>
-              <h3>Kết nối nguồn lực</h3>
-              <p>Kết nối chuyên gia, tình nguyện viên, doanh nghiệp, tổ chức và cá nhân có nguồn lực phù hợp với các nhu cầu giáo dục cộng đồng.</p>
-            </div>
-          </div>
+    <!-- Phần 3 -->
+    <div class="mission-story-block">
+      <h2><i class="fa-solid fa-shield-halved"></i> Minh bạch để giữ gìn niềm tin</h2>
+      <p>Mỗi sự đóng góp đều bắt đầu từ niềm tin.</p>
+      <p>Chúng tôi có trách nhiệm sử dụng nguồn lực đúng mục đích, ghi nhận đầy đủ quá trình tiếp nhận và hỗ trợ, đồng thời công khai kết quả để cộng đồng có thể biết nguồn lực của mình đã tạo ra điều gì.</p>
+      <p><strong>Minh bạch không chỉ là trách nhiệm. Đó là cách chúng tôi trân trọng sự đồng hành của mỗi người.</strong></p>
+      <p style="margin-top: 1.3rem;">
+        <a href="sao-ke.html" style="display: inline-flex; align-items: center; gap: 8px; color: #0284c7; font-weight: 700; text-decoration: none;">
+          <i class="fa-solid fa-magnifying-glass-dollar"></i> Tra cứu sao kê giao dịch công khai <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </p>
+    </div>
 
-          <div class="upcoming-home-card">
-            <div class="upcoming-home-body">
-              <div class="upcoming-home-meta">
-                <span class="upcoming-home-tag" style="background:#e0f2fe; color:#0369a1;">02</span>
-              </div>
-              <h3>Triển khai chương trình</h3>
-              <p>Chuyển nguồn lực thành các hoạt động cụ thể như học liệu, hoạt động học tập, chia sẻ kiến thức, hỗ trợ kỹ năng và các chương trình cộng đồng.</p>
-            </div>
-          </div>
+    <!-- Phần 4 -->
+    <div class="mission-story-block" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-color: #bae6fd;">
+      <h2 style="color: #0284c7;"><i class="fa-solid fa-hand-holding-heart"></i> Cùng nhau mở thêm những cơ hội</h2>
+      <p>Chúng tôi tin rằng một tổ chức không thể tạo ra thay đổi một mình:</p>
+      <ul style="list-style: none; margin: 1.2rem 0; padding-left: 0; color: var(--text-muted); font-size: 1.08rem;">
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một người góp tài chính.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một người góp sách.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một người góp thiết bị.</li>
+        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một người góp thời gian, kiến thức hoặc một sự kết nối.</li>
+      </ul>
+      <p>Mỗi đóng góp đều có thể trở thành một phần của một cơ hội lớn hơn. Bởi điều chúng tôi muốn trao đi không chỉ là một món quà hôm nay, mà là thêm một cơ hội để một đứa trẻ được học, được phát triển và tự lựa chọn tương lai của mình.</p>
+      <p style="font-weight: 800; color: #0f172a; margin-top: 1.5rem; text-align: center; font-size: 1.15rem; background: #ffffff; padding: 1.2rem; border-radius: 12px; border: 1px solid #bae6fd;">Vì cơ hội học tập không nên phụ thuộc vào hoàn cảnh.<br><span style="color: #0284c7;">Hãy cùng chúng tôi mở thêm một cơ hội.</span></p>
+    </div>
 
-          <div class="upcoming-home-card">
-            <div class="upcoming-home-body">
-              <div class="upcoming-home-meta">
-                <span class="upcoming-home-tag" style="background:#ccfbf1; color:#0f766e;">03</span>
-              </div>
-              <h3>Theo dõi và công khai</h3>
-              <p>Ghi nhận hoạt động, cập nhật thông tin và công khai các nội dung cần thiết để cộng đồng có thể theo dõi quá trình triển khai.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-wrap" id="gia-tri">
-      <div class="section-header">
-        <h2>Giá Trị Theo Đuổi</h2>
-        <p>Ba nguyên tắc định hướng cách WVN xây dựng và triển khai các hoạt động.</p>
-      </div>
-
-      <div class="upcoming-home-grid">
-        <div class="upcoming-home-card">
-          <div class="upcoming-home-body">
-            <h3>Công Bằng</h3>
-            <p>Hướng tới việc mở rộng cơ hội tiếp cận học tập và tri thức cho những người còn gặp hạn chế về điều kiện.</p>
-          </div>
-        </div>
-        <div class="upcoming-home-card">
-          <div class="upcoming-home-body">
-            <h3>Minh Bạch</h3>
-            <p>Đề cao trách nhiệm giải trình, thông tin rõ ràng và khả năng kiểm chứng trong quá trình vận hành.</p>
-          </div>
-        </div>
-        <div class="upcoming-home-card">
-          <div class="upcoming-home-body">
-            <h3>Hiệu Quả</h3>
-            <p>Ưu tiên những hoạt động có mục tiêu rõ ràng, sử dụng nguồn lực hợp lý và hướng tới giá trị thực tế cho người hưởng lợi.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-wrap" id="phap-ly">
-      <div class="legal-card">
-        <h3 style="margin-bottom:0.75rem; color:#0369a1; font-size: 1.3rem;">Mối Quan Hệ Với DR Solutions</h3>
-        <p style="font-size:0.95rem; margin-bottom:0.7rem;">
-          Wisdom Vietnam Network (WVN) là nền tảng kết nối thuộc DR Solutions,
-          được xây dựng để tập trung vào các hoạt động hướng tới cộng đồng và giáo dục.
-        </p>
-        <p style="font-size:0.95rem; margin-bottom:0.7rem;">
-          DR Solutions là pháp nhân vận hành; WVN là tên nền tảng/mạng lưới được sử dụng
-          để kết nối, tổ chức và truyền thông các hoạt động theo định hướng đã công bố.
-        </p>
-        <p style="font-size:0.9rem; color: var(--text-muted);">
-          Mã số doanh nghiệp của DR Solutions: <strong>0111291749</strong>.
-        </p>
-      </div>
-    </section>
   </main>
 
-  <section class="connect-band">
-    <div class="connect-band-inner">
-      <h3>Đồng Hành Cùng WVN</h3>
-      <p>
-        Bạn có thể tham gia bằng tri thức, thời gian, chuyên môn, nguồn lực
-        hoặc kết nối cộng đồng — mỗi hình thức đồng hành đều có thể góp phần
-        mở rộng cơ hội học tập.
-      </p>
-      <div class="hero-actions" style="justify-content:center; margin-bottom:0;">
-        <button class="btn-light" onclick="window.location.href='lien-he.html'">Kết Nối Với Chúng Tôi</button>
-        <a href="hoat-dong.html" class="hero-link" style="color:#0369a1;">Xem các hoạt động</a>
-      </div>
+  <!-- Modal Quyên góp -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <p style="font-size:0.88rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
+      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
+      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
+      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
     </div>
-  </section>
+  </div>
 
-<footer>
+  <!-- Footer chuẩn 3 cột đồng bộ -->
+  <footer>
     <div class="footer-grid">
       <div>
         <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
@@ -680,7 +356,14 @@
       &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
     </div>
   </footer>
-<script>
+
+  <script>
+    function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    window.onclick = function(event) {
+      let modal = document.getElementById('donateModal');
+      if (event.target == modal) { modal.style.display = 'none'; }
+    }
 
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
@@ -692,466 +375,6 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng trên
-    // mọi kích thước màn hình (giống charity: water), thay vì mở bằng hover.
-    function toggleNavDropdown(btn) {
-      const dropdown = btn.closest('.nav-dropdown');
-      const wasOpen = dropdown.classList.contains('open');
-      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      if (!wasOpen) dropdown.classList.add('open');
-    }
-
-    // Bấm ra ngoài bất kỳ dropdown nào đang mở thì tự đóng lại.
-    document.addEventListener('click', function (e) {
-      if (!e.target.closest('.nav-dropdown')) {
-        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      }
-    });
-
-    function animateCounters() {
-      const counters = document.querySelectorAll('.metric-number');
-      const speed = 35; 
-
-      counters.forEach(counter => {
-        const target = +counter.getAttribute('data-target');
-        const suffix = counter.getAttribute('data-suffix') || '';
-        let count = 0;
-
-        if (target === 0) {
-          counter.innerText = '0' + suffix;
-          return;
-        }
-
-        const updateCount = () => {
-          if (count < target) {
-            let increment = Math.ceil(target / speed);
-            count += increment;
-            if (count > target) count = target;
-            
-            let displayVal = (count < target && target > 30) ? Math.floor(Math.random() * (target * 1.5)) : count;
-            if (displayVal > target && count === target) displayVal = target;
-
-            counter.innerText = displayVal + suffix;
-            setTimeout(updateCount, 35);
-          } else {
-            counter.innerText = target + suffix;
-          }
-        };
-
-        updateCount();
-      });
-    }
-
-    let animated = false;
-    window.addEventListener('scroll', function() {
-      const strip = document.querySelector('.metrics-strip');
-      if (!strip) return;
-      const position = strip.getBoundingClientRect().top;
-      const screenPosition = window.innerHeight / 1.15;
-
-      if (position < screenPosition && !animated) {
-        animateCounters();
-        animated = true;
-      }
-    });
-
-    window.addEventListener('load', function() {
-      const strip = document.querySelector('.metrics-strip');
-      if (strip && strip.getBoundingClientRect().top < window.innerHeight) {
-        animateCounters();
-        animated = true;
-      }
-    });
-
-    const GITHUB_OWNER = "hvhwan-debug";
-    const GITHUB_REPO = "DRS";
-    const GITHUB_BRANCH = "main";
-    const FALLBACK_POSTS_COUNT = 19;
-
-    const heroBadgeMessages = [
-      { icon: '🌱', title: '100% Phi Lợi Nhuận', sub: 'Tái đầu tư vì giáo dục cộng đồng' },
-      { icon: '🔍', title: 'Minh Bạch 24/7', sub: 'Công khai mọi giao dịch sao kê' }
-    ];
-
-    function initRotatingHeroBadge() {
-      const badgeIcon = document.querySelector('.floating-badge .badge-icon');
-      const badgeText = document.querySelector('.floating-badge .badge-text');
-      const badgeStrong = badgeText.querySelector('strong');
-      const badgeSpan = badgeText.querySelector('span');
-      let idx = 0;
-
-      setInterval(() => {
-        idx = (idx + 1) % heroBadgeMessages.length;
-        badgeText.classList.add('badge-fade');
-        setTimeout(() => {
-          const msg = heroBadgeMessages[idx];
-          badgeIcon.textContent = msg.icon;
-          badgeStrong.textContent = msg.title;
-          badgeSpan.textContent = msg.sub;
-          badgeText.classList.remove('badge-fade');
-        }, 250);
-      }, 4500);
-    }
-
-    async function addRealPostCountToBadge() {
-      let count = FALLBACK_POSTS_COUNT;
-      try {
-        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/content/posts?ref=${GITHUB_BRANCH}`;
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error("GitHub API lỗi");
-        const files = await res.json();
-        const mdCount = files.filter(f => f.type === "file" && f.name.toLowerCase().endsWith(".md")).length;
-        if (mdCount > 0) count = mdCount;
-      } catch (e) {
-        console.warn("Không lấy được số bài viết thật, dùng số dự phòng.", e);
-      }
-      heroBadgeMessages.push({ icon: '📚', title: `${count}+ Bài Hoạt Động`, sub: 'Cập nhật liên tục từ thực tế' });
-    }
-
-    initRotatingHeroBadge();
-    addRealPostCountToBadge();
-
-    // ==============================================================
-    // Khối "Hoạt Động Sắp Tới" — 3 sự kiện tĩnh, đồng bộ với khối
-    // "Sự Kiện & Kế Hoạch Gây Quỹ" ở trang Hoạt Động (cùng ngày, cùng nội dung,
-    // cùng cơ chế đếm ngược, cùng ảnh minh hoạ). Khi cập nhật/lên lịch sự kiện mới
-    // ở trang Hoạt Động, cập nhật lại danh sách HOME_UPCOMING_EVENTS bên dưới cho khớp.
-    // ==============================================================
-
-    const HOME_UPCOMING_EVENTS = [
-      {
-        date: "2026-10-20",
-        anchor: "su-kien-hoi-thao-hoc-tap-so",
-        articleSlug: "trien-khai-phan-mem-hoc-tap-khi-cong-nghe-tro-thanh-mot-phan-cua-lop-hoc",
-        icon: "fa-laptop-code",
-        image: "images/hoi-thao-hoc-tap-so.jpg",
-        topBg: "linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)",
-        tag: "Đang nhận đăng ký",
-        tagBg: "#dbeafe", tagColor: "#1e40af",
-        title: "Hội thảo phương pháp học tập số",
-        desc: "Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên."
-      },
-      {
-        date: "2026-11-01",
-        anchor: "su-kien-ao-am-vung-cao",
-        articleSlug: "chien-dich-ao-am-vung-cao-keu-goi",
-        icon: "fa-mitten",
-        image: "images/ao-am-vung-cao.jpg",
-        topBg: "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)",
-        tag: "Sắp diễn ra",
-        tagBg: "#e0f2fe", tagColor: "#0369a1",
-        title: "Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)",
-        desc: "Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang."
-      },
-      {
-        date: "2026-12-01",
-        anchor: "su-kien-hoc-bong-uom-mam",
-        articleSlug: "khoi-dong-hoc-bong-uom-mam",
-        icon: "fa-award",
-        image: "images/le-trao-hoc-bong-uom-mam.jpg",
-        topBg: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
-        tag: "Kế hoạch quý IV",
-        tagBg: "#ccfbf1", tagColor: "#0f766e",
-        title: "Phát động Học Bổng Ươm Mầm",
-        desc: "Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập."
-      }
-    ];
-
-    function renderUpcomingHomeCard(ev) {
-      // Ưu tiên dẫn tới bài viết chi tiết tương ứng trong Tin Tức nếu có gán
-      // articleSlug; nếu chưa có bài viết nào khớp, quay về trang Hoạt Động.
-      const eventUrl = ev.articleSlug
-        ? `chi-tiet.html?slug=${encodeURIComponent(ev.articleSlug)}`
-        : `hoat-dong.html#${ev.anchor}`;
-      return `
-        <div class="upcoming-home-card">
-          <div class="upcoming-home-top" style="background:${ev.topBg};">
-            <img src="${ev.image}" alt="Ảnh minh hoạ ${ev.title}" loading="lazy">
-            <span class="upcoming-home-icon-badge"><i class="fa-solid ${ev.icon}"></i></span>
-          </div>
-          <div class="upcoming-home-body">
-            <div class="upcoming-home-meta">
-              <span class="upcoming-home-tag" style="background:${ev.tagBg}; color:${ev.tagColor};">${ev.tag}</span>
-              <span class="upcoming-home-countdown" data-home-event-date="${ev.date}">Đang tính...</span>
-            </div>
-            <h3><a href="${eventUrl}" style="color:inherit; text-decoration:none;">${ev.title}</a></h3>
-            <p>${ev.desc}</p>
-            <a class="upcoming-home-link" href="${eventUrl}">Xem chi tiết <i class="fa-solid fa-arrow-right"></i></a>
-          </div>
-        </div>`;
-    }
-
-    function updateHomeCountdowns() {
-      const now = new Date();
-      document.querySelectorAll(".upcoming-home-countdown[data-home-event-date]").forEach(chip => {
-        const val = chip.getAttribute("data-home-event-date");
-        const eventDate = new Date(val + "T00:00:00");
-        if (isNaN(eventDate.getTime())) { chip.textContent = ""; return; }
-        const diffMs = eventDate - now;
-        if (diffMs <= 0) {
-          const isToday = eventDate.toDateString() === now.toDateString();
-          chip.innerHTML = isToday ? `<i class="fa-solid fa-star"></i> Diễn ra hôm nay` : `<i class="fa-solid fa-check"></i> Đang diễn ra`;
-          return;
-        }
-
-        // Đếm ngược thật theo từng giây (ngày : giờ : phút : giây), cập nhật mỗi 1 giây
-        // để tạo cảm giác đồng hồ đang chạy sống động — đồng bộ với trang Hoạt Động.
-        let totalSeconds = Math.floor(diffMs / 1000);
-        const days = Math.floor(totalSeconds / 86400);
-        totalSeconds %= 86400;
-        const hours = Math.floor(totalSeconds / 3600);
-        totalSeconds %= 3600;
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-
-        const pad = n => String(n).padStart(2, "0");
-        const label = days > 0
-          ? `${days} ngày ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
-          : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-
-        chip.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> ${label}`;
-      });
-    }
-
-    function loadUpcomingHomeEvents() {
-      const grid = document.getElementById("upcomingHomeGrid");
-      const events = [...HOME_UPCOMING_EVENTS].sort((a, b) => new Date(a.date) - new Date(b.date));
-      grid.innerHTML = events.map(renderUpcomingHomeCard).join("");
-      updateHomeCountdowns();
-      setInterval(updateHomeCountdowns, 1000);
-    }
-
-    loadUpcomingHomeEvents();
-
-    // ==============================================================
-    // Khối "Bài Viết Mới Nhất" — lấy bài mới nhất thật từ
-    // content/posts-index.json (cùng nguồn dữ liệu với trang Tin Tức),
-    // ưu tiên bài gắn loai:"tin-tuc" đã diễn ra (không phải sự kiện sắp tới).
-    // ==============================================================
-
-    const LATEST_ARTICLE_FALLBACK_IMG = "images/uploads/2-onl-16997056815001293662280.jpg";
-
-    function parseDateForSortLatest(dateStr) {
-      if (!dateStr) return -Infinity;
-      // Ưu tiên định dạng có ngày cụ thể: dd/mm/yyyy hoặc dd-mm-yyyy — cho độ chính xác cao nhất.
-      const dmyMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-      if (dmyMatch) {
-        const [, d, m, y] = dmyMatch;
-        return ((parseInt(y, 10) * 12 + parseInt(m, 10)) * 31) + parseInt(d, 10);
-      }
-      // Định dạng "Tháng MM / YYYY" chỉ có tháng — không có ngày cụ thể, nên chỉ
-      // đủ độ chính xác đến cấp tháng (xem thêm ghi chú ở loadLatestArticle bên dưới).
-      const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
-      if (viMatch) return (parseInt(viMatch[2], 10) * 12 + parseInt(viMatch[1], 10)) * 31;
-      const d = new Date(dateStr);
-      return isNaN(d.getTime()) ? -Infinity : (d.getFullYear() * 12 + (d.getMonth() + 1)) * 31 + d.getDate();
-    }
-
-    function isUpcomingLatest(dateStr) {
-      const weight = parseDateForSortLatest(dateStr);
-      if (weight === -Infinity) return false;
-      const now = new Date();
-      return weight > (now.getFullYear() * 12 + (now.getMonth() + 1)) * 31 + now.getDate();
-    }
-
-    function formatDateLatest(dateStr) {
-      if (!dateStr) return "";
-      if (/th[aá]ng\s*\d{1,2}\s*\/\s*\d{4}/i.test(dateStr)) return dateStr;
-      const d = new Date(dateStr);
-      return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString("vi-VN");
-    }
-
-    function renderLatestArticle(article) {
-      const wrap = document.getElementById("latestArticleSplit");
-      if (!article) {
-        wrap.innerHTML = `
-          <div class="latest-article-status">
-            <i class="fa-solid fa-circle-info"></i>
-            Chưa có bài viết nào để hiển thị. <a href="tin-tuc.html" style="color:#0284c7; font-weight:700;">Xem trang Tin Tức →</a>
-          </div>`;
-        return;
-      }
-      const articleUrl = `chi-tiet.html?slug=${encodeURIComponent(article.slug)}`;
-      wrap.innerHTML = `
-        <a class="latest-article-media" href="${articleUrl}" aria-label="${article.title}">
-          <img src="${article.image}" alt="${article.title}" loading="lazy" onerror="this.onerror=null; this.src='${LATEST_ARTICLE_FALLBACK_IMG}';">
-          ${article.date ? `<span class="latest-article-date-badge">${formatDateLatest(article.date)}</span>` : ""}
-        </a>
-        <div class="latest-article-content">
-          <span class="latest-article-tag">Mới nhất</span>
-          <h3><a href="${articleUrl}">${article.title}</a></h3>
-          <p>${article.excerpt}</p>
-          <a class="latest-article-cta" href="${articleUrl}">Đọc chi tiết <i class="fa-solid fa-arrow-right"></i></a>
-        </div>`;
-    }
-
-    async function loadLatestArticle() {
-      try {
-        const res = await fetch("content/posts-index.json", { cache: "no-store" });
-        if (!res.ok) throw new Error("Chưa có posts-index.json");
-        const list = await res.json();
-        if (!Array.isArray(list)) throw new Error("posts-index.json sai định dạng");
-
-        const posts = list.map((p, idx) => ({
-          slug: p.slug,
-          title: p.title || p.slug,
-          date: p.date || "",
-          image: p.image || LATEST_ARTICLE_FALLBACK_IMG,
-          loai: (p.loai || "").trim().toLowerCase(),
-          excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết.",
-          _originalIndex: idx // vị trí gốc trong posts-index.json — dùng làm tiêu chí phụ
-        })).sort((a, b) => {
-          const dateDiff = parseDateForSortLatest(b.date) - parseDateForSortLatest(a.date);
-          if (dateDiff !== 0) return dateDiff;
-          // Ngày dạng "Tháng MM / YYYY" không có thông tin ngày cụ thể, nên khi 2 bài
-          // trùng tháng, ưu tiên bài nằm SAU trong posts-index.json (giả định file này
-          // được thêm bài mới vào cuối danh sách theo thứ tự thời gian thêm bài thật).
-          // Nếu hệ thống của bạn thêm bài mới vào ĐẦU danh sách, đổi (b - a) thành (a - b) bên dưới.
-          return b._originalIndex - a._originalIndex;
-        });
-
-        const taggedArticles = posts.filter(p => p.loai === "tin-tuc" && !isUpcomingLatest(p.date));
-        const articlePool = taggedArticles.length > 0 ? taggedArticles : posts.filter(p => !isUpcomingLatest(p.date));
-
-        renderLatestArticle(articlePool[0] || posts[0] || null);
-      } catch (err) {
-        console.error(err);
-        document.getElementById("latestArticleSplit").innerHTML = `
-          <div class="latest-article-status">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            Không thể tải bài viết lúc này. <a href="tin-tuc.html" style="color:#0284c7; font-weight:700;">Xem tại trang Tin Tức →</a>
-          </div>`;
-      }
-    }
-
-    loadLatestArticle();
-
-    // ==============================================================
-    // Khối "Thư Viện Hình Ảnh" — 6 ảnh cố định, hiển thị dạng lưới.
-    // Bấm vào một ảnh sẽ mở popup, thứ tự xem trong popup được xáo trộn
-    // ngẫu nhiên (Fisher–Yates) mỗi lần mở, bấm vào ảnh trong popup để
-    // phóng to / thu nhỏ (toggle class "zoomed").
-    // ==============================================================
-    const GALLERY_IMAGES = [
-      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
-      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
-      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
-      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
-      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
-      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
-    ];
-
-    let galleryShuffled = [];
-    let galleryCurrentIndex = 0;
-
-    function shuffleArray(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-
-    function renderGalleryGrid() {
-      const grid = document.getElementById("galleryGrid");
-      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
-        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
-          <img src="${img.src}" alt="${img.caption}" loading="lazy">
-        </div>
-      `).join("");
-    }
-
-    function openGalleryModal(startIndex) {
-      // Xáo trộn ngẫu nhiên thứ tự xem mỗi lần mở popup, nhưng luôn bắt đầu
-      // từ đúng ảnh vừa bấm để không gây khó chịu cho người dùng.
-      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
-      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
-      galleryCurrentIndex = 0;
-      renderGalleryModalImage();
-      document.getElementById("galleryModal").classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-
-    function renderGalleryModalImage() {
-      const img = galleryShuffled[galleryCurrentIndex];
-      const modalImg = document.getElementById("galleryModalImg");
-      modalImg.src = img.src;
-      modalImg.alt = img.caption;
-      modalImg.classList.remove("zoomed");
-      document.querySelector(".gallery-modal-caption").textContent = img.caption;
-    }
-
-    function showGalleryImage(direction) {
-      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
-      renderGalleryModalImage();
-    }
-
-    function closeGalleryModal() {
-      document.getElementById("galleryModal").classList.remove("active");
-      document.body.style.overflow = "";
-    }
-
-    document.getElementById("galleryModal").addEventListener("click", function (e) {
-      if (e.target === this) closeGalleryModal();
-    });
-    document.addEventListener("keydown", function (e) {
-      const modal = document.getElementById("galleryModal");
-      if (!modal.classList.contains("active")) return;
-      if (e.key === "Escape") closeGalleryModal();
-      if (e.key === "ArrowLeft") showGalleryImage(-1);
-      if (e.key === "ArrowRight") showGalleryImage(1);
-    });
-
-    renderGalleryGrid();
-
-    // ==============================================================
-    // Khối "Đăng Ký Nhận Bản Tin" — gửi bằng AJAX qua formsubmit.co
-    // (cùng dịch vụ đang dùng ở form Liên Hệ), hiện thông báo ngay
-    // trên trang thay vì chuyển hướng sang trang khác.
-    // ==============================================================
-    const newsletterForm = document.getElementById("newsletterForm");
-    const newsletterBtn = document.getElementById("newsletterBtn");
-    const newsletterAlert = document.getElementById("newsletterAlert");
-
-    newsletterForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const originalBtnHtml = newsletterBtn.innerHTML;
-      newsletterBtn.disabled = true;
-      newsletterBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-      newsletterAlert.className = "newsletter-alert";
-      newsletterAlert.style.display = "none";
-
-      const formData = new FormData(newsletterForm);
-      const recipientEmail = "hotro@wvn.vn";
-
-      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
-        method: "POST",
-        headers: { "Accept": "application/json" },
-        body: formData
-      })
-        .then(async res => {
-          let data = null;
-          try { data = await res.json(); } catch (e) { /* phản hồi không phải JSON, vẫn xét theo res.ok */ }
-          const isSuccess = res.ok && (!data || data.success === "true" || data.success === true || data.success === undefined);
-          if (!isSuccess) throw new Error("Đăng ký không thành công");
-        })
-        .then(() => {
-          newsletterAlert.className = "newsletter-alert newsletter-alert-success";
-          newsletterAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi bản tin mới nhất tới email này.</span>';
-          newsletterForm.reset();
-        })
-        .catch(() => {
-          newsletterAlert.className = "newsletter-alert newsletter-alert-error";
-          newsletterAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
-        })
-        .finally(() => {
-          newsletterBtn.disabled = false;
-          newsletterBtn.innerHTML = originalBtnHtml;
-        });
-    });
   </script>
 </body>
 </html>
