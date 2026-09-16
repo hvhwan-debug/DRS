@@ -1,23 +1,36 @@
 ---
 title: "Hành trình thắp sáng tri thức và sưởi ấm trẻ em vùng cao Hà Giang"
 date: "Tháng 07 / 2026"
-description: "Chia sẻ những khó khăn thầm lặng của trẻ em vùng cao Hà Giang và các chương trình thiết thực đồng hành, trao tặng học liệu, áo ấm để tiếp bước các em đến trường."
+description: "Ghi lại hành trình 5 ngày khảo sát và các chương trình hỗ trợ thực tế tại 3 điểm trường Sà Phìn A, Lũng Táo, Ma Lé — nơi trẻ em vùng cao Đồng Văn, Hà Giang đang thiếu sách vở, áo ấm và cả một mái nhà lớp học lành lặn."
 thumbnail: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80"
 ---
 
-Hà Giang không chỉ làm say lòng người bởi những cung đường đèo hùng vĩ hay sắc hoa tam giác mạch bạt ngàn, mà nơi đây còn là mái nhà chung của hàng vạn trẻ em vùng cao – những em nhỏ ngày ngày phải vượt qua những con dốc dựng đứng, băng qua sương mù để tìm đến con chữ. 
+Tháng 2/2026, đoàn khảo sát 4 người của Mạng Lưới Tri Thức Việt Nam có mặt tại 3 điểm trường Sà Phìn A, Lũng Táo và Ma Lé (huyện Đồng Văn, Hà Giang) trong 5 ngày, để ghi nhận trực tiếp những gì các em học sinh nơi đây đang thiếu. Bài viết này là những gì chúng tôi đã thấy, và những việc chúng tôi đã bắt tay vào làm trong 6 tháng sau đó.
 
-Dự án và các chương trình thiện nguyện giáo dục luôn đặc biệt dành trọn tình thương và sự quan tâm cho **trẻ em nghèo vùng cao Hà Giang** thông qua những hành động thiết thực.
+### 1. Những gì đoàn khảo sát ghi nhận được
 
-### 1. Những khó khăn thầm lặng của trẻ em vùng cao Hà Giang
-* **Hành trình đến trường gian nan:** Nhiều em nhỏ ở các bản làng xa xôi như Xín Mần, Mèo Vạc, Đồng Văn phải bộ hành hàng nhiều cây số đường đất sạt lở, trơn trượt vào mùa mưa lũ để đến điểm trường bản.
-* **Thiếu thốn học liệu và áo ấm:** Vào mùa đông, cái lạnh cắt da cắt thịt ở vùng cao biên viễn khiến các em thiếu thốn từng chiếc áo ấm, đôi giày vải. Sách vở, bút thước và đèn học ban đêm cũng là những món quà đôi khi rất xa xỉ.
-* **Cơ sở vật chất học tập sơ sài:** Các điểm trường lẻ thường là những lớp học vách nắp tạm bợ, thiếu bàn ghế tiêu chuẩn và ánh sáng an toàn cho đôi mắt của trẻ thơ.
+**Đường đến trường.** Từ trung tâm xã Sà Phìn đến điểm trường Ma Lé là hơn 6km đường đất, không có biển báo, không có lan can ở những đoạn sát vực. Vào mùa mưa (tháng 6–8), đoạn đường này thường xuyên sạt lở nhỏ, khiến nhiều em phải nghỉ học vài ngày liền vì phụ huynh không dám cho đi qua.
 
-### 2. Các hoạt động đồng hành và hỗ trợ thiết thực
-* **Trao tặng Tủ sách và Học liệu:** Xây dựng các tủ sách lưu động, tặng sách giáo khoa, truyện tranh và dụng cụ học tập để nuôi dưỡng ước mơ và thói quen đọc sách cho các em nhỏ.
-* **Chương trình "Tiếp sức đến trường" & "Áo ấm mùa đông":** Tặng học bổng, áo khoác dày, chăn ấm, giày dép và quà tết cho các em học sinh có hoàn cảnh đặc biệt khó khăn tại các huyện biên giới.
-* **Cải thiện không gian sinh hoạt:** Kết nối nguồn lực xã hội để sửa sang lớp học, tặng bàn ghế, bảng viết và hỗ trợ các bữa ăn dinh dưỡng bán trú tại trường.
+**Mái nhà lớp học.** Một phòng học tại Ma Lé có 40m² mái tôn đã dột từ 2 năm trước, giáo viên phải kê lại bàn ghế mỗi khi trời mưa để tránh dột trúng chỗ ngồi của học sinh. Cô Nguyễn Thị Hoa, giáo viên chủ nhiệm tại đây, chia sẻ: "Mưa to là cả lớp phải dồn sang một góc, có hôm nước dột ướt hết sách vở của mấy em ngồi bàn cuối."
 
-### 3. Cùng chung tay vì tương lai trẻ em Hà Giang
-Mỗi sự đóng góp, dù là một cuốn sách cũ, một bộ quần áo ấm hay một phần kinh phí nhỏ đều là nguồn động lực to lớn giúp thắp sáng tương lai, mang lại nụ cười và cơ hội học tập công bằng hơn cho các em nhỏ nơi miền đá ngút ngàn.
+**Sách vở và học liệu.** Tại thời điểm khảo sát, tủ sách chung của điểm trường Lũng Táo chỉ có 60 cuốn, phần lớn là sách giáo khoa cũ đã sờn gáy, không có sách truyện hay tài liệu tham khảo nào cho học sinh đọc thêm ngoài giờ học.
+
+**Áo ấm mùa đông.** Nhiệt độ tại Đồng Văn tháng 12 năm ngoái xuống dưới 5°C, nhưng phần lớn học sinh chỉ có 1 áo khoác mỏng mặc suốt cả mùa, không có găng tay hay mũ len.
+
+### 2. Những việc đã triển khai từ tháng 3 đến tháng 8/2026
+
+**Tháng 3/2026 — Ra mắt chương trình.** Ngay sau đợt khảo sát, chúng tôi công bố kế hoạch hoạt động cả năm dựa trên 4 vấn đề ghi nhận được ở trên.
+
+**Tháng 4/2026 — 15 suất học bổng thí điểm.** Trao 15 suất học bổng 1,5 triệu đồng/em cho học sinh lớp 4–5 có hoàn cảnh khó khăn nhất tại Sà Phìn A, do giáo viên chủ nhiệm trực tiếp đề xuất.
+
+**Tháng 5/2026 — Sửa mái nhà lớp học Ma Lé.** Thay toàn bộ 40m² mái tôn dột, kinh phí 18 triệu đồng huy động từ 26 nhà hảo tâm, thi công trong 3 ngày với sự hỗ trợ của phụ huynh học sinh.
+
+**Tháng 6/2026 — Tủ sách cộng đồng thứ hai.** Đặt thêm tủ sách tại Lũng Táo, nâng tổng số đầu sách phục vụ 3 điểm trường lên 420 cuốn, do 2 em học sinh lớp 5 luân phiên quản lý mượn trả vào giờ ra chơi.
+
+**Tháng 8/2026 — 120 suất học liệu đầu năm học.** Trao sách giáo khoa lớp 1–5, vở ô ly và bút chì màu cho học sinh cả 3 điểm trường trước thềm năm học mới.
+
+### 3. Sắp tới: Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)
+
+Trước khi mùa đông tới, chúng tôi đang gây quỹ mục tiêu 300 áo khoác và 150 chăn bông cho đúng 2 điểm trường đã ghi nhận thiếu áo ấm nghiêm trọng nhất trong đợt khảo sát: Sà Phìn A và Ma Lé. Đồ quyên góp được phân loại, giặt sạch tại kho ở Hà Nội trước khi vận chuyển, dự kiến chuyến xe đầu tiên khởi hành ngày 25/11/2026.
+
+Toàn bộ tiến độ quyên góp và chi tiêu cho các chương trình trên được cập nhật công khai tại trang [Sao Kê](sao-ke.html) và [Hoạt Động](hoat-dong.html) của chúng tôi.
