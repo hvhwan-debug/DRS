@@ -808,6 +808,14 @@
 
     function parseDateForSortLatest(dateStr) {
       if (!dateStr) return -Infinity;
+      // Ưu tiên định dạng có ngày cụ thể: dd/mm/yyyy hoặc dd-mm-yyyy — cho độ chính xác cao nhất.
+      const dmyMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if (dmyMatch) {
+        const [, d, m, y] = dmyMatch;
+        return ((parseInt(y, 10) * 12 + parseInt(m, 10)) * 31) + parseInt(d, 10);
+      }
+      // Định dạng "Tháng MM / YYYY" chỉ có tháng — không có ngày cụ thể, nên chỉ
+      // đủ độ chính xác đến cấp tháng (xem thêm ghi chú ở loadLatestArticle bên dưới).
       const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
       if (viMatch) return (parseInt(viMatch[2], 10) * 12 + parseInt(viMatch[1], 10)) * 31;
       const d = new Date(dateStr);
@@ -859,14 +867,23 @@
         const list = await res.json();
         if (!Array.isArray(list)) throw new Error("posts-index.json sai định dạng");
 
-        const posts = list.map(p => ({
+        const posts = list.map((p, idx) => ({
           slug: p.slug,
           title: p.title || p.slug,
           date: p.date || "",
           image: p.image || LATEST_ARTICLE_FALLBACK_IMG,
           loai: (p.loai || "").trim().toLowerCase(),
-          excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết."
-        })).sort((a, b) => parseDateForSortLatest(b.date) - parseDateForSortLatest(a.date));
+          excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết.",
+          _originalIndex: idx // vị trí gốc trong posts-index.json — dùng làm tiêu chí phụ
+        })).sort((a, b) => {
+          const dateDiff = parseDateForSortLatest(b.date) - parseDateForSortLatest(a.date);
+          if (dateDiff !== 0) return dateDiff;
+          // Ngày dạng "Tháng MM / YYYY" không có thông tin ngày cụ thể, nên khi 2 bài
+          // trùng tháng, ưu tiên bài nằm SAU trong posts-index.json (giả định file này
+          // được thêm bài mới vào cuối danh sách theo thứ tự thời gian thêm bài thật).
+          // Nếu hệ thống của bạn thêm bài mới vào ĐẦU danh sách, đổi (b - a) thành (a - b) bên dưới.
+          return b._originalIndex - a._originalIndex;
+        });
 
         const taggedArticles = posts.filter(p => p.loai === "tin-tuc" && !isUpcomingLatest(p.date));
         const articlePool = taggedArticles.length > 0 ? taggedArticles : posts.filter(p => !isUpcomingLatest(p.date));
