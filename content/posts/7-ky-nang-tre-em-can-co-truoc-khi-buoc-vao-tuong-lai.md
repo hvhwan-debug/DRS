@@ -15,6 +15,7 @@ Vì vậy, bên cạnh kiến thức ở trường, trẻ cần được hình t
 Những việc đơn giản như tự chuẩn bị đồ dùng, giữ gìn vệ sinh, sắp xếp góc học tập hay tự hoàn thành một số công việc phù hợp với lứa tuổi giúp trẻ dần hình thành tính tự lập.
 
 Đây là nền tảng để trẻ biết chịu trách nhiệm với chính mình.
+<img width="678" height="452" alt="image" src="https://github.com/user-attachments/assets/5672da8d-2005-4811-972b-db2b45f52f47" />
 
 2. Biết giao tiếp
 
@@ -31,6 +32,7 @@ Thay vì lập tức giải quyết mọi khó khăn cho trẻ, người lớn c
 “Con nghĩ chúng ta nên làm gì?”
 
 Điều này giúp trẻ tập suy nghĩ và tìm ra nhiều cách giải quyết khác nhau.
+<img width="545" height="366" alt="image" src="https://github.com/user-attachments/assets/2b2bbcba-eb25-40e0-bf09-f8f36f06f3e2" />
 
 4. Biết sử dụng công nghệ
 
@@ -45,6 +47,7 @@ Một đứa trẻ không thể trưởng thành chỉ bằng năng lực cá nh
 Các em cần học cách làm việc cùng bạn bè, chia sẻ nhiệm vụ, lắng nghe ý kiến khác và cùng nhau hoàn thành một mục tiêu.
 
 Những kỹ năng này có thể được rèn luyện ngay từ những hoạt động nhỏ trong lớp học và gia đình.
+<img width="516" height="387" alt="image" src="https://github.com/user-attachments/assets/27e4dee0-5481-4ef0-a279-e2bf47cb50d7" />
 
 6. Biết đối diện với thất bại
 
@@ -59,6 +62,7 @@ Mình đã sai ở đâu?
 Mình có thể làm khác đi như thế nào?
 
 Khi trẻ hiểu rằng thất bại là một phần của quá trình học hỏi, các em sẽ có thêm sự kiên trì.
+<img width="800" height="500" alt="image" src="https://github.com/user-attachments/assets/e69887c6-264b-45e3-9249-be06e2020ca1" />
 
 7. Biết tự học
 
@@ -91,5 +95,6 @@ Giáo dục vì vậy không chỉ là chuẩn bị cho trẻ một bài kiểm 
 Đó là chuẩn bị cho trẻ khả năng học hỏi và thích nghi với cuộc sống.
 
 Kiến thức giúp trẻ hiểu thế giới. Kỹ năng giúp trẻ biết cách sống và phát triển trong thế giới đó.
+<img width="548" height="364" alt="image" src="https://github.com/user-attachments/assets/394f90b4-f764-450f-84c7-b9490c0a31d8" />
 
 Đây cũng là hướng nội dung rất phù hợp để WVN phát triển thành một chuỗi bài về giáo dục trẻ em trong đời sống thực tế, mỗi bài tập trung vào một vấn đề cụ thể và có giải pháp rõ ràng.
