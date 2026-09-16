@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giới Thiệu - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Giới thiệu về Mạng Lưới Tri Thức Việt Nam (Wisdom Vietnam Network): nền tảng kết nối nguồn lực xã hội để mở rộng cơ hội học tập và tiếp cận tri thức cho trẻ em Việt Nam, hoạt động minh bạch và phi lợi nhuận.">
-  <!-- Favicon chuẩn trực tuyến -->
+  <title>Liên Hệ - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Liên hệ với Mạng Lưới Tri Thức Việt Nam để trao đổi về các chương trình giáo dục, thiện nguyện và hỗ trợ trẻ em vùng cao Việt Nam.">
+  <meta property="og:title" content="Liên Hệ - Mạng Lưới Tri Thức Việt Nam">
+  <meta property="og:description" content="Liên hệ với Mạng Lưới Tri Thức Việt Nam để trao đổi về các chương trình giáo dục, thiện nguyện và hỗ trợ trẻ em vùng cao Việt Nam.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -13,7 +14,6 @@
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
       --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
       --text-dark: #0f172a;
@@ -31,7 +31,7 @@
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định Đồng Bộ */
+    /* Menu Cố Định */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -64,7 +64,6 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp */
     .btn-donate-glow {
       position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
     }
@@ -82,18 +81,29 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Banner (đồng bộ kích thước với các trang khác trong site) */
-    .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 3.6rem 1.5rem 4rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
     }
-    .hero-wrapper::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
+
+    /* Banner trang */
+    .article-banner {
+      position: relative; width: 100%; padding: 3rem 1.5rem 3.4rem; color: var(--white); overflow: hidden;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite;
     }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
+    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .article-banner-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 2; }
     .hero-dove {
       position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
       opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
-      pointer-events: none; z-index: 5;
+      pointer-events: none; z-index: 1;
       animation: doveFloat 9s ease-in-out infinite;
       transform-origin: center center;
     }
@@ -111,50 +121,140 @@
     @media (max-width: 640px) {
       .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
     }
-    .hero-badge {
-      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
-    }
-    .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
-    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 620px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.88rem; color: #e0f2fe; margin-bottom: 1rem; }
+    .breadcrumb a { color: #e0f2fe; text-decoration: none; opacity: 0.85; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article-title { font-size: 2.1rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; line-height: 1.25; }
+    .article-meta { color: #e0f2fe; font-size: 0.92rem; display: flex; gap: 1.2rem; flex-wrap: wrap; max-width: 640px; }
 
-    /* Quote Banner Nghệ Thuật */
-    .mission-quote-box {
-      max-width: 950px; margin: -3rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10;
-    }
-    .quote-card {
-      background: #ffffff; border-radius: 24px; padding: 3rem 2.5rem; text-align: center;
-      border: 1px solid #bae6fd; box-shadow: 0 25px 50px rgba(2, 132, 199, 0.12); position: relative;
-    }
-    .quote-card::before {
-      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--blue-grad-btn); border-radius: 2px;
-    }
-    .quote-card i { font-size: 2.2rem; color: #0284c7; opacity: 0.3; margin-bottom: 1rem; display: block; }
-    .quote-card p { font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.75; font-style: italic; }
-    .quote-card span { display: block; margin-top: 1.2rem; font-size: 0.9rem; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 1px; }
+    /* Nội dung trang liên hệ */
+    .article-wrap { max-width: 1000px; margin: 0 auto; padding: 3rem 1.5rem 4.5rem; }
 
-    /* Main Container & Story Sections Sang Trọng */
-    .container { max-width: 1000px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: 2.5rem; align-items: start;
+    }
+    @media (max-width: 860px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
 
-    .mission-story-block {
-      background: #ffffff; border-radius: 20px; padding: 3.2rem; border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); margin-bottom: 2.5rem; transition: transform 0.3s, box-shadow 0.3s;
+    /* Cột thông tin liên hệ */
+    .contact-info-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+      padding: 2rem 1.8rem; box-shadow: 0 10px 30px rgba(15,23,42,0.06);
     }
-    .mission-story-block:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.08); border-color: #bae6fd; }
-    
-    .mission-story-block h2 {
-      font-size: 1.65rem; font-weight: 800; color: #0369a1; margin-bottom: 1.2rem;
-      display: flex; align-items: center; gap: 12px;
+    .contact-info-card h3 { color: #0369a1; font-size: 1.15rem; font-weight: 800; margin-bottom: 1.4rem; }
+    .contact-info-item {
+      display: flex; gap: 14px; align-items: flex-start; margin-bottom: 1.4rem;
     }
-    .mission-story-block h2 i {
-      width: 42px; height: 42px; background: #e0f2fe; color: #0284c7; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+    .contact-info-item:last-child { margin-bottom: 0; }
+    .contact-info-icon {
+      width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px;
+      background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center;
+      font-size: 1.05rem;
     }
-    .mission-story-block p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.1rem; }
-    .mission-story-block p:last-child { margin-bottom: 0; }
+    .contact-info-text h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.2rem; }
+    .contact-info-text p, .contact-info-text a { font-size: 0.92rem; color: var(--text-muted); text-decoration: none; }
+    .contact-info-text a:hover { color: #0284c7; text-decoration: underline; }
 
-    /* Footer chuẩn 3 cột */
+    .contact-social {
+      margin-top: 1.8rem; padding-top: 1.6rem; border-top: 1px solid var(--border);
+    }
+    .contact-social h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.9rem; color: var(--text-dark); }
+    .contact-social .social-links a {
+      width: 40px; height: 40px; font-size: 1rem;
+    }
+
+    /* Cột form liên hệ */
+    .contact-form-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+      padding: 2.2rem 2rem; box-shadow: 0 10px 30px rgba(15,23,42,0.06);
+    }
+    .contact-form-card h3 { color: #0369a1; font-size: 1.2rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .contact-form-card > p { color: var(--text-muted); font-size: 0.94rem; margin-bottom: 1.6rem; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block; font-size: 0.88rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.45rem;
+    }
+    .form-group label .required { color: #dc2626; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 0.75rem 0.9rem; border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: inherit; font-size: 0.95rem; color: var(--text-dark); background: #f8fafc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); background: #ffffff;
+    }
+    .form-group textarea { resize: vertical; min-height: 140px; }
+    .form-group .error-msg {
+      display: none; color: #dc2626; font-size: 0.82rem; margin-top: 0.4rem;
+    }
+    .form-group.has-error input,
+    .form-group.has-error select,
+    .form-group.has-error textarea { border-color: #dc2626; }
+    .form-group.has-error .error-msg { display: block; }
+
+    .form-submit-btn {
+      width: 100%; padding: 0.95rem; font-size: 1rem; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .form-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    .form-feedback {
+      display: none; margin-top: 1.2rem; padding: 0.9rem 1.1rem; border-radius: 10px; font-size: 0.92rem;
+      align-items: center; gap: 10px;
+    }
+    .form-feedback.success { display: flex; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .form-feedback.error { display: flex; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    /* Bản đồ */
+    .map-wrap {
+      margin-top: 2.5rem; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+      border: 1px solid var(--border);
+    }
+    .map-wrap iframe { width: 100%; height: 340px; border: 0; display: block; }
+
+    /* Câu hỏi thường gặp (FAQ) */
+    .faq-section { margin-top: 3rem; }
+    .faq-heading { text-align: center; margin-bottom: 2rem; }
+    .faq-heading h2 { color: #0369a1; font-size: 1.55rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .faq-heading p { color: var(--text-muted); font-size: 0.96rem; }
+
+    .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.9rem; }
+    .faq-item {
+      background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; box-shadow: 0 4px 14px rgba(15,23,42,0.04); transition: box-shadow 0.2s;
+    }
+    .faq-item.open { box-shadow: 0 10px 26px rgba(15,23,42,0.08); }
+
+    .faq-question {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.15rem 1.4rem; background: none; border: none; cursor: pointer; text-align: left;
+      font-family: inherit; font-size: 1rem; font-weight: 700; color: var(--text-dark);
+    }
+    .faq-question:hover { color: #0284c7; }
+    .faq-question .faq-icon {
+      flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: #e0f2fe; color: #0284c7;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: transform 0.25s;
+    }
+    .faq-item.open .faq-question .faq-icon { transform: rotate(45deg); background: var(--blue-grad-btn); color: #fff; }
+
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .faq-answer-inner { padding: 0 1.4rem 1.3rem; color: var(--text-muted); font-size: 0.94rem; line-height: 1.75; }
+    .faq-answer-inner a { color: #0284c7; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
+    .article-footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+    .back-link { color: #0284c7; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .back-link:hover { text-decoration: underline; }
+
+    /* Footer 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -164,31 +264,20 @@
     }
     .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
 
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
     .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
     .footer-bottom a { color: #94a3b8; text-decoration: none; }
     .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
     @media (max-width: 960px) {
-      .mobile-menu-btn { display: block; }
-      .nav-links {
-        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
-        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
-      }
-      .nav-links.active { display: flex; }
-      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-title { font-size: 2rem; }
-      .quote-card { padding: 2rem 1.5rem; }
-      .quote-card p { font-size: 1.05rem; }
-      .mission-story-block { padding: 2rem 1.5rem; }
+      .article-title { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định Đồng Bộ -->
+  <!-- Menu Cố Định -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
@@ -203,15 +292,17 @@
           <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
         </div>
       </a>
+
       <nav class="nav-links" id="navLinks">
-        <a href="su-menh.html" class="active">Giới Thiệu</a>
+        <a href="su-menh.html">Giới Thiệu</a>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="sao-ke.html">Tra Cứu Sao Kê</a>
         <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>
+        <a href="lien-he.html" class="active">Liên Hệ</a>
       </nav>
+
       <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" onclick="window.location.href='quyen-gop.html'">Quyên Góp</button>
+        <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Liên Hệ</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -219,117 +310,207 @@
     </div>
   </header>
 
-  <!-- Hero Banner -->
-  <section class="hero-wrapper">
+  <!-- Banner -->
+  <section class="article-banner">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-badge">VỀ WISDOM VIETNAM NETWORK</div>
-    <h1 class="hero-title">Giới Thiệu Về Chúng Tôi</h1>
-    <p class="hero-desc">Nền tảng hoạt động vì cộng đồng, hướng đến việc mở rộng cơ hội học tập và tiếp cận tri thức cho trẻ em, học sinh và những người còn gặp khó khăn trong tiếp cận các nguồn lực giáo dục.</p>
+    <div class="article-banner-inner">
+      <div class="breadcrumb"><a href="index.html">Trang chủ</a> / <span>Liên hệ</span></div>
+      <h1 class="article-title">Liên Hệ Với Chúng Tôi</h1>
+      <div class="article-meta">
+        <span>Chúng tôi luôn sẵn sàng lắng nghe, giải đáp thắc mắc và đồng hành cùng bạn trên hành trình gieo mầm tri thức.</span>
+      </div>
+    </div>
   </section>
 
-  <!-- Quote Banner Nghệ Thuật -->
-  <div class="mission-quote-box">
-    <div class="quote-card">
-      <i class="fa-solid fa-quote-left"></i>
-      <p>"Một cơ hội học tập hôm nay có thể trở thành một cánh cửa mới cho ngày mai."</p>
-      <span>— Wisdom Vietnam Network (Mạng Lưới Tri Thức Việt Nam)</span>
+  <!-- Nội dung trang liên hệ -->
+  <main class="article-wrap">
+    <div class="contact-grid">
+
+      <!-- Thông tin liên hệ -->
+      <div class="contact-info-card">
+        <h3>Thông Tin Liên Hệ</h3>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="contact-info-text">
+            <h4>Địa chỉ trụ sở</h4>
+            <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="contact-info-text">
+            <h4>Email</h4>
+            <p><a href="mailto:hotro@wvn.vn">hotro@wvn.vn</a></p>
+            <p><a href="mailto:cskh@dr.com">cskh@dr.com</a></p>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-solid fa-building"></i></div>
+          <div class="contact-info-text">
+            <h4>Đơn vị vận hành</h4>
+            <p>Công Ty TNHH DR Solutions</p>
+            <p>Mã số doanh nghiệp: 0111291749</p>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-regular fa-clock"></i></div>
+          <div class="contact-info-text">
+            <h4>Thời gian phản hồi</h4>
+            <p>Thứ 2 - Thứ 6: 8:00 - 17:30 (giờ Hà Nội)</p>
+          </div>
+        </div>
+
+        <div class="contact-social">
+          <h4>Kết nối với chúng tôi</h4>
+          <div class="social-links">
+            <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form liên hệ -->
+      <div class="contact-form-card">
+        <h3>Gửi Lời Nhắn Cho Chúng Tôi</h3>
+        <p>Điền thông tin bên dưới, đội ngũ của chúng tôi sẽ phản hồi trong thời gian sớm nhất.</p>
+
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group" id="group-name">
+              <label for="cf-name">Họ và tên <span class="required">*</span></label>
+              <input type="text" id="cf-name" name="name" placeholder="Nguyễn Văn A" autocomplete="name">
+              <div class="error-msg">Vui lòng nhập họ và tên của bạn.</div>
+            </div>
+            <div class="form-group" id="group-email">
+              <label for="cf-email">Email <span class="required">*</span></label>
+              <input type="email" id="cf-email" name="email" placeholder="ban@email.com" autocomplete="email">
+              <div class="error-msg">Vui lòng nhập một địa chỉ email hợp lệ.</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="group-phone">
+              <label for="cf-phone">Số điện thoại</label>
+              <input type="tel" id="cf-phone" name="phone" placeholder="09xx xxx xxx" autocomplete="tel">
+            </div>
+            <div class="form-group" id="group-subject">
+              <label for="cf-subject">Chủ đề <span class="required">*</span></label>
+              <select id="cf-subject" name="subject">
+                <option value="" selected disabled>-- Chọn chủ đề --</option>
+                <option value="quyen-gop">Quyên góp &amp; tài trợ</option>
+                <option value="tinh-nguyen">Tham gia tình nguyện</option>
+                <option value="hop-tac">Hợp tác chương trình</option>
+                <option value="khac">Vấn đề khác</option>
+              </select>
+              <div class="error-msg">Vui lòng chọn một chủ đề.</div>
+            </div>
+          </div>
+
+          <div class="form-group" id="group-message">
+            <label for="cf-message">Nội dung <span class="required">*</span></label>
+            <textarea id="cf-message" name="message" placeholder="Nội dung bạn muốn trao đổi với chúng tôi..."></textarea>
+            <div class="error-msg">Vui lòng nhập nội dung tin nhắn (tối thiểu 10 ký tự).</div>
+          </div>
+
+          <button type="submit" class="btn form-submit-btn" id="submitBtn">
+            <i class="fa-solid fa-paper-plane"></i> Gửi Liên Hệ
+          </button>
+
+          <div class="form-feedback" id="formFeedback"></div>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <!-- Main Container -->
-  <main class="container">
-
-    <!-- Phần 1: Giới thiệu -->
-    <div class="mission-story-block">
-      <h2><i class="fa-solid fa-circle-info"></i> Giới Thiệu Về Wisdom Vietnam Network</h2>
-      <p>Wisdom Vietnam Network (WVN) là nền tảng hoạt động vì cộng đồng bởi Công ty TNHH DR Solutions, hướng đến việc mở rộng cơ hội học tập và tiếp cận tri thức cho trẻ em, học sinh và những người còn gặp khó khăn trong tiếp cận các nguồn lực giáo dục.</p>
-      <ul style="list-style: none; margin: 1.2rem 0; padding-left: 0; color: var(--text-muted); font-size: 1.08rem;">
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: flex-start; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7; margin-top: 4px;"></i> <span><strong>Mã số doanh nghiệp:</strong> 0111291749</span></li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: flex-start; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7; margin-top: 4px;"></i> <span><strong>Địa chỉ trụ sở:</strong> Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</span></li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: flex-start; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7; margin-top: 4px;"></i> <span><strong>Đóng góp ý kiến:</strong> hotro@wvn.vn</span></li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: flex-start; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7; margin-top: 4px;"></i> <span><strong>Giải đáp thông tin:</strong> cskh@dr.com</span></li>
-      </ul>
-      <p>Chúng tôi tin rằng giáo dục không chỉ là việc đến trường. Một cơ hội học tập có ý nghĩa còn bao gồm sách, học liệu, môi trường học tập, kỹ năng, công nghệ và sự đồng hành của cộng đồng.</p>
-      <p>Vì vậy, WVN hướng đến việc kết nối những nguồn lực xã hội có thể đóng góp cho giáo dục và chuyển hóa những nguồn lực đó thành các chương trình hỗ trợ thiết thực.</p>
+    <!-- Bản đồ -->
+    <div class="map-wrap">
+      <iframe
+        src="https://www.google.com/maps?q=S%E1%BB%91%206%2C%20Ng%C3%A1ch%2029%20ng%C3%B5%2027%2C%20%C4%91%C6%B0%E1%BB%9Dng%20V%C3%B5%20Ch%C3%AD%20C%C3%B4ng%2C%20Ph%C6%B0%E1%BB%9Dng%20Ngh%C4%A9a%20%C4%90%C3%B4%2C%20H%C3%A0%20N%E1%BB%99i&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Bản đồ trụ sở Mạng Lưới Tri Thức Việt Nam">
+      </iframe>
     </div>
 
-    <!-- Phần 2: Sứ mệnh -->
-    <div class="mission-story-block">
-      <h2><i class="fa-solid fa-heart-circle-check"></i> Sứ Mệnh Của Chúng Tôi</h2>
-      <p>Sứ mệnh của Wisdom Vietnam Network là góp phần xây dựng một môi trường trong đó mọi trẻ em đều có thêm cơ hội tiếp cận tri thức và phát triển năng lực của bản thân.</p>
-      <p>Chúng tôi tập trung vào những vấn đề thiết thực trong giáo dục như:</p>
-      <ul style="list-style: none; margin: 1.2rem 0; padding-left: 0; color: var(--text-muted); font-size: 1.08rem;">
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Cơ hội tiếp cận sách và học liệu.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Hỗ trợ điều kiện học tập cho trẻ em có hoàn cảnh khó khăn.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Phát triển kỹ năng tự học.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Khuyến khích tư duy và khả năng khám phá.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Hỗ trợ trẻ tiếp cận công nghệ phục vụ học tập.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Kết nối cộng đồng với các hoạt động giáo dục.</li>
-      </ul>
-      <p>WVN không xem một chương trình giáo dục chỉ là việc trao tặng một món quà. Điều chúng tôi hướng tới là tạo ra giá trị có khả năng tiếp tục đồng hành với người học trong quá trình phát triển lâu dài.</p>
-    </div>
+    <!-- Câu hỏi thường gặp -->
+    <section class="faq-section">
+      <div class="faq-heading">
+        <h2>Câu Hỏi Thường Gặp</h2>
+        <p>Một số thắc mắc phổ biến trước khi bạn liên hệ với chúng tôi.</p>
+      </div>
 
-    <!-- Phần 3: Cách hoạt động -->
-    <div class="mission-story-block">
-      <h2><i class="fa-solid fa-seedling"></i> Chúng Tôi Hoạt Động Như Thế Nào?</h2>
-      <p>Các chương trình của WVN được triển khai dựa trên nhu cầu thực tế và khả năng kết nối nguồn lực của cộng đồng.</p>
-      <p>Tùy từng chương trình, nguồn lực có thể được sử dụng để hỗ trợ sách, học liệu, dụng cụ học tập, không gian đọc hoặc các hoạt động phát triển kỹ năng cho trẻ em.</p>
-      <p>Bên cạnh hỗ trợ trực tiếp, WVN cũng xây dựng và chia sẻ các nội dung giáo dục nhằm giúp phụ huynh, giáo viên và cộng đồng có thêm thông tin về việc đồng hành cùng trẻ trong học tập.</p>
-      <p>Đặc biệt, chúng tôi quan tâm đến những chủ đề như tự học, đọc sách, kỹ năng sống, tiếng Anh, công nghệ và AI trong giáo dục.</p>
-    </div>
+      <div class="faq-list" id="faqList">
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Làm thế nào để tôi có thể quyên góp ủng hộ chương trình?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Bạn có thể quyên góp trực tiếp qua trang <a href="quyen-gop.html">Quyên Góp</a> trên website, với thông tin chuyển khoản và mã VietQR được cập nhật đầy đủ. Mọi khoản đóng góp đều được ghi nhận minh bạch và có thể tra cứu tại mục <a href="sao-ke.html">Tra Cứu Sao Kê</a>.
+            </div>
+          </div>
+        </div>
 
-    <!-- Phần 4: Vì sao chọn giáo dục -->
-    <div class="mission-story-block">
-      <h2><i class="fa-solid fa-lightbulb"></i> Vì Sao Chúng Tôi Lựa Chọn Giáo Dục?</h2>
-      <p>Một cuốn sách có thể mở ra một câu hỏi.</p>
-      <p>Một người thầy có thể truyền cảm hứng cho một học sinh.</p>
-      <p>Một thiết bị học tập có thể giúp một em tiếp cận nguồn kiến thức mới.</p>
-      <p>Một cơ hội được học có thể tạo ra những thay đổi lâu dài mà đôi khi chúng ta không thể nhìn thấy ngay lập tức.</p>
-      <p><strong>Chúng tôi tin rằng đầu tư vào giáo dục là đầu tư vào khả năng phát triển của con người.</strong></p>
-      <p>Đó cũng là lý do WVN lựa chọn cơ hội học tập làm một trong những trọng tâm của hoạt động cộng đồng.</p>
-    </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Tôi muốn tham gia tình nguyện thì cần liên hệ như thế nào?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Bạn điền vào form liên hệ phía trên, chọn chủ đề "Tham gia tình nguyện" và để lại thông tin cụ thể (kỹ năng, thời gian rảnh, khu vực mong muốn hoạt động). Đội ngũ của chúng tôi sẽ phản hồi và sắp xếp chương trình phù hợp trong thời gian sớm nhất.
+            </div>
+          </div>
+        </div>
 
-    <!-- Phần 5: Minh bạch -->
-    <div class="mission-story-block">
-      <h2><i class="fa-solid fa-shield-halved"></i> Minh Bạch Và Trách Nhiệm Với Cộng Đồng</h2>
-      <p>Niềm tin của cộng đồng là nền tảng của mọi hoạt động thiện nguyện.</p>
-      <p>Vì vậy, WVN hướng đến việc công khai thông tin về các chương trình, nguồn lực được tiếp nhận và cách thức sử dụng nguồn lực trong phạm vi phù hợp.</p>
-      <p>Website có khu vực Tra cứu sao kê, thông tin hoạt động và thông tin liên hệ để cộng đồng có thể tìm hiểu về các chương trình của tổ chức. WVN cũng công bố cam kết về việc sử dụng nguồn lực cho các mục tiêu xã hội và giáo dục theo định hướng hoạt động của mình.</p>
-      <p><strong>Minh bạch không chỉ là công bố thông tin. Đó là trách nhiệm giải trình với những người đã tin tưởng và đồng hành cùng các hoạt động vì cộng đồng.</strong></p>
-      <p style="margin-top: 1.3rem;">
-        <a href="sao-ke.html" style="display: inline-flex; align-items: center; gap: 8px; color: #0284c7; font-weight: 700; text-decoration: none;">
-          <i class="fa-solid fa-magnifying-glass-dollar"></i> Tra cứu sao kê giao dịch công khai <i class="fa-solid fa-arrow-right"></i>
-        </a>
-      </p>
-    </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Sau khi gửi form liên hệ, bao lâu thì tôi nhận được phản hồi?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Chúng tôi thường phản hồi trong vòng 1-2 ngày làm việc (Thứ 2 - Thứ 6, 8:00 - 17:30 giờ Hà Nội). Với các yêu cầu gấp, bạn có thể gửi email trực tiếp đến <a href="mailto:hotro@wvn.vn">hotro@wvn.vn</a> để được hỗ trợ nhanh hơn.
+            </div>
+          </div>
+        </div>
 
-    <!-- Phần 6: Cùng cộng đồng -->
-    <div class="mission-story-block" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-color: #bae6fd;">
-      <h2 style="color: #0284c7;"><i class="fa-solid fa-hand-holding-heart"></i> Cùng Cộng Đồng Tạo Thêm Cơ Hội Học Tập</h2>
-      <p>Giáo dục không thể được xây dựng bởi một cá nhân hay một tổ chức đơn lẻ:</p>
-      <ul style="list-style: none; margin: 1.2rem 0; padding-left: 0; color: var(--text-muted); font-size: 1.08rem;">
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một giáo viên có kiến thức.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một phụ huynh có sự đồng hành.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một tình nguyện viên có thời gian.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một người đóng góp có nguồn lực.</li>
-        <li style="margin-bottom: 0.7rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: #0284c7;"></i> Một cộng đồng có thể kết nối tất cả những điều đó.</li>
-      </ul>
-      <p>WVN mong muốn trở thành một cầu nối giữa những người muốn đóng góp và những cơ hội giáo dục đang cần được hỗ trợ.</p>
-      <p>Mỗi sự đóng góp, dù lớn hay nhỏ, đều có thể trở thành một phần của một hành trình học tập.</p>
-    </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Tôi có thể xem báo cáo sử dụng tiền quyên góp ở đâu?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Toàn bộ sao kê thu - chi được cập nhật công khai tại trang <a href="sao-ke.html">Tra Cứu Sao Kê</a>. Ngoài ra, Báo Cáo Tác Động Thường Niên tổng hợp chi tiết các hoạt động và kết quả trong năm cũng được đăng tải công khai trên website.
+            </div>
+          </div>
+        </div>
 
-    <!-- Phần 7: Định hướng -->
-    <div class="mission-story-block">
-      <h2><i class="fa-solid fa-flag-checkered"></i> Định Hướng Của Wisdom Vietnam Network</h2>
-      <p>Trong thời gian tới, WVN hướng đến việc phát triển các hoạt động theo hướng:</p>
-      <p style="font-size: 1.18rem; font-weight: 700; color: var(--text-dark); text-align: center; padding: 1rem; background: #f0f9ff; border-radius: 12px; border: 1px solid #bae6fd;">Hỗ trợ thiết thực – Giáo dục bền vững – Minh bạch – Kết nối cộng đồng.</p>
-      <p>Chúng tôi không chỉ muốn trao đi nguồn lực, mà muốn góp phần tạo ra những môi trường trong đó trẻ em có thể đọc, học, đặt câu hỏi, tự khám phá và phát triển sự tự tin.</p>
-      <p style="font-weight: 800; color: #0f172a; margin-top: 1.5rem; text-align: center; font-size: 1.15rem; background: #ffffff; padding: 1.2rem; border-radius: 12px; border: 1px solid #bae6fd;">Một cơ hội học tập hôm nay có thể trở thành một cánh cửa mới cho ngày mai.<br><span style="color: #0284c7;">Wisdom Vietnam Network – Cùng mở rộng cơ hội học tập, cùng xây dựng một tương lai có nhiều cơ hội hơn cho trẻ em và cộng đồng.</span></p>
-    </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            Đơn vị vận hành Mạng Lưới Tri Thức Việt Nam là ai?
+            <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Website được vận hành bởi Công Ty TNHH DR Solutions (Mã số doanh nghiệp: 0111291749), một doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng, với 100% lợi nhuận sau thuế được tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <div class="article-footer-nav">
+      <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</a>
+      <button class="btn" onclick="window.location.href='quyen-gop.html'">Quyên Góp Ủng Hộ</button>
+    </div>
   </main>
 
-  <!-- Footer chuẩn 3 cột đồng bộ -->
+  <!-- Footer 3 Cột -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -362,6 +543,32 @@
   </footer>
 
   <script>
+    // Điều khiển đóng/mở các mục Câu Hỏi Thường Gặp (accordion).
+    (function () {
+      const faqItems = document.querySelectorAll('#faqList .faq-item');
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        question.addEventListener('click', () => {
+          const isOpen = item.classList.contains('open');
+
+          faqItems.forEach(other => {
+            if (other !== item) {
+              other.classList.remove('open');
+              other.querySelector('.faq-answer').style.maxHeight = null;
+            }
+          });
+
+          if (isOpen) {
+            item.classList.remove('open');
+            answer.style.maxHeight = null;
+          } else {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+          }
+        });
+      });
+    })();
 
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
@@ -373,6 +580,108 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
+
+    // Xử lý validate & submit form liên hệ, gửi qua FormSubmit.co (miễn phí, không cần backend).
+    //
+    // *** BẠN CẦN LÀM 2 BƯỚC SAU ĐỂ NHẬN ĐƯỢC EMAIL ***
+    // 1. Thay "email-cua-ban@gmail.com" bên dưới (biến FORM_SUBMIT_EMAIL) bằng email thật của bạn.
+    // 2. Lần đầu tiên có người gửi form thành công, FormSubmit sẽ gửi 1 email xác nhận
+    //    đến địa chỉ đó — bạn bấm "Activate Form" trong email đó thì các lần gửi sau
+    //    mới thực sự về hộp thư của bạn.
+    const FORM_SUBMIT_EMAIL = 'email-cua-ban@gmail.com';
+
+    (function () {
+      const form = document.getElementById('contactForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const feedback = document.getElementById('formFeedback');
+
+      const fields = {
+        name: { input: document.getElementById('cf-name'), group: document.getElementById('group-name'),
+          validate: v => v.trim().length >= 2 },
+        email: { input: document.getElementById('cf-email'), group: document.getElementById('group-email'),
+          validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+        subject: { input: document.getElementById('cf-subject'), group: document.getElementById('group-subject'),
+          validate: v => v.trim().length > 0 },
+        message: { input: document.getElementById('cf-message'), group: document.getElementById('group-message'),
+          validate: v => v.trim().length >= 10 }
+      };
+
+      function validateField(key) {
+        const f = fields[key];
+        const ok = f.validate(f.input.value);
+        f.group.classList.toggle('has-error', !ok);
+        return ok;
+      }
+
+      Object.keys(fields).forEach(key => {
+        fields[key].input.addEventListener('blur', () => validateField(key));
+        fields[key].input.addEventListener('input', () => {
+          if (fields[key].group.classList.contains('has-error')) validateField(key);
+        });
+      });
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        feedback.className = 'form-feedback';
+        feedback.innerHTML = '';
+
+        let allValid = true;
+        Object.keys(fields).forEach(key => {
+          if (!validateField(key)) allValid = false;
+        });
+        if (!allValid) {
+          feedback.className = 'form-feedback error';
+          feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng kiểm tra lại các trường được đánh dấu.';
+          return;
+        }
+
+        const payload = {
+          name: fields.name.input.value.trim(),
+          email: fields.email.input.value.trim(),
+          phone: document.getElementById('cf-phone').value.trim(),
+          subject: fields.subject.input.value,
+          message: fields.message.input.value.trim()
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+
+        try {
+          const fsPayload = {
+            Họ_và_tên: payload.name,
+            Email: payload.email,
+            Số_điện_thoại: payload.phone || 'Không cung cấp',
+            Chủ_đề: fields.subject.input.options[fields.subject.input.selectedIndex].text,
+            Nội_dung: payload.message,
+            _subject: `[Liên hệ website] ${fields.subject.input.options[fields.subject.input.selectedIndex].text} - ${payload.name}`,
+            _template: 'table',
+            _captcha: 'false'
+          };
+
+          const res = await fetch(`https://formsubmit.co/ajax/${FORM_SUBMIT_EMAIL}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(fsPayload)
+          });
+
+          if (!res.ok) throw new Error('FormSubmit trả về lỗi');
+
+          feedback.className = 'form-feedback success';
+          feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.';
+          form.reset();
+          Object.keys(fields).forEach(key => fields[key].group.classList.remove('has-error'));
+        } catch (err) {
+          feedback.className = 'form-feedback error';
+          feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Đã có lỗi xảy ra, vui lòng thử lại sau hoặc liên hệ trực tiếp qua email.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Gửi Liên Hệ';
+        }
+      });
+    })();
   </script>
 </body>
 </html>
