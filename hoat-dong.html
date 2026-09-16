@@ -169,14 +169,24 @@
       transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; scroll-margin-top: 100px;
     }
     .event-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(2, 132, 199, 0.12); }
-    .event-card-top { height: 84px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.6rem; position: relative; overflow: hidden; }
+    .event-card-top { height: 150px; display: flex; align-items: flex-end; justify-content: flex-start; color: #fff; font-size: 1.6rem; position: relative; overflow: hidden; }
+    .event-card-top img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .event-card-top::before {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(180deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.55) 100%);
+    }
     .event-card-top::after {
-      content: ''; position: absolute; top: -60%; left: -60%; width: 220%; height: 220%;
-      background: linear-gradient(115deg, transparent 44%, rgba(255,255,255,0.4) 50%, transparent 56%);
+      content: ''; position: absolute; top: -60%; left: -60%; width: 220%; height: 220%; z-index: 1;
+      background: linear-gradient(115deg, transparent 44%, rgba(255,255,255,0.25) 50%, transparent 56%);
       animation: cardShineSweep 4.5s linear infinite;
     }
     @keyframes cardShineSweep { 0% { transform: translate(-15%, -15%) rotate(12deg); } 100% { transform: translate(15%, 15%) rotate(12deg); } }
-    .event-card-top i { position: relative; z-index: 2; }
+    .event-card-top .event-icon-badge {
+      position: relative; z-index: 2; margin: 0.8rem;
+      width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; border: 1px solid rgba(255,255,255,0.35);
+    }
     .event-card-body { padding: 1.4rem; display: flex; flex-direction: column; flex-grow: 1; }
     .event-card-meta { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
     .event-tag { padding: 0.28rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
@@ -231,6 +241,13 @@
     .impact-date { font-size: 0.78rem; font-weight: 700; color: #0284c7; margin-bottom: 0.3rem; letter-spacing: 0.2px; }
     .impact-item h3 { font-size: 1.02rem; color: #0f172a; font-weight: 800; margin-bottom: 0.4rem; }
     .impact-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; max-width: 640px; }
+    .impact-item-body { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+    .impact-thumb {
+      width: 96px; height: 72px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
+      border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(15,23,42,0.06);
+    }
+    .impact-item-text { flex: 1; min-width: 200px; }
+    @media (max-width: 480px) { .impact-thumb { width: 72px; height: 54px; } }
 
     @media (prefers-reduced-motion: reduce) {
       .event-card-top::after, .event-countdown .pulse-dot,
@@ -307,7 +324,7 @@
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">HOẠT ĐỘNG &amp; CHIẾN DỊCH</div>
     <h1 class="hero-title">Hoạt Động &amp; Chương Trình</h1>
-    <p class="hero-desc">Các sự kiện sắp diễn ra, chiến dịch gây quỹ đang triển khai và những dấu ấn đã đạt được trên hành trình vì giáo dục công bằng.</p>
+    <p class="hero-desc">Từ lớp học kỹ năng số ở vùng cao đến những thùng áo ấm chuẩn bị cho mùa đông này — đây là nơi chúng tôi công khai từng chiến dịch, từng con số quyên góp và tiến độ thực tế, để bạn biết chính xác đóng góp của mình đi về đâu.</p>
   </section>
 
   <!-- Container Hoạt Động -->
@@ -330,21 +347,69 @@
         <div class="impact-fill" id="impactFill"></div>
         <div class="impact-item">
           <span class="impact-dot"></span>
-          <div class="impact-date">Tháng 8/2026</div>
-          <h3>Trao 120 suất học liệu đầu năm học mới</h3>
-          <p>Trao tặng sách giáo khoa, vở viết và dụng cụ học tập cho học sinh tại 3 điểm trường vùng cao trước thềm năm học mới.</p>
+          <div class="impact-item-body">
+            <img class="impact-thumb" src="https://picsum.photos/seed/dau-an-hoc-lieu-t8/200/150" alt="Ảnh minh hoạ trao học liệu" loading="lazy">
+            <div class="impact-item-text">
+              <div class="impact-date">Tháng 8/2026</div>
+              <h3>Trao 120 suất học liệu đầu năm học mới</h3>
+              <p>Trao tặng sách giáo khoa lớp 1–5, vở ô ly và bộ bút chì màu tại 3 điểm trường: Tiểu học Sà Phìn A, Tiểu học Lũng Táo và Tiểu học Ma Lé. Cô Nguyễn Thị Hoa, giáo viên chủ nhiệm tại Sà Phìn A, chia sẻ: "Nhiều em năm nay lần đầu có bộ sách mới tinh, không phải sách cũ chuyền tay."</p>
+            </div>
+          </div>
         </div>
         <div class="impact-item">
           <span class="impact-dot"></span>
-          <div class="impact-date">Tháng 6/2026</div>
-          <h3>Khai trương tủ sách cộng đồng thứ hai</h3>
-          <p>Mở rộng mô hình thư viện lưu động sang điểm trường thứ hai, nâng tổng số đầu sách phục vụ trẻ em vượt mốc 400 cuốn.</p>
+          <div class="impact-item-body">
+            <img class="impact-thumb" src="https://picsum.photos/seed/dau-an-tu-sach-t6/200/150" alt="Ảnh minh hoạ tủ sách cộng đồng" loading="lazy">
+            <div class="impact-item-text">
+              <div class="impact-date">Tháng 6/2026</div>
+              <h3>Khai trương tủ sách cộng đồng thứ hai</h3>
+              <p>Tủ sách thứ hai đặt tại Trường Tiểu học Lũng Táo, nâng tổng số đầu sách phục vụ lên 420 cuốn, gồm truyện tranh, sách khoa học thiếu nhi và từ điển tiếng Việt. Tủ sách mở cửa vào giờ ra chơi và cuối buổi học, do 2 em học sinh lớp 5 luân phiên quản lý mượn trả.</p>
+            </div>
+          </div>
         </div>
         <div class="impact-item">
           <span class="impact-dot"></span>
-          <div class="impact-date">Tháng 3/2026</div>
-          <h3>Ra mắt Mạng Lưới Tri Thức Việt Nam</h3>
-          <p>Chính thức công bố sứ mệnh và cam kết pháp lý, đặt nền móng cho các chương trình giáo dục phi lợi nhuận dài hạn.</p>
+          <div class="impact-item-body">
+            <img class="impact-thumb" src="https://picsum.photos/seed/dau-an-mai-nha-t5/200/150" alt="Ảnh minh hoạ sửa mái nhà lớp học" loading="lazy">
+            <div class="impact-item-text">
+              <div class="impact-date">Tháng 5/2026</div>
+              <h3>Hoàn thành sửa chữa mái nhà lớp học tại Ma Lé</h3>
+              <p>Thay 40m² mái tôn bị dột tại 1 phòng học của Tiểu học Ma Lé, kịp trước mùa mưa. Kinh phí 18 triệu đồng huy động từ 26 nhà hảo tâm, thi công trong 3 ngày với sự hỗ trợ của phụ huynh học sinh tại địa phương.</p>
+            </div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-dot"></span>
+          <div class="impact-item-body">
+            <img class="impact-thumb" src="https://picsum.photos/seed/dau-an-hoc-bong-thi-diem-t4/200/150" alt="Ảnh minh hoạ trao học bổng thí điểm" loading="lazy">
+            <div class="impact-item-text">
+              <div class="impact-date">Tháng 4/2026</div>
+              <h3>Trao 15 suất học bổng thí điểm đầu tiên</h3>
+              <p>Trước khi chính thức phát động chương trình Học Bổng Ươm Mầm, 15 suất học bổng thí điểm trị giá 1,5 triệu đồng/em đã được trao cho học sinh lớp 4–5 có hoàn cảnh khó khăn tại Sà Phìn A, dựa trên đề xuất trực tiếp từ giáo viên chủ nhiệm.</p>
+            </div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-dot"></span>
+          <div class="impact-item-body">
+            <img class="impact-thumb" src="https://picsum.photos/seed/dau-an-ra-mat-t3/200/150" alt="Ảnh minh hoạ lễ ra mắt tổ chức" loading="lazy">
+            <div class="impact-item-text">
+              <div class="impact-date">Tháng 3/2026</div>
+              <h3>Ra mắt Mạng Lưới Tri Thức Việt Nam</h3>
+              <p>Ra mắt chính thức tại Hà Nội với sự tham dự của đại diện 3 điểm trường đối tác, công bố mã số doanh nghiệp 0111291749 và cam kết trích 100% lợi nhuận sau thuế cho các chương trình giáo dục.</p>
+            </div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-dot"></span>
+          <div class="impact-item-body">
+            <img class="impact-thumb" src="https://picsum.photos/seed/dau-an-khao-sat-t2/200/150" alt="Ảnh minh hoạ khảo sát thực địa" loading="lazy">
+            <div class="impact-item-text">
+              <div class="impact-date">Tháng 2/2026</div>
+              <h3>Khảo sát thực địa 3 điểm trường tại Đồng Văn</h3>
+              <p>Đoàn khảo sát 4 người làm việc 5 ngày tại Sà Phìn A, Lũng Táo và Ma Lé để đánh giá nhu cầu thực tế về sách vở, dụng cụ học tập và cơ sở vật chất — làm căn cứ xây dựng kế hoạch hoạt động cả năm 2026.</p>
+            </div>
+          </div>
         </div>
       </div>
       <div style="text-align: center; margin-top: 2rem;">
@@ -451,7 +516,7 @@
         tag: "Đang nhận đăng ký",
         tagBg: "#dbeafe", tagColor: "#1e40af",
         title: "Hội thảo phương pháp học tập số",
-        desc: "Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.",
+        desc: "Chuỗi 4 buổi học cuối tuần, mỗi buổi 90 phút, do tình nguyện viên là sinh viên năm cuối ngành CNTT trực tiếp đứng lớp. Nội dung xoay quanh cách tra cứu thông tin an toàn, kỹ năng gõ 10 ngón và quản lý thời gian tự học — các em dùng chung 8 laptop tài trợ tại điểm trường.",
         qrContent: "DA-002 Hoi Thao Hoc Tap So",
         qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-002%20Hoi%20Thao%20Hoc%20Tap%20So&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
       },
@@ -464,7 +529,7 @@
         tag: "Sắp diễn ra",
         tagBg: "#e0f2fe", tagColor: "#0369a1",
         title: "Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)",
-        desc: "Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.",
+        desc: "Mục tiêu quyên góp 300 áo khoác và 150 chăn bông cho 2 điểm trường tại Đồng Văn, Hà Giang, nơi nhiệt độ tháng 12 năm ngoái xuống dưới 5°C. Đồ quyên góp được phân loại, giặt sạch tại kho ở Hà Nội trước khi vận chuyển, dự kiến chuyến xe đầu tiên khởi hành ngày 25/11.",
         qrContent: "DA-001 Ao Am Vung Cao",
         qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
       },
@@ -477,7 +542,7 @@
         tag: "Kế hoạch quý IV",
         tagBg: "#ccfbf1", tagColor: "#0f766e",
         title: "Phát động Học Bổng Ươm Mầm",
-        desc: "Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.",
+        desc: "Xét duyệt 20 suất học bổng trị giá 2 triệu đồng/em/năm học, dựa trên hồ sơ hoàn cảnh do giáo viên chủ nhiệm xác nhận trực tiếp — không qua đơn xin trực tuyến. Danh sách và tiêu chí xét duyệt sẽ công bố công khai trên trang Sao Kê trước ngày 15/12.",
         qrContent: "DA-003 Hoc Bong Uom Mam",
         qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Hoc%20Bong%20Uom%20Mam&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
       }
@@ -490,7 +555,10 @@
     function renderActivityEventCard(ev) {
       return `
         <div class="event-card" id="${ev.anchor}">
-          <div class="event-card-top" style="background:${ev.topBg};"><i class="fa-solid ${ev.icon}"></i></div>
+          <div class="event-card-top" style="background:${ev.topBg};">
+            <img src="https://picsum.photos/seed/${ev.anchor}/400/300" alt="Ảnh minh hoạ ${ev.title}" loading="lazy">
+            <span class="event-icon-badge"><i class="fa-solid ${ev.icon}"></i></span>
+          </div>
           <div class="event-card-body">
             <div class="event-card-meta">
               <span class="event-tag" style="background:${ev.tagBg}; color:${ev.tagColor};">${ev.tag}</span>
