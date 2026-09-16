@@ -15,8 +15,6 @@ Sau đợt khảo sát nhu cầu thực hiện trong tháng 9, Mạng Lưới Tr
 
 Nhiệt độ tại Đồng Văn tháng 12 năm ngoái đã xuống dưới 5°C. Với phần lớn học sinh chỉ có một áo khoác mỏng mặc suốt mùa đông, đây không phải là chiến dịch có thể chờ đợi.
 
-![Học sinh vùng cao trong áo khoác ấm được trao tặng](images/hoc-sinh-ao-am-dong-phuc.jpg)
-
 ### Bạn có thể đóng góp bằng cách nào
 
 **1. Quyên góp hiện vật:** áo khoác, chăn bông còn sử dụng tốt (không rách, không ố nặng), gửi về địa chỉ kho tiếp nhận tại Hà Nội — thông tin chi tiết tại trang [Liên Hệ](lien-he.html).
