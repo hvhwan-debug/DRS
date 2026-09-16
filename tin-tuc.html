@@ -167,6 +167,15 @@
       text-transform: uppercase; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
       display: inline-flex; align-items: center; gap: 4px;
     }
+    /* Nhãn phân loại "Bài Viết" / "Sự Kiện" — đặt ở đầu phần nội dung, phía trên tiêu đề,
+       để phân biệt rõ bài tường thuật/kiến thức với các thông báo về sự kiện cụ thể. */
+    .news-type-badge {
+      display: inline-flex; align-items: center; gap: 5px; align-self: flex-start;
+      padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.2px; margin-bottom: 0.7rem;
+    }
+    .news-type-badge.type-article { background: #e0f2fe; color: #0369a1; }
+    .news-type-badge.type-event { background: #fef3c7; color: #b45309; }
     .news-content { padding: 1.5rem 1.4rem; flex-grow: 1; display: flex; flex-direction: column; }
     .news-content h3 { font-size: 1.15rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 700; line-height: 1.35; }
     .news-content p { font-size: 0.92rem; color: #475569; line-height: 1.6; flex-grow: 1; margin-bottom: 1rem; }
@@ -434,9 +443,10 @@
     // date: 2026-04-20
     // image: images/uploads/xxx.jpg
     // excerpt: "..."
+    // loai: "tin-tuc" | "su-kien"
     // ---
     function parseFrontMatter(raw) {
-      const result = { title: "", date: "", image: "", excerpt: "", body: raw, valid: false };
+      const result = { title: "", date: "", image: "", excerpt: "", loai: "", body: raw, valid: false };
       const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
       if (!match) return result;
       result.valid = true;
@@ -448,7 +458,7 @@
         const key = kv[1].trim().toLowerCase();
         let value = kv[2].trim();
         value = value.replace(/^["']|["']$/g, "");
-        if (key in result || key === "title" || key === "date" || key === "image" || key === "thumbnail" || key === "excerpt" || key === "description") {
+        if (key in result || key === "title" || key === "date" || key === "image" || key === "thumbnail" || key === "excerpt" || key === "description" || key === "loai") {
           if (key === "description") result.excerpt = result.excerpt || value;
           else if (key === "thumbnail") result.image = result.image || value;
           else result[key] = value;
@@ -472,6 +482,21 @@
       return para.trim().slice(0, 160);
     }
 
+    // ==== Nhãn phân loại "Bài Viết" / "Sự Kiện" ====
+    // Ưu tiên đọc trường "loai" khai báo trong front matter của từng bài
+    // ("tin-tuc" → Bài Viết; "su-kien" hoặc "hoat-dong" → Sự Kiện).
+    // Nếu bài không khai báo "loai", tự suy luận theo ngày tháng: ngày nằm ở
+    // tương lai (chưa diễn ra) được coi là Sự Kiện, ngày đã qua coi là Bài Viết.
+    function getPostTypeLabel(post) {
+      const loai = (post.loai || "").trim().toLowerCase();
+      if (loai === "tin-tuc" || loai === "bai-viet") return { key: "article", label: "Bài Viết" };
+      if (loai === "su-kien" || loai === "hoat-dong" || loai === "event") return { key: "event", label: "Sự Kiện" };
+      // Không có "loai" rõ ràng — suy luận theo ngày tháng.
+      return isUpcomingPost(post.date)
+        ? { key: "event", label: "Sự Kiện" }
+        : { key: "article", label: "Bài Viết" };
+    }
+
     let allPosts = [];
     let filteredPosts = [];
     let currentPage = 1;
@@ -489,7 +514,8 @@
         title: p.title || slugToTitle(p.slug),
         date: p.date || "",
         image: p.image || getStableImageForSlug(p.slug),
-        excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết."
+        excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết.",
+        loai: p.loai || ""
       }));
     }
 
@@ -513,7 +539,8 @@
             title: fm.title || slugToTitle(slug),
             date: fm.date || "",
             image: fm.image || getStableImageForSlug(slug),
-            excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết."
+            excerpt: fm.excerpt || firstParagraph(fm.body) || "Bấm để đọc toàn bộ nội dung bài viết.",
+            loai: fm.loai || ""
           };
         } catch (e) {
           return null;
@@ -603,7 +630,9 @@
 
       countEl.textContent = `${posts.length} bài viết — Trang ${currentPage}/${totalPages}`;
 
-      grid.innerHTML = pagePosts.map(p => `
+      grid.innerHTML = pagePosts.map(p => {
+        const typeInfo = getPostTypeLabel(p);
+        return `
         <a class="news-card" href="chi-tiet.html?slug=${encodeURIComponent(p.slug)}">
           <div class="news-img-box">
             <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.onerror=null; this.src=getRandomUploadedImage();">
@@ -611,12 +640,16 @@
             ${isUpcomingPost(p.date) ? `<span class="news-upcoming-badge"><i class="fa-solid fa-clock"></i> Chưa diễn ra</span>` : ""}
           </div>
           <div class="news-content">
+            <span class="news-type-badge type-${typeInfo.key}">
+              <i class="fa-solid ${typeInfo.key === 'event' ? 'fa-calendar-days' : 'fa-newspaper'}"></i> ${typeInfo.label}
+            </span>
             <h3>${p.title}</h3>
             <p>${p.excerpt}</p>
             <span class="news-readmore">Đọc chi tiết <i class="fa-solid fa-arrow-right"></i></span>
           </div>
         </a>
-      `).join("");
+      `;
+      }).join("");
 
       renderPagination(totalPages);
     }
