@@ -5,8 +5,8 @@ loai: "tin-tuc"
 image: "images/uploads/chuoi-hoi-thao-giao-duc-thang-052026-cung-nhin-lai-nhung-co-hoi-hoc-tap-trong-thoi-dai-moi.jpeg"
 excerpt: "Bởi tương lai của giáo dục không chỉ được quyết định trong những hội trường lớn. Nó được tạo nên từ những gì diễn ra mỗi ngày trong một lớp học, một gia đình và trong cách xã hội trao cho mỗi đứa trẻ cơ hội được học tập."
 ---
-https://www.haui.edu.vn//media/96/t96248.jpg
 Tháng 5/2026, các hoạt động và diễn đàn giáo dục tiếp tục tập trung vào những vấn đề đang được xã hội quan tâm: đổi mới phương pháp học tập, chuyển đổi số, AI trong giáo dục, phát triển kỹ năng và mở rộng cơ hội tiếp cận tri thức.
+<img width="2040" height="1360" alt="image" src="https://github.com/user-attachments/assets/a5c88dda-3bdf-405f-8459-dc71e21bb38a" />
 
 Một sự kiện đáng chú ý trong tháng là Education Vietnam 2026, diễn ra từ ngày 06–08/05/2026 tại SECC, TP.HCM, quy tụ các đơn vị giáo dục và công nghệ giáo dục.
 
