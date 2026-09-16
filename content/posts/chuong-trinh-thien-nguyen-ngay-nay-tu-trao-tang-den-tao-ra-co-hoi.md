@@ -7,6 +7,7 @@ excerpt: "Trao một món quà có thể giúp một ngày trở nên tốt đ�
 ---
 
 Thiện nguyện dành cho trẻ em ngày nay đang đứng trước một thay đổi quan trọng: không chỉ giúp đỡ trước mắt, mà cần hướng tới những giá trị có thể tồn tại lâu dài.
+<img width="600" height="400" alt="image" src="https://github.com/user-attachments/assets/223ea5c3-1541-43cc-a05f-f3bec34f5c0b" />
 
 Một chương trình thiện nguyện có thể bắt đầu bằng vài thùng sách, những phần quà, học bổng hay một chuyến đi đến trường vùng khó khăn. Nhưng câu hỏi quan trọng hơn là: sau khi chương trình kết thúc, điều gì còn lại với các em?
 
@@ -41,6 +42,7 @@ Hai câu hỏi dẫn đến hai cách làm rất khác nhau.
 Một bên tập trung vào những gì người hỗ trợ muốn trao.
 
 Một bên bắt đầu từ nhu cầu thực tế của người nhận.
+<img width="543" height="368" alt="image" src="https://github.com/user-attachments/assets/5629b1c7-1e51-468c-ad7a-662f85a34df6" />
 
 Trong giáo dục, cách tiếp cận thứ hai đặc biệt quan trọng vì mỗi trường học, mỗi cộng đồng và mỗi nhóm học sinh có những khó khăn khác nhau.
 
@@ -51,6 +53,7 @@ Một hoạt động chỉ diễn ra trong một ngày có thể tạo ra niềm
 Nhưng giáo dục cần thời gian.
 
 Một tủ sách cần được bổ sung và sử dụng thường xuyên.
+<img width="738" height="415" alt="image" src="https://github.com/user-attachments/assets/1f36fc73-515f-4e18-ab95-13ff60f3bc7d" />
 
 Một chương trình học cần có người phụ trách.
 
