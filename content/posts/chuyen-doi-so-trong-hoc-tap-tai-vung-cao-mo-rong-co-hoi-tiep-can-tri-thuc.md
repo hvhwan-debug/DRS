@@ -7,6 +7,7 @@ excerpt: "Ở những khu vực vùng cao, nơi địa hình còn nhiều cách 
 ---
 
 Ở những khu vực vùng cao, nơi địa hình còn nhiều cách trở và điều kiện học tập chưa thực sự đầy đủ, chuyển đổi số trong giáo dục đang mở ra một hướng đi mới để thu hẹp khoảng cách tiếp cận tri thức. Một chiếc máy tính, máy tính bảng hay một kết nối Internet ổn định có thể giúp học sinh ở những bản làng xa xôi tiếp cận với nguồn tài liệu và phương pháp học tập mà trước đây rất khó có được.
+<img width="617" height="324" alt="image" src="https://github.com/user-attachments/assets/11da452e-b183-46bd-a03b-58ef3f565ac9" />
 
 Khi công nghệ trở thành cây cầu kết nối tri thức
 
@@ -23,6 +24,7 @@ Chuyển đổi số không đơn giản là trang bị máy tính hay máy tín
 Một mô hình chuyển đổi số hiệu quả cần có sự kết hợp giữa thiết bị, kết nối Internet, nội dung giáo dục và con người.
 
 Giáo viên vẫn giữ vai trò quan trọng trong việc hướng dẫn học sinh sử dụng công nghệ, lựa chọn nguồn tài liệu phù hợp và biến những công cụ số thành phương tiện phục vụ việc học.
+<img width="1200" height="628" alt="image" src="https://github.com/user-attachments/assets/b6a2b490-3f04-48f0-a20f-3970472f5d7d" />
 
 Từ học sinh đến giáo viên đều cần được hỗ trợ
 
@@ -41,6 +43,7 @@ Với trẻ em vùng cao, điều này càng quan trọng. Các em không chỉ 
 Thu hẹp khoảng cách không chỉ bằng công nghệ
 
 Chuyển đổi số trong giáo dục vùng cao là một hành trình dài. Những khó khăn về điện, Internet, thiết bị, điều kiện kinh tế và năng lực sử dụng công nghệ vẫn cần được giải quyết đồng bộ.
+![Uploading image.png…]()
 
 Vì vậy, mục tiêu cuối cùng không phải là để học sinh vùng cao có những thiết bị hiện đại nhất, mà là giúp các em có thêm cơ hội học tập và phát triển năng lực của mình.
 
