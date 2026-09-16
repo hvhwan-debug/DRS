@@ -59,21 +59,21 @@
 
     /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — đồng bộ với index.html,
        có vùng đệm để tránh mất hover khi di chuột từ nút xuống menu. */
-    .nav-dropdown { position: relative; display: inline-block; padding-bottom: 12px; margin-bottom: -12px; }
+    .nav-dropdown { position: relative; display: inline-block; }
     .nav-dropdown > .nav-dropdown-trigger {
       margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
       font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
       gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
     }
     .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
-    .nav-dropdown:hover > .nav-dropdown-trigger, .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
     .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
     .nav-dropdown-menu {
       display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
       border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
       padding: 0.5rem; z-index: 100; margin-top: 0;
     }
-    .nav-dropdown:hover > .nav-dropdown-menu, .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
     .nav-dropdown-menu a {
       display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
       color: var(--text-dark); font-weight: 500;
@@ -113,7 +113,7 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown { display: block; width: 100%; padding-bottom: 0; margin-bottom: 0; }
+      .nav-dropdown { display: block; width: 100%; }
       .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
       .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
       .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
@@ -641,7 +641,7 @@
     <div class="footer-transparency-strip">
       <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
-        <a href="index.html#phap-ly" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục vùng cao.</a>
+        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
       </p>
     </div>
 
@@ -699,15 +699,20 @@
       }
     }
 
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — trên desktop mở bằng
-    // hover (CSS), trên di động cần bấm để mở/đóng vì không có sự kiện hover thật.
+    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng trên
+    // mọi kích thước màn hình (giống charity: water), thay vì mở bằng hover.
     function toggleNavDropdown(btn) {
-      if (window.innerWidth > 960) return;
       const dropdown = btn.closest('.nav-dropdown');
       const wasOpen = dropdown.classList.contains('open');
       document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
       if (!wasOpen) dropdown.classList.add('open');
     }
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
 
     // Thư Viện Hình Ảnh — cùng danh sách ảnh và cơ chế xáo trộn ngẫu nhiên
     // như trang chủ, để đồng bộ trải nghiệm trên toàn site.
