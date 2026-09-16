@@ -183,7 +183,50 @@
       .quote-card p { font-size: 1.05rem; }
       .mission-story-block { padding: 2rem 1.5rem; }
     }
-  .nav-dropdown{position:relative;display:inline-block}.nav-dropdown>.nav-dropdown-trigger{margin-left:1.8rem;text-decoration:none;color:var(--text-muted);font-size:.95rem;font-weight:500;font-family:inherit;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:.4rem 0;transition:color .2s}.nav-dropdown>.nav-dropdown-trigger i{font-size:.7rem;transition:transform .2s}.nav-dropdown.open>.nav-dropdown-trigger{color:#0284c7;font-weight:600}.nav-dropdown.open>.nav-dropdown-trigger i{transform:rotate(180deg)}.nav-dropdown-menu{display:none;position:absolute;top:100%;left:1.8rem;background:#fff;min-width:260px;border-radius:12px;border:1px solid var(--border);box-shadow:0 12px 30px rgba(15,23,42,.12);padding:.5rem;z-index:100}.nav-dropdown.open>.nav-dropdown-menu{display:block}.nav-dropdown-menu a{display:block;margin-left:0!important;padding:.65rem .8rem;border-radius:8px;font-size:.9rem;color:var(--text-dark);font-weight:500}.nav-dropdown-menu a:hover{background:#f0f9ff;color:#0284c7!important}.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;max-width:220px}.social-links{display:flex;gap:.65rem;align-items:center}.social-link{width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#cbd5e1;border:1px solid rgba(255,255,255,.18);text-decoration:none;transition:all .2s}.social-link:hover{color:#fff;background:rgba(255,255,255,.1);transform:translateY(-2px)}.footer-transparency-strip{max-width:1240px;margin:2.5rem auto 0;padding:1rem 0 0;border-top:1px solid rgba(255,255,255,.1);text-align:center}.footer-transparency-strip p{margin:.35rem 0;color:#cbd5e1}.footer-transparency-strip .transparency-claim{color:#7dd3fc;text-decoration:underline;text-underline-offset:2px;font-weight:600}.footer-transparency-strip .transparency-sep{margin:0 .6rem;color:#64748b}@media(max-width:960px){.nav-dropdown{display:block;width:100%}.nav-dropdown>.nav-dropdown-trigger{margin-left:0;justify-content:center;width:100%;font-size:1.1rem;padding:.5rem 0}.nav-dropdown-menu{display:none!important;position:static;box-shadow:none;border:none;margin-top:0;text-align:center}.nav-dropdown.open .nav-dropdown-menu{display:block!important}}
+  
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+      padding: 0.5rem; z-index: 100; margin-top: 0;
+    }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
+      color: var(--text-dark); font-weight: 500;
+    }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
+    .social-links { display: flex; gap: 0.65rem; align-items: center; }
+    .social-link {
+      width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #cbd5e1; border: 1px solid rgba(255,255,255,0.18); text-decoration: none; transition: all 0.2s;
+    }
+    .social-link:hover { color: #ffffff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+    .footer-transparency-strip {
+      max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0;
+      border-top: 1px solid rgba(255,255,255,0.1); text-align: center;
+    }
+    .footer-transparency-strip p { margin: 0.35rem 0; color: #cbd5e1; }
+    .footer-transparency-strip .transparency-claim {
+      color: #7dd3fc; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;
+    }
+    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+    @media (max-width: 960px) {
+      .nav-dropdown { display: block; width: 100%; }
+      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
+      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -204,7 +247,7 @@
       </div>
     </a>
     <nav class="nav-links" id="navLinks">
-      <div class="nav-dropdown">
+      <div class="nav-dropdown" id="navDropdownAction">
         <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
         <div class="nav-dropdown-menu">
           <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
@@ -213,7 +256,7 @@
           <a href="lien-he.html">Đăng ký tình nguyện viên</a>
         </div>
       </div>
-      <div class="nav-dropdown">
+      <div class="nav-dropdown" id="navDropdownAbout">
         <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
         <div class="nav-dropdown-menu">
           <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
@@ -228,7 +271,9 @@
     </nav>
     <div style="display:flex;align-items:center;gap:10px;">
       <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
-      <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng"><i class="fa-solid fa-bars"></i></button>
+      <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
   </div>
 </header>
@@ -297,6 +342,37 @@
       <p style="font-weight: 800; color: #0f172a; margin-top: 1.5rem; text-align: center; font-size: 1.15rem; background: #ffffff; padding: 1.2rem; border-radius: 12px; border: 1px solid #bae6fd;">Vì cơ hội học tập không nên phụ thuộc vào hoàn cảnh.<br><span style="color: #0284c7;">Hãy cùng chúng tôi mở thêm một cơ hội.</span></p>
     </div>
 
+  
+    <section class="mission-story-block" style="background:linear-gradient(135deg,#f8fafc 0%,#eef6ff 100%);border-color:#cbd5e1;">
+      <h2><i class="fa-solid fa-building"></i> Wisdom Vietnam Network và Công ty TNHH DR Solutions</h2>
+      <p><strong>Wisdom Vietnam Network (WVN)</strong> là mạng lưới và nền tảng hoạt động cộng đồng được xây dựng nhằm kết nối các nguồn lực xã hội với những nhu cầu thực tế trong giáo dục, học tập và phát triển cộng đồng tại Việt Nam.</p>
+      <p>WVN hoạt động dưới sự tổ chức và vận hành của <strong>Công ty TNHH DR Solutions</strong>. DR Solutions là pháp nhân chịu trách nhiệm về mặt tổ chức, quản trị và vận hành đối với các hoạt động được triển khai dưới tên Wisdom Vietnam Network.</p>
+      <p>Việc sử dụng tên <strong>Wisdom Vietnam Network</strong> nhằm nhận diện một mạng lưới hoạt động cộng đồng và các chương trình hướng tới giáo dục, thay vì một pháp nhân độc lập. WVN và DR Solutions có mối quan hệ trực tiếp về mặt vận hành: WVN là tên gọi của mạng lưới/nền tảng hoạt động cộng đồng, còn DR Solutions là pháp nhân đứng sau tổ chức và vận hành mạng lưới này.</p>
+
+      <h3 style="margin-top:2rem;color:#0369a1;font-size:1.2rem;">Thông tin pháp nhân và nhận diện</h3>
+      <ul style="list-style:none;margin:1rem 0;padding:0;color:var(--text-muted);font-size:1.05rem;">
+        <li style="margin-bottom:.55rem;"><strong>Tên pháp nhân:</strong> CÔNG TY TNHH DR SOLUTIONS</li>
+        <li style="margin-bottom:.55rem;"><strong>Mã số doanh nghiệp:</strong> 0111291749</li>
+        <li style="margin-bottom:.55rem;"><strong>Tên mạng lưới hoạt động cộng đồng:</strong> Wisdom Vietnam Network (WVN)</li>
+        <li style="margin-bottom:.55rem;"><strong>Tên miền hoạt động:</strong> wvn.vn</li>
+        <li style="margin-bottom:.55rem;"><strong>Email liên hệ:</strong> hotro@wvn.vn</li>
+        <li style="margin-bottom:.55rem;"><strong>Email doanh nghiệp:</strong> cskh@dr.com</li>
+        <li><strong>Địa chỉ trụ sở:</strong> Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</li>
+      </ul>
+
+      <h3 style="margin-top:2rem;color:#0369a1;font-size:1.2rem;">DR Solutions vận hành WVN như thế nào?</h3>
+      <p>Công ty TNHH DR Solutions cung cấp và quản lý các nguồn lực cần thiết để Wisdom Vietnam Network hoạt động, bao gồm tổ chức và điều phối các chương trình cộng đồng; kết nối với trường học, cộng đồng, cá nhân, doanh nghiệp và đối tác; quản lý các kênh thông tin và nền tảng trực tuyến; điều phối nhân sự và tình nguyện viên; quản lý hồ sơ, tài liệu và thông tin liên quan đến hoạt động; đồng thời công khai thông tin về chương trình và kết quả hoạt động.</p>
+      <p>Thông qua mô hình này, <strong>wvn.vn là kênh thông tin và kết nối chính của Wisdom Vietnam Network</strong>, trong khi <strong>DR Solutions là pháp nhân tổ chức và vận hành mạng lưới</strong>.</p>
+
+      <h3 style="margin-top:2rem;color:#0369a1;font-size:1.2rem;">Vì sao chúng tôi công khai mối quan hệ này?</h3>
+      <p>Chúng tôi công khai rõ mối quan hệ giữa <strong>Wisdom Vietnam Network, wvn.vn và Công ty TNHH DR Solutions</strong> nhằm giúp cộng đồng, đối tác, nhà tài trợ, tình nguyện viên và các tổ chức xác minh dễ dàng xác định WVN là gì, đơn vị nào vận hành WVN và trách nhiệm tổ chức thuộc về pháp nhân nào.</p>
+      <p>Việc công khai danh tính tổ chức, pháp nhân vận hành, thông tin liên hệ và mối quan hệ với tên miền là một phần trong cam kết của chúng tôi về <strong>tính minh bạch và trách nhiệm với cộng đồng</strong>.</p>
+
+      <div style="margin-top:1.5rem;padding:1.2rem;background:#fff;border:1px solid #bae6fd;border-radius:12px;text-align:center;font-weight:700;color:#0f172a;">
+        Wisdom Vietnam Network (WVN) là một mạng lưới hoạt động cộng đồng được tổ chức và vận hành bởi Công ty TNHH DR Solutions.
+      </div>
+    </section>
+
   </main>
 
   <!-- Modal Quyên góp -->
@@ -341,9 +417,16 @@
   </div>
   <div class="footer-transparency-strip">
     <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
-    <p><a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a><span class="transparency-sep">•</span><a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('newsletterEmail').focus();return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a></p>
+    <p>
+      <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+      <span class="transparency-sep">•</span>
+      <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('newsletterEmail').focus();return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+    </p>
   </div>
-  <div class="footer-bottom">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></div>
+  <div class="footer-bottom">
+    &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp;
+    <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+  </div>
 </footer>
 
   <script>
@@ -364,7 +447,19 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-  function toggleNavDropdown(btn){const dropdown=btn.closest('.nav-dropdown');const wasOpen=dropdown.classList.contains('open');document.querySelectorAll('.nav-dropdown.open').forEach(d=>d.classList.remove('open'));if(!wasOpen)dropdown.classList.add('open')}document.addEventListener('click',function(e){if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown.open').forEach(d=>d.classList.remove('open'))});
+  
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
   </script>
 </body>
 </html>
