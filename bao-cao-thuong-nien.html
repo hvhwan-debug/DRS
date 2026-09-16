@@ -194,39 +194,106 @@
       .hero-title { font-size: 2.1rem; }
       .report-card { padding: 1.5rem; }
     }
+  
+    /* CSS đồng bộ Header/Footer với index.html */
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem;
+      font-weight: 500; font-family: inherit; background: none; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #fff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,.12);
+      padding: .5rem; z-index: 100; margin-top: 0;
+    }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; margin-left: 0 !important; padding: .65rem .8rem; border-radius: 8px;
+      font-size: .9rem; color: var(--text-dark); font-weight: 500;
+    }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; max-width:220px; }
+    .social-links { display:flex; gap:.65rem; align-items:center; }
+    .social-link {
+      width:38px; height:38px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+      color:#cbd5e1; border:1px solid rgba(255,255,255,.18); text-decoration:none; transition:all .2s;
+    }
+    .social-link:hover { color:#fff; background:rgba(255,255,255,.1); transform:translateY(-2px); }
+    .footer-transparency-strip {
+      max-width:1240px; margin:2.5rem auto 0; padding:1rem 0 0;
+      border-top:1px solid rgba(255,255,255,.1); text-align:center;
+    }
+    .footer-transparency-strip p { margin:.35rem 0; color:#cbd5e1; }
+    .footer-transparency-strip .transparency-claim {
+      color:#7dd3fc; text-decoration:underline; text-underline-offset:2px; font-weight:600;
+    }
+    .footer-transparency-strip .transparency-sep { margin:0 .6rem; color:#64748b; }
+    @media (max-width:960px) {
+      .nav-dropdown { display:block; width:100%; }
+      .nav-dropdown > .nav-dropdown-trigger {
+        margin-left:0; justify-content:center; width:100%; font-size:1.1rem; padding:.5rem 0;
+      }
+      .nav-dropdown-menu {
+        display:none !important; position:static; box-shadow:none; border:none; margin-top:0; text-align:center;
+      }
+      .nav-dropdown.open .nav-dropdown-menu { display:block !important; }
+    }
+
   </style>
 </head>
 <body>
 
   <header>
-    <div class="nav-container">
-      <a href="index.html" class="brand-wrap">
-        <div class="brand-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-          </svg>
-        </div>
-        <div class="brand-text-group">
-          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
-          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
-        </div>
-      </a>
-      <nav class="nav-links" id="navLinks">
-        <a href="su-menh.html">Giới Thiệu</a>
-        <a href="hoat-dong.html">Hoạt Động</a>
-        <a href="sao-ke.html">Tra Cứu Sao Kê</a>
-        <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>
-      </nav>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" onclick="window.location.href='quyen-gop.html'">Quyên Góp</button>
-        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
-          <i class="fa-solid fa-bars"></i>
-        </button>
+  <div class="nav-container">
+    <a href="index.html" class="brand-wrap">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
       </div>
+      <div class="brand-text-group">
+        <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+        <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+      </div>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <div class="nav-dropdown" id="navDropdownAction">
+        <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="nav-dropdown-menu">
+          <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
+          <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
+          <a href="lien-he.html">Trở thành nhà tài trợ</a>
+          <a href="lien-he.html">Đăng ký tình nguyện viên</a>
+        </div>
+      </div>
+      <div class="nav-dropdown" id="navDropdownAbout">
+        <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="nav-dropdown-menu">
+          <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+          <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
+          <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
+          <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
+        </div>
+      </div>
+      <a href="hoat-dong.html">Hoạt Động</a>
+      <a href="tin-tuc.html">Tin Tức</a>
+      <a href="lien-he.html">Liên Hệ</a>
+    </nav>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
+      <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
-  </header>
+  </div>
+</header>
 
   <section class="hero-wrapper">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
@@ -368,35 +435,46 @@
   </main>
 
   <footer>
-    <div class="footer-grid">
-      <div>
-        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
-        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
-        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
-      </div>
-      <div>
-        <h4>Địa Chỉ Trụ Sở</h4>
-        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
-        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
-      </div>
-      <div>
-        <h4>Cam Kết Xã Hội</h4>
-        <p>100% lợi nhuận sau thuế tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng.</p>
-        <p style="margin-top:0.6rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
-      </div>
-      <div>
-        <h4>Kết Nối Với Chúng Tôi</h4>
-        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-        <div class="social-links" style="margin-top: 0.8rem;">
-          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-        </div>
+  <div class="footer-grid">
+    <div>
+      <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+      <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+      <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+      <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+    </div>
+    <div>
+      <h4>Địa Chỉ Trụ Sở</h4>
+      <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+      <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+      <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+    </div>
+    <div>
+      <h4><i class="fa-solid fa-images" style="font-size:0.85em;margin-right:6px;color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+      <div class="gallery-grid" id="galleryGrid" style="margin-top:0.9rem;"></div>
+    </div>
+    <div>
+      <h4>Kết Nối Với Chúng Tôi</h4>
+      <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
+      <div class="social-links" style="margin-top:0.8rem;">
+        <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
       </div>
     </div>
-    <div class="footer-bottom">
-      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
-    </div>
-  </footer>
+  </div>
+
+  <div class="footer-transparency-strip">
+    <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+    <p>
+      <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+      <span class="transparency-sep">•</span>
+      <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('newsletterEmail').focus();return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+    </p>
+  </div>
+
+  <div class="footer-bottom">
+    &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp;
+    <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+  </div>
+</footer>
 
   <script>
     function toggleMobileMenu() {
@@ -409,6 +487,19 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
+  
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
   </script>
 </body>
 </html>
