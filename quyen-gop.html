@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chính Sách Bảo Mật & Điều Khoản Sử Dụng - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Chính sách bảo mật thông tin và điều khoản sử dụng website của Mạng Lưới Tri Thức Việt Nam, doanh nghiệp xã hội phi lợi nhuận hoạt động minh bạch vì giáo dục cộng đồng.">
+  <title>Quyên Góp - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Quyên góp cho Mạng Lưới Tri Thức Việt Nam qua chuyển khoản ngân hàng an toàn, minh bạch — chọn đúng dự án bạn muốn đồng hành: Áo Ấm Vùng Cao, Hội Thảo Học Tập Số, Học Bổng Ươm Mầm.">
+  <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -30,6 +31,7 @@
     }
     body { padding-top: 72px; }
 
+    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -55,32 +57,6 @@
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
-
-
-    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng,
-       đồng bộ trên toàn site (giống charity: water). */
-    .nav-dropdown { position: relative; display: inline-block; }
-    .nav-dropdown > .nav-dropdown-trigger {
-      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
-      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
-      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
-    }
-    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
-    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
-    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
-    .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
-      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-      padding: 0.5rem; z-index: 100; margin-top: 0;
-    }
-    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
-    .nav-dropdown-menu a {
-      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
-      color: var(--text-dark); font-weight: 500;
-    }
-    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
-        .nav-dropdown-trigger.active-page { color: #0284c7; font-weight: 600; }
-
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
@@ -105,23 +81,15 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Banner trang (đồng bộ với các trang phụ khác) */
-    .page-banner {
-      position: relative; width: 100%; padding: 3.6rem 1.5rem 4rem; color: var(--white); overflow: hidden;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite; text-align: center;
+    /* Hero Banner */
+    .hero-wrapper {
+      width: 100%; background: var(--blue-grad-hero); padding: 4.5rem 1.5rem 5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
-    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    .page-banner .hero-badge {
-      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
+    .hero-wrapper::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 26px 26px;
     }
-    .page-banner h1 { font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
-    .page-banner p { color: #e0f2fe; font-size: 1rem; max-width: 620px; margin: 0 auto; }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác */
     .hero-dove {
-      position: absolute; top: 8%; right: 5%; width: 100px; height: auto;
+      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
       opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
       pointer-events: none; z-index: 5;
       animation: doveFloat 9s ease-in-out infinite;
@@ -139,55 +107,117 @@
       .brand-subtitle { font-size: 0.6rem; }
     }
     @media (max-width: 640px) {
-      .hero-dove { width: 64px; top: 4%; right: 4%; opacity: 0.35; }
+      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
+      position: relative; z-index: 1;
+    }
+    .hero-title { font-size: 2.8rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; position: relative; z-index: 1; }
+    .hero-desc { font-size: 1.1rem; color: #e0f2fe; max-width: 680px; margin: 0 auto; line-height: 1.7; position: relative; z-index: 1; }
+
+    /* Container chính */
+    .container { max-width: 1100px; margin: -3rem auto 5rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+
+    .section-header { text-align: center; margin-bottom: 2.2rem; }
+    .section-header h2 { font-size: 1.65rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .section-header p { color: #64748b; font-size: 0.98rem; max-width: 620px; margin: 0 auto; }
+
+    /* ==== Khối chọn dự án — mỗi dự án có mã riêng để phân biệt khi tra cứu sao kê ==== */
+    .project-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1.6rem; margin-bottom: 3.5rem;
+    }
+    .project-card {
+      background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06); display: flex; flex-direction: column;
+    }
+    .project-top { height: 78px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; color: #fff; }
+    .project-body { padding: 1.6rem; flex-grow: 1; display: flex; flex-direction: column; }
+    .project-code-tag {
+      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.28rem 0.8rem; border-radius: 999px;
+      font-weight: 800; font-size: 0.76rem; letter-spacing: 0.4px; margin-bottom: 0.8rem; align-self: flex-start;
+    }
+    .project-body h3 { font-size: 1.08rem; color: var(--text-dark); margin-bottom: 0.6rem; font-weight: 800; line-height: 1.35; }
+    .project-body p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.2rem; flex-grow: 1; }
+    .project-qr { text-align: center; margin-bottom: 1rem; }
+    .project-qr img { width: 100%; max-width: 190px; border-radius: 12px; border: 1px solid var(--border); }
+    .project-code-box {
+      background: #f0f9ff; border: 1px dashed #7dd3fc; border-radius: 10px; padding: 0.7rem 0.9rem;
+      text-align: center; font-size: 0.9rem; color: #0369a1;
+    }
+    .project-code-box strong { display: block; font-size: 1rem; letter-spacing: 0.5px; margin-top: 0.2rem; }
+
+    .donate-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch; margin-bottom: 2.5rem;
     }
 
-    /* Nội dung chính sách */
-    .container { max-width: 880px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
-
-    .policy-updated {
-      background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; border-radius: 10px;
-      padding: 0.9rem 1.2rem; font-size: 0.9rem; margin: 2.5rem 0 2rem; display: flex; align-items: center; gap: 10px;
+    .donate-card {
+      background: #ffffff; border-radius: 22px; padding: 2.6rem; border: 1px solid var(--border);
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.07);
     }
-
-    .policy-toc {
-      background: #ffffff; border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.8rem;
-      margin-bottom: 2.5rem; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
-    }
-    .policy-toc h4 { font-size: 0.95rem; color: var(--text-dark); margin-bottom: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; }
-    .policy-toc ol { padding-left: 1.2rem; }
-    .policy-toc li { margin-bottom: 0.4rem; }
-    .policy-toc a { color: #0284c7; text-decoration: none; font-size: 0.94rem; font-weight: 600; }
-    .policy-toc a:hover { text-decoration: underline; }
-
-    .policy-section {
-      background: #ffffff; border-radius: 18px; padding: 2.2rem 2.4rem; border: 1px solid var(--border);
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04); margin-bottom: 1.6rem; scroll-margin-top: 90px;
-    }
-    .policy-section h2 {
-      font-size: 1.3rem; font-weight: 800; color: #0369a1; margin-bottom: 1rem;
+    .donate-card h2 {
+      font-size: 1.35rem; color: #0369a1; margin-bottom: 1.4rem; font-weight: 800;
       display: flex; align-items: center; gap: 10px;
     }
-    .policy-section h2 i {
-      width: 36px; height: 36px; background: #e0f2fe; color: #0284c7; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0;
+    .donate-card h2 i {
+      width: 38px; height: 38px; background: #e0f2fe; color: #0284c7; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
     }
-    .policy-section p { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 0.9rem; }
-    .policy-section p:last-child { margin-bottom: 0; }
-    .policy-section ul { padding-left: 1.3rem; margin-bottom: 0.9rem; }
-    .policy-section li { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 0.5rem; }
-    .policy-section strong { color: var(--text-dark); }
-    .policy-section a { color: #0284c7; font-weight: 600; text-decoration: none; }
-    .policy-section a:hover { text-decoration: underline; }
 
-    .contact-box {
+    .qr-box { text-align: center; }
+    .qr-box img { width: 100%; max-width: 260px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 1.2rem; }
+    .bank-info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .bank-info-row:last-child { border-bottom: none; }
+    .bank-info-row span:first-child { color: var(--text-muted); }
+    .bank-info-row span:last-child { font-weight: 700; color: var(--text-dark); text-align: right; }
+
+    .donate-steps { list-style: none; counter-reset: step; }
+    .donate-steps li {
+      counter-increment: step; display: flex; gap: 1rem; margin-bottom: 1.3rem; align-items: flex-start;
+    }
+    .donate-steps li:last-child { margin-bottom: 0; }
+    .donate-steps li::before {
+      content: counter(step); flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+      background: var(--blue-grad-btn); color: #fff; font-weight: 800; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .donate-steps li div { color: var(--text-muted); font-size: 0.96rem; padding-top: 0.3rem; }
+    .donate-steps li strong { color: var(--text-dark); }
+
+    .transparency-band {
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd;
-      border-radius: 14px; padding: 1.6rem 1.8rem; margin-top: 2rem;
+      border-radius: 20px; padding: 2.2rem 2.4rem; margin-bottom: 2.5rem; text-align: center;
     }
-    .contact-box p { color: var(--text-dark); margin-bottom: 0.4rem; }
-    .contact-box p:last-child { margin-bottom: 0; }
+    .transparency-band i { font-size: 1.8rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
+    .transparency-band h3 { font-size: 1.2rem; color: #0369a1; margin-bottom: 0.6rem; font-weight: 800; }
+    .transparency-band p { color: var(--text-dark); font-size: 0.98rem; max-width: 620px; margin: 0 auto 1.2rem; }
+    .transparency-band a.btn { padding: 0.75rem 1.8rem; font-size: 0.95rem; }
 
-    /* Footer 3 cột */
+    .alt-donate-section { margin-bottom: 2.5rem; }
+    .alt-donate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1.4rem; }
+    .alt-donate-card {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 18px; padding: 1.8rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .alt-donate-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(2, 132, 199, 0.1); }
+    .alt-donate-card .alt-icon {
+      width: 46px; height: 46px; background: #e0f2fe; color: #0284c7; border-radius: 12px; margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .alt-donate-card h4 { font-size: 1.05rem; color: var(--text-dark); margin-bottom: 0.6rem; font-weight: 700; }
+    .alt-donate-card p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .alt-donate-card a { color: #0284c7; font-weight: 700; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .alt-donate-card a:hover { text-decoration: underline; }
+
+    .legal-note {
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #0284c7;
+      padding: 1.6rem 1.8rem; border-radius: 14px; font-size: 0.92rem; color: var(--text-muted);
+    }
+    .legal-note strong { color: #0369a1; }
+
+    /* Footer chuẩn 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -203,6 +233,9 @@
     .footer-bottom a { color: #94a3b8; text-decoration: none; }
     .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
+    @media (max-width: 900px) {
+      .donate-grid { grid-template-columns: 1fr; }
+    }
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
       .nav-links {
@@ -212,127 +245,73 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown { display: block; width: 100%; }
-      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
-      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
-      .page-banner h1 { font-size: 1.8rem; }
-      .policy-section { padding: 1.6rem 1.4rem; }
+      .hero-title { font-size: 2.1rem; }
+      .donate-card { padding: 1.8rem; }
+      .transparency-band { padding: 1.8rem 1.3rem; }
     }
-  
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
-    @media (max-width: 960px) {
-      .gallery-grid { max-width: 100%; gap: 0.7rem; }
-    }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
 
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
+    .nav-dropdown { position:relative; display:inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left:1.8rem; text-decoration:none; color:var(--text-muted); font-size:.95rem; font-weight:500;
+      font-family:inherit; background:none; border:none; cursor:pointer; display:inline-flex; align-items:center;
+      gap:5px; padding:.4rem 0; transition:color .2s;
     }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
+    .nav-dropdown > .nav-dropdown-trigger i { font-size:.7rem; transition:transform .2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color:#0284c7; font-weight:600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform:rotate(180deg); }
+    .nav-dropdown-menu {
+      display:none; position:absolute; top:100%; left:1.8rem; background:#fff; min-width:260px;
+      border-radius:12px; border:1px solid var(--border); box-shadow:0 12px 30px rgba(15,23,42,.12);
+      padding:.5rem; z-index:100; margin-top:0;
     }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+    .nav-dropdown.open > .nav-dropdown-menu { display:block; }
+    .nav-dropdown-menu a {
+      display:block; margin-left:0 !important; padding:.65rem .8rem; border-radius:8px; font-size:.9rem;
+      color:var(--text-dark); font-weight:500;
     }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+    .nav-dropdown-menu a:hover { background:#f0f9ff; color:#0284c7 !important; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; max-width:220px; }
+    .social-links { display:flex; gap:.65rem; align-items:center; }
+    .social-link {
+      width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+      color:#cbd5e1;border:1px solid rgba(255,255,255,.18);text-decoration:none;transition:all .2s;
     }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
+    .social-link:hover { color:#fff;background:rgba(255,255,255,.1);transform:translateY(-2px); }
+    .footer-transparency-strip {
+      max-width:1240px;margin:2.5rem auto 0;padding:1rem 0 0;
+      border-top:1px solid rgba(255,255,255,.1);text-align:center;
     }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
+    .footer-transparency-strip p { margin:.35rem 0; color:#cbd5e1; }
+    .footer-transparency-strip .transparency-claim {
+      color:#7dd3fc;text-decoration:underline;text-underline-offset:2px;font-weight:600;
+    }
+    .footer-transparency-strip .transparency-sep { margin:0 .6rem; color:#64748b; }
+    @media (max-width:960px) {
+      .mobile-menu-btn { display:block; }
+      .nav-links {
+        display:none;position:absolute;top:72px;left:0;right:0;background:#fff;
+        flex-direction:column;padding:1.5rem;border-bottom:1px solid var(--border);
+        box-shadow:0 10px 25px rgba(0,0,0,.1);text-align:center;gap:1rem;
+      }
+      .nav-links.active { display:flex; }
+      .nav-dropdown { display:block;width:100%; }
+      .nav-dropdown > .nav-dropdown-trigger {
+        margin-left:0;justify-content:center;width:100%;font-size:1.1rem;padding:.5rem 0;
+      }
+      .nav-dropdown-menu {
+        display:none !important;position:static;box-shadow:none;border:none;margin-top:0;text-align:center;
+      }
+      .nav-dropdown.open .nav-dropdown-menu { display:block !important; }
+      .nav-links a { margin-left:0 !important;font-size:1.1rem;padding:.5rem 0; }
+      .gallery-grid { max-width:100%;gap:.7rem; }
+    }
 
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
-  
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
-    @media (max-width: 960px) {
-      .gallery-grid { max-width: 100%; gap: 0.7rem; }
-    }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
-
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
-    }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
-    }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
-
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định -->
-  <header>
+  <!-- Menu Cố Định Đồng Bộ -->
+    <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
@@ -355,22 +334,21 @@
             <a href="lien-he.html">Trở thành nhà tài trợ</a>
             <a href="lien-he.html">Đăng ký tình nguyện viên</a>
           </div>
-
+        </div>
         <div class="nav-dropdown">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
-            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
             <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
             <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
             <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
           </div>
-        </div>        </div>        </div>        </div>
-
+        </div>
         <a href="hoat-dong.html">Hoạt Động</a>
         <a href="tin-tuc.html">Tin Tức</a>
-        <a href="lien-he.html">Liên Hệ</a>      </nav>
-      <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:10px;">
         <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
@@ -379,190 +357,219 @@
     </div>
   </header>
 
-  <!-- Banner -->
-  <section class="page-banner">
+  <!-- Hero Banner -->
+  <section class="hero-wrapper">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-badge">MINH BẠCH & TIN CẬY</div>
-    <h1>Chính Sách Bảo Mật & Điều Khoản Sử Dụng</h1>
-    <p>Cam kết của chúng tôi trong việc bảo vệ thông tin cá nhân và sử dụng website một cách minh bạch, an toàn.</p>
+    <div class="hero-badge">CHUNG TAY VÌ GIÁO DỤC CÔNG BẰNG</div>
+    <h1 class="hero-title">Quyên Góp Vì Cơ Hội Học Tập</h1>
+    <p class="hero-desc">Mỗi đóng góp của bạn, dù lớn hay nhỏ, đều trực tiếp góp phần mang sách, học liệu và cơ hội học tập tới trẻ em vùng cao Việt Nam. 100% lợi nhuận sau thuế được tái đầu tư cho các chương trình giáo dục.</p>
   </section>
 
   <main class="container">
 
-    <div class="policy-updated">
-      <i class="fa-regular fa-clock"></i>
-      <span>Cập nhật lần gần nhất: Tháng 9/2026</span>
+    <!-- Chọn dự án cụ thể -->
+    <div class="section-header">
+      <h2>Chọn Dự Án Bạn Muốn Đồng Hành</h2>
+      <p>Mỗi dự án có mã riêng — ghi đúng mã vào nội dung chuyển khoản để khoản đóng góp của bạn được ghi nhận đúng vào dự án mong muốn.</p>
     </div>
 
-    <div class="policy-toc">
-      <h4>Mục lục</h4>
-      <ol>
-        <li><a href="#thu-thap">Thông tin chúng tôi thu thập</a></li>
-        <li><a href="#muc-dich">Mục đích sử dụng thông tin</a></li>
-        <li><a href="#chia-se">Chia sẻ thông tin với bên thứ ba</a></li>
-        <li><a href="#luu-tru">Lưu trữ và bảo mật dữ liệu</a></li>
-        <li><a href="#cookie">Cookie & công nghệ theo dõi</a></li>
-        <li><a href="#quyen">Quyền của bạn đối với dữ liệu cá nhân</a></li>
-        <li><a href="#dieu-khoan">Điều khoản sử dụng website</a></li>
-        <li><a href="#ban-quyen">Bản quyền nội dung & khiếu nại vi phạm</a></li>
-        <li><a href="#quyen-gop">Chính sách quyên góp & minh bạch tài chính</a></li>
-        <li><a href="#thay-doi">Thay đổi chính sách</a></li>
-        <li><a href="#lien-he">Liên hệ về quyền riêng tư</a></li>
-      </ol>
-    </div>
+    <div class="project-grid">
 
-    <div class="policy-section" id="thu-thap">
-      <h2><i class="fa-solid fa-database"></i> 1. Thông tin chúng tôi thu thập</h2>
-      <p>Mạng Lưới Tri Thức Việt Nam ("chúng tôi") chỉ thu thập những thông tin cá nhân cần thiết, tối thiểu, khi bạn chủ động cung cấp thông qua các biểu mẫu trên website, cụ thể:</p>
-      <ul>
-        <li><strong>Họ và tên, địa chỉ email, nội dung tin nhắn</strong> — khi bạn điền biểu mẫu tại trang Liên Hệ để gửi câu hỏi, góp ý hoặc đề xuất hợp tác.</li>
-        <li><strong>Thông tin giao dịch quyên góp</strong> — được ghi nhận qua hệ thống ngân hàng khi bạn thực hiện chuyển khoản qua mã VietQR, không do website trực tiếp thu thập hay lưu trữ số tài khoản của người quyên góp.</li>
-      </ul>
-      <p>Chúng tôi <strong>không thu thập</strong> thông tin nhạy cảm như số căn cước công dân, mật khẩu, hay dữ liệu tài chính chi tiết của người dùng thông qua website.</p>
-    </div>
-
-    <div class="policy-section" id="muc-dich">
-      <h2><i class="fa-solid fa-bullseye"></i> 2. Mục đích sử dụng thông tin</h2>
-      <p>Thông tin bạn cung cấp qua biểu mẫu liên hệ được sử dụng duy nhất để:</p>
-      <ul>
-        <li>Phản hồi câu hỏi, góp ý hoặc đề xuất hợp tác của bạn qua email.</li>
-        <li>Liên hệ xác nhận trong trường hợp cần trao đổi thêm về nội dung bạn đã gửi.</li>
-      </ul>
-      <p>Chúng tôi không sử dụng thông tin cá nhân của bạn cho mục đích quảng cáo, tiếp thị của bên thứ ba, hoặc bán/cho thuê dữ liệu dưới bất kỳ hình thức nào.</p>
-    </div>
-
-    <div class="policy-section" id="chia-se">
-      <h2><i class="fa-solid fa-share-nodes"></i> 3. Chia sẻ thông tin với bên thứ ba</h2>
-      <p>Chúng tôi không bán, trao đổi hay chuyển giao thông tin cá nhân của bạn cho bên thứ ba vì mục đích thương mại.</p>
-      <p>Biểu mẫu liên hệ trên website được xử lý thông qua dịch vụ trung gian gửi email <strong>FormSubmit</strong> — dữ liệu bạn nhập chỉ được dùng để chuyển tiếp email đến hộp thư của chúng tôi, không được FormSubmit lưu trữ hay sử dụng cho mục đích khác.</p>
-      <p>Chúng tôi chỉ chia sẻ thông tin trong trường hợp pháp luật Việt Nam yêu cầu, hoặc để bảo vệ quyền lợi hợp pháp của tổ chức và cộng đồng.</p>
-    </div>
-
-    <div class="policy-section" id="luu-tru">
-      <h2><i class="fa-solid fa-lock"></i> 4. Lưu trữ và bảo mật dữ liệu</h2>
-      <p>Website được vận hành trên nền tảng GitHub Pages với kết nối <strong>HTTPS mã hóa</strong>, giúp bảo vệ dữ liệu truyền tải giữa trình duyệt của bạn và máy chủ.</p>
-      <p>Thông tin liên hệ bạn gửi qua biểu mẫu được chuyển trực tiếp đến hộp thư điện tử quản trị (hotro@wvn.vn), không được lưu trữ công khai trên website hay cơ sở dữ liệu có thể truy cập từ bên ngoài.</p>
-      <p>Chúng tôi áp dụng các biện pháp hợp lý để bảo vệ thông tin khỏi truy cập, sử dụng hoặc tiết lộ trái phép, tuy nhiên không có phương thức truyền tải qua Internet nào đảm bảo an toàn tuyệt đối 100%.</p>
-    </div>
-
-    <div class="policy-section" id="cookie">
-      <h2><i class="fa-solid fa-cookie-bite"></i> 5. Cookie & công nghệ theo dõi</h2>
-      <p>Website hiện <strong>không sử dụng cookie theo dõi hành vi người dùng</strong> hay các công cụ phân tích quảng cáo bên thứ ba (như Google AdSense).</p>
-      <p>Một số thư viện bên ngoài được tải để hiển thị giao diện (như Font Awesome cho biểu tượng) có thể ghi nhận thông tin kỹ thuật cơ bản (địa chỉ IP, loại trình duyệt) theo chính sách riêng của nhà cung cấp dịch vụ đó, nằm ngoài phạm vi kiểm soát trực tiếp của chúng tôi.</p>
-    </div>
-
-    <div class="policy-section" id="quyen">
-      <h2><i class="fa-solid fa-user-shield"></i> 6. Quyền của bạn đối với dữ liệu cá nhân</h2>
-      <p>Bạn có quyền:</p>
-      <ul>
-        <li>Yêu cầu chúng tôi cung cấp thông tin về dữ liệu cá nhân của bạn mà chúng tôi đang nắm giữ (nếu có).</li>
-        <li>Yêu cầu chỉnh sửa hoặc xóa thông tin cá nhân đã cung cấp qua biểu mẫu liên hệ.</li>
-        <li>Rút lại sự đồng ý cho việc liên hệ qua email vào bất kỳ lúc nào.</li>
-      </ul>
-      <p>Để thực hiện các quyền trên, vui lòng liên hệ trực tiếp qua email được cung cấp ở mục 10 bên dưới.</p>
-    </div>
-
-    <div class="policy-section" id="dieu-khoan">
-      <h2><i class="fa-solid fa-file-contract"></i> 7. Điều khoản sử dụng website</h2>
-      <p>Khi truy cập và sử dụng website này, bạn đồng ý:</p>
-      <ul>
-        <li>Sử dụng nội dung, hình ảnh và thông tin trên website vì mục đích tìm hiểu, tham khảo hợp pháp, không sao chép hoặc sử dụng lại cho mục đích thương mại mà không có sự đồng ý bằng văn bản.</li>
-        <li>Không thực hiện các hành vi gây hại đến hệ thống website (tấn công, khai thác lỗ hổng bảo mật, phát tán mã độc...).</li>
-        <li>Cung cấp thông tin trung thực khi liên hệ hoặc thực hiện quyên góp qua website.</li>
-      </ul>
-      <p>Nội dung trên website (bài viết, hình ảnh hoạt động, số liệu thống kê) được cập nhật thường xuyên và có thể thay đổi mà không cần báo trước, nhằm phản ánh chính xác nhất tình hình hoạt động thực tế của tổ chức.</p>
-    </div>
-
-    <div class="policy-section" id="ban-quyen">
-      <h2><i class="fa-solid fa-copyright"></i> 8. Bản quyền nội dung & khiếu nại vi phạm</h2>
-      <p>Toàn bộ bài viết, hình ảnh hoạt động và tài liệu do Mạng Lưới Tri Thức Việt Nam tự sản xuất, hoặc được sử dụng khi đã có sự cho phép/giấy phép phù hợp, đều được bảo hộ theo <strong>Luật Sở Hữu Trí Tuệ Việt Nam</strong> (Luật số 50/2005/QH11, đã sửa đổi, bổ sung).</p>
-      <p>Chúng tôi tôn trọng quyền sở hữu trí tuệ của bên thứ ba. Trong trường hợp bạn cho rằng có nội dung hoặc hình ảnh trên website này vô tình vi phạm quyền tác giả mà bạn đang sở hữu hợp pháp, vui lòng gửi khiếu nại tới email <strong>hotro@wvn.vn</strong>, kèm theo:</p>
-      <ul>
-        <li>Bằng chứng xác nhận quyền sở hữu hợp pháp đối với nội dung/hình ảnh liên quan.</li>
-        <li>Đường dẫn (URL) cụ thể tới trang có chứa nội dung bị cho là vi phạm.</li>
-        <li>Thông tin liên hệ của người khiếu nại (họ tên, email) để chúng tôi có thể phản hồi.</li>
-      </ul>
-      <p>Sau khi nhận được khiếu nại hợp lệ, chúng tôi cam kết xem xét và phản hồi trong vòng <strong>5-7 ngày làm việc</strong>, đồng thời gỡ bỏ hoặc chỉnh sửa nội dung liên quan nếu xác nhận có vi phạm.</p>
-    </div>
-
-    <div class="policy-section" id="quyen-gop">
-      <h2><i class="fa-solid fa-hand-holding-heart"></i> 9. Chính sách quyên góp & minh bạch tài chính</h2>
-      <p>Mạng Lưới Tri Thức Việt Nam cam kết sử dụng <strong>100% tổng lợi nhuận sau thuế</strong> để tái đầu tư cho các chương trình giáo dục và phát triển cộng đồng đã đăng ký, không phân chia lợi tức cho bất kỳ cá nhân hay tổ chức nào.</p>
-      <p>Mọi giao dịch quyên góp qua mã VietQR đều được thực hiện trực tiếp qua hệ thống ngân hàng, tuân theo quy định bảo mật của ngân hàng liên quan. Chúng tôi công khai định kỳ thông tin sao kê giao dịch tại trang <a href="sao-ke.html">Tra Cứu Sao Kê</a> để đảm bảo tính minh bạch với người đồng hành. Bạn có thể xem chi tiết các dự án đang gây quỹ và cách thức quyên góp tại trang <a href="quyen-gop.html">Quyên Góp</a>.</p>
-      <p>Người quyên góp có quyền yêu cầu thông tin chi tiết về việc sử dụng khoản đóng góp của mình bằng cách liên hệ trực tiếp với chúng tôi.</p>
-    </div>
-
-    <div class="policy-section" id="thay-doi">
-      <h2><i class="fa-solid fa-arrows-rotate"></i> 10. Thay đổi chính sách</h2>
-      <p>Chúng tôi có thể cập nhật Chính Sách Bảo Mật & Điều Khoản Sử Dụng này theo thời gian để phản ánh đúng thực tế vận hành hoặc theo yêu cầu pháp lý. Mọi thay đổi sẽ được cập nhật trực tiếp trên trang này kèm ngày cập nhật gần nhất ở đầu trang.</p>
-      <p>Chúng tôi khuyến khích bạn xem lại trang này định kỳ để nắm được các thay đổi (nếu có).</p>
-    </div>
-
-    <div class="policy-section" id="lien-he">
-      <h2><i class="fa-solid fa-envelope-open-text"></i> 11. Liên hệ về quyền riêng tư</h2>
-      <p>Nếu bạn có bất kỳ câu hỏi, thắc mắc hoặc yêu cầu nào liên quan đến Chính Sách Bảo Mật này, vui lòng liên hệ với chúng tôi qua:</p>
-      <div class="contact-box">
-        <p><i class="fa-solid fa-building" style="color:#0284c7; margin-right:8px;"></i><strong>Đơn vị vận hành:</strong> Công ty TNHH DR Solutions</p>
-        <p><i class="fa-solid fa-envelope" style="color:#0284c7; margin-right:8px;"></i><strong>Email:</strong> hotro@wvn.vn | cskh@dr.com</p>
-        <p><i class="fa-solid fa-location-dot" style="color:#0284c7; margin-right:8px;"></i><strong>Địa chỉ:</strong> Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p><i class="fa-solid fa-id-card" style="color:#0284c7; margin-right:8px;"></i><strong>Mã số doanh nghiệp:</strong> 0111291749</p>
+      <div class="project-card">
+        <div class="project-top" style="background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);">
+          <i class="fa-solid fa-mitten"></i>
+        </div>
+        <div class="project-body">
+          <span class="project-code-tag">MÃ DA-001</span>
+          <h3>Chiến Dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h3>
+          <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
+          <div class="project-qr">
+            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Áo Ấm Vùng Cao">
+          </div>
+          <div class="project-code-box">
+            Nội dung chuyển khoản
+            <strong>DA-001 Ao Am Vung Cao</strong>
+          </div>
+        </div>
       </div>
-      <p style="margin-top: 1.3rem;">
-        <a href="lien-he.html" style="display: inline-flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-paper-plane"></i> Gửi lời nhắn trực tuyến <i class="fa-solid fa-arrow-right"></i>
-        </a>
-      </p>
+
+      <div class="project-card">
+        <div class="project-top" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);">
+          <i class="fa-solid fa-laptop-code"></i>
+        </div>
+        <div class="project-body">
+          <span class="project-code-tag">MÃ DA-002</span>
+          <h3>Hội Thảo Phương Pháp Học Tập Số</h3>
+          <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
+          <div class="project-qr">
+            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-002%20Hoi%20Thao%20Hoc%20Tap%20So&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Hội Thảo Học Tập Số">
+          </div>
+          <div class="project-code-box">
+            Nội dung chuyển khoản
+            <strong>DA-002 Hoi Thao Hoc Tap So</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
+          <i class="fa-solid fa-award"></i>
+        </div>
+        <div class="project-body">
+          <span class="project-code-tag">MÃ DA-003</span>
+          <h3>Phát Động Học Bổng Ươm Mầm</h3>
+          <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
+          <div class="project-qr">
+            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Hoc%20Bong%20Uom%20Mam&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Học Bổng Ươm Mầm">
+          </div>
+          <div class="project-code-box">
+            Nội dung chuyển khoản
+            <strong>DA-003 Hoc Bong Uom Mam</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-header">
+      <h2>Hoặc Ủng Hộ Quỹ Chung</h2>
+      <p>Không chọn dự án cụ thể? Đóng góp vào quỹ chung để chúng tôi phân bổ vào chương trình đang cần nhất.</p>
+    </div>
+
+    <div class="donate-grid">
+
+      <!-- Cột trái: Mã QR & thông tin chuyển khoản -->
+      <div class="donate-card">
+        <h2><i class="fa-solid fa-qrcode"></i> Chuyển Khoản Qua VietQR</h2>
+        <div class="qr-box">
+          <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20Chung%20DRSV&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Quyên góp Mạng Lưới Tri Thức Việt Nam">
+        </div>
+        <div class="bank-info-row">
+          <span>Ngân hàng</span>
+          <span>Techcombank</span>
+        </div>
+        <div class="bank-info-row">
+          <span>Chủ tài khoản</span>
+          <span>CÔNG TY TNHH DR SOLUTIONS</span>
+        </div>
+        <div class="bank-info-row">
+          <span>Số tài khoản</span>
+          <span>30000</span>
+        </div>
+        <div class="bank-info-row">
+          <span>Nội dung chuyển khoản</span>
+          <span>Ung ho Quy Chung DRSV</span>
+        </div>
+      </div>
+
+      <!-- Cột phải: Hướng dẫn các bước -->
+      <div class="donate-card">
+        <h2><i class="fa-solid fa-list-check"></i> Các Bước Thực Hiện</h2>
+        <ol class="donate-steps">
+          <li><div><strong>Mở ứng dụng ngân hàng</strong> của bạn (Techcombank, MoMo, hoặc bất kỳ app hỗ trợ VietQR nào).</div></li>
+          <li><div><strong>Chọn dự án</strong> bạn muốn ủng hộ ở trên, hoặc quét mã Quỹ Chung nếu không có ưu tiên riêng.</div></li>
+          <li><div><strong>Kiểm tra lại nội dung chuyển khoản</strong> đúng với mã dự án đã chọn trước khi xác nhận.</div></li>
+          <li><div><strong>Hoàn tất giao dịch</strong> — mọi khoản đóng góp sẽ được ghi nhận và công khai định kỳ.</div></li>
+          <li><div><strong>Tra cứu giao dịch</strong> của bạn bất cứ lúc nào tại trang Tra Cứu Sao Kê để xác nhận đã được ghi nhận.</div></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <!-- Băng minh bạch -->
+    <div class="transparency-band">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h3>Cam Kết Minh Bạch Tuyệt Đối</h3>
+      <p>Mọi giao dịch quyên góp đều được công khai theo thời gian thực. Bạn có thể tra cứu chính xác giao dịch của mình bằng mã giao dịch từ ngân hàng.</p>
+      <a href="sao-ke.html" class="btn"><i class="fa-solid fa-magnifying-glass-dollar"></i> Tra Cứu Sao Kê Giao Dịch</a>
+    </div>
+
+    <!-- Các hình thức đóng góp khác -->
+    <div class="alt-donate-section">
+      <div class="alt-donate-grid">
+        <div class="alt-donate-card">
+          <div class="alt-icon"><i class="fa-solid fa-book"></i></div>
+          <h4>Quyên góp hiện vật</h4>
+          <p>Sách, học liệu, dụng cụ học tập còn sử dụng tốt đều được tiếp nhận và trao tận tay học sinh vùng cao.</p>
+          <a href="lien-he.html">Liên hệ hướng dẫn gửi <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="alt-donate-card">
+          <div class="alt-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
+          <h4>Trở thành tình nguyện viên</h4>
+          <p>Đồng hành trực tiếp cùng các chương trình giảng dạy, hội thảo và hoạt động cộng đồng của chúng tôi.</p>
+          <a href="lien-he.html">Đăng ký tham gia <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="alt-donate-card">
+          <div class="alt-icon"><i class="fa-solid fa-handshake"></i></div>
+          <h4>Hợp tác doanh nghiệp</h4>
+          <p>Đồng hành dài hạn cùng các chiến dịch gây quỹ, tài trợ chương trình học bổng hoặc sự kiện giáo dục.</p>
+          <a href="lien-he.html">Đề xuất hợp tác <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ghi chú pháp lý -->
+    <div class="legal-note">
+      <p><strong>Cam kết pháp lý:</strong> Mạng Lưới Tri Thức Việt Nam sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; tuyệt đối không phân chia lợi tức hoặc cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mã số doanh nghiệp (MST): <strong>0111291749</strong>.</p>
     </div>
 
   </main>
 
   <!-- Footer 3 Cột -->
-  <footer>
+    <footer>
     <div class="footer-grid">
       <div>
         <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
         <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
         <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
-        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
       </div>
       <div>
         <h4>Địa Chỉ Trụ Sở</h4>
         <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
         <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
-        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4><i class="fa-solid fa-images" style="font-size:.85em;margin-right:6px;color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top:.9rem;"></div>
       </div>
       <div>
         <h4>Kết Nối Với Chúng Tôi</h4>
         <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-        <div class="social-links" style="margin-top: 0.8rem;">
+        <div class="social-links" style="margin-top:.8rem;">
           <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
         </div>
       </div>
-      <div>
-        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
-        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
-      </div>
     </div>
-
     <div class="footer-transparency-strip">
       <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
-      </p>
-    </div>
-
-    <div class="footer-transparency-strip">
-      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
-      <p>
-        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="document.getElementById('newsletterEmail')?.scrollIntoView({behavior:'smooth',block:'center'}); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
       </p>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp;
+      <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
     </div>
   </footer>
 
   <script>
+
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
       const menuBtn = document.getElementById('menuBtn');
@@ -573,97 +580,6 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-  
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
-    function toggleNavDropdown(btn) {
-      const dropdown = btn.closest('.nav-dropdown');
-      const wasOpen = dropdown.classList.contains('open');
-      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      if (!wasOpen) dropdown.classList.add('open');
-    }
-    document.addEventListener('click', function (e) {
-      if (!e.target.closest('.nav-dropdown')) {
-        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      }
-    });
-
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.
-    const GALLERY_IMAGES = [
-      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
-      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
-      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
-      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
-      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
-      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
-    ];
-    let galleryShuffled = [];
-    let galleryCurrentIndex = 0;
-    function shuffleArray(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-    function renderGalleryGrid() {
-      const grid = document.getElementById("galleryGrid");
-      if (!grid) return;
-      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
-        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
-          <img src="${img.src}" alt="${img.caption}" loading="lazy">
-        </div>
-      `).join("");
-    }
-    function openGalleryModal(startIndex) {
-      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
-      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
-      galleryCurrentIndex = 0;
-      renderGalleryModalImage();
-      document.getElementById("galleryModal").classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-    function renderGalleryModalImage() {
-      const img = galleryShuffled[galleryCurrentIndex];
-      const modalImg = document.getElementById("galleryModalImg");
-      modalImg.src = img.src;
-      modalImg.alt = img.caption;
-      modalImg.classList.remove("zoomed");
-      document.querySelector(".gallery-modal-caption").textContent = img.caption;
-    }
-    function showGalleryImage(direction) {
-      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
-      renderGalleryModalImage();
-    }
-    function closeGalleryModal() {
-      document.getElementById("galleryModal").classList.remove("active");
-      document.body.style.overflow = "";
-    }
-    document.getElementById("galleryModal").addEventListener("click", function (e) {
-      if (e.target === this) closeGalleryModal();
-    });
-    document.addEventListener("keydown", function (e) {
-      const modal = document.getElementById("galleryModal");
-      if (!modal.classList.contains("active")) return;
-      if (e.key === "Escape") closeGalleryModal();
-      if (e.key === "ArrowLeft") showGalleryImage(-1);
-      if (e.key === "ArrowRight") showGalleryImage(1);
-    });
-    renderGalleryGrid();
-
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.</script>
-
-  <div class="gallery-modal" id="galleryModal">
-    <div class="gallery-modal-inner">
-      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
-      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
-      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
-      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
-      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
-    </div>
-  </div>
-  </div>
-
+  </script>
 </body>
 </html>
