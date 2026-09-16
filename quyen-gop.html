@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quyên Góp - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Quyên góp cho Mạng Lưới Tri Thức Việt Nam qua chuyển khoản ngân hàng an toàn, minh bạch — chọn đúng dự án bạn muốn đồng hành: Áo Ấm Vùng Cao, Hội Thảo Học Tập Số, Học Bổng Ươm Mầm.">
-  <!-- Favicon chuẩn trực tuyến -->
+  <meta name="description" content="Quyên góp cho Mạng Lưới Tri Thức Việt Nam — chọn đúng dự án bạn muốn đồng hành: Áo Ấm Vùng Cao, Hội Thảo Học Tập Số, Học Bổng Ươm Mầm, hoặc liên hệ trực tiếp để được hướng dẫn.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -31,7 +30,6 @@
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -81,7 +79,6 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Banner */
     .hero-wrapper {
       width: 100%; background: var(--blue-grad-hero); padding: 3.6rem 1.5rem 4rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
     }
@@ -118,14 +115,12 @@
     .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; position: relative; z-index: 1; }
     .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 620px; margin: 0 auto; position: relative; z-index: 1; }
 
-    /* Container chính */
     .container { max-width: 1100px; margin: 1.5rem auto 5rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
     .section-header { text-align: center; margin-bottom: 2.2rem; }
     .section-header h2 { font-size: 1.65rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; letter-spacing: -0.3px; }
     .section-header p { color: #64748b; font-size: 0.98rem; max-width: 620px; margin: 0 auto; }
 
-    /* ==== Khối chọn dự án — mỗi dự án có mã riêng để phân biệt khi tra cứu sao kê ==== */
     .project-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1.6rem; margin-bottom: 3.5rem;
     }
@@ -136,19 +131,10 @@
     }
     .project-top { height: 78px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; color: #fff; }
     .project-body { padding: 1.6rem; flex-grow: 1; display: flex; flex-direction: column; }
-    .project-code-tag {
-      display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.28rem 0.8rem; border-radius: 999px;
-      font-weight: 800; font-size: 0.76rem; letter-spacing: 0.4px; margin-bottom: 0.8rem; align-self: flex-start;
-    }
     .project-body h3 { font-size: 1.08rem; color: var(--text-dark); margin-bottom: 0.6rem; font-weight: 800; line-height: 1.35; }
     .project-body p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.2rem; flex-grow: 1; }
-    .project-qr { text-align: center; margin-bottom: 1rem; }
-    .project-qr img { width: 100%; max-width: 190px; border-radius: 12px; border: 1px solid var(--border); }
-    .project-code-box {
-      background: #f0f9ff; border: 1px dashed #7dd3fc; border-radius: 10px; padding: 0.7rem 0.9rem;
-      text-align: center; font-size: 0.9rem; color: #0369a1;
-    }
-    .project-code-box strong { display: block; font-size: 1rem; letter-spacing: 0.5px; margin-top: 0.2rem; }
+    .project-contact-btn { text-align: center; margin-top: auto; }
+    .project-contact-btn .btn { width: 100%; }
 
     .donate-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch; margin-bottom: 2.5rem;
@@ -166,13 +152,10 @@
       width: 38px; height: 38px; background: #e0f2fe; color: #0284c7; border-radius: 10px;
       display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
     }
-
-    .qr-box { text-align: center; }
-    .qr-box img { width: 100%; max-width: 260px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 1.2rem; }
-    .bank-info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
-    .bank-info-row:last-child { border-bottom: none; }
-    .bank-info-row span:first-child { color: var(--text-muted); }
-    .bank-info-row span:last-child { font-weight: 700; color: var(--text-dark); text-align: right; }
+    .contact-cta-box { text-align: center; padding: 1.4rem 1rem; }
+    .contact-cta-box i { font-size: 2.2rem; color: #0284c7; margin-bottom: 1rem; display: block; }
+    .contact-cta-box p { color: var(--text-muted); margin-bottom: 1.4rem; font-size: 0.98rem; }
+    .contact-cta-box .btn { padding: 0.8rem 2rem; font-size: 1rem; }
 
     .donate-steps { list-style: none; counter-reset: step; }
     .donate-steps li {
@@ -218,7 +201,6 @@
     }
     .legal-note strong { color: #0369a1; }
 
-    /* Footer chuẩn 4 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -254,7 +236,6 @@
 </head>
 <body>
 
-  <!-- Menu Cố Định Đồng Bộ -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
@@ -285,7 +266,6 @@
     </div>
   </header>
 
-  <!-- Hero Banner -->
   <section class="hero-wrapper">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">CHUNG TAY VÌ GIÁO DỤC CÔNG BẰNG</div>
@@ -295,10 +275,9 @@
 
   <main class="container">
 
-    <!-- Chọn dự án cụ thể -->
     <div class="section-header">
       <h2>Chọn Dự Án Bạn Muốn Đồng Hành</h2>
-      <p>Mỗi dự án có mã riêng — ghi đúng mã vào nội dung chuyển khoản để khoản đóng góp của bạn được ghi nhận đúng vào dự án mong muốn.</p>
+      <p>Liên hệ với chúng tôi để được hướng dẫn cách đóng góp phù hợp với dự án bạn quan tâm.</p>
     </div>
 
     <div class="project-grid">
@@ -308,15 +287,10 @@
           <i class="fa-solid fa-mitten"></i>
         </div>
         <div class="project-body">
-          <span class="project-code-tag">MÃ DA-001</span>
           <h3>Chiến Dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h3>
           <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Áo Ấm Vùng Cao">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-001 Ao Am Vung Cao</strong>
+          <div class="project-contact-btn">
+            <a href="lien-he.html" class="btn"><i class="fa-solid fa-envelope"></i> Liên Hệ Để Đóng Góp</a>
           </div>
         </div>
       </div>
@@ -326,15 +300,10 @@
           <i class="fa-solid fa-laptop-code"></i>
         </div>
         <div class="project-body">
-          <span class="project-code-tag">MÃ DA-002</span>
           <h3>Hội Thảo Phương Pháp Học Tập Số</h3>
           <p>Chuỗi lớp học kỹ năng tự học và ứng dụng công nghệ thông tin lành mạnh dành cho thanh thiếu niên.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-002%20Hoi%20Thao%20Hoc%20Tap%20So&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Hội Thảo Học Tập Số">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-002 Hoi Thao Hoc Tap So</strong>
+          <div class="project-contact-btn">
+            <a href="lien-he.html" class="btn"><i class="fa-solid fa-envelope"></i> Liên Hệ Để Đóng Góp</a>
           </div>
         </div>
       </div>
@@ -344,15 +313,10 @@
           <i class="fa-solid fa-award"></i>
         </div>
         <div class="project-body">
-          <span class="project-code-tag">MÃ DA-003</span>
           <h3>Phát Động Học Bổng Ươm Mầm</h3>
           <p>Chính thức xét duyệt và trao học bổng dài hạn cho các em học sinh nghèo vượt khó vươn lên trong học tập.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Hoc%20Bong%20Uom%20Mam&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Học Bổng Ươm Mầm">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-003 Hoc Bong Uom Mam</strong>
+          <div class="project-contact-btn">
+            <a href="lien-he.html" class="btn"><i class="fa-solid fa-envelope"></i> Liên Hệ Để Đóng Góp</a>
           </div>
         </div>
       </div>
@@ -361,50 +325,33 @@
 
     <div class="section-header">
       <h2>Hoặc Ủng Hộ Quỹ Chung</h2>
-      <p>Không chọn dự án cụ thể? Đóng góp vào quỹ chung để chúng tôi phân bổ vào chương trình đang cần nhất.</p>
+      <p>Không chọn dự án cụ thể? Liên hệ với chúng tôi để đóng góp vào quỹ chung — chúng tôi sẽ phân bổ vào chương trình đang cần nhất.</p>
     </div>
 
     <div class="donate-grid">
 
-      <!-- Cột trái: Mã QR & thông tin chuyển khoản -->
       <div class="donate-card">
-        <h2><i class="fa-solid fa-qrcode"></i> Chuyển Khoản Qua VietQR</h2>
-        <div class="qr-box">
-          <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20Chung%20DRSV&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Quyên góp Mạng Lưới Tri Thức Việt Nam">
-        </div>
-        <div class="bank-info-row">
-          <span>Ngân hàng</span>
-          <span>Techcombank</span>
-        </div>
-        <div class="bank-info-row">
-          <span>Chủ tài khoản</span>
-          <span>CÔNG TY TNHH DR SOLUTIONS</span>
-        </div>
-        <div class="bank-info-row">
-          <span>Số tài khoản</span>
-          <span>30000</span>
-        </div>
-        <div class="bank-info-row">
-          <span>Nội dung chuyển khoản</span>
-          <span>Ung ho Quy Chung DRSV</span>
+        <h2><i class="fa-solid fa-hand-holding-heart"></i> Đóng Góp Qua Liên Hệ Trực Tiếp</h2>
+        <div class="contact-cta-box">
+          <i class="fa-solid fa-envelope-open-text"></i>
+          <p>Để đảm bảo khoản đóng góp của bạn được ghi nhận chính xác, vui lòng liên hệ với đội ngũ của chúng tôi. Chúng tôi sẽ hướng dẫn bạn hình thức đóng góp phù hợp và cung cấp thông tin chuyển khoản trực tiếp.</p>
+          <a href="lien-he.html" class="btn"><i class="fa-solid fa-envelope"></i> Liên Hệ Ngay</a>
         </div>
       </div>
 
-      <!-- Cột phải: Hướng dẫn các bước -->
       <div class="donate-card">
         <h2><i class="fa-solid fa-list-check"></i> Các Bước Thực Hiện</h2>
         <ol class="donate-steps">
-          <li><div><strong>Mở ứng dụng ngân hàng</strong> của bạn (Techcombank, MoMo, hoặc bất kỳ app hỗ trợ VietQR nào).</div></li>
-          <li><div><strong>Chọn dự án</strong> bạn muốn ủng hộ ở trên, hoặc quét mã Quỹ Chung nếu không có ưu tiên riêng.</div></li>
-          <li><div><strong>Kiểm tra lại nội dung chuyển khoản</strong> đúng với mã dự án đã chọn trước khi xác nhận.</div></li>
-          <li><div><strong>Hoàn tất giao dịch</strong> — mọi khoản đóng góp sẽ được ghi nhận và công khai định kỳ.</div></li>
+          <li><div><strong>Nhấn nút "Liên Hệ Ngay"</strong> hoặc chọn dự án bạn muốn ủng hộ ở trên.</div></li>
+          <li><div><strong>Điền thông tin liên hệ</strong> của bạn vào biểu mẫu trên trang Liên Hệ.</div></li>
+          <li><div><strong>Đội ngũ chúng tôi sẽ phản hồi</strong> với hướng dẫn đóng góp và thông tin chuyển khoản cụ thể.</div></li>
+          <li><div><strong>Hoàn tất đóng góp</strong> — mọi khoản đóng góp sẽ được ghi nhận và công khai định kỳ.</div></li>
           <li><div><strong>Tra cứu giao dịch</strong> của bạn bất cứ lúc nào tại trang Tra Cứu Sao Kê để xác nhận đã được ghi nhận.</div></li>
         </ol>
       </div>
 
     </div>
 
-    <!-- Băng minh bạch -->
     <div class="transparency-band">
       <i class="fa-solid fa-shield-halved"></i>
       <h3>Cam Kết Minh Bạch Tuyệt Đối</h3>
@@ -412,7 +359,6 @@
       <a href="sao-ke.html" class="btn"><i class="fa-solid fa-magnifying-glass-dollar"></i> Tra Cứu Sao Kê Giao Dịch</a>
     </div>
 
-    <!-- Các hình thức đóng góp khác -->
     <div class="alt-donate-section">
       <div class="alt-donate-grid">
         <div class="alt-donate-card">
@@ -436,14 +382,12 @@
       </div>
     </div>
 
-    <!-- Ghi chú pháp lý -->
     <div class="legal-note">
       <p><strong>Cam kết pháp lý:</strong> Mạng Lưới Tri Thức Việt Nam sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; tuyệt đối không phân chia lợi tức hoặc cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mã số doanh nghiệp (MST): <strong>0111291749</strong>.</p>
     </div>
 
   </main>
 
-  <!-- Footer 4 Cột -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -454,7 +398,7 @@
       <div>
         <h4>Địa Chỉ Trụ Sở</h4>
         <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
-        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.6rem;">Email: cskh@dr.com | hotro@dr.com</p>
         <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
