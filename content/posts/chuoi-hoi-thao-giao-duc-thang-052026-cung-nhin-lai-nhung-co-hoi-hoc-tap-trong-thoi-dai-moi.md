@@ -5,45 +5,31 @@ loai: "tin-tuc"
 image: "images/uploads/chuoi-hoi-thao-giao-duc-thang-052026-cung-nhin-lai-nhung-co-hoi-hoc-tap-trong-thoi-dai-moi.jpeg"
 excerpt: "Bởi tương lai của giáo dục không chỉ được quyết định trong những hội trường lớn. Nó được tạo nên từ những gì diễn ra mỗi ngày trong một lớp học, một gia đình và trong cách xã hội trao cho mỗi đứa trẻ cơ hội được học tập."
 ---
-
+https://www.haui.edu.vn//media/96/t96248.jpg
 Tháng 5/2026, các hoạt động và diễn đàn giáo dục tiếp tục tập trung vào những vấn đề đang được xã hội quan tâm: đổi mới phương pháp học tập, chuyển đổi số, AI trong giáo dục, phát triển kỹ năng và mở rộng cơ hội tiếp cận tri thức.
 
 Một sự kiện đáng chú ý trong tháng là Education Vietnam 2026, diễn ra từ ngày 06–08/05/2026 tại SECC, TP.HCM, quy tụ các đơn vị giáo dục và công nghệ giáo dục.
 
 7
 Giáo dục đang đứng trước những câu hỏi mới
-
 Một đứa trẻ hôm nay không chỉ học từ sách giáo khoa.
-
 Các em có thể học qua video, thư viện số, lớp học trực tuyến và ngày càng nhiều công cụ hỗ trợ bằng trí tuệ nhân tạo.
-
 Điều này mở ra cơ hội rất lớn. Nhưng đồng thời, nó cũng đặt ra những câu hỏi mới:
-
 Trẻ nên học như thế nào?
-
 Giáo viên cần thay đổi ra sao?
-
 AI nên được sử dụng đến mức nào trong lớp học?
-
 Làm thế nào để công nghệ giúp thu hẹp thay vì tạo thêm khoảng cách giáo dục?
-
 Đó cũng là những vấn đề khiến các diễn đàn giáo dục ngày càng chuyển từ việc bàn về “dạy cái gì” sang “làm thế nào để người học phát triển năng lực thực sự”.
-
 Từ học thuộc sang biết cách học
-
 Một trong những thay đổi đáng chú ý của giáo dục hiện đại là sự quan tâm ngày càng lớn đến khả năng tự học.
-
 Kiến thức có thể thay đổi. Công nghệ có thể thay đổi. Nghề nghiệp cũng có thể thay đổi.
-
 Nhưng nếu một người biết cách tìm kiếm kiến thức, đặt câu hỏi, kiểm chứng thông tin và tự bổ sung những điều mình chưa biết, họ sẽ có khả năng thích nghi tốt hơn.
-
 Vì vậy, một lớp học hiệu quả không nhất thiết là lớp học mà học sinh ghi nhớ được nhiều nhất.
-
 Đó có thể là lớp học khiến học sinh muốn tiếp tục tìm hiểu sau khi tiết học kết thúc.
-
 AI: Công cụ mới nhưng người học vẫn là trung tâm
 
 AI đang tạo ra một thay đổi rất nhanh trong giáo dục. Các hội nghị, hội thảo giáo dục năm 2026 cũng dành sự quan tâm đáng kể đến vai trò của AI và chuyển đổi số. Bộ Giáo dục và Đào tạo cho biết tại một hội nghị giáo dục số quốc tế năm 2026, các nội dung được trao đổi bao gồm vai trò của AI trong đổi mới giáo dục và tăng cường hợp tác giữa cơ sở giáo dục với doanh nghiệp.
+<img width="2040" height="1360" alt="image" src="https://github.com/user-attachments/assets/27c83f22-60f2-48f8-bfc8-ee4d93cad132" />
 
 AI có thể giúp giải thích một vấn đề theo nhiều cách, tạo bài tập, mô phỏng tình huống hoặc hỗ trợ giáo viên chuẩn bị tài liệu.
 
@@ -98,6 +84,7 @@ Một doanh nghiệp muốn góp phần phát triển nhân lực.
 Một tổ chức xã hội muốn mở rộng cơ hội học tập cho trẻ em khó khăn.
 
 Và chính học sinh – những người trực tiếp trải nghiệm hệ thống giáo dục – cũng cần được lắng nghe.
+<img width="2039" height="881" alt="image" src="https://github.com/user-attachments/assets/6dee31e7-eb79-4e2e-8e70-f8f3663dc057" />
 
 Khi nhiều góc nhìn cùng xuất hiện, những vấn đề của giáo dục mới có cơ hội được nhìn nhận đầy đủ hơn.
 
