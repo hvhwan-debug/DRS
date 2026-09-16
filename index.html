@@ -709,6 +709,7 @@
       {
         date: "2026-10-20",
         anchor: "su-kien-hoi-thao-hoc-tap-so",
+        articleSlug: "trien-khai-phan-mem-hoc-tap-khi-cong-nghe-tro-thanh-mot-phan-cua-lop-hoc",
         icon: "fa-laptop-code",
         image: "images/hoi-thao-hoc-tap-so.jpg",
         topBg: "linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)",
@@ -720,6 +721,7 @@
       {
         date: "2026-11-01",
         anchor: "su-kien-ao-am-vung-cao",
+        articleSlug: "chuan-bi-mua-dong-khao-sat-nhu-cau-ao-am-ha-giang",
         icon: "fa-mitten",
         image: "images/ao-am-vung-cao.jpg",
         topBg: "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)",
@@ -731,6 +733,7 @@
       {
         date: "2026-12-01",
         anchor: "su-kien-hoc-bong-uom-mam",
+        articleSlug: "khoi-dong-hoc-bong-uom-mam",
         icon: "fa-award",
         image: "images/le-trao-hoc-bong-uom-mam.jpg",
         topBg: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
@@ -742,7 +745,11 @@
     ];
 
     function renderUpcomingHomeCard(ev) {
-      const eventUrl = `hoat-dong.html#${ev.anchor}`;
+      // Ưu tiên dẫn tới bài viết chi tiết tương ứng trong Tin Tức nếu có gán
+      // articleSlug; nếu chưa có bài viết nào khớp, quay về trang Hoạt Động.
+      const eventUrl = ev.articleSlug
+        ? `chi-tiet.html?slug=${encodeURIComponent(ev.articleSlug)}`
+        : `hoat-dong.html#${ev.anchor}`;
       return `
         <div class="upcoming-home-card">
           <div class="upcoming-home-top" style="background:${ev.topBg};">
