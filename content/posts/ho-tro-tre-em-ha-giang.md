@@ -2,8 +2,10 @@
 title: "Hành trình thắp sáng tri thức và sưởi ấm trẻ em vùng cao Hà Giang"
 date: "Tháng 07 / 2026"
 description: "Ghi lại hành trình 5 ngày khảo sát và các chương trình hỗ trợ thực tế tại 3 điểm trường Sà Phìn A, Lũng Táo, Ma Lé — nơi trẻ em vùng cao Đồng Văn, Hà Giang đang thiếu sách vở, áo ấm và cả một mái nhà lớp học lành lặn."
-thumbnail: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80"
+thumbnail: "images/tre-em-vung-cao-ha-giang.jpg"
 ---
+
+![Trẻ em vùng cao Hà Giang trong trang phục mùa đông](images/tre-em-vung-cao-ha-giang.jpg)
 
 Tháng 2/2026, đoàn khảo sát 4 người của Mạng Lưới Tri Thức Việt Nam có mặt tại 3 điểm trường Sà Phìn A, Lũng Táo và Ma Lé (huyện Đồng Văn, Hà Giang) trong 5 ngày, để ghi nhận trực tiếp những gì các em học sinh nơi đây đang thiếu. Bài viết này là những gì chúng tôi đã thấy, và những việc chúng tôi đã bắt tay vào làm trong 6 tháng sau đó.
 
@@ -11,9 +13,13 @@ Tháng 2/2026, đoàn khảo sát 4 người của Mạng Lưới Tri Thức Vi�
 
 **Đường đến trường.** Từ trung tâm xã Sà Phìn đến điểm trường Ma Lé là hơn 6km đường đất, không có biển báo, không có lan can ở những đoạn sát vực. Vào mùa mưa (tháng 6–8), đoạn đường này thường xuyên sạt lở nhỏ, khiến nhiều em phải nghỉ học vài ngày liền vì phụ huynh không dám cho đi qua.
 
+![Điểm trường nằm cheo leo giữa núi đá, cạnh con đường độc đạo dẫn vào bản](images/duong-den-truong-dong-van.jpg)
+
 **Mái nhà lớp học.** Một phòng học tại Ma Lé có 40m² mái tôn đã dột từ 2 năm trước, giáo viên phải kê lại bàn ghế mỗi khi trời mưa để tránh dột trúng chỗ ngồi của học sinh. Cô Nguyễn Thị Hoa, giáo viên chủ nhiệm tại đây, chia sẻ: "Mưa to là cả lớp phải dồn sang một góc, có hôm nước dột ướt hết sách vở của mấy em ngồi bàn cuối."
 
 **Sách vở và học liệu.** Tại thời điểm khảo sát, tủ sách chung của điểm trường Lũng Táo chỉ có 60 cuốn, phần lớn là sách giáo khoa cũ đã sờn gáy, không có sách truyện hay tài liệu tham khảo nào cho học sinh đọc thêm ngoài giờ học.
+
+![Học sinh đọc lại sách giáo khoa cũ tại điểm trường](images/sach-giao-khoa-hoc-sinh.jpg)
 
 **Áo ấm mùa đông.** Nhiệt độ tại Đồng Văn tháng 12 năm ngoái xuống dưới 5°C, nhưng phần lớn học sinh chỉ có 1 áo khoác mỏng mặc suốt cả mùa, không có găng tay hay mũ len.
 
