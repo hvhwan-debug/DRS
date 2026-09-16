@@ -85,28 +85,6 @@
       color: var(--text-dark); font-weight: 500;
     }
     .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
-    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng,
-       đồng bộ trên toàn site (giống charity: water). */
-    .nav-dropdown { position: relative; display: inline-block; }
-    .nav-dropdown > .nav-dropdown-trigger {
-      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
-      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
-      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
-    }
-    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
-    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
-    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
-    .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
-      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-      padding: 0.5rem; z-index: 100; margin-top: 0;
-    }
-    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
-    .nav-dropdown-menu a {
-      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
-      color: var(--text-dark); font-weight: 500;
-    }
-    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
     .nav-dropdown-trigger.active-page { color: #0284c7; font-weight: 600; }
 
     .btn {
@@ -192,10 +170,6 @@
       }
       .nav-links.active { display: flex; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown { display: block; width: 100%; }
-      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
-      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
-      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
       .nav-dropdown { display: block; width: 100%; }
       .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
       .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
@@ -481,24 +455,7 @@
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
-            <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
-            <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
-            <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
-          </div>
-        </div>
-        <div class="nav-dropdown">
-          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
-          <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
-            <a href="lien-he.html">Trở thành nhà tài trợ</a>
-            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
-          </div>
-        </div>
-        <div class="nav-dropdown">
-          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
-          <div class="nav-dropdown-menu">
-            <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
             <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
             <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
             <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
@@ -940,82 +897,7 @@
     renderGalleryGrid();
 
     // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
-    function toggleNavDropdown(btn) {
-      const dropdown = btn.closest('.nav-dropdown');
-      const wasOpen = dropdown.classList.contains('open');
-      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      if (!wasOpen) dropdown.classList.add('open');
-    }
-    document.addEventListener('click', function (e) {
-      if (!e.target.closest('.nav-dropdown')) {
-        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
-      }
-    });
-
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.
-    const GALLERY_IMAGES = [
-      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
-      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
-      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
-      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
-      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
-      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
-    ];
-    let galleryShuffled = [];
-    let galleryCurrentIndex = 0;
-    function shuffleArray(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-    function renderGalleryGrid() {
-      const grid = document.getElementById("galleryGrid");
-      if (!grid) return;
-      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
-        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
-          <img src="${img.src}" alt="${img.caption}" loading="lazy">
-        </div>
-      `).join("");
-    }
-    function openGalleryModal(startIndex) {
-      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
-      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
-      galleryCurrentIndex = 0;
-      renderGalleryModalImage();
-      document.getElementById("galleryModal").classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-    function renderGalleryModalImage() {
-      const img = galleryShuffled[galleryCurrentIndex];
-      const modalImg = document.getElementById("galleryModalImg");
-      modalImg.src = img.src;
-      modalImg.alt = img.caption;
-      modalImg.classList.remove("zoomed");
-      document.querySelector(".gallery-modal-caption").textContent = img.caption;
-    }
-    function showGalleryImage(direction) {
-      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
-      renderGalleryModalImage();
-    }
-    function closeGalleryModal() {
-      document.getElementById("galleryModal").classList.remove("active");
-      document.body.style.overflow = "";
-    }
-    document.getElementById("galleryModal").addEventListener("click", function (e) {
-      if (e.target === this) closeGalleryModal();
-    });
-    document.addEventListener("keydown", function (e) {
-      const modal = document.getElementById("galleryModal");
-      if (!modal.classList.contains("active")) return;
-      if (e.key === "Escape") closeGalleryModal();
-      if (e.key === "ArrowLeft") showGalleryImage(-1);
-      if (e.key === "ArrowRight") showGalleryImage(1);
-    });
-    renderGalleryGrid();
-</script>
+    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.</script>
 
   <div class="gallery-modal" id="galleryModal">
     <div class="gallery-modal-inner">
@@ -1026,16 +908,6 @@
       <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
     </div>
   </div>
-
-
-  <div class="gallery-modal" id="galleryModal">
-    <div class="gallery-modal-inner">
-      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
-      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
-      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
-      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
-      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
-    </div>
   </div>
 
 </body>
