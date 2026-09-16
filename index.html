@@ -65,14 +65,14 @@
       gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
     }
     .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
-    .nav-dropdown:hover > .nav-dropdown-trigger, .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
     .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
     .nav-dropdown-menu {
       display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
       border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-      padding: 0.5rem; z-index: 100; margin-top: 8px;
+      padding: 0.5rem; z-index: 100; margin-top: 0;
     }
-    .nav-dropdown:hover > .nav-dropdown-menu, .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
     .nav-dropdown-menu a {
       display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
       color: var(--text-dark); font-weight: 500;
@@ -665,15 +665,21 @@
       }
     }
 
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — trên desktop mở bằng
-    // hover (CSS), trên di động cần bấm để mở/đóng vì không có sự kiện hover thật.
+    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng trên
+    // mọi kích thước màn hình (giống charity: water), thay vì mở bằng hover.
     function toggleNavDropdown(btn) {
-      if (window.innerWidth > 960) return; // desktop dùng hover, bỏ qua click
       const dropdown = btn.closest('.nav-dropdown');
       const wasOpen = dropdown.classList.contains('open');
       document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
       if (!wasOpen) dropdown.classList.add('open');
     }
+
+    // Bấm ra ngoài bất kỳ dropdown nào đang mở thì tự đóng lại.
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
 
     function animateCounters() {
       const counters = document.querySelectorAll('.metric-number');
