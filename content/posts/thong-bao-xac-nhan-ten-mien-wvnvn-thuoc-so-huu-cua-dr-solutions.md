@@ -1,84 +1,41 @@
----
-title: "THÔNG BÁO XÁC NHẬN TÊN MIỀN WVN.VN THUỘC SỞ HỮU CỦA DR SOLUTIONS"
-date: "2026-09-14"
-loai: "cot-moc"
-image: "images/uploads/thong-bao-xac-nhan-ten-mien-wvnvn-thuoc-so-huu-cua-dr-solutions.png"
-excerpt: "CÔNG TY TNHH DR SOLUTIONS trân trọng thông báo và xác nhận rằng tên miền WVN.VN (wvn.vn) thuộc quyền sở hữu và quản lý của CÔNG TY TNHH DR SOLUTIONS."
----
+ính gửi: Quý cơ quan, tổ chức, đối tác và các bên liên quan,
 
-Kính gửi: Quý cơ quan, tổ chức, đối tác và các bên liên quan,
+CÔNG TY TNHH DR SOLUTIONS xin trân trọng thông báo và xác nhận tên miền WVN.VN (wvn.vn) thuộc quyền sở hữu và quản lý hợp pháp của chúng tôi. Tên miền này được sử dụng làm địa chỉ website chính thức tại: https://wvn.vn.
 
-CÔNG TY TNHH DR SOLUTIONS trân trọng thông báo và xác nhận rằng tên miền WVN.VN (wvn.vn) thuộc quyền sở hữu và quản lý của CÔNG TY TNHH DR SOLUTIONS.
+Nhằm tạo điều kiện thuận lợi để các bên liên quan chủ động xác minh thông tin, DR Solutions công khai Giấy xác nhận quyền sở hữu tên miền WVN.VN được lập ngày 14/09/2026. Văn bản này thể hiện rõ DR Solutions là đơn vị sở hữu hợp pháp, trực tiếp quản lý và chịu trách nhiệm toàn diện đối với tên miền nêu trên.
 
-Tên miền wvn.vn được sử dụng làm địa chỉ website chính thức của tổ chức tại:
+1. Tài liệu xác nhận chính thức
+Quý cơ quan, tổ chức và đối tác có thể xem và tải bản văn bản điện tử có chữ ký số tại đây:
+👉 Xem Văn bản xác nhận quyền sở hữu tên miền WVN.VN: https://drive.google.com/file/d/1jpFk4q9ACLZs-l_G0Pk-vErZd5x8WthR/view
 
-https://wvn.vn
+2. Hướng dẫn kiểm tra tính hợp lệ của chữ ký số
+Để xác thực tính pháp lý và chữ ký số trên văn bản, Quý đơn vị có thể sử dụng hệ thống kiểm tra chính thức của Trung tâm Chứng thực điện tử quốc gia (NEAC) theo các bước sau:
 
-Để các cơ quan, tổ chức, đối tác và cá nhân có nhu cầu có thể chủ động xác minh thông tin, DR Solutions công khai Giấy xác nhận quyền sở hữu tên miền WVN.VN được lập ngày 14/09/2026. Văn bản xác nhận nêu rõ DR Solutions là đơn vị sở hữu hợp pháp, quản lý trực tiếp và chịu trách nhiệm đối với tên miền wvn.vn.
+Bước 1: Tải file PDF văn bản xác nhận về thiết bị từ liên kết ở mục 1.
 
-1. Xem văn bản xác nhận chính thức
+Bước 2: Truy cập website chính thức của NEAC tại: https://neac.gov.vn/vi.
 
-Quý cơ quan, tổ chức và đối tác có thể xem và tải bản văn bản điện tử đã được ký tại liên kết dưới đây:
+Bước 3: Tại mục “Kiểm tra văn bản ký số”, chọn “Chọn tệp tải lên” và tải file PDF vừa lưu.
 
-👉 XEM VĂN BẢN XÁC NHẬN QUYỀN SỞ HỮU TÊN MIỀN WVN.VN
+Bước 4: Nhấn “Kiểm tra văn bản” để hệ thống hiển thị các thông tin: đơn vị/cá nhân ký, chứng thư số, tính hợp lệ của chữ ký, thời gian ký và trạng thái tài liệu.
 
-Đây là file PDF được cung cấp để các bên liên quan có thể trực tiếp kiểm tra nội dung văn bản và chữ ký điện tử.
+3. Thông tin đối chiếu
+Sau khi kiểm tra, Quý cơ quan và đối tác có thể đối chiếu trực tiếp với các thông tin cốt lõi sau:
 
-2. Hướng dẫn kiểm tra văn bản đã ký số
+Đơn vị sở hữu: CÔNG TY TNHH DR SOLUTIONS
 
-Để kiểm tra tính hợp lệ của chữ ký số trên văn bản, Quý cơ quan, tổ chức và cá nhân có thể sử dụng công cụ kiểm tra văn bản ký số chính thức của Trung tâm Chứng thực điện tử quốc gia (NEAC).
-
-👉 TRUY CẬP HỆ THỐNG KIỂM TRA VĂN BẢN KÝ SỐ CỦA NEAC
-
-Trên website NEAC hiện có chức năng “Kiểm tra văn bản ký số”, hỗ trợ kiểm tra văn bản định dạng PDF và XML.
-
-3. Các bước thực hiện kiểm tra
-
-Bước 1: Truy cập văn bản xác nhận tại liên kết:
-
-👉 Xem văn bản xác nhận của DR Solutions
-
-Bước 2: Tải file PDF về thiết bị.
-
-Bước 3: Truy cập website chính thức của NEAC:
-
-👉 https://neac.gov.vn/vi
-
-Bước 4: Tại mục “Kiểm tra văn bản ký số”, chọn “Chọn tệp tải lên” và tải file PDF vừa tải về.
-
-Bước 5: Nhấn “Kiểm tra văn bản”.
-
-Theo hướng dẫn của NEAC, hệ thống sẽ thực hiện kiểm tra và trả về thông tin liên quan đến chữ ký số, bao gồm thông tin đơn vị/cá nhân ký, tình trạng tài liệu, chứng thư số, tính hợp lệ của chữ ký, thời gian ký và trạng thái chứng thư.
-
-4. Đối chiếu thông tin
-
-Sau khi kiểm tra, Quý cơ quan, tổ chức và cá nhân có thể đối chiếu kết quả với thông tin thể hiện trên văn bản.
-
-Văn bản xác nhận thể hiện:
-
-Đơn vị: CÔNG TY TNHH DR SOLUTIONS
 Mã số doanh nghiệp: 0111291749
+
 Tên miền: WVN.VN
-Website: https://wvn.vn
-Ngày lập văn bản: 14/09/2026
 
-Việc công khai văn bản và hướng dẫn kiểm tra nhằm giúp các bên liên quan không cần chỉ dựa vào thông báo của tổ chức, mà có thể trực tiếp xem văn bản và sử dụng hệ thống kiểm tra chữ ký số của NEAC để xác minh.
-
-5. Thông tin chính thức
-
-Tên miền thuộc sở hữu và quản lý: wvn.vn
-Đơn vị: CÔNG TY TNHH DR SOLUTIONS
 Website chính thức: https://wvn.vn
 
-Văn bản xác nhận:
-👉 Xem văn bản xác nhận quyền sở hữu tên miền https://drive.google.com/file/d/1jpFk4q9ACLZs-l_G0Pk-vErZd5x8WthR/view?usp=sharing
+Ngày lập văn bản: 14/09/2026
 
-Kiểm tra chữ ký số:
-👉 Truy cập Trung tâm Chứng thực điện tử quốc gia – NEAC
-https://neac.gov.vn/vi
+Việc công khai tài liệu và minh bạch hóa quy trình kiểm tra giúp các bên liên quan dễ dàng tự kiểm chứng thông tin và xác thực chữ ký số một cách nhanh chóng, chính xác.
 
-DR Solutions trân trọng thông báo để các cơ quan, tổ chức, đối tác và các bên liên quan được biết và thuận tiện trong việc xác minh tên miền WVN.VN, kiểm tra văn bản xác nhận và đối chiếu chữ ký số khi cần thiết.
+DR Solutions trân trọng thông báo để Quý cơ quan, tổ chức, đối tác được biết và thuận tiện trong quá trình phối hợp, giao dịch.
 
-Trân trọng thông báo.
+Trân trọng,
 
 CÔNG TY TNHH DR SOLUTIONS
