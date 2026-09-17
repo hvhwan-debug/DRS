@@ -109,6 +109,17 @@
       background: linear-gradient(90deg, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0.3) 45%, rgba(15,23,42,0.08) 75%);
     }
     .item-hero-inner { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: 3.5rem 1.5rem; width: 100%; }
+    .hero-dove {
+      position: absolute; top: 8%; right: 5%; width: 100px; height: auto; opacity: 0.5;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15)); pointer-events: none; z-index: 3;
+      animation: doveFloat 9s ease-in-out infinite; transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0% { transform: translate(0, 0) rotate(-4deg); } 25% { transform: translate(-14px, -18px) rotate(2deg); }
+      50% { transform: translate(-4px, -30px) rotate(-6deg); } 75% { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 640px) { .hero-dove { width: 64px; top: 4%; right: 4%; opacity: 0.3; } }
 
     .item-form-card { background: #ffffff; border-radius: 18px; padding: 2.4rem 2.2rem; max-width: 480px; box-shadow: 0 30px 60px rgba(15,23,42,0.35); }
     .item-form-card h1 { font-size: 1.7rem; font-weight: 800; color: #0f172a; margin-bottom: 0.8rem; line-height: 1.3; }
@@ -325,6 +336,7 @@
   </header>
 
   <section class="item-hero">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true" onerror="this.style.display='none'">
     <img src="images/nhom-tre-em-vung-cao-ngoi-cung-nhau.jpg" alt="Nhóm trẻ em vùng cao cùng nhau" class="item-hero-bg" loading="eager">
     <div class="item-hero-overlay"></div>
     <div class="item-hero-inner">
@@ -481,13 +493,13 @@
         <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
         <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
         <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
-        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: none; font-weight: 400;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
       </div>
       <div>
         <h4>Địa Chỉ Trụ Sở</h4>
         <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
         <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
-        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: none; font-weight: 400;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
         <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
