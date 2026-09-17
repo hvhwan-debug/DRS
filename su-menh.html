@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sứ Mệnh & Tầm Nhìn - Wisdom Vietnam Network</title>
   <meta name="description" content="Sứ mệnh của Wisdom Vietnam Network & DR Solutions: kết nối nguồn lực xã hội để mang cơ hội học tập công bằng đến trẻ em vùng cao Việt Nam, hoạt động minh bạch và phi lợi nhuận.">
-  <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -13,7 +12,6 @@
   <style>
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
       --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
       --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
       --text-dark: #0f172a;
@@ -31,7 +29,6 @@
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định Đồng Bộ */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -52,7 +49,7 @@
       font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
+    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
 
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
@@ -64,10 +61,7 @@
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    /* Hiệu ứng viền sáng quét line cho nút Quyên Góp */
-    .btn-donate-glow {
-      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
-    }
+    .btn-donate-glow { position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out; }
     .btn-donate-glow::after {
       content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
       background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
@@ -82,108 +76,6 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
-    /* Hero Banner Sang Trọng */
-    .hero-wrapper {
-      width: 100%; background: var(--blue-grad-hero); padding: 5rem 1.5rem 6rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
-    }
-    .hero-wrapper::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;
-    }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với các trang khác trong site */
-    .hero-dove {
-      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
-      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
-      pointer-events: none; z-index: 5;
-      animation: doveFloat 9s ease-in-out infinite;
-      transform-origin: center center;
-    }
-    @keyframes doveFloat {
-      0%   { transform: translate(0, 0) rotate(-4deg); }
-      25%  { transform: translate(-14px, -18px) rotate(2deg); }
-      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
-      75%  { transform: translate(10px, -14px) rotate(3deg); }
-      100% { transform: translate(0, 0) rotate(-4deg); }
-    }
-    @media (max-width: 640px) {
-      .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
-    }
-    .hero-badge {
-      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
-      padding: 0.45rem 1.4rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
-      letter-spacing: 1px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.3); text-transform: uppercase;
-    }
-    .hero-title { font-size: 3rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
-    .hero-desc { font-size: 1.15rem; color: #e0f2fe; max-width: 750px; margin: 0 auto; line-height: 1.7; }
-
-    /* Quote Banner Nghệ Thuật */
-    .mission-quote-box {
-      max-width: 950px; margin: -3rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10;
-    }
-    .quote-card {
-      background: #ffffff; border-radius: 24px; padding: 3rem 2.5rem; text-align: center;
-      border: 1px solid #bae6fd; box-shadow: 0 25px 50px rgba(2, 132, 199, 0.12); position: relative;
-    }
-    .quote-card::before {
-      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--blue-grad-btn); border-radius: 2px;
-    }
-    .quote-card i { font-size: 2.2rem; color: #0284c7; opacity: 0.3; margin-bottom: 1rem; display: block; }
-    .quote-card p { font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.75; font-style: italic; }
-    .quote-card span { display: block; margin-top: 1.2rem; font-size: 0.9rem; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 1px; }
-
-    /* Main Container & Story Sections Sang Trọng */
-    .container { max-width: 1000px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
-
-    .mission-story-block {
-      background: #ffffff; border-radius: 20px; padding: 3.2rem; border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); margin-bottom: 2.5rem; transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .mission-story-block:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.08); border-color: #bae6fd; }
-    
-    .mission-story-block h2 {
-      font-size: 1.65rem; font-weight: 800; color: #0369a1; margin-bottom: 1.2rem;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .mission-story-block h2 i {
-      width: 42px; height: 42px; background: #e0f2fe; color: #0284c7; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
-    }
-    .mission-story-block p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.1rem; }
-    .mission-story-block p:last-child { margin-bottom: 0; }
-
-    /* Modal Quyên góp */
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
-    }
-    .modal-content {
-      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
-    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
-
-    /* Footer chuẩn 3 cột */
-    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
-    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-    .footer-bottom a { color: #94a3b8; text-decoration: none; }
-    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
-
-    @media (max-width: 960px) {
-      .mobile-menu-btn { display: block; }
-      .nav-links {
-        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
-        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
-      }
-      .nav-links.active { display: flex; }
-      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
-      .hero-title { font-size: 2.3rem; }
-      .quote-card { padding: 2rem 1.5rem; }
-      .quote-card p { font-size: 1.05rem; }
-      .mission-story-block { padding: 2rem 1.5rem; }
-    }
-  
     .nav-dropdown { position: relative; display: inline-block; }
     .nav-dropdown > .nav-dropdown-trigger {
       margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
@@ -204,41 +96,241 @@
       color: var(--text-dark); font-weight: 500;
     }
     .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
-    .social-links { display: flex; gap: 0.65rem; align-items: center; }
-    .social-link {
-      width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-      color: #cbd5e1; border: 1px solid rgba(255,255,255,0.18); text-decoration: none; transition: all 0.2s;
-    }
-    .social-link:hover { color: #ffffff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
-    .footer-transparency-strip {
-      max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0;
-      border-top: 1px solid rgba(255,255,255,0.1); text-align: center;
-    }
-    .footer-transparency-strip p { margin: 0.35rem 0; color: #cbd5e1; }
-    .footer-transparency-strip .transparency-claim {
-      color: #7dd3fc; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;
-    }
-    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+
     @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
       .nav-dropdown { display: block; width: 100%; }
       .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
       .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
       .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
     }
 
+    .cw-hero {
+      position: relative; width: 100%; padding: 4.5rem 1.5rem 6.5rem; text-align: center;
+      background: linear-gradient(160deg, #0f172a 0%, #14213d 55%, #0f2f52 100%); color: #fff; overflow: hidden;
+    }
+    .cw-hero::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.06;
+      background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 26px 26px;
+    }
+    .hero-dove {
+      position: absolute; top: 10%; right: 6%; width: 90px; height: auto; opacity: 0.35;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.25)); pointer-events: none; z-index: 1;
+      animation: doveFloat 9s ease-in-out infinite; transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0%   { transform: translate(0, 0) rotate(-4deg); }
+      25%  { transform: translate(-14px, -18px) rotate(2deg); }
+      50%  { transform: translate(-4px, -30px) rotate(-6deg); }
+      75%  { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 640px) { .hero-dove { width: 60px; top: 4%; right: 4%; opacity: 0.25; } }
+    .cw-hero-badge {
+      display: inline-block; background: #0284c7; color: #ffffff;
+      padding: 0.4rem 1.2rem; border-radius: 4px; font-size: 0.8rem; font-weight: 800;
+      letter-spacing: 1.2px; margin-bottom: 1.3rem; text-transform: uppercase; position: relative; z-index: 1;
+    }
+    .cw-hero h1 { font-size: 2.7rem; font-weight: 900; margin-bottom: 1rem; line-height: 1.25; position: relative; z-index: 1; }
+    .cw-hero p { font-size: 1.08rem; color: #cbd5e1; max-width: 720px; margin: 0 auto; line-height: 1.75; position: relative; z-index: 1; }
+
+    .cw-stats-float { max-width: 980px; margin: -3.2rem auto 0; padding: 0 1.5rem; position: relative; z-index: 5; }
+    .cw-stats-card {
+      background: #ffffff; border-radius: 16px; box-shadow: 0 20px 45px rgba(15,23,42,0.18);
+      display: grid; grid-template-columns: repeat(4, 1fr); overflow: hidden; border: 1px solid var(--border);
+    }
+    .cw-stat-item { padding: 1.6rem 1rem; text-align: center; border-right: 1px solid var(--border); }
+    .cw-stat-item:last-child { border-right: none; }
+    .cw-stat-num { font-size: 1.7rem; font-weight: 900; color: #0284c7; line-height: 1.1; margin-bottom: 0.3rem; }
+    .cw-stat-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+    @media (max-width: 700px) {
+      .cw-stats-card { grid-template-columns: repeat(2, 1fr); }
+      .cw-stat-item:nth-child(2) { border-right: none; }
+      .cw-stat-item { border-bottom: 1px solid var(--border); }
+      .cw-stat-item:nth-last-child(-n+2) { border-bottom: none; }
+    }
+
+    .cw-section { max-width: 1100px; margin: 0 auto; padding: 4.5rem 1.5rem 1rem; }
+    .cw-section-header { text-align: center; margin-bottom: 3rem; }
+    .cw-section-header h2 { font-size: 1.9rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; }
+    .cw-section-header p { color: var(--text-muted); font-size: 1rem; max-width: 640px; margin: 0 auto; }
+
+    .cw-how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 2.5rem; }
+    .cw-how-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .cw-how-icon {
+      width: 56px; height: 56px; border-radius: 14px; background: #e0f2fe; color: #0284c7;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+    }
+    .cw-how-item h3 { font-size: 1.15rem; color: #0f172a; margin-bottom: 0.5rem; font-weight: 800; }
+    .cw-how-item p { font-size: 0.96rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+    .cw-how-item a { font-size: 0.88rem; font-weight: 700; color: #0284c7; text-decoration: none; letter-spacing: 0.3px; }
+    .cw-how-item a:hover { text-decoration: underline; }
+
+    .cw-stories-section { background: #ffffff; padding: 4.5rem 1.5rem; margin-top: 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .cw-stories-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1.6rem; }
+    .cw-story-card { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 22px rgba(15,23,42,0.08); background: #fff; border: 1px solid var(--border); }
+    .cw-story-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .cw-story-body { padding: 1.2rem 1.3rem 1.4rem; }
+    .cw-story-body h4 { font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; line-height: 1.4; }
+    .cw-story-body a { font-size: 0.82rem; font-weight: 700; color: #0284c7; text-decoration: none; letter-spacing: 0.3px; }
+    .cw-story-body a:hover { text-decoration: underline; }
+
+    .mission-quote-box { max-width: 950px; margin: 4rem auto; padding: 0 1.5rem; }
+    .quote-card {
+      background: #ffffff; border-radius: 24px; padding: 3rem 2.5rem; text-align: center;
+      border: 1px solid #bae6fd; box-shadow: 0 25px 50px rgba(2, 132, 199, 0.12); position: relative;
+    }
+    .quote-card::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--blue-grad-btn); border-radius: 2px;
+    }
+    .quote-card i { font-size: 2.2rem; color: #0284c7; opacity: 0.3; margin-bottom: 1rem; display: block; }
+    .quote-card p { font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.75; font-style: italic; }
+    .quote-card span { display: block; margin-top: 1.2rem; font-size: 0.9rem; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 1px; }
+
+    .container { max-width: 1000px; margin: 0 auto 5rem auto; padding: 0 1.5rem; }
+
+    .mission-story-block {
+      background: #ffffff; border-radius: 20px; padding: 3.2rem; border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); margin-bottom: 2.5rem; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .mission-story-block:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.08); border-color: #bae6fd; }
+    .mission-story-block h2 {
+      font-size: 1.65rem; font-weight: 800; color: #0369a1; margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .mission-story-block h2 i {
+      width: 42px; height: 42px; background: #e0f2fe; color: #0284c7; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+    }
+    .mission-story-block p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.1rem; }
+    .mission-story-block p:last-child { margin-bottom: 0; }
+
+    .cw-cta-band { max-width: 1000px; margin: 0 auto 5rem; padding: 0 1.5rem; }
+    .cw-cta-inner {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 22px; padding: 3rem 2.5rem;
+      display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap;
+    }
+    .cw-cta-icon { font-size: 2.6rem; color: #b45309; flex-shrink: 0; }
+    .cw-cta-text { flex: 1; min-width: 240px; }
+    .cw-cta-text h3 { font-size: 1.3rem; font-weight: 800; color: #78350f; margin-bottom: 0.6rem; }
+    .cw-cta-text p { font-size: 0.98rem; color: #92400e; margin-bottom: 1.2rem; max-width: 560px; }
+    .cw-cta-text .btn { background: #b45309; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3); }
+    .cw-cta-text .btn:hover { background: #92400e; }
+
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin: 0.8rem 0; border: 1px solid var(--border); }
+    .modal-qr { width: 100%; max-width: 230px; margin: 0.8rem auto; display: block; border-radius: 10px; border: 1px solid var(--border); }
+
+    .newsletter-modal-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .newsletter-modal-form { text-align: left; display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 0.5rem; }
+    .newsletter-modal-field label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .newsletter-modal-field input {
+      width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #f8fafc; transition: all 0.2s;
+    }
+    .newsletter-modal-field input:focus { outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+    .newsletter-modal-submit {
+      width: 100%; margin-top: 0.3rem; background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.5rem;
+      border-radius: 8px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+    }
+    .newsletter-modal-submit:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .newsletter-modal-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .newsletter-modal-alert { display: none; margin-top: 0.9rem; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.86rem; align-items: center; gap: 8px; text-align: left; }
+    .newsletter-modal-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .newsletter-modal-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
+    }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
+    @media (max-width: 960px) { .gallery-grid { max-width: 100%; gap: 0.7rem; } }
+    .gallery-thumb { position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+    .gallery-thumb:hover img { transform: scale(1.12); }
+    .gallery-thumb::after {
+      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
+    }
+    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
+    .gallery-modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem; }
+    .gallery-modal.active { display: flex; }
+    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
+    .gallery-modal-img { max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); cursor: zoom-in; transition: transform 0.25s; background: #0f172a; }
+    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
+    .gallery-modal-close {
+      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
+    .gallery-modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
+    .gallery-modal-prev { left: -18px; }
+    .gallery-modal-next { right: -18px; }
+    @media (max-width: 700px) { .gallery-modal-prev { left: 4px; } .gallery-modal-next { right: 4px; } }
+    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
+
+    .footer-transparency-strip { max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+    .footer-transparency-strip p { margin: 0.35rem 0; color: #94a3b8; font-size: 0.88rem; }
+    .footer-transparency-strip .transparency-claim { font-weight: 500; color: #7dd3fc; text-decoration: none; }
+    .footer-transparency-strip .transparency-claim:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+
+    @media (max-width: 960px) {
+      .cw-hero h1 { font-size: 2.1rem; }
+      .quote-card { padding: 2rem 1.5rem; }
+      .quote-card p { font-size: 1.05rem; }
+      .mission-story-block { padding: 2rem 1.5rem; }
+      .cw-cta-inner { padding: 2rem 1.5rem; text-align: center; justify-content: center; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định Đồng Bộ -->
   <header>
   <div class="nav-container">
     <a href="index.html" class="brand-wrap">
       <div class="brand-logo-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3 3h7z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
         </svg>
       </div>
       <div class="brand-text-group">
@@ -250,16 +342,17 @@
       <div class="nav-dropdown" id="navDropdownAction">
         <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
         <div class="nav-dropdown-menu">
-          <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-          <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
+          <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+          <a href="hoat-dong.html">Gây quỹ bằng hiện vật</a>
           <a href="lien-he.html">Trở thành nhà tài trợ</a>
           <a href="lien-he.html">Đăng ký tình nguyện viên</a>
         </div>
       </div>
       <div class="nav-dropdown" id="navDropdownAbout">
-        <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
+        <button class="nav-dropdown-trigger active-page" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
         <div class="nav-dropdown-menu">
           <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+          <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
           <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
           <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
           <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
@@ -278,27 +371,94 @@
   </div>
 </header>
 
-  <!-- Hero Banner Sang Trọng -->
-  <section class="hero-wrapper">
-    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
-    <div class="hero-badge">ĐỊNH HƯỚNG CHIẾN LƯỢC CỘNG ĐỒNG</div>
-    <h1 class="hero-title">Sứ Mệnh & Tầm Nhìn Chiến Lược</h1>
-    <p class="hero-desc">Đồng hành bền bỉ cùng giáo dục vùng cao, mang tri thức mở và cơ hội phát triển công bằng đến với từng em nhỏ trên mọi miền đất nước.</p>
+  <section class="cw-hero">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true" loading="lazy" width="90" height="90">
+    <div class="cw-hero-badge">Sứ Mệnh &amp; Công Việc Của Chúng Tôi</div>
+    <h1>Vì cơ hội học tập công bằng cho trẻ em vùng cao</h1>
+    <p>Chúng tôi kết nối nguồn lực xã hội với những nhu cầu giáo dục thực tế, minh bạch từng đồng đóng góp và công khai kết quả hoạt động để cộng đồng cùng theo dõi.</p>
   </section>
 
-  <!-- Quote Banner Nghệ Thuật -->
+  <div class="cw-stats-float">
+    <div class="cw-stats-card">
+      <div class="cw-stat-item"><div class="cw-stat-num">100%</div><div class="cw-stat-label">Lợi nhuận tái đầu tư</div></div>
+      <div class="cw-stat-item"><div class="cw-stat-num">420+</div><div class="cw-stat-label">Sách &amp; học liệu đã trao</div></div>
+      <div class="cw-stat-item"><div class="cw-stat-num">3</div><div class="cw-stat-label">Điểm trường đối tác</div></div>
+      <div class="cw-stat-item"><div class="cw-stat-num">24/7</div><div class="cw-stat-label">Sao kê công khai</div></div>
+    </div>
+  </div>
+
+  <section class="cw-section">
+    <div class="cw-section-header">
+      <h2>Cách Thức Chúng Tôi Hoạt Động</h2>
+      <p>Hai nguyên tắc xuyên suốt mọi chương trình: triển khai sát nhu cầu thực tế và minh bạch tuyệt đối với người đồng hành.</p>
+    </div>
+    <div class="cw-how-grid">
+      <div class="cw-how-item">
+        <div class="cw-how-icon"><i class="fa-solid fa-people-group"></i></div>
+        <div>
+          <h3>Làm việc trực tiếp với nhà trường &amp; cộng đồng</h3>
+          <p>Trước mỗi chương trình, đội ngũ khảo sát thực địa cùng giáo viên chủ nhiệm để xác định đúng nhu cầu — từ sách vở, áo ấm đến học bổng — thay vì phân bổ dàn trải.</p>
+          <a href="hoat-dong.html">Xem các chương trình đang triển khai <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="cw-how-item">
+        <div class="cw-how-icon"><i class="fa-solid fa-magnifying-glass-dollar"></i></div>
+        <div>
+          <h3>Minh bạch từng đồng đóng góp</h3>
+          <p>Mọi giao dịch quyên góp đều được ghi nhận và có thể tra cứu công khai theo mã giao dịch, giúp người đồng hành tự xác minh mà không cần chỉ dựa vào lời hứa.</p>
+          <a href="sao-ke.html">Tra cứu sao kê giao dịch <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cw-stories-section">
+    <div class="cw-section-header">
+      <h2>Những Hình Ảnh Từ Thực Địa</h2>
+      <p>Nụ cười của các em nhỏ tại những điểm trường vùng cao — lý do chúng tôi tiếp tục hành trình này mỗi ngày.</p>
+    </div>
+    <div class="cw-stories-grid">
+      <div class="cw-story-card">
+        <img src="images/tre-em-cuoi-dua-vui-ve.jpg" alt="Hai em nhỏ cười đùa vui vẻ tại điểm trường vùng cao" loading="lazy" width="900" height="472">
+        <div class="cw-story-body">
+          <h4>Niềm vui giản dị ở điểm trường</h4>
+          <a href="tin-tuc.html">Xem thêm câu chuyện <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="cw-story-card">
+        <img src="images/tre-em-nam-tay-canh-dong-lua.jpg" alt="Nhóm trẻ em nắm tay nhau đi trên cánh đồng lúa vùng cao" loading="lazy" width="900" height="600">
+        <div class="cw-story-body">
+          <h4>Trên đường tới trường qua cánh đồng lúa</h4>
+          <a href="tin-tuc.html">Xem thêm câu chuyện <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="cw-story-card">
+        <img src="images/nhom-tre-em-vung-cao-ngoi-cung-nhau.jpg" alt="Nhóm đông trẻ em vùng cao ngồi cùng nhau trên khúc gỗ" loading="lazy" width="900" height="600">
+        <div class="cw-story-body">
+          <h4>Gắn kết cộng đồng nhỏ nơi bản làng</h4>
+          <a href="tin-tuc.html">Xem thêm câu chuyện <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="cw-story-card">
+        <img src="images/be-gai-khan-xanh-cuoi-tuoi.jpg" alt="Bé gái đội khăn xanh cười tươi" loading="lazy" width="700" height="1057">
+        <div class="cw-story-body">
+          <h4>Ánh mắt hồn nhiên của trẻ vùng cao</h4>
+          <a href="tin-tuc.html">Xem thêm câu chuyện <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="mission-quote-box">
     <div class="quote-card">
       <i class="fa-solid fa-quote-left"></i>
-      <p>“Vì cơ hội học tập không nên phụ thuộc vào hoàn cảnh. Hãy cùng chúng tôi mở thêm một cơ hội.”</p>
+      <p>"Vì cơ hội học tập không nên phụ thuộc vào hoàn cảnh. Hãy cùng chúng tôi mở thêm một cơ hội."</p>
       <span>— Wisdom Vietnam Network (DR Solutions)</span>
     </div>
   </div>
 
-  <!-- Main Container -->
   <main class="container">
-    
-    <!-- Phần 1 -->
+
     <div class="mission-story-block">
       <h2><i class="fa-solid fa-heart-circle-check"></i> VÌ CƠ HỘI HỌC TẬP</h2>
       <p style="font-size: 1.18rem; font-weight: 700; color: var(--text-dark);">Mỗi đứa trẻ đều xứng đáng có cơ hội được học</p>
@@ -307,7 +467,6 @@
       <p>Vì vậy, chúng tôi hoạt động với một sứ mệnh giản dị: <strong>kết nối nguồn lực xã hội với những nhu cầu giáo dục thực tế</strong>, đặc biệt tại các cộng đồng còn nhiều khó khăn, để trẻ em và người học có thêm điều kiện tiếp cận tri thức.</p>
     </div>
 
-    <!-- Phần 2 -->
     <div class="mission-story-block">
       <h2><i class="fa-solid fa-seedling"></i> Trao đúng điều cần thiết</h2>
       <p>Một cuốn sách có thể mở thêm một cánh cửa đến tri thức. Một chiếc máy tính có thể đưa một học sinh đến gần hơn với thế giới rộng lớn. Một thiết bị cho lớp học có thể hỗ trợ nhiều thế hệ học sinh.</p>
@@ -315,7 +474,6 @@
       <p>Các hoạt động được triển khai dựa trên việc tìm hiểu nhu cầu, phối hợp với nhà trường và cộng đồng địa phương, đồng thời hướng tới những giá trị có thể duy trì lâu dài.</p>
     </div>
 
-    <!-- Phần 3 -->
     <div class="mission-story-block">
       <h2><i class="fa-solid fa-shield-halved"></i> Minh bạch để giữ gìn niềm tin</h2>
       <p>Mỗi sự đóng góp đều bắt đầu từ niềm tin.</p>
@@ -328,7 +486,6 @@
       </p>
     </div>
 
-    <!-- Phần 4 -->
     <div class="mission-story-block" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-color: #bae6fd;">
       <h2 style="color: #0284c7;"><i class="fa-solid fa-hand-holding-heart"></i> Cùng nhau mở thêm những cơ hội</h2>
       <p>Chúng tôi tin rằng một tổ chức không thể tạo ra thay đổi một mình:</p>
@@ -342,7 +499,6 @@
       <p style="font-weight: 800; color: #0f172a; margin-top: 1.5rem; text-align: center; font-size: 1.15rem; background: #ffffff; padding: 1.2rem; border-radius: 12px; border: 1px solid #bae6fd;">Vì cơ hội học tập không nên phụ thuộc vào hoàn cảnh.<br><span style="color: #0284c7;">Hãy cùng chúng tôi mở thêm một cơ hội.</span></p>
     </div>
 
-  
     <section class="mission-story-block" style="background:linear-gradient(135deg,#f8fafc 0%,#eef6ff 100%);border-color:#cbd5e1;">
       <h2><i class="fa-solid fa-building"></i> Wisdom Vietnam Network và Công ty TNHH DR Solutions</h2>
       <p><strong>Wisdom Vietnam Network (WVN)</strong> là mạng lưới và nền tảng hoạt động cộng đồng được xây dựng nhằm kết nối các nguồn lực xã hội với những nhu cầu thực tế trong giáo dục, học tập và phát triển cộng đồng tại Việt Nam.</p>
@@ -375,20 +531,52 @@
 
   </main>
 
-  <!-- Modal Quyên góp -->
+  <div class="cw-cta-band">
+    <div class="cw-cta-inner">
+      <i class="fa-solid fa-road cw-cta-icon"></i>
+      <div class="cw-cta-text">
+        <h3>Bước tiếp theo hướng tới sự phát triển bền vững</h3>
+        <p>Chúng tôi tiếp tục mở rộng hợp tác với nhà trường và cộng đồng địa phương để nhân rộng mô hình tủ sách, học bổng và các chương trình hỗ trợ dài hạn.</p>
+        <a href="hoat-dong.html" class="btn">Xem Kế Hoạch Sắp Tới</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="newsletterModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+      <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Đăng Ký Nhận Bản Tin</h3>
+      <p class="newsletter-modal-text">Nhận thông tin về hoạt động mới, sự kiện gây quỹ và câu chuyện giáo dục vùng cao — gửi thẳng tới email của bạn, không spam.</p>
+      <form id="newsletterModalForm" class="newsletter-modal-form">
+        <input type="hidden" name="_subject" value="Đăng ký nhận bản tin - Website Mạng Lưới Tri Thức Việt Nam">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="newsletter-modal-field">
+          <label for="newsletterFullName">Họ và tên</label>
+          <input type="text" name="fullname" id="newsletterFullName" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="newsletter-modal-field">
+          <label for="newsletterModalEmail">Email</label>
+          <input type="email" name="email" id="newsletterModalEmail" placeholder="ban@email.com" required>
+        </div>
+        <button type="submit" id="newsletterModalBtn" class="newsletter-modal-submit">Đăng Ký</button>
+      </form>
+      <div id="newsletterModalAlert" class="newsletter-modal-alert"></div>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none; margin-top: 0.9rem;" onclick="closeNewsletterModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Ủng Hộ Vì Cơ Hội Học Tập</h3>
-      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner">
+      <img src="banner-drs.png.png" alt="Cơ hội học tập công bằng" class="modal-banner" loading="lazy">
       <p style="font-size:0.88rem; color:var(--text-muted);">Mở ứng dụng ngân hàng quét mã QR để đồng hành cùng quỹ:</p>
-      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20TM%20VA%20DV%20EZVINA" alt="Mã VietQR Quyên góp" class="modal-qr">
-      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;"><strong>CONG TY TNHH TM VA DV EZVINA</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
+      <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20DRSV&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Quyên góp" class="modal-qr" loading="lazy">
+      <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;"><strong>CÔNG TY TNHH DR SOLUTIONS</strong><br>STK: <strong>30000</strong> — Ngân hàng Techcombank</p>
       <p style="font-size:0.82rem; color:#64748b; margin-bottom:1rem;">Nội dung chuyển khoản: <strong>Ung ho Quy DRSV</strong></p>
       <button class="btn" style="background:#64748b; width:100%; box-shadow:none;" onclick="closeModal()">Đóng Cửa Sổ</button>
     </div>
   </div>
 
-  <!-- Footer chuẩn 3 cột đồng bộ -->
   <footer>
   <div class="footer-grid">
     <div>
@@ -407,34 +595,41 @@
       <h4><i class="fa-solid fa-images" style="font-size:0.85em;margin-right:6px;color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
       <div class="gallery-grid" id="galleryGrid" style="margin-top:0.9rem;"></div>
     </div>
-    <div>
-      <h4>Kết Nối Với Chúng Tôi</h4>
-      <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-      <div class="social-links" style="margin-top:0.8rem;">
-        <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-      </div>
-    </div>
   </div>
   <div class="footer-transparency-strip">
     <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
     <p>
       <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
       <span class="transparency-sep">•</span>
-      <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('newsletterEmail').focus();return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+      <a href="#" onclick="openNewsletterModal(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
     </p>
   </div>
   <div class="footer-bottom">
-    &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp;
-    <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+    <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+    <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
   </div>
 </footer>
+
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-modal-inner">
+      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
+      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
+      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
+    </div>
+  </div>
 
   <script>
     function openModal() { document.getElementById('donateModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('donateModal').style.display = 'none'; }
+    function openNewsletterModal() { document.getElementById('newsletterModal').style.display = 'flex'; }
+    function closeNewsletterModal() { document.getElementById('newsletterModal').style.display = 'none'; }
     window.onclick = function(event) {
       let modal = document.getElementById('donateModal');
       if (event.target == modal) { modal.style.display = 'none'; }
+      let newsModal = document.getElementById('newsletterModal');
+      if (event.target == newsModal) { newsModal.style.display = 'none'; }
     }
 
     function toggleMobileMenu() {
@@ -447,7 +642,7 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-  
+
     function toggleNavDropdown(btn) {
       const dropdown = btn.closest('.nav-dropdown');
       const wasOpen = dropdown.classList.contains('open');
@@ -460,6 +655,110 @@
       }
     });
 
+    const newsletterModalForm = document.getElementById("newsletterModalForm");
+    const newsletterModalBtn = document.getElementById("newsletterModalBtn");
+    const newsletterModalAlert = document.getElementById("newsletterModalAlert");
+
+    newsletterModalForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const originalBtnHtml = newsletterModalBtn.innerHTML;
+      newsletterModalBtn.disabled = true;
+      newsletterModalBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      newsletterModalAlert.className = "newsletter-modal-alert";
+      newsletterModalAlert.style.display = "none";
+
+      const formData = new FormData(newsletterModalForm);
+      const recipientEmail = "hotro@wvn.vn";
+
+      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: formData
+      })
+        .then(async res => {
+          let data = null;
+          try { data = await res.json(); } catch (e) { }
+          const isSuccess = res.ok && (!data || data.success === "true" || data.success === true || data.success === undefined);
+          if (!isSuccess) throw new Error("Đăng ký không thành công");
+        })
+        .then(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-success";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi bản tin mới nhất tới email này.</span>';
+          newsletterModalForm.reset();
+        })
+        .catch(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-error";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          newsletterModalBtn.disabled = false;
+          newsletterModalBtn.innerHTML = originalBtnHtml;
+        });
+    });
+
+    const GALLERY_IMAGES = [
+      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
+      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
+      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
+      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
+      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
+      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
+    ];
+    let galleryShuffled = [];
+    let galleryCurrentIndex = 0;
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function renderGalleryGrid() {
+      const grid = document.getElementById("galleryGrid");
+      if (!grid) return;
+      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
+        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
+          <img src="${img.src}" alt="${img.caption}" loading="lazy">
+        </div>
+      `).join("");
+    }
+    function openGalleryModal(startIndex) {
+      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
+      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
+      galleryCurrentIndex = 0;
+      renderGalleryModalImage();
+      document.getElementById("galleryModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+    function renderGalleryModalImage() {
+      const img = galleryShuffled[galleryCurrentIndex];
+      const modalImg = document.getElementById("galleryModalImg");
+      modalImg.src = img.src;
+      modalImg.alt = img.caption;
+      modalImg.classList.remove("zoomed");
+      document.querySelector(".gallery-modal-caption").textContent = img.caption;
+    }
+    function showGalleryImage(direction) {
+      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
+      renderGalleryModalImage();
+    }
+    function closeGalleryModal() {
+      document.getElementById("galleryModal").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("galleryModal").addEventListener("click", function (e) {
+      if (e.target === this) closeGalleryModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      const modal = document.getElementById("galleryModal");
+      if (!modal.classList.contains("active")) return;
+      if (e.key === "Escape") closeGalleryModal();
+      if (e.key === "ArrowLeft") showGalleryImage(-1);
+      if (e.key === "ArrowRight") showGalleryImage(1);
+    });
+    renderGalleryGrid();
   </script>
 </body>
 </html>
