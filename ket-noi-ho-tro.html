@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cần Được Giúp Đỡ | Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Kênh kết nối dành cho những gia đình, học sinh có hoàn cảnh khó khăn cần được hỗ trợ. Mạng Lưới Tri Thức Việt Nam sẽ liên hệ và đồng hành cùng bạn.">
+  <!-- Favicon chuẩn trực tuyến -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+    }
+    body { padding-top: 72px; }
+
+    /* Menu Cố Định Đồng Bộ */
+    header {
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
+    }
+    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+
+
+
+    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng,
+       đồng bộ trên toàn site (giống charity: water). */
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+      padding: 0.5rem; z-index: 100; margin-top: 0;
+    }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
+      color: var(--text-dark); font-weight: 500;
+    }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+    .nav-dropdown-trigger.active-page { color: #0284c7; font-weight: 600; }
+
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+
+    .btn-donate-glow {
+      position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+    }
+
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
+
+    /* Hero Banner (đồng bộ với sao-ke.html) */
+    .hero-wrapper {
+      width: 100%; background: var(--blue-grad-hero); padding: 3.6rem 1.5rem 4rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;
+    }
+    .hero-dove {
+      position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
+      opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+      pointer-events: none; z-index: 1; animation: doveFloat 9s ease-in-out infinite; transform-origin: center center;
+    }
+    @keyframes doveFloat {
+      0% { transform: translate(0, 0) rotate(-4deg); }
+      25% { transform: translate(-14px, -18px) rotate(2deg); }
+      50% { transform: translate(-4px, -30px) rotate(-6deg); }
+      75% { transform: translate(10px, -14px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(-4deg); }
+    }
+    @media (max-width: 480px) {
+      .brand-title { font-size: 1.02rem; }
+      .brand-subtitle { font-size: 0.6rem; }
+    }
+    @media (max-width: 640px) { .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; } }
+    .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
+      padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.5px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
+      position: relative; z-index: 1;
+    }
+    .hero-title { font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 0.8rem; position: relative; z-index: 1; }
+    .hero-desc { font-size: 1.05rem; color: #e0f2fe; max-width: 620px; margin: 0 auto; position: relative; z-index: 1; }
+
+    /* Container chính (đồng bộ với sao-ke.html) */
+    .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+
+    /* Footer chuẩn 3 cột (đồng bộ toàn site) */
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown { display: block; width: 100%; }
+      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
+      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
+      .hero-title { font-size: 2rem; }
+    }
+
+    /* ============================================================
+       KHỐI CSS RIÊNG CHO NỘI DUNG TRANG HOẠT ĐỘNG
+       Dùng đúng bo góc 16px, đổ bóng nhạt và bảng màu đã có ở
+       sao-ke.html (border-radius, box-shadow 0 10px 25px -5px...),
+       không tạo hệ thống bo góc/màu mới.
+       ============================================================ */
+    .activity-panel {
+      background: #ffffff; border-radius: 16px; border: 1px solid var(--border);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
+      padding: 2rem 1.75rem 2.25rem; margin-bottom: 2.5rem;
+    }
+    .activity-panel:last-child { margin-bottom: 0; }
+    .activity-panel-header { margin-bottom: 1.75rem; }
+    .activity-panel-header h2 { font-size: 1.35rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .activity-panel-header p { color: var(--text-muted); font-size: 0.92rem; }
+
+    .events-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1.5rem; }
+    .event-card {
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: #fff;
+      transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; scroll-margin-top: 100px;
+    }
+    .event-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(2, 132, 199, 0.12); }
+    .event-card-top { height: 150px; display: flex; align-items: flex-end; justify-content: flex-start; color: #fff; font-size: 1.6rem; position: relative; overflow: hidden; }
+    .event-card-top img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .event-card-top::before {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(180deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.55) 100%);
+    }
+    .event-card-top::after {
+      content: ''; position: absolute; top: -60%; left: -60%; width: 220%; height: 220%; z-index: 1;
+      background: linear-gradient(115deg, transparent 44%, rgba(255,255,255,0.25) 50%, transparent 56%);
+      animation: cardShineSweep 4.5s linear infinite;
+    }
+    @keyframes cardShineSweep { 0% { transform: translate(-15%, -15%) rotate(12deg); } 100% { transform: translate(15%, 15%) rotate(12deg); } }
+    .event-card-top .event-icon-badge {
+      position: relative; z-index: 2; margin: 0.8rem;
+      width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; border: 1px solid rgba(255,255,255,0.35);
+    }
+    .event-card-body { padding: 1.4rem; display: flex; flex-direction: column; flex-grow: 1; }
+    .event-card-meta { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+    .event-tag { padding: 0.28rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+    .event-countdown {
+      font-size: 0.76rem; font-weight: 700; color: #0369a1; display: inline-flex; align-items: center; gap: 6px;
+      background: #e0f2fe; padding: 0.28rem 0.65rem; border-radius: 999px;
+    }
+    .event-countdown .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: #0284c7; flex-shrink: 0; animation: cardPulseDot 1.8s infinite; }
+    @keyframes cardPulseDot {
+      0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5); }
+      70% { box-shadow: 0 0 0 6px rgba(2, 132, 199, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
+    }
+    .event-card-body h3 { font-size: 1.02rem; font-weight: 800; color: #0369a1; margin-bottom: 0.5rem; line-height: 1.35; }
+    .event-card-body p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; flex-grow: 1; }
+    .event-project-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; padding-top: 0.9rem; border-top: 1px dashed var(--border); }
+    .event-project-code { font-size: 0.74rem; font-weight: 800; color: #0369a1; background: #f0f9ff; border: 1px dashed #7dd3fc; padding: 0.2rem 0.6rem; border-radius: 999px; white-space: nowrap; }
+    .event-cta {
+      font-size: 0.85rem; font-weight: 700; color: #0284c7; display: inline-flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer; font-family: inherit; padding: 0;
+    }
+    .event-cta i { transition: transform 0.2s; }
+    .event-card:hover .event-cta i { transform: translateX(4px); }
+
+    /* Dòng thời gian dấu ấn đã qua — có thanh tiến trình chạy theo cuộn trang
+       và nút mốc thời gian toả sáng khi được "kích hoạt". */
+    .impact-timeline { position: relative; padding-left: 2rem; }
+    .impact-timeline::before { content: ''; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: var(--border); }
+    .impact-fill {
+      position: absolute; left: 6px; top: 6px; width: 2px; height: 0%;
+      background: linear-gradient(180deg, #7dd3fc 0%, #0284c7 55%, #1e3a8a 100%);
+      transition: height 0.15s ease-out; z-index: 1;
+    }
+    .impact-item { position: relative; padding-bottom: 2rem; }
+    .impact-item:last-child { padding-bottom: 0; }
+    .impact-dot {
+      position: absolute; left: -2rem; top: 3px; width: 14px; height: 14px; border-radius: 50%;
+      background: #ffffff; border: 3px solid #cbd5e1; box-shadow: 0 0 0 2px #ffffff; z-index: 2;
+      transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+    }
+    .impact-dot::after {
+      content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #0284c7;
+      opacity: 0; transform: scale(0.6);
+    }
+    .impact-item.is-active .impact-dot { background: var(--blue-grad-btn); border-color: #0284c7; box-shadow: 0 0 0 2px #bae6fd; }
+    .impact-item.is-active .impact-dot::after { animation: dotRadiate 1.8s ease-out infinite; }
+    .impact-item.is-active .impact-dot::before {
+      content: ''; position: absolute; inset: -12px; border-radius: 50%; border: 2px solid #38bdf8;
+      opacity: 0; transform: scale(0.5); animation: dotRadiate 1.8s ease-out 0.5s infinite;
+    }
+    @keyframes dotRadiate { 0% { transform: scale(0.6); opacity: 0.7; } 100% { transform: scale(2); opacity: 0; } }
+    .impact-date { font-size: 0.78rem; font-weight: 700; color: #0284c7; margin-bottom: 0.3rem; letter-spacing: 0.2px; }
+    .impact-item h3 { font-size: 1.02rem; color: #0f172a; font-weight: 800; margin-bottom: 0.4rem; }
+    .impact-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; max-width: 640px; }
+    .impact-item-body { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+    .impact-thumb {
+      width: 96px; height: 72px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
+      border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(15,23,42,0.06);
+    }
+    .impact-item-text { flex: 1; min-width: 200px; }
+    @media (max-width: 480px) { .impact-thumb { width: 72px; height: 54px; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .event-card-top::after, .event-countdown .pulse-dot,
+      .impact-item.is-active .impact-dot::after, .impact-item.is-active .impact-dot::before { animation: none; }
+      .impact-fill { transition: none; }
+    }
+
+    /* Popup mã QR ủng hộ chiến dịch — hiện khi bấm "Ủng hộ chiến dịch này" trên thẻ sự kiện */
+    .qr-modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .qr-modal.active { display: flex; }
+    .qr-modal-content {
+      position: relative; background: #ffffff; padding: 2.2rem; border-radius: 20px; max-width: 400px; width: 100%;
+      text-align: center; box-shadow: 0 24px 50px rgba(15, 23, 42, 0.3);
+    }
+    .qr-modal-close {
+      position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%;
+      background: #f1f5f9; border: none; color: var(--text-muted); font-size: 0.95rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .qr-modal-close:hover { background: #e2e8f0; color: var(--text-dark); }
+    .qr-modal-content h3 { color: #0369a1; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+    .qr-modal-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .qr-modal-img { width: 100%; max-width: 220px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 1.2rem; }
+    .qr-modal-content-box {
+      background: #f0f9ff; border: 1px dashed #7dd3fc; border-radius: 10px; padding: 0.7rem 0.9rem;
+      text-align: center; font-size: 0.88rem; color: #0369a1; margin-bottom: 1.3rem;
+    }
+    .qr-modal-content-box strong { display: block; font-size: 0.98rem; letter-spacing: 0.4px; margin-top: 0.25rem; }
+    .qr-modal-more {
+      font-size: 0.88rem; font-weight: 700; color: #0284c7; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .qr-modal-more:hover { text-decoration: underline; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
+    @media (max-width: 960px) {
+      .gallery-grid { max-width: 100%; gap: 0.7rem; }
+    }
+    .gallery-thumb {
+      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
+    }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+    .gallery-thumb:hover img { transform: scale(1.12); }
+    .gallery-thumb::after {
+      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
+    }
+    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
+
+    .gallery-modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
+      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .gallery-modal.active { display: flex; }
+    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
+    .gallery-modal-img {
+      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
+    }
+    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
+    .gallery-modal-close {
+      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
+    .gallery-modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
+    .gallery-modal-prev { left: -18px; }
+    .gallery-modal-next { right: -18px; }
+    @media (max-width: 700px) {
+      .gallery-modal-prev { left: 4px; }
+      .gallery-modal-next { right: 4px; }
+    }
+    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
+
+    .footer-transparency-strip { max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0; border-top: 1px solid rgba(255,255,255,.1); text-align: center; }
+    .footer-transparency-strip p { margin: 0.35rem 0; font-size: 0.88rem; color: #cbd5e1; }
+    .footer-transparency-strip .transparency-claim { font-weight: 400; color: #7dd3fc; text-decoration: none; }
+
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    .social-link {
+      width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #cbd5e1; border: 1px solid rgba(255,255,255,.18); text-decoration: none; transition: all .2s;
+    }
+    .social-link:hover { color: #fff; background: rgba(255,255,255,.1); transform: translateY(-2px); }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu Cố Định Đồng Bộ -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="gay-quy-hien-vat.html">Gây quỹ bằng hiện vật</a>
+            <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
+            <a href="tinh-nguyen-vien.html">Đăng ký tình nguyện viên</a>
+            <a href="ket-noi-ho-tro.html">Cần được giúp đỡ</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
+            <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
+            <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
+            <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
+          </div>
+        </div>
+
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="tin-tuc.html">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>      </nav>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn btn-donate-glow" id="authBtn" onclick="window.location.href='dang-nhap.html'">Đăng Nhập</button>
+        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <style>
+    /* ================= BANNER (đồng bộ với mo-hinh-100.html) ================= */
+    .page-banner {
+      position: relative; width: 100%; padding: 3.2rem 1.5rem 3.6rem; color: var(--white); overflow: hidden;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%); background-size: 250% 250%;
+      animation: heroGradientMove 12s ease infinite; text-align: center;
+    }
+    .page-banner .hero-badge {
+      display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe; padding: 0.4rem 1.1rem;
+      border-radius: 999px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);
+    }
+    .page-banner h1 { font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
+    .page-banner p { color: #e0f2fe; font-size: 1.02rem; max-width: 640px; margin: 0 auto; }
+    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @media (max-width: 960px) { .page-banner h1 { font-size: 1.9rem; } }
+
+    /* ================= FULL-BLEED PHOTO + QUOTE ================= */
+    /* ================= ẢNH NỀN + CARD HÀNH ĐỘNG ================= */
+    .support-photo-hero { position: relative; width: 100%; min-height: 560px; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
+    .support-photo-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .support-photo-hero::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(180deg, rgba(15,23,42,0.35) 0%, rgba(15,23,42,0.6) 100%);
+    }
+    .support-photo-hero-inner { position: relative; z-index: 2; width: 100%; }
+    @media (max-width: 640px) { .support-photo-hero { min-height: 620px; } }
+
+    .support-hero-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 2rem;
+      max-width: 520px;
+      margin: 0 auto;
+      color: var(--text-dark);
+      box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+    }
+    .support-hero-card-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: #64748b; margin-bottom: 1rem; text-align: center; }
+    .support-need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem; }
+    .support-need-option {
+      border: 1.5px solid var(--border); border-radius: 6px; background: #f8fafc;
+      padding: 0.7rem 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--text-dark);
+      cursor: pointer; text-align: center; transition: border-color 0.15s, background 0.15s;
+      font-family: inherit;
+    }
+    .support-need-option:hover { border-color: #94a3b8; }
+    .support-need-option.selected { border-color: #0284c7; background: #eff6ff; color: #0369a1; }
+    .support-hero-card-note { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.1rem; text-align: center; }
+    .support-hero-card-note i { color: #0284c7; }
+    .support-cta-btn {
+      display: block; width: 100%; text-align: center; padding: 0.95rem; border: none; border-radius: 6px;
+      background: var(--blue-grad-btn); color: #fff; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.02em;
+      cursor: pointer; font-family: inherit; text-decoration: none; transition: background 0.15s;
+    }
+    .support-cta-btn:hover { background: var(--blue-grad-btn-hover); }
+
+    @media (max-width: 480px) {
+      .support-hero-card { padding: 1.4rem 1.1rem; max-width: 100%; }
+      .support-need-grid { grid-template-columns: 1fr; }
+      .support-need-option { padding: 0.85rem 0.6rem; font-size: 0.88rem; }
+      .support-photo-hero { padding: 2rem 1rem; }
+      .page-banner { padding: 2.4rem 1.2rem 2.8rem; }
+      .page-banner .hero-badge { font-size: 0.74rem; padding: 0.35rem 0.9rem; }
+    }
+
+    .support-hero-form-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem;
+      font-size: 0.9rem; font-weight: 700; color: var(--text-dark);
+    }
+    .support-hero-back {
+      background: none; border: none; cursor: pointer; font-family: inherit;
+      font-size: 0.82rem; font-weight: 600; color: #0284c7; padding: 0;
+    }
+    .support-hero-back:hover { text-decoration: underline; }
+    #heroStepForm .form-group { margin-bottom: 0.9rem; }
+    #heroStepForm .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem; color: var(--text-dark); }
+    #heroStepForm .form-group .required { color: #dc2626; }
+    #heroStepForm .form-group input,
+    #heroStepForm .form-group select,
+    #heroStepForm .form-group textarea {
+      width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.9rem; font-family: inherit; color: var(--text-dark); background: #f8fafc;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #heroStepForm .form-group input:focus,
+    #heroStepForm .form-group select:focus,
+    #heroStepForm .form-group textarea:focus {
+      outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); background: #fff;
+    }
+    #heroStepForm .form-group textarea { resize: vertical; min-height: 80px; }
+    .support-hero-form-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.7rem; text-align: center; }
+    #heroStepForm .support-success { padding: 1rem 0.5rem; }
+    #heroStepForm .support-success i { font-size: 2.2rem; }
+    #heroStepForm .support-success h3 { font-size: 1.05rem; }
+    #heroStepForm .support-success p { font-size: 0.88rem; }
+
+  </style>
+  <style>
+
+    .support-wrap { max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 3.5rem; }
+
+    .support-intro { padding: 0 0 2.4rem; margin-bottom: 2.2rem; border-bottom: 1px solid var(--border); }
+    .support-intro h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 0.8rem; color: var(--text-dark); }
+    .support-intro p { color: var(--text-muted); font-size: 1.02rem; line-height: 1.75; }
+    .support-intro ul { margin: 1rem 0 0 1.2rem; color: var(--text-muted); font-size: 0.98rem; line-height: 1.9; }
+
+    .support-process { margin-bottom: 2.6rem; }
+    .support-process h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 1.6rem; color: var(--text-dark); }
+    .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .process-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0; position: relative; }
+    .process-step:not(:last-child)::after {
+      content: ''; position: absolute; top: 20px; left: calc(50% + 26px); width: calc(100% - 32px);
+      height: 2px; background: var(--border); z-index: 1;
+    }
+    .process-step-num {
+      flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+      background: var(--blue-grad-btn); color: #fff; font-weight: 700; font-size: 1.05rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.9rem; position: relative; z-index: 2;
+    }
+    .process-step-body h3 { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .process-step-body p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+    .process-step-time { display: inline-block; margin-top: 0.5rem; font-size: 0.8rem; color: #0284c7; font-weight: 600; }
+
+    @media (max-width: 760px) {
+      .process-steps { display: flex; flex-direction: column; grid-template-columns: none; gap: 0; }
+      .process-step { flex-direction: row; align-items: flex-start; text-align: left; gap: 1.2rem; padding: 1.3rem 0; border-bottom: 1px solid var(--border); }
+      .process-step:last-child { border-bottom: none; padding-bottom: 0; }
+      .process-step:not(:last-child)::after { display: none; }
+      .process-step-num { margin-bottom: 0; }
+      .process-step-body h3 { font-size: 1.05rem; }
+      .process-step-body p { font-size: 0.95rem; }
+    }
+
+    .support-form-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 2.2rem 2rem; }
+    .support-form-card h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 1.5rem; color: var(--text-dark); }
+
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.92rem; margin-bottom: 0.4rem; color: var(--text-dark); }
+    .form-group .required { color: #dc2626; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.95rem; font-family: inherit; color: var(--text-dark); background: #f8fafc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); background: #fff;
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+    .support-submit-btn {
+      width: 100%; padding: 0.9rem; border: none; border-radius: 8px; cursor: pointer;
+      background: var(--blue-grad-btn); color: #fff; font-size: 1.02rem; font-weight: 600;
+      font-family: inherit; transition: opacity 0.2s;
+    }
+    .support-submit-btn:hover { opacity: 0.92; }
+    .support-note { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.9rem; text-align: center; }
+
+    .support-success { display: none; text-align: center; padding: 2.5rem 1.5rem; }
+    .support-success i { font-size: 2.6rem; color: #16a34a; margin-bottom: 1rem; }
+    .support-success h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark); }
+    .support-success p { color: var(--text-muted); font-size: 0.95rem; }
+  </style>
+
+  <section class="page-banner">
+    <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true" onerror="this.style.display='none'">
+    <div class="hero-badge">KẾT NỐI HỖ TRỢ</div>
+    <h1>Cần Được Giúp Đỡ?</h1>
+    <p>Nếu bạn hoặc gia đình đang gặp khó khăn về học tập, sinh hoạt hay các nhu cầu thiết yếu khác, hãy để lại thông tin. Đội ngũ Mạng Lưới Tri Thức Việt Nam sẽ liên hệ để tìm hiểu và đồng hành cùng bạn.</p>
+  </section>
+
+  <section class="support-photo-hero">
+    <img src="images/em-be-vung-cao-mang-khoai.jpg" alt="Em nhỏ vùng cao gùi khoai trên đường về nhà">
+    <div class="support-photo-hero-inner">
+    <div class="support-hero-card">
+      <div class="support-hero-card-step" id="heroStepNeed">
+        <div class="support-hero-card-label">BẠN ĐANG CẦN HỖ TRỢ VỀ VIỆC GÌ?</div>
+        <div class="support-need-grid">
+          <button type="button" class="support-need-option" data-need="hoc_tap" onclick="selectHeroNeed(this)">Học bổng / đồ dùng học tập</button>
+          <button type="button" class="support-need-option" data-need="hien_vat" onclick="selectHeroNeed(this)">Nhu yếu phẩm / hiện vật</button>
+          <button type="button" class="support-need-option" data-need="tinh_nguyen" onclick="selectHeroNeed(this)">Hỗ trợ tình nguyện viên</button>
+          <button type="button" class="support-need-option" data-need="khac" onclick="selectHeroNeed(this)">Nhu cầu khác</button>
+        </div>
+        <div class="support-hero-card-note"><i class="fa-solid fa-heart"></i> Mỗi năm, chương trình đồng hành cùng hàng trăm gia đình vùng khó khăn.</div>
+      </div>
+
+      <div class="support-hero-card-step" id="heroStepForm" style="display:none;">
+        <div class="support-hero-form-header">
+          <span id="heroFormNeedLabel">Học bổng / đồ dùng học tập</span>
+          <button type="button" class="support-hero-back" onclick="backToHeroNeed()">← Chọn lại</button>
+        </div>
+
+        <form id="supportForm" onsubmit="return handleSupportSubmit(event)">
+          <input type="hidden" id="supNeed" name="needType" value="hoc_tap">
+          <div class="form-group">
+            <label for="supFullName">Họ và tên <span class="required">*</span></label>
+            <input type="text" id="supFullName" name="fullName" required placeholder="Nguyễn Văn A">
+          </div>
+          <div class="form-group">
+            <label for="supPhone">Số điện thoại <span class="required">*</span></label>
+            <input type="tel" id="supPhone" name="phone" required placeholder="09xx xxx xxx">
+          </div>
+          <div class="form-group">
+            <label for="supRelation">Bạn đang liên hệ với vai trò</label>
+            <select id="supRelation" name="relation">
+              <option value="ban_than">Cho bản thân</option>
+              <option value="gia_dinh">Cho người thân trong gia đình</option>
+              <option value="dai_dien">Đại diện cho một trường hợp khác (hàng xóm, học sinh...)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="supAddress">Địa chỉ hiện tại <span class="required">*</span></label>
+            <input type="text" id="supAddress" name="address" required placeholder="Thôn/xã/huyện/tỉnh">
+          </div>
+          <div class="form-group">
+            <label for="supDetail">Mô tả hoàn cảnh và nhu cầu cụ thể <span class="required">*</span></label>
+            <textarea id="supDetail" name="detail" required placeholder="Vui lòng chia sẻ ngắn gọn về hoàn cảnh hiện tại và điều bạn đang cần được hỗ trợ..."></textarea>
+          </div>
+          <button type="submit" class="support-cta-btn">GỬI THÔNG TIN KẾT NỐI</button>
+          <p class="support-hero-form-note">Thông tin của bạn được bảo mật và chỉ dùng để đội ngũ chương trình liên hệ hỗ trợ.</p>
+        </form>
+
+        <div class="support-success" id="supportSuccess">
+          <i class="fa-solid fa-circle-check"></i>
+          <h3>Đã gửi thành công!</h3>
+          <p>Cảm ơn bạn đã tin tưởng chia sẻ. Đội ngũ Mạng Lưới Tri Thức Việt Nam sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <div class="support-wrap">
+    <div class="support-intro">
+      <h2>Chúng tôi có thể hỗ trợ gì?</h2>
+      <p>Tùy vào hoàn cảnh cụ thể, chương trình có thể kết nối bạn với:</p>
+      <ul>
+        <li>Học bổng, sách vở, đồ dùng học tập cho học sinh vùng khó khăn</li>
+        <li>Nhu yếu phẩm, hiện vật thiết yếu cho gia đình có hoàn cảnh đặc biệt</li>
+        <li>Tình nguyện viên hỗ trợ giảng dạy hoặc hướng dẫn kỹ năng</li>
+        <li>Kết nối với các nhà tài trợ và chương trình phù hợp khác</li>
+      </ul>
+    </div>
+
+    <div class="support-process">
+      <h2>Quy trình kết nối hỗ trợ</h2>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="process-step-num">1</div>
+          <div class="process-step-body">
+            <h3>Gửi thông tin</h3>
+            <p>Bạn điền thông tin liên hệ và mô tả hoàn cảnh vào form bên dưới. Chỉ mất khoảng 2 phút.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">2</div>
+          <div class="process-step-body">
+            <h3>Đội ngũ tiếp nhận và rà soát</h3>
+            <p>Chương trình xem xét thông tin để xác định hình thức hỗ trợ phù hợp nhất với hoàn cảnh của bạn.</p>
+            <span class="process-step-time">Trong vòng 3–5 ngày làm việc</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">3</div>
+          <div class="process-step-body">
+            <h3>Liên hệ xác minh</h3>
+            <p>Tình nguyện viên hoặc nhân sự chương trình gọi điện hoặc đến thăm trực tiếp để tìm hiểu thêm và xác minh thông tin.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">4</div>
+          <div class="process-step-body">
+            <h3>Đồng hành hỗ trợ</h3>
+            <p>Bạn được kết nối với chương trình, nhà tài trợ hoặc tình nguyện viên phù hợp, và chương trình tiếp tục theo sát trong quá trình hỗ trợ.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="support-form-card" id="supportFormCard">
+      <h2>Vẫn còn thắc mắc?</h2>
+      <p style="color: var(--text-muted); font-size: 0.98rem; line-height: 1.7;">
+        Bạn có thể quay lại đầu trang để gửi thông tin kết nối, hoặc liên hệ trực tiếp nếu cần hỗ trợ khẩn cấp.
+      </p>
+      <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin-top:1.3rem;">
+        <button type="button" class="btn" style="border:none; cursor:pointer;" onclick="window.scrollTo({top:0, behavior:'smooth'});">Lên đầu trang gửi thông tin</button>
+        <a href="lien-he.html" class="btn" style="background:#fff; color:#0284c7; border:1.5px solid #0284c7; box-shadow:none;">Liên hệ trực tiếp</a>
+      </div>
+    </div>
+
+    <p style="text-align:center; margin-top:1.6rem; color: var(--text-muted); font-size:0.92rem;">
+      Cần hỗ trợ khẩn cấp hoặc muốn trao đổi trực tiếp? <a href="lien-he.html" style="color:#0284c7; font-weight:600; text-decoration:underline;">Liên hệ với chúng tôi</a>
+    </p>
+  </div>
+
+  <script>
+    const HERO_NEED_LABELS = {
+      hoc_tap: 'Học bổng / đồ dùng học tập',
+      hien_vat: 'Nhu yếu phẩm / hiện vật',
+      tinh_nguyen: 'Hỗ trợ tình nguyện viên',
+      khac: 'Nhu cầu khác'
+    };
+
+    function selectHeroNeed(btn) {
+      const need = btn.getAttribute('data-need');
+      document.getElementById('supNeed').value = need;
+      document.getElementById('heroFormNeedLabel').textContent = HERO_NEED_LABELS[need] || '';
+      document.getElementById('heroStepNeed').style.display = 'none';
+      document.getElementById('heroStepForm').style.display = 'block';
+    }
+
+    function backToHeroNeed() {
+      document.getElementById('heroStepForm').style.display = 'none';
+      document.getElementById('heroStepNeed').style.display = 'block';
+      document.getElementById('supportForm').style.display = 'block';
+      document.getElementById('supportSuccess').style.display = 'none';
+    }
+
+    function handleSupportSubmit(e) {
+      e.preventDefault();
+      document.getElementById('supportForm').style.display = 'none';
+      document.getElementById('supportSuccess').style.display = 'block';
+      // TODO: nối vào hệ thống lưu trữ / email nội bộ khi có API xử lý form.
+      return false;
+    }
+  </script>
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: none; font-weight: 400;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: none; font-weight: 400;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
+      </div>
+    </div>
+
+    <div class="footer-transparency-strip">
+      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+      <p>
+        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="var el=document.getElementById('newsletterEmail'); if(el){el.scrollIntoView({behavior:'smooth', block:'center'}); el.focus();} else { window.location.href='index.html#newsletterEmail'; } return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+      </p>
+    </div>
+    <div class="footer-bottom">
+      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
+    </div>
+  </footer>
+
+  <!-- Popup Mã QR Ủng Hộ Chiến Dịch -->
+  <div id="qrModal" class="qr-modal" onclick="if(event.target===this) closeQrModal()">
+    <div class="qr-modal-content">
+      <button class="qr-modal-close" onclick="closeQrModal()" aria-label="Đóng">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 id="qrModalTitle">Ủng Hộ Chiến Dịch</h3>
+      <p id="qrModalSubtitle" class="qr-modal-subtitle">Quét mã VietQR bên dưới bằng ứng dụng ngân hàng để đóng góp trực tiếp.</p>
+      <img id="qrModalImage" src="" alt="Mã VietQR ủng hộ chiến dịch" class="qr-modal-img">
+      <div class="qr-modal-content-box">
+        Nội dung chuyển khoản
+        <strong id="qrModalContent"></strong>
+      </div>
+      <a href="quyen-gop.html" class="qr-modal-more">Xem tất cả các cách ủng hộ khác <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-modal-inner">
+      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
+      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
+      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.getElementById('menuBtn');
+      navLinks.classList.toggle('active');
+      if (navLinks.classList.contains('active')) {
+        menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      } else {
+        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    }
+
+    // ============================================================
+    // Popup mã QR ủng hộ chiến dịch — mở ngay tại trang Hoạt Động
+    // thay vì điều hướng sang trang Quyên Góp, dùng đúng ảnh QR và
+    // nội dung chuyển khoản thật khớp với từng dự án ở quyen-gop.html.
+    // ============================================================
+    function openQrModal(projectCode) {
+      const ev = ACTIVITY_EVENTS_BY_CODE[projectCode];
+      if (!ev) return;
+      document.getElementById('qrModalTitle').textContent = ev.title;
+      document.getElementById('qrModalImage').src = ev.qrImage;
+      document.getElementById('qrModalImage').alt = `Mã VietQR ${ev.title}`;
+      document.getElementById('qrModalContent').textContent = ev.qrContent;
+      document.getElementById('qrModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeQrModal() {
+      document.getElementById('qrModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // ============================================================
+    // Sự Kiện & Kế Hoạch Gây Quỹ — cùng dữ liệu & id neo với các
+    // trang khác trong site (index.html). Cập nhật đồng thời khi
+    // thêm/sửa sự kiện.
+    // ============================================================
+    const ACTIVITY_EVENTS = [
+      {
+        date: "2026-10-20",
+        anchor: "su-kien-hoi-thao-hoc-tap-so",
+        projectCode: "DA-002",
+        icon: "fa-laptop-code",
+        topBg: "linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)",
+        tag: "Đang nhận đăng ký",
+        tagBg: "#dbeafe", tagColor: "#1e40af",
+        title: "Hội thảo phương pháp học tập số",
+        image: "images/hoi-thao-hoc-tap-so.jpg",
+        desc: "Chuỗi 4 buổi học cuối tuần, mỗi buổi 90 phút, do tình nguyện viên là sinh viên năm cuối ngành CNTT trực tiếp đứng lớp. Nội dung xoay quanh cách tra cứu thông tin an toàn, kỹ năng gõ 10 ngón và quản lý thời gian tự học — các em dùng chung 8 laptop tài trợ tại điểm trường.",
+        qrContent: "DA-002 Hoi Thao Hoc Tap So",
+        qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-002%20Hoi%20Thao%20Hoc%20Tap%20So&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
+      },
+      {
+        date: "2026-11-01",
+        anchor: "su-kien-ao-am-vung-cao",
+        projectCode: "DA-001",
+        icon: "fa-mitten",
+        topBg: "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)",
+        tag: "Sắp diễn ra",
+        tagBg: "#e0f2fe", tagColor: "#0369a1",
+        title: "Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)",
+        image: "images/ao-am-vung-cao.jpg",
+        desc: "Mục tiêu quyên góp 300 áo khoác và 150 chăn bông cho 2 điểm trường tại Đồng Văn, Hà Giang, nơi nhiệt độ tháng 12 năm ngoái xuống dưới 5°C. Đồ quyên góp được phân loại, giặt sạch tại kho ở Hà Nội trước khi vận chuyển, dự kiến chuyến xe đầu tiên khởi hành ngày 25/11.",
+        qrContent: "DA-001 Ao Am Vung Cao",
+        qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
+      },
+      {
+        date: "2026-12-01",
+        anchor: "su-kien-hoc-bong-uom-mam",
+        projectCode: "DA-003",
+        icon: "fa-award",
+        topBg: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
+        tag: "Kế hoạch quý IV",
+        tagBg: "#ccfbf1", tagColor: "#0f766e",
+        title: "Phát động Học Bổng Ươm Mầm",
+        image: "images/le-trao-hoc-bong-uom-mam.jpg",
+        desc: "Xét duyệt 20 suất học bổng trị giá 2 triệu đồng/em/năm học, dựa trên hồ sơ hoàn cảnh do giáo viên chủ nhiệm xác nhận trực tiếp — không qua đơn xin trực tuyến. Danh sách và tiêu chí xét duyệt sẽ công bố công khai trên trang Sao Kê trước ngày 15/12.",
+        qrContent: "DA-003 Hoc Bong Uom Mam",
+        qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Hoc%20Bong%20Uom%20Mam&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
+      }
+    ];
+
+    // Tra cứu nhanh dữ liệu sự kiện theo mã dự án — dùng cho popup QR
+    const ACTIVITY_EVENTS_BY_CODE = {};
+    ACTIVITY_EVENTS.forEach(ev => { ACTIVITY_EVENTS_BY_CODE[ev.projectCode] = ev; });
+
+    function renderActivityEventCard(ev) {
+      return `
+        <div class="event-card" id="${ev.anchor}">
+          <div class="event-card-top" style="background:${ev.topBg};">
+            <img src="${ev.image ? ev.image : 'https://loremflickr.com/400/300/' + ev.imageKeywords}" alt="Ảnh minh hoạ ${ev.title}" loading="lazy">
+            <span class="event-icon-badge"><i class="fa-solid ${ev.icon}"></i></span>
+          </div>
+          <div class="event-card-body">
+            <div class="event-card-meta">
+              <span class="event-tag" style="background:${ev.tagBg}; color:${ev.tagColor};">${ev.tag}</span>
+              <span class="event-countdown" data-activity-event-date="${ev.date}"><span class="pulse-dot"></span>Đang tính...</span>
+            </div>
+            <h3>${ev.title}</h3>
+            <p>${ev.desc}</p>
+            <div class="event-project-row">
+              <span class="event-project-code">Mã ${ev.projectCode}</span>
+              <button class="event-cta" onclick="window.location.href='lien-he.html'">Tìm hiểu thêm <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function updateActivityCountdowns() {
+      const now = new Date();
+      document.querySelectorAll(".event-countdown[data-activity-event-date]").forEach(chip => {
+        const val = chip.getAttribute("data-activity-event-date");
+        const eventDate = new Date(val + "T00:00:00");
+        if (isNaN(eventDate.getTime())) { chip.innerHTML = ""; return; }
+        const diffMs = eventDate - now;
+        if (diffMs <= 0) {
+          const isToday = eventDate.toDateString() === now.toDateString();
+          chip.innerHTML = isToday ? `<i class="fa-solid fa-star"></i> Diễn ra hôm nay` : `<i class="fa-solid fa-check"></i> Đang diễn ra`;
+          return;
+        }
+        let totalSeconds = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+        const hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const pad = n => String(n).padStart(2, "0");
+        const label = days > 0 ? `${days} ngày ${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        chip.innerHTML = `<span class="pulse-dot"></span>${label}`;
+      });
+    }
+
+    function loadActivityEvents() {
+      const grid = document.getElementById("activityEventsGrid");
+      const events = [...ACTIVITY_EVENTS].sort((a, b) => new Date(a.date) - new Date(b.date));
+      grid.innerHTML = events.map(renderActivityEventCard).join("");
+      updateActivityCountdowns();
+      setInterval(updateActivityCountdowns, 1000);
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "center" }), 200);
+      }
+    }
+    loadActivityEvents();
+
+    // ============================================================
+    // Dòng thời gian "Dấu Ấn Đã Qua" — thanh tiến trình chạy dần
+    // theo độ cuộn trang, và mốc thời gian toả sáng khi thanh tiến
+    // trình chạy tới.
+    // ============================================================
+    function updateImpactTimeline() {
+      const timeline = document.getElementById("impactTimeline");
+      const fill = document.getElementById("impactFill");
+      if (!timeline || !fill) return;
+
+      const rect = timeline.getBoundingClientRect();
+      const viewportLine = window.innerHeight * 0.8; // "đường đọc" nằm ở 80% chiều cao màn hình
+      const progress = Math.min(1, Math.max(0, (viewportLine - rect.top) / rect.height));
+      fill.style.height = (progress * 100) + "%";
+
+      document.querySelectorAll(".impact-item").forEach(item => {
+        const dot = item.querySelector(".impact-dot");
+        if (!dot) return;
+        const dotRect = dot.getBoundingClientRect();
+        const dotCenter = dotRect.top + dotRect.height / 2;
+        item.classList.toggle("is-active", dotCenter <= viewportLine);
+      });
+    }
+
+    let impactTicking = false;
+    function requestImpactUpdate() {
+      if (impactTicking) return;
+      impactTicking = true;
+      requestAnimationFrame(() => { updateImpactTimeline(); impactTicking = false; });
+    }
+    window.addEventListener("scroll", requestImpactUpdate);
+    window.addEventListener("resize", requestImpactUpdate);
+    window.addEventListener("load", updateImpactTimeline);
+    updateImpactTimeline();
+
+    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
+    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.
+    const GALLERY_IMAGES = [
+      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
+      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
+      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
+      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
+      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
+      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
+    ];
+    let galleryShuffled = [];
+    let galleryCurrentIndex = 0;
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function renderGalleryGrid() {
+      const grid = document.getElementById("galleryGrid");
+      if (!grid) return;
+      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
+        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
+          <img src="${img.src}" alt="${img.caption}" loading="lazy">
+        </div>
+      `).join("");
+    }
+    function openGalleryModal(startIndex) {
+      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
+      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
+      galleryCurrentIndex = 0;
+      renderGalleryModalImage();
+      document.getElementById("galleryModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+    function renderGalleryModalImage() {
+      const img = galleryShuffled[galleryCurrentIndex];
+      const modalImg = document.getElementById("galleryModalImg");
+      modalImg.src = img.src;
+      modalImg.alt = img.caption;
+      modalImg.classList.remove("zoomed");
+      document.querySelector(".gallery-modal-caption").textContent = img.caption;
+    }
+    function showGalleryImage(direction) {
+      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
+      renderGalleryModalImage();
+    }
+    function closeGalleryModal() {
+      document.getElementById("galleryModal").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("galleryModal").addEventListener("click", function (e) {
+      if (e.target === this) closeGalleryModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      const modal = document.getElementById("galleryModal");
+      if (!modal.classList.contains("active")) return;
+      if (e.key === "Escape") closeGalleryModal();
+      if (e.key === "ArrowLeft") showGalleryImage(-1);
+      if (e.key === "ArrowRight") showGalleryImage(1);
+    });
+    renderGalleryGrid();
+  
+    async function updateAuthButton() {
+      const authBtn = document.getElementById('authBtn');
+      if (!authBtn) return;
+      try {
+        const res = await fetch('/.auth/me');
+        const payload = await res.json();
+        const clientPrincipal = payload.clientPrincipal;
+        if (clientPrincipal) {
+          authBtn.textContent = clientPrincipal.userDetails || 'Thành viên';
+          authBtn.onclick = () => { window.location.href = '/.auth/logout'; };
+          authBtn.title = 'Bấm để đăng xuất';
+        }
+      } catch (e) {
+        console.warn('Không kiểm tra được trạng thái đăng nhập', e);
+      }
+    }
+    updateAuthButton();
+</script>
+
+</body>
+</html>
