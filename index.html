@@ -374,17 +374,26 @@
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; position: relative; }
-    .footer-bottom .footer-bottom-social { position: absolute; left: 0; top: 1.5rem; width: 30px; height: 30px; font-size: 0.85rem; }
-    @media (max-width: 640px) { .footer-bottom .footer-bottom-social { position: static; margin: 0 auto 0.8rem; } }
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; }
+    }
 
     .footer-transparency-strip {
       max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center;
     }
     .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
     .footer-transparency-strip .transparency-claim {
-      font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px;
+      font-weight: 500; color: #7dd3fc; text-decoration: none;
     }
+    .footer-transparency-strip .transparency-claim:hover { text-decoration: underline; text-underline-offset: 3px; }
     .footer-transparency-strip .transparency-sep { color: #475569; margin: 0 0.6rem; }
 
     @media (max-width: 960px) {
@@ -423,8 +432,8 @@
         <div class="nav-dropdown" id="navDropdownAction">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="hoat-dong.html">Gây quỹ bằng hiện vật</a>
             <a href="lien-he.html">Trở thành nhà tài trợ</a>
             <a href="lien-he.html">Đăng ký tình nguyện viên</a>
           </div>
@@ -624,7 +633,7 @@
 
     <div class="footer-bottom">
       <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-      <span>&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
 
