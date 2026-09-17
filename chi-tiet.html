@@ -351,7 +351,7 @@
       </nav>
 
       <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
+        <button class="btn btn-donate-glow" id="authBtn" onclick="window.location.href='/.auth/login/aadb2c'">Đăng Nhập</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -526,9 +526,6 @@
           ? `<i class="fa-regular fa-calendar"></i> ${formatDate(fm.date)}`
           : "";
 
-        // Cập nhật thẻ SEO (meta description) và Open Graph theo đúng nội dung bài viết,
-        // giúp trang chi tiết mỗi bài có mô tả riêng thay vì dùng chung 1 mô tả mặc định —
-        // quan trọng cho SEO và khi chia sẻ link bài viết lên mạng xã hội.
         const seoExcerpt = fm.excerpt || "Đọc bài viết từ Wisdom Vietnam Network - DR Solutions.";
         document.getElementById("pageDescription").setAttribute("content", seoExcerpt);
         document.getElementById("pageOgTitle").setAttribute("content", title);
@@ -688,6 +685,24 @@
       if (e.key === "ArrowRight") showGalleryImage(1);
     });
     renderGalleryGrid();
+
+    async function updateAuthButton() {
+      const authBtn = document.getElementById('authBtn');
+      if (!authBtn) return;
+      try {
+        const res = await fetch('/.auth/me');
+        const payload = await res.json();
+        const clientPrincipal = payload.clientPrincipal;
+        if (clientPrincipal) {
+          authBtn.textContent = clientPrincipal.userDetails || 'Thành viên';
+          authBtn.onclick = () => { window.location.href = '/.auth/logout'; };
+          authBtn.title = 'Bấm để đăng xuất';
+        }
+      } catch (e) {
+        console.warn('Không kiểm tra được trạng thái đăng nhập', e);
+      }
+    }
+    updateAuthButton();
   </script>
 
 </body>
