@@ -81,6 +81,27 @@
 
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
 
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #fff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,.12);
+      padding: 0.5rem; z-index: 100; margin-top: 0;
+    }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem;
+      color: var(--text-dark); font-weight: 500;
+    }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+
     /* Hero Banner */
     .hero-wrapper {
       width: 100%; background: var(--blue-grad-hero); padding: 4.5rem 1.5rem 5rem; color: var(--white); text-align: center; position: relative; overflow: hidden;
@@ -217,7 +238,7 @@
     }
     .legal-note strong { color: #0369a1; }
 
-    /* Footer chuẩn 3 cột */
+    /* Footer đồng bộ theo trang chủ */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -229,9 +250,31 @@
 
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-    .footer-bottom a { color: #94a3b8; text-decoration: none; }
-    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
+    }
+
+    .footer-transparency-strip {
+      max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center;
+    }
+    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
+    .footer-transparency-strip .transparency-claim {
+      font-weight: 500; color: #7dd3fc; text-decoration: none;
+    }
+    .footer-transparency-strip .transparency-claim:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .footer-transparency-strip .transparency-sep { color: #475569; margin: 0 0.6rem; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
 
     @media (max-width: 900px) {
       .donate-grid { grid-template-columns: 1fr; }
@@ -244,74 +287,23 @@
         box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
       }
       .nav-links.active { display: flex; }
+      .nav-dropdown { display: block; width: 100%; }
+      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
+      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
       .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
       .hero-title { font-size: 2.1rem; }
       .donate-card { padding: 1.8rem; }
       .transparency-band { padding: 1.8rem 1.3rem; }
-    }
-
-    .nav-dropdown { position:relative; display:inline-block; }
-    .nav-dropdown > .nav-dropdown-trigger {
-      margin-left:1.8rem; text-decoration:none; color:var(--text-muted); font-size:.95rem; font-weight:500;
-      font-family:inherit; background:none; border:none; cursor:pointer; display:inline-flex; align-items:center;
-      gap:5px; padding:.4rem 0; transition:color .2s;
-    }
-    .nav-dropdown > .nav-dropdown-trigger i { font-size:.7rem; transition:transform .2s; }
-    .nav-dropdown.open > .nav-dropdown-trigger { color:#0284c7; font-weight:600; }
-    .nav-dropdown.open > .nav-dropdown-trigger i { transform:rotate(180deg); }
-    .nav-dropdown-menu {
-      display:none; position:absolute; top:100%; left:1.8rem; background:#fff; min-width:260px;
-      border-radius:12px; border:1px solid var(--border); box-shadow:0 12px 30px rgba(15,23,42,.12);
-      padding:.5rem; z-index:100; margin-top:0;
-    }
-    .nav-dropdown.open > .nav-dropdown-menu { display:block; }
-    .nav-dropdown-menu a {
-      display:block; margin-left:0 !important; padding:.65rem .8rem; border-radius:8px; font-size:.9rem;
-      color:var(--text-dark); font-weight:500;
-    }
-    .nav-dropdown-menu a:hover { background:#f0f9ff; color:#0284c7 !important; }
-    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; max-width:220px; }
-    .social-links { display:flex; gap:.65rem; align-items:center; }
-    .social-link {
-      width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
-      color:#cbd5e1;border:1px solid rgba(255,255,255,.18);text-decoration:none;transition:all .2s;
-    }
-    .social-link:hover { color:#fff;background:rgba(255,255,255,.1);transform:translateY(-2px); }
-    .footer-transparency-strip {
-      max-width:1240px;margin:2.5rem auto 0;padding:1rem 0 0;
-      border-top:1px solid rgba(255,255,255,.1);text-align:center;
-    }
-    .footer-transparency-strip p { margin:.35rem 0; color:#cbd5e1; }
-    .footer-transparency-strip .transparency-claim {
-      color:#7dd3fc;text-decoration:underline;text-underline-offset:2px;font-weight:600;
-    }
-    .footer-transparency-strip .transparency-sep { margin:0 .6rem; color:#64748b; }
-    @media (max-width:960px) {
-      .mobile-menu-btn { display:block; }
-      .nav-links {
-        display:none;position:absolute;top:72px;left:0;right:0;background:#fff;
-        flex-direction:column;padding:1.5rem;border-bottom:1px solid var(--border);
-        box-shadow:0 10px 25px rgba(0,0,0,.1);text-align:center;gap:1rem;
-      }
-      .nav-links.active { display:flex; }
-      .nav-dropdown { display:block;width:100%; }
-      .nav-dropdown > .nav-dropdown-trigger {
-        margin-left:0;justify-content:center;width:100%;font-size:1.1rem;padding:.5rem 0;
-      }
-      .nav-dropdown-menu {
-        display:none !important;position:static;box-shadow:none;border:none;margin-top:0;text-align:center;
-      }
-      .nav-dropdown.open .nav-dropdown-menu { display:block !important; }
-      .nav-links a { margin-left:0 !important;font-size:1.1rem;padding:.5rem 0; }
-      .gallery-grid { max-width:100%;gap:.7rem; }
+      .gallery-grid { max-width: 100%; gap: 0.7rem; }
     }
 
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định Đồng Bộ -->
-    <header>
+  <!-- Menu Cố Định Đồng Bộ theo trang chủ -->
+  <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
@@ -325,20 +317,22 @@
           <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
         </div>
       </a>
+
       <nav class="nav-links" id="navLinks">
-        <div class="nav-dropdown">
+        <div class="nav-dropdown" id="navDropdownAction">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
-            <a href="lien-he.html">Trở thành nhà tài trợ</a>
-            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="gay-quy-hien-vat.html">Gây quỹ bằng hiện vật</a>
+            <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
+            <a href="tinh-nguyen-vien.html">Đăng ký tình nguyện viên</a>
           </div>
         </div>
-        <div class="nav-dropdown">
+        <div class="nav-dropdown" id="navDropdownAbout">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
             <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
             <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
             <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
@@ -348,7 +342,8 @@
         <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
-      <div style="display:flex;align-items:center;gap:10px;">
+
+      <div style="display: flex; align-items: center; gap: 10px;">
         <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
@@ -515,44 +510,39 @@
 
   </main>
 
-  <!-- Footer 3 Cột -->
-    <footer>
+  <!-- Footer đồng bộ theo trang chủ (3 cột + dải minh bạch + dòng cuối) -->
+  <footer>
     <div class="footer-grid">
       <div>
         <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
         <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
         <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
-        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
       </div>
       <div>
         <h4>Địa Chỉ Trụ Sở</h4>
         <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
         <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
-        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color:#38bdf8;text-decoration:underline;text-underline-offset:2px;font-weight:600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
-        <h4><i class="fa-solid fa-images" style="font-size:.85em;margin-right:6px;color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
-        <div class="gallery-grid" id="galleryGrid" style="margin-top:.9rem;"></div>
-      </div>
-      <div>
-        <h4>Kết Nối Với Chúng Tôi</h4>
-        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-        <div class="social-links" style="margin-top:.8rem;">
-          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-        </div>
+        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
       </div>
     </div>
+
     <div class="footer-transparency-strip">
       <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
         <span class="transparency-sep">•</span>
-        <a href="#" onclick="document.getElementById('newsletterEmail')?.scrollIntoView({behavior:'smooth',block:'center'}); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+        <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('newsletterEmail').focus(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
       </p>
     </div>
+
     <div class="footer-bottom">
-      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp;
-      <a href="chinh-sach-bao-mat.html" style="color:#94a3b8;text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
 
