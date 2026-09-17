@@ -310,21 +310,21 @@
     }
     .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
 
-    .social-links { display: flex; gap: 0.65rem; align-items: center; }
+    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
-      width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-      color: #cbd5e1; border: 1px solid rgba(255,255,255,0.18); text-decoration: none; transition: all 0.2s;
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
     }
-    .social-link:hover { color: #ffffff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
     .footer-transparency-strip {
-      max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0;
-      border-top: 1px solid rgba(255,255,255,0.1); text-align: center;
+      max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center;
     }
-    .footer-transparency-strip p { margin: 0.35rem 0; color: #cbd5e1; }
+    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
     .footer-transparency-strip .transparency-claim {
-      color: #7dd3fc; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;
+      font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px;
     }
-    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+    .footer-transparency-strip .transparency-sep { color: #475569; margin: 0 0.6rem; }
 
     @media (max-width: 960px) {
       .nav-dropdown { display: block; width: 100%; }
@@ -372,6 +372,7 @@
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
             <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
             <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
             <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
