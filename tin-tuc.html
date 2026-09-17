@@ -29,7 +29,6 @@
     }
     body { padding-top: 72px; }
 
-    /* Menu Cố Định */
     header {
       position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
       background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
@@ -55,9 +54,6 @@
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
 
-
-    /* Menu thả xuống "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng,
-       đồng bộ trên toàn site (giống charity: water). */
     .nav-dropdown { position: relative; display: inline-block; }
     .nav-dropdown > .nav-dropdown-trigger {
       margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
@@ -117,7 +113,6 @@
       .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
     }
 
-    /* Page Header dạng banner (đồng bộ tông màu Hero của trang chủ) */
     .page-banner {
       position: relative; width: 100%; padding: 3.6rem 1.5rem 4rem; color: var(--white); overflow: hidden;
       background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
@@ -131,7 +126,6 @@
     }
     .page-banner h1 { font-size: 2.6rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
     .page-banner p { color: #e0f2fe; font-size: 1.05rem; max-width: 620px; margin: 0 auto; }
-    /* Bồ câu trắng bay — điểm nhấn nghệ thuật đồng bộ với trang Tra Cứu Sao Kê */
     .hero-dove {
       position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
       opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
@@ -154,10 +148,8 @@
       .hero-dove { width: 70px; top: 4%; right: 4%; opacity: 0.35; }
     }
 
-    /* Section chung */
     .section-wrap { max-width: 1240px; margin: 0 auto; padding: 4rem 1.5rem; }
 
-    /* Bộ lọc tìm kiếm tin tức */
     .news-toolbar {
       display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 2.5rem;
     }
@@ -170,7 +162,6 @@
     .news-search input:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); }
     .news-count { color: var(--text-muted); font-size: 0.92rem; }
 
-    /* Lưới bài viết */
     .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1.8rem; }
     .news-card {
       background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid var(--border);
@@ -185,7 +176,6 @@
       position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.75); color: #fff;
       padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(3px);
     }
-    /* Nhóm badge góc phải ảnh — xếp chồng dọc khi có cả 2 nhãn (phân loại + chưa diễn ra) */
     .news-badges-right {
       position: absolute; top: 12px; right: 12px; z-index: 2;
       display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
@@ -196,8 +186,6 @@
       text-transform: uppercase; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
       display: inline-flex; align-items: center; gap: 4px;
     }
-    /* Nhãn phân loại "Bài Viết" / "Sự Kiện" — đặt ở góc phải ảnh, cùng nhóm với
-       nhãn "Chưa diễn ra" thay vì nằm trong phần nội dung bên dưới tiêu đề. */
     .news-type-badge {
       display: inline-flex; align-items: center; gap: 5px;
       padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
@@ -217,7 +205,6 @@
     }
     .news-loading i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
 
-    /* Phân trang */
     .pagination {
       display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap;
     }
@@ -231,9 +218,6 @@
     .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
     .pagination .dots { color: var(--text-muted); padding: 0 0.3rem; }
 
-    /* Modal Quyên góp VietQR */
-
-    /* Footer 3 cột */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
     .social-link {
@@ -245,12 +229,22 @@
 
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; }
+    }
 
     @media (max-width: 960px) {
       .page-banner h1 { font-size: 2rem; }
     }
-  
+
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
     @media (max-width: 960px) {
       .gallery-grid { max-width: 100%; gap: 0.7rem; }
@@ -303,12 +297,43 @@
 
     .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
     .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
+    .footer-transparency-strip .transparency-claim { font-weight: 500; color: #7dd3fc; text-decoration: none; }
+    .footer-transparency-strip .transparency-claim:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .footer-transparency-strip .transparency-sep { color: #475569; margin: 0 0.6rem; }
+
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content {
+      background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .newsletter-modal-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .newsletter-modal-form { text-align: left; display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 0.5rem; }
+    .newsletter-modal-field label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .newsletter-modal-field input {
+      width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #f8fafc; transition: all 0.2s;
+    }
+    .newsletter-modal-field input:focus {
+      outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1);
+    }
+    .newsletter-modal-submit {
+      width: 100%; margin-top: 0.3rem; background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.5rem;
+      border-radius: 8px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+    }
+    .newsletter-modal-submit:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .newsletter-modal-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .newsletter-modal-alert {
+      display: none; margin-top: 0.9rem; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.86rem; align-items: center; gap: 8px; text-align: left;
+    }
+    .newsletter-modal-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .newsletter-modal-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
   </style>
 </head>
 <body>
 
-  <!-- Menu Cố Định -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand-wrap">
@@ -328,8 +353,8 @@
         <div class="nav-dropdown">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="hoat-dong.html">Gây quỹ bằng hiện vật</a>
             <a href="lien-he.html">Trở thành nhà tài trợ</a>
             <a href="lien-he.html">Đăng ký tình nguyện viên</a>
           </div>
@@ -358,7 +383,6 @@
     </div>
   </header>
 
-  <!-- Banner trang tin tức -->
   <section class="page-banner">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true">
     <div class="hero-badge">TIN TỨC & HOẠT ĐỘNG</div>
@@ -366,7 +390,6 @@
     <p>Cập nhật hành trình gieo mầm tri thức, các chương trình thiện nguyện và câu chuyện học tập từ khắp mọi miền.</p>
   </section>
 
-  <!-- Danh sách tin tức -->
   <main class="section-wrap">
     <div class="news-toolbar">
       <div class="news-search">
@@ -386,7 +409,29 @@
     <div class="pagination" id="pagination"></div>
   </main>
 
-  <!-- Footer 3 Cột -->
+  <div id="newsletterModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+      <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Đăng Ký Nhận Bản Tin</h3>
+      <p class="newsletter-modal-text">Nhận thông tin về hoạt động mới, sự kiện gây quỹ và câu chuyện giáo dục vùng cao — gửi thẳng tới email của bạn, không spam.</p>
+      <form id="newsletterModalForm" class="newsletter-modal-form">
+        <input type="hidden" name="_subject" value="Đăng ký nhận bản tin - Website Mạng Lưới Tri Thức Việt Nam">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="newsletter-modal-field">
+          <label for="newsletterFullName">Họ và tên</label>
+          <input type="text" name="fullname" id="newsletterFullName" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="newsletter-modal-field">
+          <label for="newsletterModalEmail">Email</label>
+          <input type="email" name="email" id="newsletterModalEmail" placeholder="ban@email.com" required>
+        </div>
+        <button type="submit" id="newsletterModalBtn" class="newsletter-modal-submit">Đăng Ký</button>
+      </form>
+      <div id="newsletterModalAlert" class="newsletter-modal-alert"></div>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none; margin-top: 0.9rem;" onclick="closeNewsletterModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
   <footer>
     <div class="footer-grid">
       <div>
@@ -402,13 +447,6 @@
         <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
-        <h4>Kết Nối Với Chúng Tôi</h4>
-        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-        <div class="social-links" style="margin-top: 0.8rem;">
-          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-        </div>
-      </div>
-      <div>
         <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
         <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
       </div>
@@ -418,24 +456,32 @@
       <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="openNewsletterModal(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
       </p>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
 
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-modal-inner">
+      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
+      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
+      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
+    </div>
+  </div>
+
   <script>
-    // ==== CẤU HÌNH ====
-    // Repo GitHub chứa website (dùng để tự động liệt kê toàn bộ bài viết trong content/posts)
     const GITHUB_OWNER = "hvhwan-debug";
     const GITHUB_REPO = "DRS";
     const GITHUB_BRANCH = "main";
     const POSTS_PER_PAGE = 9;
 
-    // Danh sách slug dự phòng (dùng khi không gọi được GitHub API, ví dụ do vượt giới hạn request).
-    // Bài viết mới thêm vào content/posts sẽ tự động được lấy qua API bên dưới,
-    // không bắt buộc phải cập nhật mảng này, nhưng nên cập nhật để đảm bảo vẫn hiển thị đủ khi API lỗi.
     const FALLBACK_SLUGS = [
       "ban-hang-gay-quy-ho-guom-thanh-nien-cuoi-tuân",
       "buc-tranh-20-11-2025-ha-giang",
@@ -464,9 +510,6 @@
 
     const FALLBACK_IMG = "images/uploads/2-onl-16997056815001293662280.jpg";
 
-    // Danh sách ảnh dự phòng lấy trong kho images/uploads (dùng khi không gọi được GitHub API).
-    // Ảnh minh họa của mỗi bài viết sẽ được CHỌN NGẪU NHIÊN từ chính kho ảnh này,
-    // không dùng ảnh cố định khai báo trong front matter của bài viết nữa.
     const FALLBACK_UPLOADED_IMAGES = [
       "2-onl-16997056815001293662280.jpg",
       "48591585757_7be64177d0_o.jpg",
@@ -480,8 +523,6 @@
 
     let uploadedImagePool = [];
 
-    // Lấy toàn bộ tên file ảnh thật trong images/uploads qua GitHub API,
-    // nhờ vậy ảnh mới upload lên kho sẽ tự động được đưa vào vòng quay ngẫu nhiên.
     async function fetchUploadedImages() {
       try {
         const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/images/uploads?ref=${GITHUB_BRANCH}`;
@@ -506,10 +547,6 @@
       return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
     }
 
-    // ==== ẢNH ỔN ĐỊNH CHO TỪNG BÀI VIẾT (thay thế Unsplash không còn ổn định) ====
-    // Mỗi bài viết được gán MỘT ảnh cố định, chọn từ kho ảnh thật images/uploads/ dựa
-    // theo chính tên bài (slug) — trông vẫn "ngẫu nhiên" giữa các bài khác nhau, nhưng
-    // KHÔNG đổi qua đổi lại mỗi lần tải trang, vì cùng 1 slug luôn cho cùng 1 kết quả.
     function hashSlugToIndex(slug, poolLength) {
       let hash = 0;
       for (let i = 0; i < slug.length; i++) {
@@ -525,8 +562,6 @@
       return "images/uploads/" + name.split("/").map(encodeURIComponent).join("/");
     }
 
-    // Lấy toàn bộ tên file .md trong content/posts qua GitHub API.
-    // Nhờ vậy có bài viết mới là tự hiện lên trang, không cần sửa code.
     async function fetchAllPostSlugs() {
       try {
         const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/content/posts?ref=${GITHUB_BRANCH}`;
@@ -544,14 +579,6 @@
       }
     }
 
-    // Phân tích Front Matter dạng YAML đơn giản ở đầu file markdown:
-    // ---
-    // title: "..."
-    // date: 2026-04-20
-    // image: images/uploads/xxx.jpg
-    // excerpt: "..."
-    // loai: "tin-tuc" | "su-kien"
-    // ---
     function parseFrontMatter(raw) {
       const result = { title: "", date: "", image: "", excerpt: "", loai: "", body: raw, valid: false };
       const match = raw.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---\s*[\r\n]+([\s\S]*)$/);
@@ -589,16 +616,10 @@
       return para.trim().slice(0, 160);
     }
 
-    // ==== Nhãn phân loại "Bài Viết" / "Sự Kiện" ====
-    // Ưu tiên đọc trường "loai" khai báo trong front matter của từng bài
-    // ("tin-tuc" → Bài Viết; "su-kien" hoặc "hoat-dong" → Sự Kiện).
-    // Nếu bài không khai báo "loai", tự suy luận theo ngày tháng: ngày nằm ở
-    // tương lai (chưa diễn ra) được coi là Sự Kiện, ngày đã qua coi là Bài Viết.
     function getPostTypeLabel(post) {
       const loai = (post.loai || "").trim().toLowerCase();
       if (loai === "tin-tuc" || loai === "bai-viet") return { key: "article", label: "Bài Viết" };
       if (loai === "su-kien" || loai === "hoat-dong" || loai === "event") return { key: "event", label: "Sự Kiện" };
-      // Không có "loai" rõ ràng — suy luận theo ngày tháng.
       return isUpcomingPost(post.date)
         ? { key: "event", label: "Sự Kiện" }
         : { key: "article", label: "Bài Viết" };
@@ -608,9 +629,6 @@
     let filteredPosts = [];
     let currentPage = 1;
 
-    // Cách nhanh: đọc 1 file tổng hợp posts-index.json (được GitHub Actions tự động tạo
-    // sẵn mỗi khi có bài viết mới) thay vì phải gọi riêng từng file .md — giúp trang tải
-    // nhanh hơn đáng kể khi số lượng bài viết tăng lên, quan trọng cho tốc độ trang & SEO.
     async function loadPostsFromIndex() {
       const res = await fetch("content/posts-index.json", { cache: "no-store" });
       if (!res.ok) throw new Error("Chưa có posts-index.json");
@@ -626,9 +644,6 @@
       }));
     }
 
-    // Cách cũ (chậm hơn): gọi GitHub API liệt kê file, rồi tải riêng từng file .md một.
-    // Chỉ dùng khi posts-index.json chưa kịp tạo (ví dụ vừa thêm bài đầu tiên, GitHub
-    // Actions chưa chạy xong) hoặc gặp sự cố khi đọc file tổng hợp.
     async function loadPostsSlowFallback() {
       const postSlugs = await fetchAllPostSlugs();
       const results = await Promise.all(postSlugs.map(async slug => {
@@ -672,38 +687,25 @@
       renderPosts(allPosts);
     }
 
-    // Chuyển chuỗi ngày dạng "Tháng MM / YYYY" (hoặc ngày ISO) thành một số có thể so sánh
-    // để sắp xếp đúng thứ tự thời gian thực tế, thay vì so sánh chuỗi ký tự (dễ sai khi
-    // khác năm, ví dụ "Tháng 09 / 2026" bị xếp trước "Tháng 12 / 2025" nếu so sánh chuỗi).
     function parseDateForSort(dateStr) {
       if (!dateStr) return -Infinity;
       const viMatch = dateStr.match(/th[aá]ng\s*(\d{1,2})\s*\/\s*(\d{4})/i);
       if (viMatch) {
         const month = parseInt(viMatch[1], 10);
         const year = parseInt(viMatch[2], 10);
-        // Định dạng "Tháng MM/YYYY" không có thông tin ngày cụ thể, nên chỉ sắp xếp
-        // được tới độ chính xác THÁNG — các bài cùng tháng sẽ giữ nguyên thứ tự
-        // theo tên file. Nhân 31 để cùng thang đo với nhánh có ngày cụ thể bên dưới.
         return (year * 12 + month) * 31;
       }
       const d = new Date(dateStr);
       if (!isNaN(d.getTime())) {
-        // Định dạng ISO đầy đủ (ví dụ "2026-09-15") có thông tin NGÀY cụ thể,
-        // nên sắp xếp chính xác từng ngày, không chỉ theo tháng như trên.
         return (d.getFullYear() * 12 + (d.getMonth() + 1)) * 31 + d.getDate();
       }
       return -Infinity;
     }
 
-    // Xác định một bài viết có mang ngày tháng NẰM Ở TƯƠNG LAI so với thời điểm người xem
-    // đang truy cập trang hay không, để gắn nhãn "Chưa diễn ra" cho đúng — dùng độ chính
-    // xác theo THÁNG (khớp với định dạng "Tháng MM/YYYY" phổ biến trong front matter).
     function isUpcomingPost(dateStr) {
       const postSortWeight = parseDateForSort(dateStr);
       if (postSortWeight === -Infinity) return false;
       const now = new Date();
-      // Nhân 31 để khớp thang đo với parseDateForSort ở trên; cộng thêm ngày hiện tại
-      // giúp so sánh chính xác hơn cho các bài dùng định dạng ISO có ngày cụ thể.
       const currentSortWeight = (now.getFullYear() * 12 + (now.getMonth() + 1)) * 31 + now.getDate();
       return postSortWeight > currentSortWeight;
     }
@@ -808,8 +810,7 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-  
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
+
     function toggleNavDropdown(btn) {
       const dropdown = btn.closest('.nav-dropdown');
       const wasOpen = dropdown.classList.contains('open');
@@ -822,7 +823,59 @@
       }
     });
 
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.
+    function openNewsletterModal() {
+      document.getElementById('newsletterModal').style.display = 'flex';
+    }
+    function closeNewsletterModal() {
+      document.getElementById('newsletterModal').style.display = 'none';
+    }
+    window.addEventListener('click', function (event) {
+      const newsModal = document.getElementById('newsletterModal');
+      if (event.target === newsModal) newsModal.style.display = 'none';
+    });
+
+    const newsletterModalForm = document.getElementById("newsletterModalForm");
+    const newsletterModalBtn = document.getElementById("newsletterModalBtn");
+    const newsletterModalAlert = document.getElementById("newsletterModalAlert");
+
+    newsletterModalForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const originalBtnHtml = newsletterModalBtn.innerHTML;
+      newsletterModalBtn.disabled = true;
+      newsletterModalBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      newsletterModalAlert.className = "newsletter-modal-alert";
+      newsletterModalAlert.style.display = "none";
+
+      const formData = new FormData(newsletterModalForm);
+      const recipientEmail = "hotro@wvn.vn";
+
+      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: formData
+      })
+        .then(async res => {
+          let data = null;
+          try { data = await res.json(); } catch (e) { /* phản hồi không phải JSON, vẫn xét theo res.ok */ }
+          const isSuccess = res.ok && (!data || data.success === "true" || data.success === true || data.success === undefined);
+          if (!isSuccess) throw new Error("Đăng ký không thành công");
+        })
+        .then(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-success";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi bản tin mới nhất tới email này.</span>';
+          newsletterModalForm.reset();
+        })
+        .catch(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-error";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          newsletterModalBtn.disabled = false;
+          newsletterModalBtn.innerHTML = originalBtnHtml;
+        });
+    });
+
     const GALLERY_IMAGES = [
       { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
       { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
@@ -885,17 +938,7 @@
       if (e.key === "ArrowRight") showGalleryImage(1);
     });
     renderGalleryGrid();
-</script>
-
-  <div class="gallery-modal" id="galleryModal">
-    <div class="gallery-modal-inner">
-      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
-      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
-      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
-      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
-      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
-    </div>
-  </div>
+  </script>
 
 </body>
 </html>
