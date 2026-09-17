@@ -11,10 +11,6 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <style>
-    /* ============================================================
-       KHỐI CSS DÙNG CHUNG — SAO CHÉP NGUYÊN VẸN TỪ sao-ke.html
-       (template chuẩn của site) để đồng bộ tuyệt đối. Không sửa.
-       ============================================================ */
     :root {
       --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
       --blue-grad-hero: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
@@ -147,19 +143,10 @@
     /* Container chính (đồng bộ với sao-ke.html) */
     .container { max-width: 1100px; margin: -1.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
-    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
-    .social-link {
-      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
-      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
-      transition: all 0.2s; text-decoration: none;
-    }
-    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
-
-    /* Footer chuẩn 4 cột (đồng bộ toàn site) */
+    /* Footer chuẩn 3 cột (đồng bộ toàn site) */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
@@ -314,7 +301,7 @@
       display: inline-flex; align-items: center; gap: 6px;
     }
     .qr-modal-more:hover { text-decoration: underline; }
-  
+
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
     @media (max-width: 960px) {
       .gallery-grid { max-width: 100%; gap: 0.7rem; }
@@ -365,63 +352,29 @@
     }
     .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
 
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
+    .footer-transparency-strip { max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0; border-top: 1px solid rgba(255,255,255,.1); text-align: center; }
+    .footer-transparency-strip p { margin: 0.35rem 0; font-size: 0.88rem; color: #cbd5e1; }
     .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
-  
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 220px; }
-    @media (max-width: 960px) {
-      .gallery-grid { max-width: 100%; gap: 0.7rem; }
-    }
-    .gallery-thumb {
-      position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08);
-    }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-    .gallery-thumb:hover img { transform: scale(1.12); }
-    .gallery-thumb::after {
-      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
-    }
-    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
 
-    .gallery-modal {
-      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-      z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem;
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
     }
-    .gallery-modal.active { display: flex; }
-    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
-    .gallery-modal-img {
-      max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-      cursor: zoom-in; transition: transform 0.25s; background: #0f172a;
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    .social-link {
+      width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #cbd5e1; border: 1px solid rgba(255,255,255,.18); text-decoration: none; transition: all .2s;
     }
-    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
-    .gallery-modal-close {
-      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+    .social-link:hover { color: #fff; background: rgba(255,255,255,.1); transform: translateY(-2px); }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
     }
-    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
-    .gallery-modal-nav {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
-    .gallery-modal-prev { left: -18px; }
-    .gallery-modal-next { right: -18px; }
-    @media (max-width: 700px) {
-      .gallery-modal-prev { left: 4px; }
-      .gallery-modal-next { right: 4px; }
-    }
-    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
-
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
-    .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
   </style>
 </head>
 <body>
@@ -445,10 +398,10 @@
         <div class="nav-dropdown">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
-            <a href="lien-he.html">Trở thành nhà tài trợ</a>
-            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="gay-quy-hien-vat.html">Gây quỹ bằng hiện vật</a>
+            <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
+            <a href="tinh-nguyen-vien.html">Đăng ký tình nguyện viên</a>
           </div>
         </div>
         <div class="nav-dropdown">
@@ -574,7 +527,7 @@
 
   </div>
 
-  <!-- Footer 4 Cột (đồng bộ đúng bản thật của index.html) -->
+  <!-- Footer 3 Cột (đồng bộ với index.html / gay-quy-hien-vat.html) -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -590,13 +543,6 @@
         <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
-        <h4>Kết Nối Với Chúng Tôi</h4>
-        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-        <div class="social-links" style="margin-top: 0.8rem;">
-          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-        </div>
-      </div>
-      <div>
         <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
         <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
       </div>
@@ -608,15 +554,9 @@
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
       </p>
     </div>
-
-    <div class="footer-transparency-strip">
-      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
-      <p>
-        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
-      </p>
-    </div>
     <div class="footer-bottom">
-      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
 
@@ -634,6 +574,16 @@
         <strong id="qrModalContent"></strong>
       </div>
       <a href="quyen-gop.html" class="qr-modal-more">Xem tất cả các cách ủng hộ khác <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-modal-inner">
+      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
+      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
+      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
     </div>
   </div>
 
@@ -818,7 +768,7 @@
     window.addEventListener("resize", requestImpactUpdate);
     window.addEventListener("load", updateImpactTimeline);
     updateImpactTimeline();
-  
+
     // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
     function toggleNavDropdown(btn) {
       const dropdown = btn.closest('.nav-dropdown');
@@ -895,20 +845,7 @@
       if (e.key === "ArrowRight") showGalleryImage(1);
     });
     renderGalleryGrid();
-
-    // Dropdown menu "Hành Động Ngay" / "Về Chúng Tôi" — bấm để mở/đóng.
-    // Thư Viện Hình Ảnh — đồng bộ với trang chủ.</script>
-
-  <div class="gallery-modal" id="galleryModal">
-    <div class="gallery-modal-inner">
-      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
-      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
-      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
-      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
-      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
-    </div>
-  </div>
-  </div>
+  </script>
 
 </body>
 </html>
