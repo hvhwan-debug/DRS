@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gây Quỹ Bằng Hiện Vật - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Quyên góp sách vở, áo ấm, thiết bị học tập cho trẻ em vùng cao. Đăng ký hiện vật quyên góp cùng Mạng Lưới Tri Thức Việt Nam, minh bạch từng đợt tiếp nhận và phân phối.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+    }
+    body { padding-top: 72px; }
+
+    header {
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
+    }
+    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+      padding: 0.5rem; z-index: 100; margin-top: 0;
+    }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a { display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .btn-donate-glow { position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out; }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+    }
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown { display: block; width: 100%; }
+      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
+      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
+    }
+
+    /* Hero + form nổi (đồng bộ phong cách các trang Nhà Tài Trợ / Tình Nguyện Viên) */
+    .item-hero { position: relative; width: 100%; min-height: 600px; display: flex; align-items: center; background: #0f172a; }
+    .item-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .item-hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(90deg, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0.3) 45%, rgba(15,23,42,0.08) 75%);
+    }
+    .item-hero-inner { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: 3.5rem 1.5rem; width: 100%; }
+
+    .item-form-card { background: #ffffff; border-radius: 18px; padding: 2.4rem 2.2rem; max-width: 480px; box-shadow: 0 30px 60px rgba(15,23,42,0.35); }
+    .item-form-card h1 { font-size: 1.7rem; font-weight: 800; color: #0f172a; margin-bottom: 0.8rem; line-height: 1.3; }
+    .item-form-card > p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.65; }
+
+    .item-form-field { margin-bottom: 1rem; }
+    .item-form-field label { display: block; font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.45rem; }
+    .item-form-field input, .item-form-field select, .item-form-field textarea {
+      width: 100%; padding: 0.75rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #f8fafc; transition: all 0.2s;
+    }
+    .item-form-field input:focus, .item-form-field select:focus, .item-form-field textarea:focus {
+      outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1);
+    }
+    .item-form-field textarea { resize: vertical; min-height: 70px; }
+
+    .item-checkbox-group { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .item-checkbox-item {
+      display: flex; align-items: center; gap: 6px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 999px;
+      padding: 0.45rem 0.9rem; font-size: 0.82rem; font-weight: 600; color: #0369a1; cursor: pointer; transition: all 0.2s;
+    }
+    .item-checkbox-item input { width: auto; margin: 0; accent-color: #0284c7; }
+    .item-checkbox-item:has(input:checked) { background: var(--blue-grad-btn); color: #fff; border-color: transparent; }
+
+    .item-radio-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .item-radio-item { display: flex; align-items: flex-start; gap: 8px; font-size: 0.85rem; color: var(--text-dark); cursor: pointer; }
+    .item-radio-item input { margin-top: 3px; accent-color: #0284c7; }
+
+    .item-submit-btn {
+      width: 100%; background: var(--blue-grad-btn); color: #fff; padding: 0.85rem 1.5rem; border-radius: 10px;
+      font-weight: 800; font-size: 0.98rem; border: none; cursor: pointer; font-family: inherit;
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.3); transition: all 0.2s; margin-top: 0.6rem;
+    }
+    .item-submit-btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .item-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    .item-form-alert { display: none; margin-top: 1rem; padding: 0.7rem 0.9rem; border-radius: 8px; font-size: 0.85rem; align-items: center; gap: 8px; }
+    .item-form-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .item-form-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    @media (max-width: 700px) {
+      .item-hero { min-height: auto; padding-top: 1rem; }
+      .item-hero-inner { padding: 2rem 1rem 3rem; }
+      .item-form-card { max-width: 100%; padding: 1.8rem 1.4rem; }
+    }
+
+    /* Những hiện vật đang cần */
+    .needs-section { max-width: 1100px; margin: 0 auto; padding: 4.5rem 1.5rem; }
+    .needs-header { text-align: center; margin-bottom: 3rem; }
+    .needs-header h2 { font-size: 1.9rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; }
+    .needs-header p { color: var(--text-muted); font-size: 1rem; max-width: 640px; margin: 0 auto; }
+    .needs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1.6rem; }
+    .need-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; box-shadow: 0 6px 18px rgba(15,23,42,0.04); transition: transform 0.25s, box-shadow 0.25s; }
+    .need-card:hover { transform: translateY(-5px); box-shadow: 0 16px 30px rgba(2, 132, 199, 0.1); }
+    .need-icon {
+      width: 50px; height: 50px; border-radius: 14px; background: #e0f2fe; color: #0284c7;
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 1rem;
+    }
+    .need-card h3 { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; }
+    .need-card p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* Địa điểm tiếp nhận */
+    .dropoff-band { background: #f0f9ff; border-top: 1px solid #bae6fd; border-bottom: 1px solid #bae6fd; padding: 3rem 1.5rem; }
+    .dropoff-inner { max-width: 780px; margin: 0 auto; text-align: center; }
+    .dropoff-inner i { font-size: 1.8rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
+    .dropoff-inner h3 { font-size: 1.2rem; font-weight: 800; color: #0369a1; margin-bottom: 0.8rem; }
+    .dropoff-inner p { font-size: 0.95rem; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .dropoff-inner p.muted { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* Quy trình quyên góp hiện vật (nền xám nhạt) */
+    .process-section { background: #e6eaee; padding: 4.5rem 1.5rem; text-align: center; }
+    .process-section h2 { font-size: 1.85rem; font-weight: 800; color: #1e3a5f; margin-bottom: 1rem; }
+    .process-section > p { max-width: 680px; margin: 0 auto 3rem; color: #3d5875; font-size: 0.98rem; line-height: 1.7; }
+    .process-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 2.2rem; }
+    .process-step-num {
+      width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid #1e3a5f; color: #1e3a5f;
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; margin: 0 auto 1.1rem;
+    }
+    .process-grid h3 { font-size: 1.02rem; font-weight: 800; color: #1e3a5f; margin-bottom: 0.7rem; line-height: 1.4; }
+    .process-grid p { font-size: 0.88rem; color: #3d5875; line-height: 1.6; }
+    .process-grid a { font-size: 0.84rem; font-weight: 700; color: #0284c7; text-decoration: underline; text-underline-offset: 2px; }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
+    }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
+    @media (max-width: 960px) { .gallery-grid { max-width: 100%; gap: 0.7rem; } }
+    .gallery-thumb { position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+    .gallery-thumb:hover img { transform: scale(1.12); }
+    .gallery-thumb::after {
+      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
+    }
+    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
+    .gallery-modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem; }
+    .gallery-modal.active { display: flex; }
+    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
+    .gallery-modal-img { max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); cursor: zoom-in; transition: transform 0.25s; background: #0f172a; }
+    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
+    .gallery-modal-close {
+      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
+    .gallery-modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
+    .gallery-modal-prev { left: -18px; }
+    .gallery-modal-next { right: -18px; }
+    @media (max-width: 700px) { .gallery-modal-prev { left: 4px; } .gallery-modal-next { right: 4px; } }
+    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
+    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
+    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
+    .footer-transparency-strip .transparency-claim { font-weight: 500; color: #7dd3fc; text-decoration: none; }
+    .footer-transparency-strip .transparency-claim:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content { background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25); }
+    .newsletter-modal-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .newsletter-modal-form { text-align: left; display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 0.5rem; }
+    .newsletter-modal-field label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .newsletter-modal-field input {
+      width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #f8fafc; transition: all 0.2s;
+    }
+    .newsletter-modal-field input:focus { outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+    .newsletter-modal-submit {
+      width: 100%; margin-top: 0.3rem; background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.5rem;
+      border-radius: 8px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+    }
+    .newsletter-modal-submit:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .newsletter-modal-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .newsletter-modal-alert { display: none; margin-top: 0.9rem; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.86rem; align-items: center; gap: 8px; text-align: left; }
+    .newsletter-modal-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .newsletter-modal-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <div class="nav-dropdown" id="navDropdownAction">
+          <button class="nav-dropdown-trigger active-page" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="gay-quy-hien-vat.html">Gây quỹ bằng hiện vật</a>
+            <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
+            <a href="tinh-nguyen-vien.html">Đăng ký tình nguyện viên</a>
+          </div>
+        </div>
+        <div class="nav-dropdown" id="navDropdownAbout">
+          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
+            <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
+            <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
+            <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
+          </div>
+        </div>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="tin-tuc.html">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
+        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="item-hero">
+    <img src="images/nhom-tre-em-vung-cao-ngoi-cung-nhau.jpg" alt="Nhóm trẻ em vùng cao cùng nhau" class="item-hero-bg" loading="eager">
+    <div class="item-hero-overlay"></div>
+    <div class="item-hero-inner">
+      <div class="item-form-card">
+        <h1>Gây Quỹ Bằng Hiện Vật</h1>
+        <p>Sách vở, áo ấm, thiết bị học tập không dùng đến của bạn có thể trở thành món quà ý nghĩa cho một em nhỏ vùng cao. Đăng ký hiện vật muốn quyên góp, chúng tôi sẽ liên hệ hướng dẫn cách gửi.</p>
+
+        <form id="itemForm">
+          <div class="item-form-field">
+            <label for="itemName">Họ và tên</label>
+            <input type="text" name="fullname" id="itemName" placeholder="Nguyễn Văn A" required>
+          </div>
+          <div class="item-form-field">
+            <label for="itemEmail">Email</label>
+            <input type="email" name="email" id="itemEmail" placeholder="ban@email.com" required>
+          </div>
+          <div class="item-form-field">
+            <label for="itemPhone">Số điện thoại</label>
+            <input type="tel" name="phone" id="itemPhone" placeholder="09xx xxx xxx" required>
+          </div>
+
+          <div class="item-form-field">
+            <label>Bạn muốn quyên góp loại hiện vật nào?</label>
+            <div class="item-checkbox-group">
+              <label class="item-checkbox-item"><input type="checkbox" name="loai_hien_vat" value="Sách vở & học liệu"> Sách vở & học liệu</label>
+              <label class="item-checkbox-item"><input type="checkbox" name="loai_hien_vat" value="Áo ấm & quần áo"> Áo ấm & quần áo</label>
+              <label class="item-checkbox-item"><input type="checkbox" name="loai_hien_vat" value="Thiết bị học tập"> Thiết bị học tập</label>
+              <label class="item-checkbox-item"><input type="checkbox" name="loai_hien_vat" value="Khác"> Khác</label>
+            </div>
+          </div>
+
+          <div class="item-form-field">
+            <label for="itemQuantity">Số lượng ước tính</label>
+            <input type="text" name="so_luong" id="itemQuantity" placeholder="Ví dụ: 20 cuốn sách, 10 áo ấm...">
+          </div>
+
+          <div class="item-form-field">
+            <label>Hình thức gửi hiện vật</label>
+            <div class="item-radio-group">
+              <label class="item-radio-item"><input type="radio" name="hinh_thuc_gui" value="Tự mang đến trụ sở" checked> Tự mang / gửi đến địa chỉ trụ sở</label>
+              <label class="item-radio-item"><input type="radio" name="hinh_thuc_gui" value="Cần hỗ trợ thu gom"> Cần hỗ trợ thu gom tận nơi (nội thành Hà Nội)</label>
+            </div>
+          </div>
+
+          <div class="item-form-field" style="margin-bottom: 0;">
+            <label for="itemMessage">Ghi chú thêm (không bắt buộc)</label>
+            <textarea name="ghi_chu" id="itemMessage" placeholder="Tình trạng hiện vật, thời gian thuận tiện để thu gom..."></textarea>
+          </div>
+
+          <input type="hidden" name="_subject" value="Đăng ký quyên góp hiện vật - Website Mạng Lưới Tri Thức Việt Nam">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+          <button type="submit" class="item-submit-btn" id="itemSubmitBtn">Đăng Ký Quyên Góp</button>
+          <div id="itemFormAlert" class="item-form-alert"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="needs-section">
+    <div class="needs-header">
+      <h2>Những Hiện Vật Chúng Tôi Đang Cần</h2>
+      <p>Không phải hiện vật nào cũng phù hợp với mọi thời điểm — dưới đây là những nhóm nhu cầu thực tế nhất hiện nay tại các điểm trường.</p>
+    </div>
+    <div class="needs-grid">
+      <div class="need-card">
+        <div class="need-icon"><i class="fa-solid fa-book"></i></div>
+        <h3>Sách vở &amp; học liệu</h3>
+        <p>Sách giáo khoa các cấp, vở ô ly, bút viết, bút màu, truyện tranh và sách tham khảo còn sử dụng tốt.</p>
+      </div>
+      <div class="need-card">
+        <div class="need-icon"><i class="fa-solid fa-mitten"></i></div>
+        <h3>Áo ấm &amp; quần áo</h3>
+        <p>Áo khoác, chăn bông, mũ len, tất — đặc biệt cần vào mùa đông tại các điểm trường vùng cao Hà Giang.</p>
+      </div>
+      <div class="need-card">
+        <div class="need-icon"><i class="fa-solid fa-laptop"></i></div>
+        <h3>Thiết bị học tập</h3>
+        <p>Máy tính, máy chiếu, loa mic phục vụ lớp học kỹ năng số và các buổi tập huấn tại điểm trường.</p>
+      </div>
+      <div class="need-card">
+        <div class="need-icon"><i class="fa-solid fa-pump-soap"></i></div>
+        <h3>Đồ dùng thiết yếu</h3>
+        <p>Dụng cụ vệ sinh cá nhân, đồ dùng bán trú cơ bản hỗ trợ sinh hoạt hằng ngày của học sinh nội trú.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dropoff-band">
+    <div class="dropoff-inner">
+      <i class="fa-solid fa-location-dot"></i>
+      <h3>Địa Điểm Tiếp Nhận</h3>
+      <p><strong>CÔNG TY TNHH DR SOLUTIONS</strong></p>
+      <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+      <p class="muted">Vui lòng đăng ký trước qua form phía trên để chúng tôi sắp xếp tiếp nhận phù hợp, tránh trường hợp hiện vật không đúng nhu cầu tại thời điểm hiện tại.</p>
+    </div>
+  </section>
+
+  <section class="process-section">
+    <h2>Quy Trình Quyên Góp Hiện Vật</h2>
+    <p>Mỗi hiện vật quyên góp đều được ghi nhận và theo dõi tới tận nơi tiếp nhận. Dưới đây là các bước bạn có thể mong đợi:</p>
+    <div class="process-grid">
+      <div>
+        <div class="process-step-num">1</div>
+        <h3>Đăng ký hiện vật</h3>
+        <p>Điền loại hiện vật, số lượng và hình thức gửi ở form phía trên.</p>
+      </div>
+      <div>
+        <div class="process-step-num">2</div>
+        <h3>Xác nhận nhu cầu phù hợp</h3>
+        <p>Đội ngũ đối chiếu với nhu cầu thực tế tại từng điểm trường trước khi xác nhận tiếp nhận.</p>
+      </div>
+      <div>
+        <div class="process-step-num">3</div>
+        <h3>Thu gom hoặc tiếp nhận</h3>
+        <p>Bạn gửi đến trụ sở hoặc chúng tôi hỗ trợ thu gom (nội thành Hà Nội) theo lịch đã thống nhất.</p>
+      </div>
+      <div>
+        <div class="process-step-num">4</div>
+        <h3>Vận chuyển &amp; cập nhật</h3>
+        <p>Hiện vật được phân loại, vận chuyển tới điểm trường và cập nhật hình ảnh trên trang Tin Tức.</p>
+        <a href="tin-tuc.html">Xem cập nhật mới nhất</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="newsletterModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+      <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Đăng Ký Nhận Bản Tin</h3>
+      <p class="newsletter-modal-text">Nhận thông tin về hoạt động mới, sự kiện gây quỹ và câu chuyện giáo dục vùng cao — gửi thẳng tới email của bạn, không spam.</p>
+      <form id="newsletterModalForm" class="newsletter-modal-form">
+        <input type="hidden" name="_subject" value="Đăng ký nhận bản tin - Website Mạng Lưới Tri Thức Việt Nam">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="newsletter-modal-field">
+          <label for="newsletterFullName">Họ và tên</label>
+          <input type="text" name="fullname" id="newsletterFullName" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="newsletter-modal-field">
+          <label for="newsletterModalEmail">Email</label>
+          <input type="email" name="email" id="newsletterModalEmail" placeholder="ban@email.com" required>
+        </div>
+        <button type="submit" id="newsletterModalBtn" class="newsletter-modal-submit">Đăng Ký</button>
+      </form>
+      <div id="newsletterModalAlert" class="newsletter-modal-alert"></div>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none; margin-top: 0.9rem;" onclick="closeNewsletterModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
+      </div>
+    </div>
+    <div class="footer-transparency-strip">
+      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+      <p>
+        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="openNewsletterModal(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+      </p>
+    </div>
+    <div class="footer-bottom">
+      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
+    </div>
+  </footer>
+
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-modal-inner">
+      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
+      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
+      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.getElementById('menuBtn');
+      navLinks.classList.toggle('active');
+      menuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+    }
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
+    const itemForm = document.getElementById('itemForm');
+    const itemSubmitBtn = document.getElementById('itemSubmitBtn');
+    const itemFormAlert = document.getElementById('itemFormAlert');
+    itemForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const originalHtml = itemSubmitBtn.innerHTML;
+      itemSubmitBtn.disabled = true;
+      itemSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      itemFormAlert.className = 'item-form-alert';
+      itemFormAlert.style.display = 'none';
+
+      const formData = new FormData(itemForm);
+      fetch('https://formsubmit.co/ajax/hotro@wvn.vn', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+        .then(async res => {
+          let data = null;
+          try { data = await res.json(); } catch (e) { }
+          const ok = res.ok && (!data || data.success === 'true' || data.success === true || data.success === undefined);
+          if (!ok) throw new Error('failed');
+        })
+        .then(() => {
+          itemFormAlert.className = 'item-form-alert item-form-alert-success';
+          itemFormAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn! Chúng tôi sẽ liên hệ để xác nhận và hướng dẫn cách gửi hiện vật.</span>';
+          itemForm.reset();
+        })
+        .catch(() => {
+          itemFormAlert.className = 'item-form-alert item-form-alert-error';
+          itemFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          itemSubmitBtn.disabled = false;
+          itemSubmitBtn.innerHTML = originalHtml;
+        });
+    });
+
+    const GALLERY_IMAGES = [
+      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
+      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
+      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
+      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
+      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
+      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
+    ];
+    let galleryShuffled = [];
+    let galleryCurrentIndex = 0;
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function renderGalleryGrid() {
+      const grid = document.getElementById("galleryGrid");
+      if (!grid) return;
+      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => '<div class="gallery-thumb" onclick="openGalleryModal(' + idx + ')"><img src="' + img.src + '" alt="' + img.caption + '" loading="lazy"></div>').join("");
+    }
+    function openGalleryModal(startIndex) {
+      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
+      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
+      galleryCurrentIndex = 0;
+      renderGalleryModalImage();
+      document.getElementById("galleryModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+    function renderGalleryModalImage() {
+      const img = galleryShuffled[galleryCurrentIndex];
+      const modalImg = document.getElementById("galleryModalImg");
+      modalImg.src = img.src;
+      modalImg.alt = img.caption;
+      modalImg.classList.remove("zoomed");
+      document.querySelector(".gallery-modal-caption").textContent = img.caption;
+    }
+    function showGalleryImage(direction) {
+      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
+      renderGalleryModalImage();
+    }
+    function closeGalleryModal() {
+      document.getElementById("galleryModal").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("galleryModal").addEventListener("click", function (e) {
+      if (e.target === this) closeGalleryModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      const modal = document.getElementById("galleryModal");
+      if (!modal.classList.contains("active")) return;
+      if (e.key === "Escape") closeGalleryModal();
+      if (e.key === "ArrowLeft") showGalleryImage(-1);
+      if (e.key === "ArrowRight") showGalleryImage(1);
+    });
+    renderGalleryGrid();
+
+    function openNewsletterModal() { document.getElementById('newsletterModal').style.display = 'flex'; }
+    function closeNewsletterModal() { document.getElementById('newsletterModal').style.display = 'none'; }
+    window.addEventListener('click', function (event) {
+      const newsModal = document.getElementById('newsletterModal');
+      if (event.target === newsModal) newsModal.style.display = 'none';
+    });
+    const newsletterModalForm = document.getElementById("newsletterModalForm");
+    const newsletterModalBtn = document.getElementById("newsletterModalBtn");
+    const newsletterModalAlert = document.getElementById("newsletterModalAlert");
+    newsletterModalForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const originalBtnHtml = newsletterModalBtn.innerHTML;
+      newsletterModalBtn.disabled = true;
+      newsletterModalBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      newsletterModalAlert.className = "newsletter-modal-alert";
+      newsletterModalAlert.style.display = "none";
+      const formData = new FormData(newsletterModalForm);
+      fetch("https://formsubmit.co/ajax/hotro@wvn.vn", {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: formData
+      })
+        .then(async res => {
+          let data = null;
+          try { data = await res.json(); } catch (e) { }
+          const isSuccess = res.ok && (!data || data.success === "true" || data.success === true || data.success === undefined);
+          if (!isSuccess) throw new Error("Đăng ký không thành công");
+        })
+        .then(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-success";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi bản tin mới nhất tới email này.</span>';
+          newsletterModalForm.reset();
+        })
+        .catch(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-error";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          newsletterModalBtn.disabled = false;
+          newsletterModalBtn.innerHTML = originalBtnHtml;
+        });
+    });
+  </script>
+</body>
+</html>
