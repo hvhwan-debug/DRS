@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trở Thành Nhà Tài Trợ - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Trở thành nhà tài trợ của Mạng Lưới Tri Thức Việt Nam - đồng hành dài hạn cùng các chương trình học liệu, học bổng cho trẻ em vùng cao, minh bạch tuyệt đối từng dự án.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230284c7%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z%22></path><path d=%22M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z%22></path></svg>">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+    }
+    body { padding-top: 72px; }
+
+    header {
+      position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 9999;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
+    .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand-logo-icon {
+      width: 38px; height: 38px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    }
+    .brand-logo-icon svg { width: 21px; height: 21px; stroke: #0284c7; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-title {
+      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
+    }
+    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+    .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
+    .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
+    .nav-dropdown { position: relative; display: inline-block; }
+    .nav-dropdown > .nav-dropdown-trigger {
+      margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      font-family: inherit; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 5px; padding: 0.4rem 0; transition: color 0.2s;
+    }
+    .nav-dropdown > .nav-dropdown-trigger i { font-size: 0.7rem; transition: transform 0.2s; }
+    .nav-dropdown.open > .nav-dropdown-trigger { color: #0284c7; font-weight: 600; }
+    .nav-dropdown.open > .nav-dropdown-trigger i { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 1.8rem; background: #ffffff; min-width: 260px;
+      border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+      padding: 0.5rem; z-index: 100; margin-top: 0;
+    }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a { display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+    .btn {
+      background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+    }
+    .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .btn-donate-glow { position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out; }
+    .btn-donate-glow::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(30deg); animation: shineLine 2.8s infinite linear;
+    }
+    @keyframes shineLine { 0% { left: -100%; top: -100%; } 100% { left: 100%; top: 100%; } }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 4px 22px rgba(2, 132, 199, 0.7), 0 0 12px rgba(56, 189, 248, 0.6); transform: scale(1.04); }
+      100% { box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: scale(1); }
+    }
+    .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
+    @media (max-width: 960px) {
+      .mobile-menu-btn { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
+        flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; gap: 1rem;
+      }
+      .nav-links.active { display: flex; }
+      .nav-links a { margin-left: 0 !important; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown { display: block; width: 100%; }
+      .nav-dropdown > .nav-dropdown-trigger { margin-left: 0; justify-content: center; width: 100%; font-size: 1.1rem; padding: 0.5rem 0; }
+      .nav-dropdown-menu { display: none !important; position: static; box-shadow: none; border: none; margin-top: 0; text-align: center; }
+      .nav-dropdown.open .nav-dropdown-menu { display: block !important; }
+    }
+
+    .donor-hero {
+      position: relative; width: 100%; min-height: 620px; display: flex; align-items: center;
+      background: #0f172a;
+    }
+    .donor-hero-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;
+    }
+    .donor-hero-bg-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(90deg, rgba(15,23,42,0.55) 0%, rgba(15,23,42,0.25) 45%, rgba(15,23,42,0.05) 70%);
+    }
+    .donor-hero-inner { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: 3.5rem 1.5rem; width: 100%; }
+
+    .donor-form-card {
+      background: #ffffff; border-radius: 18px; padding: 2.4rem 2.2rem; max-width: 460px;
+      box-shadow: 0 30px 60px rgba(15,23,42,0.35);
+    }
+    .donor-form-card h1 { font-size: 1.7rem; font-weight: 800; color: #0f172a; margin-bottom: 0.8rem; line-height: 1.3; }
+    .donor-form-card > p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.6rem; line-height: 1.65; }
+
+    .donor-field-label { font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.5rem; display: block; }
+    .donor-amount-box {
+      display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden;
+      margin-bottom: 0.6rem; background: #f8fafc;
+    }
+    .donor-amount-box span.suffix { padding: 0 0.9rem; font-weight: 700; color: #0284c7; font-size: 0.95rem; }
+    .donor-amount-box input {
+      flex: 1; border: none; background: transparent; padding: 0.85rem 0.7rem; font-size: 1.25rem; font-weight: 800;
+      color: var(--text-dark); font-family: inherit; outline: none; min-width: 0;
+    }
+    .donor-impact-note {
+      display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #0369a1; background: #f0f9ff;
+      border: 1px dashed #7dd3fc; border-radius: 8px; padding: 0.55rem 0.8rem; margin-bottom: 1.3rem;
+    }
+    .donor-impact-note i { color: #0284c7; }
+
+    .donor-form-field { margin-bottom: 1rem; }
+    .donor-form-field input {
+      width: 100%; padding: 0.75rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #f8fafc; transition: all 0.2s;
+    }
+    .donor-form-field input:focus { outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+
+    .donor-submit-btn {
+      width: 100%; background: var(--blue-grad-btn); color: #fff; padding: 0.85rem 1.5rem; border-radius: 10px;
+      font-weight: 800; font-size: 0.98rem; border: none; cursor: pointer; font-family: inherit;
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.3); transition: all 0.2s; margin-top: 0.4rem;
+    }
+    .donor-submit-btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .donor-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    .donor-form-alert {
+      display: none; margin-top: 1rem; padding: 0.7rem 0.9rem; border-radius: 8px; font-size: 0.85rem; align-items: center; gap: 8px;
+    }
+    .donor-form-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .donor-form-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    .donor-other-ways { margin-top: 1.8rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .donor-other-ways-label { font-size: 0.78rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
+    .donor-ways-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; text-align: center; }
+    .donor-way-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .donor-way-item .icon-circle {
+      width: 46px; height: 46px; border-radius: 50%; background: #f0f9ff; border: 1px solid #bae6fd;
+      display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 1.05rem;
+      transition: all 0.2s;
+    }
+    .donor-way-item:hover .icon-circle { background: var(--blue-grad-btn); color: #fff; border-color: transparent; }
+    .donor-way-item span.label { font-size: 0.74rem; font-weight: 700; color: #0369a1; line-height: 1.3; }
+
+    @media (max-width: 700px) {
+      .donor-hero { min-height: auto; padding-top: 1rem; }
+      .donor-hero-inner { padding: 2rem 1rem 3rem; }
+      .donor-form-card { max-width: 100%; padding: 1.8rem 1.4rem; }
+      .donor-ways-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+    }
+
+    .howworks-section { background: #e6eaee; padding: 4.5rem 1.5rem; text-align: center; }
+    .howworks-section h2 { font-size: 1.85rem; font-weight: 800; color: #1e3a5f; margin-bottom: 1rem; }
+    .howworks-section > p { max-width: 680px; margin: 0 auto 3rem; color: #3d5875; font-size: 0.98rem; line-height: 1.7; }
+    .howworks-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; }
+    .howworks-step-num {
+      width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid #1e3a5f; color: #1e3a5f;
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem;
+      margin: 0 auto 1.1rem;
+    }
+    .howworks-grid h3 { font-size: 1.08rem; font-weight: 800; color: #1e3a5f; margin-bottom: 0.8rem; line-height: 1.4; }
+    .howworks-grid p { font-size: 0.9rem; color: #3d5875; margin-bottom: 0.8rem; line-height: 1.65; }
+    .howworks-grid a { font-size: 0.86rem; font-weight: 700; color: #0284c7; text-decoration: underline; text-underline-offset: 2px; }
+
+    .proof-section { background: #ffffff; padding: 5rem 1.5rem; }
+    .proof-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 1fr; gap: 3.5rem; align-items: center; }
+    @media (max-width: 860px) { .proof-grid { grid-template-columns: 1fr; } }
+
+    .proof-map-wrap { position: relative; }
+    #projectsMap {
+      width: 100%; height: 340px; border-radius: 16px; border: 1px solid var(--border);
+      box-shadow: 0 10px 28px rgba(15,23,42,0.1); z-index: 1;
+    }
+    .proof-map-card {
+      position: absolute; left: 18px; bottom: -28px; background: #fff; border-radius: 12px; border: 1px solid var(--border);
+      box-shadow: 0 14px 32px rgba(15,23,42,0.16); padding: 0.8rem; display: flex; gap: 0.8rem; align-items: center;
+      max-width: 300px; z-index: 5;
+    }
+    .proof-map-card img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .proof-map-card .proof-map-card-title { font-size: 0.86rem; font-weight: 800; color: #0f172a; margin-bottom: 0.15rem; }
+    .proof-map-card .proof-map-card-sub { font-size: 0.74rem; color: var(--text-muted); }
+    .proof-map-card .proof-map-card-code { font-size: 0.7rem; font-weight: 700; color: #0284c7; margin-top: 0.15rem; }
+    @media (max-width: 480px) { .proof-map-card { left: 10px; right: 10px; max-width: none; bottom: -24px; } }
+
+    .proof-text { padding-top: 2.2rem; }
+    @media (max-width: 860px) { .proof-text { padding-top: 3.5rem; } }
+    .proof-text h2 { font-size: 1.85rem; font-weight: 800; color: #0f172a; margin-bottom: 1.1rem; line-height: 1.3; }
+    .proof-text p { font-size: 1rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.75; }
+    .proof-text a.proof-link { font-size: 0.95rem; font-weight: 700; color: #0284c7; text-decoration: underline; text-underline-offset: 2px; }
+
+    .leaflet-popup-content { font-family: inherit; font-size: 0.85rem; line-height: 1.55; }
+    .leaflet-popup-content strong { color: #0369a1; }
+    .leaflet-popup-content a { color: #0284c7; font-weight: 700; }
+
+    footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
+    .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
+    .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
+    }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 220px; }
+    @media (max-width: 960px) { .gallery-grid { max-width: 100%; gap: 0.7rem; } }
+    .gallery-thumb { position: relative; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+    .gallery-thumb:hover img { transform: scale(1.12); }
+    .gallery-thumb::after {
+      content: '\f00e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #fff;
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; background: rgba(15, 23, 42, 0); opacity: 0; transition: all 0.2s;
+    }
+    .gallery-thumb:hover::after { background: rgba(15, 23, 42, 0.4); opacity: 1; }
+    .gallery-modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 10001; align-items: center; justify-content: center; padding: 1.5rem; }
+    .gallery-modal.active { display: flex; }
+    .gallery-modal-inner { position: relative; max-width: 900px; width: 100%; text-align: center; }
+    .gallery-modal-img { max-width: 100%; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); cursor: zoom-in; transition: transform 0.25s; background: #0f172a; }
+    .gallery-modal-img.zoomed { cursor: zoom-out; transform: scale(1.35); }
+    .gallery-modal-close {
+      position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .gallery-modal-close:hover { background: rgba(255,255,255,0.28); }
+    .gallery-modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .gallery-modal-nav:hover { background: rgba(255,255,255,0.25); }
+    .gallery-modal-prev { left: -18px; }
+    .gallery-modal-next { right: -18px; }
+    @media (max-width: 700px) { .gallery-modal-prev { left: 4px; } .gallery-modal-next { right: 4px; } }
+    .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
+    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
+    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
+    .footer-transparency-strip .transparency-claim { font-weight: 500; color: #7dd3fc; text-decoration: none; }
+    .footer-transparency-strip .transparency-claim:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .footer-transparency-strip .transparency-sep { margin: 0 0.6rem; color: #64748b; }
+
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .modal-content { background: var(--white); padding: 2.2rem; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25); }
+    .newsletter-modal-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .newsletter-modal-form { text-align: left; display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 0.5rem; }
+    .newsletter-modal-field label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .newsletter-modal-field input {
+      width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #f8fafc; transition: all 0.2s;
+    }
+    .newsletter-modal-field input:focus { outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+    .newsletter-modal-submit {
+      width: 100%; margin-top: 0.3rem; background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.5rem;
+      border-radius: 8px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+    }
+    .newsletter-modal-submit:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+    .newsletter-modal-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .newsletter-modal-alert { display: none; margin-top: 0.9rem; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.86rem; align-items: center; gap: 8px; text-align: left; }
+    .newsletter-modal-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .newsletter-modal-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Mạng Lưới Tri Thức Việt Nam</span>
+          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <div class="nav-dropdown" id="navDropdownAction">
+          <button class="nav-dropdown-trigger active-page" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="hoat-dong.html">Gây quỹ bằng hiện vật</a>
+            <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
+            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
+          </div>
+        </div>
+        <div class="nav-dropdown" id="navDropdownAbout">
+          <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="nav-dropdown-menu">
+            <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
+            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
+            <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
+            <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
+            <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
+          </div>
+        </div>
+        <a href="hoat-dong.html">Hoạt Động</a>
+        <a href="tin-tuc.html">Tin Tức</a>
+        <a href="lien-he.html">Liên Hệ</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
+        <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="donor-hero">
+    <img src="images/tre-em-nam-tay-canh-dong-lua.jpg" alt="Trẻ em vùng cao trên cánh đồng lúa" class="donor-hero-bg" loading="eager">
+    <div class="donor-hero-bg-overlay"></div>
+    <div class="donor-hero-inner">
+      <div class="donor-form-card">
+        <h1>Trở Thành Nhà Tài Trợ</h1>
+        <p>Bằng cách trở thành nhà tài trợ, bạn có thể cung cấp học liệu, thiết bị học tập hoặc học bổng dài hạn cho trẻ em vùng cao. 100% giá trị tài trợ được sử dụng trực tiếp cho chương trình giáo dục.</p>
+
+        <form id="donorForm">
+          <label class="donor-field-label" for="donorAmount">Nhập mức tài trợ mong muốn</label>
+          <div class="donor-amount-box">
+            <input type="number" id="donorAmount" min="0" step="10000" placeholder="1.000.000" inputmode="numeric">
+            <span class="suffix">VNĐ</span>
+          </div>
+          <div class="donor-impact-note" id="donorImpactNote">
+            <i class="fa-solid fa-lightbulb"></i> <span>Nhập số tiền để xem ước tính tác động</span>
+          </div>
+
+          <div class="donor-form-field">
+            <input type="text" name="fullname" id="donorName" placeholder="Họ và tên" required>
+          </div>
+          <div class="donor-form-field">
+            <input type="email" name="email" id="donorEmail" placeholder="Email liên hệ" required>
+          </div>
+          <div class="donor-form-field" style="margin-bottom: 0;">
+            <input type="tel" name="phone" id="donorPhone" placeholder="Số điện thoại (không bắt buộc)">
+          </div>
+          <input type="hidden" name="_subject" value="Đăng ký trở thành nhà tài trợ - Website Mạng Lưới Tri Thức Việt Nam">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="muc_tai_tro" id="donorAmountHidden">
+
+          <button type="submit" class="donor-submit-btn" id="donorSubmitBtn">Đăng Ký Tài Trợ</button>
+          <div id="donorFormAlert" class="donor-form-alert"></div>
+        </form>
+
+        <div class="donor-other-ways">
+          <div class="donor-other-ways-label">Bạn cũng có thể tài trợ bằng cách:</div>
+          <div class="donor-ways-grid">
+            <a class="donor-way-item" href="hoat-dong.html">
+              <span class="icon-circle"><i class="fa-solid fa-gift"></i></span>
+              <span class="label">Hiện vật</span>
+            </a>
+            <a class="donor-way-item" href="quyen-gop.html">
+              <span class="icon-circle"><i class="fa-solid fa-arrows-rotate"></i></span>
+              <span class="label">Chuyển khoản định kỳ</span>
+            </a>
+            <a class="donor-way-item" href="lien-he.html">
+              <span class="icon-circle"><i class="fa-solid fa-building"></i></span>
+              <span class="label">Đối tác CSR</span>
+            </a>
+            <a class="donor-way-item" href="lien-he.html">
+              <span class="icon-circle"><i class="fa-solid fa-hands-holding-child"></i></span>
+              <span class="label">Tình nguyện viên</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="howworks-section">
+    <h2>Cách Thức Tài Trợ Hoạt Động Như Thế Nào</h2>
+    <p>Mỗi khoản tài trợ đều đi qua một quy trình rõ ràng, được ghi nhận và đối chiếu công khai. Dưới đây là ba bước bạn có thể mong đợi:</p>
+    <div class="howworks-grid">
+      <div>
+        <div class="howworks-step-num">1</div>
+        <h3>Chúng tôi tiếp nhận đăng ký của bạn</h3>
+        <p>Sau khi bạn gửi đăng ký, đội ngũ của chúng tôi liên hệ trong vòng 48 giờ để thống nhất hình thức và mã dự án tài trợ phù hợp.</p>
+        <a href="lien-he.html">Liên hệ trực tiếp</a>
+      </div>
+      <div>
+        <div class="howworks-step-num">2</div>
+        <h3>Chúng tôi cập nhật tiến độ thực tế</h3>
+        <p>Trong quá trình triển khai, chúng tôi chia sẻ hình ảnh, câu chuyện và tiến độ dự án qua bản tin và trang Tin Tức.</p>
+        <a href="tin-tuc.html">Xem cập nhật mới nhất</a>
+      </div>
+      <div>
+        <div class="howworks-step-num">3</div>
+        <h3>Bạn thấy được tác động cụ thể</h3>
+        <p>Sau khi dự án hoàn thành, mọi giao dịch và kết quả đều có thể tự tra cứu, đối chiếu công khai trên trang Sao Kê.</p>
+        <a href="sao-ke.html">Tra cứu sao kê</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof-section">
+    <div class="proof-grid">
+      <div class="proof-map-wrap">
+        <div id="projectsMap"></div>
+        <div class="proof-map-card">
+          <img src="images/nhom-tre-em-vung-cao-ngoi-cung-nhau.jpg" alt="Học sinh tại Tiểu học Ma Lé">
+          <div>
+            <div class="proof-map-card-title">Tiểu học Ma Lé</div>
+            <div class="proof-map-card-sub">Đồng Văn, Hà Giang</div>
+            <div class="proof-map-card-code">Mã DA — Sửa mái nhà lớp học</div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-text">
+        <h2>Chúng tôi chứng minh mọi dự án.</h2>
+        <p>Mỗi điểm trường chúng tôi từng hỗ trợ đều được đánh dấu công khai trên bản đồ thực địa phía trên — không phải hình minh họa. Sau khi một dự án hoàn thành, bạn có thể đối chiếu thời gian, nội dung và số tiền tương ứng ngay tại trang Sao Kê.</p>
+        <p>Chúng tôi tin rằng minh chứng cụ thể — địa điểm thật, mã dự án thật, giao dịch thật — là cách duy nhất để giữ vững niềm tin lâu dài với người đồng hành.</p>
+        <a href="sao-ke.html" class="proof-link">Xem bằng chứng tại trang Sao Kê <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <div id="newsletterModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+      <h3 style="color:#0369a1; margin-bottom: 0.4rem;">Đăng Ký Nhận Bản Tin</h3>
+      <p class="newsletter-modal-text">Nhận thông tin về hoạt động mới, sự kiện gây quỹ và câu chuyện giáo dục vùng cao — gửi thẳng tới email của bạn, không spam.</p>
+      <form id="newsletterModalForm" class="newsletter-modal-form">
+        <input type="hidden" name="_subject" value="Đăng ký nhận bản tin - Website Mạng Lưới Tri Thức Việt Nam">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="newsletter-modal-field">
+          <label for="newsletterFullName">Họ và tên</label>
+          <input type="text" name="fullname" id="newsletterFullName" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="newsletter-modal-field">
+          <label for="newsletterModalEmail">Email</label>
+          <input type="email" name="email" id="newsletterModalEmail" placeholder="ban@email.com" required>
+        </div>
+        <button type="submit" id="newsletterModalBtn" class="newsletter-modal-submit">Đăng Ký</button>
+      </form>
+      <div id="newsletterModalAlert" class="newsletter-modal-alert"></div>
+      <button class="btn" style="background:#64748b; width:100%; box-shadow:none; margin-top: 0.9rem;" onclick="closeNewsletterModal()">Đóng Cửa Sổ</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>CÔNG TY TNHH DR SOLUTIONS</h4>
+        <p>Doanh nghiệp xã hội đồng hành vì cơ hội học tập công bằng cho cộng đồng.</p>
+        <p style="margin-top:0.6rem;">Mã số doanh nghiệp: 0111291749</p>
+        <p style="margin-top:0.4rem;"><a href="bao-cao-thuong-nien.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Xem Báo Cáo Tác Động Thường Niên</a></p>
+      </div>
+      <div>
+        <h4>Địa Chỉ Trụ Sở</h4>
+        <p>Số 6, Ngách 29 ngõ 27, đường Võ Chí Công, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam.</p>
+        <p style="margin-top:0.6rem;">Email: hotro@wvn.vn | cskh@dr.com</p>
+        <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
+      </div>
+      <div>
+        <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
+        <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
+      </div>
+    </div>
+    <div class="footer-transparency-strip">
+      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+      <p>
+        <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
+        <span class="transparency-sep">•</span>
+        <a href="#" onclick="openNewsletterModal(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+      </p>
+    </div>
+    <div class="footer-bottom">
+      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
+    </div>
+  </footer>
+
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-modal-inner">
+      <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      <button class="gallery-modal-nav gallery-modal-prev" onclick="showGalleryImage(-1)" aria-label="Ảnh trước"><i class="fa-solid fa-chevron-left"></i></button>
+      <img class="gallery-modal-img" id="galleryModalImg" src="" alt="Ảnh thư viện phóng to" onclick="this.classList.toggle('zoomed')">
+      <button class="gallery-modal-nav gallery-modal-next" onclick="showGalleryImage(1)" aria-label="Ảnh tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="gallery-modal-caption">Bấm vào ảnh để phóng to / thu nhỏ</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const menuBtn = document.getElementById('menuBtn');
+      navLinks.classList.toggle('active');
+      menuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+    }
+    function toggleNavDropdown(btn) {
+      const dropdown = btn.closest('.nav-dropdown');
+      const wasOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!wasOpen) dropdown.classList.add('open');
+    }
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
+
+    const IMPACT_UNIT_VND = 50000;
+    const donorAmountInput = document.getElementById('donorAmount');
+    const donorImpactNote = document.getElementById('donorImpactNote');
+    donorAmountInput.addEventListener('input', function () {
+      const val = parseInt(this.value, 10) || 0;
+      document.getElementById('donorAmountHidden').value = val ? val.toLocaleString('vi-VN') + ' đ' : '';
+      if (val <= 0) {
+        donorImpactNote.innerHTML = '<i class="fa-solid fa-lightbulb"></i> <span>Nhập số tiền để xem ước tính tác động</span>';
+        return;
+      }
+      const units = Math.floor(val / IMPACT_UNIT_VND);
+      donorImpactNote.innerHTML = '<i class="fa-solid fa-lightbulb"></i> <span>Có thể trao khoảng <strong>' + units.toLocaleString('vi-VN') + '</strong> đơn vị học liệu / sách vở cho học sinh vùng cao.</span>';
+    });
+
+    const donorForm = document.getElementById('donorForm');
+    const donorSubmitBtn = document.getElementById('donorSubmitBtn');
+    const donorFormAlert = document.getElementById('donorFormAlert');
+    donorForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const originalHtml = donorSubmitBtn.innerHTML;
+      donorSubmitBtn.disabled = true;
+      donorSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      donorFormAlert.className = 'donor-form-alert';
+      donorFormAlert.style.display = 'none';
+
+      const formData = new FormData(donorForm);
+      fetch('https://formsubmit.co/ajax/hotro@wvn.vn', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+        .then(async res => {
+          let data = null;
+          try { data = await res.json(); } catch (e) { }
+          const ok = res.ok && (!data || data.success === 'true' || data.success === true || data.success === undefined);
+          if (!ok) throw new Error('failed');
+        })
+        .then(() => {
+          donorFormAlert.className = 'donor-form-alert donor-form-alert-success';
+          donorFormAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn! Đội ngũ của chúng tôi sẽ liên hệ trong vòng 48 giờ để hướng dẫn hoàn tất tài trợ.</span>';
+          donorForm.reset();
+          donorImpactNote.innerHTML = '<i class="fa-solid fa-lightbulb"></i> <span>Nhập số tiền để xem ước tính tác động</span>';
+        })
+        .catch(() => {
+          donorFormAlert.className = 'donor-form-alert donor-form-alert-error';
+          donorFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          donorSubmitBtn.disabled = false;
+          donorSubmitBtn.innerHTML = originalHtml;
+        });
+    });
+
+    const PROJECT_LOCATIONS = [
+      { name: "Tiểu học Sà Phìn A", lat: 23.2895, lng: 105.3235, code: "Trao học liệu đầu năm học", info: "Trao 120 suất học liệu, sách giáo khoa và học bổng thí điểm." },
+      { name: "Tiểu học Lũng Táo", lat: 23.3140, lng: 105.2650, code: "Tủ sách cộng đồng", info: "Khai trương tủ sách cộng đồng thứ hai, 420 đầu sách." },
+      { name: "Tiểu học Ma Lé", lat: 23.3210, lng: 105.3300, code: "Sửa mái nhà lớp học", info: "Thay 40m² mái tôn bị dột, hoàn thành trước mùa mưa." }
+    ];
+
+    const map = L.map('projectsMap', { scrollWheelZoom: false }).setView([23.305, 105.305], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    const markerIcon = L.divIcon({
+      className: 'custom-project-marker',
+      html: '<div style="width:16px;height:16px;border-radius:50%;background:#0284c7;border:3px solid #fff;box-shadow:0 2px 6px rgba(15,23,42,0.4);"></div>',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    });
+
+    PROJECT_LOCATIONS.forEach(loc => {
+      L.marker([loc.lat, loc.lng], { icon: markerIcon }).addTo(map)
+        .bindPopup('<strong>' + loc.name + '</strong><br>' + loc.code + '<br>' + loc.info + '<br><a href="sao-ke.html">Xem sao kê liên quan &rarr;</a>');
+    });
+
+    const GALLERY_IMAGES = [
+      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
+      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
+      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
+      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
+      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
+      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
+    ];
+    let galleryShuffled = [];
+    let galleryCurrentIndex = 0;
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function renderGalleryGrid() {
+      const grid = document.getElementById("galleryGrid");
+      if (!grid) return;
+      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => '<div class="gallery-thumb" onclick="openGalleryModal(' + idx + ')"><img src="' + img.src + '" alt="' + img.caption + '" loading="lazy"></div>').join("");
+    }
+    function openGalleryModal(startIndex) {
+      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
+      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
+      galleryCurrentIndex = 0;
+      renderGalleryModalImage();
+      document.getElementById("galleryModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+    function renderGalleryModalImage() {
+      const img = galleryShuffled[galleryCurrentIndex];
+      const modalImg = document.getElementById("galleryModalImg");
+      modalImg.src = img.src;
+      modalImg.alt = img.caption;
+      modalImg.classList.remove("zoomed");
+      document.querySelector(".gallery-modal-caption").textContent = img.caption;
+    }
+    function showGalleryImage(direction) {
+      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
+      renderGalleryModalImage();
+    }
+    function closeGalleryModal() {
+      document.getElementById("galleryModal").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("galleryModal").addEventListener("click", function (e) {
+      if (e.target === this) closeGalleryModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      const modal = document.getElementById("galleryModal");
+      if (!modal.classList.contains("active")) return;
+      if (e.key === "Escape") closeGalleryModal();
+      if (e.key === "ArrowLeft") showGalleryImage(-1);
+      if (e.key === "ArrowRight") showGalleryImage(1);
+    });
+    renderGalleryGrid();
+
+    function openNewsletterModal() { document.getElementById('newsletterModal').style.display = 'flex'; }
+    function closeNewsletterModal() { document.getElementById('newsletterModal').style.display = 'none'; }
+    window.addEventListener('click', function (event) {
+      const newsModal = document.getElementById('newsletterModal');
+      if (event.target === newsModal) newsModal.style.display = 'none';
+    });
+    const newsletterModalForm = document.getElementById("newsletterModalForm");
+    const newsletterModalBtn = document.getElementById("newsletterModalBtn");
+    const newsletterModalAlert = document.getElementById("newsletterModalAlert");
+    newsletterModalForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const originalBtnHtml = newsletterModalBtn.innerHTML;
+      newsletterModalBtn.disabled = true;
+      newsletterModalBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      newsletterModalAlert.className = "newsletter-modal-alert";
+      newsletterModalAlert.style.display = "none";
+      const formData = new FormData(newsletterModalForm);
+      fetch("https://formsubmit.co/ajax/hotro@wvn.vn", {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: formData
+      })
+        .then(async res => {
+          let data = null;
+          try { data = await res.json(); } catch (e) { }
+          const isSuccess = res.ok && (!data || data.success === "true" || data.success === true || data.success === undefined);
+          if (!isSuccess) throw new Error("Đăng ký không thành công");
+        })
+        .then(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-success";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi bản tin mới nhất tới email này.</span>';
+          newsletterModalForm.reset();
+        })
+        .catch(() => {
+          newsletterModalAlert.className = "newsletter-modal-alert newsletter-modal-alert-error";
+          newsletterModalAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.</span>';
+        })
+        .finally(() => {
+          newsletterModalBtn.disabled = false;
+          newsletterModalBtn.innerHTML = originalBtnHtml;
+        });
+    });
+  </script>
+</body>
+</html>
