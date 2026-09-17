@@ -221,7 +221,8 @@
     .footer-bottom-text { grid-column: 2; text-align: center; }
     @media (max-width: 640px) {
       .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
-      .footer-bottom-text { text-align: center; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
     }
 
     @media (max-width: 960px) {
