@@ -186,21 +186,10 @@
     .contact-box p { color: var(--text-dark); margin-bottom: 0.4rem; }
     .contact-box p:last-child { margin-bottom: 0; }
 
-    /* Footer 3 cột */
+    /* Footer 3 cột (đồng bộ với index.html / gay-quy-hien-vat.html) */
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
-    .social-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
-    .social-link {
-      display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
-      border-radius: 50%; background: #fff; border: 1px solid var(--border); color: #0284c7; font-size: 1.15rem;
-      transition: all 0.2s; text-decoration: none;
-    }
-    .social-link:hover { background: var(--blue-grad-btn); color: #fff; border-color: transparent; transform: translateY(-3px); }
-
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 2.5rem; text-align: left; }
     .footer-grid h4 { color: var(--white); margin-bottom: 1rem; font-size: 1.05rem; }
-    .footer-bottom { max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: #94a3b8; }
-    .footer-bottom a { color: #94a3b8; text-decoration: none; }
-    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
@@ -269,9 +258,32 @@
     }
     .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
 
-    .footer-transparency-strip { max-width: 1240px; margin: 0 auto; padding-top: 2rem; text-align: center; }
-    .footer-transparency-strip p { font-size: 0.88rem; color: #94a3b8; margin-bottom: 0.6rem; }
+    .footer-transparency-strip {
+      max-width: 1240px; margin: 2.5rem auto 0; padding: 1rem 0 0;
+      border-top: 1px solid rgba(255,255,255,.1); text-align: center;
+    }
+    .footer-transparency-strip p { margin: 0.35rem 0; font-size: 0.88rem; color: #cbd5e1; }
     .footer-transparency-strip .transparency-claim { font-weight: 700; color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
+
+    .footer-bottom {
+      max-width: 1240px; margin: 3rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem; color: #94a3b8;
+      display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
+    }
+    .footer-bottom a { color: #94a3b8; text-decoration: none; }
+    .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
+    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-text { grid-column: 2; text-align: center; }
+    .social-link {
+      width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #cbd5e1; border: 1px solid rgba(255,255,255,.18); text-decoration: none; transition: all .2s;
+    }
+    .social-link:hover { color: #fff; background: rgba(255,255,255,.1); transform: translateY(-2px); }
+    @media (max-width: 640px) {
+      .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+      .footer-bottom-text { text-align: center; order: 1; }
+      .footer-bottom .footer-bottom-social { order: 2; }
+    }
   </style>
 </head>
 <body>
@@ -295,10 +307,10 @@
         <div class="nav-dropdown">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Quyên góp / Ủng hộ định kỳ</a>
-            <a href="hoat-dong.html">Gây quỹ cho tủ sách &amp; học liệu</a>
-            <a href="lien-he.html">Trở thành nhà tài trợ</a>
-            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
+            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
+            <a href="gay-quy-hien-vat.html">Gây quỹ bằng hiện vật</a>
+            <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
+            <a href="tinh-nguyen-vien.html">Đăng ký tình nguyện viên</a>
           </div>
         </div>
         <div class="nav-dropdown">
@@ -461,7 +473,7 @@
 
   </main>
 
-  <!-- Footer 3 Cột -->
+  <!-- Footer 3 Cột (đồng bộ với index.html / gay-quy-hien-vat.html) -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -477,13 +489,6 @@
         <p style="margin-top:0.4rem;"><a href="lien-he.html" style="color: #38bdf8; text-decoration: underline; text-underline-offset: 2px; font-weight: 600;">&rarr; Gửi lời nhắn trực tuyến</a></p>
       </div>
       <div>
-        <h4>Kết Nối Với Chúng Tôi</h4>
-        <p>Theo dõi hành trình gieo mầm tri thức mỗi ngày qua các kênh chính thức của Mạng Lưới Tri Thức Việt Nam.</p>
-        <div class="social-links" style="margin-top: 0.8rem;">
-          <a class="social-link" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-        </div>
-      </div>
-      <div>
         <h4><i class="fa-solid fa-images" style="font-size:0.85em; margin-right:6px; color:#7dd3fc;"></i>Thư Viện Hình Ảnh</h4>
         <div class="gallery-grid" id="galleryGrid" style="margin-top: 0.9rem;"></div>
       </div>
@@ -496,7 +501,8 @@
       </p>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a>
+      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
 
