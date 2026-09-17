@@ -178,6 +178,34 @@
       .donor-ways-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
     }
 
+    /* Ba con đường tài trợ — ảnh trên, tiêu đề + mô tả + link dưới */
+    .paths-section { max-width: 1100px; margin: 0 auto; padding: 4.5rem 1.5rem 1rem; }
+    .paths-header { text-align: center; margin-bottom: 3rem; }
+    .paths-header h2 { font-size: 1.9rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; }
+    .paths-header p { color: var(--text-muted); font-size: 1rem; max-width: 640px; margin: 0 auto; }
+    .paths-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.8rem; }
+    .path-card { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 8px 22px rgba(15,23,42,0.06); background: #fff; transition: transform 0.25s, box-shadow 0.25s; }
+    .path-card:hover { transform: translateY(-5px); box-shadow: 0 18px 34px rgba(2,132,199,0.12); }
+    .path-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .path-card-body { padding: 1.4rem 1.4rem 1.6rem; }
+    .path-card-body h3 { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 8px; }
+    .path-card-body p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.65; }
+    .path-card-body a { font-size: 0.85rem; font-weight: 700; color: #0284c7; text-decoration: underline; text-underline-offset: 2px; }
+
+    /* Bạn xứng đáng đóng góp một cách an tâm — huy hiệu minh bạch thật của site */
+    .trust-section { background: #fdf6e3; padding: 4rem 1.5rem; text-align: center; }
+    .trust-section h2 { font-size: 1.65rem; font-weight: 800; color: #1e3a5f; margin-bottom: 1.2rem; }
+    .trust-section p { max-width: 720px; margin: 0 auto 2.2rem; color: #3d5875; font-size: 0.96rem; line-height: 1.75; }
+    .trust-badges-row { display: flex; justify-content: center; align-items: stretch; gap: 1.4rem; flex-wrap: wrap; }
+    .trust-badge {
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-decoration: none;
+      background: #fff; border: 1px solid #e7d9b5; border-radius: 14px; padding: 1.2rem 1.3rem; width: 150px;
+      box-shadow: 0 6px 16px rgba(30,58,95,0.06); transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .trust-badge:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(30,58,95,0.12); }
+    .trust-badge i { font-size: 1.6rem; color: #b45309; }
+    .trust-badge span { font-size: 0.78rem; font-weight: 700; color: #1e3a5f; line-height: 1.35; }
+
     .howworks-section { background: #e6eaee; padding: 4.5rem 1.5rem; text-align: center; }
     .howworks-section h2 { font-size: 1.85rem; font-weight: 800; color: #1e3a5f; margin-bottom: 1rem; }
     .howworks-section > p { max-width: 680px; margin: 0 auto 3rem; color: #3d5875; font-size: 0.98rem; line-height: 1.7; }
@@ -326,9 +354,9 @@
           <button class="nav-dropdown-trigger active-page" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
             <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
-            <a href="hoat-dong.html">Gây quỹ bằng hiện vật</a>
+            <a href="gay-quy-hien-vat.html">Gây quỹ bằng hiện vật</a>
             <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
-            <a href="lien-he.html">Đăng ký tình nguyện viên</a>
+            <a href="tinh-nguyen-vien.html">Đăng ký tình nguyện viên</a>
           </div>
         </div>
         <div class="nav-dropdown" id="navDropdownAbout">
@@ -415,6 +443,39 @@
     </div>
   </section>
 
+  <section class="paths-section">
+    <div class="paths-header">
+      <h2>Nhiều Con Đường Để Đồng Hành</h2>
+      <p>Mỗi người có một cách phù hợp để góp sức — dưới đây là ba hướng đi phổ biến nhất.</p>
+    </div>
+    <div class="paths-grid">
+      <div class="path-card">
+        <img src="images/tre-em-cuoi-dua-vui-ve.jpg" alt="Trẻ em vùng cao tại điểm trường" loading="lazy">
+        <div class="path-card-body">
+          <h3>Tài Trợ Cho Một Dự Án Cụ Thể <i class="fa-solid fa-arrow-right" style="font-size:0.85rem;color:#0284c7;"></i></h3>
+          <p>Chọn đúng chiến dịch bạn muốn hỗ trợ — áo ấm, học liệu hay học bổng — và theo dõi tiến độ tới tận nơi.</p>
+          <a href="hoat-dong.html">Xem các dự án đang triển khai</a>
+        </div>
+      </div>
+      <div class="path-card">
+        <img src="images/tinh-nguyen-vien-cung-nhau.jpg" alt="Đối tác doanh nghiệp đồng hành cùng chương trình" loading="lazy">
+        <div class="path-card-body">
+          <h3>Trở Thành Đối Tác Doanh Nghiệp <i class="fa-solid fa-arrow-right" style="font-size:0.85rem;color:#0284c7;"></i></h3>
+          <p>Hợp tác CSR dài hạn giữa doanh nghiệp của bạn và chương trình giáo dục vùng cao, cùng nhân rộng tác động.</p>
+          <a href="lien-he.html">Liên hệ hợp tác</a>
+        </div>
+      </div>
+      <div class="path-card">
+        <img src="images/be-gai-khan-xanh-cuoi-tuoi.jpg" alt="Bé gái vùng cao cười tươi" loading="lazy">
+        <div class="path-card-body">
+          <h3>Ủng Hộ Định Kỳ Hàng Tháng <i class="fa-solid fa-arrow-right" style="font-size:0.85rem;color:#0284c7;"></i></h3>
+          <p>Một khoản đóng góp đều đặn mỗi tháng giúp tạo nguồn lực ổn định, chủ động lên kế hoạch dài hạn cho các em.</p>
+          <a href="quyen-gop.html">Ủng hộ định kỳ ngay</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="howworks-section">
     <h2>Cách Thức Tài Trợ Hoạt Động Như Thế Nào</h2>
     <p>Mỗi khoản tài trợ đều đi qua một quy trình rõ ràng, được ghi nhận và đối chiếu công khai. Dưới đây là ba bước bạn có thể mong đợi:</p>
@@ -459,6 +520,29 @@
         <p>Chúng tôi tin rằng minh chứng cụ thể — địa điểm thật, mã dự án thật, giao dịch thật — là cách duy nhất để giữ vững niềm tin lâu dài với người đồng hành.</p>
         <a href="sao-ke.html" class="proof-link">Xem bằng chứng tại trang Sao Kê <i class="fa-solid fa-arrow-right"></i></a>
       </div>
+    </div>
+  </section>
+
+  <section class="trust-section">
+    <h2>Bạn xứng đáng đóng góp một cách an tâm.</h2>
+    <p>Chúng tôi không mong bạn chỉ tin vào lời nói. Mỗi cam kết minh bạch dưới đây đều có thể tự tra cứu, đối chiếu công khai — không chỉ là một dòng chữ trên trang giới thiệu.</p>
+    <div class="trust-badges-row">
+      <a class="trust-badge" href="mo-hinh-100.html">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>100% Lợi Nhuận<br>Tái Đầu Tư</span>
+      </a>
+      <a class="trust-badge" href="sao-ke.html">
+        <i class="fa-solid fa-magnifying-glass-dollar"></i>
+        <span>Sao Kê Công Khai<br>24/7</span>
+      </a>
+      <a class="trust-badge" href="index.html#phap-ly">
+        <i class="fa-solid fa-id-card"></i>
+        <span>Mã Số DN<br>0111291749</span>
+      </a>
+      <a class="trust-badge" href="bao-cao-thuong-nien.html">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>Báo Cáo<br>Thường Niên</span>
+      </a>
     </div>
   </section>
 
