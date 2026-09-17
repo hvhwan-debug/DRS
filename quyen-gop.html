@@ -384,7 +384,7 @@
       </nav>
 
       <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" onclick="window.location.href='lien-he.html'">Kết Nối</button>
+        <button class="btn btn-donate-glow" id="authBtn" onclick="window.location.href='dang-nhap.html'">Đăng Nhập</button>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -593,7 +593,7 @@
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
         <span class="transparency-sep">•</span>
-        <a href="#" onclick="document.getElementById('newsletterEmail').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('newsletterEmail').focus(); return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
+        <a href="#" onclick="var el=document.getElementById('newsletterEmail'); if(el){el.scrollIntoView({behavior:'smooth', block:'center'}); el.focus();} else { window.location.href='index.html#newsletterEmail'; } return false;" class="transparency-claim">Đăng ký nhận bản tin của chúng tôi</a>
       </p>
     </div>
 
@@ -627,6 +627,24 @@
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
     }
-  </script>
+  
+    async function updateAuthButton() {
+      const authBtn = document.getElementById('authBtn');
+      if (!authBtn) return;
+      try {
+        const res = await fetch('/.auth/me');
+        const payload = await res.json();
+        const clientPrincipal = payload.clientPrincipal;
+        if (clientPrincipal) {
+          authBtn.textContent = clientPrincipal.userDetails || 'Thành viên';
+          authBtn.onclick = () => { window.location.href = '/.auth/logout'; };
+          authBtn.title = 'Bấm để đăng xuất';
+        }
+      } catch (e) {
+        console.warn('Không kiểm tra được trạng thái đăng nhập', e);
+      }
+    }
+    updateAuthButton();
+</script>
 </body>
 </html>
