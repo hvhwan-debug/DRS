@@ -112,9 +112,12 @@
     }
     .btn-continue:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
-    .no-access { display: block; text-align: center; margin-top: 1.5rem; font-size: 0.88rem; }
+    .no-access { display: block; text-align: center; margin-top: 1.5rem; font-size: 0.88rem; line-height: 1.8; }
     .no-access a { color: #64748b; text-decoration: none; }
     .no-access a:hover { text-decoration: underline; }
+    @media (max-width: 480px) {
+      .no-access { line-height: 2; }
+    }
 
     .form-footer-links {
       margin-top: 3rem; display: flex; gap: 1.5rem; justify-content: center;
@@ -206,7 +209,9 @@
         </form>
 
         <span class="no-access">
-          <a href="lien-he.html">Bạn không truy cập được vào tài khoản?</a>
+          <a href="#" onclick="goToLogin(); return false;">Quên mật khẩu?</a>
+          &nbsp;·&nbsp;
+          <a href="lien-he.html">Cần hỗ trợ khác? Liên hệ chúng tôi</a>
         </span>
 
         <div class="form-footer-links">
