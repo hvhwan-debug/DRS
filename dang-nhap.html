@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập - Mạng Lưới Tri Thức Việt Nam</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --blue-grad-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --blue-grad-btn-hover: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --bg-page: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; overflow-x: hidden; min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark); background-color: var(--bg-page); line-height: 1.6;
+    }
+
+    .login-wrap {
+      min-height: 100vh; display: flex; flex-wrap: wrap;
+    }
+
+    /* Cột trái: thương hiệu */
+    .brand-panel {
+      flex: 1 1 45%; min-width: 340px; min-height: 100vh;
+      padding: 3rem 3.5rem; display: flex; flex-direction: column; justify-content: space-between;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 45%, #0f172a 100%);
+      color: #ffffff; position: relative; overflow: hidden;
+    }
+    .brand-panel-top { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-logo-icon {
+      width: 44px; height: 44px; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-logo-icon svg { width: 24px; height: 24px; stroke: #0284c7; }
+    .brand-panel-name { display: flex; flex-direction: column; line-height: 1.3; }
+    .brand-panel-name strong { font-size: 1.15rem; font-weight: 800; color: #fff; }
+    .brand-panel-name span { font-size: 0.7rem; font-weight: 600; color: #bae6fd; letter-spacing: 0.4px; }
+
+    .brand-panel-badge {
+      display: inline-block; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px; padding: 0.4rem 1.1rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.4px;
+      margin-bottom: 1.3rem;
+    }
+    .brand-panel-title { font-size: 2.2rem; font-weight: 900; line-height: 1.25; letter-spacing: -0.5px; margin-bottom: 1rem; }
+    .brand-panel-desc { font-size: 1rem; line-height: 1.75; color: #e0f2fe; max-width: 420px; }
+    .brand-panel-foot { font-size: 0.82rem; color: #bae6fd; }
+
+    /* Cột phải: form */
+    .form-panel {
+      flex: 1 1 55%; min-width: 320px; display: flex; flex-direction: column; justify-content: center;
+      padding: 3rem 4.5rem; position: relative;
+    }
+    .form-inner { max-width: 400px; width: 100%; }
+    .form-eyebrow { font-size: 0.8rem; font-weight: 700; color: #64748b; letter-spacing: 0.3px; margin-bottom: 0.5rem; }
+    .form-title { font-size: 1.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
+    .form-sub { font-size: 0.95rem; color: #64748b; margin-bottom: 2rem; }
+
+    .form-field label { display: block; font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem; }
+    .form-field input {
+      width: 100%; border: none; border-bottom: 2px solid #cbd5e1; padding: 0.65rem 0.1rem;
+      font-size: 1rem; color: #0f172a; background: transparent; font-family: inherit; margin-bottom: 1.3rem;
+      transition: border-color 0.2s;
+    }
+    .form-field input:focus { outline: none; border-bottom-color: #0284c7; }
+
+    .signup-link { display: block; margin-bottom: 2rem; font-size: 0.92rem; }
+    .signup-link a { color: #0284c7; font-weight: 600; text-decoration: none; }
+    .signup-link a:hover { text-decoration: underline; }
+
+    .btn-continue {
+      width: 100%; background: var(--blue-grad-btn); color: #fff; border: none; padding: 0.9rem 1.4rem;
+      border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+    }
+    .btn-continue:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
+
+    .no-access { display: block; text-align: center; margin-top: 1.5rem; font-size: 0.88rem; }
+    .no-access a { color: #64748b; text-decoration: none; }
+    .no-access a:hover { text-decoration: underline; }
+
+    .form-footer-links {
+      position: absolute; bottom: 2.2rem; right: 4.5rem; display: flex; gap: 1.5rem;
+      font-size: 0.82rem;
+    }
+    .form-footer-links a { color: #94a3b8; text-decoration: none; }
+    .form-footer-links a:hover { text-decoration: underline; }
+
+    .back-home { position: absolute; top: 2rem; right: 2.5rem; font-size: 0.88rem; }
+    .back-home a { color: #64748b; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .back-home a:hover { color: #0284c7; }
+
+    @media (max-width: 900px) {
+      .brand-panel { min-height: auto; padding: 2.2rem 1.8rem; }
+      .brand-panel-title { font-size: 1.7rem; }
+      .form-panel { padding: 2.5rem 1.8rem 4.5rem; }
+      .form-footer-links { position: static; margin-top: 2.5rem; justify-content: center; }
+      .back-home { position: static; text-align: right; margin-bottom: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrap">
+
+    <!-- Cột trái: thương hiệu -->
+    <div class="brand-panel">
+      <a href="index.html" class="brand-panel-top">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="brand-panel-name">
+          <strong>Mạng Lưới Tri Thức Việt Nam</strong>
+          <span>WVN MEMBERS</span>
+        </div>
+      </a>
+
+      <div>
+        <div class="brand-panel-badge">KHU VỰC THÀNH VIÊN</div>
+        <h1 class="brand-panel-title">Đồng hành cùng chúng tôi vì giáo dục công bằng</h1>
+        <p class="brand-panel-desc">Đăng nhập để theo dõi hoạt động đã tham gia, lịch sử đóng góp và nhận thông tin mới nhất từ Mạng Lưới Tri Thức Việt Nam.</p>
+      </div>
+
+      <div class="brand-panel-foot">&copy; 2026 Mạng Lưới Tri Thức Việt Nam</div>
+    </div>
+
+    <!-- Cột phải: form -->
+    <div class="form-panel">
+      <div class="back-home">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Về trang chủ</a>
+      </div>
+
+      <div class="form-inner">
+        <div class="form-eyebrow">WVN MEMBERS</div>
+        <h2 class="form-title">Đăng Nhập</h2>
+        <p class="form-sub">Đăng nhập để truy nhập khu vực thành viên WVN</p>
+
+        <form id="loginForm">
+          <div class="form-field">
+            <label for="email">Địa chỉ email</label>
+            <input id="email" name="email" type="email" placeholder="ban@email.com" autocomplete="email">
+          </div>
+
+          <span class="signup-link">
+            <a href="#" onclick="goToLogin(); return false;">Bạn chưa có tài khoản? Hãy tạo tài khoản</a>
+          </span>
+
+          <button type="submit" class="btn-continue">Tiếp Theo</button>
+        </form>
+
+        <span class="no-access">
+          <a href="lien-he.html">Bạn không truy cập được vào tài khoản?</a>
+        </span>
+      </div>
+
+      <div class="form-footer-links">
+        <a href="chinh-sach-bao-mat.html">Điều Khoản Sử Dụng</a>
+        <a href="chinh-sach-bao-mat.html">Chính Sách Bảo Mật</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Trang này chỉ là "màn hình chờ" mang đúng thương hiệu WVN.
+    // Việc xác thực thật (nhập mật khẩu / tạo tài khoản / mã OTP) diễn ra
+    // trên trang bảo mật của Microsoft Entra External ID, đã được tùy chỉnh
+    // logo, màu sắc và footer riêng cho WVN trong Company Branding.
+    function goToLogin() {
+      const email = document.getElementById('email').value.trim();
+      let url = '/.auth/login/aadb2c?post_login_redirect_uri=' + encodeURIComponent('/thanh-vien/');
+      if (email) {
+        url += '&login_hint=' + encodeURIComponent(email);
+      }
+      window.location.href = url;
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      goToLogin();
+    });
+  </script>
+
+</body>
+</html>
