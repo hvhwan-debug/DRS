@@ -10,6 +10,16 @@ const FORM_TITLES = {
   newsletter: "Đăng ký nhận bản tin mới"
 };
 
+// ===== Nội dung email cảm ơn/xác nhận gửi lại cho chính người gửi form =====
+const AUTOREPLY_INTRO = {
+  contact: "Cảm ơn bạn đã liên hệ với Mạng Lưới Tri Thức Việt Nam. Chúng tôi đã nhận được tin nhắn của bạn và đội ngũ sẽ phản hồi trong vòng 1-2 ngày làm việc.",
+  volunteer: "Cảm ơn bạn đã đăng ký trở thành tình nguyện viên. Chúng tôi đã nhận được thông tin đăng ký và đội ngũ điều phối sẽ liên hệ với bạn trong 3-5 ngày tới.",
+  item: "Cảm ơn bạn đã đăng ký gây quỹ bằng hiện vật. Chúng tôi đã nhận được thông tin và sẽ liên hệ để xác nhận, hướng dẫn cách gửi hiện vật sớm nhất.",
+  donor: "Cảm ơn bạn đã quan tâm trở thành nhà tài trợ. Chúng tôi đã nhận được thông tin đăng ký và đội ngũ sẽ liên hệ trong vòng 48 giờ để hướng dẫn hoàn tất tài trợ.",
+  support: "Cảm ơn bạn đã tin tưởng chia sẻ. Chúng tôi đã nhận được thông tin và đội ngũ chương trình sẽ liên hệ để tìm hiểu, hỗ trợ trong thời gian sớm nhất.",
+  newsletter: "Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi đã ghi nhận email của bạn và sẽ gửi những tin tức, hoạt động mới nhất từ Mạng Lưới Tri Thức Việt Nam."
+};
+
 // ===== Nhãn tiếng Việt cho từng trường dữ liệu (áp dụng cho mọi form) =====
 const FIELD_LABELS = {
   fullname: "Họ và tên",
@@ -118,6 +128,63 @@ function buildEmailHtml(title, rowsHtml) {
 </html>`;
 }
 
+function buildAutoReplyHtml(recipientName, introMessage) {
+  const greeting = recipientName ? `Xin chào <strong>${escapeHtml(recipientName)}</strong>,` : "Xin chào,";
+  return `<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 28px rgba(15,23,42,0.10);">
+
+          <tr>
+            <td style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0284c7 100%);padding:28px 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+                <td style="vertical-align:middle;">
+                  <div style="width:38px;height:38px;background:rgba(255,255,255,0.15);border-radius:10px;display:inline-block;text-align:center;line-height:38px;font-size:18px;">📖</div>
+                </td>
+                <td style="padding-left:12px;vertical-align:middle;">
+                  <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;">Mạng Lưới Tri Thức Việt Nam</div>
+                  <div style="color:#bfdbfe;font-size:11px;font-weight:600;letter-spacing:0.2px;">WISDOM VIETNAM NETWORK | DR SOLUTIONS</div>
+                </td>
+              </tr></table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:32px 32px 8px;">
+              <span style="display:inline-block;background:#f0fdf4;color:#166534;font-size:11px;font-weight:700;letter-spacing:0.4px;padding:5px 12px;border-radius:999px;">✓ ĐÃ NHẬN ĐƯỢC THÔNG TIN</span>
+              <h1 style="font-size:20px;line-height:1.35;color:#0f172a;margin:16px 0 14px;font-weight:800;">Chúng tôi đã nhận được thông tin của bạn</h1>
+              <p style="font-size:14px;color:#334155;margin:0 0 12px;line-height:1.7;">${greeting}</p>
+              <p style="font-size:14px;color:#334155;margin:0 0 22px;line-height:1.7;">${escapeHtml(introMessage)}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:0 32px 30px;">
+              <a href="https://wvn.vn" style="display:inline-block;background:linear-gradient(135deg,#0284c7 0%,#2563eb 100%);color:#ffffff;text-decoration:none;font-weight:700;font-size:13px;padding:11px 22px;border-radius:8px;">Xem thêm về Mạng Lưới Tri Thức Việt Nam →</a>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background:#f8fafc;padding:18px 32px;border-top:1px solid #e2e8f0;">
+              <div style="font-size:11px;color:#94a3b8;line-height:1.6;">
+                Đây là email tự động, vui lòng không trả lời trực tiếp email này. Cần hỗ trợ gấp? Liên hệ <a href="mailto:hotro@wvn.vn" style="color:#0284c7;">hotro@wvn.vn</a>.<br>
+                Doanh nghiệp xã hội phi lợi nhuận đồng hành vì cơ hội học tập công bằng cho trẻ em vùng cao.
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 module.exports = async function (context, req) {
   context.res = {
     headers: { "Content-Type": "application/json" }
@@ -147,25 +214,48 @@ module.exports = async function (context, req) {
 
   const title = FORM_TITLES[formType] || "Thông báo mới từ website";
   const rowsHtml = buildRowsHtml(data);
-  const html = buildEmailHtml(title, rowsHtml);
+  const adminHtml = buildEmailHtml(title, rowsHtml);
 
   sgMail.setApiKey(apiKey);
 
-  const msg = {
+  const senderName = data.fullname || data.fullName || data.name || "";
+  const senderEmail = (data.email || "").trim();
+
+  const adminMsg = {
     to: toEmail,
     from: { email: fromEmail, name: "Website Mạng Lưới Tri Thức Việt Nam" },
-    replyTo: data.email || undefined,
+    replyTo: senderEmail || undefined,
     subject: `[WVN Website] ${title}`,
-    html
+    html: adminHtml
   };
 
   try {
-    await sgMail.send(msg);
-    context.res.status = 200;
-    context.res.body = { success: true };
+    // Email báo cho admin — bắt buộc phải thành công, nếu lỗi thì báo lỗi cho người dùng
+    await sgMail.send(adminMsg);
   } catch (err) {
-    context.log.error("Gửi email SendGrid thất bại:", err?.response?.body || err.message);
+    context.log.error("Gửi email thông báo admin thất bại:", err?.response?.body || err.message);
     context.res.status = 502;
     context.res.body = { success: false, message: "Gửi email thất bại, vui lòng thử lại sau." };
+    return;
   }
+
+  // Email cảm ơn/xác nhận gửi lại cho chính người gửi (best-effort — không chặn phản hồi thành công nếu lỗi)
+  if (senderEmail) {
+    try {
+      const introMessage = AUTOREPLY_INTRO[formType] || "Chúng tôi đã nhận được thông tin bạn gửi và đang xử lý. Đội ngũ sẽ phản hồi sớm nhất có thể.";
+      const autoReplyHtml = buildAutoReplyHtml(senderName, introMessage);
+      await sgMail.send({
+        to: senderEmail,
+        from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
+        subject: "Đã nhận được thông tin của bạn - Mạng Lưới Tri Thức Việt Nam",
+        html: autoReplyHtml
+      });
+    } catch (err) {
+      context.log.error("Gửi email cảm ơn cho người gửi thất bại:", err?.response?.body || err.message);
+      // Không return lỗi ở đây — người dùng vẫn nên thấy "gửi thành công" vì admin đã nhận được.
+    }
+  }
+
+  context.res.status = 200;
+  context.res.body = { success: true };
 };
