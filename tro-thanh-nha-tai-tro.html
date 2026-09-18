@@ -91,7 +91,8 @@
     .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; padding: 0.4rem; }
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
-      #authBtn { white-space: normal; width: 88px; text-align: center; line-height: 1.3; padding: 0.55rem 0.5rem; font-size: 0.85rem; border-radius: 10px; }
+      #authBtn { text-align: center; line-height: 1.3; padding: 0.5rem 0.9rem; font-size: 0.85rem; border-radius: 10px; }
+      .authbtn-line2 { display: block; }
       .nav-links {
         display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
         flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
@@ -389,7 +390,7 @@
         <a href="lien-he.html">Liên Hệ</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
-        <a class="btn btn-donate-glow" id="authBtn" href="ket-noi-ho-tro.html">Kết Nối</a>
+        <a class="btn btn-donate-glow" id="authBtn" href="ket-noi-ho-tro.html">Kết<span class="authbtn-line2"> Nối</span></a>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
         </button>
