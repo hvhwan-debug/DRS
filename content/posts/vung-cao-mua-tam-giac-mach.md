@@ -2,7 +2,7 @@
 title: "Vùng cao mùa tam giác mạch"
 date: "10/2025"
 loai: "tin-tuc"
-image: "images/uploads/vung-cao-mua-tam-giac-mach.png"
+image: "images/tre-em-dong-tam-giac-mach.jpg"
 excerpt: "Mùa tam giác mạch về trên những triền núi vùng cao, mang theo sắc hoa nhẹ nhàng phủ lên những thung lũng và sườn đồi. Những cánh đồng hoa trải dài giữa núi đá, những bản làng thấp thoáng trong sương và hình ảnh người dân địa phương tạo nên một vẻ đẹp rất riêng của vùng cao phía Bắc."
 ---
 

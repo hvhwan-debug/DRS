@@ -2,7 +2,7 @@
 title: "Nắm cơm đến trường – câu chuyện về những bữa ăn giản dị nơi vùng cao"
 date: "02/2026"
 loai: "tin-tuc"
-image: "images/uploads/nam-com-den-truong-cau-chuyen-ve-nhung-bua-an-gian-di-noi-vung-cao.png"
+image: "images/tre-em-di-qua-ruong-bac-thang.jpg"
 excerpt: "Với nhiều học sinh, đến trường mỗi ngày là một điều bình thường. Nhưng ở những bản làng vùng cao, hành trình đến lớp của các em đôi khi bắt đầu từ rất sớm, với con đường xa và một nắm cơm nhỏ được chuẩn bị từ nhà."
 ---
 
