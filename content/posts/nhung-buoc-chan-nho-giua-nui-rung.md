@@ -2,10 +2,10 @@
 title: "Những bước chân nhỏ giữa núi rừng"
 date: "Tháng 09 / 2026"
 description: "Phóng sự ghi lại một buổi sáng theo chân học sinh Ma Lé băng qua 6km đường núi để đến lớp — hành trình mà nhiều em đã đi từ khi còn chưa biết đọc."
-thumbnail: "images/hoc-sinh-vuot-duong-sat-lo.jpg"
+thumbnail: "images/duong-den-truong-dong-van.jpg"
 ---
 
-![Học sinh lội qua đoạn đường đất sạt lở để đến trường](images/hoc-sinh-vuot-duong-sat-lo.jpg)
+![Học sinh lội qua đoạn đường đất sạt lở để đến trường](images/duong-den-truong-dong-van.jpg)
 
 5 giờ 40 phút sáng, khi sương còn chưa tan hết trên đỉnh núi đá phía sau bản, Sùng Thị Mỷ, học sinh lớp 4 điểm trường Ma Lé, đã dậy nhóm bếp nấu cơm cho em trai rồi xỏ đôi dép tổ ong đã mòn gót, khoác chiếc túi vải đựng hai quyển vở và một chiếc bút chì gọt dở, bắt đầu đi bộ đến trường.
 

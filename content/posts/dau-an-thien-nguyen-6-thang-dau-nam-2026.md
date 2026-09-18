@@ -2,10 +2,10 @@
 title: "Dấu ấn thiện nguyện 6 tháng đầu năm 2026: Nhìn lại chặng đường từ khảo sát đến hành động"
 date: "Tháng 07 / 2026"
 description: "Từ chuyến khảo sát 5 ngày tại Đồng Văn đến 15 suất học bổng, 1 mái nhà lớp học được sửa và 1 tủ sách cộng đồng mới — điểm lại những gì Mạng Lưới Tri Thức Việt Nam đã làm được trong 6 tháng đầu năm 2026."
-thumbnail: "images/dau-an-6-thang-dau-nam.jpg"
+thumbnail: "images/nhom-tre-em-vung-cao-ngoi-cung-nhau.jpg"
 ---
 
-![Đoàn thiện nguyện cùng học sinh tại một trong các điểm trường được hỗ trợ](images/dau-an-6-thang-dau-nam.jpg)
+![Đoàn thiện nguyện cùng học sinh tại một trong các điểm trường được hỗ trợ](images/nhom-tre-em-vung-cao-ngoi-cung-nhau.jpg)
 
 Nửa đầu năm 2026 là giai đoạn đặt nền móng của Mạng Lưới Tri Thức Việt Nam — từ một chuyến khảo sát thực địa ban đầu, đến những chương trình cụ thể đầu tiên tại 3 điểm trường Sà Phìn A, Lũng Táo và Ma Lé (huyện Đồng Văn, Hà Giang). Bài viết này tổng hợp lại toàn bộ những gì đã diễn ra từ tháng 2 đến tháng 6/2026, kèm số liệu cộng dồn.
 
