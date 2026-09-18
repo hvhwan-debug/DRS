@@ -1045,18 +1045,16 @@
       newsletterAlert.style.display = "none";
 
       const formData = new FormData(newsletterForm);
-      const recipientEmail = "hotro@wvn.vn";
+      const payload = { formType: 'newsletter', data: Object.fromEntries(formData.entries()) };
 
-      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+      fetch('/api/send-notification', {
         method: "POST",
-        headers: { "Accept": "application/json" },
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       })
         .then(async res => {
-          let data = null;
-          try { data = await res.json(); } catch (e) { /* phản hồi không phải JSON, vẫn xét theo res.ok */ }
-          const isSuccess = res.ok && (!data || data.success === "true" || data.success === true || data.success === undefined);
-          if (!isSuccess) throw new Error("Đăng ký không thành công");
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.success) throw new Error(data.message || "Đăng ký không thành công");
         })
         .then(() => {
           newsletterAlert.className = "newsletter-alert newsletter-alert-success";

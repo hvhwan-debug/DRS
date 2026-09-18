@@ -671,12 +671,11 @@
       newsletterModalAlert.style.display = "none";
 
       const formData = new FormData(newsletterModalForm);
-      const recipientEmail = "hotro@wvn.vn";
-
-      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+      const payload = { formType: 'newsletter', data: Object.fromEntries(formData.entries()) };
+      fetch('/api/send-notification', {
         method: "POST",
-        headers: { "Accept": "application/json" },
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       })
         .then(async res => {
           let data = null;

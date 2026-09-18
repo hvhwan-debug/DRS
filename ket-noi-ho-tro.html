@@ -649,8 +649,9 @@
             <label for="supDetail">Mô tả hoàn cảnh và nhu cầu cụ thể <span class="required">*</span></label>
             <textarea id="supDetail" name="detail" required placeholder="Vui lòng chia sẻ ngắn gọn về hoàn cảnh hiện tại và điều bạn đang cần được hỗ trợ..."></textarea>
           </div>
-          <button type="submit" class="support-cta-btn">GỬI THÔNG TIN KẾT NỐI</button>
+          <button type="submit" class="support-cta-btn" id="supportSubmitBtn">GỬI THÔNG TIN KẾT NỐI</button>
           <p class="support-hero-form-note">Thông tin của bạn được bảo mật và chỉ dùng để đội ngũ chương trình liên hệ hỗ trợ.</p>
+          <div class="support-form-alert" id="supportFormAlert" style="display:none; margin-top:0.8rem; font-size:0.85rem; text-align:center;"></div>
         </form>
 
         <div class="support-success" id="supportSuccess">
@@ -751,9 +752,41 @@
 
     function handleSupportSubmit(e) {
       e.preventDefault();
-      document.getElementById('supportForm').style.display = 'none';
-      document.getElementById('supportSuccess').style.display = 'block';
-      // TODO: nối vào hệ thống lưu trữ / email nội bộ khi có API xử lý form.
+      const form = document.getElementById('supportForm');
+      const submitBtn = document.getElementById('supportSubmitBtn');
+      const alertBox = document.getElementById('supportFormAlert');
+      const originalHtml = submitBtn.innerHTML;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+      alertBox.style.display = 'none';
+
+      const formData = new FormData(form);
+      const payload = { formType: 'support', data: Object.fromEntries(formData.entries()) };
+
+      fetch('/api/send-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(async res => {
+          const resData = await res.json().catch(() => ({}));
+          if (!res.ok || !resData.success) throw new Error(resData.message || 'failed');
+        })
+        .then(() => {
+          form.style.display = 'none';
+          document.getElementById('supportSuccess').style.display = 'block';
+        })
+        .catch(() => {
+          alertBox.style.display = 'block';
+          alertBox.style.color = '#dc2626';
+          alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email hotro@wvn.vn.';
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalHtml;
+        });
+
       return false;
     }
   </script>

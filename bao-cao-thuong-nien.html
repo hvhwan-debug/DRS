@@ -682,10 +682,11 @@
       newsletterModalAlert.className = "newsletter-modal-alert";
       newsletterModalAlert.style.display = "none";
       const formData = new FormData(newsletterModalForm);
-      fetch("https://formsubmit.co/ajax/hotro@wvn.vn", {
+      const payload = { formType: 'newsletter', data: Object.fromEntries(formData.entries()) };
+      fetch('/api/send-notification', {
         method: "POST",
-        headers: { "Accept": "application/json" },
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       })
         .then(async res => {
           let data = null;

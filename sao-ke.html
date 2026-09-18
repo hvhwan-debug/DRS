@@ -551,7 +551,7 @@
 
     // ==============================================================
     // Popup "Đăng Ký Nhận Bản Tin" — mở form (Họ tên + Email), gửi bằng
-    // AJAX qua formsubmit.co (cùng dịch vụ đang dùng ở form Liên Hệ / index.html).
+    // Gửi thông báo qua API nội bộ (Twilio SendGrid) — cùng cơ chế dùng chung toàn site.
     // ==============================================================
     function openNewsletterModal() {
       document.getElementById('newsletterModal').style.display = 'flex';
@@ -574,12 +574,11 @@
       newsletterModalAlert.style.display = "none";
 
       const formData = new FormData(newsletterModalForm);
-      const recipientEmail = "hotro@wvn.vn";
-
-      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+      const payload = { formType: 'newsletter', data: Object.fromEntries(formData.entries()) };
+      fetch('/api/send-notification', {
         method: "POST",
-        headers: { "Accept": "application/json" },
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       })
         .then(async res => {
           let data = null;
