@@ -684,6 +684,70 @@
 
   <script>
 
+    const GALLERY_IMAGES = [
+      { src: "images/co-to-quoc-vung-cao-1.jpg", caption: "Học sinh vùng cao rước cờ Tổ quốc trong ngày hội" },
+      { src: "images/tre-em-vung-cao-ha-giang.jpg", caption: "Trẻ em vùng cao Hà Giang trong trang phục mùa đông" },
+      { src: "images/duong-den-truong-dong-van.jpg", caption: "Điểm trường nằm giữa núi đá tại Đồng Văn" },
+      { src: "images/sach-giao-khoa-hoc-sinh.jpg", caption: "Học sinh đọc lại sách giáo khoa tại điểm trường" },
+      { src: "images/tap-huan-tinh-nguyen-vien.jpg", caption: "Buổi tập huấn kỹ năng giảng dạy cho tình nguyện viên" },
+      { src: "images/phat-qua-tre-em-vung-cao.jpg", caption: "Tình nguyện viên phát quà cho học sinh tại điểm trường" }
+    ];
+
+    let galleryShuffled = [];
+    let galleryCurrentIndex = 0;
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function renderGalleryGrid() {
+      const grid = document.getElementById("galleryGrid");
+      grid.innerHTML = GALLERY_IMAGES.map((img, idx) => `
+        <div class="gallery-thumb" onclick="openGalleryModal(${idx})">
+          <img src="${img.src}" alt="${img.caption}" loading="lazy">
+        </div>
+      `).join("");
+    }
+
+    function openGalleryModal(startIndex) {
+      const rest = GALLERY_IMAGES.filter((_, i) => i !== startIndex);
+      galleryShuffled = [GALLERY_IMAGES[startIndex], ...shuffleArray(rest)];
+      galleryCurrentIndex = 0;
+      renderGalleryModalImage();
+      document.getElementById("galleryModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function renderGalleryModalImage() {
+      const img = galleryShuffled[galleryCurrentIndex];
+      const modalImg = document.getElementById("galleryModalImg");
+      modalImg.src = img.src;
+      modalImg.alt = img.caption;
+      modalImg.classList.remove("zoomed");
+      document.querySelector(".gallery-modal-caption").textContent = img.caption;
+    }
+
+    function showGalleryImage(direction) {
+      galleryCurrentIndex = (galleryCurrentIndex + direction + galleryShuffled.length) % galleryShuffled.length;
+      renderGalleryModalImage();
+    }
+
+    function closeGalleryModal() {
+      document.getElementById("galleryModal").classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    document.getElementById("galleryModal").addEventListener("click", function (e) {
+      if (e.target === this) closeGalleryModal();
+    });
+
+    renderGalleryGrid();
+
     function toggleNavDropdown(btn) {
       const dropdown = btn.closest('.nav-dropdown');
       const wasOpen = dropdown.classList.contains('open');
