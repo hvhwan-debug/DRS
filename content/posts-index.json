@@ -1,13 +1,5 @@
 [
   {
-    "slug": "thong-bao-xac-nhan-ten-mien-wvnvn-thuoc-so-huu-cua-dr-solutions",
-    "title": "Thông Báo Xác Nhận Quyền Sở Hữu Tên Miền WVN.VN",
-    "date": "14/09/2026",
-    "image": "images/ra-mat-to-chuc.jpg",
-    "loai": "tin-tuc",
-    "excerpt": "CÔNG TY TNHH DR SOLUTIONS công khai thông báo và cung cấp văn bản xác nhận quyền sở hữu hợp pháp tên miền WVN.VN, kèm hướng dẫn kiểm tra chữ ký số qua hệ thống chính thức của NEAC."
-  },
-  {
     "slug": "7-ky-nang-tre-em-can-co-truoc-khi-buoc-vao-tuong-lai",
     "title": "7 kỹ năng trẻ em cần có trước khi bước vào tương lai",
     "date": "07/07/2026",
@@ -494,6 +486,14 @@
     "image": "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80",
     "loai": "",
     "excerpt": "Ghi nhận những khoảnh khắc xúc động và nụ cười rạng rỡ của các em nhỏ vùng cao Lào Cai trong chuyến thăm, trao tặng học liệu và áo ấm tháng 05/2026."
+  },
+  {
+    "slug": "thong-bao-xac-nhan-ten-mien-wvnvn-thuoc-so-huu-cua-dr-solutions",
+    "title": "Thông Báo Xác Nhận Quyền Sở Hữu Tên Miền WVN.VN",
+    "date": "14/09/2026",
+    "image": "images/ra-mat-to-chuc.jpg",
+    "loai": "tin-tuc",
+    "excerpt": "CÔNG TY TNHH DR SOLUTIONS công khai thông báo và cung cấp văn bản xác nhận quyền sở hữu hợp pháp tên miền WVN.VN, kèm hướng dẫn kiểm tra chữ ký số qua hệ thống chính thức của NEAC."
   },
   {
     "slug": "thue-gia-su-cho-tre-khi-nao-can-va-khi-nao-chua-can",
