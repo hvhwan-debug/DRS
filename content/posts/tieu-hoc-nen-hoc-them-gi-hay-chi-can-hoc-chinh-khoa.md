@@ -40,8 +40,6 @@ Nếu chương trình chính khóa giúp trẻ xây dựng nền tảng, thì ho
 Học chính khóa để xây nền tảng; học thêm để mở rộng năng lực.
 
 Nhưng “mở rộng” không có nghĩa là học trước thật nhiều chương trình lớp trên.
-![Ảnh minh họa](images/uploads/tieu-hoc-nen-hoc-them-gi-hay-chi-can-hoc-chinh-khoa-anh-1.png)
-
 
 3. Ngoại ngữ có phải lựa chọn đáng ưu tiên?
 

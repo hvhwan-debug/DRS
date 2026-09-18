@@ -34,8 +34,6 @@ Một học sinh có thể nhớ rất nhiều kiến thức nhưng vẫn gặp 
 Một học sinh biết công thức là một chuyện. Một học sinh hiểu tại sao công thức đó tồn tại, biết khi nào nên sử dụng và có thể áp dụng nó để giải quyết một vấn đề thực tế lại là một cấp độ năng lực khác.
 
 ---
-![Ảnh minh họa](images/uploads/giao-duc-quoc-te-va-viet-nam-khac-biet-nam-o-dau-anh-1.png)
-
 
 ## 2. Khác biệt về phương pháp học
 

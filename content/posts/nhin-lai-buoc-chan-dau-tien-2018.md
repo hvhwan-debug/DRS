@@ -1,7 +1,7 @@
 ---
 title: "Nhìn Lại Những Bước Chân Đầu Tiên: Hành Trình Thiện Nguyện Năm 2018"
 date: "Tháng 3/2018"
-image: "images/uploads/nhin-lai-buoc-chan-dau-tien-banner.png"
+image: "images/xe-may-lun-bun-duong-nui.jpg"
 excerpt: "Hành trình thiện nguyện năm 2018 là những bước chân đầu tiên đặt nền móng cho chương trình giáo dục cộng đồng, khi mọi thứ còn giản đơn nhưng đầy nhiệt huyết."
 ---
 
@@ -9,7 +9,7 @@ Trước khi có tủ sách lưu động, trước khi có những chuyến xe c
 
 Không có kế hoạch dài hạn, không có quy trình bài bản như bây giờ. Chỉ có một nhóm người trẻ mang theo một ít sách vở, một ít đồ dùng học tập, và rất nhiều nhiệt huyết.
 
-![Nhìn lại bước chân đầu tiên - Thiện nguyện vì học tập](images/uploads/nhin-lai-buoc-chan-dau-tien-banner.png)
+![Nhìn lại bước chân đầu tiên - Thiện nguyện vì học tập](images/xe-may-lun-bun-duong-nui.jpg)
 
 ## Những chuyến đi đầu tiên
 

@@ -129,8 +129,6 @@ Kết luận
 
 AI có thể giúp nhân viên làm việc nhanh hơn, nhưng kiến thức, kinh nghiệm, tư duy, khả năng phán đoán và trách nhiệm của con người vẫn là nền tảng.
 
-![Ảnh minh họa](images/uploads/dao-tao-noi-bo-doanh-nghiep-trong-thoi-dai-ai-tu-truyen-dat-kien-thuc-den-phat-trien-nang-luc-anh-1.png)
-
 Doanh nghiệp nào xây dựng được văn hóa học tập liên tục, biết kết hợp đào tạo chuyên môn với năng lực sử dụng AI và tạo điều kiện để nhân viên ứng dụng kiến thức ngay vào công việc sẽ có lợi thế lớn hơn trong quá trình chuyển đổi.
 
 Trong thời đại AI, doanh nghiệp không chỉ cần những người biết sử dụng công nghệ. Doanh nghiệp cần những người biết dùng công nghệ để tạo ra kết quả tốt hơn.
