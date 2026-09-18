@@ -2,7 +2,7 @@
 title: "Tiểu học: Nên học thêm gì hay chỉ cần học chính khóa?"
 date: "10/2025"
 loai: "tin-tuc"
-image: "images/uploads/tieu-hoc-nen-hoc-them-gi-hay-chi-can-hoc-chinh-khoa.png"
+image: "images/gia-sach-trang-tri.jpg"
 excerpt: "Học sinh tiểu học có thực sự cần học thêm? Đây là câu hỏi khiến nhiều phụ huynh băn khoăn. Khi chương trình học ngày càng đa dạng và yêu cầu về ngoại ngữ, công nghệ, kỹ năng ngày càng cao, nhiều gia đình lựa chọn cho con học thêm ngay từ những năm đầu tiểu học."
 ---
 

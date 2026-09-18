@@ -2,7 +2,7 @@
 title: "Giáo dục quốc tế và Việt Nam: Khác biệt nằm ở đâu?"
 date: "03/2026"
 loai: "tin-tuc"
-image: "images/uploads/giao-duc-quoc-te-va-viet-nam-khac-biet-nam-o-dau.png"
+image: "images/tu-sach-son-la.jpg"
 excerpt: "Giáo dục là một trong những yếu tố quyết định cách một thế hệ nhìn nhận thế giới, phát triển năng lực và tạo ra giá trị cho xã hội. Việt Nam đã đạt được nhiều thành tựu đáng kể trong việc mở rộng cơ hội học tập và nâng cao chất lượng giáo dục. Tuy nhiên, khi đặt giáo dục Việt Nam trong bối cảnh quốc tế, một câu hỏi quan trọng xuất hiện: chúng ta đang đào tạo học sinh để làm tốt những gì đã có, hay để thích ứng với những điều chưa xuất hiện?"
 ---
 

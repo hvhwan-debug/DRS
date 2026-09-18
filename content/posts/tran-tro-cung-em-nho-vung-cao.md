@@ -2,7 +2,7 @@
 title: "Trăn trở cùng em nhỏ vùng cao"
 date: "07/2026"
 loai: "tin-tuc"
-image: "images/uploads/tran-tro-cung-em-nho-vung-cao.png"
+image: "images/em-be-vung-cao-mang-khoai.jpg"
 excerpt: "Có những đứa trẻ lớn lên với ước mơ rất giản dị: được đến trường, có một cuốn sách mới, có đủ đồ dùng học tập và được tiếp tục học như bao bạn bè đồng trang lứa."
 ---
 

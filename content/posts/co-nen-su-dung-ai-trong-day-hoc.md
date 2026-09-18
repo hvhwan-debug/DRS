@@ -2,7 +2,7 @@
 title: "Có nên sử dụng AI trong dạy học?"
 date: "03/2024"
 loai: "tin-tuc"
-image: "images/uploads/co-nen-su-dung-ai-trong-day-hoc.png"
+image: "images/hoi-thao-giao-duc-vung-cao-2.jpg"
 excerpt: "AI đang thay đổi nhiều lĩnh vực của đời sống, và giáo dục cũng không nằm ngoài sự thay đổi đó. Trong lớp học, AI có thể hỗ trợ giáo viên chuẩn bị bài giảng, tạo tài liệu, đưa ra bài tập phù hợp với từng học sinh và giúp người học tiếp cận kiến thức nhanh hơn."
 ---
 

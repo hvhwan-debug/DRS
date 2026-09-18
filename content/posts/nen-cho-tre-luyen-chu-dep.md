@@ -2,7 +2,7 @@
 title: "Nên cho trẻ luyện chữ đẹp"
 date: "05/2025"
 loai: "tin-tuc"
-image: "images/uploads/nen-cho-tre-luyen-chu-dep.png"
+image: "images/doc-sach-cung-em.jpg"
 excerpt: "Trong quá trình học tập, chữ viết là một trong những kỹ năng cơ bản mà trẻ cần được rèn luyện. Vì vậy, cho trẻ luyện chữ đẹp từ sớm là điều cần thiết, không chỉ để tạo ra nét chữ rõ ràng, ngay ngắn mà còn giúp trẻ hình thành tính kiên trì và cẩn thận.
 
 Trước hết, luyện chữ giúp trẻ hình thành kỹ năng viết đúng và rõ ràng. Khi được hướng dẫn cách cầm bút, ngồi đúng tư thế và viết từng nét một cách chính xác, trẻ sẽ dần tạo được thói quen viết khoa học. Một bài viết sạch đẹp cũng giúp người đọc dễ dàng hiểu được nội dung mà trẻ muốn truyền đạt.

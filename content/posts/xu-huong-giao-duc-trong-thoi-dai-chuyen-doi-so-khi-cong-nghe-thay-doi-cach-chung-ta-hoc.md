@@ -2,7 +2,7 @@
 title: "Xu hướng giáo dục trong thời đại chuyển đổi số: Khi công nghệ thay đổi cách chúng ta học"
 date: "08/2024"
 loai: "tin-tuc"
-image: "images/uploads/xu-huong-giao-duc-trong-thoi-dai-chuyen-doi-so-khi-cong-nghe-thay-doi-cach-chung-ta-hoc.png"
+image: "images/hoat-dong-cung-tre-em.jpg"
 excerpt: "Xu hướng giáo dục trong thời đại chuyển đổi số không đơn giản là đưa máy tính, Internet hay AI vào trường học. Bản chất của sự thay đổi nằm ở việc tái định nghĩa cách con người học tập và phát triển năng lực."
 ---
 
