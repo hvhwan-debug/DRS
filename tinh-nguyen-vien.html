@@ -277,6 +277,20 @@
     .newsletter-modal-alert-success { display: flex; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
     .newsletter-modal-alert-error { display: flex; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
   </style>
+
+  <!-- ============================================================
+       Google Ads Conversion Tracking (Google tag)
+       CẦN THAY: AW-XXXXXXXXXX bằng Conversion ID thật lấy từ
+       Google Ads > Công cụ và cài đặt > Chuyển đổi > (mở hành động
+       chuyển đổi) > Thẻ Google > "Cài đặt thẻ theo cách thủ công".
+       ============================================================ -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-XXXXXXXXXX');
+  </script>
 </head>
 <body>
 
@@ -552,6 +566,10 @@
         .then(() => {
           volFormAlert.className = 'vol-form-alert vol-form-alert-success';
           volFormAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn đã đăng ký! Đội ngũ điều phối sẽ liên hệ trong vòng 3-5 ngày.</span>';
+          // Đo lường chuyển đổi Google Ads — CẦN THAY nhãn chuyển đổi thật (xem hướng dẫn ở đầu trang)
+          if (typeof gtag === 'function') {
+            gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXXX/VOLUNTEER_FORM_LABEL' });
+          }
           volunteerForm.reset();
         })
         .catch(() => {

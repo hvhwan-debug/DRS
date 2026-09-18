@@ -380,6 +380,20 @@
       .footer-bottom .footer-bottom-social { order: 2; }
     }
   </style>
+
+  <!-- ============================================================
+       Google Ads Conversion Tracking (Google tag)
+       CẦN THAY: AW-XXXXXXXXXX bằng Conversion ID thật lấy từ
+       Google Ads > Công cụ và cài đặt > Chuyển đổi > (mở hành động
+       chuyển đổi) > Thẻ Google > "Cài đặt thẻ theo cách thủ công".
+       ============================================================ -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-XXXXXXXXXX');
+  </script>
 </head>
 <body>
 
@@ -783,6 +797,10 @@
         .then(() => {
           form.style.display = 'none';
           document.getElementById('supportSuccess').style.display = 'block';
+          // Đo lường chuyển đổi Google Ads — CẦN THAY nhãn chuyển đổi thật (xem hướng dẫn ở đầu trang)
+          if (typeof gtag === 'function') {
+            gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXXX/SUPPORT_FORM_LABEL' });
+          }
         })
         .catch(() => {
           alertBox.style.display = 'block';

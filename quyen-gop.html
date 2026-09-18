@@ -388,6 +388,24 @@
     }
 
   </style>
+
+  <!-- ============================================================
+       Google Ads Conversion Tracking (Google tag)
+       CẦN THAY: AW-XXXXXXXXXX bằng Conversion ID thật lấy từ
+       Google Ads > Công cụ và cài đặt > Chuyển đổi > (mở hành động
+       chuyển đổi) > Thẻ Google > "Cài đặt thẻ theo cách thủ công".
+       ============================================================ -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-XXXXXXXXXX');
+    // Trang Quyên Góp không có form gửi (chuyển khoản qua QR/ngân hàng),
+    // nên tính lượt xem trang này là tín hiệu chuyển đổi.
+    // CẦN THAY nhãn chuyển đổi thật (xem hướng dẫn ở trên).
+    gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXXX/DONATE_PAGE_VIEW_LABEL' });
+  </script>
 </head>
 <body>
 
