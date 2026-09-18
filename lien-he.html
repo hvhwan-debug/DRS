@@ -786,14 +786,10 @@
 
     renderGalleryGrid();
 
-    // Xử lý validate & submit form liên hệ, gửi qua FormSubmit.co (miễn phí, không cần backend).
-    //
-    // *** BẠN CẦN LÀM 2 BƯỚC SAU ĐỂ NHẬN ĐƯỢC EMAIL ***
-    // 1. Thay "email-cua-ban@gmail.com" bên dưới (biến FORM_SUBMIT_EMAIL) bằng email thật của bạn.
-    // 2. Lần đầu tiên có người gửi form thành công, FormSubmit sẽ gửi 1 email xác nhận
-    //    đến địa chỉ đó — bạn bấm "Activate Form" trong email đó thì các lần gửi sau
-    //    mới thực sự về hộp thư của bạn.
-    const FORM_SUBMIT_EMAIL = 'email-cua-ban@gmail.com';
+    // Xử lý validate & submit form liên hệ, gửi qua Azure Function riêng (api/sendContactEmail).
+    // Hàm này sẽ: (1) lưu dữ liệu vào Azure Table Storage, (2) gửi email cảm ơn cho người gửi
+    // và (3) gửi email thông báo cho admin — toàn bộ cấu hình (SendGrid API key, email admin...)
+    // được đặt trong Application Settings của Azure Static Web App, không lộ ra ngoài trình duyệt.
 
     (function () {
       const form = document.getElementById('contactForm');
@@ -852,27 +848,26 @@
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
 
         try {
-          const fsPayload = {
-            Họ_và_tên: payload.name,
-            Email: payload.email,
-            Số_điện_thoại: payload.phone || 'Không cung cấp',
-            Chủ_đề: fields.subject.input.options[fields.subject.input.selectedIndex].text,
-            Nội_dung: payload.message,
-            _subject: `[Liên hệ website] ${fields.subject.input.options[fields.subject.input.selectedIndex].text} - ${payload.name}`,
-            _template: 'table',
-            _captcha: 'false'
+          const apiPayload = {
+            name: payload.name,
+            email: payload.email,
+            phone: payload.phone || '',
+            subject: fields.subject.input.options[fields.subject.input.selectedIndex].text,
+            message: payload.message
           };
 
-          const res = await fetch(`https://formsubmit.co/ajax/${FORM_SUBMIT_EMAIL}`, {
+          const res = await fetch('/api/sendContactEmail', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
+              'Content-Type': 'application/json'
             },
-            body: JSON.stringify(fsPayload)
+            body: JSON.stringify(apiPayload)
           });
 
-          if (!res.ok) throw new Error('FormSubmit trả về lỗi');
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.error || 'Máy chủ trả về lỗi');
+          }
 
           feedback.className = 'form-feedback success';
           feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.';
