@@ -411,7 +411,7 @@
       </nav>
 
       <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn btn-donate-glow" id="authBtn" onclick="window.location.href='dang-nhap.html'">Đăng Nhập</button>
+        <a class="btn btn-donate-glow" id="authBtn" href="ket-noi-ho-tro.html">Kết Nối</a>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -786,10 +786,14 @@
 
     renderGalleryGrid();
 
-    // Xử lý validate & submit form liên hệ, gửi qua Azure Function riêng (api/sendContactEmail).
-    // Hàm này sẽ: (1) lưu dữ liệu vào Azure Table Storage, (2) gửi email cảm ơn cho người gửi
-    // và (3) gửi email thông báo cho admin — toàn bộ cấu hình (SendGrid API key, email admin...)
-    // được đặt trong Application Settings của Azure Static Web App, không lộ ra ngoài trình duyệt.
+    // Xử lý validate & submit form liên hệ, gửi qua FormSubmit.co (miễn phí, không cần backend).
+    //
+    // *** BẠN CẦN LÀM 2 BƯỚC SAU ĐỂ NHẬN ĐƯỢC EMAIL ***
+    // 1. Thay "email-cua-ban@gmail.com" bên dưới (biến FORM_SUBMIT_EMAIL) bằng email thật của bạn.
+    // 2. Lần đầu tiên có người gửi form thành công, FormSubmit sẽ gửi 1 email xác nhận
+    //    đến địa chỉ đó — bạn bấm "Activate Form" trong email đó thì các lần gửi sau
+    //    mới thực sự về hộp thư của bạn.
+    const FORM_SUBMIT_EMAIL = 'email-cua-ban@gmail.com';
 
     (function () {
       const form = document.getElementById('contactForm');
@@ -848,26 +852,27 @@
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
 
         try {
-          const apiPayload = {
-            name: payload.name,
-            email: payload.email,
-            phone: payload.phone || '',
-            subject: fields.subject.input.options[fields.subject.input.selectedIndex].text,
-            message: payload.message
+          const fsPayload = {
+            Họ_và_tên: payload.name,
+            Email: payload.email,
+            Số_điện_thoại: payload.phone || 'Không cung cấp',
+            Chủ_đề: fields.subject.input.options[fields.subject.input.selectedIndex].text,
+            Nội_dung: payload.message,
+            _subject: `[Liên hệ website] ${fields.subject.input.options[fields.subject.input.selectedIndex].text} - ${payload.name}`,
+            _template: 'table',
+            _captcha: 'false'
           };
 
-          const res = await fetch('/api/sendContactEmail', {
+          const res = await fetch(`https://formsubmit.co/ajax/${FORM_SUBMIT_EMAIL}`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
             },
-            body: JSON.stringify(apiPayload)
+            body: JSON.stringify(fsPayload)
           });
 
-          if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.error || 'Máy chủ trả về lỗi');
-          }
+          if (!res.ok) throw new Error('FormSubmit trả về lỗi');
 
           feedback.className = 'form-feedback success';
           feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.';
@@ -882,24 +887,10 @@
         }
       });
     })();
-  
-    async function updateAuthButton() {
-      const authBtn = document.getElementById('authBtn');
-      if (!authBtn) return;
-      try {
-        const res = await fetch('/.auth/me');
-        const payload = await res.json();
-        const clientPrincipal = payload.clientPrincipal;
-        if (clientPrincipal) {
-          authBtn.textContent = clientPrincipal.userDetails || 'Thành viên';
-          authBtn.onclick = () => { window.location.href = '/.auth/logout'; };
-          authBtn.title = 'Bấm để đăng xuất';
-        }
       } catch (e) {
         console.warn('Không kiểm tra được trạng thái đăng nhập', e);
       }
     }
-    updateAuthButton();
 </script>
 </body>
 </html>
