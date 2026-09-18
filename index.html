@@ -337,16 +337,19 @@
     .gallery-modal-caption { color: #e2e8f0; font-size: 0.88rem; margin-top: 1rem; }
 
     .connect-band { background: #eff6ff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4rem 1.5rem; }
-    .connect-band-inner { max-width: 560px; margin: 0 auto; text-align: center; }
+    .connect-band-inner { max-width: 900px; margin: 0 auto; text-align: center; }
 
     .connect-band-inner h3 { font-size: 1.25rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem; }
     .connect-band-inner p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1.3rem; line-height: 1.6; }
 
     .newsletter-form { display: flex; gap: 0.7rem; flex-wrap: wrap; justify-content: center; }
+    .newsletter-form input[type="text"],
     .newsletter-form input[type="email"] {
-      flex: 1; min-width: 200px; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border);
+      flex: 1; min-width: 160px; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border);
       font-size: 0.92rem; font-family: inherit; color: var(--text-dark); background: #fff;
     }
+    .newsletter-form input[type="email"] { min-width: 200px; }
+    .newsletter-form input[type="text"]:focus,
     .newsletter-form input[type="email"]:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); }
     .newsletter-form button {
       background: var(--blue-grad-btn); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700;
@@ -613,6 +616,8 @@
         <input type="hidden" name="_subject" value="Đăng ký nhận bản tin - Website Mạng Lưới Tri Thức Việt Nam">
         <input type="hidden" name="_captcha" value="false">
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="text" name="firstname" id="newsletterFirstname" placeholder="Tên" required>
+        <input type="text" name="lastname" id="newsletterLastname" placeholder="Họ" required>
         <input type="email" name="email" id="newsletterEmail" placeholder="Email của bạn" required>
         <button type="submit" id="newsletterBtn">Đăng Ký</button>
       </form>
