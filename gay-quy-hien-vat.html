@@ -70,7 +70,8 @@
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+      font-family: inherit; font-size: 0.95rem; line-height: 1.3;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
     .btn-donate-glow { position: relative; overflow: hidden; animation: pulseGlow 2.5s infinite ease-in-out; }
@@ -562,16 +563,15 @@
       itemFormAlert.style.display = 'none';
 
       const formData = new FormData(itemForm);
-      fetch('https://formsubmit.co/ajax/hotro@wvn.vn', {
+      const payload = { formType: 'item', data: Object.fromEntries(formData.entries()) };
+      fetch('/api/send-notification', {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       })
         .then(async res => {
-          let data = null;
-          try { data = await res.json(); } catch (e) { }
-          const ok = res.ok && (!data || data.success === 'true' || data.success === true || data.success === undefined);
-          if (!ok) throw new Error('failed');
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.success) throw new Error(data.message || 'failed');
         })
         .then(() => {
           itemFormAlert.className = 'item-form-alert item-form-alert-success';
@@ -689,10 +689,6 @@
           newsletterModalBtn.innerHTML = originalBtnHtml;
         });
     });
-      } catch (e) {
-        console.warn('Không kiểm tra được trạng thái đăng nhập', e);
-      }
-    }
 </script>
 </body>
 </html>

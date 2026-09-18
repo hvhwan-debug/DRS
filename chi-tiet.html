@@ -84,7 +84,8 @@
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+      font-family: inherit; font-size: 0.95rem; line-height: 1.3;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
@@ -686,10 +687,6 @@
       if (e.key === "ArrowRight") showGalleryImage(1);
     });
     renderGalleryGrid();
-      } catch (e) {
-        console.warn('Không kiểm tra được trạng thái đăng nhập', e);
-      }
-    }
   </script>
 
 </body>

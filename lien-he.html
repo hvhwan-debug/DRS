@@ -81,7 +81,8 @@
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s; font-family: inherit;
+      display: inline-block; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); transition: all 0.2s;
+      font-family: inherit; font-size: 0.95rem; line-height: 1.3;
     }
     .btn:hover { background: var(--blue-grad-btn-hover); transform: translateY(-1px); }
 
@@ -787,14 +788,6 @@
     renderGalleryGrid();
 
     // Xử lý validate & submit form liên hệ, gửi qua FormSubmit.co (miễn phí, không cần backend).
-    //
-    // *** BẠN CẦN LÀM 2 BƯỚC SAU ĐỂ NHẬN ĐƯỢC EMAIL ***
-    // 1. Thay "email-cua-ban@gmail.com" bên dưới (biến FORM_SUBMIT_EMAIL) bằng email thật của bạn.
-    // 2. Lần đầu tiên có người gửi form thành công, FormSubmit sẽ gửi 1 email xác nhận
-    //    đến địa chỉ đó — bạn bấm "Activate Form" trong email đó thì các lần gửi sau
-    //    mới thực sự về hộp thư của bạn.
-    const FORM_SUBMIT_EMAIL = 'email-cua-ban@gmail.com';
-
     (function () {
       const form = document.getElementById('contactForm');
       const submitBtn = document.getElementById('submitBtn');
@@ -840,39 +833,29 @@
           return;
         }
 
-        const payload = {
-          name: fields.name.input.value.trim(),
-          email: fields.email.input.value.trim(),
-          phone: document.getElementById('cf-phone').value.trim(),
-          subject: fields.subject.input.value,
-          message: fields.message.input.value.trim()
-        };
-
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
-
         try {
-          const fsPayload = {
-            Họ_và_tên: payload.name,
-            Email: payload.email,
-            Số_điện_thoại: payload.phone || 'Không cung cấp',
-            Chủ_đề: fields.subject.input.options[fields.subject.input.selectedIndex].text,
-            Nội_dung: payload.message,
-            _subject: `[Liên hệ website] ${fields.subject.input.options[fields.subject.input.selectedIndex].text} - ${payload.name}`,
-            _template: 'table',
-            _captcha: 'false'
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+
+          const payload = {
+            formType: 'contact',
+            data: {
+              name: fields.name.input.value.trim(),
+              email: fields.email.input.value.trim(),
+              phone: document.getElementById('cf-phone').value.trim(),
+              subject: fields.subject.input.options[fields.subject.input.selectedIndex].text,
+              message: fields.message.input.value.trim()
+            }
           };
 
-          const res = await fetch(`https://formsubmit.co/ajax/${FORM_SUBMIT_EMAIL}`, {
+          const res = await fetch('/api/send-notification', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(fsPayload)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
           });
 
-          if (!res.ok) throw new Error('FormSubmit trả về lỗi');
+          const resData = await res.json().catch(() => ({}));
+          if (!res.ok || !resData.success) throw new Error(resData.message || 'API trả về lỗi');
 
           feedback.className = 'form-feedback success';
           feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.';
@@ -887,10 +870,6 @@
         }
       });
     })();
-      } catch (e) {
-        console.warn('Không kiểm tra được trạng thái đăng nhập', e);
-      }
-    }
 </script>
 </body>
 </html>
