@@ -1,4 +1,12 @@
-ính gửi: Quý cơ quan, tổ chức, đối tác và các bên liên quan,
+---
+title: "Thông Báo Xác Nhận Quyền Sở Hữu Tên Miền WVN.VN"
+date: "14/09/2026"
+loai: "tin-tuc"
+image: "images/ra-mat-to-chuc.jpg"
+excerpt: "CÔNG TY TNHH DR SOLUTIONS công khai thông báo và cung cấp văn bản xác nhận quyền sở hữu hợp pháp tên miền WVN.VN, kèm hướng dẫn kiểm tra chữ ký số qua hệ thống chính thức của NEAC."
+---
+
+Kính gửi: Quý cơ quan, tổ chức, đối tác và các bên liên quan,
 
 CÔNG TY TNHH DR SOLUTIONS xin trân trọng thông báo và xác nhận tên miền WVN.VN (wvn.vn) thuộc quyền sở hữu và quản lý hợp pháp của chúng tôi. Tên miền này được sử dụng làm địa chỉ website chính thức tại: https://wvn.vn.
 
