@@ -41,16 +41,16 @@
     .nav-container { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; position: relative; }
     .brand-wrap { text-decoration: none; display: flex; align-items: center; gap: 10px; }
     .brand-logo-icon {
-      width: 96px; height: 38px; display: flex; align-items: center; justify-content: center;
+      width: 86px; height: 34px; display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .brand-logo-icon img { width: 100%; height: 100%; object-fit: contain; }
-    .brand-text-group { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; }
+    .brand-logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .brand-text-group { display: flex; flex-direction: column; justify-content: center; height: 34px; }
     .brand-title {
-      font-size: 1.18rem; font-weight: 800; background: var(--blue-grad-primary);
+      font-size: 1.18rem; line-height: 20px; font-weight: 800; background: var(--blue-grad-primary);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
-    .brand-subtitle { font-size: 0.68rem; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 1px; }
+    .brand-subtitle { font-size: 0.68rem; line-height: 14px; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 0; }
     .nav-links a { margin-left: 1.8rem; text-decoration: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.2s; font-family: inherit; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; font-weight: 600; }
     .nav-dropdown { position: relative; display: inline-block; }
