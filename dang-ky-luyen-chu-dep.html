@@ -692,30 +692,42 @@
 
     .support-process { margin-bottom: 2.6rem; }
     .support-process h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 1.6rem; color: var(--text-dark); }
-    .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-    .process-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0; position: relative; }
-    .process-step:not(:last-child)::after {
-      content: ''; position: absolute; top: 20px; left: calc(50% + 26px); width: calc(100% - 32px);
-      height: 2px; background: var(--border); z-index: 1;
+    /* Dòng thời gian quy trình đăng ký — thanh tiến trình chạy theo
+       cuộn trang, chấm số toả sáng khi được "kích hoạt" (giống dòng
+       thời gian "Dấu Ấn Đã Qua" ở trang Hoạt Động). */
+    .reg-timeline { position: relative; padding-left: 2.6rem; }
+    .reg-timeline::before { content: ''; position: absolute; left: 13px; top: 13px; bottom: 13px; width: 2px; background: var(--border); }
+    .reg-fill {
+      position: absolute; left: 13px; top: 13px; width: 2px; height: 0%;
+      background: linear-gradient(180deg, #7dd3fc 0%, #0284c7 55%, #1e3a8a 100%);
+      transition: height 0.15s ease-out; z-index: 1;
     }
-    .process-step-num {
-      flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
-      background: var(--blue-grad-btn); color: #fff; font-weight: 700; font-size: 1.05rem;
+    .reg-item { position: relative; padding-bottom: 1.8rem; }
+    .reg-item:last-child { padding-bottom: 0; }
+    .reg-dot {
+      position: absolute; left: -2.6rem; top: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: #fff; border: 3px solid #cbd5e1; box-shadow: 0 0 0 2px #fff; z-index: 2;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 0.9rem; position: relative; z-index: 2;
+      font-size: 0.82rem; font-weight: 800; color: #94a3b8;
+      transition: background 0.4s, border-color 0.4s, box-shadow 0.4s, color 0.4s;
     }
-    .process-step-body h3 { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.4rem; }
-    .process-step-body p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
-    .process-step-time { display: inline-block; margin-top: 0.5rem; font-size: 0.8rem; color: #0284c7; font-weight: 600; }
+    .reg-dot::after {
+      content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #0284c7;
+      opacity: 0; transform: scale(0.6);
+    }
+    .reg-item.is-active .reg-dot { background: var(--blue-grad-btn); border-color: #0284c7; box-shadow: 0 0 0 2px #bae6fd; color: #fff; }
+    .reg-item.is-active .reg-dot::after { animation: regDotRadiate 1.8s ease-out infinite; }
+    .reg-item.is-active .reg-dot::before {
+      content: ''; position: absolute; inset: -12px; border-radius: 50%; border: 2px solid #38bdf8;
+      opacity: 0; transform: scale(0.5); animation: regDotRadiate 1.8s ease-out 0.5s infinite;
+    }
+    @keyframes regDotRadiate { 0% { transform: scale(0.6); opacity: 0.7; } 100% { transform: scale(2); opacity: 0; } }
+    .reg-item h3 { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .reg-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
 
-    @media (max-width: 760px) {
-      .process-steps { display: flex; flex-direction: column; grid-template-columns: none; gap: 0; }
-      .process-step { flex-direction: row; align-items: flex-start; text-align: left; gap: 1.2rem; padding: 1.3rem 0; border-bottom: 1px solid var(--border); }
-      .process-step:last-child { border-bottom: none; padding-bottom: 0; }
-      .process-step:not(:last-child)::after { display: none; }
-      .process-step-num { margin-bottom: 0; }
-      .process-step-body h3 { font-size: 1.05rem; }
-      .process-step-body p { font-size: 0.95rem; }
+    @media (prefers-reduced-motion: reduce) {
+      .reg-item.is-active .reg-dot::after, .reg-item.is-active .reg-dot::before { animation: none; }
+      .reg-fill { transition: none; }
     }
 
     .support-form-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 2.2rem 2rem; }
@@ -1113,34 +1125,27 @@
 
     <div class="support-process">
       <h2>Quy trình đăng ký &amp; xét duyệt</h2>
-      <div class="process-steps">
-        <div class="process-step">
-          <div class="process-step-num">1</div>
-          <div class="process-step-body">
-            <h3>Gửi thông tin đăng ký</h3>
-            <p>Phụ huynh điền thông tin của trẻ, hoặc tình nguyện viên điền thông tin cá nhân vào form bên trên.</p>
-          </div>
+      <div class="reg-timeline" id="regTimeline">
+        <div class="reg-fill" id="regFill"></div>
+        <div class="reg-item">
+          <span class="reg-dot">1</span>
+          <h3>Gửi thông tin đăng ký</h3>
+          <p>Phụ huynh điền thông tin của trẻ, hoặc tình nguyện viên điền thông tin cá nhân vào form bên trên.</p>
         </div>
-        <div class="process-step">
-          <div class="process-step-num">2</div>
-          <div class="process-step-body">
-            <h3>Ban phụ trách rà soát hồ sơ</h3>
-            <p>Kiểm tra thông tin, đánh giá hoàn cảnh và mức độ phù hợp với chương trình.</p>
-          </div>
+        <div class="reg-item">
+          <span class="reg-dot">2</span>
+          <h3>Ban phụ trách rà soát hồ sơ</h3>
+          <p>Kiểm tra thông tin, đánh giá hoàn cảnh và mức độ phù hợp với chương trình.</p>
         </div>
-        <div class="process-step">
-          <div class="process-step-num">3</div>
-          <div class="process-step-body">
-            <h3>Liên hệ xác nhận</h3>
-            <p>Chương trình có thể liên hệ để xác minh thêm thông tin nếu cần thiết.</p>
-          </div>
+        <div class="reg-item">
+          <span class="reg-dot">3</span>
+          <h3>Liên hệ xác nhận</h3>
+          <p>Chương trình có thể liên hệ để xác minh thêm thông tin nếu cần thiết.</p>
         </div>
-        <div class="process-step">
-          <div class="process-step-num">4</div>
-          <div class="process-step-body">
-            <h3>Thông báo kết quả</h3>
-            <p>Kết quả được thông báo trực tiếp, kèm hướng dẫn về lịch học, địa điểm và nội quy.</p>
-          </div>
+        <div class="reg-item">
+          <span class="reg-dot">4</span>
+          <h3>Thông báo kết quả</h3>
+          <p>Kết quả được thông báo trực tiếp, kèm hướng dẫn về lịch học, địa điểm và nội quy.</p>
         </div>
       </div>
     </div>
@@ -1741,6 +1746,40 @@
 
       return false;
     }
+
+    // ============================================================
+    // Dòng thời gian "Quy trình đăng ký & xét duyệt" — thanh tiến
+    // trình chạy dần theo độ cuộn trang, chấm số toả sáng khi tới.
+    // ============================================================
+    function updateRegTimeline() {
+      const timeline = document.getElementById('regTimeline');
+      const fill = document.getElementById('regFill');
+      if (!timeline || !fill) return;
+
+      const rect = timeline.getBoundingClientRect();
+      const viewportLine = window.innerHeight * 0.8;
+      const progress = Math.min(1, Math.max(0, (viewportLine - rect.top) / rect.height));
+      fill.style.height = (progress * 100) + '%';
+
+      document.querySelectorAll('.reg-item').forEach(item => {
+        const dot = item.querySelector('.reg-dot');
+        if (!dot) return;
+        const dotRect = dot.getBoundingClientRect();
+        const dotCenter = dotRect.top + dotRect.height / 2;
+        item.classList.toggle('is-active', dotCenter <= viewportLine);
+      });
+    }
+
+    let regTicking = false;
+    function requestRegUpdate() {
+      if (regTicking) return;
+      regTicking = true;
+      requestAnimationFrame(() => { updateRegTimeline(); regTicking = false; });
+    }
+    window.addEventListener('scroll', requestRegUpdate);
+    window.addEventListener('resize', requestRegUpdate);
+    window.addEventListener('load', updateRegTimeline);
+    updateRegTimeline();
   </script>
 
   <footer>
