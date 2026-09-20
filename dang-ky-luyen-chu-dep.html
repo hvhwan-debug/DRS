@@ -640,12 +640,7 @@
     .field-error { color: #dc2626; font-size: 0.78rem; margin-top: 0.3rem; display: none; }
     .field-error.show { display: block; }
 
-    /* Gộp 2 trường ngắn trên 1 hàng để form gọn hơn */
-    .form-row { display: flex; gap: 0.8rem; }
-    .form-row .form-group { flex: 1; min-width: 0; }
-    @media (max-width: 480px) {
-      .form-row { flex-direction: column; gap: 0; }
-    }
+    /* Gộp 2 trường ngắn trên 1 hàng để form gọn hơn — định nghĩa đầy đủ nằm ở phần .form-row phía dưới */
 
     /* Box xổ xuống chọn nhiều mục — bấm vào để hiện danh sách checkbox,
        ô đóng hiện tóm tắt các mục đã chọn. */
@@ -842,8 +837,11 @@
       outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); background: #fff;
     }
     .form-group textarea { resize: vertical; min-height: 110px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+    .form-row .form-group { min-width: 0; }
+    .form-row .form-group input,
+    .form-row .form-group select { width: 100%; min-width: 0; box-sizing: border-box; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: minmax(0, 1fr); } }
 
     .support-submit-btn {
       width: 100%; padding: 0.9rem; border: none; border-radius: 8px; cursor: pointer;
