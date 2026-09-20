@@ -73,11 +73,13 @@ const FIELD_LABELS = {
   sdt_tai_tro: "SĐT nhà tài trợ",
   email_tai_tro: "Email nhà tài trợ",
   hinh_thuc_tai_tro: "Hình thức hỗ trợ",
-  chi_tiet_tai_tro: "Chi tiết cụ thể"
+  chi_tiet_tai_tro: "Chi tiết cụ thể",
+  dia_diem_cu_the: "Địa điểm cụ thể",
+  vi_tri_gps_dia_diem: "Vị trí GPS (địa điểm tài trợ)"
 };
 
 // Các trường chứa tọa độ "lat,lng" cần hiển thị thành link Google Maps bấm được
-const LOCATION_FIELDS = new Set(["location", "beneficiaryLocation", "vi_tri_gps_thu_gom"]);
+const LOCATION_FIELDS = new Set(["location", "beneficiaryLocation", "vi_tri_gps_thu_gom", "vi_tri_gps_dia_diem"]);
 
 // Các trường ẩn / kỹ thuật không hiển thị trong email
 const SKIP_FIELDS = new Set(["_subject", "_captcha", "_honey", "_template", "formType"]);
