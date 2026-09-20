@@ -54,4 +54,4 @@ Chương trình không phân biệt đối xử dựa trên giới tính, dân t
 
 **Phụ huynh, người giám hộ hoặc tình nguyện viên quan tâm** có thể [đăng ký tham gia chương trình tại đây](dang-ky-luyen-chu-dep.html).
 
-*WVN — Đồng hành cùng trẻ em Hà Nội trên hành trình học tập và phát triển.*
+*WVN — Đồng hành cùng cộng đồng Hà Nội trên hành trình học tập và phát triển.*
