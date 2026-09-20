@@ -42,8 +42,13 @@ const FIELD_LABELS = {
   detail: "Mô tả hoàn cảnh",
   beneficiaryName: "Họ tên người cần hỗ trợ",
   beneficiaryPhone: "SĐT người cần hỗ trợ",
-  beneficiaryAddress: "Địa chỉ người cần hỗ trợ"
+  beneficiaryAddress: "Địa chỉ người cần hỗ trợ",
+  location: "Vị trí GPS (của bạn)",
+  beneficiaryLocation: "Vị trí GPS (người cần hỗ trợ)"
 };
+
+// Các trường chứa tọa độ "lat,lng" cần hiển thị thành link Google Maps bấm được
+const LOCATION_FIELDS = new Set(["location", "beneficiaryLocation"]);
 
 // Các trường ẩn / kỹ thuật không hiển thị trong email
 const SKIP_FIELDS = new Set(["_subject", "_captcha", "_honey", "_template", "formType"]);
@@ -59,10 +64,14 @@ function buildRowsHtml(data) {
     .filter(([key, value]) => !SKIP_FIELDS.has(key) && value !== undefined && value !== "")
     .map(([key, value]) => {
       const label = FIELD_LABELS[key] || key;
+      const isLocation = LOCATION_FIELDS.has(key) && /^-?\d+\.?\d*,-?\d+\.?\d*$/.test(String(value).trim());
+      const valueHtml = isLocation
+        ? `<a href="https://www.google.com/maps?q=${encodeURIComponent(value)}" target="_blank" rel="noopener">📍 ${escapeHtml(value)} (xem trên Google Maps)</a>`
+        : escapeHtml(value);
       return `
         <tr>
           <td style="padding:10px 14px;font-weight:600;color:#0f172a;background:#f8fafc;border-bottom:1px solid #e2e8f0;width:180px;font-size:13px;vertical-align:top;">${escapeHtml(label)}</td>
-          <td style="padding:10px 14px;color:#334155;border-bottom:1px solid #e2e8f0;font-size:13px;white-space:pre-wrap;">${escapeHtml(value)}</td>
+          <td style="padding:10px 14px;color:#334155;border-bottom:1px solid #e2e8f0;font-size:13px;white-space:pre-wrap;">${valueHtml}</td>
         </tr>`;
     })
     .join("");
