@@ -221,12 +221,37 @@ module.exports = async function (context, req) {
   const senderName = data.fullname || data.fullName || data.name || "";
   const senderEmail = (data.email || "").trim();
 
+  // Đính kèm ảnh minh chứng (nếu form gửi kèm) — giới hạn tổng dung lượng
+  // để tránh vượt hạn mức SendGrid (thường ~30MB mỗi email tính cả header).
+  const MAX_TOTAL_ATTACHMENT_MB = 20;
+  let attachments;
+  if (Array.isArray(body.attachments) && body.attachments.length > 0) {
+    let totalBytes = 0;
+    attachments = [];
+    for (const att of body.attachments) {
+      if (!att || !att.content || !att.filename) continue;
+      const approxBytes = Math.ceil((att.content.length * 3) / 4); // ước lượng dung lượng gốc từ base64
+      totalBytes += approxBytes;
+      if (totalBytes > MAX_TOTAL_ATTACHMENT_MB * 1024 * 1024) {
+        context.log.warn("Bỏ qua các ảnh vượt tổng dung lượng cho phép.");
+        break;
+      }
+      attachments.push({
+        content: att.content,
+        filename: att.filename,
+        type: att.type || "application/octet-stream",
+        disposition: "attachment"
+      });
+    }
+  }
+
   const adminMsg = {
     to: toEmail,
     from: { email: fromEmail, name: "Website Mạng Lưới Tri Thức Việt Nam" },
     replyTo: senderEmail || undefined,
     subject: `[WVN Website] ${title}`,
-    html: adminHtml
+    html: adminHtml,
+    ...(attachments && attachments.length > 0 ? { attachments } : {})
   };
 
   try {

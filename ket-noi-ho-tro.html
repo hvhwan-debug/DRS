@@ -553,6 +553,30 @@
     #heroStepForm .support-success { padding: 1rem 0.5rem; }
     #heroStepForm .support-success i { font-size: 2.2rem; }
     #heroStepForm .support-success h3 { font-size: 1.05rem; }
+
+    /* Upload ảnh minh chứng (tối thiểu 3 ảnh) */
+    .support-image-upload-box {
+      border: 2px dashed var(--border); border-radius: 8px; padding: 1rem;
+      text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; background: #f8fafc;
+    }
+    .support-image-upload-box:hover, .support-image-upload-box.drag-over { border-color: #0284c7; background: #f0f9ff; }
+    .support-image-upload-box i { font-size: 1.4rem; color: #0284c7; margin-bottom: 0.4rem; display: block; }
+    .support-image-upload-box span { font-size: 0.85rem; color: var(--text-muted); }
+    .support-image-upload-box input[type="file"] { display: none; }
+    .support-image-count-hint { font-size: 0.78rem; margin-top: 0.4rem; color: var(--text-muted); }
+    .support-image-count-hint.ok { color: #16a34a; font-weight: 600; }
+    .support-image-count-hint.warn { color: #dc2626; font-weight: 600; }
+    .support-image-preview-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 0.5rem; margin-top: 0.7rem;
+    }
+    .support-image-preview-item { position: relative; aspect-ratio: 1/1; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+    .support-image-preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .support-image-preview-remove {
+      position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(15,23,42,0.7); color: #fff; border: none; font-size: 0.7rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .support-image-preview-remove:hover { background: #dc2626; }
     #heroStepForm .support-success p { font-size: 0.88rem; }
 
   </style>
@@ -683,6 +707,16 @@
             <label for="supDetail">Mô tả hoàn cảnh và nhu cầu cụ thể <span class="required">*</span></label>
             <textarea id="supDetail" name="detail" required placeholder="Vui lòng chia sẻ ngắn gọn về hoàn cảnh hiện tại và điều bạn đang cần được hỗ trợ..."></textarea>
           </div>
+          <div class="form-group">
+            <label>Hình ảnh minh chứng <span class="required">*</span> (tối thiểu 3 ảnh)</label>
+            <label class="support-image-upload-box" id="supImageBox" for="supImages">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>Bấm để chọn ảnh hoặc kéo thả vào đây</span>
+              <input type="file" id="supImages" accept="image/*" multiple>
+            </label>
+            <div class="support-image-count-hint" id="supImageHint">Chưa chọn ảnh nào (cần tối thiểu 3 ảnh)</div>
+            <div class="support-image-preview-grid" id="supImagePreview"></div>
+          </div>
           <button type="submit" class="support-cta-btn" id="supportSubmitBtn">GỬI THÔNG TIN KẾT NỐI</button>
           <p class="support-hero-form-note">Thông tin của bạn được bảo mật và chỉ dùng để đội ngũ chương trình liên hệ hỗ trợ.</p>
           <div class="support-form-alert" id="supportFormAlert" style="display:none; margin-top:0.8rem; font-size:0.85rem; text-align:center;"></div>
@@ -784,12 +818,113 @@
       document.getElementById('supportSuccess').style.display = 'none';
     }
 
+    // ==============================================================
+    // Đính kèm ảnh minh chứng (tối thiểu 3 ảnh) — chọn qua click hoặc
+    // kéo-thả, xem trước bằng thumbnail, giới hạn số lượng & dung
+    // lượng mỗi ảnh để tránh email quá nặng.
+    // ==============================================================
+    const MIN_SUPPORT_IMAGES = 3;
+    const MAX_SUPPORT_IMAGES = 6;
+    const MAX_IMAGE_SIZE_MB = 5;
+    let supportSelectedImages = [];
+
+    function renderSupportImagePreview() {
+      const grid = document.getElementById('supImagePreview');
+      const hint = document.getElementById('supImageHint');
+
+      grid.innerHTML = supportSelectedImages.map((file, idx) => {
+        const url = URL.createObjectURL(file);
+        return `
+          <div class="support-image-preview-item">
+            <img src="${url}" alt="Ảnh minh chứng ${idx + 1}">
+            <button type="button" class="support-image-preview-remove" onclick="removeSupportImage(${idx})" aria-label="Xóa ảnh">✕</button>
+          </div>`;
+      }).join('');
+
+      const count = supportSelectedImages.length;
+      if (count === 0) {
+        hint.className = 'support-image-count-hint';
+        hint.textContent = `Chưa chọn ảnh nào (cần tối thiểu ${MIN_SUPPORT_IMAGES} ảnh)`;
+      } else if (count < MIN_SUPPORT_IMAGES) {
+        hint.className = 'support-image-count-hint warn';
+        hint.textContent = `Đã chọn ${count} ảnh — cần thêm ít nhất ${MIN_SUPPORT_IMAGES - count} ảnh nữa`;
+      } else {
+        hint.className = 'support-image-count-hint ok';
+        hint.textContent = `Đã chọn ${count} ảnh (tối đa ${MAX_SUPPORT_IMAGES})`;
+      }
+    }
+
+    function removeSupportImage(index) {
+      supportSelectedImages.splice(index, 1);
+      renderSupportImagePreview();
+    }
+
+    function addSupportImageFiles(fileList) {
+      const alertBox = document.getElementById('supportFormAlert');
+      for (const file of fileList) {
+        if (!file.type.startsWith('image/')) continue;
+        if (supportSelectedImages.length >= MAX_SUPPORT_IMAGES) {
+          alertBox.style.display = 'block';
+          alertBox.style.color = '#dc2626';
+          alertBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Chỉ được chọn tối đa ${MAX_SUPPORT_IMAGES} ảnh.`;
+          break;
+        }
+        if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+          alertBox.style.display = 'block';
+          alertBox.style.color = '#dc2626';
+          alertBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Ảnh "${file.name}" vượt quá ${MAX_IMAGE_SIZE_MB}MB, vui lòng chọn ảnh nhỏ hơn.`;
+          continue;
+        }
+        supportSelectedImages.push(file);
+      }
+      renderSupportImagePreview();
+    }
+
+    document.getElementById('supImages').addEventListener('change', function (e) {
+      addSupportImageFiles(e.target.files);
+      e.target.value = ''; // cho phép chọn lại cùng file nếu vừa xóa
+    });
+
+    const supImageBox = document.getElementById('supImageBox');
+    ['dragover', 'dragenter'].forEach(evt => {
+      supImageBox.addEventListener(evt, function (e) {
+        e.preventDefault();
+        supImageBox.classList.add('drag-over');
+      });
+    });
+    ['dragleave', 'drop'].forEach(evt => {
+      supImageBox.addEventListener(evt, function (e) {
+        e.preventDefault();
+        supImageBox.classList.remove('drag-over');
+      });
+    });
+    supImageBox.addEventListener('drop', function (e) {
+      if (e.dataTransfer?.files?.length) addSupportImageFiles(e.dataTransfer.files);
+    });
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]); // bỏ phần "data:image/..;base64,"
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
     function handleSupportSubmit(e) {
       e.preventDefault();
       const form = document.getElementById('supportForm');
       const submitBtn = document.getElementById('supportSubmitBtn');
       const alertBox = document.getElementById('supportFormAlert');
       const originalHtml = submitBtn.innerHTML;
+
+      if (supportSelectedImages.length < MIN_SUPPORT_IMAGES) {
+        alertBox.style.display = 'block';
+        alertBox.style.color = '#dc2626';
+        alertBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Vui lòng đính kèm tối thiểu ${MIN_SUPPORT_IMAGES} ảnh minh chứng trước khi gửi.`;
+        document.getElementById('supImageBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
@@ -798,11 +933,19 @@
       const formData = new FormData(form);
       const payload = { formType: 'support', data: Object.fromEntries(formData.entries()) };
 
-      fetch('/api/send-notification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
+      Promise.all(supportSelectedImages.map(async (file) => ({
+        filename: file.name,
+        type: file.type,
+        content: await fileToBase64(file)
+      })))
+        .then(attachments => {
+          payload.attachments = attachments;
+          return fetch('/api/send-notification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        })
         .then(async res => {
           const resData = await res.json().catch(() => ({}));
           if (!res.ok || !resData.success) throw new Error(resData.message || 'failed');
