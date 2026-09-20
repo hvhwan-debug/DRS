@@ -3,16 +3,10 @@ title: "WVN Triển Khai Chương Trình Luyện Chữ Đẹp Cho Cộng Đồng
 date: "Tháng 12/2026"
 loai: "tin-tuc"
 image: "images/uploads/luyen-chu-dep-bang-den.jpg"
-excerpt: "WVN khởi động Chương trình Luyện chữ đẹp dành cho trẻ em tại Hà Nội, vận hành theo mô hình phi lợi nhuận: nguồn lực từ hoạt động đào tạo được tái sử dụng để duy trì chương trình và mở rộng cơ hội tiếp cận cho trẻ em cần được hỗ trợ."
+excerpt: "WVN khởi động Chương trình Luyện chữ đẹp dành cho trẻ em tại Hà Nội, hoạt động phi lợi nhuận, không vì mục đích thương mại, giúp các em rèn nét chữ, tính kiên trì và sự tự tin trong học tập."
 ---
 
-Viết đúng, viết rõ và trình bày sạch sẽ là những kỹ năng nền tảng mà bất kỳ học sinh nào cũng cần có. Đó cũng là lý do WVN chính thức triển khai **Chương trình Luyện chữ đẹp dành cho trẻ em tại Hà Nội** — hướng đến việc giúp các em rèn luyện chữ viết, tính kiên trì, sự tập trung và sự tự tin trong học tập.
-
-## Vận hành theo mô hình nào
-
-Chương trình được triển khai theo định hướng **phi lợi nhuận**: nguồn lực tạo ra từ hoạt động đào tạo được tái sử dụng để duy trì chương trình, phát triển hoạt động giáo dục và mở rộng cơ hội tiếp cận cho trẻ em cần được hỗ trợ.
-
-Nói cách khác, đây không phải là mô hình xin tài trợ để vận hành, mà là mô hình "lấy hoạt động nuôi hoạt động" — phần nguồn lực từ các lớp học không dùng để tạo lợi nhuận cho cá nhân, mà quay lại phục vụ chính chương trình: duy trì đội ngũ giảng dạy, cải thiện chất lượng lớp học, và tạo thêm suất học được hỗ trợ cho những em có hoàn cảnh khó khăn hơn.
+Viết đúng, viết rõ và trình bày sạch sẽ là những kỹ năng nền tảng mà bất kỳ học sinh nào cũng cần có. Đó cũng là lý do WVN chính thức triển khai **Chương trình Luyện chữ đẹp dành cho trẻ em tại Hà Nội** — một chương trình phi lợi nhuận, không vì mục đích thương mại, hướng đến việc giúp các em rèn luyện chữ viết, tính kiên trì, sự tập trung và sự tự tin trong học tập.
 
 ## Ai có thể tham gia
 
