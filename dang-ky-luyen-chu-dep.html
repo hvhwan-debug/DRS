@@ -1262,12 +1262,6 @@
       const el = document.getElementById('lcChildDob');
       const errorEl = document.getElementById('lcChildDobError');
 
-      // Giới hạn lịch chọn: không quá 20 năm trước, không sau hôm nay
-      const today = new Date();
-      const pad = (n) => String(n).padStart(2, '0');
-      el.max = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
-      el.min = `${today.getFullYear() - 20}-01-01`;
-
       const update = () => {
         if (!el.value) {
           el.setCustomValidity('');
@@ -1276,8 +1270,9 @@
         }
         const age = calcAge(el.value);
         if (age < MIN_CHILD_AGE || age > MAX_CHILD_AGE || age < 0) {
-          el.setCustomValidity('invalid');
-          errorEl.textContent = `Không đủ điều kiện: chương trình chỉ nhận trẻ từ ${MIN_CHILD_AGE}–${MAX_CHILD_AGE} tuổi (hiện tại ${age >= 0 ? age : '—'} tuổi).`;
+          const msg = `Không đủ điều kiện: chương trình chỉ nhận trẻ từ ${MIN_CHILD_AGE}–${MAX_CHILD_AGE} tuổi (hiện tại ${age >= 0 ? age : '—'} tuổi).`;
+          el.setCustomValidity(msg);
+          errorEl.textContent = msg;
         } else {
           el.setCustomValidity('');
           errorEl.textContent = 'Vui lòng nhập ngày sinh của trẻ.';
