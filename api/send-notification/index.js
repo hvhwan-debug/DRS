@@ -90,6 +90,77 @@ const LOCATION_FIELDS = new Set(["location", "beneficiaryLocation", "vi_tri_gps_
 // Các trường ẩn / kỹ thuật không hiển thị trong email
 const SKIP_FIELDS = new Set(["_subject", "_captcha", "_honey", "_template", "formType"]);
 
+// ===== Tích hợp Monday.com CRM (board "Marketing Contacts") =====
+const MONDAY_BOARD_ID = 5031435768;
+
+// Mỗi form dùng tên trường khác nhau -> thử lần lượt theo thứ tự ưu tiên
+function pickField(data, keys) {
+  for (const k of keys) {
+    if (data[k] !== undefined && data[k] !== null && String(data[k]).trim() !== "") {
+      return String(data[k]).trim();
+    }
+  }
+  return "";
+}
+
+async function createMondayItem(formType, data, title) {
+  const token = process.env.MONDAY_API_TOKEN;
+  if (!token) {
+    return; // Chưa cấu hình MONDAY_API_TOKEN -> bỏ qua âm thầm, không ảnh hưởng luồng chính
+  }
+
+  const fullName = pickField(data, [
+    "fullname", "fullName", "name",
+    "ten_phu_huynh", "ten_tre",
+    "ten_tnv",
+    "ten_tai_tro"
+  ]) || "Người gửi form";
+
+  const email = pickField(data, ["email", "email_phu_huynh", "email_tnv", "email_tai_tro"]);
+  const phone = pickField(data, ["phone", "sdt_phu_huynh", "sdt_tnv", "sdt_tai_tro"]);
+
+  const columnValues = {
+    marketing_contact_first_name: fullName
+  };
+  if (email) {
+    columnValues.marketing_contact_email = { email, text: email };
+  }
+  if (phone) {
+    columnValues.marketing_contact_phone = { phone, countryShortName: "VN" };
+  }
+
+  const itemName = `${fullName} — ${title}`;
+
+  const query = `
+    mutation ($boardId: ID!, $itemName: String!, $columnValues: JSON!) {
+      create_item(board_id: $boardId, item_name: $itemName, column_values: $columnValues) {
+        id
+      }
+    }
+  `;
+
+  const res = await fetch("https://api.monday.com/v2", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        boardId: MONDAY_BOARD_ID,
+        itemName,
+        columnValues: JSON.stringify(columnValues)
+      }
+    })
+  });
+
+  const json = await res.json();
+  if (json.errors) {
+    throw new Error(JSON.stringify(json.errors));
+  }
+}
+
 function escapeHtml(str) {
   return String(str ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -311,6 +382,13 @@ module.exports = async function (context, req) {
     context.res.status = 502;
     context.res.body = { success: false, message: "Gửi email thất bại, vui lòng thử lại sau." };
     return;
+  }
+
+  // Tạo item mới trên Monday.com CRM (best-effort — không chặn phản hồi thành công nếu lỗi)
+  try {
+    await createMondayItem(formType, data, title);
+  } catch (err) {
+    context.log.error("Tạo item Monday.com thất bại:", err.message);
   }
 
   // Email cảm ơn/xác nhận gửi lại cho chính người gửi (best-effort — không chặn phản hồi thành công nếu lỗi)
