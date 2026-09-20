@@ -718,8 +718,11 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="supAddress">Địa chỉ hiện tại <span class="required">*</span></label>
-            <input type="text" id="supAddress" name="address" required placeholder="Thôn/xã/huyện/tỉnh">
+            <label>Địa chỉ hiện tại <span class="required">*</span></label>
+            <input type="text" id="supProvince" required placeholder="Tỉnh / Thành phố" style="margin-bottom:0.5rem;">
+            <input type="text" id="supWard" required placeholder="Xã / Phường" style="margin-bottom:0.5rem;">
+            <input type="text" id="supHamlet" placeholder="Thôn / Tổ dân phố, số nhà, đường (nếu có)">
+            <input type="hidden" id="supAddress" name="address">
           </div>
           <div class="form-group">
             <label for="supDetail">Mô tả hoàn cảnh và nhu cầu cụ thể <span class="required">*</span></label>
@@ -829,6 +832,9 @@
       document.getElementById('heroStepForm').style.display = 'block';
       document.getElementById('supRelation').value = 'ban_than';
       toggleBeneficiarySection('ban_than');
+      document.getElementById('supProvince').value = '';
+      document.getElementById('supWard').value = '';
+      document.getElementById('supHamlet').value = '';
     }
 
     function backToHeroNeed() {
@@ -951,12 +957,31 @@
       }
     }
 
+    function buildCombinedAddress() {
+      const province = document.getElementById('supProvince').value.trim();
+      const ward = document.getElementById('supWard').value.trim();
+      const hamlet = document.getElementById('supHamlet').value.trim();
+      // Định dạng chuẩn: Thôn/Tổ, Xã/Phường, Tỉnh/Thành phố
+      return [hamlet, ward, province].filter(Boolean).join(', ');
+    }
+
     function handleSupportSubmit(e) {
       e.preventDefault();
       const form = document.getElementById('supportForm');
       const submitBtn = document.getElementById('supportSubmitBtn');
       const alertBox = document.getElementById('supportFormAlert');
       const originalHtml = submitBtn.innerHTML;
+
+      const provinceVal = document.getElementById('supProvince').value.trim();
+      const wardVal = document.getElementById('supWard').value.trim();
+      if (!provinceVal || !wardVal) {
+        alertBox.style.display = 'block';
+        alertBox.style.color = '#dc2626';
+        alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng nhập đầy đủ Tỉnh/Thành phố và Xã/Phường.';
+        document.getElementById('supProvince').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+      document.getElementById('supAddress').value = buildCombinedAddress();
 
       if (supportSelectedImages.length < MIN_SUPPORT_IMAGES) {
         alertBox.style.display = 'block';
