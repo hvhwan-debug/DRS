@@ -882,6 +882,7 @@
     const itemSubmitBtn = document.getElementById('itemSubmitBtn');
     const itemFormAlert = document.getElementById('itemFormAlert');
     togglePickupSection(document.getElementById('itemDeliveryMethod').value);
+    document.getElementById('itemOfficeDate').min = new Date().toISOString().split('T')[0];
 
     // Dấu tích xanh + dòng đỏ báo thiếu cho 3 trường bắt buộc
     const itemRequiredIds = ['itemName', 'itemEmail', 'itemPhone'];
@@ -943,6 +944,17 @@
       }
 
       const needsPickup = document.getElementById('itemDeliveryMethod').value === 'Cần hỗ trợ thu gom';
+      const isOfficeVisit = document.getElementById('itemDeliveryMethod').value === 'Tự mang đến trụ sở';
+      if (isOfficeVisit) {
+        const officeDateInput = document.getElementById('itemOfficeDate');
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (officeDateInput.value && officeDateInput.value < todayStr) {
+          itemFormAlert.className = 'item-form-alert item-form-alert-error';
+          itemFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Ngày mang đến phải từ hôm nay trở đi, vui lòng chọn lại.</span>';
+          officeDateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+      }
       if (needsPickup) {
         const pProvince = document.getElementById('pickupProvince').value.trim();
         const pWard = document.getElementById('pickupWard').value.trim();
