@@ -153,10 +153,15 @@
       100% { transform: translate(0, 0) rotate(-4deg); }
     }
     @media (max-width: 480px) {
-      .brand-title { font-size: 1.02rem; line-height: 17px; }
-      .brand-subtitle { font-size: 0.6rem; line-height: 12px; }
-      .brand-text-group { height: 29px; }
-      .brand-logo-icon { width: 73px; height: 29px; }
+      .brand-wrap { align-items: flex-end; gap: 8px; }
+      .brand-title { font-size: 0.92rem; line-height: 15px; white-space: nowrap; }
+      .brand-subtitle { font-size: 0.52rem; line-height: 11px; white-space: nowrap; }
+      .brand-text-group { height: auto; justify-content: flex-end; }
+      .brand-logo-icon { width: 62px; height: 26px; align-self: flex-end; }
+    }
+    @media (max-width: 360px) {
+      .brand-title { font-size: 0.8rem; line-height: 13px; }
+      .brand-subtitle { display: none; }
     }
     @media (max-width: 640px) {
       .hero-dove { width: 64px; top: 4%; right: 4%; opacity: 0.35; }

@@ -52,6 +52,17 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px;
     }
     .brand-subtitle { font-size: 0.68rem; line-height: 14px; font-weight: 600; color: #64748b; letter-spacing: 0.2px; margin-top: 0; }
+    @media (max-width: 480px) {
+      .brand-wrap { align-items: flex-end; gap: 8px; }
+      .brand-title { font-size: 0.92rem; line-height: 15px; white-space: nowrap; }
+      .brand-subtitle { font-size: 0.52rem; line-height: 11px; white-space: nowrap; }
+      .brand-text-group { height: auto; justify-content: flex-end; }
+      .brand-logo-icon { width: 62px; height: 26px; align-self: flex-end; }
+    }
+    @media (max-width: 360px) {
+      .brand-title { font-size: 0.8rem; line-height: 13px; }
+      .brand-subtitle { display: none; }
+    }
 
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
