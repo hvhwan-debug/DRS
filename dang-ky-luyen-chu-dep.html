@@ -893,6 +893,48 @@
           </div>
           </div>
           <div class="form-group">
+            <label for="lcVolType">Bạn là</label>
+            <select id="lcVolType" name="loai_tnv" onchange="toggleVolTypeFields(this.value)">
+              <option value="Sinh viên">Sinh viên</option>
+              <option value="Giáo viên">Giáo viên</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+
+          <div id="lcVolStudentFields">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="lcVolSchool">Trường đang học</label>
+                <input type="text" id="lcVolSchool" name="truong_dang_hoc" placeholder="VD: Đại học Sư phạm Hà Nội">
+              </div>
+              <div class="form-group">
+                <label for="lcVolMajor">Ngành học</label>
+                <input type="text" id="lcVolMajor" name="nganh_hoc" placeholder="VD: Giáo dục Tiểu học">
+              </div>
+            </div>
+          </div>
+
+          <div id="lcVolTeacherFields" style="display:none;">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="lcVolWorkplace">Trường / đơn vị đang giảng dạy</label>
+                <input type="text" id="lcVolWorkplace" name="truong_giang_day" placeholder="VD: Tiểu học ABC">
+              </div>
+              <div class="form-group">
+                <label for="lcVolSubject">Môn / cấp đang dạy</label>
+                <input type="text" id="lcVolSubject" name="mon_cap_day" placeholder="VD: Tiếng Việt, lớp 3">
+              </div>
+            </div>
+          </div>
+
+          <div id="lcVolOtherFields" style="display:none;">
+            <div class="form-group">
+              <label for="lcVolOccupation">Nghề nghiệp hiện tại</label>
+              <input type="text" id="lcVolOccupation" name="nghe_nghiep" placeholder="VD: Nhân viên văn phòng">
+            </div>
+          </div>
+
+          <div class="form-group">
             <label for="lcVolExperience">Kinh nghiệm dạy học / luyện chữ (nếu có)</label>
             <textarea id="lcVolExperience" name="kinh_nghiem" placeholder="VD: Sinh viên sư phạm, từng dạy kèm, có kinh nghiệm viết chữ đẹp..."></textarea>
           </div>
@@ -1049,6 +1091,12 @@
   </div>
 
   <script>
+    function toggleVolTypeFields(type) {
+      document.getElementById('lcVolStudentFields').style.display = type === 'Sinh viên' ? 'block' : 'none';
+      document.getElementById('lcVolTeacherFields').style.display = type === 'Giáo viên' ? 'block' : 'none';
+      document.getElementById('lcVolOtherFields').style.display = type === 'Khác' ? 'block' : 'none';
+    }
+
     function chooseRole(role) {
       document.getElementById('heroStepNeed').style.display = 'none';
       document.getElementById('parentStep').style.display = role === 'parent' ? 'block' : 'none';
@@ -1067,6 +1115,8 @@
       document.getElementById('lcVolSuccess').style.display = 'none';
       document.getElementById('lcSponsorForm').style.display = 'block';
       document.getElementById('lcSponsorSuccess').style.display = 'none';
+      document.getElementById('lcVolType').value = 'Sinh viên';
+      toggleVolTypeFields('Sinh viên');
     }
 
     // Dữ liệu Xã/Phường Hà Nội — trích từ bộ dữ liệu 34 tỉnh/thành chuẩn hóa
