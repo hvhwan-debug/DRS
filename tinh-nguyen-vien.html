@@ -161,6 +161,16 @@
     }
     .vol-form-field textarea { resize: vertical; min-height: 70px; }
 
+    /* Dấu tích xanh + dòng đỏ báo thiếu */
+    .field-check-wrap { position: relative; }
+    .field-check-icon {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: #16a34a; font-size: 0.95rem; opacity: 0; transition: opacity 0.15s; pointer-events: none;
+    }
+    .field-check-icon.show { opacity: 1; }
+    .field-error { color: #dc2626; font-size: 0.78rem; margin-top: 0.35rem; display: none; }
+    .field-error.show { display: block; }
+
     .vol-checkbox-group { display: flex; flex-wrap: wrap; gap: 0.6rem; }
     .vol-checkbox-item {
       display: flex; align-items: center; gap: 6px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 999px;
@@ -373,14 +383,17 @@
           <div class="vol-form-field">
             <label for="volName">Họ và tên</label>
             <input type="text" name="fullname" id="volName" placeholder="Nguyễn Văn A" required>
+            <div class="field-error" id="volNameError">Vui lòng nhập họ và tên.</div>
           </div>
           <div class="vol-form-field">
             <label for="volEmail">Email</label>
             <input type="email" name="email" id="volEmail" placeholder="ban@email.com" required>
+            <div class="field-error" id="volEmailError">Vui lòng nhập email hợp lệ.</div>
           </div>
           <div class="vol-form-field">
             <label for="volPhone">Số điện thoại</label>
-            <input type="tel" name="phone" id="volPhone" placeholder="09xx xxx xxx" required>
+            <input type="tel" name="phone" id="volPhone" placeholder="09xx xxx xxx" pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" required>
+            <div class="field-error" id="volPhoneError">Vui lòng nhập đúng số điện thoại.</div>
           </div>
 
           <div class="vol-form-field">
@@ -562,8 +575,60 @@
     const volunteerForm = document.getElementById('volunteerForm');
     const volSubmitBtn = document.getElementById('volSubmitBtn');
     const volFormAlert = document.getElementById('volFormAlert');
+
+    // Dấu tích xanh + dòng đỏ báo thiếu cho 3 trường bắt buộc
+    const volRequiredIds = ['volName', 'volEmail', 'volPhone'];
+    const volFieldIcons = {};
+    volRequiredIds.forEach(id => {
+      const el = document.getElementById(id);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field-check-wrap';
+      el.parentNode.insertBefore(wrapper, el);
+      wrapper.appendChild(el);
+      el.style.paddingRight = '2.2rem';
+      const icon = document.createElement('i');
+      icon.className = 'fa-solid fa-circle-check field-check-icon';
+      wrapper.appendChild(icon);
+      volFieldIcons[id] = icon;
+
+      const errorEl = document.getElementById(id + 'Error');
+      const update = () => {
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        icon.classList.toggle('show', valid);
+        if (valid && errorEl) errorEl.classList.remove('show');
+      };
+      el.addEventListener('input', update);
+      el.addEventListener('change', update);
+    });
+
+    function validateVolunteerRequiredFields() {
+      let allValid = true;
+      let firstInvalid = null;
+      volRequiredIds.forEach(id => {
+        const el = document.getElementById(id);
+        const errorEl = document.getElementById(id + 'Error');
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        if (errorEl) errorEl.classList.toggle('show', !valid);
+        if (!valid) {
+          allValid = false;
+          if (!firstInvalid) firstInvalid = el;
+        }
+      });
+      return { allValid, firstInvalid };
+    }
+
     volunteerForm.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      const { allValid, firstInvalid } = validateVolunteerRequiredFields();
+      if (!allValid) {
+        volFormAlert.className = 'vol-form-alert vol-form-alert-error';
+        volFormAlert.style.display = 'block';
+        volFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.</span>';
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
       const originalHtml = volSubmitBtn.innerHTML;
       volSubmitBtn.disabled = true;
       volSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
@@ -589,6 +654,11 @@
             gtag('event', 'conversion', { 'send_to': 'AW-18460459117/zzsVCJmju_wcEO2A0eJE' });
           }
           volunteerForm.reset();
+          volRequiredIds.forEach(id => {
+            volFieldIcons[id].classList.remove('show');
+            const errorEl = document.getElementById(id + 'Error');
+            if (errorEl) errorEl.classList.remove('show');
+          });
         })
         .catch(() => {
           volFormAlert.className = 'vol-form-alert vol-form-alert-error';

@@ -248,6 +248,15 @@
     .form-group.has-error textarea { border-color: #dc2626; }
     .form-group.has-error .error-msg { display: block; }
 
+    /* Dấu tích xanh khi trường nhập đúng/hợp lệ */
+    .field-check-wrap { position: relative; }
+    .field-check-icon {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: #16a34a; font-size: 0.95rem; opacity: 0; transition: opacity 0.15s; pointer-events: none;
+    }
+    .field-check-icon.show { opacity: 1; }
+    select ~ .field-check-icon { right: 28px; }
+
     .form-submit-btn {
       width: 100%; padding: 0.95rem; font-size: 1rem; border-radius: 10px;
       display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -834,10 +843,25 @@
           validate: v => v.trim().length >= 10 }
       };
 
+      // Dấu tích xanh nhỏ khi trường đã nhập đúng
+      Object.keys(fields).forEach(key => {
+        const el = fields[key].input;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'field-check-wrap';
+        el.parentNode.insertBefore(wrapper, el);
+        wrapper.appendChild(el);
+        el.style.paddingRight = '2.2rem';
+        const icon = document.createElement('i');
+        icon.className = 'fa-solid fa-circle-check field-check-icon';
+        wrapper.appendChild(icon);
+        fields[key].icon = icon;
+      });
+
       function validateField(key) {
         const f = fields[key];
         const ok = f.validate(f.input.value);
         f.group.classList.toggle('has-error', !ok);
+        f.icon.classList.toggle('show', ok && f.input.value.trim() !== '');
         return ok;
       }
 
@@ -894,7 +918,10 @@
             gtag('event', 'conversion', { 'send_to': 'AW-18460459117/_D2WCLuJwf0cEO2A0eJE' });
           }
           form.reset();
-          Object.keys(fields).forEach(key => fields[key].group.classList.remove('has-error'));
+          Object.keys(fields).forEach(key => {
+            fields[key].group.classList.remove('has-error');
+            fields[key].icon.classList.remove('show');
+          });
         } catch (err) {
           feedback.className = 'form-feedback error';
           feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Đã có lỗi xảy ra, vui lòng thử lại sau hoặc liên hệ trực tiếp qua email.';

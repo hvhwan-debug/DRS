@@ -161,6 +161,16 @@
     }
     .item-form-field textarea { resize: vertical; min-height: 70px; }
 
+    /* Dấu tích xanh + dòng đỏ báo thiếu */
+    .field-check-wrap { position: relative; }
+    .field-check-icon {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: #16a34a; font-size: 0.95rem; opacity: 0; transition: opacity 0.15s; pointer-events: none;
+    }
+    .field-check-icon.show { opacity: 1; }
+    .field-error { color: #dc2626; font-size: 0.78rem; margin-top: 0.35rem; display: none; }
+    .field-error.show { display: block; }
+
     .item-checkbox-group { display: flex; flex-wrap: wrap; gap: 0.6rem; }
     .item-checkbox-item {
       display: flex; align-items: center; gap: 6px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 999px;
@@ -382,14 +392,17 @@
           <div class="item-form-field">
             <label for="itemName">Họ và tên</label>
             <input type="text" name="fullname" id="itemName" placeholder="Nguyễn Văn A" required>
+            <div class="field-error" id="itemNameError">Vui lòng nhập họ và tên.</div>
           </div>
           <div class="item-form-field">
             <label for="itemEmail">Email</label>
             <input type="email" name="email" id="itemEmail" placeholder="ban@email.com" required>
+            <div class="field-error" id="itemEmailError">Vui lòng nhập email hợp lệ.</div>
           </div>
           <div class="item-form-field">
             <label for="itemPhone">Số điện thoại</label>
-            <input type="tel" name="phone" id="itemPhone" placeholder="09xx xxx xxx" required>
+            <input type="tel" name="phone" id="itemPhone" placeholder="09xx xxx xxx" pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" required>
+            <div class="field-error" id="itemPhoneError">Vui lòng nhập đúng số điện thoại.</div>
           </div>
 
           <div class="item-form-field">
@@ -586,8 +599,60 @@
     const itemForm = document.getElementById('itemForm');
     const itemSubmitBtn = document.getElementById('itemSubmitBtn');
     const itemFormAlert = document.getElementById('itemFormAlert');
+
+    // Dấu tích xanh + dòng đỏ báo thiếu cho 3 trường bắt buộc
+    const itemRequiredIds = ['itemName', 'itemEmail', 'itemPhone'];
+    const itemFieldIcons = {};
+    itemRequiredIds.forEach(id => {
+      const el = document.getElementById(id);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field-check-wrap';
+      el.parentNode.insertBefore(wrapper, el);
+      wrapper.appendChild(el);
+      el.style.paddingRight = '2.2rem';
+      const icon = document.createElement('i');
+      icon.className = 'fa-solid fa-circle-check field-check-icon';
+      wrapper.appendChild(icon);
+      itemFieldIcons[id] = icon;
+
+      const errorEl = document.getElementById(id + 'Error');
+      const update = () => {
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        icon.classList.toggle('show', valid);
+        if (valid && errorEl) errorEl.classList.remove('show');
+      };
+      el.addEventListener('input', update);
+      el.addEventListener('change', update);
+    });
+
+    function validateItemRequiredFields() {
+      let allValid = true;
+      let firstInvalid = null;
+      itemRequiredIds.forEach(id => {
+        const el = document.getElementById(id);
+        const errorEl = document.getElementById(id + 'Error');
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        if (errorEl) errorEl.classList.toggle('show', !valid);
+        if (!valid) {
+          allValid = false;
+          if (!firstInvalid) firstInvalid = el;
+        }
+      });
+      return { allValid, firstInvalid };
+    }
+
     itemForm.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      const { allValid, firstInvalid } = validateItemRequiredFields();
+      if (!allValid) {
+        itemFormAlert.className = 'item-form-alert item-form-alert-error';
+        itemFormAlert.style.display = 'block';
+        itemFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.</span>';
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
       const originalHtml = itemSubmitBtn.innerHTML;
       itemSubmitBtn.disabled = true;
       itemSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
@@ -609,6 +674,11 @@
           itemFormAlert.className = 'item-form-alert item-form-alert-success';
           itemFormAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn! Chúng tôi sẽ liên hệ để xác nhận và hướng dẫn cách gửi hiện vật.</span>';
           itemForm.reset();
+          itemRequiredIds.forEach(id => {
+            itemFieldIcons[id].classList.remove('show');
+            const errorEl = document.getElementById(id + 'Error');
+            if (errorEl) errorEl.classList.remove('show');
+          });
         })
         .catch(() => {
           itemFormAlert.className = 'item-form-alert item-form-alert-error';

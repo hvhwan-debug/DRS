@@ -181,6 +181,16 @@
     }
     .donor-form-field input:focus { outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
 
+    /* Dấu tích xanh + dòng đỏ báo thiếu */
+    .field-check-wrap { position: relative; }
+    .field-check-icon {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: #16a34a; font-size: 0.95rem; opacity: 0; transition: opacity 0.15s; pointer-events: none;
+    }
+    .field-check-icon.show { opacity: 1; }
+    .field-error { color: #dc2626; font-size: 0.78rem; margin-top: 0.35rem; display: none; }
+    .field-error.show { display: block; }
+
     .donor-submit-btn {
       width: 100%; background: var(--blue-grad-btn); color: #fff; padding: 0.85rem 1.5rem; border-radius: 10px;
       font-weight: 800; font-size: 0.98rem; border: none; cursor: pointer; font-family: inherit;
@@ -448,9 +458,11 @@
 
           <div class="donor-form-field">
             <input type="text" name="fullname" id="donorName" placeholder="Họ và tên" required>
+            <div class="field-error" id="donorNameError">Vui lòng nhập họ và tên.</div>
           </div>
           <div class="donor-form-field">
             <input type="email" name="email" id="donorEmail" placeholder="Email liên hệ" required>
+            <div class="field-error" id="donorEmailError">Vui lòng nhập email hợp lệ.</div>
           </div>
           <div class="donor-form-field" style="margin-bottom: 0;">
             <input type="tel" name="phone" id="donorPhone" placeholder="Số điện thoại (không bắt buộc)">
@@ -695,8 +707,60 @@
     const donorForm = document.getElementById('donorForm');
     const donorSubmitBtn = document.getElementById('donorSubmitBtn');
     const donorFormAlert = document.getElementById('donorFormAlert');
+
+    // Dấu tích xanh + dòng đỏ báo thiếu cho Họ tên & Email (bắt buộc)
+    const donorRequiredIds = ['donorName', 'donorEmail'];
+    const donorFieldIcons = {};
+    donorRequiredIds.forEach(id => {
+      const el = document.getElementById(id);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field-check-wrap';
+      el.parentNode.insertBefore(wrapper, el);
+      wrapper.appendChild(el);
+      el.style.paddingRight = '2.2rem';
+      const icon = document.createElement('i');
+      icon.className = 'fa-solid fa-circle-check field-check-icon';
+      wrapper.appendChild(icon);
+      donorFieldIcons[id] = icon;
+
+      const errorEl = document.getElementById(id + 'Error');
+      const update = () => {
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        icon.classList.toggle('show', valid);
+        if (valid && errorEl) errorEl.classList.remove('show');
+      };
+      el.addEventListener('input', update);
+      el.addEventListener('change', update);
+    });
+
+    function validateDonorRequiredFields() {
+      let allValid = true;
+      let firstInvalid = null;
+      donorRequiredIds.forEach(id => {
+        const el = document.getElementById(id);
+        const errorEl = document.getElementById(id + 'Error');
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        if (errorEl) errorEl.classList.toggle('show', !valid);
+        if (!valid) {
+          allValid = false;
+          if (!firstInvalid) firstInvalid = el;
+        }
+      });
+      return { allValid, firstInvalid };
+    }
+
     donorForm.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      const { allValid, firstInvalid } = validateDonorRequiredFields();
+      if (!allValid) {
+        donorFormAlert.className = 'donor-form-alert donor-form-alert-error';
+        donorFormAlert.style.display = 'block';
+        donorFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.</span>';
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
       const originalHtml = donorSubmitBtn.innerHTML;
       donorSubmitBtn.disabled = true;
       donorSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
@@ -719,6 +783,11 @@
           donorFormAlert.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Cảm ơn bạn! Đội ngũ của chúng tôi sẽ liên hệ trong vòng 48 giờ để hướng dẫn hoàn tất tài trợ.</span>';
           donorForm.reset();
           donorImpactNote.innerHTML = '<i class="fa-solid fa-lightbulb"></i> <span>Nhập số tiền để xem ước tính tác động</span>';
+          donorRequiredIds.forEach(id => {
+            donorFieldIcons[id].classList.remove('show');
+            const errorEl = document.getElementById(id + 'Error');
+            if (errorEl) errorEl.classList.remove('show');
+          });
         })
         .catch(() => {
           donorFormAlert.className = 'donor-form-alert donor-form-alert-error';
