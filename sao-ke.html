@@ -450,6 +450,10 @@
   <div class="container">
     <div class="toolbar">
       <div class="search-box">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="searchNameInput" placeholder="Nhập họ tên (không dấu), ví dụ: Nguyen Van A" style="text-transform:none;" onkeydown="if(event.key==='Enter'){filterData();}">
+      </div>
+      <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="searchInput" placeholder="Nhập mã giao dịch, ví dụ: GD000123" onkeydown="if(event.key==='Enter'){filterData();}">
       </div>
@@ -734,76 +738,23 @@
 
     renderGalleryGrid();
 
-    // ==== DỮ LIỆU THỬ NGHIỆM (2.000 giao dịch ngẫu nhiên) ====
-    // Đây là dữ liệu giả lập để TEST chức năng tra cứu theo mã giao dịch.
-    // Khi triển khai thật, hãy thay hàm generateDynamicTransactions() bằng
-    // việc gọi API / đọc dữ liệu sao kê thật của ngân hàng.
-    const TOTAL_TEST_TRANSACTIONS = 2000;
-    let allTransactions = [];
+    // ==============================================================
+    // Tra cứu sao kê qua API backend (Azure Function: /api/lookup-transaction)
+    // Dữ liệu giao dịch thật được lưu trong Azure Table Storage, KHÔNG
+    // còn nằm trong mã nguồn frontend — chỉ trả về đúng 1 kết quả khớp
+    // cả họ tên (không dấu) và mã giao dịch, không bao giờ trả cả danh sách.
+    // ==============================================================
 
-    function generateDynamicTransactions() {
-      const firstNames = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý"];
-      const middleNames = ["Văn", "Thị", "Hữu", "Đình", "Minh", "Gia", "Học", "Thành", "Đức", "Quang", "Ngọc", "Hoài", "Phương", "Thu"];
-      const lastNames = ["An", "Bình", "Cường", "Dung", "Đạt", "Giang", "Hà", "Hải", "Hòa", "Hùng", "Hương", "Khang", "Linh", "Long", "Mai", "Nam", "Nga", "Phong", "Quân", "Sơn", "Tâm", "Thảo", "Trang", "Tuấn", "Vân", "Yến"];
-
-      const actions = [
-        "ung ho quy hoc lieu vung cao",
-        "gop quy tu sach cho em",
-        "ung ho chuong trinh tiep suc den truong",
-        "dong hanh cung drs",
-        "ung ho sua va sach vo",
-        "gop quy phat trien giao duc",
-        "ung ho tre em ha giang",
-        "ung ho tu sach tinh thuong",
-        "chung tay vi tuong lai tre tho",
-        "ho tro bua an ban tru"
-      ];
-
-      const today = new Date(2026, 8, 11); // Mốc ngày hiện tại (Tháng 9/2026)
-      const startOfYear = new Date(2026, 0, 1);
-      const diffDays = Math.ceil((today - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
-
-      const generated = [];
-
-      for (let i = 1; i <= TOTAL_TEST_TRANSACTIONS; i++) {
-        const rnd1 = ((i * 9301 + 49297) % 233280) / 233280;
-        const rnd2 = ((i * 3271 + 12345) % 233280) / 233280;
-        const rnd3 = ((i * 1231 + 54321) % 233280) / 233280;
-        const rnd4 = ((i * 5437 + 98765) % 233280) / 233280;
-
-        const fn = firstNames[Math.floor(rnd1 * firstNames.length)];
-        const mn = middleNames[Math.floor(rnd2 * middleNames.length)];
-        const ln = lastNames[Math.floor(rnd3 * lastNames.length)];
-        const fullName = `${fn} ${mn} ${ln}`;
-
-        const act = actions[Math.floor(rnd4 * actions.length)];
-        const amount = (Math.floor(rnd1 * 50) + 1) * 10000;
-
-        const dayOffset = i % diffDays;
-        let txDate = new Date(startOfYear.getTime() + dayOffset * (24 * 60 * 60 * 1000));
-        if (txDate > today) txDate = today;
-
-        const dd = String(txDate.getDate()).padStart(2, '0');
-        const mm = String(txDate.getMonth() + 1).padStart(2, '0');
-        const yyyy = txDate.getFullYear();
-        const dateStr = `${dd}/${mm}/${yyyy}`;
-
-        const code = `GD${String(i).padStart(6, '0')}`;
-        const content = `${fullName} ${act} - ${code}`;
-
-        generated.push({
-          code: code,
-          date: dateStr,
-          rawDate: txDate,
-          content: content,
-          amount: amount.toLocaleString('vi-VN') + " đ"
-        });
-      }
-
-      return generated;
+    // Bỏ dấu tiếng Việt + chuẩn hóa để chuẩn hóa input trước khi gửi lên API
+    function removeVietnameseDiacritics(str) {
+      return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d").replace(/Đ/g, "D")
+        .trim()
+        .toUpperCase()
+        .replace(/\s+/g, " ");
     }
-
-    allTransactions = generateDynamicTransactions();
 
     function renderEmptyPrompt() {
       const tbody = document.getElementById('tableBody');
@@ -812,12 +763,25 @@
           <td colspan="4">
             <div class="empty-state">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <p>Vui lòng nhập chính xác mã giao dịch (ví dụ: <code>GD000123</code>) rồi bấm <strong>Tra Cứu</strong> hoặc nhấn Enter để xem thông tin.</p>
+              <p>Vui lòng nhập đầy đủ <strong>họ tên (không dấu)</strong> và <strong>mã giao dịch</strong> (ví dụ: <code>Nguyen Van A</code> — <code>GD000123</code>) rồi bấm <strong>Tra Cứu</strong> hoặc nhấn Enter để xem thông tin.</p>
             </div>
           </td>
         </tr>`;
       document.getElementById('statsText').innerText = 'Hệ thống sẵn sàng';
-      document.getElementById('noticeText').innerText = 'Vui lòng nhập chính xác mã giao dịch để tra cứu.';
+      document.getElementById('noticeText').innerText = 'Vui lòng nhập đầy đủ họ tên và mã giao dịch để tra cứu.';
+    }
+
+    function renderLoading() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              <p>Đang tra cứu...</p>
+            </div>
+          </td>
+        </tr>`;
     }
 
     function renderNotFound(keyword) {
@@ -827,12 +791,27 @@
           <td colspan="4">
             <div class="empty-state">
               <i class="fa-solid fa-circle-exclamation"></i>
-              <p>Không tìm thấy giao dịch nào với mã <code>${keyword}</code>. Vui lòng kiểm tra lại chính xác mã giao dịch.</p>
+              <p>Không tìm thấy giao dịch nào khớp với <code>${keyword}</code>. Vui lòng kiểm tra lại chính xác họ tên (không dấu) và mã giao dịch.</p>
             </div>
           </td>
         </tr>`;
       document.getElementById('statsText').innerText = 'Kết quả: 0';
-      document.getElementById('noticeText').innerText = 'Không có giao dịch khớp với mã đã nhập.';
+      document.getElementById('noticeText').innerText = 'Không có giao dịch khớp với họ tên và mã đã nhập.';
+    }
+
+    function renderError() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <p>Có lỗi xảy ra khi tra cứu. Vui lòng thử lại sau ít phút.</p>
+            </div>
+          </td>
+        </tr>`;
+      document.getElementById('statsText').innerText = 'Lỗi tra cứu';
+      document.getElementById('noticeText').innerText = 'Vui lòng thử lại sau.';
     }
 
     function renderResult(tx) {
@@ -848,21 +827,29 @@
       document.getElementById('noticeText').innerText = 'Đã tìm thấy giao dịch khớp với mã đã nhập.';
     }
 
-    function filterData() {
-      const keyword = document.getElementById('searchInput').value.trim().toUpperCase();
+    async function filterData() {
+      const codeKeyword = document.getElementById('searchInput').value.trim().toUpperCase();
+      const nameKeywordRaw = document.getElementById('searchNameInput').value.trim();
 
-      if (keyword === "") {
+      if (codeKeyword === "" || nameKeywordRaw === "") {
         renderEmptyPrompt();
         return;
       }
 
-      // Chỉ hiện kết quả khi mã giao dịch nhập vào KHỚP CHÍNH XÁC
-      const found = allTransactions.find(tx => tx.code === keyword);
+      renderLoading();
 
-      if (found) {
-        renderResult(found);
-      } else {
-        renderNotFound(keyword);
+      try {
+        const params = new URLSearchParams({ code: codeKeyword, name: nameKeywordRaw });
+        const res = await fetch(`/api/lookup-transaction?${params.toString()}`);
+        const data = await res.json();
+
+        if (data.success) {
+          renderResult(data.data);
+        } else {
+          renderNotFound(`${nameKeywordRaw} - ${codeKeyword}`);
+        }
+      } catch (err) {
+        renderError();
       }
     }
 
