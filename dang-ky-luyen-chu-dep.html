@@ -788,6 +788,56 @@
 
         <datalist id="hanoiWardsDatalist"></datalist>
 
+        <datalist id="schoolsDatalist">
+          <option value="Đại học Quốc gia Hà Nội">
+          <option value="Đại học Sư phạm Hà Nội">
+          <option value="Đại học Sư phạm Hà Nội 2">
+          <option value="Đại học Bách khoa Hà Nội">
+          <option value="Đại học Ngoại thương">
+          <option value="Đại học Kinh tế Quốc dân">
+          <option value="Học viện Ngân hàng">
+          <option value="Học viện Tài chính">
+          <option value="Đại học Luật Hà Nội">
+          <option value="Đại học Y Hà Nội">
+          <option value="Đại học Ngoại ngữ - ĐHQGHN">
+          <option value="Đại học Hà Nội">
+          <option value="Học viện Báo chí và Tuyên truyền">
+          <option value="Đại học Giao thông Vận tải">
+          <option value="Đại học Xây dựng Hà Nội">
+          <option value="Đại học Thủy lợi">
+          <option value="Đại học Công nghiệp Hà Nội">
+          <option value="Đại học Mở Hà Nội">
+          <option value="Đại học Văn hóa Hà Nội">
+          <option value="Học viện Nông nghiệp Việt Nam">
+          <option value="Đại học Lao động - Xã hội">
+          <option value="Đại học Thương mại">
+          <option value="Học viện Công nghệ Bưu chính Viễn thông">
+          <option value="Đại học FPT">
+          <option value="Đại học Thủ đô Hà Nội">
+        </datalist>
+
+        <datalist id="majorsDatalist">
+          <option value="Giáo dục Tiểu học">
+          <option value="Giáo dục Mầm non">
+          <option value="Sư phạm Ngữ văn">
+          <option value="Sư phạm Toán học">
+          <option value="Sư phạm Tiếng Anh">
+          <option value="Sư phạm Lịch sử">
+          <option value="Ngôn ngữ Anh">
+          <option value="Tâm lý học">
+          <option value="Tâm lý học giáo dục">
+          <option value="Công tác xã hội">
+          <option value="Công nghệ thông tin">
+          <option value="Quản trị kinh doanh">
+          <option value="Kế toán">
+          <option value="Luật">
+          <option value="Y đa khoa">
+          <option value="Kinh tế">
+          <option value="Báo chí">
+          <option value="Xã hội học">
+          <option value="Khác">
+        </datalist>
+
         <form id="parentForm" onsubmit="return handleParentSubmit(event)">
           <div class="form-group">
             <label for="lcParentName">Họ tên phụ huynh / người giám hộ <span class="required">*</span></label>
@@ -905,11 +955,11 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="lcVolSchool">Trường đang học</label>
-                <input type="text" id="lcVolSchool" name="truong_dang_hoc" placeholder="VD: Đại học Sư phạm Hà Nội">
+                <input type="text" id="lcVolSchool" name="truong_dang_hoc" list="schoolsDatalist" placeholder="Gõ để tìm hoặc nhập tên trường...">
               </div>
               <div class="form-group">
                 <label for="lcVolMajor">Ngành học</label>
-                <input type="text" id="lcVolMajor" name="nganh_hoc" placeholder="VD: Giáo dục Tiểu học">
+                <input type="text" id="lcVolMajor" name="nganh_hoc" list="majorsDatalist" placeholder="Gõ để tìm hoặc nhập ngành học...">
               </div>
             </div>
           </div>
@@ -918,7 +968,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="lcVolWorkplace">Trường / đơn vị đang giảng dạy</label>
-                <input type="text" id="lcVolWorkplace" name="truong_giang_day" placeholder="VD: Tiểu học ABC">
+                <input type="text" id="lcVolWorkplace" name="truong_giang_day" list="schoolsDatalist" placeholder="Gõ để tìm hoặc nhập tên trường...">
               </div>
               <div class="form-group">
                 <label for="lcVolSubject">Môn / cấp đang dạy</label>
@@ -937,6 +987,16 @@
           <div class="form-group">
             <label for="lcVolExperience">Kinh nghiệm dạy học / luyện chữ (nếu có)</label>
             <textarea id="lcVolExperience" name="kinh_nghiem" placeholder="VD: Sinh viên sư phạm, từng dạy kèm, có kinh nghiệm viết chữ đẹp..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Minh chứng công việc / học tập (không bắt buộc)</label>
+            <label class="support-image-upload-box" id="lcVolProofBox" for="lcVolProofInput">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>Bấm để chọn ảnh (VD: thẻ sinh viên, thẻ giáo viên, giấy tờ liên quan)</span>
+              <input type="file" id="lcVolProofInput" accept="image/*" multiple>
+            </label>
+            <div class="support-image-count-hint" id="lcVolProofHint">Chưa chọn ảnh nào (không bắt buộc)</div>
+            <div class="support-image-preview-grid" id="lcVolProofPreview"></div>
           </div>
           <div class="form-group">
             <label for="lcVolTime">Thời gian có thể tham gia</label>
@@ -1403,6 +1463,51 @@
       e.target.value = '';
     });
 
+    // ==============================================================
+    // Minh chứng công việc/học tập (không bắt buộc) — form Tình nguyện viên
+    // ==============================================================
+    const MAX_VOL_PROOF_IMAGES = 3;
+    const MAX_VOL_PROOF_SIZE_MB = 5;
+    let lcVolProofImages = [];
+
+    function renderLcVolProofPreview() {
+      const grid = document.getElementById('lcVolProofPreview');
+      const hint = document.getElementById('lcVolProofHint');
+      grid.innerHTML = lcVolProofImages.map((file, idx) => {
+        const url = URL.createObjectURL(file);
+        return `
+          <div class="support-image-preview-item">
+            <img src="${url}" alt="Minh chứng ${idx + 1}">
+            <button type="button" class="support-image-preview-remove" onclick="removeLcVolProof(${idx})" aria-label="Xóa ảnh">✕</button>
+          </div>`;
+      }).join('');
+      const count = lcVolProofImages.length;
+      hint.className = count > 0 ? 'support-image-count-hint ok' : 'support-image-count-hint';
+      hint.textContent = count > 0
+        ? `Đã chọn ${count} ảnh (tối đa ${MAX_VOL_PROOF_IMAGES})`
+        : 'Chưa chọn ảnh nào (không bắt buộc)';
+    }
+
+    function removeLcVolProof(index) {
+      lcVolProofImages.splice(index, 1);
+      renderLcVolProofPreview();
+    }
+
+    function addLcVolProofFiles(fileList) {
+      for (const file of fileList) {
+        if (!file.type.startsWith('image/')) continue;
+        if (lcVolProofImages.length >= MAX_VOL_PROOF_IMAGES) break;
+        if (file.size > MAX_VOL_PROOF_SIZE_MB * 1024 * 1024) continue;
+        lcVolProofImages.push(file);
+      }
+      renderLcVolProofPreview();
+    }
+
+    document.getElementById('lcVolProofInput').addEventListener('change', function (e) {
+      addLcVolProofFiles(e.target.files);
+      e.target.value = '';
+    });
+
     // Submit: form Phụ huynh
     // ==============================================================
     const parentForm = document.getElementById('parentForm');
@@ -1503,11 +1608,23 @@
       const formData = new FormData(lcVolunteerForm);
       const payload = { formType: 'luyen_chu_tinh_nguyen', data: Object.fromEntries(formData.entries()) };
 
-      fetch('/api/send-notification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
+      const attachmentPromise = lcVolProofImages.length > 0
+        ? Promise.all(lcVolProofImages.map(async (file) => ({
+            filename: file.name,
+            type: file.type,
+            content: await lcFileToBase64(file)
+          })))
+        : Promise.resolve([]);
+
+      attachmentPromise
+        .then(attachments => {
+          if (attachments.length > 0) payload.attachments = attachments;
+          return fetch('/api/send-notification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        })
         .then(async res => {
           const resData = await res.json().catch(() => ({}));
           if (!res.ok || !resData.success) throw new Error(resData.message || 'failed');
@@ -1515,6 +1632,8 @@
         .then(() => {
           lcVolunteerForm.style.display = 'none';
           document.getElementById('lcVolSuccess').style.display = 'block';
+          lcVolProofImages = [];
+          renderLcVolProofPreview();
         })
         .catch(() => {
           lcVolFormAlert.style.display = 'block';
