@@ -500,7 +500,10 @@
       color: var(--text-dark);
       box-shadow: 0 10px 30px rgba(15,23,42,0.08);
     }
-    .support-hero-card-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: #64748b; margin-bottom: 1rem; text-align: center; }
+    .support-hero-card-label {
+      font-size: 1.15rem; font-weight: 800; letter-spacing: 0.01em; color: var(--text-dark);
+      margin-bottom: 1.2rem; text-align: center; line-height: 1.4;
+    }
     .support-need-grid { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem; }
     .support-need-option {
       display: flex; align-items: center; gap: 1rem;
@@ -745,7 +748,7 @@
     <div class="support-photo-hero-inner">
     <div class="support-hero-card">
       <div class="support-hero-card-step" id="heroStepNeed">
-        <div class="support-hero-card-label">BẠN MUỐN ĐĂNG KÝ VỚI VAI TRÒ NÀO?</div>
+        <div class="support-hero-card-label"><i class="fa-solid fa-hand-point-right" style="color:#0284c7; margin-right:0.4rem;"></i>Bạn muốn đăng ký với vai trò nào?</div>
         <div class="support-need-grid">
           <button type="button" class="support-need-option" data-role="parent" onclick="chooseRole('parent')">
             <i class="fa-solid fa-child-reaching"></i>
