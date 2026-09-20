@@ -629,9 +629,9 @@
     }
 
     /* Ô chọn nhu cầu dạng viên thuốc, xếp ngang tự xuống dòng */
-    .item-radio-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .item-radio-group { display: flex; flex-wrap: nowrap; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }
     .item-radio-item {
-      display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600;
+      display: inline-flex; flex-shrink: 0; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600;
       color: var(--text-dark); cursor: pointer; border: 1.5px solid var(--border); border-radius: 999px;
       padding: 0.4rem 0.85rem; background: #f8fafc; white-space: nowrap;
       transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
