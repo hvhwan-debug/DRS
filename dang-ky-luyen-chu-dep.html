@@ -628,26 +628,40 @@
       .form-row { flex-direction: column; gap: 0; }
     }
 
-    /* Ô chọn nhu cầu dạng viên thuốc, xếp ngang tự xuống dòng */
-    .item-radio-group { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .item-radio-item {
-      display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 600;
-      color: var(--text-dark); cursor: pointer; border: 1.5px solid var(--border); border-radius: 999px;
-      padding: 0.3rem 0.6rem; background: #f8fafc; white-space: nowrap;
-      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    /* Box xổ xuống chọn nhiều mục — bấm vào để hiện danh sách checkbox,
+       ô đóng hiện tóm tắt các mục đã chọn. */
+    .dropdown-select { position: relative; }
+    .dropdown-select-toggle {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+      padding: 0.6rem 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; background: #f8fafc;
+      font-family: inherit; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; text-align: left;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .item-radio-item:hover { border-color: #94a3b8; }
-    .item-radio-item:has(input:checked) { border-color: #0284c7; background: #eff6ff; color: #0369a1; box-shadow: 0 1px 4px rgba(2,132,199,0.15); }
-    .item-radio-item input[type="checkbox"] {
-      appearance: none; -webkit-appearance: none; width: 13px; height: 13px; flex-shrink: 0;
-      border: 1.5px solid #94a3b8; border-radius: 3px; margin: 0; cursor: pointer; position: relative;
+    .dropdown-select-toggle:hover { border-color: #94a3b8; }
+    .dropdown-select.open .dropdown-select-toggle { border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.12); }
+    .dropdown-select.has-selection .dropdown-select-text { color: var(--text-dark); font-weight: 600; }
+    .dropdown-select-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dropdown-select-toggle i { flex-shrink: 0; color: #94a3b8; font-size: 0.8rem; transition: transform 0.15s; }
+    .dropdown-select.open .dropdown-select-toggle i { transform: rotate(180deg); }
+    .dropdown-select-panel {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30;
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      box-shadow: 0 10px 28px rgba(15,23,42,0.14); padding: 0.4rem; max-height: 230px; overflow-y: auto;
+    }
+    .dropdown-select.open .dropdown-select-panel { display: block; }
+    .dropdown-select-option {
+      display: flex; align-items: center; gap: 9px; padding: 0.55rem 0.6rem; border-radius: 6px;
+      cursor: pointer; font-size: 0.88rem; color: var(--text-dark); font-weight: 500;
+    }
+    .dropdown-select-option:hover { background: #f0f9ff; }
+    .dropdown-select-option input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none; width: 15px; height: 15px; flex-shrink: 0;
+      border: 1.5px solid #94a3b8; border-radius: 4px; margin: 0; cursor: pointer; position: relative;
       transition: border-color 0.15s, background 0.15s;
     }
-    .item-radio-item input[type="checkbox"]:checked {
-      background: #0284c7; border-color: #0284c7;
-    }
-    .item-radio-item input[type="checkbox"]:checked::after {
-      content: ''; position: absolute; left: 3px; top: -1px; width: 3px; height: 7px;
+    .dropdown-select-option input[type="checkbox"]:checked { background: #0284c7; border-color: #0284c7; }
+    .dropdown-select-option input[type="checkbox"]:checked::after {
+      content: ''; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px;
       border: solid #fff; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg);
     }
     .support-hero-form-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.7rem; text-align: center; }
@@ -927,12 +941,18 @@
           </div>
           <div class="form-group">
             <label>Nhu cầu cần hỗ trợ của trẻ (chọn các mục phù hợp)</label>
-            <div class="item-radio-group">
-              <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Tư thế ngồi viết"> Tư thế ngồi viết</label>
-              <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Cách cầm bút"> Cách cầm bút</label>
-              <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Viết đúng nét"> Viết đúng nét</label>
-              <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Tốc độ viết"> Tốc độ viết</label>
-              <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Trình bày bài viết"> Trình bày bài viết</label>
+            <div class="dropdown-select" id="nhuCauDropdown" data-placeholder="— Chọn nhu cầu cần hỗ trợ —">
+              <button type="button" class="dropdown-select-toggle" onclick="toggleDropdownSelect('nhuCauDropdown')">
+                <span class="dropdown-select-text">— Chọn nhu cầu cần hỗ trợ —</span>
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <div class="dropdown-select-panel">
+                <label class="dropdown-select-option"><input type="checkbox" name="nhu_cau[]" value="Tư thế ngồi viết" onchange="updateDropdownSelectText('nhuCauDropdown')"> Tư thế ngồi viết</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="nhu_cau[]" value="Cách cầm bút" onchange="updateDropdownSelectText('nhuCauDropdown')"> Cách cầm bút</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="nhu_cau[]" value="Viết đúng nét" onchange="updateDropdownSelectText('nhuCauDropdown')"> Viết đúng nét</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="nhu_cau[]" value="Tốc độ viết" onchange="updateDropdownSelectText('nhuCauDropdown')"> Tốc độ viết</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="nhu_cau[]" value="Trình bày bài viết" onchange="updateDropdownSelectText('nhuCauDropdown')"> Trình bày bài viết</label>
+              </div>
             </div>
           </div>
           <div class="form-group">
@@ -1090,10 +1110,16 @@
           </div>
           <div class="form-group">
             <label>Hình thức hỗ trợ (chọn các mục phù hợp) <span class="required">*</span></label>
-            <div class="item-radio-group">
-              <label class="item-radio-item"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Địa điểm tổ chức lớp học"> Địa điểm tổ chức lớp học</label>
-              <label class="item-radio-item"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Học liệu (sách vở, bút, dụng cụ)"> Học liệu (sách vở, bút, dụng cụ)</label>
-              <label class="item-radio-item"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Kinh phí"> Kinh phí</label>
+            <div class="dropdown-select" id="hinhThucDropdown" data-placeholder="— Chọn hình thức hỗ trợ —">
+              <button type="button" class="dropdown-select-toggle" onclick="toggleDropdownSelect('hinhThucDropdown')">
+                <span class="dropdown-select-text">— Chọn hình thức hỗ trợ —</span>
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <div class="dropdown-select-panel">
+                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Địa điểm tổ chức lớp học" onchange="updateDropdownSelectText('hinhThucDropdown')"> Địa điểm tổ chức lớp học</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Học liệu (sách vở, bút, dụng cụ)" onchange="updateDropdownSelectText('hinhThucDropdown')"> Học liệu (sách vở, bút, dụng cụ)</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Kinh phí" onchange="updateDropdownSelectText('hinhThucDropdown')"> Kinh phí</label>
+              </div>
             </div>
             <div class="field-error" id="lcSponsorTypeError">Vui lòng chọn ít nhất 1 hình thức hỗ trợ.</div>
           </div>
@@ -1190,6 +1216,35 @@
       document.getElementById('lcVolTeacherFields').style.display = type === 'Giáo viên' ? 'block' : 'none';
       document.getElementById('lcVolOtherFields').style.display = type === 'Khác' ? 'block' : 'none';
     }
+
+    // Box xổ xuống chọn nhiều mục (Nhu cầu hỗ trợ / Hình thức hỗ trợ)
+    function toggleDropdownSelect(id) {
+      const el = document.getElementById(id);
+      const willOpen = !el.classList.contains('open');
+      document.querySelectorAll('.dropdown-select.open').forEach(d => {
+        if (d.id !== id) d.classList.remove('open');
+      });
+      el.classList.toggle('open', willOpen);
+    }
+
+    function updateDropdownSelectText(id) {
+      const el = document.getElementById(id);
+      const textEl = el.querySelector('.dropdown-select-text');
+      const checked = [...el.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
+      if (checked.length === 0) {
+        textEl.textContent = el.dataset.placeholder || '— Chọn —';
+        el.classList.remove('has-selection');
+      } else {
+        textEl.textContent = checked.join(', ');
+        el.classList.add('has-selection');
+      }
+    }
+
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.dropdown-select.open').forEach(d => {
+        if (!d.contains(e.target)) d.classList.remove('open');
+      });
+    });
 
     function chooseRole(role) {
       document.getElementById('heroStepNeed').style.display = 'none';
