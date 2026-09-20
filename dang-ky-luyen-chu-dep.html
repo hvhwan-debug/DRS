@@ -1018,14 +1018,15 @@
             <textarea id="lcVolExperience" name="kinh_nghiem" placeholder="VD: Sinh viên sư phạm, từng dạy kèm, có kinh nghiệm viết chữ đẹp..."></textarea>
           </div>
           <div class="form-group">
-            <label>Minh chứng công việc / học tập (không bắt buộc)</label>
+            <label>Minh chứng công việc / học tập <span class="required">*</span></label>
             <label class="support-image-upload-box" id="lcVolProofBox" for="lcVolProofInput">
               <i class="fa-solid fa-cloud-arrow-up"></i>
               <span>Bấm để chọn ảnh (VD: thẻ sinh viên, thẻ giáo viên, giấy tờ liên quan)</span>
               <input type="file" id="lcVolProofInput" accept="image/*" multiple>
             </label>
-            <div class="support-image-count-hint" id="lcVolProofHint">Chưa chọn ảnh nào (không bắt buộc)</div>
+            <div class="support-image-count-hint" id="lcVolProofHint">Chưa chọn ảnh nào (cần tối thiểu 1 ảnh)</div>
             <div class="support-image-preview-grid" id="lcVolProofPreview"></div>
+            <div class="field-error" id="lcVolProofError">Vui lòng đính kèm ít nhất 1 ảnh minh chứng công việc/học tập.</div>
           </div>
           <div class="form-group">
             <label for="lcVolTime">Thời gian có thể tham gia</label>
@@ -1506,8 +1507,9 @@
     });
 
     // ==============================================================
-    // Minh chứng công việc/học tập (không bắt buộc) — form Tình nguyện viên
+    // Minh chứng công việc/học tập (bắt buộc) — form Tình nguyện viên
     // ==============================================================
+    const MIN_VOL_PROOF_IMAGES = 1;
     const MAX_VOL_PROOF_IMAGES = 3;
     const MAX_VOL_PROOF_SIZE_MB = 5;
     let lcVolProofImages = [];
@@ -1527,7 +1529,8 @@
       hint.className = count > 0 ? 'support-image-count-hint ok' : 'support-image-count-hint';
       hint.textContent = count > 0
         ? `Đã chọn ${count} ảnh (tối đa ${MAX_VOL_PROOF_IMAGES})`
-        : 'Chưa chọn ảnh nào (không bắt buộc)';
+        : `Chưa chọn ảnh nào (cần tối thiểu ${MIN_VOL_PROOF_IMAGES} ảnh)`;
+      if (count > 0) document.getElementById('lcVolProofError').classList.remove('show');
     }
 
     function removeLcVolProof(index) {
@@ -1635,11 +1638,15 @@
       e.preventDefault();
 
       const { allValid, firstInvalid } = validateLcRequiredFields(LC_VOL_REQUIRED_IDS);
-      if (!allValid) {
+      const proofError = document.getElementById('lcVolProofError');
+      const proofValid = lcVolProofImages.length >= MIN_VOL_PROOF_IMAGES;
+      proofError.classList.toggle('show', !proofValid);
+
+      if (!allValid || !proofValid) {
         lcVolFormAlert.style.display = 'block';
         lcVolFormAlert.style.color = '#dc2626';
         lcVolFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.';
-        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        (firstInvalid || document.getElementById('lcVolProofBox')).scrollIntoView({ behavior: 'smooth', block: 'center' });
         return false;
       }
 
