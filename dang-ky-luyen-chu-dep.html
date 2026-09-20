@@ -501,26 +501,36 @@
       box-shadow: 0 10px 30px rgba(15,23,42,0.08);
     }
     .support-hero-card-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: #64748b; margin-bottom: 1rem; text-align: center; }
-    .support-need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1rem; }
+    .support-need-grid { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem; }
     .support-need-option {
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      display: flex; align-items: center; gap: 1rem;
       border: 2px solid var(--border); border-radius: 12px; background: #fff;
-      padding: 1.2rem 0.8rem; font-size: 0.88rem; font-weight: 700; color: var(--text-dark);
-      cursor: pointer; text-align: center; line-height: 1.3;
+      padding: 1rem 1.2rem; font-size: 1rem; font-weight: 700; color: var(--text-dark);
+      cursor: pointer; text-align: left; line-height: 1.3; width: 100%;
       transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
-      font-family: inherit; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+      font-family: inherit; box-shadow: 0 2px 6px rgba(15,23,42,0.08);
     }
     .support-need-option i {
-      font-size: 1.5rem; color: #0284c7; width: 48px; height: 48px; border-radius: 50%;
-      background: #eff6ff; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.5rem; width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, color 0.15s;
     }
-    .support-need-option:hover {
-      border-color: #0284c7; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(2,132,199,0.15);
-    }
-    .support-need-option:hover i { background: #0284c7; color: #fff; }
-    .support-need-option.selected { border-color: #0284c7; background: #eff6ff; color: #0369a1; }
-    .support-need-option.selected i { background: #0284c7; color: #fff; }
+    .support-need-option .role-text { display: flex; flex-direction: column; gap: 0.15rem; }
+    .support-need-option .role-sub { font-weight: 400; font-size: 0.82rem; opacity: 0.85; }
+    /* Mỗi vai trò 1 màu riêng để dễ phân biệt và nổi bật hơn */
+    .support-need-option[data-role="parent"] i { color: #0284c7; background: #eff6ff; }
+    .support-need-option[data-role="parent"]:hover, .support-need-option[data-role="parent"].selected { border-color: #0284c7; background: #eff6ff; }
+    .support-need-option[data-role="parent"]:hover i, .support-need-option[data-role="parent"].selected i { background: #0284c7; color: #fff; }
+
+    .support-need-option[data-role="volunteer"] i { color: #0d9488; background: #f0fdfa; }
+    .support-need-option[data-role="volunteer"]:hover, .support-need-option[data-role="volunteer"].selected { border-color: #0d9488; background: #f0fdfa; }
+    .support-need-option[data-role="volunteer"]:hover i, .support-need-option[data-role="volunteer"].selected i { background: #0d9488; color: #fff; }
+
+    .support-need-option[data-role="sponsor"] i { color: #b45309; background: #fffbeb; }
+    .support-need-option[data-role="sponsor"]:hover, .support-need-option[data-role="sponsor"].selected { border-color: #b45309; background: #fffbeb; }
+    .support-need-option[data-role="sponsor"]:hover i, .support-need-option[data-role="sponsor"].selected i { background: #b45309; color: #fff; }
+
+    .support-need-option:hover { transform: translateX(4px); box-shadow: 0 10px 24px rgba(15,23,42,0.14); }
     .support-hero-card-note { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.1rem; text-align: center; }
     .support-hero-card-note i { color: #0284c7; }
     .support-cta-btn {
@@ -532,8 +542,8 @@
 
     @media (max-width: 480px) {
       .support-hero-card { padding: 1.4rem 1.1rem; max-width: 100%; }
-      .support-need-grid { grid-template-columns: 1fr; }
-      .support-need-option { padding: 1rem 0.7rem; font-size: 0.9rem; }
+      .support-need-option { padding: 0.85rem 0.9rem; font-size: 0.92rem; gap: 0.7rem; }
+      .support-need-option i { width: 42px; height: 42px; font-size: 1.25rem; }
       .support-photo-hero { padding: 2rem 1rem; }
       .page-banner { padding: 2.4rem 1.2rem 2.8rem; }
       .page-banner .hero-badge { font-size: 0.74rem; padding: 0.35rem 0.9rem; }
@@ -737,8 +747,18 @@
       <div class="support-hero-card-step" id="heroStepNeed">
         <div class="support-hero-card-label">BẠN MUỐN ĐĂNG KÝ VỚI VAI TRÒ NÀO?</div>
         <div class="support-need-grid">
-          <button type="button" class="support-need-option" onclick="chooseRole('parent')"><i class="fa-solid fa-child-reaching"></i><span>Phụ huynh / Người giám hộ</span><span style="font-weight:400; font-size:0.78rem; opacity:0.85;">Đăng ký cho con em tham gia lớp học</span></button>
-          <button type="button" class="support-need-option" onclick="chooseRole('volunteer')"><i class="fa-solid fa-hands-holding-child"></i><span>Tình nguyện viên</span><span style="font-weight:400; font-size:0.78rem; opacity:0.85;">Đăng ký dạy hoặc hỗ trợ lớp học</span></button>
+          <button type="button" class="support-need-option" data-role="parent" onclick="chooseRole('parent')">
+            <i class="fa-solid fa-child-reaching"></i>
+            <span class="role-text"><span>Phụ huynh / Người giám hộ</span><span class="role-sub">Đăng ký cho con em tham gia lớp học</span></span>
+          </button>
+          <button type="button" class="support-need-option" data-role="volunteer" onclick="chooseRole('volunteer')">
+            <i class="fa-solid fa-hands-holding-child"></i>
+            <span class="role-text"><span>Tình nguyện viên</span><span class="role-sub">Đăng ký dạy hoặc hỗ trợ lớp học</span></span>
+          </button>
+          <button type="button" class="support-need-option" data-role="sponsor" onclick="chooseRole('sponsor')">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+            <span class="role-text"><span>Nhà tài trợ / Đơn vị hỗ trợ</span><span class="role-sub">Hỗ trợ địa điểm, học liệu hoặc kinh phí</span></span>
+          </button>
         </div>
         <div class="support-hero-card-note"><i class="fa-solid fa-heart"></i> Chương trình xét duyệt theo hoàn cảnh thực tế và số chỗ học của từng khóa — <a href="chi-tiet.html?slug=chuong-trinh-luyen-chu-dep-tre-em-kho-khan-ha-noi" style="color:#0284c7; text-decoration:underline;">tìm hiểu thêm về chương trình</a>.</div>
       </div>
@@ -883,6 +903,56 @@
           <p>Cảm ơn bạn đã muốn đồng hành cùng chương trình. Đội ngũ điều phối sẽ liên hệ trong thời gian sớm nhất.</p>
         </div>
       </div>
+
+      <!-- ============ FORM NHÀ TÀI TRỢ ============ -->
+      <div class="support-hero-card-step" id="sponsorStep" style="display:none;">
+        <div class="support-hero-form-header">
+          <span>Nhà tài trợ / Đơn vị hỗ trợ</span>
+          <button type="button" class="support-hero-back" onclick="backToRoleSelect()">← Chọn lại</button>
+        </div>
+
+        <form id="lcSponsorForm" onsubmit="return handleLcSponsorSubmit(event)">
+          <div class="form-group">
+            <label for="lcSponsorName">Họ tên / Tên đơn vị <span class="required">*</span></label>
+            <input type="text" id="lcSponsorName" name="ten_tai_tro" required placeholder="Cá nhân hoặc tên công ty/tổ chức">
+            <div class="field-error" id="lcSponsorNameError">Vui lòng nhập họ tên hoặc tên đơn vị.</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+            <label for="lcSponsorPhone">Số điện thoại <span class="required">*</span></label>
+            <input type="tel" id="lcSponsorPhone" name="sdt_tai_tro" required pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" placeholder="09xx xxx xxx">
+            <div class="field-error" id="lcSponsorPhoneError">Vui lòng nhập đúng số điện thoại.</div>
+          </div>
+            <div class="form-group">
+            <label for="lcSponsorEmail">Email <span class="required">*</span></label>
+            <input type="email" id="lcSponsorEmail" name="email_tai_tro" required placeholder="ban@email.com">
+            <div class="field-error" id="lcSponsorEmailError">Vui lòng nhập email hợp lệ.</div>
+          </div>
+          </div>
+          <div class="form-group">
+            <label>Hình thức hỗ trợ (chọn các mục phù hợp) <span class="required">*</span></label>
+            <div class="item-radio-group">
+              <label class="item-radio-item"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Địa điểm tổ chức lớp học"> Địa điểm tổ chức lớp học</label>
+              <label class="item-radio-item"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Học liệu (sách vở, bút, dụng cụ)"> Học liệu (sách vở, bút, dụng cụ)</label>
+              <label class="item-radio-item"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Kinh phí"> Kinh phí</label>
+            </div>
+            <div class="field-error" id="lcSponsorTypeError">Vui lòng chọn ít nhất 1 hình thức hỗ trợ.</div>
+          </div>
+          <div class="form-group">
+            <label for="lcSponsorDetail">Chi tiết cụ thể</label>
+            <textarea id="lcSponsorDetail" name="chi_tiet_tai_tro" placeholder="VD: Địa điểm tại quận nào, sức chứa bao nhiêu người; loại học liệu và số lượng; mức kinh phí dự kiến..."></textarea>
+          </div>
+          <button type="submit" class="support-cta-btn" id="lcSponsorSubmitBtn">GỬI ĐĂNG KÝ TÀI TRỢ</button>
+          <p class="support-hero-form-note">Thông tin của bạn được bảo mật và chỉ dùng để đội ngũ chương trình liên hệ.</p>
+          <div class="support-form-alert" id="lcSponsorFormAlert" style="display:none; margin-top:0.8rem; font-size:0.85rem; text-align:center;"></div>
+        </form>
+
+        <div class="support-success" id="lcSponsorSuccess" style="display:none;">
+          <i class="fa-solid fa-circle-check"></i>
+          <h3>Đã gửi đăng ký thành công!</h3>
+          <p>Cảm ơn bạn đã muốn đồng hành cùng chương trình. Đội ngũ điều phối sẽ liên hệ để trao đổi cụ thể trong thời gian sớm nhất.</p>
+        </div>
+      </div>
     </div>
     </div>
   </section>
@@ -944,16 +1014,20 @@
       document.getElementById('heroStepNeed').style.display = 'none';
       document.getElementById('parentStep').style.display = role === 'parent' ? 'block' : 'none';
       document.getElementById('volunteerStep').style.display = role === 'volunteer' ? 'block' : 'none';
+      document.getElementById('sponsorStep').style.display = role === 'sponsor' ? 'block' : 'none';
     }
 
     function backToRoleSelect() {
       document.getElementById('parentStep').style.display = 'none';
       document.getElementById('volunteerStep').style.display = 'none';
+      document.getElementById('sponsorStep').style.display = 'none';
       document.getElementById('heroStepNeed').style.display = 'block';
       document.getElementById('parentForm').style.display = 'block';
       document.getElementById('parentSuccess').style.display = 'none';
       document.getElementById('lcVolunteerForm').style.display = 'block';
       document.getElementById('lcVolSuccess').style.display = 'none';
+      document.getElementById('lcSponsorForm').style.display = 'block';
+      document.getElementById('lcSponsorSuccess').style.display = 'none';
     }
 
     // Dữ liệu Xã/Phường Hà Nội — trích từ bộ dữ liệu 34 tỉnh/thành chuẩn hóa
@@ -1015,7 +1089,8 @@
 
     [
       'lcParentName', 'lcParentPhone', 'lcParentEmail', 'lcChildName', 'lcChildYear', 'lcWard', 'lcReason',
-      'lcVolName', 'lcVolPhone', 'lcVolEmail'
+      'lcVolName', 'lcVolPhone', 'lcVolEmail',
+      'lcSponsorName', 'lcSponsorPhone', 'lcSponsorEmail'
     ].forEach(wrapLcFieldWithCheckIcon);
 
     function validateLcRequiredFields(ids) {
@@ -1210,6 +1285,71 @@
         .finally(() => {
           lcVolSubmitBtn.disabled = false;
           lcVolSubmitBtn.innerHTML = 'GỬI ĐĂNG KÝ TÌNH NGUYỆN';
+        });
+
+      return false;
+    }
+
+    // ==============================================================
+    // Submit: form Nhà tài trợ
+    // ==============================================================
+    const lcSponsorForm = document.getElementById('lcSponsorForm');
+    const lcSponsorSubmitBtn = document.getElementById('lcSponsorSubmitBtn');
+    const lcSponsorFormAlert = document.getElementById('lcSponsorFormAlert');
+    const LC_SPONSOR_REQUIRED_IDS = ['lcSponsorName', 'lcSponsorPhone', 'lcSponsorEmail'];
+
+    function handleLcSponsorSubmit(e) {
+      e.preventDefault();
+
+      const { allValid, firstInvalid } = validateLcRequiredFields(LC_SPONSOR_REQUIRED_IDS);
+      const typeChecked = lcSponsorForm.querySelectorAll('input[name="hinh_thuc_tai_tro[]"]:checked').length > 0;
+      const typeError = document.getElementById('lcSponsorTypeError');
+      typeError.classList.toggle('show', !typeChecked);
+
+      if (!allValid || !typeChecked) {
+        lcSponsorFormAlert.style.display = 'block';
+        lcSponsorFormAlert.style.color = '#dc2626';
+        lcSponsorFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.';
+        (firstInvalid || document.getElementById('lcSponsorTypeError')).scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+
+      lcSponsorSubmitBtn.disabled = true;
+      lcSponsorSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+      lcSponsorFormAlert.style.display = 'none';
+
+      const formData = new FormData(lcSponsorForm);
+      const data = {};
+      for (const [key, value] of formData.entries()) {
+        if (key === 'hinh_thuc_tai_tro[]') {
+          data['hinh_thuc_tai_tro'] = data['hinh_thuc_tai_tro'] ? data['hinh_thuc_tai_tro'] + ', ' + value : value;
+        } else {
+          data[key] = value;
+        }
+      }
+      const payload = { formType: 'luyen_chu_tai_tro', data };
+
+      fetch('/api/send-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(async res => {
+          const resData = await res.json().catch(() => ({}));
+          if (!res.ok || !resData.success) throw new Error(resData.message || 'failed');
+        })
+        .then(() => {
+          lcSponsorForm.style.display = 'none';
+          document.getElementById('lcSponsorSuccess').style.display = 'block';
+        })
+        .catch(() => {
+          lcSponsorFormAlert.style.display = 'block';
+          lcSponsorFormAlert.style.color = '#dc2626';
+          lcSponsorFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ hotro@wvn.vn.';
+        })
+        .finally(() => {
+          lcSponsorSubmitBtn.disabled = false;
+          lcSponsorSubmitBtn.innerHTML = 'GỬI ĐĂNG KÝ TÀI TRỢ';
         });
 
       return false;

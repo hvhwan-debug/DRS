@@ -9,7 +9,8 @@ const FORM_TITLES = {
   support: "Yêu cầu kết nối hỗ trợ mới",
   newsletter: "Đăng ký nhận bản tin mới",
   luyen_chu_phu_huynh: "Đăng ký Luyện Chữ Đẹp — Phụ huynh mới",
-  luyen_chu_tinh_nguyen: "Đăng ký Luyện Chữ Đẹp — Tình nguyện viên mới"
+  luyen_chu_tinh_nguyen: "Đăng ký Luyện Chữ Đẹp — Tình nguyện viên mới",
+  luyen_chu_tai_tro: "Đăng ký Luyện Chữ Đẹp — Nhà tài trợ mới"
 };
 
 // ===== Nội dung email cảm ơn/xác nhận gửi lại cho chính người gửi form =====
@@ -21,7 +22,8 @@ const AUTOREPLY_INTRO = {
   support: "Cảm ơn bạn đã tin tưởng chia sẻ. Chúng tôi đã nhận được thông tin và đội ngũ chương trình sẽ liên hệ để tìm hiểu, hỗ trợ trong thời gian sớm nhất.",
   newsletter: "Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi đã ghi nhận email của bạn và sẽ gửi những tin tức, hoạt động mới nhất từ Mạng Lưới Tri Thức Việt Nam.",
   luyen_chu_phu_huynh: "Cảm ơn bạn đã đăng ký Chương trình Luyện chữ đẹp cho con em. Ban phụ trách sẽ xem xét hồ sơ và thông báo kết quả xét duyệt trong thời gian sớm nhất.",
-  luyen_chu_tinh_nguyen: "Cảm ơn bạn đã đăng ký làm tình nguyện viên cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ với bạn trong thời gian sớm nhất."
+  luyen_chu_tinh_nguyen: "Cảm ơn bạn đã đăng ký làm tình nguyện viên cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ với bạn trong thời gian sớm nhất.",
+  luyen_chu_tai_tro: "Cảm ơn bạn đã quan tâm tài trợ cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ để trao đổi cụ thể trong thời gian sớm nhất."
 };
 
 // ===== Nhãn tiếng Việt cho từng trường dữ liệu (áp dụng cho mọi form) =====
@@ -66,7 +68,12 @@ const FIELD_LABELS = {
   email_tnv: "Email tình nguyện viên",
   kinh_nghiem: "Kinh nghiệm dạy học/luyện chữ",
   thoi_gian_tnv: "Thời gian có thể tham gia",
-  ghi_chu_tnv: "Ghi chú thêm"
+  ghi_chu_tnv: "Ghi chú thêm",
+  ten_tai_tro: "Họ tên / Tên đơn vị tài trợ",
+  sdt_tai_tro: "SĐT nhà tài trợ",
+  email_tai_tro: "Email nhà tài trợ",
+  hinh_thuc_tai_tro: "Hình thức hỗ trợ",
+  chi_tiet_tai_tro: "Chi tiết cụ thể"
 };
 
 // Các trường chứa tọa độ "lat,lng" cần hiển thị thành link Google Maps bấm được
