@@ -677,7 +677,7 @@
     .dropdown-select-option:has(input:checked) { background: #eff6ff; }
     .dropdown-select-option input[type="checkbox"] {
       appearance: none; -webkit-appearance: none; width: 20px; height: 20px; flex-shrink: 0;
-      border: 2px solid #cbd5e1; border-radius: 6px; margin: 0; cursor: pointer; position: relative;
+      border: 2px solid #cbd5e1; border-radius: 5px; margin: 0; cursor: pointer; position: relative;
       background: #fff; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
     }
     .dropdown-select-option input[type="checkbox"]:hover { border-color: #0284c7; }
@@ -1190,9 +1190,9 @@
                 <i class="fa-solid fa-chevron-down"></i>
               </button>
               <div class="dropdown-select-panel">
-                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Địa điểm tổ chức lớp học" onchange="updateDropdownSelectText('hinhThucDropdown')"> Địa điểm tổ chức lớp học</label>
-                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Học liệu (sách vở, bút, dụng cụ)" onchange="updateDropdownSelectText('hinhThucDropdown')"> Học liệu (sách vở, bút, dụng cụ)</label>
-                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Kinh phí" onchange="updateDropdownSelectText('hinhThucDropdown')"> Kinh phí</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Địa điểm tổ chức lớp học" onchange="updateDropdownSelectText('hinhThucDropdown'); updateLcSponsorImageVisibility();"> Địa điểm tổ chức lớp học</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Học liệu (sách vở, bút, dụng cụ)" onchange="updateDropdownSelectText('hinhThucDropdown'); updateLcSponsorImageVisibility();"> Học liệu (sách vở, bút, dụng cụ)</label>
+                <label class="dropdown-select-option"><input type="checkbox" name="hinh_thuc_tai_tro[]" value="Kinh phí" onchange="updateDropdownSelectText('hinhThucDropdown'); updateLcSponsorImageVisibility();"> Kinh phí</label>
               </div>
             </div>
             <div class="field-error" id="lcSponsorTypeError">Vui lòng chọn ít nhất 1 hình thức hỗ trợ.</div>
@@ -1214,7 +1214,7 @@
             </button>
             <div class="support-geo-status" id="lcSponsorGeoStatus"></div>
           </div>
-          <div class="form-group">
+          <div class="form-group" id="lcSponsorImageGroup" style="display:none;">
             <label>Hình ảnh minh họa (nếu có)</label>
             <label class="support-image-upload-box" id="lcSponsorImageBox" for="lcSponsorImageInput">
               <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -1487,7 +1487,12 @@
       );
     }
 
-    // Ẩn/hiện + bật tắt bắt buộc phần tài liệu chứng minh theo đối tượng đăng ký
+    // Ẩn/hiện khối "Hình ảnh minh họa": chỉ hiện khi có chọn Địa điểm hoặc Học liệu (bỏ qua nếu chỉ chọn Kinh phí)
+    function updateLcSponsorImageVisibility() {
+      const checked = Array.from(document.querySelectorAll('input[name="hinh_thuc_tai_tro[]"]:checked')).map(cb => cb.value);
+      const needsImage = checked.includes('Địa điểm tổ chức lớp học') || checked.includes('Học liệu (sách vở, bút, dụng cụ)');
+      document.getElementById('lcSponsorImageGroup').style.display = needsImage ? 'block' : 'none';
+    }
     function updateLcObjectType() {
       const isKhoKhan = document.querySelector('input[name="doi_tuong_dang_ky"]:checked').value === 'Hoàn cảnh khó khăn';
       const group = document.getElementById('lcDocsGroup');
