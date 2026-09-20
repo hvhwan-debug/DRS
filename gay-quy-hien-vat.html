@@ -482,14 +482,11 @@
 
           <div id="officeVisitSection" style="display:none;">
             <div class="item-form-field">
-              <label for="itemOfficeTime">Thời gian dự kiến mang đến</label>
-              <select name="thoi_gian_mang_den" id="itemOfficeTime">
-                <option value="">— Chọn khung giờ thuận tiện —</option>
-                <option value="Sáng thứ 2 - thứ 6 (8:00 - 12:00)">Sáng thứ 2 - thứ 6 (8:00 - 12:00)</option>
-                <option value="Chiều thứ 2 - thứ 6 (13:30 - 17:30)">Chiều thứ 2 - thứ 6 (13:30 - 17:30)</option>
-                <option value="Thứ 7 (8:00 - 12:00)">Thứ 7 (8:00 - 12:00)</option>
-                <option value="Khác (ghi chú bên dưới)">Khác (ghi chú bên dưới)</option>
-              </select>
+              <label>Thời gian dự kiến mang đến</label>
+              <div class="pickup-address-row">
+                <input type="date" name="ngay_mang_den" id="itemOfficeDate" placeholder="Ngày">
+                <input type="time" name="gio_mang_den" id="itemOfficeTime" placeholder="Giờ">
+              </div>
             </div>
           </div>
 
@@ -739,6 +736,7 @@
       officeSection.style.display = isOfficeVisit ? 'block' : 'none';
 
       if (!isOfficeVisit) {
+        document.getElementById('itemOfficeDate').value = '';
         document.getElementById('itemOfficeTime').value = '';
       }
       if (!needsPickup) {
