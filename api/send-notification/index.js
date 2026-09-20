@@ -57,7 +57,7 @@ const FIELD_LABELS = {
   sdt_phu_huynh: "SĐT phụ huynh/người giám hộ",
   email_phu_huynh: "Email phụ huynh/người giám hộ",
   ten_tre: "Họ tên trẻ",
-  nam_sinh_tre: "Năm sinh của trẻ",
+  ngay_sinh_tre: "Ngày sinh của trẻ",
   truong_lop: "Trường/lớp đang học",
   phuong_xa: "Xã/Phường (Hà Nội)",
   dia_chi: "Địa chỉ",
