@@ -692,9 +692,10 @@
 
     .support-process { margin-bottom: 2.6rem; }
     .support-process h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 1.6rem; color: var(--text-dark); }
-    /* Dòng thời gian quy trình đăng ký — bố cục ngang, thanh tiến
-       trình tự chạy từ trái sang phải và chấm số sáng dần lần lượt
-       khi cuộn tới (kích hoạt 1 lần bằng IntersectionObserver). */
+    /* Dòng thời gian quy trình đăng ký — bố cục ngang, thanh sáng
+       chạy liên tục từ trái sang phải, chấm nào được chạy tới thì
+       sáng luôn tới đó, hết vòng thì tự lặp lại từ đầu. Toàn bộ
+       chạy bằng CSS animation (không cần JS/cuộn trang). */
     .reg-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; position: relative; }
     .reg-timeline::before {
       content: ''; position: absolute; top: 14px; left: calc(12.5% + 14px); right: calc(12.5% + 14px);
@@ -703,32 +704,41 @@
     .reg-fill {
       position: absolute; top: 14px; left: calc(12.5% + 14px); height: 2px; width: 0%;
       background: linear-gradient(90deg, #7dd3fc 0%, #0284c7 55%, #1e3a8a 100%);
-      transition: width 1.4s ease-out; z-index: 1;
+      z-index: 1; animation: regFillRun 4.4s linear infinite;
     }
-    .reg-timeline.in-view .reg-fill { width: calc(75% - 28px); }
+    @keyframes regFillRun {
+      0% { width: 0%; }
+      92%, 100% { width: calc(75% - 28px); }
+    }
     .reg-item { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
     .reg-dot {
       position: relative; width: 28px; height: 28px; border-radius: 50%;
       background: #fff; border: 3px solid #cbd5e1; box-shadow: 0 0 0 2px #fff; z-index: 2;
       display: flex; align-items: center; justify-content: center; margin-bottom: 0.9rem;
       font-size: 0.82rem; font-weight: 800; color: #94a3b8;
-      transition: background 0.4s, border-color 0.4s, box-shadow 0.4s, color 0.4s;
     }
-    .reg-dot::after {
-      content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #0284c7;
-      opacity: 0; transform: scale(0.6);
+    /* Mỗi chấm sáng lên đúng lúc thanh chạy tới, giữ sáng tới hết
+       vòng rồi cùng tắt và lặp lại đồng bộ với thanh chạy ở trên. */
+    .reg-item:nth-child(1) .reg-dot { animation: regDotOn1 4.4s linear infinite; }
+    .reg-item:nth-child(2) .reg-dot { animation: regDotOn2 4.4s linear infinite; }
+    .reg-item:nth-child(3) .reg-dot { animation: regDotOn3 4.4s linear infinite; }
+    .reg-item:nth-child(4) .reg-dot { animation: regDotOn4 4.4s linear infinite; }
+    @keyframes regDotOn1 {
+      0%, 2% { background: #fff; border-color: #cbd5e1; color: #94a3b8; box-shadow: 0 0 0 2px #fff; }
+      4%, 100% { background: var(--blue-grad-btn); border-color: #0284c7; color: #fff; box-shadow: 0 0 0 2px #bae6fd; }
     }
-    .reg-item.is-active .reg-dot { background: var(--blue-grad-btn); border-color: #0284c7; box-shadow: 0 0 0 2px #bae6fd; color: #fff; }
-    .reg-item.is-active .reg-dot::after { animation: regDotRadiate 1.8s ease-out infinite; }
-    .reg-item.is-active .reg-dot::before {
-      content: ''; position: absolute; inset: -12px; border-radius: 50%; border: 2px solid #38bdf8;
-      opacity: 0; transform: scale(0.5); animation: regDotRadiate 1.8s ease-out 0.5s infinite;
+    @keyframes regDotOn2 {
+      0%, 25% { background: #fff; border-color: #cbd5e1; color: #94a3b8; box-shadow: 0 0 0 2px #fff; }
+      27%, 100% { background: var(--blue-grad-btn); border-color: #0284c7; color: #fff; box-shadow: 0 0 0 2px #bae6fd; }
     }
-    @keyframes regDotRadiate { 0% { transform: scale(0.6); opacity: 0.7; } 100% { transform: scale(2); opacity: 0; } }
-    /* Chấm sáng lần lượt theo thứ tự — mỗi mục trễ hơn mục trước 0.35s */
-    .reg-item:nth-child(2) .reg-dot { transition-delay: 0.35s; }
-    .reg-item:nth-child(3) .reg-dot { transition-delay: 0.7s; }
-    .reg-item:nth-child(4) .reg-dot { transition-delay: 1.05s; }
+    @keyframes regDotOn3 {
+      0%, 50% { background: #fff; border-color: #cbd5e1; color: #94a3b8; box-shadow: 0 0 0 2px #fff; }
+      52%, 100% { background: var(--blue-grad-btn); border-color: #0284c7; color: #fff; box-shadow: 0 0 0 2px #bae6fd; }
+    }
+    @keyframes regDotOn4 {
+      0%, 75% { background: #fff; border-color: #cbd5e1; color: #94a3b8; box-shadow: 0 0 0 2px #fff; }
+      77%, 100% { background: var(--blue-grad-btn); border-color: #0284c7; color: #fff; box-shadow: 0 0 0 2px #bae6fd; }
+    }
     .reg-item h3 { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.4rem; }
     .reg-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
 
@@ -737,14 +747,15 @@
       .reg-timeline::before, .reg-fill { display: none; }
       .reg-item { flex-direction: row; align-items: flex-start; text-align: left; gap: 1.2rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
       .reg-item:last-child { border-bottom: none; padding-bottom: 0; }
-      .reg-dot { margin-bottom: 0; flex-shrink: 0; }
+      .reg-dot { margin-bottom: 0; flex-shrink: 0; animation: none !important; background: var(--blue-grad-btn) !important; border-color: #0284c7 !important; color: #fff !important; }
       .reg-item h3 { font-size: 1.05rem; }
       .reg-item p { font-size: 0.95rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .reg-item.is-active .reg-dot::after, .reg-item.is-active .reg-dot::before { animation: none; }
-      .reg-fill { transition: none; }
+      .reg-fill, .reg-dot { animation: none; }
+      .reg-fill { width: calc(75% - 28px); }
+      .reg-dot { background: var(--blue-grad-btn); border-color: #0284c7; color: #fff; box-shadow: 0 0 0 2px #bae6fd; }
     }
 
     .support-form-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 2.2rem 2rem; }
@@ -1790,32 +1801,6 @@
 
       return false;
     }
-
-    // ============================================================
-    // Dòng thời gian "Quy trình đăng ký & xét duyệt" — bố cục ngang,
-    // kích hoạt hiệu ứng 1 lần (thanh chạy + chấm sáng lần lượt)
-    // khi cuộn tới, bằng IntersectionObserver.
-    // ============================================================
-    (function initRegTimelineObserver() {
-      const timeline = document.getElementById('regTimeline');
-      if (!timeline || !('IntersectionObserver' in window)) {
-        if (timeline) {
-          timeline.classList.add('in-view');
-          document.querySelectorAll('.reg-item').forEach(item => item.classList.add('is-active'));
-        }
-        return;
-      }
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            timeline.classList.add('in-view');
-            document.querySelectorAll('.reg-item').forEach(item => item.classList.add('is-active'));
-            observer.disconnect();
-          }
-        });
-      }, { threshold: 0.4 });
-      observer.observe(timeline);
-    })();
   </script>
 
   <footer>
