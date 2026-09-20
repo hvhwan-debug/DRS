@@ -10,8 +10,6 @@ Viết đúng, viết rõ và trình bày sạch sẽ là những kỹ năng n�
 
 Đó là lý do WVN chính thức triển khai **Chương trình Luyện chữ đẹp cho trẻ em có hoàn cảnh khó khăn tại Hà Nội** — một chương trình học hoàn toàn không vì mục đích thương mại, hướng tới trẻ từ 6 đến 12 tuổi đang sinh sống hoặc học tập trên địa bàn thành phố.
 
-![Một buổi hướng dẫn luyện chữ trên bảng](images/uploads/luyen-chu-dep-bang-den.jpg)
-
 ## Vì sao chương trình ra đời
 
 Không phải trẻ nào cũng có cơ hội được uốn nắn chữ viết ngay từ nhỏ. Với các em thuộc hộ nghèo, cận nghèo, mồ côi hoặc đang được người thân chăm sóc trong điều kiện khó khăn, một lớp học bổ trợ ngoài giờ gần như nằm ngoài khả năng của gia đình.
