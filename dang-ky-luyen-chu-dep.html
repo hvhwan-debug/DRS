@@ -669,21 +669,41 @@
     }
     .dropdown-select.open .dropdown-select-panel { display: block; }
     .dropdown-select-option {
-      display: flex; align-items: center; gap: 9px; padding: 0.55rem 0.6rem; border-radius: 6px;
+      display: flex; align-items: center; gap: 10px; padding: 0.6rem 0.7rem; border-radius: 8px;
       cursor: pointer; font-size: 0.88rem; color: var(--text-dark); font-weight: 500;
+      transition: background 0.15s;
     }
     .dropdown-select-option:hover { background: #f0f9ff; }
+    .dropdown-select-option:has(input:checked) { background: #eff6ff; }
     .dropdown-select-option input[type="checkbox"] {
-      appearance: none; -webkit-appearance: none; width: 15px; height: 15px; flex-shrink: 0;
-      border: 1.5px solid #94a3b8; border-radius: 4px; margin: 0; cursor: pointer; position: relative;
-      transition: border-color 0.15s, background 0.15s;
+      appearance: none; -webkit-appearance: none; width: 20px; height: 20px; flex-shrink: 0;
+      border: 2px solid #cbd5e1; border-radius: 6px; margin: 0; cursor: pointer; position: relative;
+      background: #fff; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
     }
-    .dropdown-select-option input[type="checkbox"]:checked { background: #0284c7; border-color: #0284c7; }
+    .dropdown-select-option input[type="checkbox"]:hover { border-color: #0284c7; }
+    .dropdown-select-option input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px rgba(2,132,199,0.18); }
+    .dropdown-select-option input[type="checkbox"]:checked {
+      background: linear-gradient(135deg,#0284c7,#2563eb); border-color: #0284c7;
+    }
     .dropdown-select-option input[type="checkbox"]:checked::after {
-      content: ''; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px;
-      border: solid #fff; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg);
+      content: ''; position: absolute; left: 6px; top: 2px; width: 5px; height: 10px;
+      border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
     }
     .support-hero-form-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.7rem; text-align: center; }
+
+    /* Đối tượng đăng ký: Bình thường / Hoàn cảnh khó khăn */
+    .lc-object-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .lc-object-option {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      border: 1.5px solid var(--border); border-radius: 8px; padding: 0.7rem 0.6rem;
+      font-size: 0.88rem; font-weight: 600; color: var(--text-dark); cursor: pointer;
+      transition: border-color 0.15s, background 0.15s; text-align: center;
+    }
+    .lc-object-option input { position: absolute; opacity: 0; pointer-events: none; }
+    .lc-object-option:hover { border-color: #94a3b8; }
+    .lc-object-option:has(input:checked) { border-color: #0284c7; background: #eff6ff; color: #0369a1; }
+    .lc-object-option[data-obj="kho-khan"]:has(input:checked) { border-color: #d97706; background: #fffbeb; color: #92400e; }
+    @media (max-width: 480px) { .lc-object-toggle { grid-template-columns: 1fr; } }
     #heroStepForm .support-success { padding: 1rem 0.5rem; }
     #heroStepForm .support-success i { font-size: 2.2rem; }
     #heroStepForm .support-success h3 { font-size: 1.05rem; }
@@ -951,10 +971,15 @@
               <input type="text" id="lcHamlet" placeholder="Thôn/Tổ, số nhà, ngõ (nếu có)">
             </div>
             <input type="hidden" id="lcAddress" name="dia_chi">
+            <input type="hidden" id="lcParentLocation" name="vi_tri_gps">
+            <button type="button" class="support-geo-btn" id="lcParentGeoBtn" onclick="requestLcParentGeolocation()">
+              <i class="fa-solid fa-location-crosshairs"></i> Lấy vị trí hiện tại (GPS)
+            </button>
+            <div class="support-geo-status" id="lcParentGeoStatus"></div>
             <div class="field-error" id="lcWardError">Vui lòng chọn Xã/Phường nơi trẻ đang sinh sống.</div>
           </div>
           <div class="form-group">
-            <label for="lcReason">Hoàn cảnh gia đình và lý do đăng ký <span class="required">*</span></label>
+            <label>Hoàn cảnh gia đình và lý do đăng ký <span class="required">*</span></label>
             <textarea id="lcReason" name="hoan_canh_ly_do" required minlength="10" placeholder="Chia sẻ ngắn gọn về hoàn cảnh gia đình và lý do muốn đăng ký chương trình cho trẻ..."></textarea>
             <div class="field-error" id="lcReasonError">Vui lòng mô tả ít nhất 10 ký tự.</div>
           </div>
@@ -975,14 +1000,28 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Tài liệu xác minh hoàn cảnh (không bắt buộc)</label>
+            <label>Đối tượng đăng ký <span class="required">*</span></label>
+            <div class="lc-object-toggle">
+              <label class="lc-object-option" data-obj="binh-thuong">
+                <input type="radio" name="doi_tuong_dang_ky" value="Bình thường" checked onchange="updateLcObjectType()">
+                <i class="fa-solid fa-user"></i> Bình thường
+              </label>
+              <label class="lc-object-option" data-obj="kho-khan">
+                <input type="radio" name="doi_tuong_dang_ky" value="Hoàn cảnh khó khăn" onchange="updateLcObjectType()">
+                <i class="fa-solid fa-hand-holding-heart"></i> Hoàn cảnh khó khăn
+              </label>
+            </div>
+          </div>
+          <div class="form-group" id="lcDocsGroup" style="display:none;">
+            <label>Tài liệu xác minh hoàn cảnh <span class="required" id="lcDocsRequiredMark">*</span></label>
             <label class="support-image-upload-box" id="lcDocsBox" for="lcDocsInput">
               <i class="fa-solid fa-cloud-arrow-up"></i>
-              <span>Bấm để chọn ảnh (VD: giấy xác nhận hộ nghèo/cận nghèo, nếu có)</span>
+              <span>Bấm để chọn ảnh giấy tờ chứng minh (VD: giấy xác nhận hộ nghèo/cận nghèo, sổ hộ khẩu...)</span>
               <input type="file" id="lcDocsInput" accept="image/*" multiple>
             </label>
-            <div class="support-image-count-hint" id="lcDocsHint">Chưa chọn ảnh nào (không bắt buộc)</div>
+            <div class="support-image-count-hint" id="lcDocsHint">Chưa chọn ảnh nào</div>
             <div class="support-image-preview-grid" id="lcDocsPreview"></div>
+            <div class="field-error" id="lcDocsError">Vui lòng đính kèm ít nhất 1 ảnh tài liệu chứng minh hoàn cảnh.</div>
           </div>
           <button type="submit" class="support-cta-btn" id="parentSubmitBtn">GỬI ĐĂNG KÝ CHO TRẺ</button>
           <p class="support-hero-form-note">Thông tin của bạn được bảo mật và chỉ dùng để đội ngũ chương trình liên hệ xét duyệt.</p>
@@ -1396,7 +1435,55 @@
       );
     }
 
-    // Dấu tích xanh / dấu X đỏ khi trường nhập đúng/sai
+    // Lấy vị trí GPS hiện tại cho địa chỉ của phụ huynh/trẻ (không bắt buộc)
+    function requestLcParentGeolocation() {
+      const btn = document.getElementById('lcParentGeoBtn');
+      const status = document.getElementById('lcParentGeoStatus');
+      const locationInput = document.getElementById('lcParentLocation');
+
+      if (!navigator.geolocation) {
+        status.className = 'support-geo-status err';
+        status.textContent = 'Trình duyệt của bạn không hỗ trợ định vị GPS.';
+        return;
+      }
+
+      btn.disabled = true;
+      status.className = 'support-geo-status';
+      status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lấy vị trí...';
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude.toFixed(6);
+          const lng = pos.coords.longitude.toFixed(6);
+          locationInput.value = `${lat},${lng}`;
+          status.className = 'support-geo-status ok';
+          status.innerHTML = `<i class="fa-solid fa-circle-check"></i> Đã lấy được vị trí (${lat}, ${lng})`;
+          btn.disabled = false;
+        },
+        (err) => {
+          locationInput.value = '';
+          status.className = 'support-geo-status err';
+          status.textContent = err.code === err.PERMISSION_DENIED
+            ? 'Bạn đã từ chối chia sẻ vị trí. Có thể bỏ qua bước này, không bắt buộc.'
+            : 'Không lấy được vị trí, vui lòng thử lại hoặc bỏ qua.';
+          btn.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    // Ẩn/hiện + bật tắt bắt buộc phần tài liệu chứng minh theo đối tượng đăng ký
+    function updateLcObjectType() {
+      const isKhoKhan = document.querySelector('input[name="doi_tuong_dang_ky"]:checked').value === 'Hoàn cảnh khó khăn';
+      const group = document.getElementById('lcDocsGroup');
+      const input = document.getElementById('lcDocsInput');
+      const requiredMark = document.getElementById('lcDocsRequiredMark');
+      const errorEl = document.getElementById('lcDocsError');
+
+      group.style.display = isKhoKhan ? 'block' : 'none';
+      requiredMark.style.display = isKhoKhan ? 'inline' : 'none';
+      if (!isKhoKhan && errorEl) errorEl.classList.remove('show');
+    }
     const lcFieldHandles = {};
     function wrapLcFieldWithCheckIcon(id) {
       const el = document.getElementById(id);
@@ -1649,11 +1736,16 @@
       e.preventDefault();
 
       const { allValid, firstInvalid } = validateLcRequiredFields(PARENT_REQUIRED_IDS);
-      if (!allValid) {
+      const isKhoKhan = document.querySelector('input[name="doi_tuong_dang_ky"]:checked').value === 'Hoàn cảnh khó khăn';
+      const docsError = document.getElementById('lcDocsError');
+      const docsValid = !isKhoKhan || lcDocsSelected.length > 0;
+      if (docsError) docsError.classList.toggle('show', isKhoKhan && !docsValid);
+
+      if (!allValid || !docsValid) {
         parentFormAlert.style.display = 'block';
         parentFormAlert.style.color = '#dc2626';
         parentFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.';
-        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        (firstInvalid || document.getElementById('lcDocsBox')).scrollIntoView({ behavior: 'smooth', block: 'center' });
         return false;
       }
       document.getElementById('lcAddress').value = buildCombinedLcAddress();
