@@ -123,8 +123,11 @@
 
     @media (max-width: 960px) {
       .mobile-menu-btn { display: block; }
-      #authBtn { text-align: center; line-height: 1.25; padding: 0.45rem 0.7rem; font-size: 0.72rem; border-radius: 9px; }
-      .authbtn-line2 { display: block; }
+      #authBtn { text-align: center; padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 9px; white-space: nowrap; }
+      .authbtn-line2 { display: inline; }
+      .nav-container > div[style] { flex-shrink: 0; }
+      .brand-wrap { min-width: 0; flex: 1 1 auto; overflow: hidden; }
+      .brand-title, .brand-subtitle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .nav-links {
         display: none; position: absolute; top: 72px; left: 0; right: 0; background: #ffffff;
         flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
