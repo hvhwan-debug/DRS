@@ -786,6 +786,8 @@
           <button type="button" class="support-hero-back" onclick="backToRoleSelect()">← Chọn lại</button>
         </div>
 
+        <datalist id="hanoiWardsDatalist"></datalist>
+
         <form id="parentForm" onsubmit="return handleParentSubmit(event)">
           <div class="form-group">
             <label for="lcParentName">Họ tên phụ huynh / người giám hộ <span class="required">*</span></label>
@@ -822,9 +824,7 @@
           <div class="form-group">
             <label>Khu vực sinh sống tại Hà Nội <span class="required">*</span></label>
             <div class="support-address-row">
-              <select id="lcWard" name="phuong_xa" required>
-                <option value="">— Chọn Xã / Phường tại Hà Nội —</option>
-              </select>
+              <input type="text" id="lcWard" name="phuong_xa" list="hanoiWardsDatalist" required placeholder="Gõ để tìm Xã/Phường...">
               <input type="text" id="lcHamlet" placeholder="Thôn/Tổ, số nhà, ngõ (nếu có)">
             </div>
             <input type="hidden" id="lcAddress" name="dia_chi">
@@ -961,9 +961,7 @@
           <div class="form-group">
             <label>Địa điểm cụ thể (nếu hỗ trợ địa điểm tổ chức lớp học)</label>
             <div class="support-address-row">
-              <select id="lcSponsorWard">
-                <option value="">— Chọn Xã / Phường tại Hà Nội —</option>
-              </select>
+              <input type="text" id="lcSponsorWard" list="hanoiWardsDatalist" placeholder="Gõ để tìm Xã/Phường...">
               <input type="text" id="lcSponsorHamlet" placeholder="Thôn/Tổ, số nhà, ngõ (nếu có)">
             </div>
             <input type="hidden" id="lcSponsorAddress" name="dia_diem_cu_the">
@@ -1077,20 +1075,39 @@
 
     // Chương trình chỉ áp dụng tại Hà Nội — chỉ cần dropdown Xã/Phường
     // của Hà Nội, không cần chọn Tỉnh/Thành phố.
-    (function initHanoiWardSelect() {
+    let HANOI_WARDS_SET = new Set();
+
+    (function initHanoiWardDatalist() {
       const hanoi = VN_ADDRESS_DATA.find(p => p.code === '01');
       const wards = [...(hanoi?.wards || [])].sort((a, b) => a.localeCompare(b, 'vi'));
-      ['lcWard', 'lcSponsorWard'].forEach(id => {
-        const wardSelect = document.getElementById(id);
-        if (!wardSelect) return;
-        wards.forEach(w => {
-          const opt = document.createElement('option');
-          opt.value = w;
-          opt.textContent = w;
-          wardSelect.appendChild(opt);
-        });
+      HANOI_WARDS_SET = new Set(wards);
+      const datalist = document.getElementById('hanoiWardsDatalist');
+      wards.forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w;
+        datalist.appendChild(opt);
       });
     })();
+
+    // Ô nhập có gợi ý (datalist) cho phép gõ tự do, nên cần validate
+    // giá trị gõ vào phải khớp đúng 1 xã/phường có thật trong danh sách.
+    function initWardInputValidation(id, required) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const update = () => {
+        const value = el.value.trim();
+        if (!value) {
+          el.setCustomValidity(required ? 'required' : '');
+          return;
+        }
+        el.setCustomValidity(HANOI_WARDS_SET.has(value) ? '' : 'invalid');
+      };
+      el.addEventListener('input', update);
+      el.addEventListener('change', update);
+      el.addEventListener('blur', update);
+    }
+    initWardInputValidation('lcWard', true);
+    initWardInputValidation('lcSponsorWard', false);
 
     function buildCombinedLcAddress() {
       const ward = document.getElementById('lcWard').value.trim();
@@ -1223,7 +1240,7 @@
     [
       'lcParentName', 'lcParentPhone', 'lcParentEmail', 'lcChildName', 'lcChildDob', 'lcWard', 'lcReason',
       'lcVolName', 'lcVolPhone', 'lcVolEmail',
-      'lcSponsorName', 'lcSponsorPhone', 'lcSponsorEmail'
+      'lcSponsorName', 'lcSponsorPhone', 'lcSponsorEmail', 'lcSponsorWard'
     ].forEach(wrapLcFieldWithCheckIcon);
 
     function validateLcRequiredFields(ids) {
@@ -1491,11 +1508,20 @@
         return false;
       }
 
+      const sponsorWardEl = document.getElementById('lcSponsorWard');
+      if (sponsorWardEl.value.trim() && !HANOI_WARDS_SET.has(sponsorWardEl.value.trim())) {
+        lcSponsorFormAlert.style.display = 'block';
+        lcSponsorFormAlert.style.color = '#dc2626';
+        lcSponsorFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng chọn đúng Xã/Phường có trong danh sách gợi ý.';
+        sponsorWardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+
       lcSponsorSubmitBtn.disabled = true;
       lcSponsorSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
       lcSponsorFormAlert.style.display = 'none';
 
-      const sponsorWard = document.getElementById('lcSponsorWard').value.trim();
+      const sponsorWard = sponsorWardEl.value.trim();
       if (sponsorWard) {
         document.getElementById('lcSponsorAddress').value = buildCombinedSponsorAddress();
       }
