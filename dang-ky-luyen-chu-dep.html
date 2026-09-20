@@ -12,8 +12,8 @@
 </script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng Ký Chương Trình Luyện Chữ Đẹp | Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Đăng ký tham gia Chương trình Luyện chữ đẹp cho trẻ em có hoàn cảnh khó khăn tại Hà Nội — dành cho phụ huynh muốn đăng ký cho con em, hoặc tình nguyện viên muốn hỗ trợ giảng dạy.">
+  <title>Luyện Chữ Đẹp Cho Cộng Đồng Hà Nội | Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="description" content="Đăng ký tham gia Luyện Chữ Đẹp Cho Cộng Đồng Hà Nội — lớp học miễn phí giúp trẻ em rèn chữ viết. Dành cho phụ huynh muốn đăng ký cho con em, hoặc tình nguyện viên muốn hỗ trợ giảng dạy.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
@@ -438,6 +438,7 @@
             <a href="tro-thanh-nha-tai-tro.html"><span class="nav-dropdown-item-title">Trở thành nhà tài trợ</span><span class="nav-dropdown-item-desc">Đồng hành dài hạn cùng chương trình</span></a>
             <a href="tinh-nguyen-vien.html"><span class="nav-dropdown-item-title">Đăng ký tình nguyện viên</span><span class="nav-dropdown-item-desc">Tham gia dạy học, hậu cần, truyền thông</span></a>
             <a href="ket-noi-ho-tro.html"><span class="nav-dropdown-item-title">Cần được giúp đỡ</span><span class="nav-dropdown-item-desc">Gửi yêu cầu hỗ trợ học tập, sinh hoạt</span></a>
+            <a href="dang-ky-luyen-chu-dep.html"><span class="nav-dropdown-item-title">Luyện chữ đẹp cho cộng đồng Hà Nội</span><span class="nav-dropdown-item-desc">Đăng ký cho con em hoặc làm tình nguyện viên</span></a>
           </div>
         </div>
         <div class="nav-dropdown">
@@ -607,6 +608,23 @@
     /* Dòng chữ đỏ báo thiếu khi bấm Gửi mà chưa điền trường bắt buộc */
     .field-error { color: #dc2626; font-size: 0.78rem; margin-top: 0.3rem; display: none; }
     .field-error.show { display: block; }
+
+    /* Gộp 2 trường ngắn trên 1 hàng để form gọn hơn */
+    .form-row { display: flex; gap: 0.8rem; }
+    .form-row .form-group { flex: 1; min-width: 0; }
+    @media (max-width: 480px) {
+      .form-row { flex-direction: column; gap: 0; }
+    }
+
+    /* Ô chọn nhu cầu dạng viên thuốc, xếp ngang tự xuống dòng */
+    .item-radio-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .item-radio-item {
+      display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600;
+      color: var(--text-dark); cursor: pointer; border: 1.5px solid var(--border); border-radius: 999px;
+      padding: 0.45rem 0.9rem; background: #f8fafc; transition: border-color 0.15s, background 0.15s;
+    }
+    .item-radio-item:has(input:checked) { border-color: #0284c7; background: #eff6ff; color: #0369a1; }
+    .item-radio-item input { accent-color: #0284c7; }
     .support-hero-form-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.7rem; text-align: center; }
     #heroStepForm .support-success { padding: 1rem 0.5rem; }
     #heroStepForm .support-success i { font-size: 2.2rem; }
@@ -709,8 +727,8 @@
   <section class="page-banner">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true" onerror="this.style.display='none'">
     <div class="hero-badge">ĐĂNG KÝ THAM GIA</div>
-    <h1>Chương Trình Luyện Chữ Đẹp</h1>
-    <p>Dành cho trẻ em có hoàn cảnh khó khăn tại Hà Nội, từ 6–12 tuổi. Chương trình hoàn toàn không vì mục đích thương mại, giúp các em rèn chữ viết, tính kiên trì và sự tự tin trong học tập.</p>
+    <h1>Luyện Chữ Đẹp Cho Cộng Đồng Hà Nội</h1>
+    <p>Lớp học miễn phí giúp trẻ em tại Hà Nội rèn chữ viết, tính kiên trì và sự tự tin trong học tập — ưu tiên các em đang cần được hỗ trợ nhất. Chương trình hoàn toàn không vì mục đích thương mại.</p>
   </section>
 
   <section class="support-photo-hero">
@@ -739,24 +757,28 @@
             <input type="text" id="lcParentName" name="ten_phu_huynh" required placeholder="Nguyễn Văn A">
             <div class="field-error" id="lcParentNameError">Vui lòng nhập họ tên.</div>
           </div>
-          <div class="form-group">
+          <div class="form-row">
+            <div class="form-group">
             <label for="lcParentPhone">Số điện thoại <span class="required">*</span></label>
             <input type="tel" id="lcParentPhone" name="sdt_phu_huynh" required pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" placeholder="09xx xxx xxx">
             <div class="field-error" id="lcParentPhoneError">Vui lòng nhập đúng số điện thoại.</div>
           </div>
-          <div class="form-group">
+            <div class="form-group">
             <label for="lcParentEmail">Email (nếu có)</label>
             <input type="email" id="lcParentEmail" name="email_phu_huynh" placeholder="ban@email.com">
           </div>
-          <div class="form-group">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
             <label for="lcChildName">Họ và tên trẻ <span class="required">*</span></label>
             <input type="text" id="lcChildName" name="ten_tre" required placeholder="Họ tên con/em">
             <div class="field-error" id="lcChildNameError">Vui lòng nhập họ tên trẻ.</div>
           </div>
-          <div class="form-group">
+            <div class="form-group">
             <label for="lcChildYear">Năm sinh của trẻ <span class="required">*</span></label>
             <input type="text" id="lcChildYear" name="nam_sinh_tre" required pattern="(19|20)[0-9]{2}" title="Nhập năm sinh dạng 4 chữ số, ví dụ 2017" placeholder="VD: 2017">
             <div class="field-error" id="lcChildYearError">Vui lòng nhập năm sinh hợp lệ (4 chữ số).</div>
+          </div>
           </div>
           <div class="form-group">
             <label for="lcChildSchool">Trường / lớp đang theo học (nếu có)</label>
@@ -780,7 +802,7 @@
           </div>
           <div class="form-group">
             <label>Nhu cầu cần hỗ trợ của trẻ (chọn các mục phù hợp)</label>
-            <div class="item-radio-group" style="flex-direction:row; flex-wrap:wrap; gap:0.6rem;">
+            <div class="item-radio-group">
               <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Tư thế ngồi viết"> Tư thế ngồi viết</label>
               <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Cách cầm bút"> Cách cầm bút</label>
               <label class="item-radio-item"><input type="checkbox" name="nhu_cau[]" value="Viết đúng nét"> Viết đúng nét</label>
@@ -823,15 +845,17 @@
             <input type="text" id="lcVolName" name="ten_tnv" required placeholder="Nguyễn Văn A">
             <div class="field-error" id="lcVolNameError">Vui lòng nhập họ và tên.</div>
           </div>
-          <div class="form-group">
+          <div class="form-row">
+            <div class="form-group">
             <label for="lcVolPhone">Số điện thoại <span class="required">*</span></label>
             <input type="tel" id="lcVolPhone" name="sdt_tnv" required pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" placeholder="09xx xxx xxx">
             <div class="field-error" id="lcVolPhoneError">Vui lòng nhập đúng số điện thoại.</div>
           </div>
-          <div class="form-group">
+            <div class="form-group">
             <label for="lcVolEmail">Email <span class="required">*</span></label>
             <input type="email" id="lcVolEmail" name="email_tnv" required placeholder="ban@email.com">
             <div class="field-error" id="lcVolEmailError">Vui lòng nhập email hợp lệ.</div>
+          </div>
           </div>
           <div class="form-group">
             <label for="lcVolExperience">Kinh nghiệm dạy học / luyện chữ (nếu có)</label>
