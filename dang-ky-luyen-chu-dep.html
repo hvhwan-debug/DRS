@@ -798,17 +798,33 @@
     @media (max-width: 760px) {
       .reg-timeline { display: flex; flex-direction: column; gap: 0; }
       .reg-timeline::before, .reg-fill { display: none; }
-      .reg-item { flex-direction: row; align-items: flex-start; text-align: left; gap: 1.2rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
+      .reg-item { flex-direction: row; align-items: flex-start; text-align: left; gap: 1.2rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border); position: relative; }
       .reg-item:last-child { border-bottom: none; padding-bottom: 0; }
+      .reg-item:not(:last-child)::before {
+        content: ''; position: absolute; left: 14px; top: 28px; bottom: -1.1rem; width: 2px;
+        background: linear-gradient(180deg, #0284c7 0%, #bae6fd 100%); z-index: 0;
+      }
       .reg-dot { margin-bottom: 0; flex-shrink: 0; animation: none !important; background: var(--blue-grad-btn) !important; border-color: #0284c7 !important; color: #fff !important; }
+      .reg-dot::after {
+        content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid #0284c7;
+        z-index: -1; animation: regDotPing 2.2s ease-out infinite;
+      }
+      .reg-item:nth-child(2) .reg-dot::after { animation-delay: 0.4s; }
+      .reg-item:nth-child(3) .reg-dot::after { animation-delay: 0.8s; }
+      .reg-item:nth-child(4) .reg-dot::after { animation-delay: 1.2s; }
+      @keyframes regDotPing {
+        0% { transform: scale(1); opacity: 0.65; }
+        100% { transform: scale(2.1); opacity: 0; }
+      }
       .reg-item h3 { font-size: 1.05rem; }
       .reg-item p { font-size: 0.95rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .reg-fill, .reg-dot { animation: none; }
+      .reg-fill, .reg-dot, .reg-dot::after { animation: none; }
       .reg-fill { width: calc(75% - 28px); }
       .reg-dot { background: var(--blue-grad-btn); border-color: #0284c7; color: #fff; box-shadow: 0 0 0 2px #bae6fd; }
+      .reg-dot::after { display: none; }
     }
 
     .support-form-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 2.2rem 2rem; }
@@ -1226,12 +1242,11 @@
   <div class="support-wrap">
     <div class="support-intro">
       <h2>Chương trình này dành cho ai?</h2>
-      <p>Dành cho trẻ từ 6–12 tuổi, đang sinh sống hoặc học tập tại Hà Nội. Chương trình phi lợi nhuận, không vì mục đích thương mại, dành riêng các suất học được hỗ trợ cho các em thuộc:</p>
+      <p>Chương trình phi lợi nhuận, không vì mục đích thương mại, dành các suất học được hỗ trợ cho trẻ em thuộc:</p>
       <ul>
-        <li>Gia đình có hoàn cảnh kinh tế khó khăn, hộ nghèo/cận nghèo</li>
-        <li>Trẻ mồ côi hoặc thiếu sự chăm sóc đầy đủ của cha/mẹ</li>
-        <li>Gia đình gặp biến cố kinh tế, khó khăn đột xuất</li>
-        <li>Các trường hợp đặc biệt khác do ban phụ trách xem xét</li>
+        <li><strong>Độ tuổi:</strong> 5–12 tuổi</li>
+        <li><strong>Khu vực:</strong> đang sinh sống hoặc học tập tại Hà Nội</li>
+        <li><strong>Miễn phí</strong> dành cho các trẻ em có hoàn cảnh khó khăn</li>
       </ul>
       <p style="margin-top:0.8rem; font-size:0.88rem; color:var(--text-muted);">Lưu ý: đủ điều kiện hoàn cảnh không đồng nghĩa với việc tự động được nhận vào suất học hỗ trợ — số suất có hạn theo từng khóa. <a href="chi-tiet.html?slug=chuong-trinh-luyen-chu-dep-tre-em-kho-khan-ha-noi" style="color:#0284c7; text-decoration:underline;">Xem chi tiết chương trình</a>.</p>
     </div>
