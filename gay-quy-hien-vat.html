@@ -480,6 +480,19 @@
             </select>
           </div>
 
+          <div id="officeVisitSection" style="display:none;">
+            <div class="item-form-field">
+              <label for="itemOfficeTime">Thời gian dự kiến mang đến</label>
+              <select name="thoi_gian_mang_den" id="itemOfficeTime">
+                <option value="">— Chọn khung giờ thuận tiện —</option>
+                <option value="Sáng thứ 2 - thứ 6 (8:00 - 12:00)">Sáng thứ 2 - thứ 6 (8:00 - 12:00)</option>
+                <option value="Chiều thứ 2 - thứ 6 (13:30 - 17:30)">Chiều thứ 2 - thứ 6 (13:30 - 17:30)</option>
+                <option value="Thứ 7 (8:00 - 12:00)">Thứ 7 (8:00 - 12:00)</option>
+                <option value="Khác (ghi chú bên dưới)">Khác (ghi chú bên dưới)</option>
+              </select>
+            </div>
+          </div>
+
           <div id="pickupSection" style="display:none;">
             <div class="item-form-field">
               <label>Địa chỉ cần thu gom <span class="required" style="color:#dc2626;">*</span></label>
@@ -718,8 +731,16 @@
 
     function togglePickupSection(method) {
       const section = document.getElementById('pickupSection');
+      const officeSection = document.getElementById('officeVisitSection');
       const needsPickup = method === 'Cần hỗ trợ thu gom';
+      const isOfficeVisit = method === 'Tự mang đến trụ sở';
+
       section.style.display = needsPickup ? 'block' : 'none';
+      officeSection.style.display = isOfficeVisit ? 'block' : 'none';
+
+      if (!isOfficeVisit) {
+        document.getElementById('itemOfficeTime').value = '';
+      }
       if (!needsPickup) {
         document.getElementById('pickupProvince').value = '';
         populateWardOptions('pickupProvince', 'pickupWard');
@@ -854,6 +875,7 @@
     const itemForm = document.getElementById('itemForm');
     const itemSubmitBtn = document.getElementById('itemSubmitBtn');
     const itemFormAlert = document.getElementById('itemFormAlert');
+    togglePickupSection(document.getElementById('itemDeliveryMethod').value);
 
     // Dấu tích xanh + dòng đỏ báo thiếu cho 3 trường bắt buộc
     const itemRequiredIds = ['itemName', 'itemEmail', 'itemPhone'];
