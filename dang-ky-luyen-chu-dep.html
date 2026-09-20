@@ -1207,19 +1207,38 @@
 
     // Chương trình chỉ áp dụng tại Hà Nội — chỉ cần dropdown Xã/Phường
     // của Hà Nội, không cần chọn Tỉnh/Thành phố.
+    let HANOI_WARDS_LIST = [];
     let HANOI_WARDS_SET = new Set();
+    const MAX_WARD_SUGGESTIONS = 15;
 
-    (function initHanoiWardDatalist() {
+    (function initHanoiWardData() {
       const hanoi = VN_ADDRESS_DATA.find(p => p.code === '01');
-      const wards = [...(hanoi?.wards || [])].sort((a, b) => a.localeCompare(b, 'vi'));
-      HANOI_WARDS_SET = new Set(wards);
+      HANOI_WARDS_LIST = [...(hanoi?.wards || [])].sort((a, b) => a.localeCompare(b, 'vi'));
+      HANOI_WARDS_SET = new Set(HANOI_WARDS_LIST);
+    })();
+
+    function normalizeVi(str) {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+    }
+
+    // Chỉ hiện gợi ý khi đã gõ tối thiểu 2 ký tự, giới hạn số lượng —
+    // tránh datalist đổ ra cả trăm xã/phường tràn hết trang khi ô
+    // còn trống (hành vi mặc định của trình duyệt nếu nạp sẵn toàn bộ).
+    function refreshWardDatalist(typedValue) {
       const datalist = document.getElementById('hanoiWardsDatalist');
-      wards.forEach(w => {
+      datalist.innerHTML = '';
+      const query = typedValue.trim();
+      if (query.length < 2) return;
+      const normQuery = normalizeVi(query);
+      const matches = HANOI_WARDS_LIST
+        .filter(w => normalizeVi(w).includes(normQuery))
+        .slice(0, MAX_WARD_SUGGESTIONS);
+      matches.forEach(w => {
         const opt = document.createElement('option');
         opt.value = w;
         datalist.appendChild(opt);
       });
-    })();
+    }
 
     // Ô nhập có gợi ý (datalist) cho phép gõ tự do, nên cần validate
     // giá trị gõ vào phải khớp đúng 1 xã/phường có thật trong danh sách.
@@ -1228,6 +1247,7 @@
       if (!el) return;
       const update = () => {
         const value = el.value.trim();
+        refreshWardDatalist(value);
         if (!value) {
           el.setCustomValidity(required ? 'required' : '');
           return;
