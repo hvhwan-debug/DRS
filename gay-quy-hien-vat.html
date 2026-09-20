@@ -934,7 +934,6 @@
       const { allValid, firstInvalid } = validateItemRequiredFields();
       if (!allValid) {
         itemFormAlert.className = 'item-form-alert item-form-alert-error';
-        itemFormAlert.style.display = 'block';
         itemFormAlert.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i><span>Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.</span>';
         firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
@@ -955,7 +954,6 @@
 
         if (pickupSelectedImages.length < MIN_PICKUP_IMAGES) {
           itemFormAlert.className = 'item-form-alert item-form-alert-error';
-          itemFormAlert.style.display = 'block';
           itemFormAlert.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i><span>Vui lòng đính kèm tối thiểu ${MIN_PICKUP_IMAGES} ảnh hiện vật trước khi gửi.</span>`;
           document.getElementById('pickupImageBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
@@ -966,7 +964,6 @@
       itemSubmitBtn.disabled = true;
       itemSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       itemFormAlert.className = 'item-form-alert';
-      itemFormAlert.style.display = 'none';
 
       const formData = new FormData(itemForm);
       const payload = { formType: 'item', data: Object.fromEntries(formData.entries()) };
@@ -1003,6 +1000,7 @@
             const errorEl = document.getElementById(id + 'Error');
             if (errorEl) errorEl.classList.remove('show');
           });
+          itemFormAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
         })
         .catch(() => {
           itemFormAlert.className = 'item-form-alert item-form-alert-error';
