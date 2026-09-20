@@ -39,7 +39,10 @@ const FIELD_LABELS = {
   needType: "Loại hỗ trợ cần thiết",
   relation: "Vai trò liên hệ",
   address: "Địa chỉ hiện tại",
-  detail: "Mô tả hoàn cảnh"
+  detail: "Mô tả hoàn cảnh",
+  beneficiaryName: "Họ tên người cần hỗ trợ",
+  beneficiaryPhone: "SĐT người cần hỗ trợ",
+  beneficiaryAddress: "Địa chỉ người cần hỗ trợ"
 };
 
 // Các trường ẩn / kỹ thuật không hiển thị trong email

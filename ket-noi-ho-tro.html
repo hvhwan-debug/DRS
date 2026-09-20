@@ -693,11 +693,29 @@
           </div>
           <div class="form-group">
             <label for="supRelation">Bạn đang liên hệ với vai trò</label>
-            <select id="supRelation" name="relation">
+            <select id="supRelation" name="relation" onchange="toggleBeneficiarySection(this.value)">
               <option value="ban_than">Cho bản thân</option>
               <option value="gia_dinh">Cho người thân trong gia đình</option>
               <option value="dai_dien">Đại diện cho một trường hợp khác (hàng xóm, học sinh...)</option>
             </select>
+          </div>
+
+          <div id="beneficiarySection" style="display:none;">
+            <div class="support-hero-form-header" style="margin-bottom:0.7rem; font-size:0.82rem; color:#0284c7;">
+              <span><i class="fa-solid fa-user-group"></i> Thông tin người cần được hỗ trợ</span>
+            </div>
+            <div class="form-group">
+              <label for="supBeneficiaryName">Họ và tên người cần hỗ trợ <span class="required">*</span></label>
+              <input type="text" id="supBeneficiaryName" name="beneficiaryName" placeholder="Họ tên người thực sự cần hỗ trợ">
+            </div>
+            <div class="form-group">
+              <label for="supBeneficiaryPhone">Số điện thoại người cần hỗ trợ (nếu có)</label>
+              <input type="tel" id="supBeneficiaryPhone" name="beneficiaryPhone" placeholder="09xx xxx xxx">
+            </div>
+            <div class="form-group">
+              <label for="supBeneficiaryAddress">Địa chỉ của người cần hỗ trợ <span class="required">*</span></label>
+              <input type="text" id="supBeneficiaryAddress" name="beneficiaryAddress" placeholder="Thôn/xã/huyện/tỉnh">
+            </div>
           </div>
           <div class="form-group">
             <label for="supAddress">Địa chỉ hiện tại <span class="required">*</span></label>
@@ -809,6 +827,8 @@
       document.getElementById('heroFormNeedLabel').textContent = HERO_NEED_LABELS[need] || '';
       document.getElementById('heroStepNeed').style.display = 'none';
       document.getElementById('heroStepForm').style.display = 'block';
+      document.getElementById('supRelation').value = 'ban_than';
+      toggleBeneficiarySection('ban_than');
     }
 
     function backToHeroNeed() {
@@ -909,6 +929,26 @@
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
+    }
+
+    // Hiện/ẩn khối thông tin người cần hỗ trợ tùy vai trò liên hệ:
+    // "Cho bản thân" giữ nguyên form gốc; các vai trò còn lại (người thân /
+    // đại diện) yêu cầu thêm thông tin người thực sự cần hỗ trợ để đội ngũ
+    // dễ xác minh và phê duyệt.
+    function toggleBeneficiarySection(relationValue) {
+      const section = document.getElementById('beneficiarySection');
+      const nameInput = document.getElementById('supBeneficiaryName');
+      const addressInput = document.getElementById('supBeneficiaryAddress');
+      const needsBeneficiaryInfo = relationValue !== 'ban_than';
+
+      section.style.display = needsBeneficiaryInfo ? 'block' : 'none';
+      nameInput.required = needsBeneficiaryInfo;
+      addressInput.required = needsBeneficiaryInfo;
+      if (!needsBeneficiaryInfo) {
+        nameInput.value = '';
+        addressInput.value = '';
+        document.getElementById('supBeneficiaryPhone').value = '';
+      }
     }
 
     function handleSupportSubmit(e) {
