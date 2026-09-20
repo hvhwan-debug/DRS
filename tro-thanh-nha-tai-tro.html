@@ -78,8 +78,11 @@
       padding: 0.5rem; z-index: 100; margin-top: 0;
     }
     .nav-dropdown.open > .nav-dropdown-menu { display: block; }
-    .nav-dropdown-menu a { display: block; margin-left: 0 !important; padding: 0.65rem 0.8rem; border-radius: 8px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; }
-    .nav-dropdown-menu a:hover { background: #f0f9ff; color: #0284c7 !important; }
+    .nav-dropdown-menu a { display: block; margin-left: 0 !important; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; line-height: 1.3; }
+    .nav-dropdown-menu a:hover { background: #f0f9ff; }
+    .nav-dropdown-menu a:hover .nav-dropdown-item-title { color: #0284c7; }
+    .nav-dropdown-item-title { display: block; font-weight: 600; }
+    .nav-dropdown-item-desc { display: block; font-size: 0.74rem; font-weight: 400; color: #94a3b8; margin-top: 1px; }
     .btn {
       background: var(--blue-grad-btn); color: var(--white); padding: 0.65rem 1.4rem;
       border-radius: 8px; font-weight: 600; cursor: pointer; border: none; text-decoration: none;
@@ -188,6 +191,11 @@
       color: #16a34a; font-size: 0.95rem; opacity: 0; transition: opacity 0.15s; pointer-events: none;
     }
     .field-check-icon.show { opacity: 1; }
+    .field-x-icon {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: #dc2626; font-size: 0.95rem; opacity: 0; transition: opacity 0.15s; pointer-events: none;
+    }
+    .field-x-icon.show { opacity: 1; }
     .field-error { color: #dc2626; font-size: 0.78rem; margin-top: 0.35rem; display: none; }
     .field-error.show { display: block; }
 
@@ -407,21 +415,21 @@
         <div class="nav-dropdown" id="navDropdownAction">
           <button class="nav-dropdown-trigger active-page" type="button" onclick="toggleNavDropdown(this)">Hành Động Ngay <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
-            <a href="quyen-gop.html">Gây quỹ tiền mặt</a>
-            <a href="gay-quy-hien-vat.html">Gây quỹ bằng hiện vật</a>
-            <a href="tro-thanh-nha-tai-tro.html">Trở thành nhà tài trợ</a>
-            <a href="tinh-nguyen-vien.html">Đăng ký tình nguyện viên</a>
-            <a href="ket-noi-ho-tro.html">Cần được giúp đỡ</a>
+            <a href="quyen-gop.html"><span class="nav-dropdown-item-title">Gây quỹ tiền mặt</span><span class="nav-dropdown-item-desc">Quyên góp một lần hoặc định kỳ</span></a>
+            <a href="gay-quy-hien-vat.html"><span class="nav-dropdown-item-title">Gây quỹ bằng hiện vật</span><span class="nav-dropdown-item-desc">Tặng sách vở, quần áo, đồ dùng học tập</span></a>
+            <a href="tro-thanh-nha-tai-tro.html"><span class="nav-dropdown-item-title">Trở thành nhà tài trợ</span><span class="nav-dropdown-item-desc">Đồng hành dài hạn cùng chương trình</span></a>
+            <a href="tinh-nguyen-vien.html"><span class="nav-dropdown-item-title">Đăng ký tình nguyện viên</span><span class="nav-dropdown-item-desc">Tham gia dạy học, hậu cần, truyền thông</span></a>
+            <a href="ket-noi-ho-tro.html"><span class="nav-dropdown-item-title">Cần được giúp đỡ</span><span class="nav-dropdown-item-desc">Gửi yêu cầu hỗ trợ học tập, sinh hoạt</span></a>
           </div>
         </div>
         <div class="nav-dropdown" id="navDropdownAbout">
           <button class="nav-dropdown-trigger" type="button" onclick="toggleNavDropdown(this)">Về Chúng Tôi <i class="fa-solid fa-chevron-down"></i></button>
           <div class="nav-dropdown-menu">
-            <a href="su-menh.html">Sứ mệnh &amp; Giới thiệu</a>
-            <a href="mo-hinh-100.html">Phi Lợi Nhuận 100%</a>
-            <a href="index.html#phap-ly">Cam kết pháp lý &amp; Minh bạch</a>
-            <a href="bao-cao-thuong-nien.html">Báo cáo tác động thường niên</a>
-            <a href="sao-ke.html">Tra cứu sao kê tài chính</a>
+            <a href="su-menh.html"><span class="nav-dropdown-item-title">Sứ mệnh &amp; Giới thiệu</span><span class="nav-dropdown-item-desc">Câu chuyện và mục tiêu của chúng tôi</span></a>
+            <a href="mo-hinh-100.html"><span class="nav-dropdown-item-title">Phi Lợi Nhuận 100%</span><span class="nav-dropdown-item-desc">Toàn bộ lợi nhuận tái đầu tư giáo dục</span></a>
+            <a href="index.html#phap-ly"><span class="nav-dropdown-item-title">Cam kết pháp lý &amp; Minh bạch</span><span class="nav-dropdown-item-desc">Thông tin pháp lý và minh bạch tài chính</span></a>
+            <a href="bao-cao-thuong-nien.html"><span class="nav-dropdown-item-title">Báo cáo tác động thường niên</span><span class="nav-dropdown-item-desc">Số liệu hoạt động tổng hợp hằng năm</span></a>
+            <a href="sao-ke.html"><span class="nav-dropdown-item-title">Tra cứu sao kê tài chính</span><span class="nav-dropdown-item-desc">Kiểm tra chi tiết giao dịch quyên góp</span></a>
           </div>
         </div>
         <a href="hoat-dong.html">Hoạt Động</a>
@@ -722,11 +730,18 @@
       icon.className = 'fa-solid fa-circle-check field-check-icon';
       wrapper.appendChild(icon);
       donorFieldIcons[id] = icon;
+      const xIcon = document.createElement('i');
+      xIcon.className = 'fa-solid fa-circle-xmark field-x-icon';
+      wrapper.appendChild(xIcon);
+      donorFieldIcons[id + 'X'] = xIcon;
 
       const errorEl = document.getElementById(id + 'Error');
       const update = () => {
-        const valid = el.value.trim() !== '' && el.checkValidity();
+        const hasValue = el.value.trim() !== '';
+        const valid = hasValue && el.checkValidity();
+        const invalid = hasValue && !el.checkValidity();
         icon.classList.toggle('show', valid);
+        xIcon.classList.toggle('show', invalid);
         if (valid && errorEl) errorEl.classList.remove('show');
       };
       el.addEventListener('input', update);
@@ -785,6 +800,7 @@
           donorImpactNote.innerHTML = '<i class="fa-solid fa-lightbulb"></i> <span>Nhập số tiền để xem ước tính tác động</span>';
           donorRequiredIds.forEach(id => {
             donorFieldIcons[id].classList.remove('show');
+            donorFieldIcons[id + 'X'].classList.remove('show');
             const errorEl = document.getElementById(id + 'Error');
             if (errorEl) errorEl.classList.remove('show');
           });

@@ -44,11 +44,13 @@ const FIELD_LABELS = {
   beneficiaryPhone: "SĐT người cần hỗ trợ",
   beneficiaryAddress: "Địa chỉ người cần hỗ trợ",
   location: "Vị trí GPS (của bạn)",
-  beneficiaryLocation: "Vị trí GPS (người cần hỗ trợ)"
+  beneficiaryLocation: "Vị trí GPS (người cần hỗ trợ)",
+  dia_chi_thu_gom: "Địa chỉ cần thu gom",
+  vi_tri_gps_thu_gom: "Vị trí GPS (thu gom)"
 };
 
 // Các trường chứa tọa độ "lat,lng" cần hiển thị thành link Google Maps bấm được
-const LOCATION_FIELDS = new Set(["location", "beneficiaryLocation"]);
+const LOCATION_FIELDS = new Set(["location", "beneficiaryLocation", "vi_tri_gps_thu_gom"]);
 
 // Các trường ẩn / kỹ thuật không hiển thị trong email
 const SKIP_FIELDS = new Set(["_subject", "_captcha", "_honey", "_template", "formType"]);
