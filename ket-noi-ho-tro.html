@@ -570,6 +570,18 @@
     .support-geo-status { font-size: 0.78rem; margin-top: 0.35rem; }
     .support-geo-status.ok { color: #16a34a; font-weight: 600; }
     .support-geo-status.err { color: #dc2626; font-weight: 600; }
+
+    /* Dấu tích xanh khi trường nhập đúng/hợp lệ */
+    .field-check-wrap { position: relative; }
+    .support-address-row .field-check-wrap { flex: 1; min-width: 0; }
+    .support-address-row .field-check-wrap select,
+    .support-address-row .field-check-wrap input { width: 100%; }
+    .field-check-icon {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: #16a34a; font-size: 0.95rem; opacity: 0; transition: opacity 0.15s; pointer-events: none;
+    }
+    .field-check-icon.show { opacity: 1; }
+    select ~ .field-check-icon { right: 28px; }
     .support-hero-form-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.7rem; text-align: center; }
     #heroStepForm .support-success { padding: 1rem 0.5rem; }
     #heroStepForm .support-success i { font-size: 2.2rem; }
@@ -706,7 +718,7 @@
           </div>
           <div class="form-group">
             <label for="supPhone">Số điện thoại <span class="required">*</span></label>
-            <input type="tel" id="supPhone" name="phone" required placeholder="09xx xxx xxx">
+            <input type="tel" id="supPhone" name="phone" required pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" placeholder="09xx xxx xxx">
           </div>
           <div class="form-group">
             <label for="supEmail">Email (nếu có)</label>
@@ -749,7 +761,7 @@
             </div>
             <div class="form-group">
               <label for="supBeneficiaryPhone">Số điện thoại người cần hỗ trợ (nếu có)</label>
-              <input type="tel" id="supBeneficiaryPhone" name="beneficiaryPhone" placeholder="09xx xxx xxx">
+              <input type="tel" id="supBeneficiaryPhone" name="beneficiaryPhone" pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" placeholder="09xx xxx xxx">
             </div>
             <div class="form-group">
               <label>Địa chỉ của người cần hỗ trợ <span class="required">*</span></label>
@@ -772,7 +784,7 @@
           </div>
           <div class="form-group">
             <label for="supDetail">Mô tả hoàn cảnh và nhu cầu cụ thể <span class="required">*</span></label>
-            <textarea id="supDetail" name="detail" required placeholder="Vui lòng chia sẻ ngắn gọn về hoàn cảnh hiện tại và điều bạn đang cần được hỗ trợ..."></textarea>
+            <textarea id="supDetail" name="detail" required minlength="10" placeholder="Vui lòng chia sẻ ngắn gọn về hoàn cảnh hiện tại và điều bạn đang cần được hỗ trợ..."></textarea>
           </div>
           <div class="form-group">
             <label>Hình ảnh minh chứng <span class="required">*</span> (tối thiểu 3 ảnh)</label>
@@ -883,6 +895,8 @@
       document.getElementById('supHamlet').value = '';
       document.getElementById('supLocation').value = '';
       document.getElementById('supGeoStatus').textContent = '';
+      refreshFieldCheck('supProvince');
+      refreshFieldCheck('supWard');
     }
 
     function backToHeroNeed() {
@@ -1009,6 +1023,10 @@
         document.getElementById('supBeneficiaryAddress').value = '';
         document.getElementById('supBenLocation').value = '';
         document.getElementById('supBenGeoStatus').textContent = '';
+        refreshFieldCheck('supBeneficiaryName');
+        refreshFieldCheck('supBeneficiaryPhone');
+        refreshFieldCheck('supBenProvince');
+        refreshFieldCheck('supBenWard');
       }
     }
 
@@ -1064,6 +1082,48 @@
     // Lấy vị trí GPS hiện tại (tùy chọn, hỗ trợ đội ngũ xác minh vị trí thực
     // tế chính xác hơn chỉ dựa vào địa chỉ gõ tay). prefix = 'sup' cho địa chỉ
     // của người liên hệ, 'supBen' cho địa chỉ người cần hỗ trợ.
+    // Dấu tích xanh nhỏ hiện lên khi trường đã nhập đúng/hợp lệ (dùng
+    // chuẩn HTML5 checkValidity() theo required/pattern/minlength có sẵn).
+    const fieldCheckHandles = {};
+
+    function wrapFieldWithCheckIcon(id) {
+      const el = document.getElementById(id);
+      if (!el || el.dataset.checkWrapped) return;
+      el.dataset.checkWrapped = '1';
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field-check-wrap';
+      el.parentNode.insertBefore(wrapper, el);
+      wrapper.appendChild(el);
+      el.style.paddingRight = '2.2rem';
+
+      const icon = document.createElement('i');
+      icon.className = 'fa-solid fa-circle-check field-check-icon';
+      wrapper.appendChild(icon);
+
+      const update = () => {
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        icon.classList.toggle('show', valid);
+      };
+      el.addEventListener('input', update);
+      el.addEventListener('change', update);
+      update();
+      fieldCheckHandles[id] = update;
+    }
+
+    function initFieldValidationIcons() {
+      [
+        'supFullName', 'supPhone', 'supEmail', 'supProvince', 'supWard', 'supDetail',
+        'supBeneficiaryName', 'supBeneficiaryPhone', 'supBenProvince', 'supBenWard'
+      ].forEach(wrapFieldWithCheckIcon);
+    }
+
+    function refreshFieldCheck(id) {
+      if (fieldCheckHandles[id]) fieldCheckHandles[id]();
+    }
+
+    initFieldValidationIcons();
+
     function requestGeolocation(prefix) {
       const btn = document.getElementById(prefix + 'GeoBtn');
       const status = document.getElementById(prefix + 'GeoStatus');
