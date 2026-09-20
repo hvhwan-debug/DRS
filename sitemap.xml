@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://wvn.vn/</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/su-menh.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/hoat-dong.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/sao-ke.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/tin-tuc.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/lien-he.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/chinh-sach-bao-mat.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>yearly</changefreq>
   </url>
   <url>
@@ -53,6 +53,10 @@
   </url>
   <url>
     <loc>https://wvn.vn/chi-tiet.html?slug=chuoi-hoi-thao-giao-duc-thang-052026-cung-nhin-lai-nhung-co-hoi-hoc-tap-trong-thoi-dai-moi</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://wvn.vn/chi-tiet.html?slug=chuong-trinh-luyen-chu-dep-tre-em-kho-khan-ha-noi</loc>
     <changefreq>monthly</changefreq>
   </url>
   <url>
