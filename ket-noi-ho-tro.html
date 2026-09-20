@@ -501,15 +501,26 @@
       box-shadow: 0 10px 30px rgba(15,23,42,0.08);
     }
     .support-hero-card-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: #64748b; margin-bottom: 1rem; text-align: center; }
-    .support-need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem; }
+    .support-need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1rem; }
     .support-need-option {
-      border: 1.5px solid var(--border); border-radius: 6px; background: #f8fafc;
-      padding: 0.7rem 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--text-dark);
-      cursor: pointer; text-align: center; transition: border-color 0.15s, background 0.15s;
-      font-family: inherit;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      border: 2px solid var(--border); border-radius: 12px; background: #fff;
+      padding: 1.2rem 0.8rem; font-size: 0.88rem; font-weight: 700; color: var(--text-dark);
+      cursor: pointer; text-align: center; line-height: 1.3;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
+      font-family: inherit; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
     }
-    .support-need-option:hover { border-color: #94a3b8; }
+    .support-need-option i {
+      font-size: 1.5rem; color: #0284c7; width: 48px; height: 48px; border-radius: 50%;
+      background: #eff6ff; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .support-need-option:hover {
+      border-color: #0284c7; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(2,132,199,0.15);
+    }
+    .support-need-option:hover i { background: #0284c7; color: #fff; }
     .support-need-option.selected { border-color: #0284c7; background: #eff6ff; color: #0369a1; }
+    .support-need-option.selected i { background: #0284c7; color: #fff; }
     .support-hero-card-note { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.1rem; text-align: center; }
     .support-hero-card-note i { color: #0284c7; }
     .support-cta-btn {
@@ -522,7 +533,7 @@
     @media (max-width: 480px) {
       .support-hero-card { padding: 1.4rem 1.1rem; max-width: 100%; }
       .support-need-grid { grid-template-columns: 1fr; }
-      .support-need-option { padding: 0.85rem 0.6rem; font-size: 0.88rem; }
+      .support-need-option { padding: 1rem 0.7rem; font-size: 0.9rem; }
       .support-photo-hero { padding: 2rem 1rem; }
       .page-banner { padding: 2.4rem 1.2rem 2.8rem; }
       .page-banner .hero-badge { font-size: 0.74rem; padding: 0.35rem 0.9rem; }
@@ -710,10 +721,10 @@
       <div class="support-hero-card-step" id="heroStepNeed">
         <div class="support-hero-card-label">BẠN ĐANG CẦN HỖ TRỢ VỀ VIỆC GÌ?</div>
         <div class="support-need-grid">
-          <button type="button" class="support-need-option" data-need="hoc_tap" onclick="selectHeroNeed(this)">Học bổng / đồ dùng học tập</button>
-          <button type="button" class="support-need-option" data-need="hien_vat" onclick="selectHeroNeed(this)">Nhu yếu phẩm / hiện vật</button>
-          <button type="button" class="support-need-option" data-need="tinh_nguyen" onclick="selectHeroNeed(this)">Hỗ trợ tình nguyện viên</button>
-          <button type="button" class="support-need-option" data-need="khac" onclick="selectHeroNeed(this)">Nhu cầu khác</button>
+          <button type="button" class="support-need-option" data-need="hoc_tap" onclick="selectHeroNeed(this)"><i class="fa-solid fa-graduation-cap"></i><span>Học bổng / đồ dùng học tập</span></button>
+          <button type="button" class="support-need-option" data-need="hien_vat" onclick="selectHeroNeed(this)"><i class="fa-solid fa-box-open"></i><span>Nhu yếu phẩm / hiện vật</span></button>
+          <button type="button" class="support-need-option" data-need="tinh_nguyen" onclick="selectHeroNeed(this)"><i class="fa-solid fa-hands-holding-child"></i><span>Hỗ trợ tình nguyện viên</span></button>
+          <button type="button" class="support-need-option" data-need="khac" onclick="selectHeroNeed(this)"><i class="fa-solid fa-circle-question"></i><span>Nhu cầu khác</span></button>
         </div>
         <div class="support-hero-card-note"><i class="fa-solid fa-heart"></i> Mỗi năm, chương trình đồng hành cùng hàng trăm gia đình vùng khó khăn.</div>
       </div>
