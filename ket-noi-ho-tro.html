@@ -582,6 +582,10 @@
     }
     .field-check-icon.show { opacity: 1; }
     select ~ .field-check-icon { right: 28px; }
+
+    /* Dòng chữ đỏ báo thiếu khi bấm Gửi mà chưa điền trường bắt buộc */
+    .field-error { color: #dc2626; font-size: 0.78rem; margin-top: 0.3rem; display: none; }
+    .field-error.show { display: block; }
     .support-hero-form-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.7rem; text-align: center; }
     #heroStepForm .support-success { padding: 1rem 0.5rem; }
     #heroStepForm .support-success i { font-size: 2.2rem; }
@@ -715,10 +719,12 @@
           <div class="form-group">
             <label for="supFullName">Họ và tên <span class="required">*</span></label>
             <input type="text" id="supFullName" name="fullName" required placeholder="Nguyễn Văn A">
+            <div class="field-error" id="supFullNameError">Vui lòng nhập họ và tên.</div>
           </div>
           <div class="form-group">
             <label for="supPhone">Số điện thoại <span class="required">*</span></label>
             <input type="tel" id="supPhone" name="phone" required pattern="(0|\+84)[0-9]{9,10}" title="Số điện thoại Việt Nam, ví dụ 0912345678" placeholder="09xx xxx xxx">
+            <div class="field-error" id="supPhoneError">Vui lòng nhập đúng số điện thoại.</div>
           </div>
           <div class="form-group">
             <label for="supEmail">Email (nếu có)</label>
@@ -741,6 +747,7 @@
               <i class="fa-solid fa-location-crosshairs"></i> Lấy vị trí hiện tại (GPS)
             </button>
             <div class="support-geo-status" id="supGeoStatus"></div>
+            <div class="field-error" id="supAddressError">Vui lòng chọn đầy đủ Tỉnh/Thành phố và Xã/Phường.</div>
           </div>
           <div class="form-group">
             <label for="supRelation">Bạn đang liên hệ với vai trò</label>
@@ -758,6 +765,7 @@
             <div class="form-group">
               <label for="supBeneficiaryName">Họ và tên người cần hỗ trợ <span class="required">*</span></label>
               <input type="text" id="supBeneficiaryName" name="beneficiaryName" placeholder="Họ tên người thực sự cần hỗ trợ">
+              <div class="field-error" id="supBeneficiaryNameError">Vui lòng nhập họ tên người cần hỗ trợ.</div>
             </div>
             <div class="form-group">
               <label for="supBeneficiaryPhone">Số điện thoại người cần hỗ trợ (nếu có)</label>
@@ -780,11 +788,13 @@
                 <i class="fa-solid fa-location-crosshairs"></i> Lấy vị trí hiện tại (GPS)
               </button>
               <div class="support-geo-status" id="supBenGeoStatus"></div>
+              <div class="field-error" id="supBenAddressError">Vui lòng chọn đầy đủ Tỉnh/Thành phố và Xã/Phường.</div>
             </div>
           </div>
           <div class="form-group">
             <label for="supDetail">Mô tả hoàn cảnh và nhu cầu cụ thể <span class="required">*</span></label>
             <textarea id="supDetail" name="detail" required minlength="10" placeholder="Vui lòng chia sẻ ngắn gọn về hoàn cảnh hiện tại và điều bạn đang cần được hỗ trợ..."></textarea>
+            <div class="field-error" id="supDetailError">Vui lòng mô tả ít nhất 10 ký tự.</div>
           </div>
           <div class="form-group">
             <label>Hình ảnh minh chứng <span class="required">*</span> (tối thiểu 3 ảnh)</label>
@@ -897,6 +907,10 @@
       document.getElementById('supGeoStatus').textContent = '';
       refreshFieldCheck('supProvince');
       refreshFieldCheck('supWard');
+      document.getElementById('supFullNameError').classList.remove('show');
+      document.getElementById('supPhoneError').classList.remove('show');
+      document.getElementById('supAddressError').classList.remove('show');
+      document.getElementById('supDetailError').classList.remove('show');
     }
 
     function backToHeroNeed() {
@@ -1027,6 +1041,8 @@
         refreshFieldCheck('supBeneficiaryPhone');
         refreshFieldCheck('supBenProvince');
         refreshFieldCheck('supBenWard');
+        document.getElementById('supBeneficiaryNameError').classList.remove('show');
+        document.getElementById('supBenAddressError').classList.remove('show');
       }
     }
 
@@ -1101,14 +1117,31 @@
       icon.className = 'fa-solid fa-circle-check field-check-icon';
       wrapper.appendChild(icon);
 
+      const errorEl = document.getElementById(id + 'Error');
       const update = () => {
         const valid = el.value.trim() !== '' && el.checkValidity();
         icon.classList.toggle('show', valid);
+        if (valid && errorEl) errorEl.classList.remove('show');
+        // Tỉnh/Xã dùng chung 1 dòng lỗi cho cả cặp (Tỉnh+Xã)
+        if (id === 'supProvince' || id === 'supWard') updateAddressGroupError('sup');
+        if (id === 'supBenProvince' || id === 'supBenWard') updateAddressGroupError('supBen');
       };
       el.addEventListener('input', update);
       el.addEventListener('change', update);
       update();
       fieldCheckHandles[id] = update;
+    }
+
+    function updateAddressGroupError(prefix) {
+      const provinceId = prefix === 'sup' ? 'supProvince' : 'supBenProvince';
+      const wardId = prefix === 'sup' ? 'supWard' : 'supBenWard';
+      const errorId = prefix === 'sup' ? 'supAddressError' : 'supBenAddressError';
+      const province = document.getElementById(provinceId);
+      const ward = document.getElementById(wardId);
+      const errorEl = document.getElementById(errorId);
+      if (!errorEl) return;
+      const bothValid = province.value.trim() !== '' && ward.value.trim() !== '';
+      if (bothValid) errorEl.classList.remove('show');
     }
 
     function initFieldValidationIcons() {
@@ -1123,6 +1156,55 @@
     }
 
     initFieldValidationIcons();
+
+    // Kiểm tra toàn bộ trường bắt buộc khi bấm Gửi — hiện dòng chữ đỏ
+    // ngay dưới từng trường còn thiếu/sai, cuộn tới trường lỗi đầu tiên.
+    function validateRequiredFieldsOnSubmit() {
+      let firstInvalid = null;
+      let allValid = true;
+
+      const simpleRequiredIds = ['supFullName', 'supPhone', 'supDetail'];
+      if (document.getElementById('supRelation').value !== 'ban_than') {
+        simpleRequiredIds.push('supBeneficiaryName');
+      }
+
+      simpleRequiredIds.forEach(id => {
+        const el = document.getElementById(id);
+        const errorEl = document.getElementById(id + 'Error');
+        const valid = el.value.trim() !== '' && el.checkValidity();
+        if (errorEl) errorEl.classList.toggle('show', !valid);
+        if (!valid) {
+          allValid = false;
+          if (!firstInvalid) firstInvalid = el;
+        }
+      });
+
+      // Địa chỉ của bạn (luôn bắt buộc)
+      const ownProvince = document.getElementById('supProvince').value.trim();
+      const ownWard = document.getElementById('supWard').value.trim();
+      const ownAddressValid = ownProvince !== '' && ownWard !== '';
+      document.getElementById('supAddressError').classList.toggle('show', !ownAddressValid);
+      if (!ownAddressValid && !firstInvalid) {
+        allValid = false;
+        firstInvalid = document.getElementById('supProvince');
+      } else if (!ownAddressValid) {
+        allValid = false;
+      }
+
+      // Địa chỉ người cần hỗ trợ (chỉ bắt buộc khi không phải "cho bản thân")
+      if (document.getElementById('supRelation').value !== 'ban_than') {
+        const benProvince = document.getElementById('supBenProvince').value.trim();
+        const benWard = document.getElementById('supBenWard').value.trim();
+        const benAddressValid = benProvince !== '' && benWard !== '';
+        document.getElementById('supBenAddressError').classList.toggle('show', !benAddressValid);
+        if (!benAddressValid) {
+          allValid = false;
+          if (!firstInvalid) firstInvalid = document.getElementById('supBenProvince');
+        }
+      }
+
+      return { allValid, firstInvalid };
+    }
 
     function requestGeolocation(prefix) {
       const btn = document.getElementById(prefix + 'GeoBtn');
@@ -1175,28 +1257,18 @@
       const alertBox = document.getElementById('supportFormAlert');
       const originalHtml = submitBtn.innerHTML;
 
-      const provinceVal = document.getElementById('supProvince').value.trim();
-      const wardVal = document.getElementById('supWard').value.trim();
-      if (!provinceVal || !wardVal) {
+      const { allValid, firstInvalid } = validateRequiredFieldsOnSubmit();
+      if (!allValid) {
         alertBox.style.display = 'block';
         alertBox.style.color = '#dc2626';
-        alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng nhập đầy đủ Tỉnh/Thành phố và Xã/Phường (địa chỉ của bạn).';
-        document.getElementById('supProvince').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng kiểm tra lại các trường được đánh dấu đỏ bên dưới.';
+        if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return false;
       }
       document.getElementById('supAddress').value = buildCombinedAddress('supProvince', 'supWard', 'supHamlet');
 
       const needsBeneficiaryInfo = document.getElementById('supRelation').value !== 'ban_than';
       if (needsBeneficiaryInfo) {
-        const benProvinceVal = document.getElementById('supBenProvince').value.trim();
-        const benWardVal = document.getElementById('supBenWard').value.trim();
-        if (!benProvinceVal || !benWardVal) {
-          alertBox.style.display = 'block';
-          alertBox.style.color = '#dc2626';
-          alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Vui lòng nhập đầy đủ Tỉnh/Thành phố và Xã/Phường của người cần hỗ trợ.';
-          document.getElementById('supBenProvince').scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return false;
-        }
         document.getElementById('supBeneficiaryAddress').value = buildCombinedAddress('supBenProvince', 'supBenWard', 'supBenHamlet');
       }
 
