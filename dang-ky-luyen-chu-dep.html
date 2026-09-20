@@ -631,12 +631,25 @@
     /* Ô chọn nhu cầu dạng viên thuốc, xếp ngang tự xuống dòng */
     .item-radio-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .item-radio-item {
-      display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600;
       color: var(--text-dark); cursor: pointer; border: 1.5px solid var(--border); border-radius: 999px;
-      padding: 0.45rem 0.9rem; background: #f8fafc; transition: border-color 0.15s, background 0.15s;
+      padding: 0.4rem 0.85rem; background: #f8fafc; white-space: nowrap;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
     }
-    .item-radio-item:has(input:checked) { border-color: #0284c7; background: #eff6ff; color: #0369a1; }
-    .item-radio-item input { accent-color: #0284c7; }
+    .item-radio-item:hover { border-color: #94a3b8; }
+    .item-radio-item:has(input:checked) { border-color: #0284c7; background: #eff6ff; color: #0369a1; box-shadow: 0 1px 4px rgba(2,132,199,0.15); }
+    .item-radio-item input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none; width: 16px; height: 16px; flex-shrink: 0;
+      border: 1.5px solid #94a3b8; border-radius: 4px; margin: 0; cursor: pointer; position: relative;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .item-radio-item input[type="checkbox"]:checked {
+      background: #0284c7; border-color: #0284c7;
+    }
+    .item-radio-item input[type="checkbox"]:checked::after {
+      content: ''; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px;
+      border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+    }
     .support-hero-form-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.7rem; text-align: center; }
     #heroStepForm .support-success { padding: 1rem 0.5rem; }
     #heroStepForm .support-success i { font-size: 2.2rem; }
