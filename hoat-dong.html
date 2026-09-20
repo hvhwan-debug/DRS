@@ -693,6 +693,8 @@
       {
         date: "2026-12-01",
         anchor: "su-kien-luyen-chu-dep",
+        registerUrl: "dang-ky-luyen-chu-dep.html",
+        articleSlug: "chuong-trinh-luyen-chu-dep-tre-em-kho-khan-ha-noi",
         projectCode: "DA-003",
         icon: "fa-pen-nib",
         topBg: "linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)",
@@ -711,6 +713,12 @@
     ACTIVITY_EVENTS.forEach(ev => { ACTIVITY_EVENTS_BY_CODE[ev.projectCode] = ev; });
 
     function renderActivityEventCard(ev) {
+      const leftBadge = ev.registerUrl
+        ? `<a href="${ev.registerUrl}" class="event-project-code" style="text-decoration:none;">Đăng ký</a>`
+        : `<span class="event-project-code">Mã ${ev.projectCode}</span>`;
+      const learnMoreUrl = ev.articleSlug
+        ? `chi-tiet.html?slug=${encodeURIComponent(ev.articleSlug)}`
+        : 'lien-he.html';
       return `
         <div class="event-card" id="${ev.anchor}">
           <div class="event-card-top" style="background:${ev.topBg};">
@@ -725,8 +733,8 @@
             <h3>${ev.title}</h3>
             <p>${ev.desc}</p>
             <div class="event-project-row">
-              <span class="event-project-code">Mã ${ev.projectCode}</span>
-              <button class="event-cta" onclick="window.location.href='lien-he.html'">Tìm hiểu thêm <i class="fa-solid fa-arrow-right"></i></button>
+              ${leftBadge}
+              <button class="event-cta" onclick="window.location.href='${learnMoreUrl}'">Tìm hiểu thêm <i class="fa-solid fa-arrow-right"></i></button>
             </div>
           </div>
         </div>`;
