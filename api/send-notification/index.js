@@ -7,7 +7,9 @@ const FORM_TITLES = {
   item: "Đăng ký gây quỹ hiện vật mới",
   donor: "Đăng ký trở thành nhà tài trợ mới",
   support: "Yêu cầu kết nối hỗ trợ mới",
-  newsletter: "Đăng ký nhận bản tin mới"
+  newsletter: "Đăng ký nhận bản tin mới",
+  luyen_chu_phu_huynh: "Đăng ký Luyện Chữ Đẹp — Phụ huynh mới",
+  luyen_chu_tinh_nguyen: "Đăng ký Luyện Chữ Đẹp — Tình nguyện viên mới"
 };
 
 // ===== Nội dung email cảm ơn/xác nhận gửi lại cho chính người gửi form =====
@@ -17,7 +19,9 @@ const AUTOREPLY_INTRO = {
   item: "Cảm ơn bạn đã đăng ký gây quỹ bằng hiện vật. Chúng tôi đã nhận được thông tin và sẽ liên hệ để xác nhận, hướng dẫn cách gửi hiện vật sớm nhất.",
   donor: "Cảm ơn bạn đã quan tâm trở thành nhà tài trợ. Chúng tôi đã nhận được thông tin đăng ký và đội ngũ sẽ liên hệ trong vòng 48 giờ để hướng dẫn hoàn tất tài trợ.",
   support: "Cảm ơn bạn đã tin tưởng chia sẻ. Chúng tôi đã nhận được thông tin và đội ngũ chương trình sẽ liên hệ để tìm hiểu, hỗ trợ trong thời gian sớm nhất.",
-  newsletter: "Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi đã ghi nhận email của bạn và sẽ gửi những tin tức, hoạt động mới nhất từ Mạng Lưới Tri Thức Việt Nam."
+  newsletter: "Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi đã ghi nhận email của bạn và sẽ gửi những tin tức, hoạt động mới nhất từ Mạng Lưới Tri Thức Việt Nam.",
+  luyen_chu_phu_huynh: "Cảm ơn bạn đã đăng ký Chương trình Luyện chữ đẹp cho con em. Ban phụ trách sẽ xem xét hồ sơ và thông báo kết quả xét duyệt trong thời gian sớm nhất.",
+  luyen_chu_tinh_nguyen: "Cảm ơn bạn đã đăng ký làm tình nguyện viên cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ với bạn trong thời gian sớm nhất."
 };
 
 // ===== Nhãn tiếng Việt cho từng trường dữ liệu (áp dụng cho mọi form) =====
@@ -46,7 +50,23 @@ const FIELD_LABELS = {
   location: "Vị trí GPS (của bạn)",
   beneficiaryLocation: "Vị trí GPS (người cần hỗ trợ)",
   dia_chi_thu_gom: "Địa chỉ cần thu gom",
-  vi_tri_gps_thu_gom: "Vị trí GPS (thu gom)"
+  vi_tri_gps_thu_gom: "Vị trí GPS (thu gom)",
+  ten_phu_huynh: "Họ tên phụ huynh/người giám hộ",
+  sdt_phu_huynh: "SĐT phụ huynh/người giám hộ",
+  email_phu_huynh: "Email phụ huynh/người giám hộ",
+  ten_tre: "Họ tên trẻ",
+  nam_sinh_tre: "Năm sinh của trẻ",
+  truong_lop: "Trường/lớp đang học",
+  phuong_xa: "Xã/Phường (Hà Nội)",
+  dia_chi: "Địa chỉ",
+  hoan_canh_ly_do: "Hoàn cảnh gia đình / Lý do đăng ký",
+  nhu_cau: "Nhu cầu cần hỗ trợ của trẻ",
+  ten_tnv: "Họ tên tình nguyện viên",
+  sdt_tnv: "SĐT tình nguyện viên",
+  email_tnv: "Email tình nguyện viên",
+  kinh_nghiem: "Kinh nghiệm dạy học/luyện chữ",
+  thoi_gian_tnv: "Thời gian có thể tham gia",
+  ghi_chu_tnv: "Ghi chú thêm"
 };
 
 // Các trường chứa tọa độ "lat,lng" cần hiển thị thành link Google Maps bấm được
