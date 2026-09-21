@@ -10,7 +10,8 @@ const FORM_TITLES = {
   newsletter: "Đăng ký nhận bản tin mới",
   luyen_chu_phu_huynh: "Đăng ký Luyện Chữ Đẹp — Phụ huynh mới",
   luyen_chu_tinh_nguyen: "Đăng ký Luyện Chữ Đẹp — Tình nguyện viên mới",
-  luyen_chu_tai_tro: "Đăng ký Luyện Chữ Đẹp — Nhà tài trợ mới"
+  luyen_chu_tai_tro: "Đăng ký Luyện Chữ Đẹp — Nhà tài trợ mới",
+  tien_tieu_hoc: "Đăng ký Chương Trình Tiền Tiểu Học mới"
 };
 
 // ===== Nội dung email cảm ơn/xác nhận gửi lại cho chính người gửi form =====
@@ -23,7 +24,8 @@ const AUTOREPLY_INTRO = {
   newsletter: "Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi đã ghi nhận email của bạn và sẽ gửi những tin tức, hoạt động mới nhất từ Mạng Lưới Tri Thức Việt Nam.",
   luyen_chu_phu_huynh: "Cảm ơn bạn đã đăng ký Chương trình Luyện chữ đẹp cho con em. Ban phụ trách sẽ xem xét hồ sơ và thông báo kết quả xét duyệt trong thời gian sớm nhất.",
   luyen_chu_tinh_nguyen: "Cảm ơn bạn đã đăng ký làm tình nguyện viên cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ với bạn trong thời gian sớm nhất.",
-  luyen_chu_tai_tro: "Cảm ơn bạn đã quan tâm tài trợ cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ để trao đổi cụ thể trong thời gian sớm nhất."
+  luyen_chu_tai_tro: "Cảm ơn bạn đã quan tâm tài trợ cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ để trao đổi cụ thể trong thời gian sớm nhất.",
+  tien_tieu_hoc: "Cảm ơn bạn đã đăng ký Chương trình Tiền Tiểu Học Miễn Phí 100% cho con em. Ban tổ chức sẽ xem xét hồ sơ và liên hệ thông báo kết quả trong thời gian sớm nhất."
 };
 
 // ===== Nhãn tiếng Việt cho từng trường dữ liệu (áp dụng cho mọi form) =====
@@ -63,6 +65,7 @@ const FIELD_LABELS = {
   dia_chi: "Địa chỉ",
   hoan_canh_ly_do: "Hoàn cảnh gia đình / Lý do đăng ký",
   nhu_cau: "Nhu cầu cần hỗ trợ của trẻ",
+  doi_tuong_dang_ky: "Đối tượng đăng ký",
   ten_tnv: "Họ tên tình nguyện viên",
   sdt_tnv: "SĐT tình nguyện viên",
   email_tnv: "Email tình nguyện viên",
