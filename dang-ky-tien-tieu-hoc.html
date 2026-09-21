@@ -423,22 +423,14 @@
     gtag('config', 'AW-18460459117');
   </script>
 
-  <!-- Event snippet for Lượt gửi biểu mẫu khách hàng tiềm năng (Đăng ký Tiền Tiểu Học) conversion page
-       Gọi gtag_report_conversion() khi form đăng ký trên trang gửi thành công. -->
+  <!-- Event snippet for Lượt gửi biểu mẫu khách hàng tiềm năng (2) conversion page -->
   <script>
-    function gtag_report_conversion(url) {
-      var callback = function () {
-        if (typeof(url) != 'undefined') {
-          window.location = url;
-        }
-      };
+    function fireTienTieuHocConversion() {
       gtag('event', 'conversion', {
-          'send_to': 'AW-18460459117/m1fbCO289v8cEO2A0eJE',
+          'send_to': 'AW-18460459117/y9iqCLfv_f8cEO2A0eJE',
           'value': 1.0,
-          'currency': 'USD',
-          'event_callback': callback
+          'currency': 'USD'
       });
-      return false;
     }
   </script>
 </head>
@@ -1387,7 +1379,7 @@
         .then(() => {
           parentForm.style.display = 'none';
           document.getElementById('parentSuccess').style.display = 'block';
-          gtag_report_conversion();
+          fireTienTieuHocConversion();
         })
         .catch(() => {
           parentFormAlert.style.display = 'block';
