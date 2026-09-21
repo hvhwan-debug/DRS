@@ -849,6 +849,7 @@
     .form-row .form-group { min-width: 0; }
     .form-row .form-group input,
     .form-row .form-group select { width: 100%; min-width: 0; box-sizing: border-box; }
+    input[type="date"] { width: 100%; max-width: 100%; box-sizing: border-box; }
     @media (max-width: 600px) { .form-row { grid-template-columns: minmax(0, 1fr); } }
 
     .support-submit-btn {
@@ -900,17 +901,15 @@
             <input type="email" id="lcParentEmail" name="email_phu_huynh" placeholder="ban@email.com">
           </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
+          <div class="form-group">
             <label for="lcChildName">Họ và tên trẻ <span class="required">*</span></label>
             <input type="text" id="lcChildName" name="ten_tre" required placeholder="Họ tên con/em">
             <div class="field-error" id="lcChildNameError">Vui lòng nhập họ tên trẻ.</div>
           </div>
-            <div class="form-group">
+          <div class="form-group">
             <label for="lcChildDob">Ngày sinh của trẻ <span class="required">*</span></label>
             <input type="date" id="lcChildDob" name="ngay_sinh_tre" required>
             <div class="field-error" id="lcChildDobError">Vui lòng nhập ngày sinh của trẻ.</div>
-          </div>
           </div>
           <div class="form-group">
             <label for="lcChildSchool">Trường mầm non đang theo học (nếu có)</label>
