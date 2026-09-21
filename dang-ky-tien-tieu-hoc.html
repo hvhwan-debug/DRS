@@ -1070,7 +1070,7 @@
     const MAX_WARD_SUGGESTIONS = 15;
 
     (function initHanoiWardData() {
-      const hanoi = VN_ADDRESS_DATA.find(p => p.name === 'Thành phố Hà Nội');
+      const hanoi = VN_ADDRESS_DATA.find(p => p.name === 'TP. Hà Nội');
       HANOI_WARDS_LIST = hanoi ? hanoi.wards : [];
       HANOI_WARDS_SET = new Set(HANOI_WARDS_LIST);
       const datalist = document.getElementById('hanoiWardsDatalist');
