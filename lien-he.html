@@ -230,6 +230,11 @@
     }
     .contact-form-card h3 { color: #0369a1; font-size: 1.2rem; font-weight: 800; margin-bottom: 0.4rem; }
     .contact-form-card > p { color: var(--text-muted); font-size: 0.94rem; margin-bottom: 1.6rem; }
+    .contact-form-photo {
+      margin: -2.2rem -2rem 1.6rem; border-radius: 18px 18px 0 0; overflow: hidden;
+    }
+    .contact-form-photo img { display: block; width: 100%; height: 220px; object-fit: cover; }
+    @media (max-width: 480px) { .contact-form-photo img { height: 170px; } }
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
@@ -541,6 +546,9 @@
 
       <!-- Form liên hệ -->
       <div class="contact-form-card">
+        <div class="contact-form-photo">
+          <img src="images/uploads/lop-hoc-tien-tieu-hoc-cung-co.jpg" alt="Cô giáo hướng dẫn các em nhỏ tập đọc tại lớp học cộng đồng" loading="lazy" width="1200" height="900">
+        </div>
         <h3>Gửi Lời Nhắn Cho Chúng Tôi</h3>
         <p>Điền thông tin bên dưới, đội ngũ của chúng tôi sẽ phản hồi trong thời gian sớm nhất.</p>
 
