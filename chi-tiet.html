@@ -210,6 +210,13 @@
     .article-body strong { color: #0f172a; }
     .article-body hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
     .article-body code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 6px; font-size: 0.9em; }
+    .article-body table { width: 100%; border-collapse: collapse; margin: 1.2rem 0 1.6rem; font-size: 0.95rem; }
+    .article-body th, .article-body td { border: 1px solid var(--border); padding: 0.65rem 0.9rem; text-align: left; vertical-align: top; }
+    .article-body th { background: #f0f9ff; color: #0369a1; font-weight: 700; }
+    .article-body tr:nth-child(even) td { background: #f8fafc; }
+    @media (max-width: 600px) {
+      .article-body table { display: block; overflow-x: auto; }
+    }
 
     .article-status { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
     .article-status i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.8rem; display: block; }
