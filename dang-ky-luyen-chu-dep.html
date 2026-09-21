@@ -1015,8 +1015,8 @@
             <div class="field-error" id="lcWardError">Vui lòng chọn Xã/Phường nơi trẻ đang sinh sống.</div>
           </div>
           <div class="form-group">
-            <label>Hoàn cảnh gia đình và lý do đăng ký <span class="required">*</span></label>
-            <textarea id="lcReason" name="hoan_canh_ly_do" required minlength="10" placeholder="Chia sẻ ngắn gọn về hoàn cảnh gia đình và lý do muốn đăng ký chương trình cho trẻ..."></textarea>
+            <label id="lcReasonLabel">Hoàn cảnh gia đình và lý do đăng ký <span class="required" id="lcReasonRequiredMark">*</span></label>
+            <textarea id="lcReason" name="hoan_canh_ly_do" minlength="10" placeholder="Chia sẻ ngắn gọn về hoàn cảnh gia đình và lý do muốn đăng ký chương trình cho trẻ..."></textarea>
             <div class="field-error" id="lcReasonError">Vui lòng mô tả ít nhất 10 ký tự.</div>
           </div>
           <div class="form-group">
@@ -1518,7 +1518,24 @@
       group.style.display = isKhoKhan ? 'block' : 'none';
       requiredMark.style.display = isKhoKhan ? 'inline' : 'none';
       if (!isKhoKhan && errorEl) errorEl.classList.remove('show');
+
+      // Hoàn cảnh khó khăn -> bắt buộc mô tả hoàn cảnh; Bình thường -> chỉ là chia sẻ thêm, không bắt buộc
+      const reasonEl = document.getElementById('lcReason');
+      const reasonLabel = document.getElementById('lcReasonLabel');
+      const reasonRequiredMark = document.getElementById('lcReasonRequiredMark');
+      const reasonError = document.getElementById('lcReasonError');
+      reasonEl.required = isKhoKhan;
+      reasonRequiredMark.style.display = isKhoKhan ? 'inline' : 'none';
+      if (isKhoKhan) {
+        reasonLabel.firstChild.textContent = 'Hoàn cảnh gia đình và lý do đăng ký ';
+        reasonEl.placeholder = 'Chia sẻ ngắn gọn về hoàn cảnh gia đình và lý do muốn đăng ký chương trình cho trẻ...';
+      } else {
+        reasonLabel.firstChild.textContent = 'Chia sẻ thêm thông tin (không bắt buộc) ';
+        reasonEl.placeholder = 'Bạn có thể chia sẻ thêm mong muốn hoặc thông tin liên quan đến việc đăng ký cho trẻ (không bắt buộc)...';
+        if (reasonError) reasonError.classList.remove('show');
+      }
     }
+    updateLcObjectType();
     const lcFieldHandles = {};
     function wrapLcFieldWithCheckIcon(id) {
       const el = document.getElementById(id);
@@ -1765,13 +1782,14 @@
     const parentForm = document.getElementById('parentForm');
     const parentSubmitBtn = document.getElementById('parentSubmitBtn');
     const parentFormAlert = document.getElementById('parentFormAlert');
-    const PARENT_REQUIRED_IDS = ['lcParentName', 'lcParentPhone', 'lcChildName', 'lcChildDob', 'lcWard', 'lcReason'];
+    const PARENT_BASE_REQUIRED_IDS = ['lcParentName', 'lcParentPhone', 'lcChildName', 'lcChildDob', 'lcWard'];
 
     function handleParentSubmit(e) {
       e.preventDefault();
 
-      const { allValid, firstInvalid } = validateLcRequiredFields(PARENT_REQUIRED_IDS);
       const isKhoKhan = document.querySelector('input[name="doi_tuong_dang_ky"]:checked').value === 'Hoàn cảnh khó khăn';
+      const requiredIds = isKhoKhan ? [...PARENT_BASE_REQUIRED_IDS, 'lcReason'] : PARENT_BASE_REQUIRED_IDS;
+      const { allValid, firstInvalid } = validateLcRequiredFields(requiredIds);
       const docsError = document.getElementById('lcDocsError');
       const docsValid = !isKhoKhan || lcDocsSelected.length > 0;
       if (docsError) docsError.classList.toggle('show', isKhoKhan && !docsValid);
