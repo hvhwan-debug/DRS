@@ -680,7 +680,7 @@
     .dropdown-select-option:has(input:checked) { background: #eff6ff; }
     .dropdown-select-option input[type="checkbox"] {
       appearance: none; -webkit-appearance: none; width: 20px; height: 20px; flex-shrink: 0;
-      border: 2px solid #cbd5e1; border-radius: 3px; margin: 0; cursor: pointer; position: relative;
+      border: 2px solid #cbd5e1; border-radius: 6px; margin: 0; cursor: pointer; position: relative;
       background: #fff; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
     }
     .dropdown-select-option input[type="checkbox"]:hover { border-color: #0284c7; }
@@ -1020,10 +1020,10 @@
             <div class="field-error" id="lcReasonError">Vui lòng mô tả ít nhất 10 ký tự.</div>
           </div>
           <div class="form-group">
-            <label>Nhu cầu cần hỗ trợ của trẻ (chọn các mục phù hợp)</label>
-            <div class="dropdown-select" id="nhuCauDropdown" data-placeholder="— Chọn nhu cầu cần hỗ trợ —">
+            <label>Vấn đề mong muốn cải thiện</label>
+            <div class="dropdown-select" id="nhuCauDropdown" data-placeholder="— Chọn vấn đề mong muốn cải thiện —">
               <button type="button" class="dropdown-select-toggle" onclick="toggleDropdownSelect('nhuCauDropdown')">
-                <span class="dropdown-select-text">— Chọn nhu cầu cần hỗ trợ —</span>
+                <span class="dropdown-select-text">— Chọn vấn đề mong muốn cải thiện —</span>
                 <i class="fa-solid fa-chevron-down"></i>
               </button>
               <div class="dropdown-select-panel">
