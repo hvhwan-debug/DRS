@@ -32,27 +32,15 @@ Sau khi tiếp nhận hồ sơ, ban phụ trách sẽ liên hệ với phụ huy
 
 ## 3. Trẻ sẽ được học những gì?
 
-Mỗi khóa dự kiến gồm 8–12 buổi, mỗi buổi khoảng 60–90 phút. Nội dung được xây dựng theo từng bước, phù hợp với khả năng của trẻ:
+Mỗi khóa dự kiến gồm 8–12 buổi, mỗi buổi khoảng 60–90 phút. Nội dung được xây dựng theo 5 giai đoạn, phù hợp với khả năng của trẻ:
 
-**Giai đoạn 1 — Đánh giá đầu vào**
-
-Giáo viên ghi nhận tình trạng ban đầu của trẻ: tư thế ngồi, cách cầm bút, cách đặt vở, nét chữ và khả năng trình bày, cùng những điểm trẻ đang gặp khó khăn. Kết quả này là cơ sở để theo dõi sự tiến bộ của trẻ trong suốt khóa học.
-
-**Giai đoạn 2 — Rèn kỹ năng nền tảng**
-
-Trẻ được hướng dẫn tư thế ngồi đúng, cách đặt vở, cách cầm bút, điều chỉnh lực tay và luyện các nét cơ bản.
-
-**Giai đoạn 3 — Luyện chữ**
-
-Từ những nét cơ bản, trẻ từng bước thực hành: chữ cái → chữ ghép → từ → câu → đoạn văn ngắn. Mục tiêu không chỉ là viết đẹp hơn mà còn giúp trẻ hình thành thói quen viết đúng, đều và có ý thức trình bày.
-
-**Giai đoạn 4 — Rèn tốc độ và trình bày**
-
-Trẻ được luyện viết trong những tình huống gần với việc học thực tế trên lớp, qua đó từng bước cân bằng giữa đúng chữ – đẹp chữ – tốc độ – trình bày.
-
-**Giai đoạn 5 — Đánh giá cuối khóa**
-
-Cuối khóa, trẻ thực hiện bài đánh giá tương tự đầu vào. Kết quả được đối chiếu để ghi nhận mức độ tiến bộ của từng em và giúp chương trình tiếp tục cải thiện nội dung đào tạo trong những khóa sau.
+| Giai đoạn | Nội dung |
+| --- | --- |
+| **1. Đánh giá đầu vào** | Giáo viên ghi nhận tình trạng ban đầu của trẻ: tư thế ngồi, cách cầm bút, cách đặt vở, nét chữ và khả năng trình bày, cùng những điểm trẻ đang gặp khó khăn. Kết quả này là cơ sở để theo dõi sự tiến bộ của trẻ trong suốt khóa học. |
+| **2. Rèn kỹ năng nền tảng** | Trẻ được hướng dẫn tư thế ngồi đúng, cách đặt vở, cách cầm bút, điều chỉnh lực tay và luyện các nét cơ bản. |
+| **3. Luyện chữ** | Từ những nét cơ bản, trẻ từng bước thực hành: chữ cái → chữ ghép → từ → câu → đoạn văn ngắn. Mục tiêu không chỉ là viết đẹp hơn mà còn giúp trẻ hình thành thói quen viết đúng, đều và có ý thức trình bày. |
+| **4. Rèn tốc độ và trình bày** | Trẻ được luyện viết trong những tình huống gần với việc học thực tế trên lớp, qua đó từng bước cân bằng giữa đúng chữ – đẹp chữ – tốc độ – trình bày. |
+| **5. Đánh giá cuối khóa** | Cuối khóa, trẻ thực hiện bài đánh giá tương tự đầu vào. Kết quả được đối chiếu để ghi nhận mức độ tiến bộ của từng em và giúp chương trình tiếp tục cải thiện nội dung đào tạo trong những khóa sau. |
 
 ![Một trang vở luyện chữ đẹp](images/uploads/luyen-chu-dep-vo-viet.jpg)
 
