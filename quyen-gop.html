@@ -214,6 +214,46 @@
       text-align: center; font-size: 0.9rem; color: #0369a1;
     }
     .project-code-box strong { display: block; font-size: 1rem; letter-spacing: 0.5px; margin-top: 0.2rem; }
+    .project-actions {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap;
+      padding-top: 1rem; margin-top: auto; border-top: 1px dashed var(--border);
+    }
+    .project-learn-more {
+      font-size: 0.85rem; font-weight: 700; color: #0284c7; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .project-learn-more:hover { text-decoration: underline; }
+    .project-donate-btn {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; border: none;
+      padding: 0.55rem 1.1rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px; transition: filter 0.2s;
+    }
+    .project-donate-btn:hover { filter: brightness(1.08); }
+
+    /* Popup mã QR ủng hộ dự án — hiện khi bấm nút "Ủng hộ" trên mỗi thẻ dự án */
+    .qr-modal {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 10000; padding: 1rem;
+    }
+    .qr-modal.active { display: flex; }
+    .qr-modal-content {
+      position: relative; background: #ffffff; padding: 2.2rem; border-radius: 20px; max-width: 400px; width: 100%;
+      text-align: center; box-shadow: 0 24px 50px rgba(15, 23, 42, 0.3);
+    }
+    .qr-modal-close {
+      position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%;
+      background: #f1f5f9; border: none; color: var(--text-muted); font-size: 0.95rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .qr-modal-close:hover { background: #e2e8f0; color: var(--text-dark); }
+    .qr-modal-content h3 { color: #0369a1; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+    .qr-modal-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .qr-modal-img { width: 100%; max-width: 220px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 1.2rem; }
+    .qr-modal-content-box {
+      background: #f0f9ff; border: 1px dashed #7dd3fc; border-radius: 10px; padding: 0.7rem 0.9rem;
+      text-align: center; font-size: 0.88rem; color: #0369a1; margin-bottom: 1.3rem;
+    }
+    .qr-modal-content-box strong { display: block; font-size: 0.98rem; letter-spacing: 0.4px; margin-top: 0.25rem; }
 
     .donate-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch; margin-bottom: 2.5rem;
@@ -520,12 +560,15 @@
           <span class="project-code-tag">MÃ DA-001</span>
           <h3>Chiến Dịch Áo Ấm Vùng Cao (Tháng 11/2026)</h3>
           <p>Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Áo Ấm Vùng Cao">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-001 Ao Am Vung Cao</strong>
+          <div class="project-actions">
+            <a href="chi-tiet.html?slug=chien-dich-ao-am-vung-cao-keu-goi" class="project-learn-more">Tìm hiểu thêm <i class="fa-solid fa-arrow-right"></i></a>
+            <button type="button" class="project-donate-btn"
+              data-title="Chiến Dịch Áo Ấm Vùng Cao (Tháng 11/2026)"
+              data-qr-image="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-001%20Ao%20Am%20Vung%20Cao&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
+              data-qr-content="DA-001 Ao Am Vung Cao"
+              onclick="openQrModal(this)">
+              <i class="fa-solid fa-qrcode"></i> Ủng hộ
+            </button>
           </div>
         </div>
       </div>
@@ -538,12 +581,15 @@
           <span class="project-code-tag">MÃ DA-004</span>
           <h3>Ủng Hộ Chương Trình Tiền Tiểu Học</h3>
           <p>Chương trình Tiền tiểu học miễn phí dành cho trẻ 5–6 tuổi chuẩn bị vào lớp 1 tại Hà Nội, giúp các em sẵn sàng tâm thế, kỹ năng tự lập và làm quen chữ số trước năm học mới.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-004%20Tien%20Tieu%20Hoc&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Tiền Tiểu Học">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-004 Tien Tieu Hoc</strong>
+          <div class="project-actions">
+            <a href="chi-tiet.html?slug=chuong-trinh-tien-tieu-hoc-mien-phi-tre-em-ha-noi" class="project-learn-more">Tìm hiểu thêm <i class="fa-solid fa-arrow-right"></i></a>
+            <button type="button" class="project-donate-btn"
+              data-title="Ủng Hộ Chương Trình Tiền Tiểu Học"
+              data-qr-image="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-004%20Tien%20Tieu%20Hoc&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
+              data-qr-content="DA-004 Tien Tieu Hoc"
+              onclick="openQrModal(this)">
+              <i class="fa-solid fa-qrcode"></i> Ủng hộ
+            </button>
           </div>
         </div>
       </div>
@@ -556,12 +602,15 @@
           <span class="project-code-tag">MÃ DA-003</span>
           <h3>Phát Động Chương Trình Luyện Chữ Đẹp</h3>
           <p>Chương trình Luyện chữ đẹp phi lợi nhuận dành cho trẻ em tại Hà Nội, giúp các em rèn chữ viết, tính kiên trì và sự tự tin trong học tập.</p>
-          <div class="project-qr">
-            <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Luyen%20Chu%20Dep&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Dự án Luyện Chữ Đẹp">
-          </div>
-          <div class="project-code-box">
-            Nội dung chuyển khoản
-            <strong>DA-003 Luyen Chu Dep</strong>
+          <div class="project-actions">
+            <a href="chi-tiet.html?slug=chuong-trinh-luyen-chu-dep-tre-em-kho-khan-ha-noi" class="project-learn-more">Tìm hiểu thêm <i class="fa-solid fa-arrow-right"></i></a>
+            <button type="button" class="project-donate-btn"
+              data-title="Phát Động Chương Trình Luyện Chữ Đẹp"
+              data-qr-image="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-003%20Luyen%20Chu%20Dep&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
+              data-qr-content="DA-003 Luyen Chu Dep"
+              onclick="openQrModal(this)">
+              <i class="fa-solid fa-qrcode"></i> Ủng hộ
+            </button>
           </div>
         </div>
       </div>
@@ -696,6 +745,22 @@
     </div>
   </footer>
 
+  <!-- Popup Mã QR Ủng Hộ Dự Án -->
+  <div id="qrModal" class="qr-modal" onclick="if(event.target===this) closeQrModal()">
+    <div class="qr-modal-content">
+      <button class="qr-modal-close" onclick="closeQrModal()" aria-label="Đóng">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 id="qrModalTitle">Ủng Hộ Dự Án</h3>
+      <p class="qr-modal-subtitle">Quét mã VietQR bên dưới bằng ứng dụng ngân hàng để đóng góp trực tiếp.</p>
+      <img id="qrModalImage" src="" alt="Mã VietQR ủng hộ dự án" class="qr-modal-img">
+      <div class="qr-modal-content-box">
+        Nội dung chuyển khoản
+        <strong id="qrModalContent"></strong>
+      </div>
+    </div>
+  </div>
+
   <div class="gallery-modal" id="galleryModal">
     <div class="gallery-modal-inner">
       <button class="gallery-modal-close" onclick="closeGalleryModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
@@ -783,6 +848,21 @@
         document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
       }
     });
+
+    // Popup mã QR ủng hộ dự án — đọc trực tiếp từ data-* của nút bấm
+    function openQrModal(btn) {
+      document.getElementById('qrModalTitle').textContent = btn.dataset.title;
+      document.getElementById('qrModalImage').src = btn.dataset.qrImage;
+      document.getElementById('qrModalImage').alt = `Mã VietQR ${btn.dataset.title}`;
+      document.getElementById('qrModalContent').textContent = btn.dataset.qrContent;
+      document.getElementById('qrModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeQrModal() {
+      document.getElementById('qrModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
 
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
