@@ -1,13 +1,5 @@
 [
   {
-    "slug": "chuong-trinh-tien-tieu-hoc-mien-phi-tre-em-ha-noi",
-    "title": "WVN Triển Khai Chương Trình Tiền Tiểu Học Miễn Phí 100% Cho Trẻ Em Tại Hà Nội",
-    "date": "Tháng 12/2026",
-    "image": "images/uploads/tien-tieu-hoc-tap-doc-lop-hoc.jpg",
-    "loai": "tin-tuc",
-    "excerpt": "WVN khởi động Chương trình Tiền tiểu học Miễn phí 100% dành cho trẻ 5–6 tuổi tại Hà Nội, giúp các em sẵn sàng tâm thế, kỹ năng tự lập và làm quen chữ số trước khi vào lớp 1."
-  },
-  {
     "slug": "7-ky-nang-tre-em-can-co-truoc-khi-buoc-vao-tuong-lai",
     "title": "7 kỹ năng trẻ em cần có trước khi bước vào tương lai",
     "date": "07/07/2026",
@@ -62,6 +54,14 @@
     "image": "images/uploads/chuong-trinh-thien-nguyen-ngay-nay-tu-trao-tang-den-tao-ra-co-hoi.jpeg",
     "loai": "tin-tuc",
     "excerpt": "Trao một món quà có thể giúp một ngày trở nên tốt đẹp hơn. Tạo ra một cơ hội học tập có thể giúp một tương lai trở nên rộng mở hơn."
+  },
+  {
+    "slug": "chuong-trinh-tien-tieu-hoc-mien-phi-tre-em-ha-noi",
+    "title": "WVN Triển Khai Chương Trình Tiền Tiểu Học Miễn Phí 100% Cho Trẻ Em Tại Hà Nội",
+    "date": "Tháng 12/2026",
+    "image": "images/uploads/tien-tieu-hoc-tap-doc-lop-hoc.jpg",
+    "loai": "tin-tuc",
+    "excerpt": "WVN khởi động Chương trình Tiền tiểu học Miễn phí 100% dành cho trẻ 5–6 tuổi tại Hà Nội, giúp các em sẵn sàng tâm thế, kỹ năng tự lập và làm quen chữ số trước khi vào lớp 1."
   },
   {
     "slug": "chuyen-doi-so-trong-hoc-tap-tai-vung-cao-mo-rong-co-hoi-tiep-can-tri-thuc",

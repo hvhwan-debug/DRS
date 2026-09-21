@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://wvn.vn/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/su-menh.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/hoat-dong.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/sao-ke.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/tin-tuc.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/lien-he.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://wvn.vn/chinh-sach-bao-mat.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>yearly</changefreq>
   </url>
   <url>
@@ -61,6 +61,10 @@
   </url>
   <url>
     <loc>https://wvn.vn/chi-tiet.html?slug=chuong-trinh-thien-nguyen-ngay-nay-tu-trao-tang-den-tao-ra-co-hoi</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://wvn.vn/chi-tiet.html?slug=chuong-trinh-tien-tieu-hoc-mien-phi-tre-em-ha-noi</loc>
     <changefreq>monthly</changefreq>
   </url>
   <url>
