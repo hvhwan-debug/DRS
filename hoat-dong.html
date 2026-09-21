@@ -237,11 +237,11 @@
       font-size: 1.1rem; border: 1px solid rgba(255,255,255,0.35);
     }
     .event-card-body { padding: 1.4rem; display: flex; flex-direction: column; flex-grow: 1; }
-    .event-card-meta { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
-    .event-tag { padding: 0.28rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+    .event-card-meta { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; flex-wrap: nowrap; }
+    .event-tag { padding: 0.28rem 0.7rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; }
     .event-countdown {
       font-size: 0.76rem; font-weight: 700; color: #0369a1; display: inline-flex; align-items: center; gap: 6px;
-      background: #e0f2fe; padding: 0.28rem 0.65rem; border-radius: 999px;
+      background: #e0f2fe; padding: 0.28rem 0.65rem; border-radius: 999px; white-space: nowrap; flex-shrink: 0;
     }
     .event-countdown .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: #0284c7; flex-shrink: 0; animation: cardPulseDot 1.8s infinite; }
     @keyframes cardPulseDot {
