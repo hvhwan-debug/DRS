@@ -227,11 +227,9 @@ function buildEmailHtml(title, rowsHtml) {
 
           <tr>
             <td style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0284c7 100%);padding:28px 32px;">
-              <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-                <td style="vertical-align:middle;">
-                  <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="50" style="display:block;height:auto;">
-                </td>
-                <td style="padding-left:12px;vertical-align:middle;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td align="center" style="text-align:center;">
+                  <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
                   <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;">Mạng Lưới Tri Thức Việt Nam</div>
                   <div style="color:#bfdbfe;font-size:11px;font-weight:600;letter-spacing:0.2px;">WISDOM VIETNAM NETWORK | DR SOLUTIONS</div>
                 </td>
@@ -291,11 +289,9 @@ function buildAutoReplyHtml(recipientName, introMessage) {
 
           <tr>
             <td style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0284c7 100%);padding:28px 32px;">
-              <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-                <td style="vertical-align:middle;">
-                  <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="50" style="display:block;height:auto;">
-                </td>
-                <td style="padding-left:12px;vertical-align:middle;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+                <td align="center" style="text-align:center;">
+                  <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
                   <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;">Mạng Lưới Tri Thức Việt Nam</div>
                   <div style="color:#bfdbfe;font-size:11px;font-weight:600;letter-spacing:0.2px;">WISDOM VIETNAM NETWORK | DR SOLUTIONS</div>
                 </td>
