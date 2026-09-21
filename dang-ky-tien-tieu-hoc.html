@@ -739,6 +739,36 @@
     .support-intro ul { margin: 1rem 0 0 1.2rem; color: var(--text-muted); font-size: 0.98rem; line-height: 1.9; }
 
     .support-process { margin-bottom: 2.6rem; }
+
+    /* Khối marketing: ảnh minh họa + lưới thẻ tính năng có icon */
+    .content-banner { margin: 0 0 2.4rem; border-radius: 18px; overflow: hidden; box-shadow: 0 12px 28px rgba(15,23,42,0.1); }
+    .content-banner img { display: block; width: 100%; height: 260px; object-fit: cover; }
+    @media (max-width: 480px) { .content-banner img { height: 190px; } }
+
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.4rem; }
+    @media (max-width: 560px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feature-card {
+      background: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 16px; padding: 1.2rem;
+    }
+    .feature-card i {
+      width: 42px; height: 42px; border-radius: 12px; background: #0d9488; color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 1.05rem; margin-bottom: 0.8rem;
+    }
+    .feature-card h3 { font-size: 0.98rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.4rem; }
+    .feature-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.6rem; }
+    .stat-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem; }
+    .stat-card i {
+      width: 38px; height: 38px; border-radius: 10px; background: #e0f2fe; color: #0369a1;
+      display: flex; align-items: center; justify-content: center; font-size: 0.95rem; margin-bottom: 0.7rem;
+    }
+    .stat-card h4 { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 0.35rem; }
+    .stat-card p { font-size: 0.9rem; color: var(--text-dark); line-height: 1.55; margin: 0; font-weight: 600; }
+
+    .commit-list { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: 0.8rem; }
+    .commit-list li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.95rem; color: var(--text-dark); line-height: 1.6; }
+    .commit-list i { color: #16a34a; margin-top: 0.2rem; flex-shrink: 0; }
     .support-process h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 1.6rem; color: var(--text-dark); }
     /* Dòng thời gian quy trình đăng ký — bố cục ngang, thanh sáng
        chạy liên tục từ trái sang phải, chấm nào được chạy tới thì
@@ -972,49 +1002,78 @@
       <p>Trước thềm năm học mới, nỗi lo "chuẩn bị hành trang vào lớp 1" luôn đè nặng lên vai nhiều gia đình, đặc biệt là các bậc phụ huynh có hoàn cảnh khó khăn hoặc lao động thu nhập thấp tại Hà Nội. Chương trình Tiền Tiểu Học Miễn Phí 100% ra đời nhằm mang lại cơ hội bình đẳng cho mọi trẻ em trước cánh cửa trường tiểu học, không phân biệt hoàn cảnh kinh tế.</p>
     </div>
 
+    <div class="content-banner">
+      <img src="images/uploads/tien-tieu-hoc-tap-doc-lop-hoc.jpg" alt="Buổi học Tập đọc trong lớp Tiền Tiểu Học" loading="lazy">
+    </div>
+
     <div class="activity-panel">
       <div class="activity-panel-header">
         <h2>Chương trình dạy gì?</h2>
-        <p>Khác với các lớp luyện chữ truyền thống chú trọng ép đọc, viết trước chương trình, lớp học tập trung xây dựng năng lực nền tảng theo chuẩn tâm sinh lý lứa tuổi 5–6 — chuẩn bị tâm thế vững vàng thay vì "nhồi nhét chữ".</p>
+        <p>Không "nhồi nhét chữ" như lớp luyện chữ truyền thống — lớp học xây dựng năng lực nền tảng theo chuẩn tâm sinh lý lứa tuổi 5–6.</p>
       </div>
-      <ul style="padding-left:1.2rem; color:var(--text-dark); line-height:1.9; font-size:0.95rem;">
-        <li><strong>Tâm thế sẵn sàng:</strong> rèn khả năng tập trung, thói quen ngồi học đúng tư thế, làm quen tiếng chuông báo giờ và nề nếp lớp học tiểu học.</li>
-        <li><strong>Kỹ năng tự phục vụ &amp; tự lập:</strong> hướng dẫn trẻ tự quản lý đồ dùng học tập, ba lô, bình nước cá nhân và các quy tắc ứng xử nơi công cộng.</li>
-        <li><strong>Làm quen chữ &amp; số tự nhiên:</strong> tiếp cận 29 chữ cái Tiếng Việt và các biểu tượng toán học qua trò chơi vận động, thơ ca, kể chuyện trực quan — không gây áp lực luyện viết nét cứng khi cơ xương ngón tay chưa hoàn thiện.</li>
-        <li><strong>Kỹ năng xã hội &amp; cảm xúc:</strong> giúp trẻ vượt qua tâm lý sợ xa lạ, tự tin kết bạn, diễn đạt nhu cầu cá nhân và biết cách nhờ thầy cô giúp đỡ.</li>
-      </ul>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <i class="fa-solid fa-brain"></i>
+          <h3>Tâm thế sẵn sàng</h3>
+          <p>Rèn khả năng tập trung, tư thế ngồi học đúng, làm quen tiếng chuông báo giờ và nề nếp lớp học tiểu học.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa-solid fa-shoe-prints"></i>
+          <h3>Tự phục vụ &amp; tự lập</h3>
+          <p>Tự quản lý đồ dùng học tập, ba lô, bình nước cá nhân và các quy tắc ứng xử nơi công cộng.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa-solid fa-spell-check"></i>
+          <h3>Làm quen chữ &amp; số</h3>
+          <p>Tiếp cận 29 chữ cái Tiếng Việt và biểu tượng toán học qua trò chơi, thơ ca, kể chuyện — không ép viết nét cứng.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa-solid fa-people-arrows"></i>
+          <h3>Kỹ năng xã hội &amp; cảm xúc</h3>
+          <p>Vượt qua tâm lý sợ xa lạ, tự tin kết bạn, diễn đạt nhu cầu cá nhân và biết cách nhờ thầy cô giúp đỡ.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-banner">
+      <img src="images/uploads/tien-tieu-hoc-high-five.jpg" alt="Cô trò cùng nhau tỏa sáng trong giờ sinh hoạt lớp" loading="lazy">
     </div>
 
     <div class="activity-panel">
       <div class="activity-panel-header">
         <h2>Thông tin triển khai lớp học</h2>
       </div>
-      <div style="overflow-x:auto;">
-      <table style="width:100%; border-collapse:collapse; font-size:0.92rem;">
-        <tbody>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:0.7rem 0.5rem; font-weight:700; width:36%; vertical-align:top; color:var(--text-dark);">Đối tượng tham gia</td>
-            <td style="padding:0.7rem 0.5rem; color:var(--text-muted);">Trẻ em 5–6 tuổi chuẩn bị bước vào lớp 1 tại Hà Nội (ưu tiên gia đình chính sách, công nhân, hoàn cảnh khó khăn).</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:0.7rem 0.5rem; font-weight:700; vertical-align:top; color:var(--text-dark);">Học phí</td>
-            <td style="padding:0.7rem 0.5rem; color:var(--text-muted);">Miễn phí 100% — toàn bộ chi phí tài liệu, đồ dùng học tập tại lớp được chương trình tài trợ.</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:0.7rem 0.5rem; font-weight:700; vertical-align:top; color:var(--text-dark);">Hình thức &amp; địa điểm</td>
-            <td style="padding:0.7rem 0.5rem; color:var(--text-muted);">Lớp học trực tiếp tại các không gian sinh hoạt cộng đồng / trường học liên kết tại Hà Nội.</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:0.7rem 0.5rem; font-weight:700; vertical-align:top; color:var(--text-dark);">Thời lượng &amp; khung giờ</td>
-            <td style="padding:0.7rem 0.5rem; color:var(--text-muted);">Các buổi học linh hoạt vào dịp cuối tuần (Thứ Bảy / Chủ Nhật) để phụ huynh tiện đưa đón.</td>
-          </tr>
-          <tr>
-            <td style="padding:0.7rem 0.5rem; font-weight:700; vertical-align:top; color:var(--text-dark);">Đội ngũ giảng dạy</td>
-            <td style="padding:0.7rem 0.5rem; color:var(--text-muted);">Giáo viên tiểu học, chuyên gia giáo dục mầm non và các tình nguyện viên được đào tạo bài bản về phương pháp sư phạm thân thiện.</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <i class="fa-solid fa-child-reaching"></i>
+          <h4>Đối tượng</h4>
+          <p>Trẻ 5–6 tuổi tại Hà Nội, ưu tiên gia đình chính sách, công nhân, hoàn cảnh khó khăn.</p>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-gift"></i>
+          <h4>Học phí</h4>
+          <p>Miễn phí 100% — bao gồm cả tài liệu và đồ dùng học tập tại lớp.</p>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-location-dot"></i>
+          <h4>Hình thức &amp; địa điểm</h4>
+          <p>Học trực tiếp tại không gian cộng đồng / trường học liên kết tại Hà Nội.</p>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-calendar-week"></i>
+          <h4>Thời lượng</h4>
+          <p>Linh hoạt cuối tuần (Thứ Bảy / Chủ Nhật) để phụ huynh tiện đưa đón.</p>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-chalkboard-user"></i>
+          <h4>Đội ngũ giảng dạy</h4>
+          <p>Giáo viên tiểu học, chuyên gia giáo dục mầm non và tình nguyện viên được đào tạo bài bản.</p>
+        </div>
       </div>
+    </div>
+
+    <div class="content-banner">
+      <img src="images/uploads/tien-tieu-hoc-hinh-trai-tim.jpg" alt="Cô và trò cùng xếp hình trái tim trong giờ sinh hoạt lớp" loading="lazy">
     </div>
 
     <div class="activity-panel">
@@ -1022,9 +1081,9 @@
         <h2>Cam kết từ ban tổ chức</h2>
         <p>Chương trình vận hành với nguyên tắc Minh bạch – Thực chất – An toàn.</p>
       </div>
-      <ul style="padding-left:1.2rem; color:var(--text-dark); line-height:1.9; font-size:0.95rem;">
-        <li>Môi trường học tập tôn trọng sự khác biệt của từng đứa trẻ, không tạo áp lực điểm số hay so sánh năng lực.</li>
-        <li>Định kỳ phản hồi tiến trình phát triển và tư vấn chuyên môn cho cha mẹ cách đồng hành cùng con tích cực tại nhà.</li>
+      <ul class="commit-list">
+        <li><i class="fa-solid fa-circle-check"></i> Môi trường học tập tôn trọng sự khác biệt của từng đứa trẻ, không tạo áp lực điểm số hay so sánh năng lực.</li>
+        <li><i class="fa-solid fa-circle-check"></i> Định kỳ phản hồi tiến trình phát triển và tư vấn chuyên môn cho cha mẹ cách đồng hành cùng con tích cực tại nhà.</li>
       </ul>
     </div>
 
