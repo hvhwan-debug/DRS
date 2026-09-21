@@ -409,12 +409,13 @@
       font-size: 0.85rem; color: #94a3b8;
       display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; column-gap: 0.8rem;
     }
-    .footer-bottom .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; grid-column: 1; justify-self: start; }
+    .footer-bottom-socials { grid-column: 1; display: flex; align-items: center; gap: 0.6rem; justify-self: start; }
+    .footer-bottom-socials .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; }
     .footer-bottom-text { grid-column: 2; text-align: center; }
     @media (max-width: 640px) {
       .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
       .footer-bottom-text { text-align: center; order: 1; }
-      .footer-bottom .footer-bottom-social { order: 2; }
+      .footer-bottom-socials { order: 2; }
     }
 
     .footer-transparency-strip {
@@ -680,8 +681,10 @@
     </div>
 
     <div class="footer-bottom">
-      <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-      <a class="social-link footer-bottom-social" href="https://www.linkedin.com/company/wvnvn" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
+      <div class="footer-bottom-socials">
+        <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+        <a class="social-link footer-bottom-social" href="https://www.linkedin.com/company/wvnvn" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
       <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
