@@ -875,10 +875,44 @@
     <img src="images/uploads/luyen-chu-dep-bang-den.jpg" alt="Một buổi hướng dẫn luyện chữ đẹp">
     <div class="support-photo-hero-inner">
     <div class="support-hero-card">
+      <!-- ============ BƯỚC CHỌN KHU VỰC ============ -->
+      <div class="support-hero-card-step" id="locationGateStep">
+        <div class="support-hero-card-label"><i class="fa-solid fa-location-dot" style="color:#0284c7; margin-right:0.4rem;"></i>Bạn đang ở đâu?</div>
+        <div class="support-need-grid">
+          <button type="button" class="support-need-option" data-role="hanoi" onclick="chooseLocation('hanoi')">
+            <i class="fa-solid fa-city"></i>
+            <span class="role-text"><span>Hà Nội</span><span class="role-sub">Vào form đăng ký ngay</span></span>
+          </button>
+          <button type="button" class="support-need-option" data-role="other" onclick="chooseLocation('other')">
+            <i class="fa-solid fa-map"></i>
+            <span class="role-text"><span>Tỉnh thành khác</span><span class="role-sub">Xem thông báo triển khai</span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ THÔNG BÁO NGOÀI HÀ NỘI ============ -->
+      <div class="support-hero-card-step" id="otherLocationStep" style="display:none;">
+        <div class="support-hero-form-header">
+          <span>Ngoài khu vực Hà Nội</span>
+          <button type="button" class="support-hero-back" onclick="backToLocationGate()">← Quay lại</button>
+        </div>
+        <div style="text-align:center; padding: 1.4rem 0.5rem 0.5rem;">
+          <i class="fa-solid fa-map-location-dot" style="font-size:2.2rem; color:#94a3b8; margin-bottom:1.1rem;"></i>
+          <p style="color:var(--text-dark); font-size:0.98rem; line-height:1.7; margin-bottom:1.2rem;">
+            Hiện tại chương trình Luyện Chữ Đẹp mới triển khai tại <strong>Hà Nội</strong>. Rất tiếc chúng tôi chưa thể mở lớp tại khu vực của bạn, nhưng sẽ sớm mở rộng trong thời gian tới.
+          </p>
+          <p style="color:var(--text-muted); font-size:0.92rem; margin-bottom:1.4rem;">
+            Để lại thông tin qua form liên hệ — chúng tôi sẽ chủ động báo cho bạn ngay khi chương trình triển khai tại khu vực của bạn.
+          </p>
+          <a href="lien-he.html" class="support-cta-btn" style="display:inline-block; text-decoration:none; text-align:center;">Gửi thông tin liên hệ</a>
+        </div>
+      </div>
+
       <!-- ============ FORM PHỤ HUYNH ============ -->
-      <div class="support-hero-card-step" id="parentStep">
+      <div class="support-hero-card-step" id="parentStep" style="display:none;">
         <div class="support-hero-form-header">
           <span>Phụ huynh / Người giám hộ</span>
+          <button type="button" class="support-hero-back" onclick="backToLocationGate()">← Quay lại</button>
         </div>
 
         <datalist id="hanoiWardsDatalist"></datalist>
@@ -1041,7 +1075,7 @@
       <div class="support-hero-card-step" id="volunteerStep" style="display:none;">
         <div class="support-hero-form-header">
           <span>Đăng ký tình nguyện viên</span>
-          <button type="button" class="support-hero-back" onclick="backToRoleSelect()">← Chọn lại</button>
+          <button type="button" class="support-hero-back" onclick="backToLocationGate()">← Chọn lại</button>
         </div>
 
         <form id="lcVolunteerForm" onsubmit="return handleLcVolunteerSubmit(event)">
@@ -1147,7 +1181,7 @@
       <div class="support-hero-card-step" id="sponsorStep" style="display:none;">
         <div class="support-hero-form-header">
           <span>Nhà tài trợ / Đơn vị hỗ trợ</span>
-          <button type="button" class="support-hero-back" onclick="backToRoleSelect()">← Chọn lại</button>
+          <button type="button" class="support-hero-back" onclick="backToLocationGate()">← Chọn lại</button>
         </div>
 
         <form id="lcSponsorForm" onsubmit="return handleLcSponsorSubmit(event)">
@@ -1305,26 +1339,21 @@
       });
     });
 
-    function chooseRole(role) {
-      document.getElementById('heroStepNeed').style.display = 'none';
-      document.getElementById('parentStep').style.display = role === 'parent' ? 'block' : 'none';
-      document.getElementById('volunteerStep').style.display = role === 'volunteer' ? 'block' : 'none';
-      document.getElementById('sponsorStep').style.display = role === 'sponsor' ? 'block' : 'none';
+    function chooseLocation(loc) {
+      document.getElementById('locationGateStep').style.display = 'none';
+      if (loc === 'hanoi') {
+        document.getElementById('parentStep').style.display = 'block';
+      } else {
+        document.getElementById('otherLocationStep').style.display = 'block';
+      }
     }
 
-    function backToRoleSelect() {
+    function backToLocationGate() {
       document.getElementById('parentStep').style.display = 'none';
-      document.getElementById('volunteerStep').style.display = 'none';
-      document.getElementById('sponsorStep').style.display = 'none';
-      document.getElementById('heroStepNeed').style.display = 'block';
+      document.getElementById('otherLocationStep').style.display = 'none';
+      document.getElementById('locationGateStep').style.display = 'block';
       document.getElementById('parentForm').style.display = 'block';
       document.getElementById('parentSuccess').style.display = 'none';
-      document.getElementById('lcVolunteerForm').style.display = 'block';
-      document.getElementById('lcVolSuccess').style.display = 'none';
-      document.getElementById('lcSponsorForm').style.display = 'block';
-      document.getElementById('lcSponsorSuccess').style.display = 'none';
-      document.getElementById('lcVolType').value = 'Sinh viên';
-      toggleVolTypeFields('Sinh viên');
     }
 
     // Dữ liệu Xã/Phường Hà Nội — trích từ bộ dữ liệu 34 tỉnh/thành chuẩn hóa
