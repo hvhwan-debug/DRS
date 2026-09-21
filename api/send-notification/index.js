@@ -103,6 +103,35 @@ function pickField(data, keys) {
   return "";
 }
 
+// Dựng nội dung tóm tắt toàn bộ trường của form (dùng để đính kèm vào Update trên Monday)
+function buildMondayUpdateText(data, title) {
+  const lines = [`📋 ${title}`, ""];
+  for (const [key, value] of Object.entries(data)) {
+    if (SKIP_FIELDS.has(key) || value === undefined || value === null || String(value).trim() === "") {
+      continue;
+    }
+    const label = FIELD_LABELS[key] || key;
+    lines.push(`${label}: ${value}`);
+  }
+  return lines.join("\n");
+}
+
+async function callMondayApi(token, query, variables) {
+  const res = await fetch("https://api.monday.com/v2", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({ query, variables })
+  });
+  const json = await res.json();
+  if (json.errors) {
+    throw new Error(JSON.stringify(json.errors));
+  }
+  return json.data;
+}
+
 async function createMondayItem(formType, data, title) {
   const token = process.env.MONDAY_API_TOKEN;
   if (!token) {
@@ -131,7 +160,7 @@ async function createMondayItem(formType, data, title) {
 
   const itemName = `${fullName} — ${title}`;
 
-  const query = `
+  const createItemQuery = `
     mutation ($boardId: ID!, $itemName: String!, $columnValues: JSON!) {
       create_item(board_id: $boardId, item_name: $itemName, column_values: $columnValues) {
         id
@@ -139,26 +168,27 @@ async function createMondayItem(formType, data, title) {
     }
   `;
 
-  const res = await fetch("https://api.monday.com/v2", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": token
-    },
-    body: JSON.stringify({
-      query,
-      variables: {
-        boardId: MONDAY_BOARD_ID,
-        itemName,
-        columnValues: JSON.stringify(columnValues)
-      }
-    })
+  const itemData = await callMondayApi(token, createItemQuery, {
+    boardId: MONDAY_BOARD_ID,
+    itemName,
+    columnValues: JSON.stringify(columnValues)
   });
 
-  const json = await res.json();
-  if (json.errors) {
-    throw new Error(JSON.stringify(json.errors));
+  const itemId = itemData && itemData.create_item && itemData.create_item.id;
+  if (!itemId) {
+    return;
   }
+
+  // Đính kèm toàn bộ chi tiết form vào phần Update của item (mọi trường, mọi loại form)
+  const updateBody = buildMondayUpdateText(data, title);
+  const createUpdateQuery = `
+    mutation ($itemId: ID!, $body: String!) {
+      create_update(item_id: $itemId, body: $body) {
+        id
+      }
+    }
+  `;
+  await callMondayApi(token, createUpdateQuery, { itemId, body: updateBody });
 }
 
 function escapeHtml(str) {
