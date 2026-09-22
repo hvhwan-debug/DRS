@@ -272,6 +272,13 @@
     .upcoming-home-link { font-size: 0.9rem; font-weight: 700; color: #0284c7; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
     .upcoming-home-link i { transition: transform 0.2s; }
     .upcoming-home-card:hover .upcoming-home-link i { transform: translateX(4px); }
+    .upcoming-home-actions { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+    .upcoming-home-register {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; text-decoration: none;
+      font-size: 0.85rem; font-weight: 700; padding: 0.5rem 1rem; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 6px; transition: filter 0.2s;
+    }
+    .upcoming-home-register:hover { filter: brightness(1.08); }
 
     .latest-article-split {
       display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
@@ -824,6 +831,7 @@
         date: "2026-10-03",
         anchor: "su-kien-tien-tieu-hoc",
         articleSlug: "chuong-trinh-tien-tieu-hoc-mien-phi-tre-em-ha-noi",
+        registerUrl: "dang-ky-tien-tieu-hoc.html",
         icon: "fa-child-reaching",
         image: "images/uploads/tien-tieu-hoc-tap-doc-lop-hoc.jpg",
         topBg: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
@@ -848,6 +856,7 @@
         date: "2026-12-01",
         anchor: "su-kien-luyen-chu-dep",
         articleSlug: "chuong-trinh-luyen-chu-dep-tre-em-kho-khan-ha-noi",
+        registerUrl: "dang-ky-luyen-chu-dep.html",
         icon: "fa-pen-nib",
         image: "images/uploads/luyen-chu-dep-bang-den.jpg",
         topBg: "linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)",
@@ -862,6 +871,9 @@
       const eventUrl = ev.articleSlug
         ? `chi-tiet.html?slug=${encodeURIComponent(ev.articleSlug)}`
         : `hoat-dong.html#${ev.anchor}`;
+      const registerLink = ev.registerUrl
+        ? `<a class="upcoming-home-register" href="${ev.registerUrl}">Đăng ký <i class="fa-solid fa-arrow-right"></i></a>`
+        : "";
       return `
         <div class="upcoming-home-card">
           <div class="upcoming-home-top" style="background:${ev.topBg};">
@@ -875,7 +887,10 @@
             </div>
             <h3><a href="${eventUrl}" style="color:inherit; text-decoration:none;">${ev.title}</a></h3>
             <p>${ev.desc}</p>
-            <a class="upcoming-home-link" href="${eventUrl}">Xem chi tiết <i class="fa-solid fa-arrow-right"></i></a>
+            <div class="upcoming-home-actions">
+              ${registerLink}
+              <a class="upcoming-home-link" href="${eventUrl}">Xem chi tiết <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
           </div>
         </div>`;
     }
