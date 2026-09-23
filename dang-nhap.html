@@ -265,13 +265,11 @@
             <input id="email" name="email" type="email" placeholder="ban@email.com" autocomplete="email" required>
           </div>
 
-          <div class="form-field" id="passwordStep" style="display:none;">
+          <div class="form-field" id="passwordStep">
             <label for="password">Mật khẩu</label>
-            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password">
+            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
             <span class="signup-link" style="display:block; margin-top:0.5rem;">
               <a href="#" onclick="startForgotPassword(); return false;">Quên mật khẩu?</a>
-              &nbsp;·&nbsp;
-              <a href="#" onclick="backToEmailStep(); return false;">Đổi email khác</a>
             </span>
           </div>
 
@@ -281,12 +279,12 @@
             <span class="signup-link" style="display:block; margin-top:0.5rem;">
               <a href="#" id="resendLink" onclick="requestOtp(); return false;">Gửi lại mã</a>
               &nbsp;·&nbsp;
-              <a href="#" onclick="backToEmailStep(); return false;">Đổi email khác</a>
+              <a href="#" onclick="backToEmailStep(); return false;">Huỷ, quay lại đăng nhập</a>
             </span>
           </div>
 
           <div class="form-field" id="setPasswordStep" style="display:none;">
-            <label for="newPassword">Tạo mật khẩu mới (tối thiểu 6 ký tự)</label>
+            <label for="newPassword">Đặt mật khẩu mới (tối thiểu 6 ký tự)</label>
             <input id="newPassword" name="newPassword" type="password" placeholder="Nhập mật khẩu mới" autocomplete="new-password">
             <label for="newPassword2" style="margin-top:0.8rem;">Nhập lại mật khẩu</label>
             <input id="newPassword2" name="newPassword2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password">
@@ -294,11 +292,11 @@
 
           <div id="loginAlert" style="display:none; font-size:0.85rem; text-align:center; margin: 0.6rem 0;"></div>
 
-          <button type="submit" class="btn-continue" id="loginSubmitBtn">Tiếp Tục</button>
+          <button type="submit" class="btn-continue" id="loginSubmitBtn">Đăng Nhập</button>
         </form>
 
         <p style="text-align:center; font-size:0.88rem; color:var(--text-muted); margin-top:1rem;">
-          Chưa có tài khoản? <a href="hoat-dong.html" style="color:#0284c7; font-weight:600; text-decoration:underline;">Đăng ký ngay</a> — chỉ cần đăng ký tham gia 1 chương trình bất kỳ, tài khoản sẽ tự động được tạo theo email bạn dùng.
+          Chưa có tài khoản? <a href="dang-ky.html" style="color:#0284c7; font-weight:600; text-decoration:underline;">Đăng ký ngay</a>
         </p>
 
         <span class="no-access" id="helpLinks">
@@ -337,10 +335,10 @@
     });
 
     // ==============================================================
-    // Đăng nhập: email + mật khẩu cho tài khoản đã có.
-    // OTP chỉ dùng khi TẠO tài khoản mới hoặc QUÊN mật khẩu.
+    // Đăng nhập bằng email + mật khẩu (kiểu website thông thường).
+    // OTP chỉ dùng khi bấm "Quên mật khẩu?".
     // ==============================================================
-    let currentStep = 'email'; // email | password | otp | setPassword
+    let currentStep = 'login'; // login | otp | setPassword
     let pendingResetToken = null;
 
     function showAlert(message, isError) {
@@ -362,12 +360,13 @@
     }
 
     function backToEmailStep() {
-      currentStep = 'email';
+      currentStep = 'login';
       pendingResetToken = null;
       hideAllSteps();
       document.getElementById('emailStep').style.display = 'block';
+      document.getElementById('passwordStep').style.display = 'block';
       document.getElementById('email').disabled = false;
-      document.getElementById('loginSubmitBtn').textContent = 'Tiếp Tục';
+      document.getElementById('loginSubmitBtn').textContent = 'Đăng Nhập';
       clearAlert();
     }
 
@@ -376,51 +375,11 @@
       requestOtp('Mã xác nhận đã được gửi để bạn đặt lại mật khẩu.');
     }
 
-    async function checkAccountAndProceed() {
-      const email = document.getElementById('email').value.trim();
-      if (!email) {
-        showAlert('Vui lòng nhập email.', true);
-        return;
-      }
-      const btn = document.getElementById('loginSubmitBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kiểm tra...';
-      clearAlert();
-
-      try {
-        const res = await fetch('/api/auth-check-account', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        const result = await res.json().catch(() => ({}));
-        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể kiểm tra tài khoản.');
-
-        document.getElementById('email').disabled = true;
-
-        if (result.hasPassword) {
-          currentStep = 'password';
-          hideAllSteps();
-          document.getElementById('passwordStep').style.display = 'block';
-          document.getElementById('loginSubmitBtn').textContent = 'Đăng Nhập';
-          document.getElementById('password').focus();
-          btn.disabled = false;
-        } else {
-          showAlert('Email này chưa có tài khoản. Đang gửi mã xác nhận để tạo mật khẩu...', false);
-          await requestOtp(); // requestOtp tự quản lý trạng thái nút bấm của chính nó
-        }
-      } catch (err) {
-        showAlert(err.message, true);
-        btn.disabled = false;
-        btn.innerHTML = 'Tiếp Tục';
-      }
-    }
-
     async function loginWithPassword() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      if (!password) {
-        showAlert('Vui lòng nhập mật khẩu.', true);
+      if (!email || !password) {
+        showAlert('Vui lòng nhập email và mật khẩu.', true);
         return;
       }
       const btn = document.getElementById('loginSubmitBtn');
@@ -435,7 +394,14 @@
           body: JSON.stringify({ email, password })
         });
         const result = await res.json().catch(() => ({}));
-        if (!res.ok || !result.success) throw new Error(result.message || 'Đăng nhập thất bại.');
+        if (!res.ok || !result.success) {
+          if (res.status === 404) {
+            showAlert('Email này chưa có tài khoản. <a href="dang-ky.html" style="color:#0284c7; font-weight:700;">Đăng ký ngay</a>?', true);
+          } else {
+            showAlert(result.message || 'Đăng nhập thất bại.', true);
+          }
+          return;
+        }
 
         localStorage.setItem('wvn_member_token', result.token);
         localStorage.setItem('wvn_member_email', result.email);
@@ -443,6 +409,7 @@
         window.location.href = 'thanh-vien-index.html';
       } catch (err) {
         showAlert(err.message, true);
+      } finally {
         btn.disabled = false;
         btn.innerHTML = 'Đăng Nhập';
       }
@@ -450,6 +417,10 @@
 
     async function requestOtp(customMessage) {
       const email = document.getElementById('email').value.trim();
+      if (!email) {
+        showAlert('Vui lòng nhập email trước.', true);
+        return;
+      }
       const btn = document.getElementById('loginSubmitBtn');
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
@@ -474,7 +445,7 @@
         showAlert(err.message, true);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = currentStep === 'otp' ? 'Xác Nhận Mã' : 'Tiếp Tục';
+        btn.innerHTML = currentStep === 'otp' ? 'Xác Nhận Mã' : 'Đăng Nhập';
       }
     }
 
@@ -504,7 +475,7 @@
         hideAllSteps();
         document.getElementById('setPasswordStep').style.display = 'block';
         document.getElementById('loginSubmitBtn').textContent = 'Hoàn Tất';
-        showAlert('Xác minh thành công! Hãy đặt mật khẩu cho tài khoản.', false);
+        showAlert('Xác minh thành công! Hãy đặt mật khẩu mới.', false);
         document.getElementById('newPassword').focus();
       } catch (err) {
         showAlert(err.message, true);
@@ -544,7 +515,7 @@
 
         localStorage.setItem('wvn_member_token', result.token);
         localStorage.setItem('wvn_member_email', result.email);
-        showAlert('Tạo mật khẩu thành công! Đang chuyển hướng...', false);
+        showAlert('Đặt mật khẩu thành công! Đang chuyển hướng...', false);
         window.location.href = 'thanh-vien-index.html';
       } catch (err) {
         showAlert(err.message, true);
@@ -555,8 +526,7 @@
 
     document.getElementById('loginForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      if (currentStep === 'email') checkAccountAndProceed();
-      else if (currentStep === 'password') loginWithPassword();
+      if (currentStep === 'login') loginWithPassword();
       else if (currentStep === 'otp') verifyOtp();
       else if (currentStep === 'setPassword') submitNewPassword();
     });
