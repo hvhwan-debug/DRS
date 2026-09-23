@@ -1,6 +1,6 @@
 ---
 title: "Nhìn Lại Những Bước Chân Đầu Tiên: Hành Trình Thiện Nguyện Năm 2018"
-date: "Tháng 3/2018"
+date: "01/03/2018"
 image: "images/xe-may-lun-bun-duong-nui.jpg"
 excerpt: "Hành trình thiện nguyện năm 2018 là những bước chân đầu tiên đặt nền móng cho chương trình giáo dục cộng đồng, khi mọi thứ còn giản đơn nhưng đầy nhiệt huyết."
 ---
