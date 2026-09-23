@@ -1,6 +1,6 @@
 ---
 title: "Cơ hội học tập của trẻ em Việt Nam trong kỷ nguyên vươn mình"
-date: "08/2026"
+date: "01/08/2026"
 loai: "tin-tuc"
 excerpt: "***Việt Nam đang bước vào một giai đoạn phát triển mới, trong đó tri thức, công nghệ và nguồn nhân lực ngày càng giữ vai trò quan trọng. Trong bối cảnh đó, cơ hội học tập không còn chỉ là việc một đứa trẻ được đến trường, mà còn là khả năng tiếp cận tri thức mới, công nghệ mới, ngoại ngữ và những phương pháp học tập phù hợp với tương lai."
 ---
