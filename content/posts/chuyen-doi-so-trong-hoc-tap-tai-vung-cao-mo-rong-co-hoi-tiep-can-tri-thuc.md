@@ -1,6 +1,6 @@
 ---
 title: "Chuyển đổi số trong học tập tại vùng cao: Mở rộng cơ hội tiếp cận tri thức"
-date: "01/2026"
+date: "01/01/2026"
 loai: "tin-tuc"
 image: "images/uploads/chuyen-doi-so-trong-hoc-tap-tai-vung-cao-mo-rong-co-hoi-tiep-can-tri-thuc.png"
 excerpt: "Ở những khu vực vùng cao, nơi địa hình còn nhiều cách trở và điều kiện học tập chưa thực sự đầy đủ, chuyển đổi số trong giáo dục đang mở ra một hướng đi mới để thu hẹp khoảng cách tiếp cận tri thức. Một chiếc máy tính, máy tính bảng hay một kết nối Internet ổn định có thể giúp học sinh ở những bản làng xa xôi tiếp cận với nguồn tài liệu và phương pháp học tập mà trước đây rất khó có được."
