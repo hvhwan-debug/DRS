@@ -1,6 +1,6 @@
 ---
 title: "Dấu ấn thiện nguyện 6 tháng đầu năm 2026: Nhìn lại chặng đường từ khảo sát đến hành động"
-date: "Tháng 07 / 2026"
+date: "06/07/2026"
 description: "Từ chuyến khảo sát 5 ngày tại Đồng Văn đến 15 suất học bổng, 1 mái nhà lớp học được sửa và 1 tủ sách cộng đồng mới — điểm lại những gì Mạng Lưới Tri Thức Việt Nam đã làm được trong 6 tháng đầu năm 2026."
 thumbnail: "images/nhom-tre-em-vung-cao-ngoi-cung-nhau.jpg"
 ---
