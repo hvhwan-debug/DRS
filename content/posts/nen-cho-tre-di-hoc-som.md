@@ -1,6 +1,6 @@
 ---
 title: "Nên cho trẻ đi học sớm"
-date: "05/2025"
+date: "01/05/2025"
 loai: "tin-tuc"
 image: "images/hoc-sinh-ao-am-dong-phuc.jpg"
 excerpt: "Trong những năm đầu đời, trẻ không chỉ cần được chăm sóc mà còn cần được tạo điều kiện để khám phá thế giới, hình thành thói quen và phát triển những kỹ năng nền tảng. Vì vậy, câu hỏi “Có nên cho trẻ đi học sớm hay không?” nhận được nhiều sự quan tâm từ các bậc phụ huynh. Theo tôi, cho trẻ đi học sớm là một lựa chọn tích cực nếu môi trường giáo dục phù hợp với lứa tuổi và không tạo áp lực quá lớn cho trẻ."
