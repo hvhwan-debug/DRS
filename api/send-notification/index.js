@@ -420,6 +420,24 @@ module.exports = async function (context, req) {
     context.log.error("Tạo item Monday.com thất bại:", err.message);
   }
 
+  // Lưu vào Azure Table Storage để chủ tài khoản có thể tra cứu lại trong khu vực thành viên
+  // (best-effort — không chặn phản hồi thành công nếu lỗi; chỉ lưu khi có email)
+  if (senderEmail) {
+    try {
+      const { getTableClient } = require("../_shared/tableStorage");
+      const regTable = await getTableClient("Registrations");
+      await regTable.createEntity({
+        partitionKey: senderEmail.toLowerCase(),
+        rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        formType,
+        dataJson: JSON.stringify(data),
+        submittedAt: new Date().toISOString()
+      });
+    } catch (err) {
+      context.log.error("Lưu Registrations vào Table Storage thất bại:", err.message);
+    }
+  }
+
   // Email cảm ơn/xác nhận gửi lại cho chính người gửi (best-effort — không chặn phản hồi thành công nếu lỗi)
   if (senderEmail) {
     try {
