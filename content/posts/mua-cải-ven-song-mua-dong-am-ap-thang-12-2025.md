@@ -1,6 +1,6 @@
 ---
 title: "Tháng 12/2025: Mùa cải ven sông rực rỡ và hơi ấm đong đầy bên những em nhỏ vùng cao"
-date: "Tháng 12 / 2025"
+date: "01/12/2025"
 description: "Ghi dấu hành trình tháng 12/2025 giữa sắc vàng hoa cải ven sông và những chuyến xe chở đầy chăn ấm, áo rét, mang mùa đông bớt lạnh giá cho trẻ em vùng cao."
 thumbnail: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&auto=format&fit=crop&q=80"
 ---
