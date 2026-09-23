@@ -1,6 +1,6 @@
 ---
 title: "Hành trình ngày 22/04/2026: Mang tri thức và lớp học tình nguyện đến với Điện Biên"
-date: "Tháng 04 / 2026"
+date: "01/04/2026"
 description: "Ghi dấu ngày 22/04/2026 tại Điện Biên với các hoạt động giảng dạy tình nguyện, sinh hoạt kỹ năng và trao gửi yêu thương cho các em học sinh vùng cao."
 thumbnail: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80"
 ---
