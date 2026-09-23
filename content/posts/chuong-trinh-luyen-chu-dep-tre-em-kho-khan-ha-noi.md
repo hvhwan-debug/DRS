@@ -1,6 +1,6 @@
 ---
 title: "WVN Triển Khai Chương Trình Luyện Chữ Đẹp Cho Cộng Đồng Trẻ Em Tại Hà Nội"
-date: "Tháng 12/2026"
+date: "01/12/2026"
 loai: "tin-tuc"
 image: "images/uploads/luyen-chu-dep-bang-den.jpg"
 excerpt: "WVN khởi động Chương trình Luyện chữ đẹp dành cho trẻ em tại Hà Nội, hoạt động phi lợi nhuận, không vì mục đích thương mại, giúp các em rèn nét chữ, tính kiên trì và sự tự tin trong học tập."
