@@ -1,6 +1,6 @@
 ---
 title: "Trẻ em vùng cao đón niềm vui đầu xuân mới"
-date: "10/2024"
+date: "01/10/2024"
 loai: "tin-tuc"
 image: "images/uploads/tre-em-vung-cao-don-niem-vui-dau-xuan-moi.webp"
 excerpt: "Những ngày này, miền Bắc trở lạnh. Gió bấc nơi miền núi rít từng cơn qua khe cửa, luồn dưới đất, len vào những đôi chân trần bé xíu. Chúng chẳng có dép mà đi, huống chi manh áo ấm, miếng cơm ngon… và ước vọng về một lớp học khang trang. Thế nhưng, hôm nay đã khác…"
