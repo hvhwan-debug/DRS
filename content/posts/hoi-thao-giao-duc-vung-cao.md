@@ -1,6 +1,6 @@
 ---
 title: "Hội thảo chuyên đề: Xây dựng phương pháp và kỹ năng giáo dục thực tiễn, phù hợp cho trẻ em vùng cao"
-date: "Tháng 07 / 2026"
+date: "05/07/2026"
 description: "Hội thảo quy tụ 40 giáo viên cắm bản và tình nguyện viên, thảo luận các rào cản học tập đặc thù của trẻ em vùng cao và chuẩn hoá 3 kỹ năng sư phạm cốt lõi để áp dụng ngay trong năm học 2026–2027."
 thumbnail: "images/hoi-thao-giao-duc-vung-cao-1.jpg"
 ---
