@@ -1,6 +1,6 @@
 ---
 title: "Món quà 20/11/2025 đong đầy nước mắt: Những bức tranh mộc mạc thay lời tri ân của trẻ em Hà Giang gửi đến tình nguyện viên"
-date: "Tháng 11 / 2025"
+date: "03/11/2025"
 description: "Ghi lại khoảnh khắc xúc động ngày 20/11/2025 khi các em học sinh vùng cao Hà Giang tự tay vẽ những bức tranh ngây ngô để tri ân các thầy cô giáo và đội ngũ tình nguyện viên DRS."
 thumbnail: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&auto=format&fit=crop&q=80"
 ---
