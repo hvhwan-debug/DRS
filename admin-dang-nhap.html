@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng Nhập Quản Trị | Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --text-dark: #0f172a; --text-muted: #475569; --border: #e2e8f0; --bg-page: #f8fafc;
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background: var(--bg-page); color: var(--text-dark); min-height: 100vh; display:flex; align-items:center; justify-content:center; padding: 1.5rem; }
+    .card { background:#fff; border-radius:16px; box-shadow:0 12px 32px rgba(15,23,42,0.12); padding:2.4rem; width:100%; max-width:380px; }
+    .badge { font-size:0.72rem; font-weight:800; letter-spacing:0.5px; color:#0284c7; text-transform:uppercase; margin-bottom:0.6rem; }
+    h1 { font-size:1.4rem; margin-bottom:0.4rem; }
+    p.sub { color:var(--text-muted); font-size:0.88rem; margin-bottom:1.6rem; }
+    .form-field { margin-bottom:1.2rem; }
+    .form-field label { display:block; font-size:0.82rem; font-weight:600; color:#475569; margin-bottom:0.5rem; }
+    .form-field input { width:100%; padding:0.7rem 0; border:none; border-bottom:2px solid var(--border); font-size:1rem; background:transparent; }
+    .form-field input:focus { outline:none; border-bottom-color:#0284c7; }
+    .btn-continue {
+      width:100%; padding:0.85rem; border:none; border-radius:10px; background:var(--blue-grad-btn); color:#fff;
+      font-size:1rem; font-weight:700; cursor:pointer; margin-top:0.5rem;
+    }
+    .btn-continue:disabled { opacity:0.7; cursor:default; }
+    #loginAlert { font-size:0.85rem; text-align:center; margin:0.8rem 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">WVN ADMIN</div>
+    <h1>Đăng Nhập Quản Trị</h1>
+    <p class="sub">Khu vực nội bộ dành cho đội ngũ điều hành.</p>
+
+    <form id="adminLoginForm">
+      <div class="form-field">
+        <label for="password">Mật khẩu quản trị</label>
+        <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+      </div>
+      <div id="loginAlert" style="display:none;"></div>
+      <button type="submit" class="btn-continue" id="submitBtn">Đăng Nhập</button>
+    </form>
+  </div>
+
+  <script>
+    function showAlert(message, isError) {
+      const el = document.getElementById('loginAlert');
+      el.style.display = 'block';
+      el.style.color = isError ? '#dc2626' : '#16a34a';
+      el.innerHTML = (isError ? '<i class="fa-solid fa-circle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ') + message;
+    }
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kiểm tra...';
+
+      try {
+        const res = await fetch('/api/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Đăng nhập thất bại.');
+
+        localStorage.setItem('wvn_admin_token', result.token);
+        window.location.href = 'admin-index.html';
+      } catch (err) {
+        showAlert(err.message, true);
+        btn.disabled = false;
+        btn.innerHTML = 'Đăng Nhập';
+      }
+    });
+
+    if (localStorage.getItem('wvn_admin_token')) {
+      window.location.href = 'admin-index.html';
+    }
+  </script>
+</body>
+</html>
