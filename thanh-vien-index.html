@@ -110,6 +110,15 @@
     .not-logged-in i { font-size: 2.5rem; color: #0284c7; margin-bottom: 1rem; display: block; }
     .not-logged-in h2 { font-size: 1.3rem; margin-bottom: 0.6rem; }
     .not-logged-in p { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+    .member-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
+    .member-tab-btn {
+      padding: 0.6rem 1.1rem; border-radius: 999px; border: 1px solid var(--border); background: #fff;
+      font-weight: 700; font-size: 0.88rem; cursor: pointer; color: var(--text-muted); font-family: inherit;
+    }
+    .member-tab-btn.active { background: #0284c7; color: #fff; border-color: #0284c7; }
+    .member-panel { display: none; }
+    .member-panel.active { display: block; }
   </style>
 </head>
 <body>
@@ -145,6 +154,13 @@
     // Khu vực thành viên — đăng nhập bằng email + mã OTP
     // (không dùng Microsoft/Azure AD B2C)
     // ==============================================================
+
+    function switchMemberTab(tab) {
+      document.querySelectorAll('.member-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.querySelectorAll('.member-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById('memberPanel-' + tab);
+      if (panel) panel.classList.add('active');
+    }
 
     function formatDateTime(iso) {
       if (!iso) return '—';
@@ -304,48 +320,63 @@
             <p>Chào mừng bạn quay trở lại khu vực thành viên của Mạng Lưới Tri Thức Việt Nam.</p>
           </div>
 
-          <div class="card">
-            <h2><i class="fa-solid fa-id-card"></i> Thông Tin Tài Khoản</h2>
-            <div class="info-row"><span>Email</span><span>${email}</span></div>
-            <form id="profileForm" style="margin-top:1.2rem; display:grid; gap:0.9rem;">
-              <div>
-                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Họ và tên</label>
-                <input type="text" id="profileFullName" value="${profile.fullName || ''}" placeholder="Họ và tên của bạn" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
-              </div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem;">
+          <div class="member-tabs">
+            <button class="member-tab-btn active" data-tab="account" onclick="switchMemberTab('account')"><i class="fa-solid fa-id-card"></i> Tài Khoản</button>
+            <button class="member-tab-btn" data-tab="activity" onclick="switchMemberTab('activity')"><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động</button>
+            <button class="member-tab-btn" data-tab="donations" onclick="switchMemberTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
+            <button class="member-tab-btn" data-tab="grades" onclick="switchMemberTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
+          </div>
+
+          <div class="member-panel active" id="memberPanel-account">
+            <div class="card">
+              <h2><i class="fa-solid fa-id-card"></i> Thông Tin Tài Khoản</h2>
+              <div class="info-row"><span>Email</span><span>${email}</span></div>
+              <form id="profileForm" style="margin-top:1.2rem; display:grid; gap:0.9rem;">
                 <div>
-                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Số điện thoại</label>
-                  <input type="tel" id="profilePhone" value="${profile.phone || ''}" placeholder="09xx xxx xxx" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Họ và tên</label>
+                  <input type="text" id="profileFullName" value="${profile.fullName || ''}" placeholder="Họ và tên của bạn" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem;">
+                  <div>
+                    <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Số điện thoại</label>
+                    <input type="tel" id="profilePhone" value="${profile.phone || ''}" placeholder="09xx xxx xxx" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ngày sinh</label>
+                    <input type="date" id="profileDob" value="${profile.dob || ''}" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                  </div>
                 </div>
                 <div>
-                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ngày sinh</label>
-                  <input type="date" id="profileDob" value="${profile.dob || ''}" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Địa chỉ</label>
+                  <input type="text" id="profileAddress" value="${profile.address || ''}" placeholder="Số nhà, đường, xã/phường, tỉnh/thành" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
                 </div>
-              </div>
-              <div>
-                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Địa chỉ</label>
-                <input type="text" id="profileAddress" value="${profile.address || ''}" placeholder="Số nhà, đường, xã/phường, tỉnh/thành" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
-              </div>
-              <div id="profileAlert" style="display:none; font-size:0.85rem;"></div>
-              <div>
-                <button type="submit" class="btn" id="profileSaveBtn">Lưu Thông Tin</button>
-              </div>
-            </form>
+                <div id="profileAlert" style="display:none; font-size:0.85rem;"></div>
+                <div>
+                  <button type="submit" class="btn" id="profileSaveBtn">Lưu Thông Tin</button>
+                </div>
+              </form>
+            </div>
           </div>
 
-          <div class="card">
-            <h2><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động Đã Tham Gia</h2>
-            ${activityHtml}
+          <div class="member-panel" id="memberPanel-activity">
+            <div class="card">
+              <h2><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động Đã Tham Gia</h2>
+              ${activityHtml}
+            </div>
           </div>
 
-          <div class="card">
-            <h2><i class="fa-solid fa-hand-holding-dollar"></i> Lịch Sử Quyên Góp</h2>
-            ${donationsHtml}
+          <div class="member-panel" id="memberPanel-donations">
+            <div class="card">
+              <h2><i class="fa-solid fa-hand-holding-dollar"></i> Lịch Sử Quyên Góp</h2>
+              ${donationsHtml}
+            </div>
           </div>
 
-          <div class="card">
-            <h2><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm / Nhận Xét Học Tập</h2>
-            ${gradesHtml}
+          <div class="member-panel" id="memberPanel-grades">
+            <div class="card">
+              <h2><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm / Nhận Xét Học Tập</h2>
+              ${gradesHtml}
+            </div>
           </div>
         `;
 
