@@ -1,6 +1,6 @@
 ---
 title: "Giáo Dục Vùng Cao: Khi Một Cơ Hội Học Tập Có Thể Mở Ra Cả Một Tương Lai"
-date: "Tháng 9/2026"
+date: "02/09/2026"
 loai: "tin-tuc"
 excerpt: "Giáo dục vùng cao là hành trình mở ra cơ hội học tập công bằng cho trẻ em khó khăn. Mỗi cuốn sách, lớp học được trao đi có thể thay đổi cả một tương lai."
 ---
