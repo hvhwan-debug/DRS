@@ -2,9 +2,9 @@ const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
 
 const OTP_TABLE = "AuthOtpCodes";
-const SESSION_TABLE = "AuthSessions";
+const RESET_TABLE = "AuthResetTokens";
 const MAX_ATTEMPTS = 5;
-const SESSION_TTL_DAYS = 30;
+const RESET_TOKEN_TTL_MINUTES = 15;
 
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
@@ -56,23 +56,24 @@ module.exports = async function (context, req) {
       return;
     }
 
-    // Mã đúng -> xoá mã (không dùng lại được) và tạo phiên đăng nhập mới
+    // Mã đúng -> xoá mã (không dùng lại được) và tạo "vé" tạm để đặt mật khẩu
+    // (không đăng nhập ngay qua OTP — OTP chỉ dùng để xác minh quyền sở hữu email
+    // khi tạo tài khoản mới hoặc quên mật khẩu; từ lần sau đăng nhập bằng mật khẩu).
     await otpTable.deleteEntity("otp", email).catch(() => {});
 
-    const token = crypto.randomBytes(32).toString("hex");
-    const expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetExpiresAt = new Date(Date.now() + RESET_TOKEN_TTL_MINUTES * 60 * 1000).toISOString();
 
-    const sessionTable = await getTableClient(SESSION_TABLE);
-    await sessionTable.upsertEntity({
-      partitionKey: "session",
-      rowKey: token,
+    const resetTable = await getTableClient(RESET_TABLE);
+    await resetTable.upsertEntity({
+      partitionKey: "reset",
+      rowKey: resetToken,
       email,
-      expiresAt,
-      createdAt: new Date().toISOString()
+      expiresAt: resetExpiresAt
     }, "Replace");
 
     context.res.status = 200;
-    context.res.body = { success: true, token, email };
+    context.res.body = { success: true, resetToken, email };
   } catch (err) {
     context.log.error("Lỗi xác minh OTP:", err.message);
     context.res.status = 500;
