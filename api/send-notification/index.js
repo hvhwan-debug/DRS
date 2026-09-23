@@ -368,7 +368,7 @@ module.exports = async function (context, req) {
   sgMail.setApiKey(apiKey);
 
   const senderName = data.fullname || data.fullName || data.name || "";
-  const senderEmail = (data.email || "").trim();
+  const senderEmail = pickField(data, ["email", "email_phu_huynh", "email_tnv", "email_tai_tro"]);
 
   // Đính kèm ảnh minh chứng (nếu form gửi kèm) — giới hạn tổng dung lượng
   // để tránh vượt hạn mức SendGrid (thường ~30MB mỗi email tính cả header).
