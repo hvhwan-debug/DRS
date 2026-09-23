@@ -116,7 +116,7 @@
 
   <header>
     <div class="nav-container">
-      <a href="../index.html" class="brand-wrap">
+      <a href="index.html" class="brand-wrap">
         <div class="brand-logo-icon">
           <img src="images/logo-wvn.png" alt="Logo Mạng Lưới Tri Thức Việt Nam">
         </div>
@@ -126,7 +126,7 @@
         </div>
       </a>
       <div>
-        <button class="btn btn-outline" id="logoutBtn" onclick="window.location.href='/.auth/logout'">
+        <button class="btn btn-outline" id="logoutBtn" onclick="logout()">
           <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
         </button>
       </div>
@@ -141,60 +141,119 @@
   </main>
 
   <script>
+    // ==============================================================
+    // Khu vực thành viên — đăng nhập bằng email + mã OTP
+    // (không dùng Microsoft/Azure AD B2C)
+    // ==============================================================
+
+    function formatDateTime(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      return d.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function pickDisplayFields(data) {
+      // Chỉ hiện vài trường chính dễ nhận diện, tránh liệt kê toàn bộ dữ liệu kỹ thuật
+      const candidates = [
+        ['ten_tre', 'Tên trẻ'], ['ten_phu_huynh', 'Phụ huynh'],
+        ['fullname', 'Họ tên'], ['fullName', 'Họ tên'], ['name', 'Họ tên'],
+        ['phone', 'SĐT'], ['sdt_phu_huynh', 'SĐT'],
+        ['dia_chi', 'Địa chỉ'], ['phuong_xa', 'Khu vực']
+      ];
+      const out = [];
+      const seenLabels = new Set();
+      for (const [key, label] of candidates) {
+        if (data[key] && !seenLabels.has(label)) {
+          out.push(`<span>${label}: <strong>${data[key]}</strong></span>`);
+          seenLabels.add(label);
+        }
+      }
+      return out.join(' &nbsp;·&nbsp; ');
+    }
+
+    function renderNotLoggedIn(container) {
+      container.innerHTML = `
+        <div class="not-logged-in">
+          <i class="fa-solid fa-lock"></i>
+          <h2>Bạn chưa đăng nhập</h2>
+          <p>Vui lòng đăng nhập để truy cập khu vực thành viên.</p>
+          <button class="btn" onclick="window.location.href='dang-nhap.html'">Đăng Nhập</button>
+        </div>`;
+    }
+
+    async function logout() {
+      const token = localStorage.getItem('wvn_member_token');
+      localStorage.removeItem('wvn_member_token');
+      localStorage.removeItem('wvn_member_email');
+      if (token) {
+        try {
+          await fetch('/api/auth-logout', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+        } catch (err) { /* bỏ qua lỗi mạng khi đăng xuất */ }
+      }
+      window.location.href = 'dang-nhap.html';
+    }
+
     async function loadMemberInfo() {
       const container = document.getElementById('pageContent');
-      try {
-        const res = await fetch('/.auth/me');
-        const payload = await res.json();
-        const principal = payload.clientPrincipal;
+      const token = localStorage.getItem('wvn_member_token');
 
-        if (!principal) {
-          container.innerHTML = `
-            <div class="not-logged-in">
-              <i class="fa-solid fa-lock"></i>
-              <h2>Bạn chưa đăng nhập</h2>
-              <p>Vui lòng đăng nhập để truy cập khu vực thành viên.</p>
-              <button class="btn" onclick="window.location.href='../dang-nhap.html'">Đăng Nhập / Đăng Ký</button>
-            </div>`;
+      if (!token) {
+        renderNotLoggedIn(container);
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/member-data', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const payload = await res.json().catch(() => ({}));
+
+        if (!res.ok || !payload.success) {
+          // Phiên hết hạn hoặc không hợp lệ -> xoá và yêu cầu đăng nhập lại
+          localStorage.removeItem('wvn_member_token');
+          localStorage.removeItem('wvn_member_email');
+          renderNotLoggedIn(container);
           return;
         }
 
-        const displayName = principal.userDetails || 'Thành viên';
-        const roles = (principal.userRoles || []).filter(r => r !== 'anonymous').join(', ') || 'authenticated';
-        const claims = principal.claims || [];
-        const email = (claims.find(c => c.typ && c.typ.toLowerCase().includes('email')) || {}).val || principal.userDetails || '—';
+        const { email, registrations } = payload;
+
+        const activityHtml = registrations.length > 0
+          ? registrations.map(r => `
+              <div class="info-row" style="flex-direction:column; align-items:flex-start; gap:0.3rem;">
+                <div style="display:flex; justify-content:space-between; width:100%;">
+                  <strong>${r.formTitle}</strong>
+                  <span style="color:var(--text-muted); font-size:0.85rem;">${formatDateTime(r.submittedAt)}</span>
+                </div>
+                <div style="font-size:0.88rem; color:var(--text-muted);">${pickDisplayFields(r.data) || 'Đã ghi nhận thông tin đăng ký.'}</div>
+              </div>
+            `).join('<hr style="border:none; border-top:1px solid var(--border); margin:0.8rem 0;">')
+          : `<div class="empty-state">
+              <i class="fa-solid fa-inbox"></i>
+              Chưa có đăng ký nào được ghi nhận với email này. Khám phá các chương trình đang diễn ra để bắt đầu đồng hành cùng chúng tôi.
+            </div>
+            <div class="actions-row">
+              <a href="hoat-dong.html" class="btn">Xem Hoạt Động Đang Diễn Ra</a>
+            </div>`;
 
         container.innerHTML = `
           <div class="welcome-banner">
-            <h1>Xin chào, ${displayName}! 👋</h1>
+            <h1>Xin chào! 👋</h1>
             <p>Chào mừng bạn quay trở lại khu vực thành viên của Mạng Lưới Tri Thức Việt Nam.</p>
           </div>
 
           <div class="card">
             <h2><i class="fa-solid fa-id-card"></i> Thông Tin Tài Khoản</h2>
-            <div class="info-row"><span>Tên hiển thị</span><span>${displayName}</span></div>
             <div class="info-row"><span>Email</span><span>${email}</span></div>
-            <div class="info-row"><span>Vai trò</span><span>${roles}</span></div>
-            <div class="info-row"><span>Nhà cung cấp đăng nhập</span><span>${principal.identityProvider || 'aadb2c'}</span></div>
           </div>
 
           <div class="card">
-            <h2><i class="fa-solid fa-hand-holding-heart"></i> Hoạt Động Đã Tham Gia</h2>
-            <div class="empty-state">
-              <i class="fa-solid fa-inbox"></i>
-              Bạn chưa tham gia hoạt động nào. Khám phá các chương trình đang diễn ra để bắt đầu đồng hành cùng chúng tôi.
-            </div>
-            <div class="actions-row">
-              <a href="../hoat-dong.html" class="btn">Xem Hoạt Động Đang Diễn Ra</a>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2><i class="fa-solid fa-receipt"></i> Lịch Sử Đóng Góp</h2>
-            <div class="empty-state">
-              <i class="fa-solid fa-hand-holding-dollar"></i>
-              Chưa có giao dịch đóng góp nào được ghi nhận cho tài khoản này.
-            </div>
+            <h2><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động Đã Tham Gia</h2>
+            ${activityHtml}
           </div>
         `;
       } catch (err) {
