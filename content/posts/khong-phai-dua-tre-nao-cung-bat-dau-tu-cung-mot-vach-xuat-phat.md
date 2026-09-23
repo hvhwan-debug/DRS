@@ -1,6 +1,6 @@
 ---
 title: "Không phải đứa trẻ nào cũng bắt đầu từ cùng một vạch xuất phát"
-date: "03/2026"
+date: "02/03/2026"
 loai: "tin-tuc"
 image: "images/uploads/khong-phai-dua-tre-nao-cung-bat-dau-tu-cung-mot-vach-xuat-phat.jpeg"
 excerpt: "Khi nói về giáo dục, chúng ta thường nhìn vào kết quả: điểm số, thành tích, tỷ lệ lên lớp hay số năm đi học. Nhưng phía sau những con số ấy là những hoàn cảnh rất khác nhau."
