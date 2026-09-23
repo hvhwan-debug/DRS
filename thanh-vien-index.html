@@ -378,7 +378,7 @@
                   </div>
                   <div>
                     <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ngày sinh</label>
-                    <input type="date" id="profileDob" value="${profile.dob || ''}" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                    <input type="date" id="profileDob" value="${profile.dob || ''}" min="1920-01-01" max="${new Date().toISOString().slice(0,10)}" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
                   </div>
                 </div>
                 <div>
@@ -420,6 +420,19 @@
           e.preventDefault();
           const btn = document.getElementById('profileSaveBtn');
           const alertEl = document.getElementById('profileAlert');
+
+          const newDobCheck = document.getElementById('profileDob').value;
+          if (newDobCheck) {
+            const dobYear = Number(newDobCheck.slice(0, 4));
+            const currentYear = new Date().getFullYear();
+            if (dobYear < 1920 || dobYear > currentYear) {
+              alertEl.style.display = 'block';
+              alertEl.style.color = '#dc2626';
+              alertEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Ngày sinh không hợp lệ, vui lòng kiểm tra lại năm sinh.';
+              return;
+            }
+          }
+
           btn.disabled = true;
           btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
           alertEl.style.display = 'none';
@@ -427,7 +440,7 @@
             const newFullName = document.getElementById('profileFullName').value.trim();
             const newPhone = document.getElementById('profilePhone').value.trim();
             const newAddress = document.getElementById('profileAddress').value.trim();
-            const newDob = document.getElementById('profileDob').value;
+            const newDob = newDobCheck;
 
             const saveRes = await fetch('/api/member-update-profile', {
               method: 'POST',
