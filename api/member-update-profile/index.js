@@ -42,7 +42,14 @@ module.exports = async function (context, req) {
     const fullName = String(body.fullName || "").trim();
     const phone = String(body.phone || "").trim();
     const address = String(body.address || "").trim();
-    const dob = String(body.dob || "").trim();
+    let dob = String(body.dob || "").trim();
+    if (dob) {
+      const dobYear = Number(dob.slice(0, 4));
+      const currentYear = new Date().getFullYear();
+      if (isNaN(dobYear) || dobYear < 1920 || dobYear > currentYear) {
+        dob = ""; // Bỏ qua giá trị năm sinh bất thường thay vì lưu lại
+      }
+    }
 
     const profilesTable = await getTableClient(PROFILES_TABLE);
     await profilesTable.upsertEntity({
