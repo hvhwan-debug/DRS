@@ -3,10 +3,11 @@ const { getTableClient } = require("../_shared/tableStorage");
 const SESSION_TABLE = "AuthSessions";
 
 function getBearerToken(req) {
-  const header = req.headers && (req.headers.authorization || req.headers.Authorization);
-  if (!header) return null;
-  const match = /^Bearer\s+(.+)$/i.exec(header.trim());
-  return match ? match[1] : null;
+  // Không dùng header "Authorization" vì Azure Static Web Apps có thể can thiệp/loại bỏ
+  // header này trước khi chuyển tới Azure Function (dành riêng cho hệ xác thực EasyAuth của Azure).
+  // Dùng header tùy chỉnh "x-member-token" để tránh xung đột.
+  const header = req.headers && (req.headers["x-member-token"] || req.headers["X-Member-Token"]);
+  return header ? header.trim() : null;
 }
 
 module.exports = async function (context, req) {
