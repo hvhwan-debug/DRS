@@ -154,12 +154,16 @@
     }
 
     function pickDisplayFields(data) {
-      // Chỉ hiện vài trường chính dễ nhận diện, tránh liệt kê toàn bộ dữ liệu kỹ thuật
+      // Hiện các trường thông tin thành viên chính khai trong form (bỏ qua các trường kỹ thuật/nội bộ)
       const candidates = [
         ['ten_tre', 'Tên trẻ'], ['ten_phu_huynh', 'Phụ huynh'],
         ['fullname', 'Họ tên'], ['fullName', 'Họ tên'], ['name', 'Họ tên'],
+        ['ngay_sinh_tre', 'Ngày sinh trẻ'], ['ngay_sinh', 'Ngày sinh'], ['dob', 'Ngày sinh'],
         ['phone', 'SĐT'], ['sdt_phu_huynh', 'SĐT'],
-        ['dia_chi', 'Địa chỉ'], ['phuong_xa', 'Khu vực']
+        ['email', 'Email'], ['email_phu_huynh', 'Email'],
+        ['dia_chi', 'Địa chỉ'], ['phuong_xa', 'Khu vực'],
+        ['truong_lop', 'Trường/lớp'], ['doi_tuong_dang_ky', 'Đối tượng đăng ký'],
+        ['hoan_canh_ly_do', 'Ghi chú/Hoàn cảnh']
       ];
       const out = [];
       const seenLabels = new Set();
@@ -170,6 +174,23 @@
         }
       }
       return out.join(' &nbsp;·&nbsp; ');
+    }
+
+    function statusBadgeStyle(status) {
+      const s = (status || '').toLowerCase();
+      if (s.includes('duyệt') && !s.includes('chờ')) return 'background:#dcfce7; color:#15803d;';
+      if (s.includes('từ chối') || s.includes('huỷ') || s.includes('hủy')) return 'background:#fee2e2; color:#b91c1c;';
+      return 'background:#fef3c7; color:#a16207;'; // mặc định: chờ xử lý
+    }
+
+    function renderAttachments(attachments) {
+      if (!attachments || attachments.length === 0) return '';
+      const links = attachments.map(a =>
+        `<a href="${a.url}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:5px; font-size:0.85rem; color:#0284c7; text-decoration:underline; margin-right:1rem;">
+          <i class="fa-solid fa-paperclip"></i> ${a.filename}
+        </a>`
+      ).join('');
+      return `<div style="margin-top:0.5rem;">${links}<div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">Link xem tài liệu có hiệu lực trong 15 phút kể từ khi tải trang.</div></div>`;
     }
 
     function renderNotLoggedIn(container) {
@@ -225,12 +246,14 @@
 
         const activityHtml = registrations.length > 0
           ? registrations.map(r => `
-              <div class="info-row" style="flex-direction:column; align-items:flex-start; gap:0.3rem;">
-                <div style="display:flex; justify-content:space-between; width:100%;">
+              <div class="info-row" style="flex-direction:column; align-items:flex-start; gap:0.4rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; flex-wrap:wrap; gap:0.5rem;">
                   <strong>${r.formTitle}</strong>
+                  <span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px; ${statusBadgeStyle(r.status)}">${r.status}</span>
                   <span style="color:var(--text-muted); font-size:0.85rem;">${formatDateTime(r.submittedAt)}</span>
                 </div>
                 <div style="font-size:0.88rem; color:var(--text-muted);">${pickDisplayFields(r.data) || 'Đã ghi nhận thông tin đăng ký.'}</div>
+                ${renderAttachments(r.attachments)}
               </div>
             `).join('<hr style="border:none; border-top:1px solid var(--border); margin:0.8rem 0;">')
           : `<div class="empty-state">
