@@ -1,6 +1,6 @@
 ---
 title: "Trao 120 phần quà Trung Thu cho học sinh xã Cô Ba, huyện Bảo Lạc, Cao Bằng"
-date: "Tháng 09 / 2026"
+date: "10/09/2026"
 description: "Tối 25/9/2026, Mạng Lưới Tri Thức Việt Nam phối hợp tổ chức chương trình Trung Thu cho học sinh Trường Tiểu học xã Cô Ba, huyện Bảo Lạc, tỉnh Cao Bằng, trao tặng 120 phần quà bánh kẹo và đồ dùng học tập."
 thumbnail: "images/trung-thu-cao-bang.jpg"
 loai: "su-kien"
