@@ -265,6 +265,16 @@
             <input id="email" name="email" type="email" placeholder="ban@email.com" autocomplete="email" required>
           </div>
 
+          <div class="form-field" id="passwordStep" style="display:none;">
+            <label for="password">Mật khẩu</label>
+            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password">
+            <span class="signup-link" style="display:block; margin-top:0.5rem;">
+              <a href="#" onclick="startForgotPassword(); return false;">Quên mật khẩu?</a>
+              &nbsp;·&nbsp;
+              <a href="#" onclick="backToEmailStep(); return false;">Đổi email khác</a>
+            </span>
+          </div>
+
           <div class="form-field" id="otpStep" style="display:none;">
             <label for="otp">Mã xác nhận (6 số)</label>
             <input id="otp" name="otp" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" autocomplete="one-time-code">
@@ -275,9 +285,16 @@
             </span>
           </div>
 
+          <div class="form-field" id="setPasswordStep" style="display:none;">
+            <label for="newPassword">Tạo mật khẩu mới (tối thiểu 6 ký tự)</label>
+            <input id="newPassword" name="newPassword" type="password" placeholder="Nhập mật khẩu mới" autocomplete="new-password">
+            <label for="newPassword2" style="margin-top:0.8rem;">Nhập lại mật khẩu</label>
+            <input id="newPassword2" name="newPassword2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password">
+          </div>
+
           <div id="loginAlert" style="display:none; font-size:0.85rem; text-align:center; margin: 0.6rem 0;"></div>
 
-          <button type="submit" class="btn-continue" id="loginSubmitBtn">Gửi Mã Đăng Nhập</button>
+          <button type="submit" class="btn-continue" id="loginSubmitBtn">Tiếp Tục</button>
         </form>
 
         <span class="no-access" id="helpLinks">
@@ -316,9 +333,11 @@
     });
 
     // ==============================================================
-    // Đăng nhập bằng email + mã OTP (không dùng Microsoft/Azure AD B2C)
+    // Đăng nhập: email + mật khẩu cho tài khoản đã có.
+    // OTP chỉ dùng khi TẠO tài khoản mới hoặc QUÊN mật khẩu.
     // ==============================================================
-    let otpRequested = false;
+    let currentStep = 'email'; // email | password | otp | setPassword
+    let pendingResetToken = null;
 
     function showAlert(message, isError) {
       const el = document.getElementById('loginAlert');
@@ -331,16 +350,29 @@
       document.getElementById('loginAlert').style.display = 'none';
     }
 
-    function backToEmailStep() {
-      otpRequested = false;
+    function hideAllSteps() {
+      document.getElementById('emailStep').style.display = 'none';
+      document.getElementById('passwordStep').style.display = 'none';
       document.getElementById('otpStep').style.display = 'none';
+      document.getElementById('setPasswordStep').style.display = 'none';
+    }
+
+    function backToEmailStep() {
+      currentStep = 'email';
+      pendingResetToken = null;
+      hideAllSteps();
       document.getElementById('emailStep').style.display = 'block';
       document.getElementById('email').disabled = false;
-      document.getElementById('loginSubmitBtn').textContent = 'Gửi Mã Đăng Nhập';
+      document.getElementById('loginSubmitBtn').textContent = 'Tiếp Tục';
       clearAlert();
     }
 
-    async function requestOtp() {
+    function startForgotPassword() {
+      clearAlert();
+      requestOtp('Mã xác nhận đã được gửi để bạn đặt lại mật khẩu.');
+    }
+
+    async function checkAccountAndProceed() {
       const email = document.getElementById('email').value.trim();
       if (!email) {
         showAlert('Vui lòng nhập email.', true);
@@ -348,8 +380,75 @@
       }
       const btn = document.getElementById('loginSubmitBtn');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kiểm tra...';
       clearAlert();
+
+      try {
+        const res = await fetch('/api/auth-check-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể kiểm tra tài khoản.');
+
+        document.getElementById('email').disabled = true;
+
+        if (result.hasPassword) {
+          currentStep = 'password';
+          hideAllSteps();
+          document.getElementById('passwordStep').style.display = 'block';
+          document.getElementById('loginSubmitBtn').textContent = 'Đăng Nhập';
+          document.getElementById('password').focus();
+          btn.disabled = false;
+        } else {
+          showAlert('Email này chưa có tài khoản. Đang gửi mã xác nhận để tạo mật khẩu...', false);
+          await requestOtp(); // requestOtp tự quản lý trạng thái nút bấm của chính nó
+        }
+      } catch (err) {
+        showAlert(err.message, true);
+        btn.disabled = false;
+        btn.innerHTML = 'Tiếp Tục';
+      }
+    }
+
+    async function loginWithPassword() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      if (!password) {
+        showAlert('Vui lòng nhập mật khẩu.', true);
+        return;
+      }
+      const btn = document.getElementById('loginSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang đăng nhập...';
+      clearAlert();
+
+      try {
+        const res = await fetch('/api/auth-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Đăng nhập thất bại.');
+
+        localStorage.setItem('wvn_member_token', result.token);
+        localStorage.setItem('wvn_member_email', result.email);
+        showAlert('Đăng nhập thành công! Đang chuyển hướng...', false);
+        window.location.href = 'thanh-vien-index.html';
+      } catch (err) {
+        showAlert(err.message, true);
+        btn.disabled = false;
+        btn.innerHTML = 'Đăng Nhập';
+      }
+    }
+
+    async function requestOtp(customMessage) {
+      const email = document.getElementById('email').value.trim();
+      const btn = document.getElementById('loginSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
 
       try {
         const res = await fetch('/api/auth-request-otp', {
@@ -358,20 +457,20 @@
           body: JSON.stringify({ email })
         });
         const result = await res.json().catch(() => ({}));
-        if (!res.ok || !result.success) {
-          throw new Error(result.message || 'Không thể gửi mã.');
-        }
-        otpRequested = true;
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể gửi mã.');
+
+        currentStep = 'otp';
         document.getElementById('email').disabled = true;
+        hideAllSteps();
         document.getElementById('otpStep').style.display = 'block';
-        document.getElementById('loginSubmitBtn').textContent = 'Xác Nhận Đăng Nhập';
-        showAlert('Đã gửi mã xác nhận tới ' + email + '. Kiểm tra hộp thư (cả mục Spam).', false);
+        document.getElementById('loginSubmitBtn').textContent = 'Xác Nhận Mã';
+        showAlert(customMessage || ('Đã gửi mã xác nhận tới ' + email + '. Kiểm tra hộp thư (cả mục Spam).'), false);
         document.getElementById('otp').focus();
       } catch (err) {
         showAlert(err.message, true);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = otpRequested ? 'Xác Nhận Đăng Nhập' : 'Gửi Mã Đăng Nhập';
+        btn.innerHTML = currentStep === 'otp' ? 'Xác Nhận Mã' : 'Tiếp Tục';
       }
     }
 
@@ -394,27 +493,68 @@
           body: JSON.stringify({ email, code: otp })
         });
         const result = await res.json().catch(() => ({}));
-        if (!res.ok || !result.success) {
-          throw new Error(result.message || 'Mã xác nhận không đúng.');
-        }
+        if (!res.ok || !result.success) throw new Error(result.message || 'Mã xác nhận không đúng.');
+
+        pendingResetToken = result.resetToken;
+        currentStep = 'setPassword';
+        hideAllSteps();
+        document.getElementById('setPasswordStep').style.display = 'block';
+        document.getElementById('loginSubmitBtn').textContent = 'Hoàn Tất';
+        showAlert('Xác minh thành công! Hãy đặt mật khẩu cho tài khoản.', false);
+        document.getElementById('newPassword').focus();
+      } catch (err) {
+        showAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = currentStep === 'setPassword' ? 'Hoàn Tất' : 'Xác Nhận Mã';
+      }
+    }
+
+    async function submitNewPassword() {
+      const email = document.getElementById('email').value.trim();
+      const pw1 = document.getElementById('newPassword').value;
+      const pw2 = document.getElementById('newPassword2').value;
+
+      if (pw1.length < 6) {
+        showAlert('Mật khẩu cần tối thiểu 6 ký tự.', true);
+        return;
+      }
+      if (pw1 !== pw2) {
+        showAlert('Mật khẩu nhập lại không khớp.', true);
+        return;
+      }
+
+      const btn = document.getElementById('loginSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      clearAlert();
+
+      try {
+        const res = await fetch('/api/auth-set-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, resetToken: pendingResetToken, password: pw1 })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể đặt mật khẩu.');
+
         localStorage.setItem('wvn_member_token', result.token);
         localStorage.setItem('wvn_member_email', result.email);
-        showAlert('Đăng nhập thành công! Đang chuyển hướng...', false);
+        showAlert('Tạo mật khẩu thành công! Đang chuyển hướng...', false);
         window.location.href = 'thanh-vien-index.html';
       } catch (err) {
         showAlert(err.message, true);
         btn.disabled = false;
-        btn.innerHTML = 'Xác Nhận Đăng Nhập';
+        btn.innerHTML = 'Hoàn Tất';
       }
     }
 
     document.getElementById('loginForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      if (!otpRequested) {
-        requestOtp();
-      } else {
-        verifyOtp();
-      }
+      if (currentStep === 'email') checkAccountAndProceed();
+      else if (currentStep === 'password') loginWithPassword();
+      else if (currentStep === 'otp') verifyOtp();
+      else if (currentStep === 'setPassword') submitNewPassword();
     });
 
     // Nếu đã đăng nhập sẵn (còn phiên hợp lệ), chuyển thẳng vào khu vực thành viên
