@@ -1,6 +1,6 @@
 ---
 title: "Tháng 11/2025 tại Thái Nguyên & Bắc Kạn: Đưa tri thức chạm đến trẻ nghèo vùng cao qua lăng kính quản trị phát triển bền vững"
-date: "Tháng 11 / 2025"
+date: "02/11/2025"
 description: "Báo cáo phân tích chuyên sâu chiến dịch tháng 11/2025 tại Thái Nguyên và Bắc Kạn: Đánh giá nhu cầu thực tế, chuẩn hóa hệ thống trao tặng học liệu và tối ưu hóa tác động giáo dục dài hạn cho học sinh vùng cao."
 thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80"
 ---
