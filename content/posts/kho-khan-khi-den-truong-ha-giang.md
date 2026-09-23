@@ -1,6 +1,6 @@
 ---
 title: "Gian nan đường đến chữ: Những thử thách khắc nghiệt trên hành trình tìm con chữ của trẻ em vùng cao Hà Giang"
-date: "Tháng 07 / 2026"
+date: "03/07/2026"
 description: "Lắng nghe câu chuyện thực tế về con đường đến trường đầy gian khó của học sinh đồng bào dân tộc thiểu số tại Hà Giang và sứ mệnh sẻ chia của cộng đồng."
 thumbnail: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80"
 ---
