@@ -3,6 +3,8 @@ const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 
 const SESSION_TABLE = "AuthSessions";
 const REGISTRATIONS_TABLE = "Registrations";
+const DONATIONS_TABLE = "Donations";
+const GRADES_TABLE = "Grades";
 
 const FORM_TITLES = {
   contact: "Liên hệ",
@@ -91,8 +93,51 @@ module.exports = async function (context, req) {
 
     registrations.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
 
+    // Lịch sử quyên góp do đội ngũ nhập thủ công, khớp theo email
+    const donations = [];
+    try {
+      const donationsTable = await getTableClient(DONATIONS_TABLE);
+      const donationIterator = donationsTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq 'donation' and donorEmail eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of donationIterator) {
+        donations.push({
+          amount: entity.amount,
+          method: entity.method || "",
+          note: entity.note || "",
+          donatedAt: entity.donatedAt
+        });
+      }
+      donations.sort((a, b) => new Date(b.donatedAt) - new Date(a.donatedAt));
+    } catch (e) {
+      // Bảng Donations có thể chưa có dữ liệu — bỏ qua, không chặn phần còn lại
+    }
+
+    // Bảng điểm / nhận xét của học sinh, khớp theo email phụ huynh
+    const grades = [];
+    try {
+      const gradesTable = await getTableClient(GRADES_TABLE);
+      const gradeIterator = gradesTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of gradeIterator) {
+        grades.push({
+          studentName: entity.studentName,
+          program: entity.program,
+          subject: entity.subject,
+          term: entity.term,
+          score: entity.score !== undefined && entity.score !== null ? entity.score : null,
+          comment: entity.comment || "",
+          recordedAt: entity.recordedAt
+        });
+      }
+      grades.sort((a, b) => new Date(b.recordedAt) - new Date(a.recordedAt));
+    } catch (e) {
+      // Bảng Grades có thể chưa có dữ liệu — bỏ qua, không chặn phần còn lại
+    }
+
     context.res.status = 200;
-    context.res.body = { success: true, email, registrations };
+    context.res.body = { success: true, email, registrations, donations, grades };
   } catch (err) {
     context.log.error("Lỗi lấy dữ liệu thành viên:", err.message);
     context.res.status = 500;
