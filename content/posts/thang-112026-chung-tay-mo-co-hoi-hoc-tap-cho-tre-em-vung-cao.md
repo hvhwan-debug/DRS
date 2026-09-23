@@ -1,6 +1,6 @@
 ---
 title: "Tháng 11/2026: Chung tay mở cơ hội học tập cho trẻ em vùng cao"
-date: "08/2026"
+date: "02/08/2026"
 loai: "tin-tuc"
 image: "images/tre-em-nam-tay-dong-lua-vang.jpg"
 excerpt: "Tháng 11/2026, hãy cùng chung tay vì trẻ em vùng cao Bắc Kạn – để cơ hội học tập không bị giới hạn bởi hoàn cảnh nơi một đứa trẻ sinh ra."
