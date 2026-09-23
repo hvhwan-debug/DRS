@@ -1,6 +1,6 @@
 ---
 title: "Tháng 11/2025: Hội thảo chiến lược 'Mùa đông tình nguyện' và hành động vì an sinh giáo dục vùng cao"
-date: "Tháng 11 / 2025"
+date: "01/11/2025"
 description: "Tổng kết chuỗi tọa đàm chuyên sâu và phát động chiến dịch 'Mùa đông tình nguyện' tháng 11/2025, kết nối nguồn lực toàn xã hội để bảo trợ tinh thần và vật chất cho học sinh biên giới."
 thumbnail: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&auto=format&fit=crop&q=80"
 ---
