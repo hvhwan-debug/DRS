@@ -113,24 +113,31 @@
     <!-- ===================== TAB: BẢNG ĐIỂM ===================== -->
     <div class="panel" id="panel-grades">
       <div class="card">
-        <h3 style="margin-bottom:1rem; font-size:1rem;">Nhập điểm / nhận xét</h3>
+        <h3 style="margin-bottom:1rem; font-size:1rem;">Nhập điểm / nhận xét cho con em phụ huynh</h3>
         <form id="gradeForm">
           <div class="form-grid">
-            <div><label>Email phụ huynh *</label><input type="email" id="gradeParentEmail" required></div>
-            <div><label>Tên học sinh *</label><input type="text" id="gradeStudentName" required></div>
+            <div><label>Email phụ huynh *</label><input type="email" id="gradeParentEmail" required placeholder="Email tài khoản của phụ huynh"></div>
+            <div><label>Tên học sinh (con em) *</label><input type="text" id="gradeStudentName" required></div>
             <div>
-              <label>Chương trình</label>
+              <label>Chương trình học</label>
               <select id="gradeProgram">
                 <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
                 <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
               </select>
             </div>
-            <div><label>Môn học / Nội dung *</label><input type="text" id="gradeSubject" required placeholder="VD: Luyện viết chữ"></div>
-            <div><label>Kỳ / Buổi học</label><input type="text" id="gradeTerm" placeholder="VD: Buổi 5 - Tháng 10/2026"></div>
+            <div>
+              <label>Loại đánh giá *</label>
+              <select id="gradeAssessmentType" required>
+                <option value="Đánh giá đầu vào">Đánh giá đầu vào</option>
+                <option value="Buổi học" selected>Buổi học</option>
+                <option value="Đánh giá đầu ra">Đánh giá đầu ra</option>
+              </select>
+            </div>
+            <div><label>Buổi học / Thời điểm</label><input type="text" id="gradeTerm" placeholder="VD: Buổi 5 - Tháng 10/2026"></div>
             <div><label>Điểm số (0-10, có thể để trống)</label><input type="number" id="gradeScore" min="0" max="10" step="0.1"></div>
           </div>
           <div style="margin-bottom:1rem;">
-            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nhận xét</label>
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Đánh giá của giáo viên</label>
             <textarea id="gradeComment" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="VD: Con viết đều nét hơn, cần luyện thêm tốc độ"></textarea>
           </div>
           <button type="submit" class="btn" id="gradeSubmitBtn">Lưu Điểm/Nhận Xét</button>
@@ -140,7 +147,7 @@
         <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="gradeTableWrap">
           <table>
-            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Môn</th><th>Kỳ/Buổi</th><th>Điểm</th><th>Nhận xét</th></tr></thead>
+            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Loại đánh giá</th><th>Buổi học</th><th>Điểm</th><th>Đánh giá GV</th></tr></thead>
             <tbody id="gradeTableBody"></tbody>
           </table>
         </div>
@@ -327,7 +334,7 @@
             <td>${escapeHtml(g.studentName)}</td>
             <td>${escapeHtml(g.parentEmail)}</td>
             <td>${escapeHtml(g.program)}</td>
-            <td>${escapeHtml(g.subject)}</td>
+            <td>${escapeHtml(g.assessmentType)}</td>
             <td>${escapeHtml(g.term)}</td>
             <td>${g.score != null ? g.score : '—'}</td>
             <td>${escapeHtml(g.comment)}</td>
@@ -351,7 +358,7 @@
             parentEmail: document.getElementById('gradeParentEmail').value.trim(),
             studentName: document.getElementById('gradeStudentName').value.trim(),
             program: document.getElementById('gradeProgram').value,
-            subject: document.getElementById('gradeSubject').value.trim(),
+            assessmentType: document.getElementById('gradeAssessmentType').value,
             term: document.getElementById('gradeTerm').value.trim(),
             score: document.getElementById('gradeScore').value,
             comment: document.getElementById('gradeComment').value.trim()
