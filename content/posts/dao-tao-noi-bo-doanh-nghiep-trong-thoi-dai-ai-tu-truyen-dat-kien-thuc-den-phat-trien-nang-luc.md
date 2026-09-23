@@ -1,6 +1,6 @@
 ---
 title: "Đào tạo nội bộ doanh nghiệp trong thời đại AI: Từ truyền đạt kiến thức đến phát triển năng lực"
-date: "09/2025"
+date: "01/09/2025"
 loai: "tin-tuc"
 image: "images/hoi-thao-giao-duc-vung-cao-1.jpg"
 excerpt: "Đào tạo nội bộ doanh nghiệp đang bước vào một giai đoạn thay đổi mạnh mẽ khi trí tuệ nhân tạo (AI) ngày càng được ứng dụng sâu vào công việc. Nếu trước đây doanh nghiệp chủ yếu tổ chức đào tạo để nhân viên nắm được quy trình, sản phẩm và kỹ năng chuyên môn, thì hiện nay, đào tạo cần hướng đến một mục tiêu rộng hơn: giúp con người biết cách làm việc hiệu quả cùng AI và tạo ra giá trị mà AI không thể thay thế hoàn toàn."
