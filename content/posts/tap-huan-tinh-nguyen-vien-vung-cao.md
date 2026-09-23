@@ -1,6 +1,6 @@
 ---
 title: "Tập huấn tình nguyện viên: Kỹ năng dạy học cho trẻ em vùng cao trước mùa chiến dịch"
-date: "Tháng 09 / 2026"
+date: "05/09/2026"
 description: "60 tình nguyện viên tham dự buổi tập huấn kỹ năng giảng dạy trước khi lên đường triển khai Hội thảo Học Tập Số tại Đồng Văn, thực hành trực tiếp 3 kỹ năng sư phạm đã đúc kết từ hội thảo chuyên đề tháng 7."
 thumbnail: "images/tap-huan-tinh-nguyen-vien.jpg"
 ---
