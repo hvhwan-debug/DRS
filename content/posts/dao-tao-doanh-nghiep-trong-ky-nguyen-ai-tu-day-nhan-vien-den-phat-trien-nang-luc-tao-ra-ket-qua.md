@@ -1,6 +1,6 @@
 ---
 title: "Đào tạo doanh nghiệp trong kỷ nguyên AI: Từ “dạy nhân viên” đến phát triển năng lực tạo ra kết quả"
-date: "02/2024"
+date: "01/02/2024"
 loai: "tin-tuc"
 image: "images/uploads/dao-tao-doanh-nghiep-trong-ky-nguyen-ai-tu-day-nhan-vien-den-phat-trien-nang-luc-tao-ra-ket-qua.jpeg"
 excerpt: "Trong bối cảnh công nghệ, thị trường và hành vi khách hàng thay đổi nhanh, đào tạo doanh nghiệp đang đứng trước một sự chuyển dịch quan trọng. Doanh nghiệp không còn chỉ cần nhân viên “biết” nhiều hơn, mà cần họ “làm tốt” hơn và thích nghi nhanh hơn."
