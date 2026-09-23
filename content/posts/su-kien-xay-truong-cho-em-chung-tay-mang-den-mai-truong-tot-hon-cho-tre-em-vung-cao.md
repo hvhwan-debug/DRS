@@ -1,6 +1,6 @@
 ---
 title: "Sự kiện “Xây trường cho em” – Chung tay mang đến mái trường tốt hơn cho trẻ em vùng cao"
-date: "05/2025"
+date: "03/05/2025"
 loai: "tin-tuc"
 image: "images/uploads/su-kien-xay-truong-cho-em-chung-tay-mang-den-mai-truong-tot-hon-cho-tre-em-vung-cao.png"
 excerpt: "Có những nơi, con đường đến trường của một đứa trẻ không chỉ dài hơn mà còn khó khăn hơn rất nhiều. Ở những bản làng vùng cao, điều kiện cơ sở vật chất còn hạn chế khiến việc học tập của các em gặp không ít trở ngại. Sự kiện “Xây trường cho em” được hướng đến như một hành trình kết nối cộng đồng, cùng chung tay cải thiện môi trường học tập cho trẻ em còn nhiều khó khăn."
