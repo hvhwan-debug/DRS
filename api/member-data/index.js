@@ -125,7 +125,7 @@ module.exports = async function (context, req) {
         grades.push({
           studentName: entity.studentName,
           program: entity.program,
-          subject: entity.subject,
+          assessmentType: entity.assessmentType || "Buổi học",
           term: entity.term,
           score: entity.score !== undefined && entity.score !== null ? entity.score : null,
           comment: entity.comment || "",
