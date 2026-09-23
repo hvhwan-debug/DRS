@@ -241,7 +241,7 @@
           return;
         }
 
-        const { email, registrations } = payload;
+        const { email, registrations, donations = [], grades = [] } = payload;
         document.getElementById('logoutBtn').style.display = 'inline-block';
 
         const activityHtml = registrations.length > 0
@@ -264,6 +264,40 @@
               <a href="hoat-dong.html" class="btn">Xem Hoạt Động Đang Diễn Ra</a>
             </div>`;
 
+        const donationsHtml = donations.length > 0
+          ? `<table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+              <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
+                <th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th>
+              </tr></thead>
+              <tbody>
+                ${donations.map(d => `
+                  <tr style="border-top:1px solid var(--border);">
+                    <td style="padding:0.5rem 0.4rem;">${formatDateTime(d.donatedAt)}</td>
+                    <td style="padding:0.5rem 0.4rem; font-weight:700; color:#15803d;">${Number(d.amount).toLocaleString('vi-VN')}đ</td>
+                    <td style="padding:0.5rem 0.4rem;">${d.method || '—'}</td>
+                    <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${d.note || '—'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>`
+          : `<div class="empty-state"><i class="fa-solid fa-hand-holding-dollar"></i> Chưa có quyên góp nào được ghi nhận với email này.</div>`;
+
+        const gradesHtml = grades.length > 0
+          ? grades.map(g => `
+              <div class="info-row" style="flex-direction:column; align-items:flex-start; gap:0.3rem;">
+                <div style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:0.5rem;">
+                  <strong>${g.studentName} — ${g.subject}</strong>
+                  <span style="color:var(--text-muted); font-size:0.85rem;">${g.program || ''} ${g.term ? '· ' + g.term : ''}</span>
+                </div>
+                <div style="font-size:0.88rem; color:var(--text-muted);">
+                  ${g.score != null ? `Điểm: <strong style="color:#0369a1;">${g.score}/10</strong>` : ''}
+                  ${g.score != null && g.comment ? ' &nbsp;·&nbsp; ' : ''}
+                  ${g.comment ? `Nhận xét: ${g.comment}` : ''}
+                </div>
+              </div>
+            `).join('<hr style="border:none; border-top:1px solid var(--border); margin:0.8rem 0;">')
+          : `<div class="empty-state"><i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận cho email này.</div>`;
+
         container.innerHTML = `
           <div class="welcome-banner">
             <h1>Xin chào! 👋</h1>
@@ -278,6 +312,16 @@
           <div class="card">
             <h2><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động Đã Tham Gia</h2>
             ${activityHtml}
+          </div>
+
+          <div class="card">
+            <h2><i class="fa-solid fa-hand-holding-dollar"></i> Lịch Sử Quyên Góp</h2>
+            ${donationsHtml}
+          </div>
+
+          <div class="card">
+            <h2><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm / Nhận Xét Học Tập</h2>
+            ${gradesHtml}
           </div>
         `;
       } catch (err) {
