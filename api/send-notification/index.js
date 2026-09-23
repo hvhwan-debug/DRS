@@ -425,12 +425,26 @@ module.exports = async function (context, req) {
   if (senderEmail) {
     try {
       const { getTableClient } = require("../_shared/tableStorage");
+      const { uploadAttachments } = require("../_shared/blobStorage");
+
+      // Lưu ảnh/tài liệu đính kèm (nếu có) vào Blob Storage riêng tư để xem lại sau trong khu vực thành viên
+      let uploadedAttachments = [];
+      if (Array.isArray(body.attachments) && body.attachments.length > 0) {
+        try {
+          uploadedAttachments = await uploadAttachments(body.attachments);
+        } catch (err) {
+          context.log.error("Lưu tài liệu đính kèm vào Blob Storage thất bại:", err.message);
+        }
+      }
+
       const regTable = await getTableClient("Registrations");
       await regTable.createEntity({
         partitionKey: senderEmail.toLowerCase(),
         rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         formType,
         dataJson: JSON.stringify(data),
+        attachmentsJson: JSON.stringify(uploadedAttachments),
+        status: "Đã ghi nhận - Chờ xử lý",
         submittedAt: new Date().toISOString()
       });
     } catch (err) {
