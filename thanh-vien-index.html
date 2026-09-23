@@ -241,7 +241,7 @@
           return;
         }
 
-        const { email, registrations, donations = [], grades = [] } = payload;
+        const { email, profile = {}, registrations, donations = [], grades = [] } = payload;
         document.getElementById('logoutBtn').style.display = 'inline-block';
 
         const activityHtml = registrations.length > 0
@@ -307,6 +307,30 @@
           <div class="card">
             <h2><i class="fa-solid fa-id-card"></i> Thông Tin Tài Khoản</h2>
             <div class="info-row"><span>Email</span><span>${email}</span></div>
+            <form id="profileForm" style="margin-top:1.2rem; display:grid; gap:0.9rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Họ và tên</label>
+                <input type="text" id="profileFullName" value="${profile.fullName || ''}" placeholder="Họ và tên của bạn" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem;">
+                <div>
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Số điện thoại</label>
+                  <input type="tel" id="profilePhone" value="${profile.phone || ''}" placeholder="09xx xxx xxx" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                </div>
+                <div>
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ngày sinh</label>
+                  <input type="date" id="profileDob" value="${profile.dob || ''}" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                </div>
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Địa chỉ</label>
+                <input type="text" id="profileAddress" value="${profile.address || ''}" placeholder="Số nhà, đường, xã/phường, tỉnh/thành" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+              </div>
+              <div id="profileAlert" style="display:none; font-size:0.85rem;"></div>
+              <div>
+                <button type="submit" class="btn" id="profileSaveBtn">Lưu Thông Tin</button>
+              </div>
+            </form>
           </div>
 
           <div class="card">
@@ -324,6 +348,39 @@
             ${gradesHtml}
           </div>
         `;
+
+        document.getElementById('profileForm').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          const btn = document.getElementById('profileSaveBtn');
+          const alertEl = document.getElementById('profileAlert');
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+          alertEl.style.display = 'none';
+          try {
+            const saveRes = await fetch('/api/member-update-profile', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+              body: JSON.stringify({
+                fullName: document.getElementById('profileFullName').value.trim(),
+                phone: document.getElementById('profilePhone').value.trim(),
+                address: document.getElementById('profileAddress').value.trim(),
+                dob: document.getElementById('profileDob').value
+              })
+            });
+            const saveResult = await saveRes.json().catch(() => ({}));
+            if (!saveRes.ok || !saveResult.success) throw new Error(saveResult.message || 'Không thể lưu.');
+            alertEl.style.display = 'block';
+            alertEl.style.color = '#16a34a';
+            alertEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã lưu thông tin.';
+          } catch (err) {
+            alertEl.style.display = 'block';
+            alertEl.style.color = '#dc2626';
+            alertEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + err.message;
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Lưu Thông Tin';
+          }
+        });
       } catch (err) {
         container.innerHTML = `
           <div class="not-logged-in">
