@@ -1,6 +1,6 @@
 ---
 title: "Minh bạch trong từ thiện: Đừng chỉ nói về lòng tốt, hãy nói về cách sử dụng nguồn lực"
-date: "Tháng 09 / 2026"
+date: "01/09/2026"
 description: "Trong hoạt động từ thiện, lòng tốt là điểm khởi đầu, nhưng minh bạch mới là nền tảng để duy trì niềm tin và trách nhiệm giải trình với cộng đồng."
 thumbnail: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80"
 ---
