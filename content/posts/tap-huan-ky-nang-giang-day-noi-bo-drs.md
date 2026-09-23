@@ -1,6 +1,6 @@
 ---
 title: "Bản tin nội bộ DRS: Nâng tầm chuyên môn – Tập huấn kỹ năng giảng dạy và phương pháp sư phạm cho đội ngũ nhân sự"
-date: "Tháng 07 / 2026"
+date: "02/07/2026"
 description: "Chương trình tập huấn nội bộ chuyên sâu giúp đội ngũ nhân sự và tình nguyện viên DRS chuẩn hóa phương pháp giảng dạy, kỹ năng truyền đạt và tâm lý học tập phục vụ các dự án giáo dục vùng cao."
 thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80"
 ---
