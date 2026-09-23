@@ -1,6 +1,6 @@
 ---
 title: "Cô giáo miền xuôi đến với bản làng: Gieo chữ, gieo hy vọng nơi vùng cao"
-date: "07/2024"
+date: "02/07/2024"
 loai: "tin-tuc"
 image: "images/uploads/co-giao-mien-xuoi-den-voi-ban-lang-gieo-chu-gieo-hy-vong-noi-vung-cao.png"
 excerpt: "Có những hành trình bắt đầu bằng một chuyến đi xa, nhưng lại để lại những giá trị rất lâu dài. Với những cô giáo từ miền xuôi lên vùng cao, hành trình đến với bản làng không chỉ là hành trình mang theo sách vở, kiến thức và những bài học. Đó còn là hành trình mang theo tình yêu nghề, sự sẻ chia và niềm tin vào tương lai của những đứa trẻ nơi núi rừng."
