@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang Quản Trị | Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --text-dark: #0f172a; --text-muted: #475569; --border: #e2e8f0; --bg-page: #f8fafc;
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background: var(--bg-page); color: var(--text-dark); }
+    header {
+      display:flex; align-items:center; justify-content:space-between; padding:1rem 1.6rem;
+      background:#fff; border-bottom:1px solid var(--border);
+    }
+    header .title { font-weight:800; font-size:1.05rem; }
+    header .title span { color:#0284c7; }
+    .btn { background:var(--blue-grad-btn); color:#fff; border:none; padding:0.55rem 1.1rem; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.9rem; }
+    .btn-outline { background:#fff; color:#dc2626; border:1.5px solid #fecaca; }
+    .page-wrap { max-width:1100px; margin:0 auto; padding:1.6rem; }
+    .tabs { display:flex; gap:0.5rem; margin-bottom:1.4rem; flex-wrap:wrap; }
+    .tab-btn {
+      padding:0.6rem 1.2rem; border-radius:999px; border:1px solid var(--border); background:#fff;
+      font-weight:700; font-size:0.88rem; cursor:pointer; color:var(--text-muted);
+    }
+    .tab-btn.active { background:#0284c7; color:#fff; border-color:#0284c7; }
+    .panel { display:none; }
+    .panel.active { display:block; }
+    .card { background:#fff; border-radius:14px; border:1px solid var(--border); padding:1.4rem; margin-bottom:1.2rem; }
+    table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+    th, td { text-align:left; padding:0.6rem 0.5rem; border-bottom:1px solid var(--border); vertical-align:top; }
+    th { color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.3px; }
+    .status-select { padding:0.3rem 0.5rem; border-radius:6px; border:1px solid var(--border); font-size:0.82rem; }
+    .form-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.8rem; margin-bottom:1rem; }
+    .form-grid label { display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem; }
+    .form-grid input, .form-grid select, .form-grid textarea {
+      width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; font-family:inherit;
+    }
+    .empty-state { text-align:center; padding:2rem; color:var(--text-muted); }
+    .loading-state { text-align:center; padding:2rem; color:var(--text-muted); }
+    #globalAlert { display:none; font-size:0.85rem; padding:0.7rem 1rem; border-radius:8px; margin-bottom:1rem; }
+    .table-scroll { overflow-x:auto; }
+    .data-preview { font-size:0.8rem; color:var(--text-muted); max-width:280px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title">Mạng Lưới Tri Thức Việt Nam <span>· Quản Trị</span></div>
+    <button class="btn btn-outline" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</button>
+  </header>
+
+  <div class="page-wrap" id="pageWrap">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="registrations" onclick="switchTab('registrations')">Đơn Đăng Ký</button>
+      <button class="tab-btn" data-tab="donations" onclick="switchTab('donations')">Quyên Góp</button>
+      <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Bảng Điểm</button>
+    </div>
+
+    <div id="globalAlert"></div>
+
+    <!-- ===================== TAB: ĐƠN ĐĂNG KÝ ===================== -->
+    <div class="panel active" id="panel-registrations">
+      <div class="card">
+        <div class="loading-state" id="regLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="regTableWrap">
+          <table>
+            <thead>
+              <tr><th>Chương trình</th><th>Email</th><th>Ngày gửi</th><th>Chi tiết</th><th>Trạng thái</th></tr>
+            </thead>
+            <tbody id="regTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="regEmpty" style="display:none;">Chưa có đơn đăng ký nào.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: QUYÊN GÓP ===================== -->
+    <div class="panel" id="panel-donations">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;">Nhập quyên góp mới</h3>
+        <form id="donationForm">
+          <div class="form-grid">
+            <div><label>Tên người quyên góp *</label><input type="text" id="donorName" required></div>
+            <div><label>Email (nếu có)</label><input type="email" id="donorEmail" placeholder="Để hiện trong trang thành viên của họ"></div>
+            <div><label>Số tiền (VNĐ) *</label><input type="number" id="donationAmount" min="1" required></div>
+            <div><label>Hình thức</label><input type="text" id="donationMethod" placeholder="VD: Chuyển khoản QR"></div>
+            <div><label>Ngày quyên góp</label><input type="date" id="donationDate"></div>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ghi chú</label>
+            <textarea id="donationNote" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;"></textarea>
+          </div>
+          <button type="submit" class="btn" id="donationSubmitBtn">Lưu Quyên Góp</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="donTableWrap">
+          <table>
+            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th></tr></thead>
+            <tbody id="donTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="donEmpty" style="display:none;">Chưa có quyên góp nào được ghi nhận.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: BẢNG ĐIỂM ===================== -->
+    <div class="panel" id="panel-grades">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;">Nhập điểm / nhận xét</h3>
+        <form id="gradeForm">
+          <div class="form-grid">
+            <div><label>Email phụ huynh *</label><input type="email" id="gradeParentEmail" required></div>
+            <div><label>Tên học sinh *</label><input type="text" id="gradeStudentName" required></div>
+            <div>
+              <label>Chương trình</label>
+              <select id="gradeProgram">
+                <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
+                <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
+              </select>
+            </div>
+            <div><label>Môn học / Nội dung *</label><input type="text" id="gradeSubject" required placeholder="VD: Luyện viết chữ"></div>
+            <div><label>Kỳ / Buổi học</label><input type="text" id="gradeTerm" placeholder="VD: Buổi 5 - Tháng 10/2026"></div>
+            <div><label>Điểm số (0-10, có thể để trống)</label><input type="number" id="gradeScore" min="0" max="10" step="0.1"></div>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nhận xét</label>
+            <textarea id="gradeComment" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="VD: Con viết đều nét hơn, cần luyện thêm tốc độ"></textarea>
+          </div>
+          <button type="submit" class="btn" id="gradeSubmitBtn">Lưu Điểm/Nhận Xét</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="gradeTableWrap">
+          <table>
+            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Môn</th><th>Kỳ/Buổi</th><th>Điểm</th><th>Nhận xét</th></tr></thead>
+            <tbody id="gradeTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="gradeEmpty" style="display:none;">Chưa có điểm/nhận xét nào.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('wvn_admin_token');
+    if (!token) window.location.href = 'admin-dang-nhap.html';
+
+    function adminLogout() {
+      localStorage.removeItem('wvn_admin_token');
+      window.location.href = 'admin-dang-nhap.html';
+    }
+
+    function showGlobalAlert(message, isError) {
+      const el = document.getElementById('globalAlert');
+      el.style.display = 'block';
+      el.style.background = isError ? '#fee2e2' : '#dcfce7';
+      el.style.color = isError ? '#b91c1c' : '#15803d';
+      el.textContent = message;
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    function formatMoney(n) {
+      if (n == null || isNaN(n)) return '—';
+      return Number(n).toLocaleString('vi-VN') + 'đ';
+    }
+
+    async function apiCall(path, options = {}) {
+      const res = await fetch(path, {
+        ...options,
+        headers: { ...(options.headers || {}), 'X-Admin-Token': token }
+      });
+      const result = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        localStorage.removeItem('wvn_admin_token');
+        window.location.href = 'admin-dang-nhap.html';
+        throw new Error('Phiên hết hạn');
+      }
+      if (!res.ok || !result.success) throw new Error(result.message || 'Có lỗi xảy ra.');
+      return result;
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + tab).classList.add('active');
+    }
+
+    // ============== ĐƠN ĐĂNG KÝ ==============
+    async function loadRegistrations() {
+      try {
+        const { registrations } = await apiCall('/api/admin-list-registrations');
+        document.getElementById('regLoading').style.display = 'none';
+        if (registrations.length === 0) {
+          document.getElementById('regEmpty').style.display = 'block';
+          return;
+        }
+        document.getElementById('regTableWrap').style.display = 'block';
+        const statuses = ['Đã ghi nhận - Chờ xử lý', 'Đã duyệt', 'Từ chối'];
+        document.getElementById('regTableBody').innerHTML = registrations.map(r => {
+          const preview = Object.entries(r.data || {})
+            .filter(([k, v]) => v && !['_honey', '_captcha'].includes(k))
+            .slice(0, 4)
+            .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`)
+            .join('<br>');
+          const options = statuses.map(s => `<option value="${escapeHtml(s)}" ${r.status === s ? 'selected' : ''}>${escapeHtml(s)}</option>`).join('');
+          return `<tr>
+            <td><strong>${escapeHtml(r.formTitle)}</strong></td>
+            <td>${escapeHtml(r.email)}</td>
+            <td>${formatDate(r.submittedAt)}</td>
+            <td class="data-preview">${preview}</td>
+            <td>
+              <select class="status-select" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this.value)">
+                ${options}
+              </select>
+            </td>
+          </tr>`;
+        }).join('');
+      } catch (err) {
+        document.getElementById('regLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function updateStatus(emailEnc, idEnc, status) {
+      try {
+        await apiCall('/api/admin-update-registration-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc), status })
+        });
+        showGlobalAlert('Đã cập nhật trạng thái.', false);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    // ============== QUYÊN GÓP ==============
+    async function loadDonations() {
+      try {
+        const { donations } = await apiCall('/api/admin-list-donations');
+        document.getElementById('donLoading').style.display = 'none';
+        if (donations.length === 0) {
+          document.getElementById('donEmpty').style.display = 'block';
+          return;
+        }
+        document.getElementById('donTableWrap').style.display = 'block';
+        document.getElementById('donTableBody').innerHTML = donations.map(d => `
+          <tr>
+            <td>${escapeHtml(d.donorName)}</td>
+            <td>${escapeHtml(d.donorEmail)}</td>
+            <td>${formatMoney(d.amount)}</td>
+            <td>${escapeHtml(d.method)}</td>
+            <td>${formatDate(d.donatedAt)}</td>
+            <td>${escapeHtml(d.note)}</td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('donLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('donationForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('donationSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      try {
+        await apiCall('/api/admin-add-donation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            donorName: document.getElementById('donorName').value.trim(),
+            donorEmail: document.getElementById('donorEmail').value.trim(),
+            amount: document.getElementById('donationAmount').value,
+            method: document.getElementById('donationMethod').value.trim(),
+            note: document.getElementById('donationNote').value.trim(),
+            donatedAt: document.getElementById('donationDate').value || undefined
+          })
+        });
+        showGlobalAlert('Đã lưu quyên góp.', false);
+        e.target.reset();
+        document.getElementById('donTableWrap').style.display = 'none';
+        document.getElementById('donEmpty').style.display = 'none';
+        document.getElementById('donLoading').style.display = 'block';
+        loadDonations();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Lưu Quyên Góp';
+      }
+    });
+
+    // ============== BẢNG ĐIỂM ==============
+    async function loadGrades() {
+      try {
+        const { grades } = await apiCall('/api/admin-list-grades');
+        document.getElementById('gradeLoading').style.display = 'none';
+        if (grades.length === 0) {
+          document.getElementById('gradeEmpty').style.display = 'block';
+          return;
+        }
+        document.getElementById('gradeTableWrap').style.display = 'block';
+        document.getElementById('gradeTableBody').innerHTML = grades.map(g => `
+          <tr>
+            <td>${escapeHtml(g.studentName)}</td>
+            <td>${escapeHtml(g.parentEmail)}</td>
+            <td>${escapeHtml(g.program)}</td>
+            <td>${escapeHtml(g.subject)}</td>
+            <td>${escapeHtml(g.term)}</td>
+            <td>${g.score != null ? g.score : '—'}</td>
+            <td>${escapeHtml(g.comment)}</td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('gradeLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('gradeForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('gradeSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      try {
+        await apiCall('/api/admin-add-grade', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            parentEmail: document.getElementById('gradeParentEmail').value.trim(),
+            studentName: document.getElementById('gradeStudentName').value.trim(),
+            program: document.getElementById('gradeProgram').value,
+            subject: document.getElementById('gradeSubject').value.trim(),
+            term: document.getElementById('gradeTerm').value.trim(),
+            score: document.getElementById('gradeScore').value,
+            comment: document.getElementById('gradeComment').value.trim()
+          })
+        });
+        showGlobalAlert('Đã lưu điểm/nhận xét.', false);
+        e.target.reset();
+        document.getElementById('gradeTableWrap').style.display = 'none';
+        document.getElementById('gradeEmpty').style.display = 'none';
+        document.getElementById('gradeLoading').style.display = 'block';
+        loadGrades();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Lưu Điểm/Nhận Xét';
+      }
+    });
+
+    loadRegistrations();
+    loadDonations();
+    loadGrades();
+  </script>
+</body>
+</html>
