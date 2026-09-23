@@ -1,6 +1,6 @@
 ---
 title: "Chiến Dịch Áo Ấm Vùng Cao: Kêu Gọi Ủng Hộ Cho Mùa Đông Sắp Tới"
-date: "Tháng 09 / 2026"
+date: "09/09/2026"
 excerpt: "300 áo khoác, 150 chăn bông — đó là con số cụ thể chúng tôi cần cho 2 điểm trường Sà Phìn A và Ma Lé trước khi nhiệt độ Đồng Văn xuống dưới 5°C. Mỗi phần đóng góp của bạn đều được ghi nhận công khai."
 thumbnail: "images/hoc-sinh-ao-am-dong-phuc.jpg"
 ---
