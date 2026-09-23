@@ -1,6 +1,6 @@
 ---
 title: "Phương Pháp Học Tiếng Anh Thế Nào Là Hiệu Quả?"
-date: "Tháng 09/2026"
+date: "23/09/2026"
 loai: "tin-tuc"
 image: "images/uploads/phuong-phap-hoc-tieng-anh-hieu-qua.jpg"
 excerpt: "Học tiếng Anh nhiều năm nhưng vẫn ngại giao tiếp, nghe không kịp, nhớ từ vựng trước quên sau? Vấn đề đôi khi không nằm ở việc học chưa đủ nhiều, mà nằm ở việc chưa học đúng phương pháp."
