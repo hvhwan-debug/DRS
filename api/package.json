@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@azure/data-tables": "^13.2.2",
+    "@azure/storage-blob": "^12.17.0",
     "@sendgrid/mail": "^8.1.3"
   }
 }
