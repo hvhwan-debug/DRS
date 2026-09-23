@@ -1,6 +1,6 @@
 ---
 title: "Hành trình tháng 05/2026: Gieo hạt mầm yêu thương tại các điểm trường vùng cao Lào Cai"
-date: "Tháng 05 / 2026"
+date: "01/05/2026"
 description: "Ghi nhận những khoảnh khắc xúc động và nụ cười rạng rỡ của các em nhỏ vùng cao Lào Cai trong chuyến thăm, trao tặng học liệu và áo ấm tháng 05/2026."
 thumbnail: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop&q=80"
 ---
