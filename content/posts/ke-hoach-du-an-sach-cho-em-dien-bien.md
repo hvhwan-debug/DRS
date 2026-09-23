@@ -1,6 +1,6 @@
 ---
 title: "Kế hoạch tổ chức dự án \"Sách Cho Em\" tại Điện Biên"
-date: "Tháng 09 / 2026"
+date: "06/09/2026"
 description: "Kế hoạch chi tiết dự án mở rộng mô hình tủ sách cộng đồng sang tỉnh thứ ba — Điện Biên, tiếp nối kinh nghiệm triển khai tại Hà Giang và Lào Cai."
 thumbnail: "images/em-nho-cam-sach.jpg"
 ---
