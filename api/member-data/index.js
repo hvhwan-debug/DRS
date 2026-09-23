@@ -1,4 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
+const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 
 const SESSION_TABLE = "AuthSessions";
 const REGISTRATIONS_TABLE = "Registrations";
@@ -64,11 +65,27 @@ module.exports = async function (context, req) {
     for await (const entity of iterator) {
       let data = {};
       try { data = JSON.parse(entity.dataJson || "{}"); } catch (e) { /* bỏ qua nếu lỗi parse */ }
+
+      let attachments = [];
+      try {
+        const rawAttachments = JSON.parse(entity.attachmentsJson || "[]");
+        attachments = await Promise.all(
+          rawAttachments.map(async (att) => ({
+            filename: att.filename,
+            url: await getAttachmentSasUrl(att.blobName)
+          }))
+        );
+      } catch (e) {
+        // Không có tài liệu đính kèm hoặc lỗi tạo link — bỏ qua, không chặn phần còn lại
+      }
+
       registrations.push({
         formType: entity.formType,
         formTitle: FORM_TITLES[entity.formType] || entity.formType,
+        status: entity.status || "Đã ghi nhận",
         submittedAt: entity.submittedAt,
-        data
+        data,
+        attachments
       });
     }
 
