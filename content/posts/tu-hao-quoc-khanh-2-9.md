@@ -1,6 +1,6 @@
 ---
 title: "Tự hào Quốc khánh 2/9: Hành trình thắp lửa tri thức mở rộng đến Lào Cai"
-date: "Tháng 09 / 2026"
+date: "07/09/2026"
 description: "Nhân dịp 2/9, Mạng Lưới Tri Thức Việt Nam công bố mở rộng hoạt động sang tỉnh thứ hai — Lào Cai, bên cạnh các chương trình đang tiếp tục tại Hà Giang."
 thumbnail: "images/co-to-quoc-vung-cao-1.jpg"
 ---
