@@ -1,6 +1,6 @@
 ---
 title: "Phiên chợ gây quỹ cuối tuần quanh Hồ Gươm"
-date: "Tháng 07 / 2026"
+date: "07/07/2026"
 description: "Đội ngũ nhân viên và tình nguyện viên công ty bán đồ thủ công, sách cũ và cây xanh mini quanh khu vực đi bộ Hồ Gươm vào cuối tuần, gây quỹ mua học liệu và áo ấm cho học sinh vùng cao."
 thumbnail: "images/phien-cho-ho-guom-gian-hang.jpg"
 loai: "su-kien"
