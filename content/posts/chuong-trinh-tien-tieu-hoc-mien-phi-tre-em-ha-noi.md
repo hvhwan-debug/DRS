@@ -1,6 +1,6 @@
 ---
 title: "WVN Triển Khai Chương Trình Tiền Tiểu Học Miễn Phí 100% Cho Trẻ Em Tại Hà Nội"
-date: "Tháng 12/2026"
+date: "02/12/2026"
 loai: "tin-tuc"
 image: "images/uploads/tien-tieu-hoc-tap-doc-lop-hoc.jpg"
 excerpt: "WVN khởi động Chương trình Tiền tiểu học Miễn phí 100% dành cho trẻ 5–6 tuổi tại Hà Nội, giúp các em sẵn sàng tâm thế, kỹ năng tự lập và làm quen chữ số trước khi vào lớp 1."
