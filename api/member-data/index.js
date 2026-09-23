@@ -4,6 +4,7 @@ const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 const SESSION_TABLE = "AuthSessions";
 const REGISTRATIONS_TABLE = "Registrations";
 const DONATIONS_TABLE = "Donations";
+const PROFILES_TABLE = "MemberProfiles";
 const GRADES_TABLE = "Grades";
 
 const FORM_TITLES = {
@@ -136,8 +137,18 @@ module.exports = async function (context, req) {
       // Bảng Grades có thể chưa có dữ liệu — bỏ qua, không chặn phần còn lại
     }
 
+    // Thông tin hồ sơ do chính thành viên tự điền
+    let profile = { fullName: "", phone: "", address: "", dob: "" };
+    try {
+      const profilesTable = await getTableClient(PROFILES_TABLE);
+      const p = await profilesTable.getEntity("profile", email);
+      profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "" };
+    } catch (e) {
+      // Chưa có hồ sơ nào được lưu — dùng giá trị rỗng mặc định ở trên
+    }
+
     context.res.status = 200;
-    context.res.body = { success: true, email, registrations, donations, grades };
+    context.res.body = { success: true, email, profile, registrations, donations, grades };
   } catch (err) {
     context.log.error("Lỗi lấy dữ liệu thành viên:", err.message);
     context.res.status = 500;
