@@ -1,6 +1,6 @@
 ---
 title: "Khởi động Học Bổng Ươm Mầm: 20 suất học bổng cho học sinh vượt khó tại Đồng Văn"
-date: "Tháng 09 / 2026"
+date: "04/09/2026"
 description: "Chính thức mở hồ sơ xét duyệt 20 suất học bổng Ươm Mầm trị giá 2 triệu đồng/em/năm học, dành cho học sinh có hoàn cảnh khó khăn tại 3 điểm trường Sà Phìn A, Lũng Táo và Ma Lé."
 thumbnail: "images/khoi-dong-hoc-bong-uom-mam.jpg"
 ---
