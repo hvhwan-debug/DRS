@@ -1,6 +1,6 @@
 ---
 title: "Tháng 04/2026 tại Cao Bằng: Hiện thực hóa sứ mệnh giáo dục công bằng và phát triển năng lực tự chủ vùng cao"
-date: "Tháng 04 / 2026"
+date: "02/04/2026"
 description: "Báo cáo chuyên sâu hành trình tháng 04/2026 tại Cao Bằng: Đánh giá tác động đa chiều, chuẩn hóa mô hình hỗ trợ giáo dục và hiện thực hóa cam kết phi lợi nhuận vì tương lai thế hệ trẻ em biên giới."
 thumbnail: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80"
 ---
