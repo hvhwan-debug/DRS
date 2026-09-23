@@ -310,21 +310,33 @@
         }
 
         const gradesHtml = grades.length > 0
-          ? grades.map(g => `
-              <div class="info-row" style="flex-direction:column; align-items:flex-start; gap:0.4rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; flex-wrap:wrap; gap:0.5rem;">
-                  <strong>${g.studentName}</strong>
-                  <span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span>
-                </div>
-                <div style="color:var(--text-muted); font-size:0.85rem;">${g.program || ''}${g.term ? ' · Buổi học: ' + g.term : ''}</div>
-                <div style="font-size:0.88rem; color:var(--text-muted);">
-                  ${g.score != null ? `Điểm: <strong style="color:#0369a1;">${g.score}/10</strong>` : ''}
-                  ${g.score != null && g.comment ? ' &nbsp;·&nbsp; ' : ''}
-                  ${g.comment ? `Đánh giá của giáo viên: ${g.comment}` : ''}
-                </div>
-              </div>
-            `).join('<hr style="border:none; border-top:1px solid var(--border); margin:0.8rem 0;">')
-          : `<div class="empty-state"><i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận cho con em với email này.</div>`;
+          ? `<div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+                <thead>
+                  <tr style="text-align:left; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">
+                    <th style="padding:0.5rem 0.6rem;">Họ tên</th>
+                    <th style="padding:0.5rem 0.6rem;">Chương trình học</th>
+                    <th style="padding:0.5rem 0.6rem;">Loại đánh giá</th>
+                    <th style="padding:0.5rem 0.6rem;">Buổi học</th>
+                    <th style="padding:0.5rem 0.6rem;">Điểm</th>
+                    <th style="padding:0.5rem 0.6rem;">Nhận xét của giáo viên</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${grades.map(g => `
+                    <tr style="border-top:1px solid var(--border);">
+                      <td style="padding:0.6rem; font-weight:700;">${g.studentName}</td>
+                      <td style="padding:0.6rem; color:var(--text-muted);">${g.program || '—'}</td>
+                      <td style="padding:0.6rem;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
+                      <td style="padding:0.6rem; color:var(--text-muted);">${g.term || '—'}</td>
+                      <td style="padding:0.6rem; font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
+                      <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>`
+          : `<div class="empty-state"><i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận.</div>`;
 
         container.innerHTML = `
           <div class="welcome-banner">
@@ -399,7 +411,6 @@
           <div class="member-panel" id="memberPanel-grades">
             <div class="card">
               <h2><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm / Nhận Xét Học Tập Của Con Em</h2>
-              <p style="color:var(--text-muted); font-size:0.85rem; margin:-0.6rem 0 1rem;">Đây là điểm và nhận xét của con em bạn đăng ký học, không phải của bản thân bạn.</p>
               ${gradesHtml}
             </div>
           </div>
