@@ -1,6 +1,6 @@
 ---
 title: "Đừng chỉ trao một chiếc cặp, hãy giữ lại một hành trình"
-date: "06/2026"
+date: "01/06/2026"
 loai: "tin-tuc"
 image: "images/uploads/dung-chi-trao-mot-chiec-cap-hay-giu-lai-mot-hanh-trinh.jpeg"
 excerpt: "Một đứa trẻ không cần chúng ta quyết định tương lai thay em. Em cần chúng ta giúp mình có đủ cơ hội để tự quyết định tương lai đó."
