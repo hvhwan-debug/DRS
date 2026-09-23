@@ -1,6 +1,6 @@
 ---
 title: "Hành trình thắp sáng tri thức và sưởi ấm trẻ em vùng cao Hà Giang"
-date: "Tháng 07 / 2026"
+date: "01/07/2026"
 description: "Ghi lại hành trình 5 ngày khảo sát và các chương trình hỗ trợ thực tế tại 3 điểm trường Sà Phìn A, Lũng Táo, Ma Lé — nơi trẻ em vùng cao Đồng Văn, Hà Giang đang thiếu sách vở, áo ấm và cả một mái nhà lớp học lành lặn."
 thumbnail: "images/tre-em-vung-cao-ha-giang.jpg"
 ---
