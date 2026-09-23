@@ -126,7 +126,7 @@
         </div>
       </a>
       <div>
-        <button class="btn btn-outline" id="logoutBtn" onclick="logout()">
+        <button class="btn btn-outline" id="logoutBtn" onclick="logout()" style="display:none;">
           <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
         </button>
       </div>
@@ -221,6 +221,7 @@
         }
 
         const { email, registrations } = payload;
+        document.getElementById('logoutBtn').style.display = 'inline-block';
 
         const activityHtml = registrations.length > 0
           ? registrations.map(r => `
