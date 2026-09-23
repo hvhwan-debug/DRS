@@ -1,6 +1,6 @@
 ---
 title: "Cơ hội học tập của trẻ em Việt Nam trong kỷ nguyên vươn mình đất nước"
-date: "08/2026"
+date: "03/08/2026"
 loai: "tin-tuc"
 image: "images/uploads/co-hoi-hoc-tap-cua-tre-em-viet-nam-trong-ky-nguyen-vuon-minh-dat-nuoc.jpeg"
 excerpt: "Giáo dục đang đứng trước một thay đổi lớn. Khi công nghệ, trí tuệ nhân tạo và nền kinh tế tri thức phát triển nhanh, cơ hội học tập của một đứa trẻ không còn chỉ được quyết định bởi ngôi trường mà em theo học. Khả năng tiếp cận tri thức, công nghệ, ngoại ngữ và một môi trường học tập phù hợp đang ngày càng trở thành yếu tố quyết định tương lai."
