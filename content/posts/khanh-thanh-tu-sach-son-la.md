@@ -1,6 +1,6 @@
 ---
 title: "Khánh thành tủ sách cộng đồng, thắp lửa tri thức tại Sơn La"
-date: "Tháng 09 / 2026"
+date: "08/09/2026"
 description: "Phóng sự ghi lại buổi sáng khánh thành tủ sách cộng đồng đầu tiên tại một điểm trường vùng cao Sơn La — nơi một em nhỏ lớp 2 đứng lặng nhìn giá sách đầy màu sắc trong gần một phút trước khi dám chạm tay vào cuốn đầu tiên."
 thumbnail: "images/tu-sach-son-la.jpg"
 ---
