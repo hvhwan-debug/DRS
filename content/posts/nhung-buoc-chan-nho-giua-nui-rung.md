@@ -1,6 +1,6 @@
 ---
 title: "Những bước chân nhỏ giữa núi rừng"
-date: "Tháng 09 / 2026"
+date: "03/09/2026"
 description: "Phóng sự ghi lại một buổi sáng theo chân học sinh Ma Lé băng qua 6km đường núi để đến lớp — hành trình mà nhiều em đã đi từ khi còn chưa biết đọc."
 thumbnail: "images/duong-den-truong-dong-van.jpg"
 ---
