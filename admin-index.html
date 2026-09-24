@@ -112,7 +112,7 @@
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
           <table>
-            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th><th>Ảnh</th></tr></thead>
+            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th><th>Ảnh</th><th>Xác nhận từ TV</th></tr></thead>
             <tbody id="donTableBody"></tbody>
           </table>
         </div>
@@ -161,7 +161,7 @@
         <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="gradeTableWrap">
           <table>
-            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Loại đánh giá</th><th>Buổi học</th><th>Điểm</th><th>Đánh giá GV</th><th>Ảnh bài làm</th></tr></thead>
+            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Loại đánh giá</th><th>Buổi học</th><th>Điểm</th><th>Đánh giá GV</th><th>Ảnh bài làm</th><th>Xác nhận từ TV</th></tr></thead>
             <tbody id="gradeTableBody"></tbody>
           </table>
         </div>
@@ -217,6 +217,12 @@
       const div = document.createElement('div');
       div.textContent = str == null ? '' : String(str);
       return div.innerHTML;
+    }
+
+    function confirmationStatusHtml(status, feedback) {
+      if (status === 'confirmed') return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã xác nhận</span>`;
+      if (status === 'rejected') return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeHtml(feedback)}">Từ chối: ${escapeHtml(feedback)}</span>`;
+      return `<span style="font-size:0.76rem; color:var(--text-muted);">Chưa xác nhận</span>`;
     }
 
     function formatDate(iso) {
@@ -330,6 +336,7 @@
             <td>${formatDate(d.donatedAt)}</td>
             <td>${escapeHtml(d.note)}</td>
             <td>${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
+            <td>${confirmationStatusHtml(d.confirmationStatus, d.memberFeedback)}</td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('donLoading').style.display = 'none';
@@ -422,6 +429,7 @@
             <td>${g.score != null ? g.score : '—'}</td>
             <td>${escapeHtml(g.comment)}</td>
             <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
+            <td>${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('gradeLoading').style.display = 'none';
