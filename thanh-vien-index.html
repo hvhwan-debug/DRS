@@ -167,6 +167,14 @@
       document.getElementById('profileForm').style.display = showEdit ? 'grid' : 'none';
     }
 
+    function toggleActivityDetail(i) {
+      const row = document.getElementById('activityDetail-' + i);
+      const chevron = document.getElementById('activityChevron-' + i);
+      const isOpen = row.style.display === 'table-row';
+      row.style.display = isOpen ? 'none' : 'table-row';
+      chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
     function formatDateTime(iso) {
       if (!iso) return '—';
       const d = new Date(iso);
@@ -195,6 +203,10 @@
         }
       }
       return out.join(' &nbsp;·&nbsp; ');
+    }
+
+    function extractStudentName(data) {
+      return data.ten_tre || data.fullname || data.fullName || data.name || data.ten_phu_huynh || '—';
     }
 
     function statusBadgeStyle(status) {
@@ -266,17 +278,38 @@
         document.getElementById('logoutBtn').style.display = 'inline-block';
 
         const activityHtml = registrations.length > 0
-          ? registrations.map(r => `
-              <div class="info-row" style="flex-direction:column; align-items:flex-start; gap:0.4rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; flex-wrap:wrap; gap:0.5rem;">
-                  <strong>${r.formTitle}</strong>
-                  <span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px; ${statusBadgeStyle(r.status)}">${r.status}</span>
-                  <span style="color:var(--text-muted); font-size:0.85rem;">${formatDateTime(r.submittedAt)}</span>
-                </div>
-                <div style="font-size:0.88rem; color:var(--text-muted);">${pickDisplayFields(r.data) || 'Đã ghi nhận thông tin đăng ký.'}</div>
-                ${renderAttachments(r.attachments)}
-              </div>
-            `).join('<hr style="border:none; border-top:1px solid var(--border); margin:0.8rem 0;">')
+          ? `<div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                <thead>
+                  <tr style="text-align:left; color:var(--text-muted); font-size:0.76rem; text-transform:uppercase; letter-spacing:0.3px;">
+                    <th style="padding:0.6rem 0.7rem;">Chương trình</th>
+                    <th style="padding:0.6rem 0.7rem;">Học sinh / Người đăng ký</th>
+                    <th style="padding:0.6rem 0.7rem;">Trạng thái</th>
+                    <th style="padding:0.6rem 0.7rem;">Ngày gửi</th>
+                    <th style="padding:0.6rem 0.7rem; width:32px;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${registrations.map((r, i) => `
+                    <tr onclick="toggleActivityDetail(${i})" style="cursor:pointer; border-top:1px solid var(--border); transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                      <td style="padding:0.75rem 0.7rem; font-weight:700; color:var(--text-dark);">${r.formTitle}</td>
+                      <td style="padding:0.75rem 0.7rem;">${extractStudentName(r.data)}</td>
+                      <td style="padding:0.75rem 0.7rem;"><span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.65rem; border-radius:999px; white-space:nowrap; ${statusBadgeStyle(r.status)}">${r.status}</span></td>
+                      <td style="padding:0.75rem 0.7rem; color:var(--text-muted); white-space:nowrap;">${formatDateTime(r.submittedAt)}</td>
+                      <td style="padding:0.75rem 0.7rem; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-chevron-down" id="activityChevron-${i}"></i></td>
+                    </tr>
+                    <tr id="activityDetail-${i}" style="display:none;">
+                      <td colspan="5" style="padding:0 0.7rem 1.1rem; background:#f8fafc;">
+                        <div style="padding-top:0.8rem; font-size:0.88rem; color:var(--text-muted); line-height:2;">
+                          ${pickDisplayFields(r.data) || 'Đã ghi nhận thông tin đăng ký.'}
+                        </div>
+                        ${renderAttachments(r.attachments)}
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>`
           : `<div class="empty-state">
               <i class="fa-solid fa-inbox"></i>
               Chưa có đăng ký nào được ghi nhận với email này. Khám phá các chương trình đang diễn ra để bắt đầu đồng hành cùng chúng tôi.
