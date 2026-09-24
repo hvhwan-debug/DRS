@@ -18,6 +18,7 @@ module.exports = async function (context, req) {
         donorEmail: entity.donorEmail || "",
         amount: entity.amount,
         method: entity.method || "",
+        transactionCode: entity.transactionCode || "",
         note: entity.note || "",
         donatedAt: entity.donatedAt,
         recordedAt: entity.recordedAt
