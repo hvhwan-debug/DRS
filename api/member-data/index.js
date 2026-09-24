@@ -116,7 +116,9 @@ module.exports = async function (context, req) {
         }
         donations.push({
           id: entity.rowKey,
-          amount: entity.amount,
+          donationType: entity.donationType || "cash",
+          amount: entity.amount !== undefined && entity.amount !== null ? entity.amount : null,
+          itemDescription: entity.itemDescription || "",
           method: entity.method || "",
           transactionCode: entity.transactionCode || "",
           note: entity.note || "",
