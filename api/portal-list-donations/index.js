@@ -28,9 +28,11 @@ module.exports = async function (context, req) {
 
       donations.push({
         id: entity.rowKey,
+        donationType: entity.donationType || "cash",
         donorName: entity.donorName,
         donorEmail: entity.donorEmail || "",
-        amount: entity.amount,
+        amount: entity.amount !== undefined && entity.amount !== null ? entity.amount : null,
+        itemDescription: entity.itemDescription || "",
         method: entity.method || "",
         transactionCode: entity.transactionCode || "",
         note: entity.note || "",
