@@ -293,9 +293,10 @@
             <td>${formatDate(r.submittedAt)}</td>
             <td class="data-preview">${preview}</td>
             <td>
-              <select class="status-select" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this.value)">
+              <select class="status-select" data-prev="${escapeHtml(r.status)}" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this)">
                 ${options}
               </select>
+              ${r.status === 'Từ chối' && r.rejectionReason ? `<div style="font-size:0.76rem; color:#b91c1c; margin-top:0.3rem;">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : ''}
             </td>
           </tr>`;
         }).join('');
@@ -314,15 +315,35 @@
       }
     }
 
-    async function updateStatus(emailEnc, idEnc, status) {
+    async function updateStatus(emailEnc, idEnc, selectEl) {
+      const status = selectEl.value;
+      const prevValue = selectEl.dataset.prev;
+      let reason = '';
+
+      if (status === 'Từ chối') {
+        reason = prompt('Vui lòng nhập lý do từ chối (sẽ gửi kèm trong email báo cho người đăng ký):');
+        if (reason === null) {
+          selectEl.value = prevValue; // Người dùng bấm Huỷ -> giữ nguyên trạng thái cũ
+          return;
+        }
+        if (!reason.trim()) {
+          alert('Vui lòng nhập lý do từ chối.');
+          selectEl.value = prevValue;
+          return;
+        }
+      }
+
       try {
         const result = await apiCall('/api/portal-update-registration-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc), status })
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc), status, reason: reason.trim() })
         });
+        selectEl.dataset.prev = status;
         showGlobalAlert(result.warning || 'Đã cập nhật trạng thái và gửi email báo cho người đăng ký.', !!result.warning);
+        loadRegistrations();
       } catch (err) {
+        selectEl.value = prevValue;
         showGlobalAlert(err.message, true);
       }
     }
