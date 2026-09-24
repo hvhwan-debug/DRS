@@ -305,12 +305,12 @@
 
     async function updateStatus(emailEnc, idEnc, status) {
       try {
-        await apiCall('/api/portal-update-registration-status', {
+        const result = await apiCall('/api/portal-update-registration-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc), status })
         });
-        showGlobalAlert('Đã cập nhật trạng thái.', false);
+        showGlobalAlert(result.warning || 'Đã cập nhật trạng thái và gửi email báo cho người đăng ký.', !!result.warning);
       } catch (err) {
         showGlobalAlert(err.message, true);
       }
