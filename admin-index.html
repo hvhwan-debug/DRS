@@ -100,6 +100,10 @@
             <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ghi chú</label>
             <textarea id="donationNote" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;"></textarea>
           </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ảnh biên lai / minh chứng chuyển khoản (không bắt buộc)</label>
+            <input type="file" id="donationAttachment" accept="image/*">
+          </div>
           <button type="submit" class="btn" id="donationSubmitBtn">Lưu Quyên Góp</button>
         </form>
       </div>
@@ -107,7 +111,7 @@
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
           <table>
-            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th></tr></thead>
+            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th><th>Ảnh</th></tr></thead>
             <tbody id="donTableBody"></tbody>
           </table>
         </div>
@@ -295,11 +299,21 @@
             <td>${escapeHtml(d.method)}</td>
             <td>${formatDate(d.donatedAt)}</td>
             <td>${escapeHtml(d.note)}</td>
+            <td>${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('donLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
     document.getElementById('donationForm').addEventListener('submit', async function (e) {
@@ -308,6 +322,14 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
+        const fileInput = document.getElementById('donationAttachment');
+        let attachments = [];
+        if (fileInput.files && fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const content = await readFileAsBase64(file);
+          attachments = [{ filename: file.name, content, type: file.type }];
+        }
+
         await apiCall('/api/portal-add-donation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -318,7 +340,8 @@
             transactionCode: document.getElementById('donationTransactionCode').value.trim(),
             method: document.getElementById('donationMethod').value.trim(),
             note: document.getElementById('donationNote').value.trim(),
-            donatedAt: document.getElementById('donationDate').value || undefined
+            donatedAt: document.getElementById('donationDate').value || undefined,
+            attachments
           })
         });
         showGlobalAlert('Đã lưu quyên góp.', false);
