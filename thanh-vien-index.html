@@ -219,6 +219,99 @@
     // ==============================================================
 
     let currentActiveMemberTab = 'account';
+    let currentRegistrations = [];
+
+    const FIELD_LABELS = {
+      ten_tre: 'Tên trẻ', ten_phu_huynh: 'Phụ huynh', fullname: 'Họ tên', fullName: 'Họ tên', name: 'Họ tên',
+      ngay_sinh_tre: 'Ngày sinh trẻ', ngay_sinh: 'Ngày sinh', dob: 'Ngày sinh',
+      phone: 'SĐT', sdt_phu_huynh: 'SĐT', dia_chi: 'Địa chỉ', phuong_xa: 'Khu vực',
+      truong_lop: 'Trường/lớp', doi_tuong_dang_ky: 'Đối tượng đăng ký', hoan_canh_ly_do: 'Ghi chú/Hoàn cảnh'
+    };
+    const NON_EDITABLE_KEYS = ['_honey', '_captcha', 'email', 'email_phu_huynh'];
+
+    function startEditRegistration(i) {
+      const r = currentRegistrations[i];
+      const editableEntries = Object.entries(r.data || {}).filter(([k, v]) => v && !NON_EDITABLE_KEYS.includes(k));
+
+      const fieldsHtml = editableEntries.map(([k, v]) => `
+        <div>
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">${FIELD_LABELS[k] || k}</label>
+          <input type="text" id="editField-${i}-${k}" value="${String(v).replace(/"/g, '&quot;')}" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
+        </div>`).join('');
+
+      document.getElementById('activityEdit-' + i).innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:0.8rem; margin-bottom:0.8rem;">
+          ${fieldsHtml}
+        </div>
+        <div style="margin-bottom:0.8rem;">
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Cập nhật ảnh minh chứng mới (nếu cần)</label>
+          <input type="file" id="editAttachment-${i}" accept="image/*">
+        </div>
+        <div id="editAlert-${i}" style="display:none; font-size:0.85rem; color:#dc2626; margin-bottom:0.6rem;"></div>
+        <div style="display:flex; gap:0.6rem;">
+          <button type="button" class="btn" onclick="saveEditRegistration(${i})">Lưu Và Gửi Lại</button>
+          <button type="button" class="btn btn-outline" onclick="cancelEditRegistration(${i})">Huỷ</button>
+        </div>`;
+
+      document.getElementById('activityView-' + i).style.display = 'none';
+      document.getElementById('activityEdit-' + i).style.display = 'block';
+    }
+
+    function cancelEditRegistration(i) {
+      document.getElementById('activityView-' + i).style.display = 'block';
+      document.getElementById('activityEdit-' + i).style.display = 'none';
+    }
+
+    function readFileAsBase64Member(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function saveEditRegistration(i) {
+      const r = currentRegistrations[i];
+      const editableKeys = Object.keys(r.data || {}).filter(k => !NON_EDITABLE_KEYS.includes(k) && r.data[k]);
+      const updatedData = {};
+      editableKeys.forEach(k => {
+        const input = document.getElementById('editField-' + i + '-' + k);
+        if (input) updatedData[k] = input.value.trim();
+      });
+
+      const alertEl = document.getElementById('editAlert-' + i);
+      alertEl.style.display = 'none';
+
+      let attachments = [];
+      const fileInput = document.getElementById('editAttachment-' + i);
+      if (fileInput.files && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if (file.size > 4 * 1024 * 1024) {
+          alertEl.style.display = 'block';
+          alertEl.textContent = `Ảnh "${file.name}" vượt quá 4MB, vui lòng chọn ảnh nhỏ hơn.`;
+          return;
+        }
+        const content = await readFileAsBase64Member(file);
+        attachments = [{ filename: file.name, content, type: file.type }];
+      }
+
+      const token = localStorage.getItem('wvn_member_token');
+      try {
+        const res = await fetch('/api/member-update-registration', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+          body: JSON.stringify({ id: r.id, data: updatedData, attachments })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể lưu.');
+        loadMemberInfo();
+      } catch (err) {
+        alertEl.style.display = 'block';
+        alertEl.textContent = err.message;
+      }
+    }
+
 
     function toggleMobileMenu() {
       document.getElementById('mobileMenuDropdown').classList.toggle('open');
@@ -422,6 +515,8 @@
           document.body.style.overflow = '';
         }
 
+        currentRegistrations = registrations;
+
         const activityHtml = registrations.length > 0
           ? `<div style="overflow-x:auto;">
               <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
@@ -450,10 +545,12 @@
                             <div style="font-size:0.76rem; font-weight:700; color:#991b1b; margin-bottom:0.2rem;">Lý do từ chối</div>
                             <div style="font-size:0.88rem; color:#7f1d1d;">${r.rejectionReason}</div>
                           </div>` : ''}
-                        <div style="padding-top:0.8rem;">
+                        <div id="activityView-${i}" style="padding-top:0.8rem;">
                           ${pickDisplayFields(r.data) || '<span style="color:var(--text-muted); font-size:0.88rem;">Đã ghi nhận thông tin đăng ký.</span>'}
+                          ${renderAttachments(r.attachments)}
+                          ${r.status !== 'Đã duyệt' ? `<div style="margin-top:0.8rem;"><button type="button" class="btn" style="padding:0.4rem 0.9rem; font-size:0.85rem;" onclick="event.stopPropagation(); startEditRegistration(${i})">Sửa Đơn</button></div>` : ''}
                         </div>
-                        ${renderAttachments(r.attachments)}
+                        <div id="activityEdit-${i}" style="display:none; padding-top:0.8rem;" onclick="event.stopPropagation()"></div>
                       </td>
                     </tr>
                   `).join('')}
