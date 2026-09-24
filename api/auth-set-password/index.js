@@ -46,11 +46,23 @@ module.exports = async function (context, req) {
       return;
     }
 
+    // Nếu tài khoản đã bị khoá, không cho đặt lại mật khẩu để né việc bị chặn
+    const membersTable = await getTableClient(MEMBERS_TABLE);
+    try {
+      const existingMember = await membersTable.getEntity("member", email);
+      if (existingMember.isBlocked) {
+        context.res.status = 403;
+        context.res.body = { success: false, message: "Tài khoản của bạn đã bị khoá. Vui lòng liên hệ với chúng tôi để được hỗ trợ." };
+        return;
+      }
+    } catch (err) {
+      if (err.statusCode !== 404) throw err; // 404 nghĩa là tài khoản mới, chưa từng có -> tiếp tục bình thường
+    }
+
     // Hợp lệ -> lưu mật khẩu, xoá vé dùng 1 lần, tạo phiên đăng nhập
     await resetTable.deleteEntity("reset", resetToken).catch(() => {});
 
     const { salt, hash } = hashPassword(password);
-    const membersTable = await getTableClient(MEMBERS_TABLE);
     await membersTable.upsertEntity({
       partitionKey: "member",
       rowKey: email,
