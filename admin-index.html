@@ -59,7 +59,8 @@
 
   <div class="page-wrap" id="pageWrap">
     <div class="tabs">
-      <button class="tab-btn active" data-tab="registrations" onclick="switchTab('registrations')">Đơn Đăng Ký</button>
+      <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">Tổng Quan</button>
+      <button class="tab-btn" data-tab="registrations" onclick="switchTab('registrations')">Đơn Đăng Ký</button>
       <button class="tab-btn" data-tab="donations" onclick="switchTab('donations')">Quyên Góp</button>
       <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Bảng Điểm</button>
       <button class="tab-btn" data-tab="members" onclick="switchTab('members')">Thành Viên</button>
@@ -69,7 +70,28 @@
     <div id="globalAlert"></div>
 
     <!-- ===================== TAB: ĐƠN ĐĂNG KÝ ===================== -->
-    <div class="panel active" id="panel-registrations">
+    <!-- ===================== TAB: TỔNG QUAN ===================== -->
+    <div class="panel active" id="panel-dashboard">
+      <div id="dashboardStatsRow" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:1.2rem;"></div>
+
+      <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:1rem; margin-bottom:1.2rem;" id="dashboardMidRow">
+        <div class="card">
+          <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-clock-rotate-left" style="color:#0284c7;"></i> Hoạt Động Gần Đây</h3>
+          <div id="dashboardRecentActivity"></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-chart-pie" style="color:#0284c7;"></i> Trạng Thái Đơn Đăng Ký</h3>
+          <div id="dashboardStatusBreakdown"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-chart-column" style="color:#0284c7;"></i> Quyên Góp Tiền Mặt Theo Tháng (6 tháng gần nhất)</h3>
+        <div id="dashboardDonationChart"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-registrations">
       <div class="card">
         <div class="loading-state" id="regLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="regTableWrap">
@@ -238,6 +260,7 @@
 
         <div id="bulkEmailSelectedField" style="display:none; margin-bottom:1rem;">
           <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Chọn thành viên</label>
+          <input type="text" id="bulkEmailMemberSearch" placeholder="Tìm theo email..." oninput="renderBulkEmailMemberChecklist()" style="width:100%; padding:0.5rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.88rem; margin-bottom:0.5rem;">
           <div id="bulkEmailMemberChecklist" style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:8px; padding:0.6rem 0.8rem;"></div>
         </div>
 
@@ -357,6 +380,7 @@
         const { registrations } = await apiCall('/api/portal-list-registrations');
         allRegistrationsData = registrations;
         renderMemberDashboardStats();
+        renderMainDashboard();
         document.getElementById('regLoading').style.display = 'none';
         if (registrations.length === 0) {
           document.getElementById('regEmpty').style.display = 'block';
@@ -462,6 +486,7 @@
         const { donations } = await apiCall('/api/portal-list-donations');
         allDonationsData = donations;
         renderMemberDashboardStats();
+        renderMainDashboard();
         document.getElementById('donLoading').style.display = 'none';
         if (donations.length === 0) {
           document.getElementById('donEmpty').style.display = 'block';
@@ -595,6 +620,7 @@
         const { grades } = await apiCall('/api/portal-list-grades');
         allGradesData = grades;
         renderMemberDashboardStats();
+        renderMainDashboard();
         document.getElementById('gradeLoading').style.display = 'none';
         if (grades.length === 0) {
           document.getElementById('gradeEmpty').style.display = 'block';
@@ -749,6 +775,119 @@
       }
     }
 
+    function renderMainDashboard() {
+      const statsEl = document.getElementById('dashboardStatsRow');
+      const activityEl = document.getElementById('dashboardRecentActivity');
+      const statusEl = document.getElementById('dashboardStatusBreakdown');
+      const chartEl = document.getElementById('dashboardDonationChart');
+      if (!statsEl) return; // Chưa vào tab Tổng Quan lần nào -> khỏi vẽ
+
+      // ---------- 1. Thẻ thống kê chính ----------
+      const totalMembers = allMembers.length;
+      const blockedMembers = allMembers.filter(m => m.isBlocked).length;
+      const totalRegistrations = allRegistrationsData.length;
+      const pendingRegistrations = allRegistrationsData.filter(r => r.status === 'Đã ghi nhận - Chờ xử lý').length;
+      const approvedRegistrations = allRegistrationsData.filter(r => r.status === 'Đã duyệt').length;
+      const rejectedRegistrations = allRegistrationsData.filter(r => r.status === 'Từ chối').length;
+      const totalCashDonated = allDonationsData.filter(d => d.donationType !== 'item').reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
+      const totalItemDonations = allDonationsData.filter(d => d.donationType === 'item').length;
+      const totalGrades = allGradesData.length;
+      const pendingConfirms = allDonationsData.filter(d => (d.confirmationStatus || 'pending') === 'pending').length
+        + allGradesData.filter(g => (g.confirmationStatus || 'pending') === 'pending').length;
+
+      const mainStats = [
+        { icon: 'fa-users', label: 'Tổng Thành Viên', value: totalMembers, sub: blockedMembers > 0 ? `${blockedMembers} bị chặn` : 'Đang hoạt động tốt', color: '#0284c7', bg: '#eff6ff' },
+        { icon: 'fa-file-lines', label: 'Đơn Đăng Ký', value: totalRegistrations, sub: `${pendingRegistrations} chờ · ${approvedRegistrations} duyệt · ${rejectedRegistrations} từ chối`, color: '#7c3aed', bg: '#f5f3ff' },
+        { icon: 'fa-hand-holding-dollar', label: 'Quyên Góp Tiền Mặt', value: totalCashDonated.toLocaleString('vi-VN') + 'đ', sub: totalItemDonations > 0 ? `+ ${totalItemDonations} lượt hiện vật` : 'Chưa có hiện vật', color: '#15803d', bg: '#f0fdf4' },
+        { icon: 'fa-graduation-cap', label: 'Bản Ghi Điểm', value: totalGrades, sub: pendingConfirms > 0 ? `${pendingConfirms} chờ xác nhận` : 'Đã xác nhận hết', color: '#d97706', bg: '#fffbeb' }
+      ];
+      statsEl.innerHTML = mainStats.map(s => `
+        <div class="card" style="padding:1.1rem 1.2rem;">
+          <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.6rem;">
+            <div style="width:42px; height:42px; border-radius:10px; background:${s.bg}; color:${s.color}; display:flex; align-items:center; justify-content:center; font-size:1.15rem;"><i class="fa-solid ${s.icon}"></i></div>
+            <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">${s.label}</div>
+          </div>
+          <div style="font-size:1.5rem; font-weight:800; color:var(--text-dark);">${s.value}</div>
+          <div style="font-size:0.76rem; color:#94a3b8; margin-top:0.2rem;">${s.sub}</div>
+        </div>`).join('');
+
+      // ---------- 2. Hoạt động gần đây (gộp 3 nguồn, sắp theo thời gian) ----------
+      const events = [];
+      allRegistrationsData.forEach(r => events.push({
+        time: r.submittedAt, icon: 'fa-file-lines', color: '#7c3aed',
+        text: `<strong>${escapeHtml(r.email)}</strong> gửi đơn <strong>${escapeHtml(r.formTitle)}</strong>`
+      }));
+      allDonationsData.forEach(d => events.push({
+        time: d.recordedAt || d.donatedAt, icon: 'fa-hand-holding-dollar', color: '#15803d',
+        text: `<strong>${escapeHtml(d.donorName)}</strong> quyên góp ${d.donationType === 'item' ? escapeHtml(d.itemDescription || 'hiện vật') : formatMoney(d.amount)}`
+      }));
+      allGradesData.forEach(g => events.push({
+        time: g.recordedAt, icon: 'fa-graduation-cap', color: '#d97706',
+        text: `Thêm điểm cho <strong>${escapeHtml(g.studentName)}</strong> (${escapeHtml(g.program || '')})`
+      }));
+      events.sort((a, b) => new Date(b.time) - new Date(a.time));
+      const recentEvents = events.slice(0, 8);
+
+      activityEl.innerHTML = recentEvents.length > 0
+        ? recentEvents.map(e => `
+            <div style="display:flex; gap:0.7rem; padding:0.55rem 0; border-top:1px solid var(--border);">
+              <div style="width:28px; height:28px; border-radius:8px; background:#f8fafc; color:${e.color}; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0;"><i class="fa-solid ${e.icon}"></i></div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:0.85rem; color:var(--text-dark);">${e.text}</div>
+                <div style="font-size:0.74rem; color:#94a3b8; margin-top:0.15rem;">${formatDate(e.time)}</div>
+              </div>
+            </div>`).join('')
+        : '<div style="color:var(--text-muted); font-size:0.88rem; padding:1rem 0;">Chưa có hoạt động nào.</div>';
+
+      // ---------- 3. Trạng thái đơn đăng ký (thanh tỉ lệ) ----------
+      const statusBreakdown = [
+        { label: 'Chờ xử lý', count: pendingRegistrations, color: '#d97706' },
+        { label: 'Đã duyệt', count: approvedRegistrations, color: '#15803d' },
+        { label: 'Từ chối', count: rejectedRegistrations, color: '#dc2626' }
+      ];
+      if (totalRegistrations === 0) {
+        statusEl.innerHTML = '<div style="color:var(--text-muted); font-size:0.88rem; padding:1rem 0;">Chưa có đơn đăng ký nào.</div>';
+      } else {
+        const barHtml = statusBreakdown.map(s => {
+          const pct = totalRegistrations > 0 ? (s.count / totalRegistrations * 100) : 0;
+          return pct > 0 ? `<div style="width:${pct}%; background:${s.color};" title="${s.label}: ${s.count}"></div>` : '';
+        }).join('');
+        statusEl.innerHTML = `
+          <div style="display:flex; height:14px; border-radius:999px; overflow:hidden; margin-bottom:1rem;">${barHtml}</div>
+          <div style="display:grid; gap:0.6rem;">
+            ${statusBreakdown.map(s => `
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.86rem;">
+                <span style="display:flex; align-items:center; gap:0.5rem;"><span style="width:10px; height:10px; border-radius:3px; background:${s.color}; display:inline-block;"></span>${s.label}</span>
+                <strong>${s.count} <span style="color:var(--text-muted); font-weight:400;">(${totalRegistrations > 0 ? Math.round(s.count / totalRegistrations * 100) : 0}%)</span></strong>
+              </div>`).join('')}
+          </div>`;
+      }
+
+      // ---------- 4. Biểu đồ quyên góp 6 tháng gần nhất ----------
+      const monthBuckets = [];
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        monthBuckets.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: `T${d.getMonth() + 1}/${d.getFullYear()}`, total: 0 });
+      }
+      allDonationsData.filter(d => d.donationType !== 'item').forEach(d => {
+        const dt = new Date(d.donatedAt);
+        const key = `${dt.getFullYear()}-${dt.getMonth()}`;
+        const bucket = monthBuckets.find(b => b.key === key);
+        if (bucket) bucket.total += Number(d.amount) || 0;
+      });
+      const maxTotal = Math.max(...monthBuckets.map(b => b.total), 1);
+      chartEl.innerHTML = `
+        <div style="display:flex; align-items:flex-end; gap:1rem; height:160px; padding-top:1rem;">
+          ${monthBuckets.map(b => `
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.3rem;">${b.total > 0 ? b.total.toLocaleString('vi-VN') : ''}</div>
+              <div style="width:70%; max-width:44px; height:${b.total > 0 ? Math.max((b.total / maxTotal * 110), 4) : 2}px; background:linear-gradient(180deg,#38bdf8,#0284c7); border-radius:6px 6px 0 0;"></div>
+              <div style="font-size:0.74rem; color:var(--text-muted); margin-top:0.4rem;">${b.label}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+
     function renderMemberDashboardStats() {
       const el = document.getElementById('memberDashboardStats');
       if (!el) return;
@@ -785,6 +924,7 @@
         document.getElementById('memberLoading').style.display = 'none';
         renderMembersList();
         renderMemberDashboardStats();
+        renderMainDashboard();
       } catch (err) {
         document.getElementById('memberLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
@@ -978,17 +1118,31 @@
       if (audience === 'selected') renderBulkEmailMemberChecklist();
     }
 
+    let selectedMemberEmails = new Set();
+
     function renderBulkEmailMemberChecklist() {
       const el = document.getElementById('bulkEmailMemberChecklist');
+      const query = (document.getElementById('bulkEmailMemberSearch').value || '').trim().toLowerCase();
+      const filtered = allMembers.filter(m => m.email.toLowerCase().includes(query));
+
       if (allMembers.length === 0) {
         el.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Chưa có thành viên nào.</div>';
         return;
       }
-      el.innerHTML = allMembers.map((m, i) => `
+      if (filtered.length === 0) {
+        el.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Không tìm thấy thành viên phù hợp.</div>';
+        return;
+      }
+      el.innerHTML = filtered.map((m, i) => `
         <label style="display:flex; align-items:center; gap:0.5rem; padding:0.3rem 0; font-size:0.88rem; cursor:pointer;">
-          <input type="checkbox" class="bulk-email-member-checkbox" value="${escapeHtml(m.email)}">
+          <input type="checkbox" class="bulk-email-member-checkbox" value="${escapeHtml(m.email)}" ${selectedMemberEmails.has(m.email) ? 'checked' : ''} onchange="toggleBulkEmailMemberSelection('${escapeHtml(m.email)}', this.checked)">
           ${escapeHtml(m.email)} ${m.isBlocked ? '<span style="font-size:0.72rem; color:#b91c1c;">(đã khoá)</span>' : ''}
         </label>`).join('');
+    }
+
+    function toggleBulkEmailMemberSelection(email, checked) {
+      if (checked) selectedMemberEmails.add(email);
+      else selectedMemberEmails.delete(email);
     }
 
     async function sendBulkEmail() {
@@ -1001,7 +1155,7 @@
       if (audience === 'all') {
         recipients = allMembers.map(m => m.email);
       } else if (audience === 'selected') {
-        recipients = Array.from(document.querySelectorAll('.bulk-email-member-checkbox:checked')).map(cb => cb.value);
+        recipients = Array.from(selectedMemberEmails);
       } else {
         recipients = document.getElementById('bulkEmailManualList').value
           .split(/[\n,]+/)
