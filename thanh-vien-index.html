@@ -229,11 +229,17 @@
       const seenLabels = new Set();
       for (const [key, label] of candidates) {
         if (data[key] && !seenLabels.has(label)) {
-          out.push(`<span>${label}: <strong>${data[key]}</strong></span>`);
+          out.push(`
+            <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.3px; color:var(--text-muted); margin-bottom:0.2rem;">${label}</div>
+              <div style="font-size:0.92rem; font-weight:600; color:var(--text-dark);">${data[key]}</div>
+            </div>`);
           seenLabels.add(label);
         }
       }
-      return out.join(' &nbsp;·&nbsp; ');
+      return out.length > 0
+        ? `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:0.7rem;">${out.join('')}</div>`
+        : '';
     }
 
     function extractStudentName(data) {
@@ -331,8 +337,8 @@
                     </tr>
                     <tr id="activityDetail-${i}" style="display:none;">
                       <td colspan="5" style="padding:0 0.7rem 1.1rem; background:#f8fafc;">
-                        <div style="padding-top:0.8rem; font-size:0.88rem; color:var(--text-muted); line-height:2;">
-                          ${pickDisplayFields(r.data) || 'Đã ghi nhận thông tin đăng ký.'}
+                        <div style="padding-top:0.8rem;">
+                          ${pickDisplayFields(r.data) || '<span style="color:var(--text-muted); font-size:0.88rem;">Đã ghi nhận thông tin đăng ký.</span>'}
                         </div>
                         ${renderAttachments(r.attachments)}
                       </td>
