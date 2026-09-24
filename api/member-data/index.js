@@ -115,11 +115,14 @@ module.exports = async function (context, req) {
           // Không có ảnh đính kèm — bỏ qua
         }
         donations.push({
+          id: entity.rowKey,
           amount: entity.amount,
           method: entity.method || "",
           transactionCode: entity.transactionCode || "",
           note: entity.note || "",
           attachments,
+          confirmationStatus: entity.confirmationStatus || "pending",
+          memberFeedback: entity.memberFeedback || "",
           donatedAt: entity.donatedAt
         });
       }
@@ -149,6 +152,7 @@ module.exports = async function (context, req) {
           // Không có ảnh đính kèm — bỏ qua
         }
         grades.push({
+          id: entity.rowKey,
           studentName: entity.studentName,
           program: entity.program,
           assessmentType: entity.assessmentType || "Buổi học",
@@ -156,6 +160,8 @@ module.exports = async function (context, req) {
           score: entity.score !== undefined && entity.score !== null ? entity.score : null,
           comment: entity.comment || "",
           attachments,
+          confirmationStatus: entity.confirmationStatus || "pending",
+          memberFeedback: entity.memberFeedback || "",
           recordedAt: entity.recordedAt
         });
       }
