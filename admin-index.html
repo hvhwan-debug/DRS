@@ -216,7 +216,7 @@
     // ============== ĐƠN ĐĂNG KÝ ==============
     async function loadRegistrations() {
       try {
-        const { registrations } = await apiCall('/api/admin-list-registrations');
+        const { registrations } = await apiCall('/api/portal-list-registrations');
         document.getElementById('regLoading').style.display = 'none';
         if (registrations.length === 0) {
           document.getElementById('regEmpty').style.display = 'block';
@@ -251,7 +251,7 @@
 
     async function updateStatus(emailEnc, idEnc, status) {
       try {
-        await apiCall('/api/admin-update-registration-status', {
+        await apiCall('/api/portal-update-registration-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc), status })
@@ -265,7 +265,7 @@
     // ============== QUYÊN GÓP ==============
     async function loadDonations() {
       try {
-        const { donations } = await apiCall('/api/admin-list-donations');
+        const { donations } = await apiCall('/api/portal-list-donations');
         document.getElementById('donLoading').style.display = 'none';
         if (donations.length === 0) {
           document.getElementById('donEmpty').style.display = 'block';
@@ -293,7 +293,7 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
-        await apiCall('/api/admin-add-donation', {
+        await apiCall('/api/portal-add-donation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -322,7 +322,7 @@
     // ============== BẢNG ĐIỂM ==============
     async function loadGrades() {
       try {
-        const { grades } = await apiCall('/api/admin-list-grades');
+        const { grades } = await apiCall('/api/portal-list-grades');
         document.getElementById('gradeLoading').style.display = 'none';
         if (grades.length === 0) {
           document.getElementById('gradeEmpty').style.display = 'block';
@@ -351,7 +351,7 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
-        await apiCall('/api/admin-add-grade', {
+        await apiCall('/api/portal-add-grade', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
