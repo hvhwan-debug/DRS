@@ -76,7 +76,7 @@
     }
     .btn-outline:hover { background: #fef2f2; transform: none; }
 
-    .page-wrap { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+    .page-wrap { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
 
     .welcome-banner {
       background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
@@ -366,9 +366,9 @@
                 <tbody>
                   ${grades.length > 0 ? grades.map(g => `
                     <tr style="border-top:1px solid var(--border);">
-                      <td style="padding:0.6rem; font-weight:700;">${g.studentName}</td>
+                      <td style="padding:0.6rem; font-weight:700; white-space:nowrap;">${g.studentName}</td>
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.program || '—'}</td>
-                      <td style="padding:0.6rem;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
+                      <td style="padding:0.6rem; white-space:nowrap;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; white-space:nowrap; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.term || '—'}</td>
                       <td style="padding:0.6rem; font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
