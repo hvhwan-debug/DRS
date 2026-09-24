@@ -170,6 +170,13 @@
       document.getElementById('profileForm').style.display = showEdit ? 'grid' : 'none';
     }
 
+    function filterGradesByCourse(value) {
+      const rows = document.querySelectorAll('#gradesTable tbody tr[data-course-key]');
+      rows.forEach(row => {
+        row.style.display = (value === 'all' || row.dataset.courseKey === value) ? '' : 'none';
+      });
+    }
+
     function toggleActivityDetail(i) {
       const row = document.getElementById('activityDetail-' + i);
       const chevron = document.getElementById('activityChevron-' + i);
@@ -415,9 +422,24 @@
         }
 
         const gradesChrono = [...grades].sort((a, b) => new Date(a.recordedAt) - new Date(b.recordedAt));
+        const courseKeys = new Set();
+        gradesChrono.forEach(g => courseKeys.add(`${g.studentName}|||${g.program || 'Chưa rõ chương trình'}`));
+        const courseOptionsHtml = Array.from(courseKeys).map(k => {
+          const [student, program] = k.split('|||');
+          return `<option value="${k.replace(/"/g, '&quot;')}">${student} — ${program}</option>`;
+        }).join('');
+        const gradeFilterHtml = courseKeys.size > 1
+          ? `<div style="margin-bottom:1rem;">
+              <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Lọc theo học sinh / khóa học</label>
+              <select id="gradeCourseFilter" onchange="filterGradesByCourse(this.value)" style="padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; max-width:320px; width:100%;">
+                <option value="all">Tất cả (${courseKeys.size} khóa học)</option>
+                ${courseOptionsHtml}
+              </select>
+            </div>`
+          : '';
 
-        const gradesHtml = `<div style="overflow-x:auto;">
-              <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+        const gradesHtml = `${gradeFilterHtml}<div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; font-size:0.88rem;" id="gradesTable">
                 <thead>
                   <tr style="text-align:left; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">
                     <th style="padding:0.5rem 0.6rem;">STT</th>
@@ -433,7 +455,7 @@
                 </thead>
                 <tbody>
                   ${gradesChrono.length > 0 ? gradesChrono.map((g, i) => `
-                    <tr style="border-top:1px solid var(--border);">
+                    <tr style="border-top:1px solid var(--border);" data-course-key="${g.studentName}|||${g.program || 'Chưa rõ chương trình'}">
                       <td style="padding:0.6rem; color:var(--text-muted);">${i + 1}</td>
                       <td style="padding:0.6rem; font-weight:700; white-space:nowrap;">${g.studentName}</td>
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.program || '—'}</td>
