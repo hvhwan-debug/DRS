@@ -85,9 +85,14 @@
         <h3 style="margin-bottom:1rem; font-size:1rem;">Nhập quyên góp mới</h3>
         <form id="donationForm">
           <div class="form-grid">
-            <div><label>Tên người quyên góp *</label><input type="text" id="donorName" required></div>
+            <div>
+              <label>Tên người quyên góp *</label>
+              <input type="text" id="donorName" required list="knownNamesList" placeholder="Gõ để tìm trong danh sách...">
+              <datalist id="knownNamesList"></datalist>
+            </div>
             <div><label>Email (nếu có)</label><input type="email" id="donorEmail" placeholder="Để hiện trong trang thành viên của họ"></div>
             <div><label>Số tiền (VNĐ) *</label><input type="number" id="donationAmount" min="1" required></div>
+            <div><label>Mã giao dịch</label><input type="text" id="donationTransactionCode" placeholder="Để tra cứu được ở trang Sao Kê"></div>
             <div><label>Hình thức</label><input type="text" id="donationMethod" placeholder="VD: Chuyển khoản QR"></div>
             <div><label>Ngày quyên góp</label><input type="date" id="donationDate"></div>
           </div>
@@ -102,7 +107,7 @@
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
           <table>
-            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th></tr></thead>
+            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th></tr></thead>
             <tbody id="donTableBody"></tbody>
           </table>
         </div>
@@ -243,6 +248,15 @@
             </td>
           </tr>`;
         }).join('');
+
+        // Gom tên (phụ huynh/người đăng ký) từ các đơn để gợi ý khi nhập tên người quyên góp
+        const nameKeys = ['ten_phu_huynh', 'fullname', 'fullName', 'name', 'ho_ten'];
+        const knownNames = new Set();
+        registrations.forEach(r => {
+          nameKeys.forEach(k => { if (r.data && r.data[k]) knownNames.add(String(r.data[k]).trim()); });
+        });
+        document.getElementById('knownNamesList').innerHTML =
+          Array.from(knownNames).map(n => `<option value="${escapeHtml(n)}">`).join('');
       } catch (err) {
         document.getElementById('regLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
@@ -277,6 +291,7 @@
             <td>${escapeHtml(d.donorName)}</td>
             <td>${escapeHtml(d.donorEmail)}</td>
             <td>${formatMoney(d.amount)}</td>
+            <td>${escapeHtml(d.transactionCode) || '—'}</td>
             <td>${escapeHtml(d.method)}</td>
             <td>${formatDate(d.donatedAt)}</td>
             <td>${escapeHtml(d.note)}</td>
@@ -300,6 +315,7 @@
             donorName: document.getElementById('donorName').value.trim(),
             donorEmail: document.getElementById('donorEmail').value.trim(),
             amount: document.getElementById('donationAmount').value,
+            transactionCode: document.getElementById('donationTransactionCode').value.trim(),
             method: document.getElementById('donationMethod').value.trim(),
             note: document.getElementById('donationNote').value.trim(),
             donatedAt: document.getElementById('donationDate').value || undefined
