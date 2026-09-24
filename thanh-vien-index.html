@@ -155,7 +155,10 @@
     // (không dùng Microsoft/Azure AD B2C)
     // ==============================================================
 
+    let currentActiveMemberTab = 'account';
+
     function switchMemberTab(tab) {
+      currentActiveMemberTab = tab;
       document.querySelectorAll('.member-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       document.querySelectorAll('.member-panel').forEach(p => p.classList.remove('active'));
       const panel = document.getElementById('memberPanel-' + tab);
@@ -512,6 +515,8 @@
             </div>
           </div>
         `;
+
+        switchMemberTab(currentActiveMemberTab);
 
         document.getElementById('profileForm').addEventListener('submit', async function (e) {
           e.preventDefault();
