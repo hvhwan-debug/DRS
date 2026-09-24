@@ -431,13 +431,14 @@
         const donationsHtml = `<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Mã giao dịch</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
+                <th style="padding:0.4rem;">Loại</th><th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Giá trị / Hiện vật</th><th style="padding:0.4rem;">Mã giao dịch</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
               </tr></thead>
               <tbody>
                 ${donations.length > 0 ? donations.map(d => `
                   <tr style="border-top:1px solid var(--border);">
+                    <td style="padding:0.5rem 0.4rem;">${d.donationType === 'item' ? '<span style="font-size:0.74rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fef3c7; color:#a16207;">Hiện vật</span>' : '<span style="font-size:0.74rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#dbeafe; color:#1e40af;">Tiền mặt</span>'}</td>
                     <td style="padding:0.5rem 0.4rem;">${formatDateTime(d.donatedAt)}</td>
-                    <td style="padding:0.5rem 0.4rem; font-weight:700; color:#15803d;">${Number(d.amount).toLocaleString('vi-VN')}đ</td>
+                    <td style="padding:0.5rem 0.4rem; font-weight:700; color:#15803d;">${d.donationType === 'item' ? (d.itemDescription || '—') : (d.amount != null ? Number(d.amount).toLocaleString('vi-VN') + 'đ' : '—')}</td>
                     <td style="padding:0.5rem 0.4rem;">${d.transactionCode || '—'}</td>
                     <td style="padding:0.5rem 0.4rem;">${d.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${d.note || '—'}</td>
@@ -446,7 +447,7 @@
                   </tr>
                 `).join('') : `
                   <tr>
-                    <td colspan="7" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
+                    <td colspan="8" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
                       <i class="fa-solid fa-hand-holding-dollar"></i> Chưa có quyên góp nào được ghi nhận với email này.
                     </td>
                   </tr>
