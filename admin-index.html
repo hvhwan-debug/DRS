@@ -149,6 +149,10 @@
             <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Đánh giá của giáo viên</label>
             <textarea id="gradeComment" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="VD: Con viết đều nét hơn, cần luyện thêm tốc độ"></textarea>
           </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ảnh bài làm của học sinh (giáo viên chụp, không bắt buộc)</label>
+            <input type="file" id="gradeAttachment" accept="image/*">
+          </div>
           <button type="submit" class="btn" id="gradeSubmitBtn">Lưu Điểm/Nhận Xét</button>
         </form>
       </div>
@@ -156,7 +160,7 @@
         <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="gradeTableWrap">
           <table>
-            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Loại đánh giá</th><th>Buổi học</th><th>Điểm</th><th>Đánh giá GV</th></tr></thead>
+            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Loại đánh giá</th><th>Buổi học</th><th>Điểm</th><th>Đánh giá GV</th><th>Ảnh bài làm</th></tr></thead>
             <tbody id="gradeTableBody"></tbody>
           </table>
         </div>
@@ -377,6 +381,7 @@
             <td>${escapeHtml(g.term)}</td>
             <td>${g.score != null ? g.score : '—'}</td>
             <td>${escapeHtml(g.comment)}</td>
+            <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('gradeLoading').style.display = 'none';
@@ -390,6 +395,14 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
+        const fileInput = document.getElementById('gradeAttachment');
+        let attachments = [];
+        if (fileInput.files && fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const content = await readFileAsBase64(file);
+          attachments = [{ filename: file.name, content, type: file.type }];
+        }
+
         await apiCall('/api/portal-add-grade', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -400,7 +413,8 @@
             assessmentType: document.getElementById('gradeAssessmentType').value,
             term: document.getElementById('gradeTerm').value.trim(),
             score: document.getElementById('gradeScore').value,
-            comment: document.getElementById('gradeComment').value.trim()
+            comment: document.getElementById('gradeComment').value.trim(),
+            attachments
           })
         });
         showGlobalAlert('Đã lưu điểm/nhận xét.', false);
