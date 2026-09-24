@@ -505,9 +505,7 @@
             <td>${escapeHtml(d.note)}</td>
             <td>${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(d.confirmationStatus, d.memberFeedback)}</td>
-            <td>${d.confirmationStatus === 'confirmed'
-              ? '<span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Đã khoá</span>'
-              : `<button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>Sửa</button>`}</td>
+            <td><button type="button" class="btn ${d.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-pen"></i> Sửa (đã xác nhận)' : 'Sửa'}</button></td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('donLoading').style.display = 'none';
@@ -537,6 +535,7 @@
     let editingDonationId = null;
 
     function startEditDonation(d) {
+      if (d.confirmationStatus === 'confirmed' && !confirm('Mục này đã được thành viên xác nhận. Sửa lại sẽ đưa về trạng thái "Chờ xác nhận" và họ cần xác nhận lại. Tiếp tục?')) return;
       editingDonationId = d.id;
       document.getElementById('donationType').value = d.donationType || 'cash';
       toggleDonationTypeFields();
@@ -638,9 +637,7 @@
             <td>${escapeHtml(g.comment)}</td>
             <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
-            <td>${g.confirmationStatus === 'confirmed'
-              ? '<span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Đã khoá</span>'
-              : `<button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>Sửa</button>`}</td>
+            <td><button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-pen"></i> Sửa (đã xác nhận)' : 'Sửa'}</button></td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('gradeLoading').style.display = 'none';
@@ -652,6 +649,7 @@
     let editingGradeParentEmail = null;
 
     function startEditGrade(g) {
+      if (g.confirmationStatus === 'confirmed' && !confirm('Mục này đã được thành viên xác nhận. Sửa lại sẽ đưa về trạng thái "Chờ xác nhận" và họ cần xác nhận lại. Tiếp tục?')) return;
       editingGradeId = g.id;
       editingGradeParentEmail = g.parentEmail;
       document.getElementById('gradeParentEmail').value = g.parentEmail || '';
