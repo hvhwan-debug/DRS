@@ -105,6 +105,7 @@ module.exports = async function (context, req) {
         donations.push({
           amount: entity.amount,
           method: entity.method || "",
+          transactionCode: entity.transactionCode || "",
           note: entity.note || "",
           donatedAt: entity.donatedAt
         });
