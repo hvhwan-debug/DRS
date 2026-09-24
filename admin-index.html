@@ -603,6 +603,14 @@
     let allMembers = [];
     let currentOverviewEmail = null;
 
+    function toggleOverviewProgramGrades(index) {
+      const table = document.getElementById('overviewProgramTable-' + index);
+      const chevron = document.getElementById('overviewProgramChevron-' + index);
+      const isOpen = table.style.display === 'block';
+      table.style.display = isOpen ? 'none' : 'block';
+      chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
     function toggleOverviewProfileEdit(showEdit) {
       document.getElementById('overviewProfileView').style.display = showEdit ? 'none' : 'block';
       document.getElementById('overviewProfileEdit').style.display = showEdit ? 'block' : 'none';
@@ -775,12 +783,50 @@
               </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có quyên góp nào.</div>'}
           </div>`;
 
+        const gradesByProgram = {};
+        data.grades.forEach(g => {
+          const key = g.program || 'Chưa rõ chương trình';
+          if (!gradesByProgram[key]) gradesByProgram[key] = [];
+          gradesByProgram[key].push(g);
+        });
+        const programKeys = Object.keys(gradesByProgram);
+
         const gradeHtml = `
           <div>
-            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Bảng điểm con em (${data.grades.length})</h4>
-            ${data.grades.length > 0 ? data.grades.map(g => `
-              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
-                <strong>${escapeHtml(g.studentName)}</strong> — ${escapeHtml(g.program)} — ${escapeHtml(g.assessmentType)} ${g.score != null ? '— ' + g.score + '/10' : ''}
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Bảng Điểm Học Viên (${data.grades.length})</h4>
+            ${programKeys.length > 0 ? programKeys.map((program, pi) => `
+              <div style="border:1px solid var(--border); border-radius:10px; margin-bottom:0.6rem; overflow:hidden;">
+                <div onclick="toggleOverviewProgramGrades(${pi})" style="cursor:pointer; padding:0.7rem 0.9rem; background:#f8fafc; display:flex; justify-content:space-between; align-items:center;">
+                  <strong style="font-size:0.9rem;">${escapeHtml(program)}</strong>
+                  <span style="font-size:0.8rem; color:var(--text-muted);">${gradesByProgram[program].length} mục <i class="fa-solid fa-chevron-down" id="overviewProgramChevron-${pi}"></i></span>
+                </div>
+                <div id="overviewProgramTable-${pi}" style="display:none;">
+                  <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                    <thead>
+                      <tr style="text-align:left; color:var(--text-muted); font-size:0.74rem; text-transform:uppercase; background:#fff;">
+                        <th style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">STT</th>
+                        <th style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">Học sinh</th>
+                        <th style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">Loại đánh giá</th>
+                        <th style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">Buổi học</th>
+                        <th style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">Điểm</th>
+                        <th style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">Nhận xét</th>
+                        <th style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">Xác nhận</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${gradesByProgram[program].map((g, i) => `
+                        <tr>
+                          <td style="padding:0.5rem 0.7rem; border-top:1px solid var(--border); color:var(--text-muted);">${i + 1}</td>
+                          <td style="padding:0.5rem 0.7rem; border-top:1px solid var(--border); font-weight:700;">${escapeHtml(g.studentName)}</td>
+                          <td style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">${escapeHtml(g.assessmentType)}</td>
+                          <td style="padding:0.5rem 0.7rem; border-top:1px solid var(--border); color:var(--text-muted);">${escapeHtml(g.term) || '—'}</td>
+                          <td style="padding:0.5rem 0.7rem; border-top:1px solid var(--border); font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
+                          <td style="padding:0.5rem 0.7rem; border-top:1px solid var(--border); color:var(--text-muted);">${escapeHtml(g.comment) || '—'}</td>
+                          <td style="padding:0.5rem 0.7rem; border-top:1px solid var(--border);">${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
+                        </tr>`).join('')}
+                    </tbody>
+                  </table>
+                </div>
               </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có điểm nào.</div>'}
           </div>`;
 
