@@ -14,6 +14,7 @@ module.exports = async function (context, req) {
     for await (const entity of membersTable.listEntities()) {
       members.push({
         email: entity.rowKey,
+        isBlocked: !!entity.isBlocked,
         createdAt: entity.createdAt || entity.updatedAt || null,
         updatedAt: entity.updatedAt || null
       });
