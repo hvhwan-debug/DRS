@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { uploadAttachments } = require("../_shared/blobStorage");
 
 const GRADES_TABLE = "Grades";
 const ASSESSMENT_TYPES = ["Đánh giá đầu vào", "Buổi học", "Đánh giá đầu ra"];
@@ -37,6 +38,16 @@ module.exports = async function (context, req) {
   }
 
   try {
+    // Lưu ảnh bài làm của học sinh (nếu có) lên Blob Storage riêng tư
+    let uploadedAttachments = [];
+    if (Array.isArray(body.attachments) && body.attachments.length > 0) {
+      try {
+        uploadedAttachments = await uploadAttachments(body.attachments);
+      } catch (err) {
+        context.log.error("Lưu ảnh bài làm vào Blob Storage thất bại:", err.message);
+      }
+    }
+
     const gradesTable = await getTableClient(GRADES_TABLE);
     await gradesTable.createEntity({
       partitionKey: parentEmail,
@@ -47,6 +58,7 @@ module.exports = async function (context, req) {
       term,
       score,
       comment,
+      attachmentsJson: JSON.stringify(uploadedAttachments),
       recordedAt: new Date().toISOString()
     });
 
