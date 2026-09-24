@@ -59,6 +59,7 @@
       <button class="tab-btn active" data-tab="registrations" onclick="switchTab('registrations')">Đơn Đăng Ký</button>
       <button class="tab-btn" data-tab="donations" onclick="switchTab('donations')">Quyên Góp</button>
       <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Bảng Điểm</button>
+      <button class="tab-btn" data-tab="members" onclick="switchTab('members')">Thành Viên</button>
     </div>
 
     <div id="globalAlert"></div>
@@ -165,6 +166,31 @@
           </table>
         </div>
         <div class="empty-state" id="gradeEmpty" style="display:none;">Chưa có điểm/nhận xét nào.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: THÀNH VIÊN ===================== -->
+    <div class="panel" id="panel-members">
+      <div class="card">
+        <div style="display:flex; gap:0.8rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
+          <input type="text" id="memberSearchInput" placeholder="Tìm theo email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
+        </div>
+        <div class="loading-state" id="memberLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="memberTableWrap">
+          <table>
+            <thead><tr><th>Email</th><th>Cập nhật gần nhất</th><th>Thao tác</th></tr></thead>
+            <tbody id="memberTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="memberEmpty" style="display:none;">Chưa có tài khoản thành viên nào.</div>
+      </div>
+
+      <div class="card" id="memberOverviewCard" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <h3 style="font-size:1.05rem;" id="memberOverviewTitle">Tổng quan thành viên</h3>
+          <button type="button" class="btn btn-outline" onclick="closeMemberOverview()" style="color:#475569; border-color:var(--border);">Đóng</button>
+        </div>
+        <div id="memberOverviewContent"></div>
       </div>
     </div>
   </div>
@@ -431,9 +457,125 @@
       }
     });
 
+    // ============== THÀNH VIÊN ==============
+    let allMembers = [];
+
+    async function loadMembers() {
+      try {
+        const { members } = await apiCall('/api/portal-list-members');
+        allMembers = members;
+        document.getElementById('memberLoading').style.display = 'none';
+        renderMembersList();
+      } catch (err) {
+        document.getElementById('memberLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderMembersList() {
+      const query = (document.getElementById('memberSearchInput').value || '').trim().toLowerCase();
+      const filtered = allMembers.filter(m => m.email.toLowerCase().includes(query));
+
+      if (allMembers.length === 0) {
+        document.getElementById('memberEmpty').style.display = 'block';
+        document.getElementById('memberTableWrap').style.display = 'none';
+        return;
+      }
+      document.getElementById('memberEmpty').style.display = 'none';
+      document.getElementById('memberTableWrap').style.display = 'block';
+      document.getElementById('memberTableBody').innerHTML = filtered.map(m => `
+        <tr>
+          <td>${escapeHtml(m.email)}</td>
+          <td>${formatDate(m.updatedAt)}</td>
+          <td style="display:flex; gap:0.5rem;">
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="openMemberOverview('${encodeURIComponent(m.email)}')">Xem chi tiết</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="deleteMember('${encodeURIComponent(m.email)}')">Xoá</button>
+          </td>
+        </tr>`).join('');
+    }
+
+    async function deleteMember(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      if (!confirm(`Xoá tài khoản đăng nhập của ${email}?\n\nLưu ý: chỉ xoá quyền đăng nhập — lịch sử đăng ký/quyên góp/điểm của họ vẫn được giữ nguyên. Họ có thể đăng ký tài khoản mới lại sau.`)) return;
+      try {
+        await apiCall('/api/portal-delete-member', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        showGlobalAlert('Đã xoá tài khoản.', false);
+        loadMembers();
+        closeMemberOverview();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function closeMemberOverview() {
+      document.getElementById('memberOverviewCard').style.display = 'none';
+    }
+
+    async function openMemberOverview(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      const card = document.getElementById('memberOverviewCard');
+      const content = document.getElementById('memberOverviewContent');
+      document.getElementById('memberOverviewTitle').textContent = 'Tổng quan: ' + email;
+      content.innerHTML = '<div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>';
+      card.style.display = 'block';
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      try {
+        const data = await apiCall('/api/portal-member-overview?email=' + encodeURIComponent(email));
+
+        const profileHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Hồ sơ cá nhân</h4>
+            <div style="font-size:0.9rem; line-height:1.9;">
+              <div><strong>Họ tên:</strong> ${escapeHtml(data.profile.fullName) || '—'}</div>
+              <div><strong>SĐT:</strong> ${escapeHtml(data.profile.phone) || '—'}</div>
+              <div><strong>Ngày sinh:</strong> ${escapeHtml(data.profile.dob) || '—'}</div>
+              <div><strong>Địa chỉ:</strong> ${escapeHtml(data.profile.address) || '—'}</div>
+              <div><strong>Có tài khoản đăng nhập:</strong> ${data.hasAccount ? 'Có' : 'Không'}</div>
+            </div>
+          </div>`;
+
+        const regHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Đơn đăng ký (${data.registrations.length})</h4>
+            ${data.registrations.length > 0 ? data.registrations.map(r => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
+                <strong>${escapeHtml(r.formTitle)}</strong> — ${formatDate(r.submittedAt)} — <span style="color:var(--text-muted);">${escapeHtml(r.status)}</span>
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có đơn nào.</div>'}
+          </div>`;
+
+        const donHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Quyên góp (${data.donations.length})</h4>
+            ${data.donations.length > 0 ? data.donations.map(d => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
+                <strong>${formatMoney(d.amount)}</strong> — ${formatDate(d.donatedAt)} ${d.transactionCode ? '— Mã: ' + escapeHtml(d.transactionCode) : ''}
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có quyên góp nào.</div>'}
+          </div>`;
+
+        const gradeHtml = `
+          <div>
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Bảng điểm con em (${data.grades.length})</h4>
+            ${data.grades.length > 0 ? data.grades.map(g => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
+                <strong>${escapeHtml(g.studentName)}</strong> — ${escapeHtml(g.program)} — ${escapeHtml(g.assessmentType)} ${g.score != null ? '— ' + g.score + '/10' : ''}
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có điểm nào.</div>'}
+          </div>`;
+
+        content.innerHTML = profileHtml + regHtml + donHtml + gradeHtml;
+      } catch (err) {
+        content.innerHTML = `<div style="color:#dc2626;">${err.message}</div>`;
+      }
+    }
+
     loadRegistrations();
     loadDonations();
     loadGrades();
+    loadMembers();
   </script>
 </body>
 </html>
