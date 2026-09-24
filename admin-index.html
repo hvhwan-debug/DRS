@@ -210,7 +210,7 @@
       el.style.background = isError ? '#fee2e2' : '#dcfce7';
       el.style.color = isError ? '#b91c1c' : '#15803d';
       el.textContent = message;
-      setTimeout(() => { el.style.display = 'none'; }, 4000);
+      setTimeout(() => { el.style.display = 'none'; }, isError ? 9000 : 4000);
     }
 
     function escapeHtml(str) {
@@ -346,21 +346,35 @@
       });
     }
 
+    const MAX_ATTACHMENT_SIZE_MB = 4;
+    function checkFileSize(file) {
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > MAX_ATTACHMENT_SIZE_MB) {
+        showGlobalAlert(`Ảnh "${file.name}" nặng ${sizeMB.toFixed(1)}MB, vượt quá giới hạn ${MAX_ATTACHMENT_SIZE_MB}MB. Vui lòng chọn ảnh nhỏ hơn hoặc nén lại trước khi tải lên.`, true);
+        return false;
+      }
+      return true;
+    }
+
     document.getElementById('donationForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const btn = document.getElementById('donationSubmitBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
         const fileInput = document.getElementById('donationAttachment');
         let attachments = [];
         if (fileInput.files && fileInput.files.length > 0) {
           const file = fileInput.files[0];
+          if (!checkFileSize(file)) return;
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
           const content = await readFileAsBase64(file);
           attachments = [{ filename: file.name, content, type: file.type }];
+        } else {
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
         }
 
-        await apiCall('/api/portal-add-donation', {
+        const result = await apiCall('/api/portal-add-donation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -374,7 +388,7 @@
             attachments
           })
         });
-        showGlobalAlert('Đã lưu quyên góp.', false);
+        showGlobalAlert(result.warning || 'Đã lưu quyên góp.', !!result.warning);
         e.target.reset();
         document.getElementById('donTableWrap').style.display = 'none';
         document.getElementById('donEmpty').style.display = 'none';
@@ -418,18 +432,22 @@
     document.getElementById('gradeForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const btn = document.getElementById('gradeSubmitBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
         const fileInput = document.getElementById('gradeAttachment');
         let attachments = [];
         if (fileInput.files && fileInput.files.length > 0) {
           const file = fileInput.files[0];
+          if (!checkFileSize(file)) return;
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
           const content = await readFileAsBase64(file);
           attachments = [{ filename: file.name, content, type: file.type }];
+        } else {
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
         }
 
-        await apiCall('/api/portal-add-grade', {
+        const result = await apiCall('/api/portal-add-grade', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -443,7 +461,7 @@
             attachments
           })
         });
-        showGlobalAlert('Đã lưu điểm/nhận xét.', false);
+        showGlobalAlert(result.warning || 'Đã lưu điểm/nhận xét.', !!result.warning);
         e.target.reset();
         document.getElementById('gradeTableWrap').style.display = 'none';
         document.getElementById('gradeEmpty').style.display = 'none';
