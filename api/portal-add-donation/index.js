@@ -11,22 +11,40 @@ module.exports = async function (context, req) {
   if (!(await requireAdmin(context, req))) return;
 
   const body = req.body || {};
+  const donationType = body.donationType === "item" ? "item" : "cash"; // 'cash' (tiền) | 'item' (hiện vật)
   const donorName = String(body.donorName || "").trim();
   const donorEmail = String(body.donorEmail || "").trim().toLowerCase();
-  const amount = Number(body.amount);
+  const amountRaw = body.amount;
+  const amount = amountRaw !== undefined && amountRaw !== null && amountRaw !== "" ? Number(amountRaw) : null;
+  const itemDescription = String(body.itemDescription || "").trim();
   const method = String(body.method || "").trim();
   const note = String(body.note || "").trim();
   const transactionCode = String(body.transactionCode || "").trim().toUpperCase();
   const donatedAt = body.donatedAt ? new Date(body.donatedAt).toISOString() : new Date().toISOString();
 
-  if (!donorName || !amount || amount <= 0) {
+  if (!donorName) {
     context.res.status = 400;
-    context.res.body = { success: false, message: "Vui lòng nhập tên người quyên góp và số tiền hợp lệ." };
+    context.res.body = { success: false, message: "Vui lòng nhập tên người quyên góp." };
+    return;
+  }
+  if (donationType === "cash" && (!amount || amount <= 0)) {
+    context.res.status = 400;
+    context.res.body = { success: false, message: "Vui lòng nhập số tiền hợp lệ cho quyên góp bằng tiền." };
+    return;
+  }
+  if (donationType === "item" && !itemDescription) {
+    context.res.status = 400;
+    context.res.body = { success: false, message: "Vui lòng mô tả hiện vật đã nhận." };
+    return;
+  }
+  if (amount !== null && (isNaN(amount) || amount < 0)) {
+    context.res.status = 400;
+    context.res.body = { success: false, message: "Số tiền / giá trị ước tính không hợp lệ." };
     return;
   }
 
   try {
-    // Lưu ảnh biên lai/minh chứng (nếu có) lên Blob Storage riêng tư
+    // Lưu ảnh biên lai/minh chứng hoặc ảnh hiện vật (nếu có) lên Blob Storage riêng tư
     let uploadedAttachments = [];
     let attachmentWarning = null;
     if (Array.isArray(body.attachments) && body.attachments.length > 0) {
@@ -42,20 +60,22 @@ module.exports = async function (context, req) {
     await donationsTable.createEntity({
       partitionKey: "donation",
       rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      donationType,
       donorName,
       donorEmail,
       amount,
+      itemDescription,
       method,
       note,
-      transactionCode,
+      transactionCode: donationType === "cash" ? transactionCode : "",
       attachmentsJson: JSON.stringify(uploadedAttachments),
       donatedAt,
       recordedAt: new Date().toISOString()
     });
 
-    // Nếu có mã giao dịch, đồng bộ luôn sang bảng Transactions để tra cứu được ở trang Sao Kê
-    // (best-effort — không chặn phản hồi thành công nếu lỗi)
-    if (transactionCode) {
+    // Nếu là quyên góp bằng tiền và có mã giao dịch, đồng bộ sang bảng Transactions để tra cứu ở trang Sao Kê
+    // (hiện vật không có giao dịch ngân hàng nên không đồng bộ — best-effort, không chặn phản hồi thành công nếu lỗi)
+    if (donationType === "cash" && transactionCode) {
       try {
         const txTable = await getTableClient(TRANSACTIONS_TABLE);
         await txTable.upsertEntity({
