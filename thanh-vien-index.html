@@ -180,6 +180,38 @@
     </div>
   </main>
 
+  <div id="mandatoryProfileOverlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:1000; align-items:center; justify-content:center; padding:1.2rem;">
+    <div style="background:#fff; border-radius:16px; max-width:480px; width:100%; padding:2rem; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="text-align:center; margin-bottom:1rem;">
+        <i class="fa-solid fa-circle-exclamation" style="font-size:2rem; color:#d97706;"></i>
+      </div>
+      <h2 style="text-align:center; font-size:1.2rem; margin-bottom:0.4rem;">Vui lòng hoàn tất hồ sơ</h2>
+      <p style="text-align:center; color:var(--text-muted); font-size:0.9rem; margin-bottom:1.4rem;">Bạn cần điền đầy đủ thông tin dưới đây trước khi tiếp tục sử dụng tài khoản.</p>
+      <form id="mandatoryProfileForm" style="display:grid; gap:0.9rem;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Họ và tên *</label>
+          <input type="text" id="mpFullName" placeholder="Họ và tên của bạn" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem;">
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Số điện thoại *</label>
+            <input type="tel" id="mpPhone" placeholder="09xx xxx xxx" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ngày sinh *</label>
+            <input type="date" id="mpDob" min="1920-01-01" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+          </div>
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Địa chỉ *</label>
+          <input type="text" id="mpAddress" placeholder="Số nhà, đường, xã/phường, tỉnh/thành" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+        </div>
+        <div id="mandatoryProfileAlert" style="display:none; font-size:0.85rem; color:#dc2626;"></div>
+        <button type="submit" class="btn" id="mandatoryProfileSubmitBtn" style="width:100%;">Lưu Và Tiếp Tục</button>
+      </form>
+    </div>
+  </div>
+
   <script>
     // ==============================================================
     // Khu vực thành viên — đăng nhập bằng email + mã OTP
@@ -367,6 +399,20 @@
 
         const { email, profile = {}, registrations, donations = [], grades = [] } = payload;
         document.getElementById('headerActions').style.display = 'block';
+
+        const isProfileIncomplete = !profile.fullName || !profile.phone || !profile.dob || !profile.address;
+        if (isProfileIncomplete) {
+          document.getElementById('mpFullName').value = profile.fullName || '';
+          document.getElementById('mpPhone').value = profile.phone || '';
+          document.getElementById('mpDob').value = profile.dob || '';
+          document.getElementById('mpDob').max = new Date().toISOString().slice(0, 10);
+          document.getElementById('mpAddress').value = profile.address || '';
+          document.getElementById('mandatoryProfileOverlay').style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.getElementById('mandatoryProfileOverlay').style.display = 'none';
+          document.body.style.overflow = '';
+        }
 
         const activityHtml = registrations.length > 0
           ? `<div style="overflow-x:auto;">
@@ -662,6 +708,48 @@
           </div>`;
       }
     }
+
+    document.getElementById('mandatoryProfileForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('mandatoryProfileSubmitBtn');
+      const alertEl = document.getElementById('mandatoryProfileAlert');
+      const fullName = document.getElementById('mpFullName').value.trim();
+      const phone = document.getElementById('mpPhone').value.trim();
+      const dob = document.getElementById('mpDob').value;
+      const address = document.getElementById('mpAddress').value.trim();
+
+      if (!fullName || !phone || !dob || !address) {
+        alertEl.style.display = 'block';
+        alertEl.textContent = 'Vui lòng điền đầy đủ các trường có dấu *.';
+        return;
+      }
+
+      const token = localStorage.getItem('wvn_member_token');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      alertEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/member-update-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+          body: JSON.stringify({ fullName, phone, dob, address })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể lưu.');
+
+        document.getElementById('mandatoryProfileOverlay').style.display = 'none';
+        document.body.style.overflow = '';
+        loadMemberInfo();
+      } catch (err) {
+        alertEl.style.display = 'block';
+        alertEl.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Lưu Và Tiếp Tục';
+      }
+    });
+
     loadMemberInfo();
   </script>
 </body>
