@@ -87,22 +87,33 @@
         <form id="donationForm">
           <div class="form-grid">
             <div>
+              <label>Loại quyên góp *</label>
+              <select id="donationType" onchange="toggleDonationTypeFields()">
+                <option value="cash">Tiền mặt / Chuyển khoản</option>
+                <option value="item">Hiện vật (đồ dùng, quần áo, sách vở...)</option>
+              </select>
+            </div>
+            <div>
               <label>Tên người quyên góp *</label>
               <input type="text" id="donorName" required list="knownNamesList" placeholder="Gõ để tìm trong danh sách...">
               <datalist id="knownNamesList"></datalist>
             </div>
             <div><label>Email (nếu có)</label><input type="email" id="donorEmail" placeholder="Để hiện trong trang thành viên của họ"></div>
-            <div><label>Số tiền (VNĐ) *</label><input type="number" id="donationAmount" min="1" required></div>
-            <div><label>Mã giao dịch</label><input type="text" id="donationTransactionCode" placeholder="Để tra cứu được ở trang Sao Kê"></div>
-            <div><label>Hình thức</label><input type="text" id="donationMethod" placeholder="VD: Chuyển khoản QR"></div>
+            <div id="donationAmountField"><label>Số tiền (VNĐ) *</label><input type="number" id="donationAmount" min="1"></div>
+            <div id="donationTransactionCodeField"><label>Mã giao dịch</label><input type="text" id="donationTransactionCode" placeholder="Để tra cứu được ở trang Sao Kê"></div>
+            <div><label>Hình thức</label><input type="text" id="donationMethod" placeholder="VD: Chuyển khoản QR / Mang tới trực tiếp"></div>
             <div><label>Ngày quyên góp</label><input type="date" id="donationDate"></div>
+          </div>
+          <div id="donationItemField" style="display:none; margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Mô tả hiện vật đã nhận *</label>
+            <textarea id="donationItemDescription" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="VD: 20 áo ấm, 15 bộ sách giáo khoa lớp 3..."></textarea>
           </div>
           <div style="margin-bottom:1rem;">
             <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ghi chú</label>
             <textarea id="donationNote" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;"></textarea>
           </div>
           <div style="margin-bottom:1rem;">
-            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ảnh biên lai / minh chứng chuyển khoản (không bắt buộc)</label>
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ảnh biên lai / minh chứng (không bắt buộc)</label>
             <input type="file" id="donationAttachment" accept="image/*">
           </div>
           <button type="submit" class="btn" id="donationSubmitBtn">Lưu Quyên Góp</button>
@@ -112,7 +123,7 @@
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
           <table>
-            <thead><tr><th>Người quyên góp</th><th>Email</th><th>Số tiền</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th><th>Ảnh</th><th>Xác nhận từ TV</th></tr></thead>
+            <thead><tr><th>Loại</th><th>Người quyên góp</th><th>Email</th><th>Giá trị / Hiện vật</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th><th>Ảnh</th><th>Xác nhận từ TV</th></tr></thead>
             <tbody id="donTableBody"></tbody>
           </table>
         </div>
@@ -317,6 +328,13 @@
     }
 
     // ============== QUYÊN GÓP ==============
+    function toggleDonationTypeFields() {
+      const isItem = document.getElementById('donationType').value === 'item';
+      document.getElementById('donationAmountField').style.display = isItem ? 'none' : 'block';
+      document.getElementById('donationTransactionCodeField').style.display = isItem ? 'none' : 'block';
+      document.getElementById('donationItemField').style.display = isItem ? 'block' : 'none';
+    }
+
     async function loadDonations() {
       try {
         const { donations } = await apiCall('/api/portal-list-donations');
@@ -328,9 +346,10 @@
         document.getElementById('donTableWrap').style.display = 'block';
         document.getElementById('donTableBody').innerHTML = donations.map(d => `
           <tr>
+            <td>${d.donationType === 'item' ? '<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fef3c7; color:#a16207;">Hiện vật</span>' : '<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dbeafe; color:#1e40af;">Tiền mặt</span>'}</td>
             <td>${escapeHtml(d.donorName)}</td>
             <td>${escapeHtml(d.donorEmail)}</td>
-            <td>${formatMoney(d.amount)}</td>
+            <td>${d.donationType === 'item' ? escapeHtml(d.itemDescription) : formatMoney(d.amount)}</td>
             <td>${escapeHtml(d.transactionCode) || '—'}</td>
             <td>${escapeHtml(d.method)}</td>
             <td>${formatDate(d.donatedAt)}</td>
@@ -385,9 +404,11 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            donationType: document.getElementById('donationType').value,
             donorName: document.getElementById('donorName').value.trim(),
             donorEmail: document.getElementById('donorEmail').value.trim(),
             amount: document.getElementById('donationAmount').value,
+            itemDescription: document.getElementById('donationItemDescription').value.trim(),
             transactionCode: document.getElementById('donationTransactionCode').value.trim(),
             method: document.getElementById('donationMethod').value.trim(),
             note: document.getElementById('donationNote').value.trim(),
@@ -397,6 +418,7 @@
         });
         showGlobalAlert(result.warning || 'Đã lưu quyên góp.', !!result.warning);
         e.target.reset();
+        toggleDonationTypeFields();
         document.getElementById('donTableWrap').style.display = 'none';
         document.getElementById('donEmpty').style.display = 'none';
         document.getElementById('donLoading').style.display = 'block';
