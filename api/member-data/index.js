@@ -136,6 +136,18 @@ module.exports = async function (context, req) {
         queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
       });
       for await (const entity of gradeIterator) {
+        let attachments = [];
+        try {
+          const rawAttachments = JSON.parse(entity.attachmentsJson || "[]");
+          attachments = await Promise.all(
+            rawAttachments.map(async (att) => ({
+              filename: att.filename,
+              url: await getAttachmentSasUrl(att.blobName)
+            }))
+          );
+        } catch (e) {
+          // Không có ảnh đính kèm — bỏ qua
+        }
         grades.push({
           studentName: entity.studentName,
           program: entity.program,
@@ -143,6 +155,7 @@ module.exports = async function (context, req) {
           term: entity.term,
           score: entity.score !== undefined && entity.score !== null ? entity.score : null,
           comment: entity.comment || "",
+          attachments,
           recordedAt: entity.recordedAt
         });
       }
