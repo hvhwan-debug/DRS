@@ -24,7 +24,7 @@ function statusColor(status) {
   return "#a16207";
 }
 
-function buildStatusEmailHtml(formTitle, status) {
+function buildStatusEmailHtml(formTitle, status, reason) {
   return `<!DOCTYPE html>
 <html lang="vi">
   <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
@@ -41,6 +41,10 @@ function buildStatusEmailHtml(formTitle, status) {
             <div style="text-align:center;margin:20px 0;">
               <span style="display:inline-block;font-size:18px;font-weight:800;color:${statusColor(status)};background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 22px;">${status}</span>
             </div>
+            ${reason ? `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:14px 16px;margin-bottom:18px;">
+              <p style="font-size:13px;color:#991b1b;margin:0 0 4px;font-weight:700;">Lý do:</p>
+              <p style="font-size:14px;color:#7f1d1d;margin:0;">${reason}</p>
+            </div>` : ''}
             <p style="font-size:13px;color:#64748b;margin:0 0 6px;">Đăng nhập vào khu vực thành viên để xem chi tiết đầy đủ.</p>
             <div style="text-align:center;margin-top:20px;">
               <a href="https://wvn.vn/thanh-vien-index.html" style="display:inline-block;background:#0284c7;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:10px 22px;border-radius:8px;">Xem Trong Trang Thành Viên</a>
@@ -61,6 +65,7 @@ module.exports = async function (context, req) {
   const email = String((req.body && req.body.email) || "").trim();
   const id = String((req.body && req.body.id) || "").trim();
   const status = String((req.body && req.body.status) || "").trim();
+  const reason = String((req.body && req.body.reason) || "").trim();
 
   if (!email || !id || !status) {
     context.res.status = 400;
@@ -70,6 +75,11 @@ module.exports = async function (context, req) {
   if (!ALLOWED_STATUSES.includes(status)) {
     context.res.status = 400;
     context.res.body = { success: false, message: "Trạng thái không hợp lệ." };
+    return;
+  }
+  if (status === "Từ chối" && !reason) {
+    context.res.status = 400;
+    context.res.body = { success: false, message: "Vui lòng nhập lý do từ chối." };
     return;
   }
 
@@ -87,7 +97,8 @@ module.exports = async function (context, req) {
     await regTable.updateEntity({
       partitionKey: email,
       rowKey: id,
-      status
+      status,
+      rejectionReason: status === "Từ chối" ? reason : ""
     }, "Merge");
 
     // Gửi email báo cho người đăng ký (best-effort — không chặn phản hồi thành công nếu gửi lỗi)
@@ -101,7 +112,7 @@ module.exports = async function (context, req) {
           to: email,
           from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
           subject: `Cập nhật trạng thái đơn đăng ký: ${status}`,
-          html: buildStatusEmailHtml(formTitle, status)
+          html: buildStatusEmailHtml(formTitle, status, status === "Từ chối" ? reason : null)
         });
       } catch (err) {
         context.log.error("Gửi email thông báo trạng thái thất bại:", err?.response?.body || err.message);
