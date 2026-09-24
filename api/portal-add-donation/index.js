@@ -28,11 +28,13 @@ module.exports = async function (context, req) {
   try {
     // Lưu ảnh biên lai/minh chứng (nếu có) lên Blob Storage riêng tư
     let uploadedAttachments = [];
+    let attachmentWarning = null;
     if (Array.isArray(body.attachments) && body.attachments.length > 0) {
       try {
         uploadedAttachments = await uploadAttachments(body.attachments);
       } catch (err) {
         context.log.error("Lưu ảnh quyên góp vào Blob Storage thất bại:", err.message);
+        attachmentWarning = "Đã lưu quyên góp, nhưng KHÔNG lưu được ảnh (" + err.message + "). Ảnh có thể quá lớn hoặc sai định dạng — thử lại với ảnh nhỏ hơn.";
       }
     }
 
@@ -70,7 +72,7 @@ module.exports = async function (context, req) {
     }
 
     context.res.status = 200;
-    context.res.body = { success: true };
+    context.res.body = { success: true, warning: attachmentWarning };
   } catch (err) {
     context.log.error("Lỗi thêm quyên góp:", err.message);
     context.res.status = 500;
