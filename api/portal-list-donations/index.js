@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 
 const DONATIONS_TABLE = "Donations";
 
@@ -12,6 +13,19 @@ module.exports = async function (context, req) {
     const donationsTable = await getTableClient(DONATIONS_TABLE);
     const donations = [];
     for await (const entity of donationsTable.listEntities()) {
+      let attachments = [];
+      try {
+        const rawAttachments = JSON.parse(entity.attachmentsJson || "[]");
+        attachments = await Promise.all(
+          rawAttachments.map(async (att) => ({
+            filename: att.filename,
+            url: await getAttachmentSasUrl(att.blobName)
+          }))
+        );
+      } catch (e) {
+        // Không có ảnh đính kèm hoặc lỗi tạo link — bỏ qua
+      }
+
       donations.push({
         id: entity.rowKey,
         donorName: entity.donorName,
@@ -20,6 +34,7 @@ module.exports = async function (context, req) {
         method: entity.method || "",
         transactionCode: entity.transactionCode || "",
         note: entity.note || "",
+        attachments,
         donatedAt: entity.donatedAt,
         recordedAt: entity.recordedAt
       });
