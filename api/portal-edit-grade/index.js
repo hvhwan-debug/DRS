@@ -51,11 +51,8 @@ module.exports = async function (context, req) {
       throw err;
     }
 
-    if (entity.confirmationStatus === "confirmed") {
-      context.res.status = 403;
-      context.res.body = { success: false, message: "Dữ liệu đã được thành viên xác nhận, không thể sửa nữa." };
-      return;
-    }
+    // Admin có toàn quyền sửa kể cả khi thành viên đã xác nhận — dữ liệu sau khi sửa
+    // sẽ tự động chuyển về "chờ xác nhận" để thành viên xem lại và xác nhận đúng thông tin mới.
 
     let attachmentsJson = entity.attachmentsJson;
     let warning = null;
