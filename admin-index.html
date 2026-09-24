@@ -93,6 +93,7 @@
 
     <div class="panel" id="panel-registrations">
       <div class="card">
+        <input type="text" id="regSearchInput" placeholder="Tìm theo email, tên, chương trình..." oninput="renderRegistrationsTable()" style="width:100%; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; margin-bottom:1rem;">
         <div class="loading-state" id="regLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="regTableWrap">
           <table>
@@ -387,27 +388,7 @@
           return;
         }
         document.getElementById('regTableWrap').style.display = 'block';
-        const statuses = ['Đã ghi nhận - Chờ xử lý', 'Đã duyệt', 'Từ chối'];
-        document.getElementById('regTableBody').innerHTML = registrations.map(r => {
-          const preview = Object.entries(r.data || {})
-            .filter(([k, v]) => v && !['_honey', '_captcha'].includes(k))
-            .slice(0, 4)
-            .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`)
-            .join('<br>');
-          const options = statuses.map(s => `<option value="${escapeHtml(s)}" ${r.status === s ? 'selected' : ''}>${escapeHtml(s)}</option>`).join('');
-          return `<tr>
-            <td><strong>${escapeHtml(r.formTitle)}</strong></td>
-            <td>${escapeHtml(r.email)}</td>
-            <td>${formatDate(r.submittedAt)}</td>
-            <td class="data-preview">${preview}</td>
-            <td>
-              <select class="status-select" data-prev="${escapeHtml(r.status)}" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this)">
-                ${options}
-              </select>
-              ${r.status === 'Từ chối' && r.rejectionReason ? `<div style="font-size:0.76rem; color:#b91c1c; margin-top:0.3rem;">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : ''}
-            </td>
-          </tr>`;
-        }).join('');
+        renderRegistrationsTable();
 
         // Gom tên (phụ huynh/người đăng ký) từ các đơn để gợi ý khi nhập tên người quyên góp
         const nameKeys = ['ten_phu_huynh', 'fullname', 'fullName', 'name', 'ho_ten'];
@@ -438,6 +419,40 @@
         document.getElementById('regLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
+    }
+
+    function renderRegistrationsTable() {
+      const query = (document.getElementById('regSearchInput').value || '').trim().toLowerCase();
+      const filtered = !query ? allRegistrationsData : allRegistrationsData.filter(r => {
+        const haystack = [r.email, r.formTitle, ...Object.values(r.data || {})].join(' ').toLowerCase();
+        return haystack.includes(query);
+      });
+
+      const statuses = ['Đã ghi nhận - Chờ xử lý', 'Đã duyệt', 'Từ chối'];
+      if (filtered.length === 0) {
+        document.getElementById('regTableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy đơn phù hợp.</td></tr>`;
+        return;
+      }
+      document.getElementById('regTableBody').innerHTML = filtered.map(r => {
+        const preview = Object.entries(r.data || {})
+          .filter(([k, v]) => v && !['_honey', '_captcha'].includes(k))
+          .slice(0, 4)
+          .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`)
+          .join('<br>');
+        const options = statuses.map(s => `<option value="${escapeHtml(s)}" ${r.status === s ? 'selected' : ''}>${escapeHtml(s)}</option>`).join('');
+        return `<tr>
+          <td><strong>${escapeHtml(r.formTitle)}</strong></td>
+          <td>${escapeHtml(r.email)}</td>
+          <td>${formatDate(r.submittedAt)}</td>
+          <td class="data-preview">${preview}</td>
+          <td>
+            <select class="status-select" data-prev="${escapeHtml(r.status)}" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this)">
+              ${options}
+            </select>
+            ${r.status === 'Từ chối' && r.rejectionReason ? `<div style="font-size:0.76rem; color:#b91c1c; margin-top:0.3rem;">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
     }
 
     async function updateStatus(emailEnc, idEnc, selectEl) {
@@ -947,9 +962,28 @@
           <td style="display:flex; gap:0.5rem; flex-wrap:wrap;">
             <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="openMemberOverview('${encodeURIComponent(m.email)}')">Xem chi tiết</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem; ${m.isBlocked ? 'color:#15803d; border-color:#86efac;' : ''}" onclick="toggleBlockMember('${encodeURIComponent(m.email)}', ${!m.isBlocked})">${m.isBlocked ? 'Bỏ chặn' : 'Chặn'}</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="resetMemberPassword('${encodeURIComponent(m.email)}')">Reset MK</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="deleteMember('${encodeURIComponent(m.email)}')">Xoá</button>
           </td>
         </tr>`).join('');
+    }
+
+    async function resetMemberPassword(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      if (!confirm(`Đặt lại mật khẩu cho ${email}? Hệ thống sẽ tạo mật khẩu mới ngẫu nhiên và gửi email báo cho họ.`)) return;
+      try {
+        const result = await apiCall('/api/portal-reset-member-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        showGlobalAlert(result.warning || 'Đã đặt lại mật khẩu và gửi email báo.', !!result.warning);
+        if (result.tempPassword) {
+          alert(`Mật khẩu tạm thời cho ${email}:\n\n${result.tempPassword}\n\n(Đã gửi email cho họ — chỉ dùng thông tin này nếu email không tới được.)`);
+        }
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
     }
 
     async function toggleBlockMember(emailEnc, block) {
@@ -1020,7 +1054,10 @@
               <div><strong>Có tài khoản đăng nhập:</strong> ${data.hasAccount ? 'Có' : 'Không'}
                 ${data.hasAccount ? `<span style="font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; margin-left:0.4rem; ${data.isBlocked ? 'background:#fee2e2; color:#b91c1c;' : 'background:#dcfce7; color:#15803d;'}">${data.isBlocked ? 'Đã khoá' : 'Đang hoạt động'}</span>` : ''}
               </div>
-              ${data.hasAccount ? `<div style="margin-top:0.6rem;"><button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem; ${data.isBlocked ? 'color:#15803d; border-color:#86efac;' : ''}" onclick="toggleBlockMember('${encodeURIComponent(email)}', ${!data.isBlocked})">${data.isBlocked ? 'Bỏ chặn tài khoản' : 'Chặn tài khoản'}</button></div>` : ''}
+              ${data.hasAccount ? `<div style="margin-top:0.6rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem; ${data.isBlocked ? 'color:#15803d; border-color:#86efac;' : ''}" onclick="toggleBlockMember('${encodeURIComponent(email)}', ${!data.isBlocked})">${data.isBlocked ? 'Bỏ chặn tài khoản' : 'Chặn tài khoản'}</button>
+                <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="resetMemberPassword('${encodeURIComponent(email)}')">Đặt Lại Mật Khẩu</button>
+              </div>` : ''}
             </div>
             <div id="overviewProfileEdit" style="display:none;">
               <div class="form-grid">
