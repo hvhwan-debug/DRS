@@ -6,6 +6,7 @@ const REGISTRATIONS_TABLE = "Registrations";
 const DONATIONS_TABLE = "Donations";
 const PROFILES_TABLE = "MemberProfiles";
 const GRADES_TABLE = "Grades";
+const TUITION_TABLE = "TuitionPayments";
 
 const FORM_TITLES = {
   contact: "Liên hệ",
@@ -184,8 +185,43 @@ module.exports = async function (context, req) {
       // Chưa có hồ sơ nào được lưu — dùng giá trị rỗng mặc định ở trên
     }
 
+    // Học phí đã nộp, khớp theo email phụ huynh
+    const tuitionPayments = [];
+    try {
+      const tuitionTable = await getTableClient(TUITION_TABLE);
+      const tuitionIterator = tuitionTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of tuitionIterator) {
+        let attachments = [];
+        try {
+          const rawAttachments = JSON.parse(entity.attachmentsJson || "[]");
+          attachments = await Promise.all(
+            rawAttachments.map(async (att) => ({
+              filename: att.filename,
+              url: await getAttachmentSasUrl(att.blobName)
+            }))
+          );
+        } catch (e) {}
+        tuitionPayments.push({
+          id: entity.rowKey,
+          studentName: entity.studentName,
+          program: entity.program,
+          amount: entity.amount,
+          period: entity.period || "",
+          method: entity.method || "",
+          note: entity.note || "",
+          attachments,
+          confirmationStatus: entity.confirmationStatus || "pending",
+          memberFeedback: entity.memberFeedback || "",
+          paidAt: entity.paidAt
+        });
+      }
+      tuitionPayments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
+    } catch (e) {}
+
     context.res.status = 200;
-    context.res.body = { success: true, email, profile, registrations, donations, grades };
+    context.res.body = { success: true, email, profile, registrations, donations, grades, tuitionPayments };
   } catch (err) {
     context.log.error("Lỗi lấy dữ liệu thành viên:", err.message);
     context.res.status = 500;
