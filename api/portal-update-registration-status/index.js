@@ -1,6 +1,7 @@
 const sgMail = require("@sendgrid/mail");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 
 const REGISTRATIONS_TABLE = "Registrations";
 const ALLOWED_STATUSES = ["Đã ghi nhận - Chờ xử lý", "Đã duyệt", "Từ chối"];
@@ -24,7 +25,7 @@ function statusColor(status) {
   return "#a16207";
 }
 
-function buildStatusEmailHtml(formTitle, status, reason) {
+function buildStatusEmailHtml(formTitle, status, reason, greeting) {
   return `<!DOCTYPE html>
 <html lang="vi">
   <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
@@ -36,6 +37,7 @@ function buildStatusEmailHtml(formTitle, status, reason) {
             <div style="color:#ffffff;font-size:17px;font-weight:800;">Mạng Lưới Tri Thức Việt Nam</div>
           </td></tr>
           <tr><td style="padding:32px;">
+            <p style="font-size:14px;color:#334155;margin:0 0 16px;">${greeting}</p>
             <p style="font-size:15px;color:#0f172a;margin:0 0 10px;">Đơn đăng ký của bạn vừa được cập nhật trạng thái:</p>
             <p style="font-size:16px;color:#0f172a;margin:0 0 18px;font-weight:700;">${formTitle}</p>
             <div style="text-align:center;margin:20px 0;">
@@ -107,12 +109,14 @@ module.exports = async function (context, req) {
     const fromEmail = process.env.SENDGRID_FROM_EMAIL;
     if (apiKey && fromEmail) {
       try {
+        const displayName = await getMemberDisplayName(email);
+        const greeting = buildGreeting(displayName);
         sgMail.setApiKey(apiKey);
         await sgMail.send({
           to: email,
           from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
           subject: `Cập nhật trạng thái đơn đăng ký: ${status}`,
-          html: buildStatusEmailHtml(formTitle, status, status === "Từ chối" ? reason : null)
+          html: buildStatusEmailHtml(formTitle, status, status === "Từ chối" ? reason : null, greeting)
         });
       } catch (err) {
         context.log.error("Gửi email thông báo trạng thái thất bại:", err?.response?.body || err.message);
