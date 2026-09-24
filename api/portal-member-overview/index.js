@@ -50,10 +50,12 @@ module.exports = async function (context, req) {
   try {
     // Có tài khoản đăng nhập hay không
     let hasAccount = false;
+    let isBlocked = false;
     try {
       const membersTable = await getTableClient(MEMBERS_TABLE);
-      await membersTable.getEntity("member", email);
+      const memberEntity = await membersTable.getEntity("member", email);
       hasAccount = true;
+      isBlocked = !!memberEntity.isBlocked;
     } catch (e) { /* không có tài khoản -> mặc định false */ }
 
     // Hồ sơ tự điền
@@ -130,7 +132,7 @@ module.exports = async function (context, req) {
     } catch (e) {}
 
     context.res.status = 200;
-    context.res.body = { success: true, email, hasAccount, profile, registrations, donations, grades };
+    context.res.body = { success: true, email, hasAccount, isBlocked, profile, registrations, donations, grades };
   } catch (err) {
     context.log.error("Lỗi lấy tổng quan thành viên:", err.message);
     context.res.status = 500;
