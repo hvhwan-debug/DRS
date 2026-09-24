@@ -86,6 +86,7 @@ module.exports = async function (context, req) {
         formType: entity.formType,
         formTitle: FORM_TITLES[entity.formType] || entity.formType,
         status: entity.status || "Đã ghi nhận",
+        rejectionReason: entity.rejectionReason || "",
         submittedAt: entity.submittedAt,
         data,
         attachments
