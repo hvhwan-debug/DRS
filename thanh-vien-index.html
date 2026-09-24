@@ -327,6 +327,7 @@
                     <th style="padding:0.5rem 0.6rem;">Buổi học</th>
                     <th style="padding:0.5rem 0.6rem;">Điểm</th>
                     <th style="padding:0.5rem 0.6rem;">Nhận xét của giáo viên</th>
+                    <th style="padding:0.5rem 0.6rem;">Ảnh bài làm</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -338,10 +339,11 @@
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.term || '—'}</td>
                       <td style="padding:0.6rem; font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
+                      <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
                     </tr>
                   `).join('') : `
                     <tr>
-                      <td colspan="6" style="padding:1.4rem 0.6rem; text-align:center; color:var(--text-muted);">
+                      <td colspan="7" style="padding:1.4rem 0.6rem; text-align:center; color:var(--text-muted);">
                         <i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận.
                       </td>
                     </tr>
