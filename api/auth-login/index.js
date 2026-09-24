@@ -33,6 +33,12 @@ module.exports = async function (context, req) {
       throw err;
     }
 
+    if (member.isBlocked) {
+      context.res.status = 403;
+      context.res.body = { success: false, message: "Tài khoản của bạn đã bị khoá. Vui lòng liên hệ với chúng tôi để được hỗ trợ." };
+      return;
+    }
+
     if ((member.failedAttempts || 0) >= MAX_FAILED_ATTEMPTS) {
       context.res.status = 429;
       context.res.body = { success: false, message: "Tài khoản tạm khoá do nhập sai quá nhiều lần. Vui lòng dùng \"Quên mật khẩu\" để đặt lại." };
