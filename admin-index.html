@@ -50,7 +50,10 @@
 <body>
 
   <header>
-    <div class="title">Mạng Lưới Tri Thức Việt Nam <span>· Quản Trị</span></div>
+    <div class="title" style="display:flex; align-items:center; gap:0.6rem;">
+      <img src="images/logo-wvn.png" alt="Logo" style="height:32px; width:auto;">
+      Mạng Lưới Tri Thức Việt Nam <span>· Quản Trị</span>
+    </div>
     <button class="btn btn-outline" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</button>
   </header>
 
@@ -589,13 +592,34 @@
       document.getElementById('memberTableWrap').style.display = 'block';
       document.getElementById('memberTableBody').innerHTML = filtered.map(m => `
         <tr>
-          <td>${escapeHtml(m.email)}</td>
+          <td>${escapeHtml(m.email)} ${m.isBlocked ? '<span style="font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fee2e2; color:#b91c1c; margin-left:0.4rem;">Đã khoá</span>' : ''}</td>
           <td>${formatDate(m.updatedAt)}</td>
-          <td style="display:flex; gap:0.5rem;">
+          <td style="display:flex; gap:0.5rem; flex-wrap:wrap;">
             <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="openMemberOverview('${encodeURIComponent(m.email)}')">Xem chi tiết</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem; ${m.isBlocked ? 'color:#15803d; border-color:#86efac;' : ''}" onclick="toggleBlockMember('${encodeURIComponent(m.email)}', ${!m.isBlocked})">${m.isBlocked ? 'Bỏ chặn' : 'Chặn'}</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="deleteMember('${encodeURIComponent(m.email)}')">Xoá</button>
           </td>
         </tr>`).join('');
+    }
+
+    async function toggleBlockMember(emailEnc, block) {
+      const email = decodeURIComponent(emailEnc);
+      const confirmMsg = block
+        ? `Chặn tài khoản ${email}? Họ sẽ không thể đăng nhập được nữa cho tới khi bạn bỏ chặn.`
+        : `Bỏ chặn tài khoản ${email}? Họ sẽ đăng nhập được bình thường trở lại.`;
+      if (!confirm(confirmMsg)) return;
+      try {
+        await apiCall('/api/portal-toggle-member-block', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, blocked: block })
+        });
+        showGlobalAlert(block ? 'Đã chặn tài khoản.' : 'Đã bỏ chặn tài khoản.', false);
+        loadMembers();
+        if (currentOverviewEmail === email) openMemberOverview(emailEnc);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
     }
 
     async function deleteMember(emailEnc) {
@@ -643,7 +667,10 @@
               <div><strong>SĐT:</strong> ${escapeHtml(data.profile.phone) || '—'}</div>
               <div><strong>Ngày sinh:</strong> ${escapeHtml(data.profile.dob) || '—'}</div>
               <div><strong>Địa chỉ:</strong> ${escapeHtml(data.profile.address) || '—'}</div>
-              <div><strong>Có tài khoản đăng nhập:</strong> ${data.hasAccount ? 'Có' : 'Không'}</div>
+              <div><strong>Có tài khoản đăng nhập:</strong> ${data.hasAccount ? 'Có' : 'Không'}
+                ${data.hasAccount ? `<span style="font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; margin-left:0.4rem; ${data.isBlocked ? 'background:#fee2e2; color:#b91c1c;' : 'background:#dcfce7; color:#15803d;'}">${data.isBlocked ? 'Đã khoá' : 'Đang hoạt động'}</span>` : ''}
+              </div>
+              ${data.hasAccount ? `<div style="margin-top:0.6rem;"><button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem; ${data.isBlocked ? 'color:#15803d; border-color:#86efac;' : ''}" onclick="toggleBlockMember('${encodeURIComponent(email)}', ${!data.isBlocked})">${data.isBlocked ? 'Bỏ chặn tài khoản' : 'Chặn tài khoản'}</button></div>` : ''}
             </div>
             <div id="overviewProfileEdit" style="display:none;">
               <div class="form-grid">
