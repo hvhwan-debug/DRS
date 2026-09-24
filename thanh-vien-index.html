@@ -76,6 +76,31 @@
     }
     .btn-outline:hover { background: #fef2f2; transform: none; }
 
+    #logoutBtn {
+      padding: 0.45rem 1rem; font-size: 0.85rem; border-radius: 999px;
+    }
+    .mobile-menu-btn {
+      display: none; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border);
+      background: #fff; color: var(--text-dark); font-size: 1.1rem; cursor: pointer; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .mobile-menu-dropdown {
+      display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #fff;
+      border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 24px rgba(15,23,42,0.12);
+      min-width: 160px; overflow: hidden; z-index: 50;
+    }
+    .mobile-menu-dropdown.open { display: block; }
+    .mobile-menu-dropdown button {
+      width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left;
+      font-size: 0.9rem; color: #dc2626; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .mobile-menu-dropdown button:hover { background: #fef2f2; }
+
+    @media (max-width: 640px) {
+      #logoutBtn { display: none !important; }
+      .mobile-menu-btn { display: flex; }
+    }
+
     .page-wrap { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
 
     .welcome-banner {
@@ -134,10 +159,16 @@
           <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
         </div>
       </a>
-      <div>
-        <button class="btn btn-outline" id="logoutBtn" onclick="logout()" style="display:none;">
+      <div style="position:relative; display:none;" id="headerActions">
+        <button class="btn btn-outline" id="logoutBtn" onclick="logout()">
           <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
         </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="mobile-menu-dropdown" id="mobileMenuDropdown">
+          <button type="button" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</button>
+        </div>
       </div>
     </div>
   </header>
@@ -156,6 +187,15 @@
     // ==============================================================
 
     let currentActiveMemberTab = 'account';
+
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenuDropdown').classList.toggle('open');
+    }
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('#headerActions')) {
+        document.getElementById('mobileMenuDropdown').classList.remove('open');
+      }
+    });
 
     function switchMemberTab(tab) {
       currentActiveMemberTab = tab;
@@ -326,7 +366,7 @@
         }
 
         const { email, profile = {}, registrations, donations = [], grades = [] } = payload;
-        document.getElementById('logoutBtn').style.display = 'inline-block';
+        document.getElementById('headerActions').style.display = 'block';
 
         const activityHtml = registrations.length > 0
           ? `<div style="overflow-x:auto;">
