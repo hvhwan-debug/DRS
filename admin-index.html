@@ -477,6 +477,41 @@
 
     // ============== THÀNH VIÊN ==============
     let allMembers = [];
+    let currentOverviewEmail = null;
+
+    function toggleOverviewProfileEdit(showEdit) {
+      document.getElementById('overviewProfileView').style.display = showEdit ? 'none' : 'block';
+      document.getElementById('overviewProfileEdit').style.display = showEdit ? 'block' : 'none';
+    }
+
+    async function saveOverviewProfile() {
+      const btn = document.getElementById('overviewProfileSaveBtn');
+      const alertEl = document.getElementById('overviewProfileAlert');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      alertEl.style.display = 'none';
+      try {
+        await apiCall('/api/portal-update-member-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: currentOverviewEmail,
+            fullName: document.getElementById('ovFullName').value.trim(),
+            phone: document.getElementById('ovPhone').value.trim(),
+            address: document.getElementById('ovAddress').value.trim(),
+            dob: document.getElementById('ovDob').value
+          })
+        });
+        showGlobalAlert('Đã lưu hồ sơ.', false);
+        openMemberOverview(encodeURIComponent(currentOverviewEmail));
+      } catch (err) {
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#dc2626';
+        alertEl.textContent = err.message;
+        btn.disabled = false;
+        btn.innerHTML = 'Lưu';
+      }
+    }
 
     async function loadMembers() {
       try {
@@ -545,15 +580,32 @@
       try {
         const data = await apiCall('/api/portal-member-overview?email=' + encodeURIComponent(email));
 
+        currentOverviewEmail = email;
         const profileHtml = `
           <div style="margin-bottom:1.4rem;">
-            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Hồ sơ cá nhân</h4>
-            <div style="font-size:0.9rem; line-height:1.9;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+              <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin:0;">Hồ sơ cá nhân</h4>
+              <button type="button" class="btn" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="toggleOverviewProfileEdit(true)">Sửa</button>
+            </div>
+            <div id="overviewProfileView" style="font-size:0.9rem; line-height:1.9;">
               <div><strong>Họ tên:</strong> ${escapeHtml(data.profile.fullName) || '—'}</div>
               <div><strong>SĐT:</strong> ${escapeHtml(data.profile.phone) || '—'}</div>
               <div><strong>Ngày sinh:</strong> ${escapeHtml(data.profile.dob) || '—'}</div>
               <div><strong>Địa chỉ:</strong> ${escapeHtml(data.profile.address) || '—'}</div>
               <div><strong>Có tài khoản đăng nhập:</strong> ${data.hasAccount ? 'Có' : 'Không'}</div>
+            </div>
+            <div id="overviewProfileEdit" style="display:none;">
+              <div class="form-grid">
+                <div><label>Họ tên</label><input type="text" id="ovFullName" value="${escapeHtml(data.profile.fullName)}"></div>
+                <div><label>SĐT</label><input type="text" id="ovPhone" value="${escapeHtml(data.profile.phone)}"></div>
+                <div><label>Ngày sinh</label><input type="date" id="ovDob" value="${escapeHtml(data.profile.dob)}" min="1920-01-01" max="${new Date().toISOString().slice(0,10)}"></div>
+                <div><label>Địa chỉ</label><input type="text" id="ovAddress" value="${escapeHtml(data.profile.address)}"></div>
+              </div>
+              <div id="overviewProfileAlert" style="display:none; font-size:0.85rem; margin-bottom:0.6rem;"></div>
+              <div style="display:flex; gap:0.6rem;">
+                <button type="button" class="btn" id="overviewProfileSaveBtn" onclick="saveOverviewProfile()">Lưu</button>
+                <button type="button" class="btn btn-outline" onclick="toggleOverviewProfileEdit(false)">Huỷ</button>
+              </div>
             </div>
           </div>`;
 
