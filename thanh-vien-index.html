@@ -175,6 +175,34 @@
       chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     }
 
+    async function confirmRecord(type, id, action) {
+      let feedback = '';
+      if (action === 'reject') {
+        feedback = prompt('Vui lòng cho biết lý do từ chối / thông tin nào chưa đúng:');
+        if (feedback === null) return; // người dùng bấm Huỷ
+        if (!feedback.trim()) {
+          alert('Vui lòng nhập lý do từ chối.');
+          return;
+        }
+      } else {
+        if (!confirm('Xác nhận thông tin này là chính xác?')) return;
+      }
+
+      const token = localStorage.getItem('wvn_member_token');
+      try {
+        const res = await fetch('/api/member-confirm-record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+          body: JSON.stringify({ type, id, action, feedback })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Có lỗi xảy ra.');
+        loadMemberInfo();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
     function formatDateTime(iso) {
       if (!iso) return '—';
       const d = new Date(iso);
@@ -318,10 +346,29 @@
               <a href="hoat-dong.html" class="btn">Xem Hoạt Động Đang Diễn Ra</a>
             </div>`;
 
+        function confirmationCellHtml(type, id, status, feedback) {
+          if (status === 'confirmed') {
+            return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;"><i class="fa-solid fa-check"></i> Đã xác nhận</span>`;
+          }
+          if (status === 'rejected') {
+            return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeAttr(feedback)}"><i class="fa-solid fa-xmark"></i> Đã từ chối</span>`;
+          }
+          return `<div style="display:flex; gap:0.4rem;">
+              <button type="button" onclick="confirmRecord('${type}','${id}','confirm')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #86efac; background:#f0fdf4; color:#15803d; font-size:0.78rem; cursor:pointer;">Xác nhận</button>
+              <button type="button" onclick="confirmRecord('${type}','${id}','reject')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #fca5a5; background:#fef2f2; color:#b91c1c; font-size:0.78rem; cursor:pointer;">Từ chối</button>
+            </div>`;
+        }
+
+        function escapeAttr(str) {
+          const div = document.createElement('div');
+          div.textContent = str || '';
+          return div.innerHTML.replace(/"/g, '&quot;');
+        }
+
         const donationsHtml = `<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Mã giao dịch</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th><th style="padding:0.4rem;">Ảnh</th>
+                <th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Mã giao dịch</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
               </tr></thead>
               <tbody>
                 ${donations.length > 0 ? donations.map(d => `
@@ -332,10 +379,11 @@
                     <td style="padding:0.5rem 0.4rem;">${d.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${d.note || '—'}</td>
                     <td style="padding:0.5rem 0.4rem;">${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
+                    <td style="padding:0.5rem 0.4rem;">${confirmationCellHtml('donation', d.id, d.confirmationStatus, d.memberFeedback)}</td>
                   </tr>
                 `).join('') : `
                   <tr>
-                    <td colspan="6" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
+                    <td colspan="7" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
                       <i class="fa-solid fa-hand-holding-dollar"></i> Chưa có quyên góp nào được ghi nhận với email này.
                     </td>
                   </tr>
@@ -361,6 +409,7 @@
                     <th style="padding:0.5rem 0.6rem;">Điểm</th>
                     <th style="padding:0.5rem 0.6rem;">Nhận xét của giáo viên</th>
                     <th style="padding:0.5rem 0.6rem;">Ảnh bài làm</th>
+                    <th style="padding:0.5rem 0.6rem;">Xác nhận</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -373,10 +422,11 @@
                       <td style="padding:0.6rem; font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
                       <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
+                      <td style="padding:0.6rem;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
                     </tr>
                   `).join('') : `
                     <tr>
-                      <td colspan="7" style="padding:1.4rem 0.6rem; text-align:center; color:var(--text-muted);">
+                      <td colspan="8" style="padding:1.4rem 0.6rem; text-align:center; color:var(--text-muted);">
                         <i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận.
                       </td>
                     </tr>
