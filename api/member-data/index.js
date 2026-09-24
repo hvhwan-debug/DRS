@@ -83,6 +83,7 @@ module.exports = async function (context, req) {
       }
 
       registrations.push({
+        id: entity.rowKey,
         formType: entity.formType,
         formTitle: FORM_TITLES[entity.formType] || entity.formType,
         status: entity.status || "Đã ghi nhận",
