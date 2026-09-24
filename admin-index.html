@@ -120,13 +120,14 @@
             <input type="file" id="donationAttachment" accept="image/*">
           </div>
           <button type="submit" class="btn" id="donationSubmitBtn">Lưu Quyên Góp</button>
+          <button type="button" class="btn btn-outline" id="donationCancelEditBtn" style="display:none;" onclick="cancelEditDonation()">Huỷ Sửa</button>
         </form>
       </div>
       <div class="card">
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
           <table>
-            <thead><tr><th>Loại</th><th>Người quyên góp</th><th>Email</th><th>Giá trị / Hiện vật</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th><th>Ảnh</th><th>Xác nhận từ TV</th></tr></thead>
+            <thead><tr><th>Loại</th><th>Người quyên góp</th><th>Email</th><th>Giá trị / Hiện vật</th><th>Mã giao dịch</th><th>Hình thức</th><th>Ngày</th><th>Ghi chú</th><th>Ảnh</th><th>Xác nhận từ TV</th><th>Thao tác</th></tr></thead>
             <tbody id="donTableBody"></tbody>
           </table>
         </div>
@@ -169,13 +170,14 @@
             <input type="file" id="gradeAttachment" accept="image/*">
           </div>
           <button type="submit" class="btn" id="gradeSubmitBtn">Lưu Điểm/Nhận Xét</button>
+          <button type="button" class="btn btn-outline" id="gradeCancelEditBtn" style="display:none;" onclick="cancelEditGrade()">Huỷ Sửa</button>
         </form>
       </div>
       <div class="card">
         <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="gradeTableWrap">
           <table>
-            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Loại đánh giá</th><th>Buổi học</th><th>Điểm</th><th>Đánh giá GV</th><th>Ảnh bài làm</th><th>Xác nhận từ TV</th></tr></thead>
+            <thead><tr><th>Học sinh</th><th>Email PH</th><th>Chương trình</th><th>Loại đánh giá</th><th>Buổi học</th><th>Điểm</th><th>Đánh giá GV</th><th>Ảnh bài làm</th><th>Xác nhận từ TV</th><th>Thao tác</th></tr></thead>
             <tbody id="gradeTableBody"></tbody>
           </table>
         </div>
@@ -380,6 +382,9 @@
             <td>${escapeHtml(d.note)}</td>
             <td>${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(d.confirmationStatus, d.memberFeedback)}</td>
+            <td>${d.confirmationStatus === 'confirmed'
+              ? '<span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Đã khoá</span>'
+              : `<button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>Sửa</button>`}</td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('donLoading').style.display = 'none';
@@ -406,6 +411,33 @@
       return true;
     }
 
+    let editingDonationId = null;
+
+    function startEditDonation(d) {
+      editingDonationId = d.id;
+      document.getElementById('donationType').value = d.donationType || 'cash';
+      toggleDonationTypeFields();
+      document.getElementById('donorName').value = d.donorName || '';
+      document.getElementById('donorEmail').value = d.donorEmail || '';
+      document.getElementById('donationAmount').value = d.amount != null ? d.amount : '';
+      document.getElementById('donationItemDescription').value = d.itemDescription || '';
+      document.getElementById('donationTransactionCode').value = d.transactionCode || '';
+      document.getElementById('donationMethod').value = d.method || '';
+      document.getElementById('donationDate').value = d.donatedAt ? d.donatedAt.slice(0, 10) : '';
+      document.getElementById('donationNote').value = d.note || '';
+      document.getElementById('donationSubmitBtn').textContent = 'Cập Nhật Quyên Góp';
+      document.getElementById('donationCancelEditBtn').style.display = 'inline-block';
+      document.getElementById('donationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function cancelEditDonation() {
+      editingDonationId = null;
+      document.getElementById('donationForm').reset();
+      toggleDonationTypeFields();
+      document.getElementById('donationSubmitBtn').textContent = 'Lưu Quyên Góp';
+      document.getElementById('donationCancelEditBtn').style.display = 'none';
+    }
+
     document.getElementById('donationForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const btn = document.getElementById('donationSubmitBtn');
@@ -424,25 +456,29 @@
           btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
         }
 
-        const result = await apiCall('/api/portal-add-donation', {
+        const payload = {
+          donationType: document.getElementById('donationType').value,
+          donorName: document.getElementById('donorName').value.trim(),
+          donorEmail: document.getElementById('donorEmail').value.trim(),
+          amount: document.getElementById('donationAmount').value,
+          itemDescription: document.getElementById('donationItemDescription').value.trim(),
+          transactionCode: document.getElementById('donationTransactionCode').value.trim(),
+          method: document.getElementById('donationMethod').value.trim(),
+          note: document.getElementById('donationNote').value.trim(),
+          donatedAt: document.getElementById('donationDate').value || undefined,
+          attachments
+        };
+
+        const isEditing = !!editingDonationId;
+        if (isEditing) payload.id = editingDonationId;
+
+        const result = await apiCall(isEditing ? '/api/portal-edit-donation' : '/api/portal-add-donation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            donationType: document.getElementById('donationType').value,
-            donorName: document.getElementById('donorName').value.trim(),
-            donorEmail: document.getElementById('donorEmail').value.trim(),
-            amount: document.getElementById('donationAmount').value,
-            itemDescription: document.getElementById('donationItemDescription').value.trim(),
-            transactionCode: document.getElementById('donationTransactionCode').value.trim(),
-            method: document.getElementById('donationMethod').value.trim(),
-            note: document.getElementById('donationNote').value.trim(),
-            donatedAt: document.getElementById('donationDate').value || undefined,
-            attachments
-          })
+          body: JSON.stringify(payload)
         });
-        showGlobalAlert(result.warning || 'Đã lưu quyên góp.', !!result.warning);
-        e.target.reset();
-        toggleDonationTypeFields();
+        showGlobalAlert(result.warning || (isEditing ? 'Đã cập nhật quyên góp. Thành viên cần xác nhận lại.' : 'Đã lưu quyên góp.'), !!result.warning);
+        cancelEditDonation();
         document.getElementById('donTableWrap').style.display = 'none';
         document.getElementById('donEmpty').style.display = 'none';
         document.getElementById('donLoading').style.display = 'block';
@@ -451,7 +487,7 @@
         showGlobalAlert(err.message, true);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = 'Lưu Quyên Góp';
+        btn.innerHTML = editingDonationId ? 'Cập Nhật Quyên Góp' : 'Lưu Quyên Góp';
       }
     });
 
@@ -476,11 +512,40 @@
             <td>${escapeHtml(g.comment)}</td>
             <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
+            <td>${g.confirmationStatus === 'confirmed'
+              ? '<span style="font-size:0.78rem; color:var(--text-muted);"><i class="fa-solid fa-lock"></i> Đã khoá</span>'
+              : `<button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>Sửa</button>`}</td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('gradeLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
+    }
+
+    let editingGradeId = null;
+    let editingGradeParentEmail = null;
+
+    function startEditGrade(g) {
+      editingGradeId = g.id;
+      editingGradeParentEmail = g.parentEmail;
+      document.getElementById('gradeParentEmail').value = g.parentEmail || '';
+      document.getElementById('gradeStudentName').value = g.studentName || '';
+      document.getElementById('gradeProgram').value = g.program || 'Luyện Chữ Đẹp';
+      document.getElementById('gradeAssessmentType').value = g.assessmentType || 'Buổi học';
+      document.getElementById('gradeTerm').value = g.term || '';
+      document.getElementById('gradeScore').value = g.score != null ? g.score : '';
+      document.getElementById('gradeComment').value = g.comment || '';
+      document.getElementById('gradeSubmitBtn').textContent = 'Cập Nhật Điểm/Nhận Xét';
+      document.getElementById('gradeCancelEditBtn').style.display = 'inline-block';
+      document.getElementById('gradeForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function cancelEditGrade() {
+      editingGradeId = null;
+      editingGradeParentEmail = null;
+      document.getElementById('gradeForm').reset();
+      document.getElementById('gradeSubmitBtn').textContent = 'Lưu Điểm/Nhận Xét';
+      document.getElementById('gradeCancelEditBtn').style.display = 'none';
     }
 
     document.getElementById('gradeForm').addEventListener('submit', async function (e) {
@@ -501,22 +566,27 @@
           btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
         }
 
-        const result = await apiCall('/api/portal-add-grade', {
+        const payload = {
+          parentEmail: document.getElementById('gradeParentEmail').value.trim(),
+          studentName: document.getElementById('gradeStudentName').value.trim(),
+          program: document.getElementById('gradeProgram').value,
+          assessmentType: document.getElementById('gradeAssessmentType').value,
+          term: document.getElementById('gradeTerm').value.trim(),
+          score: document.getElementById('gradeScore').value,
+          comment: document.getElementById('gradeComment').value.trim(),
+          attachments
+        };
+
+        const isEditing = !!editingGradeId;
+        if (isEditing) payload.id = editingGradeId;
+
+        const result = await apiCall(isEditing ? '/api/portal-edit-grade' : '/api/portal-add-grade', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            parentEmail: document.getElementById('gradeParentEmail').value.trim(),
-            studentName: document.getElementById('gradeStudentName').value.trim(),
-            program: document.getElementById('gradeProgram').value,
-            assessmentType: document.getElementById('gradeAssessmentType').value,
-            term: document.getElementById('gradeTerm').value.trim(),
-            score: document.getElementById('gradeScore').value,
-            comment: document.getElementById('gradeComment').value.trim(),
-            attachments
-          })
+          body: JSON.stringify(payload)
         });
-        showGlobalAlert(result.warning || 'Đã lưu điểm/nhận xét.', !!result.warning);
-        e.target.reset();
+        showGlobalAlert(result.warning || (isEditing ? 'Đã cập nhật điểm/nhận xét. Thành viên cần xác nhận lại.' : 'Đã lưu điểm/nhận xét.'), !!result.warning);
+        cancelEditGrade();
         document.getElementById('gradeTableWrap').style.display = 'none';
         document.getElementById('gradeEmpty').style.display = 'none';
         document.getElementById('gradeLoading').style.display = 'block';
@@ -525,7 +595,7 @@
         showGlobalAlert(err.message, true);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = 'Lưu Điểm/Nhận Xét';
+        btn.innerHTML = editingGradeId ? 'Cập Nhật Điểm/Nhận Xét' : 'Lưu Điểm/Nhận Xét';
       }
     });
 
