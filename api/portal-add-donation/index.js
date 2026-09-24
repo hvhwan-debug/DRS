@@ -2,6 +2,7 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 
 const DONATIONS_TABLE = "Donations";
+const TRANSACTIONS_TABLE = "Transactions"; // Bảng dùng chung với trang Tra Cứu Sao Kê
 
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
@@ -14,6 +15,7 @@ module.exports = async function (context, req) {
   const amount = Number(body.amount);
   const method = String(body.method || "").trim();
   const note = String(body.note || "").trim();
+  const transactionCode = String(body.transactionCode || "").trim().toUpperCase();
   const donatedAt = body.donatedAt ? new Date(body.donatedAt).toISOString() : new Date().toISOString();
 
   if (!donorName || !amount || amount <= 0) {
@@ -32,9 +34,28 @@ module.exports = async function (context, req) {
       amount,
       method,
       note,
+      transactionCode,
       donatedAt,
       recordedAt: new Date().toISOString()
     });
+
+    // Nếu có mã giao dịch, đồng bộ luôn sang bảng Transactions để tra cứu được ở trang Sao Kê
+    // (best-effort — không chặn phản hồi thành công nếu lỗi)
+    if (transactionCode) {
+      try {
+        const txTable = await getTableClient(TRANSACTIONS_TABLE);
+        await txTable.upsertEntity({
+          partitionKey: "TX",
+          rowKey: transactionCode,
+          fullName: donorName,
+          date: donatedAt,
+          content: note || "Quyên góp ủng hộ chương trình",
+          amount
+        }, "Replace");
+      } catch (err) {
+        context.log.error("Đồng bộ sang bảng Transactions thất bại:", err.message);
+      }
+    }
 
     context.res.status = 200;
     context.res.body = { success: true };
