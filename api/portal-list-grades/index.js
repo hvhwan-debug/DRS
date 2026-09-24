@@ -36,6 +36,8 @@ module.exports = async function (context, req) {
         score: entity.score !== undefined && entity.score !== null ? entity.score : null,
         comment: entity.comment || "",
         attachments,
+        confirmationStatus: entity.confirmationStatus || "pending",
+        memberFeedback: entity.memberFeedback || "",
         recordedAt: entity.recordedAt
       });
     }
