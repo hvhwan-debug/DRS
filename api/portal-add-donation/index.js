@@ -2,11 +2,12 @@ const sgMail = require("@sendgrid/mail");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadAttachments } = require("../_shared/blobStorage");
+const { buildGreeting } = require("../_shared/memberName");
 
 const DONATIONS_TABLE = "Donations";
 const TRANSACTIONS_TABLE = "Transactions"; // Bảng dùng chung với trang Tra Cứu Sao Kê
 
-function buildDonationEmailHtml(donationType, amount, itemDescription) {
+function buildDonationEmailHtml(donationType, amount, itemDescription, greeting) {
   const valueHtml = donationType === "item"
     ? `<p style="font-size:16px;color:#0f172a;margin:0;font-weight:700;">${itemDescription}</p>`
     : `<span style="display:inline-block;font-size:22px;font-weight:800;color:#15803d;background:#f0fdf4;border:1px dashed #86efac;border-radius:10px;padding:10px 24px;">${Number(amount).toLocaleString("vi-VN")}đ</span>`;
@@ -22,6 +23,7 @@ function buildDonationEmailHtml(donationType, amount, itemDescription) {
             <div style="color:#ffffff;font-size:17px;font-weight:800;">Mạng Lưới Tri Thức Việt Nam</div>
           </td></tr>
           <tr><td style="padding:32px;">
+            <p style="font-size:14px;color:#334155;margin:0 0 16px;">${greeting}</p>
             <p style="font-size:15px;color:#0f172a;margin:0 0 18px;">Chúng tôi vừa ghi nhận một khoản quyên góp ${donationType === "item" ? "hiện vật" : "bằng tiền"} từ bạn:</p>
             <div style="text-align:center;margin:18px 0;">${valueHtml}</div>
             <p style="font-size:13px;color:#64748b;margin:18px 0 6px;">Cảm ơn sự đồng hành của bạn cùng Mạng Lưới Tri Thức Việt Nam! Đăng nhập vào khu vực thành viên để xem chi tiết đầy đủ.</p>
@@ -128,12 +130,13 @@ module.exports = async function (context, req) {
       const fromEmail = process.env.SENDGRID_FROM_EMAIL;
       if (apiKey && fromEmail) {
         try {
+          const greeting = buildGreeting(donorName);
           sgMail.setApiKey(apiKey);
           await sgMail.send({
             to: donorEmail,
             from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
             subject: "Xác nhận đã ghi nhận quyên góp của bạn",
-            html: buildDonationEmailHtml(donationType, amount, itemDescription)
+            html: buildDonationEmailHtml(donationType, amount, itemDescription, greeting)
           });
         } catch (err) {
           context.log.error("Gửi email báo quyên góp thất bại:", err?.response?.body || err.message);
