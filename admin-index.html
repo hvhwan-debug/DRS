@@ -66,6 +66,7 @@
       <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Bảng Điểm</button>
       <button class="tab-btn" data-tab="members" onclick="switchTab('members')">Thành Viên</button>
       <button class="tab-btn" data-tab="bulkemail" onclick="switchTab('bulkemail')">Gửi Email</button>
+      <button class="tab-btn" data-tab="emaillogs" onclick="switchTab('emaillogs')">Lịch Sử Email</button>
     </div>
 
     <div id="globalAlert"></div>
@@ -272,6 +273,21 @@
     <!-- ===================== TAB: THÀNH VIÊN ===================== -->
     <div class="panel" id="panel-members">
       <div id="memberDashboardStats" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:0.8rem; margin-bottom:1.2rem;"></div>
+
+      <div class="card" style="background:linear-gradient(135deg,#ffffff 0%,#f8fbff 100%); border:1px solid #e0ecfb;">
+        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-user-plus" style="color:#0284c7;"></i> Khởi tạo tài khoản thành viên mới</h3>
+        <form id="createAccountForm">
+          <div class="form-grid">
+            <div><label>Email *</label><input type="email" id="newAccountEmail" required placeholder="email@vidu.com"></div>
+            <div><label>Họ tên (không bắt buộc)</label><input type="text" id="newAccountFullName"></div>
+            <div><label>SĐT (không bắt buộc)</label><input type="text" id="newAccountPhone"></div>
+            <div><label>Địa chỉ (không bắt buộc)</label><input type="text" id="newAccountAddress"></div>
+          </div>
+          <button type="submit" class="btn" id="createAccountBtn"><i class="fa-solid fa-user-plus"></i> Tạo Tài Khoản</button>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.5rem;">Hệ thống sẽ tự tạo mật khẩu tạm thời và gửi email cho thành viên để họ đăng nhập ngay.</div>
+        </form>
+      </div>
+
       <div class="card">
         <div style="display:flex; gap:0.8rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
           <input type="text" id="memberSearchInput" placeholder="Tìm theo email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
@@ -333,6 +349,21 @@
         </div>
 
         <button type="button" class="btn" id="bulkEmailSendBtn" onclick="sendBulkEmail()">Gửi Email</button>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: LỊCH SỬ EMAIL ===================== -->
+    <div class="panel" id="panel-emaillogs">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-clock-rotate-left" style="color:#0284c7;"></i> Lịch Sử Gửi Email (300 email gần nhất)</h3>
+        <div class="loading-state" id="emailLogsLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="emailLogsTableWrap">
+          <table>
+            <thead><tr><th>Trạng thái</th><th>Người nhận</th><th>Tiêu đề</th><th>Loại</th><th>Thời gian</th></tr></thead>
+            <tbody id="emailLogsTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emailLogsEmpty" style="display:none;">Chưa có email nào được gửi.</div>
       </div>
     </div>
   </div>
@@ -1154,9 +1185,55 @@
             <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="openMemberOverview('${encodeURIComponent(m.email)}')">Xem chi tiết</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem; ${m.isBlocked ? 'color:#15803d; border-color:#86efac;' : ''}" onclick="toggleBlockMember('${encodeURIComponent(m.email)}', ${!m.isBlocked})">${m.isBlocked ? 'Bỏ chặn' : 'Chặn'}</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="resetMemberPassword('${encodeURIComponent(m.email)}')">Reset MK</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="unlockMemberAccount('${encodeURIComponent(m.email)}')" title="Mở khoá nếu tài khoản bị khoá do đăng nhập sai nhiều lần">Mở Khoá</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="deleteMember('${encodeURIComponent(m.email)}')">Xoá</button>
           </td>
         </tr>`).join('');
+    }
+
+    document.getElementById('createAccountForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('createAccountBtn');
+      const email = document.getElementById('newAccountEmail').value.trim();
+      const fullName = document.getElementById('newAccountFullName').value.trim();
+      const phone = document.getElementById('newAccountPhone').value.trim();
+      const address = document.getElementById('newAccountAddress').value.trim();
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...';
+      try {
+        const result = await apiCall('/api/portal-create-member-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, fullName, phone, address })
+        });
+        showGlobalAlert(result.warning || 'Đã tạo tài khoản và gửi email cho thành viên.', !!result.warning);
+        if (result.tempPassword) {
+          alert(`Mật khẩu tạm thời cho ${email}:\n\n${result.tempPassword}\n\n(Đã gửi email cho họ — chỉ dùng thông tin này nếu email không tới được.)`);
+        }
+        document.getElementById('createAccountForm').reset();
+        loadMembers();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Tạo Tài Khoản';
+      }
+    });
+
+    async function unlockMemberAccount(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      if (!confirm(`Mở khoá đăng nhập sai cho ${email}? (Dùng khi tài khoản bị tạm khoá do nhập sai mật khẩu nhiều lần liên tiếp — không ảnh hưởng tới mật khẩu hiện tại.)`)) return;
+      try {
+        await apiCall('/api/portal-unlock-member-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        showGlobalAlert('Đã mở khoá tài khoản.', false);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
     }
 
     async function resetMemberPassword(emailEnc) {
@@ -1418,11 +1495,38 @@
       }
     }
 
+    async function loadEmailLogs() {
+      try {
+        const { logs, total } = await apiCall('/api/portal-list-email-logs');
+        document.getElementById('emailLogsLoading').style.display = 'none';
+        if (logs.length === 0) {
+          document.getElementById('emailLogsEmpty').style.display = 'block';
+          return;
+        }
+        document.getElementById('emailLogsTableWrap').style.display = 'block';
+        const typeLabels = { status: 'Đơn đăng ký', grade: 'Điểm', donation: 'Quyên góp', tuition: 'Học phí', block: 'Chặn/Mở TK', reset_password: 'Reset MK', create_account: 'Tạo TK', bulk: 'Hàng loạt', other: 'Khác' };
+        document.getElementById('emailLogsTableBody').innerHTML = logs.map(l => `
+          <tr>
+            <td>${l.success
+              ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#dcfce7; color:#15803d;"><i class="fa-solid fa-check"></i> Thành công</span>'
+              : `<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeHtml(l.errorMessage)}"><i class="fa-solid fa-xmark"></i> Thất bại</span>`}</td>
+            <td>${escapeHtml(l.to)}</td>
+            <td>${escapeHtml(l.subject)}</td>
+            <td><span style="font-size:0.78rem; color:var(--text-muted);">${typeLabels[l.type] || l.type}</span></td>
+            <td style="white-space:nowrap; color:var(--text-muted);">${formatDate(l.sentAt)}</td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('emailLogsLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
     loadRegistrations();
     loadDonations();
     loadTuition();
     loadGrades();
     loadMembers();
+    loadEmailLogs();
   </script>
 </body>
 </html>
