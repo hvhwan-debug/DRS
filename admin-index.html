@@ -63,6 +63,7 @@
       <button class="tab-btn" data-tab="donations" onclick="switchTab('donations')">Quyên Góp</button>
       <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Bảng Điểm</button>
       <button class="tab-btn" data-tab="members" onclick="switchTab('members')">Thành Viên</button>
+      <button class="tab-btn" data-tab="bulkemail" onclick="switchTab('bulkemail')">Gửi Email</button>
     </div>
 
     <div id="globalAlert"></div>
@@ -216,6 +217,46 @@
           <button type="button" class="btn btn-outline" onclick="closeMemberOverview()" style="color:#475569; border-color:var(--border);">Đóng</button>
         </div>
         <div id="memberOverviewContent"></div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: GỬI EMAIL ===================== -->
+    <div class="panel" id="panel-bulkemail">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;">Soạn email gửi thành viên</h3>
+
+        <div class="form-grid" style="margin-bottom:1rem;">
+          <div>
+            <label>Gửi cho *</label>
+            <select id="bulkEmailAudience" onchange="onBulkEmailAudienceChange()">
+              <option value="all">Tất cả thành viên</option>
+              <option value="selected">Chọn từng thành viên</option>
+              <option value="manual">Tự nhập email</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="bulkEmailSelectedField" style="display:none; margin-bottom:1rem;">
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Chọn thành viên</label>
+          <div id="bulkEmailMemberChecklist" style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:8px; padding:0.6rem 0.8rem;"></div>
+        </div>
+
+        <div id="bulkEmailManualField" style="display:none; margin-bottom:1rem;">
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Danh sách email (mỗi email 1 dòng, hoặc cách nhau bằng dấu phẩy)</label>
+          <textarea id="bulkEmailManualList" rows="4" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="ví dụ: nguyenvana@gmail.com, tranthib@gmail.com"></textarea>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Tiêu đề email *</label>
+          <input type="text" id="bulkEmailSubject" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px;" placeholder="VD: Thông báo lịch nghỉ lễ">
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nội dung email *</label>
+          <textarea id="bulkEmailMessage" rows="7" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="Nội dung email gửi tới thành viên..."></textarea>
+          <div style="font-size:0.76rem; color:var(--text-muted); margin-top:0.3rem;">Email sẽ tự động có lời chào bằng tên thật của từng người nếu đã có trong hệ thống.</div>
+        </div>
+
+        <button type="button" class="btn" id="bulkEmailSendBtn" onclick="sendBulkEmail()">Gửi Email</button>
       </div>
     </div>
   </div>
@@ -926,6 +967,74 @@
         content.innerHTML = profileHtml + regHtml + donHtml + gradeHtml;
       } catch (err) {
         content.innerHTML = `<div style="color:#dc2626;">${err.message}</div>`;
+      }
+    }
+
+    // ============== GỬI EMAIL ==============
+    function onBulkEmailAudienceChange() {
+      const audience = document.getElementById('bulkEmailAudience').value;
+      document.getElementById('bulkEmailSelectedField').style.display = audience === 'selected' ? 'block' : 'none';
+      document.getElementById('bulkEmailManualField').style.display = audience === 'manual' ? 'block' : 'none';
+      if (audience === 'selected') renderBulkEmailMemberChecklist();
+    }
+
+    function renderBulkEmailMemberChecklist() {
+      const el = document.getElementById('bulkEmailMemberChecklist');
+      if (allMembers.length === 0) {
+        el.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Chưa có thành viên nào.</div>';
+        return;
+      }
+      el.innerHTML = allMembers.map((m, i) => `
+        <label style="display:flex; align-items:center; gap:0.5rem; padding:0.3rem 0; font-size:0.88rem; cursor:pointer;">
+          <input type="checkbox" class="bulk-email-member-checkbox" value="${escapeHtml(m.email)}">
+          ${escapeHtml(m.email)} ${m.isBlocked ? '<span style="font-size:0.72rem; color:#b91c1c;">(đã khoá)</span>' : ''}
+        </label>`).join('');
+    }
+
+    async function sendBulkEmail() {
+      const audience = document.getElementById('bulkEmailAudience').value;
+      const subject = document.getElementById('bulkEmailSubject').value.trim();
+      const message = document.getElementById('bulkEmailMessage').value.trim();
+      const btn = document.getElementById('bulkEmailSendBtn');
+
+      let recipients = [];
+      if (audience === 'all') {
+        recipients = allMembers.map(m => m.email);
+      } else if (audience === 'selected') {
+        recipients = Array.from(document.querySelectorAll('.bulk-email-member-checkbox:checked')).map(cb => cb.value);
+      } else {
+        recipients = document.getElementById('bulkEmailManualList').value
+          .split(/[\n,]+/)
+          .map(s => s.trim())
+          .filter(Boolean);
+      }
+
+      if (recipients.length === 0) {
+        showGlobalAlert('Vui lòng chọn ít nhất 1 người nhận.', true);
+        return;
+      }
+      if (!subject || !message) {
+        showGlobalAlert('Vui lòng nhập đủ tiêu đề và nội dung email.', true);
+        return;
+      }
+      if (!confirm(`Gửi email tới ${recipients.length} người nhận?`)) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+      try {
+        const result = await apiCall('/api/portal-send-bulk-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipients, subject, message })
+        });
+        let msg = `Đã gửi thành công tới ${result.sentCount}/${recipients.length} người nhận.`;
+        if (result.failedCount > 0) msg += ` (${result.failedCount} gửi thất bại: ${result.failed.join(', ')})`;
+        showGlobalAlert(msg, result.failedCount > 0);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Gửi Email';
       }
     }
 
