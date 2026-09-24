@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { uploadAttachments } = require("../_shared/blobStorage");
 
 const DONATIONS_TABLE = "Donations";
 const TRANSACTIONS_TABLE = "Transactions"; // Bảng dùng chung với trang Tra Cứu Sao Kê
@@ -25,6 +26,16 @@ module.exports = async function (context, req) {
   }
 
   try {
+    // Lưu ảnh biên lai/minh chứng (nếu có) lên Blob Storage riêng tư
+    let uploadedAttachments = [];
+    if (Array.isArray(body.attachments) && body.attachments.length > 0) {
+      try {
+        uploadedAttachments = await uploadAttachments(body.attachments);
+      } catch (err) {
+        context.log.error("Lưu ảnh quyên góp vào Blob Storage thất bại:", err.message);
+      }
+    }
+
     const donationsTable = await getTableClient(DONATIONS_TABLE);
     await donationsTable.createEntity({
       partitionKey: "donation",
@@ -35,6 +46,7 @@ module.exports = async function (context, req) {
       method,
       note,
       transactionCode,
+      attachmentsJson: JSON.stringify(uploadedAttachments),
       donatedAt,
       recordedAt: new Date().toISOString()
     });
