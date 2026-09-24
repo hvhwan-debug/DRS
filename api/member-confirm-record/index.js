@@ -3,6 +3,7 @@ const { getTableClient } = require("../_shared/tableStorage");
 const SESSION_TABLE = "AuthSessions";
 const DONATIONS_TABLE = "Donations";
 const GRADES_TABLE = "Grades";
+const TUITION_TABLE = "TuitionPayments";
 
 function getMemberToken(req) {
   const header = req.headers && (req.headers["x-member-token"] || req.headers["X-Member-Token"]);
@@ -20,12 +21,12 @@ module.exports = async function (context, req) {
   }
 
   const body = req.body || {};
-  const type = String(body.type || ""); // 'donation' | 'grade'
+  const type = String(body.type || ""); // 'donation' | 'grade' | 'tuition'
   const id = String(body.id || "");
   const action = String(body.action || ""); // 'confirm' | 'reject'
   const feedback = String(body.feedback || "").trim();
 
-  if (!["donation", "grade"].includes(type) || !id || !["confirm", "reject"].includes(action)) {
+  if (!["donation", "grade", "tuition"].includes(type) || !id || !["confirm", "reject"].includes(action)) {
     context.res.status = 400;
     context.res.body = { success: false, message: "Yêu cầu không hợp lệ." };
     return;
@@ -79,8 +80,19 @@ module.exports = async function (context, req) {
         return;
       }
       await table.updateEntity({ partitionKey: "donation", rowKey: id, ...update }, "Merge");
-    } else {
+    } else if (type === "grade") {
       const table = await getTableClient(GRADES_TABLE);
+      let entity;
+      try {
+        entity = await table.getEntity(email, id);
+      } catch (err) {
+        context.res.status = 404;
+        context.res.body = { success: false, message: "Không tìm thấy bản ghi." };
+        return;
+      }
+      await table.updateEntity({ partitionKey: email, rowKey: id, ...update }, "Merge");
+    } else {
+      const table = await getTableClient(TUITION_TABLE);
       let entity;
       try {
         entity = await table.getEntity(email, id);
