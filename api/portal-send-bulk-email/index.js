@@ -1,6 +1,6 @@
-const sgMail = require("@sendgrid/mail");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const MAX_RECIPIENTS = 500; // giới hạn an toàn cho 1 lần gửi
 
@@ -73,7 +73,6 @@ module.exports = async function (context, req) {
     context.res.body = { success: false, message: "Chưa cấu hình dịch vụ gửi email (thiếu SENDGRID_API_KEY/SENDGRID_FROM_EMAIL)." };
     return;
   }
-  sgMail.setApiKey(apiKey);
 
   const messageHtml = escapeHtml(message).replace(/\n/g, "<br>");
 
@@ -81,20 +80,16 @@ module.exports = async function (context, req) {
   const failed = [];
 
   for (const email of recipients) {
-    try {
-      const displayName = await getMemberDisplayName(email);
-      const greeting = buildGreeting(displayName);
-      await sgMail.send({
-        to: email,
-        from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
-        subject,
-        html: buildBulkEmailHtml(subject, messageHtml, greeting)
-      });
-      sentCount++;
-    } catch (err) {
-      context.log.error(`Gửi email tới ${email} thất bại:`, err?.response?.body || err.message);
-      failed.push(email);
-    }
+    const displayName = await getMemberDisplayName(email);
+    const greeting = buildGreeting(displayName);
+    const result = await sendTrackedEmail(context, {
+      to: email,
+      subject,
+      html: buildBulkEmailHtml(subject, messageHtml, greeting),
+      type: "bulk"
+    });
+    if (result.success) sentCount++;
+    else failed.push(email);
   }
 
   context.res.status = 200;
