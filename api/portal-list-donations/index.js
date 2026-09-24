@@ -35,6 +35,8 @@ module.exports = async function (context, req) {
         transactionCode: entity.transactionCode || "",
         note: entity.note || "",
         attachments,
+        confirmationStatus: entity.confirmationStatus || "pending",
+        memberFeedback: entity.memberFeedback || "",
         donatedAt: entity.donatedAt,
         recordedAt: entity.recordedAt
       });
