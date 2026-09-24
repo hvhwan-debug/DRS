@@ -687,12 +687,12 @@
         : `Bỏ chặn tài khoản ${email}? Họ sẽ đăng nhập được bình thường trở lại.`;
       if (!confirm(confirmMsg)) return;
       try {
-        await apiCall('/api/portal-toggle-member-block', {
+        const result = await apiCall('/api/portal-toggle-member-block', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, blocked: block })
         });
-        showGlobalAlert(block ? 'Đã chặn tài khoản.' : 'Đã bỏ chặn tài khoản.', false);
+        showGlobalAlert(result.warning || (block ? 'Đã chặn tài khoản và gửi email báo.' : 'Đã bỏ chặn tài khoản và gửi email báo.'), !!result.warning);
         loadMembers();
         if (currentOverviewEmail === email) openMemberOverview(emailEnc);
       } catch (err) {
