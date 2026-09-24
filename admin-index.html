@@ -141,8 +141,16 @@
         <h3 style="margin-bottom:1rem; font-size:1rem;">Nhập điểm / nhận xét cho con em phụ huynh</h3>
         <form id="gradeForm">
           <div class="form-grid">
-            <div><label>Email phụ huynh *</label><input type="email" id="gradeParentEmail" required placeholder="Email tài khoản của phụ huynh"></div>
-            <div><label>Tên học sinh (con em) *</label><input type="text" id="gradeStudentName" required></div>
+            <div>
+              <label>Email phụ huynh *</label>
+              <input type="email" id="gradeParentEmail" required list="knownEmailsList" placeholder="Gõ tên hoặc email phụ huynh..." oninput="onGradeParentEmailChange()">
+              <datalist id="knownEmailsList"></datalist>
+            </div>
+            <div>
+              <label>Tên học sinh (con em) *</label>
+              <input type="text" id="gradeStudentName" required style="display:block;">
+              <select id="gradeStudentNameSelect" onchange="document.getElementById('gradeStudentName').value = this.value;" style="display:none; margin-top:0.4rem;"></select>
+            </div>
             <div>
               <label>Chương trình học</label>
               <select id="gradeProgram">
@@ -187,6 +195,7 @@
 
     <!-- ===================== TAB: THÀNH VIÊN ===================== -->
     <div class="panel" id="panel-members">
+      <div id="memberDashboardStats" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:0.8rem; margin-bottom:1.2rem;"></div>
       <div class="card">
         <div style="display:flex; gap:0.8rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
           <input type="text" id="memberSearchInput" placeholder="Tìm theo email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
@@ -214,6 +223,33 @@
   <script>
     const token = localStorage.getItem('wvn_admin_token');
     if (!token) window.location.href = 'admin-dang-nhap.html';
+
+    let emailToStudents = {};
+    let emailToParentName = {};
+    let allRegistrationsData = [];
+    let allDonationsData = [];
+    let allGradesData = [];
+
+    function onGradeParentEmailChange() {
+      const email = document.getElementById('gradeParentEmail').value.trim().toLowerCase();
+      const students = Array.from(emailToStudents[email] || []);
+      const textInput = document.getElementById('gradeStudentName');
+      const selectEl = document.getElementById('gradeStudentNameSelect');
+
+      if (students.length === 1) {
+        textInput.value = students[0];
+        textInput.style.display = 'block';
+        selectEl.style.display = 'none';
+      } else if (students.length > 1) {
+        selectEl.innerHTML = '<option value="">-- Chọn học sinh --</option>' + students.map(s => `<option value="${s}">${s}</option>`).join('');
+        selectEl.style.display = 'block';
+        textInput.value = '';
+        textInput.style.display = 'none';
+      } else {
+        textInput.style.display = 'block';
+        selectEl.style.display = 'none';
+      }
+    }
 
     function adminLogout() {
       localStorage.removeItem('wvn_admin_token');
@@ -278,6 +314,8 @@
     async function loadRegistrations() {
       try {
         const { registrations } = await apiCall('/api/portal-list-registrations');
+        allRegistrationsData = registrations;
+        renderMemberDashboardStats();
         document.getElementById('regLoading').style.display = 'none';
         if (registrations.length === 0) {
           document.getElementById('regEmpty').style.display = 'block';
@@ -314,6 +352,23 @@
         });
         document.getElementById('knownNamesList').innerHTML =
           Array.from(knownNames).map(n => `<option value="${escapeHtml(n)}">`).join('');
+
+        // Xây bảng ánh xạ email phụ huynh -> danh sách tên học sinh, để tự gợi ý/điền khi nhập điểm
+        emailToStudents = {};
+        emailToParentName = {};
+        registrations.forEach(r => {
+          const em = (r.email || '').trim().toLowerCase();
+          if (!em) return;
+          const studentName = r.data && (r.data.ten_tre || r.data.hoc_sinh);
+          if (studentName) {
+            if (!emailToStudents[em]) emailToStudents[em] = new Set();
+            emailToStudents[em].add(String(studentName).trim());
+          }
+          const parentName = r.data && (r.data.ten_phu_huynh || r.data.fullname || r.data.fullName || r.data.name);
+          if (parentName) emailToParentName[em] = String(parentName).trim();
+        });
+        document.getElementById('knownEmailsList').innerHTML =
+          Object.keys(emailToStudents).map(em => `<option value="${escapeHtml(em)}">${escapeHtml(emailToParentName[em] || '')}</option>`).join('');
       } catch (err) {
         document.getElementById('regLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
@@ -364,6 +419,8 @@
     async function loadDonations() {
       try {
         const { donations } = await apiCall('/api/portal-list-donations');
+        allDonationsData = donations;
+        renderMemberDashboardStats();
         document.getElementById('donLoading').style.display = 'none';
         if (donations.length === 0) {
           document.getElementById('donEmpty').style.display = 'block';
@@ -495,6 +552,8 @@
     async function loadGrades() {
       try {
         const { grades } = await apiCall('/api/portal-list-grades');
+        allGradesData = grades;
+        renderMemberDashboardStats();
         document.getElementById('gradeLoading').style.display = 'none';
         if (grades.length === 0) {
           document.getElementById('gradeEmpty').style.display = 'block';
@@ -530,6 +589,8 @@
       editingGradeParentEmail = g.parentEmail;
       document.getElementById('gradeParentEmail').value = g.parentEmail || '';
       document.getElementById('gradeStudentName').value = g.studentName || '';
+      document.getElementById('gradeStudentName').style.display = 'block';
+      document.getElementById('gradeStudentNameSelect').style.display = 'none';
       document.getElementById('gradeProgram').value = g.program || 'Luyện Chữ Đẹp';
       document.getElementById('gradeAssessmentType').value = g.assessmentType || 'Buổi học';
       document.getElementById('gradeTerm').value = g.term || '';
@@ -544,6 +605,8 @@
       editingGradeId = null;
       editingGradeParentEmail = null;
       document.getElementById('gradeForm').reset();
+      document.getElementById('gradeStudentName').style.display = 'block';
+      document.getElementById('gradeStudentNameSelect').style.display = 'none';
       document.getElementById('gradeSubmitBtn').textContent = 'Lưu Điểm/Nhận Xét';
       document.getElementById('gradeCancelEditBtn').style.display = 'none';
     }
@@ -645,12 +708,42 @@
       }
     }
 
+    function renderMemberDashboardStats() {
+      const el = document.getElementById('memberDashboardStats');
+      if (!el) return;
+
+      const totalMembers = allMembers.length;
+      const blockedMembers = allMembers.filter(m => m.isBlocked).length;
+      const totalRegistrations = allRegistrationsData.length;
+      const pendingRegistrations = allRegistrationsData.filter(r => r.status === 'Đã ghi nhận - Chờ xử lý').length;
+      const totalCashDonated = allDonationsData.filter(d => d.donationType !== 'item').reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
+      const totalItemDonations = allDonationsData.filter(d => d.donationType === 'item').length;
+      const totalGrades = allGradesData.length;
+      const pendingConfirms = allDonationsData.filter(d => (d.confirmationStatus || 'pending') === 'pending').length
+        + allGradesData.filter(g => (g.confirmationStatus || 'pending') === 'pending').length;
+
+      const stats = [
+        { label: 'Tổng thành viên', value: totalMembers, sub: blockedMembers > 0 ? `${blockedMembers} đang bị chặn` : '', color: '#0284c7' },
+        { label: 'Đơn đăng ký', value: totalRegistrations, sub: pendingRegistrations > 0 ? `${pendingRegistrations} chờ xử lý` : '', color: '#7c3aed' },
+        { label: 'Quyên góp tiền mặt', value: totalCashDonated.toLocaleString('vi-VN') + 'đ', sub: totalItemDonations > 0 ? `+ ${totalItemDonations} hiện vật` : '', color: '#15803d' },
+        { label: 'Bản ghi điểm', value: totalGrades, sub: pendingConfirms > 0 ? `${pendingConfirms} chờ xác nhận` : '', color: '#d97706' }
+      ];
+
+      el.innerHTML = stats.map(s => `
+        <div class="card" style="text-align:center; padding:1rem;">
+          <div style="font-size:1.5rem; font-weight:800; color:${s.color};">${s.value}</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.2rem;">${s.label}</div>
+          ${s.sub ? `<div style="font-size:0.74rem; color:#94a3b8; margin-top:0.3rem;">${s.sub}</div>` : ''}
+        </div>`).join('');
+    }
+
     async function loadMembers() {
       try {
         const { members } = await apiCall('/api/portal-list-members');
         allMembers = members;
         document.getElementById('memberLoading').style.display = 'none';
         renderMembersList();
+        renderMemberDashboardStats();
       } catch (err) {
         document.getElementById('memberLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
