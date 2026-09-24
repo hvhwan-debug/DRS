@@ -753,6 +753,26 @@
                 </div>
               </form>
             </div>
+
+            <div class="card">
+              <h2><i class="fa-solid fa-key"></i> Đổi Mật Khẩu</h2>
+              <form id="changePasswordForm" style="display:grid; gap:0.9rem; margin-top:0.6rem; max-width:420px;">
+                <div>
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Mật khẩu hiện tại</label>
+                  <input type="password" id="cpCurrentPassword" autocomplete="current-password" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                </div>
+                <div>
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Mật khẩu mới (tối thiểu 6 ký tự)</label>
+                  <input type="password" id="cpNewPassword" autocomplete="new-password" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                </div>
+                <div>
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nhập lại mật khẩu mới</label>
+                  <input type="password" id="cpNewPassword2" autocomplete="new-password" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">
+                </div>
+                <div id="changePasswordAlert" style="display:none; font-size:0.85rem;"></div>
+                <div><button type="submit" class="btn" id="changePasswordBtn">Đổi Mật Khẩu</button></div>
+              </form>
+            </div>
           </div>
 
           <div class="member-panel" id="memberPanel-activity">
@@ -826,6 +846,52 @@
           } finally {
             btn.disabled = false;
             btn.innerHTML = 'Lưu Thông Tin';
+          }
+        });
+
+        document.getElementById('changePasswordForm').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          const btn = document.getElementById('changePasswordBtn');
+          const alertEl = document.getElementById('changePasswordAlert');
+          const currentPassword = document.getElementById('cpCurrentPassword').value;
+          const newPassword = document.getElementById('cpNewPassword').value;
+          const newPassword2 = document.getElementById('cpNewPassword2').value;
+
+          alertEl.style.display = 'none';
+          if (newPassword.length < 6) {
+            alertEl.style.display = 'block';
+            alertEl.style.color = '#dc2626';
+            alertEl.textContent = 'Mật khẩu mới cần tối thiểu 6 ký tự.';
+            return;
+          }
+          if (newPassword !== newPassword2) {
+            alertEl.style.display = 'block';
+            alertEl.style.color = '#dc2626';
+            alertEl.textContent = 'Mật khẩu mới nhập lại không khớp.';
+            return;
+          }
+
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+          try {
+            const res = await fetch('/api/member-change-password', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+              body: JSON.stringify({ currentPassword, newPassword })
+            });
+            const result = await res.json().catch(() => ({}));
+            if (!res.ok || !result.success) throw new Error(result.message || 'Không thể đổi mật khẩu.');
+            alertEl.style.display = 'block';
+            alertEl.style.color = '#16a34a';
+            alertEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã đổi mật khẩu thành công.';
+            document.getElementById('changePasswordForm').reset();
+          } catch (err) {
+            alertEl.style.display = 'block';
+            alertEl.style.color = '#dc2626';
+            alertEl.textContent = err.message;
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Đổi Mật Khẩu';
           }
         });
       } catch (err) {
