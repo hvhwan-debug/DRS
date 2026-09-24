@@ -282,6 +282,17 @@
             <input id="newPassword2" name="newPassword2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password">
           </div>
 
+          <div class="form-field" id="profileStep" style="display:none;">
+            <label for="regFullName">Họ và tên *</label>
+            <input id="regFullName" name="regFullName" type="text" placeholder="Họ và tên của bạn">
+            <label for="regPhone" style="margin-top:0.8rem;">Số điện thoại *</label>
+            <input id="regPhone" name="regPhone" type="tel" placeholder="09xx xxx xxx">
+            <label for="regDob" style="margin-top:0.8rem;">Ngày sinh *</label>
+            <input id="regDob" name="regDob" type="date" min="1920-01-01" max="">
+            <label for="regAddress" style="margin-top:0.8rem;">Địa chỉ *</label>
+            <input id="regAddress" name="regAddress" type="text" placeholder="Số nhà, đường, xã/phường, tỉnh/thành">
+          </div>
+
           <div id="loginAlert" style="display:none; font-size:0.85rem; text-align:center; margin: 0.6rem 0;"></div>
 
           <button type="submit" class="btn-continue" id="loginSubmitBtn">Đăng Ký</button>
@@ -330,8 +341,10 @@
     // Đăng ký tài khoản mới: email -> mã OTP xác minh -> đặt mật khẩu.
     // Nếu email đã có tài khoản, báo và hướng sang trang Đăng Nhập.
     // ==============================================================
-    let currentStep = 'email'; // email | otp | setPassword
+    let currentStep = 'email'; // email | otp | setPassword | profile
     let pendingResetToken = null;
+    let pendingMemberToken = null;
+    let pendingMemberEmail = null;
 
     function showAlert(message, isError) {
       const el = document.getElementById('loginAlert');
@@ -348,6 +361,7 @@
       document.getElementById('emailStep').style.display = 'none';
       document.getElementById('otpStep').style.display = 'none';
       document.getElementById('setPasswordStep').style.display = 'none';
+      document.getElementById('profileStep').style.display = 'none';
     }
 
     function backToEmailStep() {
@@ -490,9 +504,52 @@
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Không thể đặt mật khẩu.');
 
-        localStorage.setItem('wvn_member_token', result.token);
-        localStorage.setItem('wvn_member_email', result.email);
-        showAlert('Tạo tài khoản thành công! Đang chuyển hướng...', false);
+        pendingMemberToken = result.token;
+        pendingMemberEmail = result.email;
+
+        currentStep = 'profile';
+        hideAllSteps();
+        document.getElementById('profileStep').style.display = 'block';
+        document.getElementById('regDob').max = new Date().toISOString().slice(0, 10);
+        document.getElementById('loginSubmitBtn').textContent = 'Hoàn Tất Đăng Ký';
+        showAlert('Tạo mật khẩu thành công! Vui lòng điền hồ sơ để hoàn tất đăng ký.', false);
+        document.getElementById('regFullName').focus();
+      } catch (err) {
+        showAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = currentStep === 'profile' ? 'Hoàn Tất Đăng Ký' : 'Hoàn Tất Đăng Ký';
+      }
+    }
+
+    async function submitRegistrationProfile() {
+      const fullName = document.getElementById('regFullName').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const dob = document.getElementById('regDob').value;
+      const address = document.getElementById('regAddress').value.trim();
+
+      if (!fullName || !phone || !dob || !address) {
+        showAlert('Vui lòng điền đầy đủ các trường có dấu * để hoàn tất đăng ký.', true);
+        return;
+      }
+
+      const btn = document.getElementById('loginSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      clearAlert();
+
+      try {
+        const res = await fetch('/api/member-update-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Member-Token': pendingMemberToken },
+          body: JSON.stringify({ fullName, phone, dob, address })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể lưu hồ sơ.');
+
+        showAlert('Đăng ký hoàn tất! Đang chuyển hướng...', false);
+        localStorage.setItem('wvn_member_token', pendingMemberToken);
+        localStorage.setItem('wvn_member_email', pendingMemberEmail);
         window.location.href = 'thanh-vien-index.html';
       } catch (err) {
         showAlert(err.message, true);
@@ -506,6 +563,7 @@
       if (currentStep === 'email') checkAccountAndProceed();
       else if (currentStep === 'otp') verifyOtp();
       else if (currentStep === 'setPassword') submitNewPassword();
+      else if (currentStep === 'profile') submitRegistrationProfile();
     });
 
     // Nếu đã đăng nhập sẵn (còn phiên hợp lệ), chuyển thẳng vào khu vực thành viên
