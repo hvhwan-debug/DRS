@@ -288,19 +288,20 @@
         const donationsHtml = `<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th>
+                <th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Mã giao dịch</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th>
               </tr></thead>
               <tbody>
                 ${donations.length > 0 ? donations.map(d => `
                   <tr style="border-top:1px solid var(--border);">
                     <td style="padding:0.5rem 0.4rem;">${formatDateTime(d.donatedAt)}</td>
                     <td style="padding:0.5rem 0.4rem; font-weight:700; color:#15803d;">${Number(d.amount).toLocaleString('vi-VN')}đ</td>
+                    <td style="padding:0.5rem 0.4rem;">${d.transactionCode || '—'}</td>
                     <td style="padding:0.5rem 0.4rem;">${d.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${d.note || '—'}</td>
                   </tr>
                 `).join('') : `
                   <tr>
-                    <td colspan="4" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
+                    <td colspan="5" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
                       <i class="fa-solid fa-hand-holding-dollar"></i> Chưa có quyên góp nào được ghi nhận với email này.
                     </td>
                   </tr>
