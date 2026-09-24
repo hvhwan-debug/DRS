@@ -102,11 +102,24 @@ module.exports = async function (context, req) {
         queryOptions: { filter: `PartitionKey eq 'donation' and donorEmail eq '${email.replace(/'/g, "''")}'` }
       });
       for await (const entity of donationIterator) {
+        let attachments = [];
+        try {
+          const rawAttachments = JSON.parse(entity.attachmentsJson || "[]");
+          attachments = await Promise.all(
+            rawAttachments.map(async (att) => ({
+              filename: att.filename,
+              url: await getAttachmentSasUrl(att.blobName)
+            }))
+          );
+        } catch (e) {
+          // Không có ảnh đính kèm — bỏ qua
+        }
         donations.push({
           amount: entity.amount,
           method: entity.method || "",
           transactionCode: entity.transactionCode || "",
           note: entity.note || "",
+          attachments,
           donatedAt: entity.donatedAt
         });
       }
