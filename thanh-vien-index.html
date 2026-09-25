@@ -633,8 +633,8 @@
         if (data[key] && !seenLabels.has(label)) {
           out.push(`
             <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem;">
-              <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.3px; color:var(--text-muted); margin-bottom:0.2rem;">${label}</div>
-              <div style="font-size:0.92rem; font-weight:600; color:var(--text-dark);">${data[key]}</div>
+              <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.3px; color:#64748b; margin-bottom:0.2rem;">${label}</div>
+              <div style="font-size:0.92rem; font-weight:600; color:#0f172a;">${data[key]}</div>
             </div>`);
           seenLabels.add(label);
         }
@@ -839,7 +839,7 @@
               <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="fa-solid fa-coins"></i></div>
               <div>
                 <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.total.toLocaleString('vi-VN')} điểm</div>
-                <div style="font-size:0.78rem; color:var(--text-muted);">Điểm tích lũy hiện có — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
+                <div style="font-size:0.78rem; color:#92651b;">Điểm tích lũy hiện có — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
               </div>
             </div>` : ''}
           ${nextTier ? `
@@ -1018,8 +1018,8 @@
                 <div style="display:flex; align-items:center; gap:0.6rem; border:1px solid var(--border); border-radius:999px; padding:0.5rem 1rem 0.5rem 0.6rem; background:#fff;">
                   <div style="width:32px; height:32px; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="fa-solid fa-user-graduate"></i></div>
                   <div>
-                    <div style="font-size:0.86rem; font-weight:700; color:var(--text-dark);">${s.studentName}</div>
-                    <div style="font-size:0.74rem; color:var(--text-muted);">${s.program || 'Chưa gán chương trình'}</div>
+                    <div style="font-size:0.86rem; font-weight:700; color:#0f172a;">${s.studentName}</div>
+                    <div style="font-size:0.74rem; color:#64748b;">${s.program || 'Chưa gán chương trình'}</div>
                   </div>
                 </div>`).join('')}
             </div>`
