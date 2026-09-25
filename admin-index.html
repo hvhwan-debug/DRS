@@ -1039,7 +1039,7 @@
             <td>${escapeHtml(d.note)}</td>
             <td>${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(d.confirmationStatus, d.memberFeedback)}</td>
-            <td><button type="button" class="btn ${d.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-pen"></i> Sửa (đã xác nhận)' : 'Sửa'}</button></td>
+            <td><button type="button" class="btn ${d.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${d.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('donLoading').style.display = 'none';
@@ -1185,7 +1185,7 @@
             <td>${formatDate(p.paidAt)}</td>
             <td>${(p.attachments && p.attachments.length > 0) ? p.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${tuitionStatusHtml(p.confirmationStatus, p.memberFeedback)}</td>
-            <td><button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-pen"></i> Sửa (đã xác nhận)' : 'Sửa'}</button></td>
+            <td><button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${p.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('tuitionLoading').style.display = 'none';
@@ -1955,7 +1955,7 @@
             <td>${escapeHtml(g.comment)}</td>
             <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
-            <td><button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-pen"></i> Sửa (đã xác nhận)' : 'Sửa'}</button></td>
+            <td><button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${g.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('gradeLoading').style.display = 'none';
