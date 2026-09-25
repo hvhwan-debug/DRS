@@ -47,7 +47,7 @@ function ctaButtonsHtml(ctas, isVip) {
       bgStyle = "background-color:#ffffff;";
       color = "#334155"; border = "1.5px solid #e2e8f0";
     }
-    return `<a href="${escapeAttr(c.href)}" style="display:inline-block; ${bgStyle} color:${color}; text-decoration:none; font-weight:700; font-size:14px; padding:12px 24px; border-radius:9px; margin:0 6px 10px; border:${border};">${c.label}</a>`;
+    return `<a href="${escapeAttr(c.href)}" style="display:inline-block; ${bgStyle} color:${color}; text-decoration:none; font-weight:700; font-size:14px; font-family:Arial,Helvetica,sans-serif; padding:12px 24px; border-radius:9px; margin:0 6px 10px; border:${border};">${c.label}</a>`;
   }).join("");
   return `<div style="text-align:center; margin:22px 0 8px;">${html}</div>`;
 }
@@ -70,7 +70,7 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
   const outerBg = isVip ? GOLD_DARK : "#f1f5f9";
 
   const eyebrowHtml = eyebrow
-    ? `<div style="text-align:center; font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:${accentOnWhite}; margin-bottom:10px;">${eyebrow}</div>`
+    ? `<div style="text-align:center; font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:${accentOnWhite}; font-family:Arial,Helvetica,sans-serif; margin-bottom:10px;">${eyebrow}</div>`
     : "";
   const titleHtml = title
     ? `<h1 style="text-align:center; font-size:20px; font-weight:800; color:#0f172a; margin:0 0 18px; font-family:Georgia,'Times New Roman',serif;">${title}</h1>`
@@ -79,26 +79,26 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
   return `<!DOCTYPE html>
 <html lang="vi">
   <body style="margin:0;padding:0;background-color:${outerBg};font-family:Arial,Helvetica,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${outerBg};padding:32px 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${outerBg};padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
       <tr><td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;background-color:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,0.22);${isVip ? `border:2px solid ${GOLD_MAIN};` : "border:1px solid #e2e8f0;"}">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;background-color:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,0.22);font-family:Arial,Helvetica,sans-serif;${isVip ? `border:2px solid ${GOLD_MAIN};` : "border:1px solid #e2e8f0;"}">
           <tr><td bgcolor="${isVip ? GOLD_DARK : STANDARD_HEADER_SOLID}" style="${headerStyle}padding:30px 32px;text-align:center;">
             <img src="${LOGO_URL}" alt="WVN" width="52" style="display:block;height:auto;margin:0 auto 10px;">
             <div style="color:#ffffff;font-size:17px;font-weight:800;letter-spacing:0.2px;font-family:Georgia,'Times New Roman',serif;">${BRAND_NAME}</div>
           </td></tr>
-          <tr><td style="padding:32px 32px 28px;">
+          <tr><td style="padding:32px 32px 28px;font-family:Arial,Helvetica,sans-serif;">
             ${eyebrowHtml}
             ${titleHtml}
-            <div style="font-size:14px;color:#334155;line-height:1.7;">${bodyHtml || ""}</div>
+            <div style="font-size:14px;color:#334155;line-height:1.7;font-family:Arial,Helvetica,sans-serif;">${bodyHtml || ""}</div>
             ${ctaButtonsHtml(ctas, isVip)}
-            ${footerNote ? `<p style="font-size:12px;color:#94a3b8;margin:20px 0 0;text-align:center;">${footerNote}</p>` : ""}
+            ${footerNote ? `<p style="font-size:12px;color:#94a3b8;margin:20px 0 0;text-align:center;font-family:Arial,Helvetica,sans-serif;">${footerNote}</p>` : ""}
           </td></tr>
           ${isVip ? `
           <tr><td bgcolor="${GOLD_DARK}" style="background-color:${GOLD_DARK}; padding:16px 24px; text-align:center; border-top:1px solid rgba(212,175,55,0.35);">
-            <div style="font-size:12px; color:${GOLD_SOFT}; font-weight:700;">Cảm ơn sự đồng hành đặc biệt của bạn cùng ${BRAND_NAME}</div>
+            <div style="font-size:12px; color:${GOLD_SOFT}; font-weight:700; font-family:Arial,Helvetica,sans-serif;">Cảm ơn sự đồng hành đặc biệt của bạn cùng ${BRAND_NAME}</div>
           </td></tr>` : `
           <tr><td bgcolor="#f8fafc" style="background-color:#f8fafc; padding:14px 24px; text-align:center; border-top:1px solid #e2e8f0;">
-            <div style="font-size:11px; color:#94a3b8;">© ${new Date().getFullYear()} ${BRAND_NAME}</div>
+            <div style="font-size:11px; color:#94a3b8; font-family:Arial,Helvetica,sans-serif;">© ${new Date().getFullYear()} ${BRAND_NAME}</div>
           </td></tr>`}
         </table>
       </td></tr>
@@ -114,7 +114,7 @@ function moneyBadgeHtml(amount, isVip) {
     ? `background-color:${GOLD_MAIN};background:linear-gradient(135deg, ${GOLD_MAIN}, ${GOLD_LIGHT});`
     : "background-color:#f0fdf4;";
   const border = isVip ? "none" : "1px dashed #86efac";
-  return `<div style="text-align:center;margin:18px 0;"><span style="display:inline-block;font-size:22px;font-weight:800;color:${color};${bgStyle}border:${border};border-radius:10px;padding:10px 26px;">${Number(amount).toLocaleString("vi-VN")}đ</span></div>`;
+  return `<div style="text-align:center;margin:18px 0;"><span style="display:inline-block;font-size:22px;font-weight:800;color:${color};font-family:Arial,Helvetica,sans-serif;${bgStyle}border:${border};border-radius:10px;padding:10px 26px;">${Number(amount).toLocaleString("vi-VN")}đ</span></div>`;
 }
 
 module.exports = { renderEmailHtml, moneyBadgeHtml, BRAND_NAME, SITE_URL };

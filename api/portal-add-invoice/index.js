@@ -24,7 +24,7 @@ function buildInvoiceEmailBody(inv, greeting) {
     <p style="margin:0 0 16px;">${greeting}</p>
     <p style="margin:0 0 10px;">Chúng tôi vừa lập một hoá đơn mới cho bạn${inv.studentName ? ` — học sinh <strong>${inv.studentName}</strong>` : ""}:</p>
     <p style="margin:0 0 14px; font-size:13px; color:#64748b;">Số hoá đơn: <strong>${inv.invoiceNumber}</strong> — Ngày lập: <strong>${new Date(inv.issueDate).toLocaleDateString("vi-VN")}</strong></p>
-    <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+    <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-family:Arial,Helvetica,sans-serif;">
       <thead><tr style="font-size:12px; color:#64748b; text-align:left;"><th style="padding:6px;">Mô tả</th><th style="padding:6px; text-align:center;">SL</th><th style="padding:6px; text-align:right;">Đơn giá</th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
