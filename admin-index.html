@@ -161,9 +161,11 @@
         <button class="tab-btn" data-tab="registrations" onclick="switchTab('registrations')"><i class="fa-solid fa-file-lines"></i> Đơn Đăng Ký</button>
         <button class="tab-btn" data-tab="donations" onclick="switchTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
         <button class="tab-btn" data-tab="tuition" onclick="switchTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
+        <button class="tab-btn" data-tab="students" onclick="switchTab('students')"><i class="fa-solid fa-child-reaching"></i> Học Sinh</button>
         <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Lịch Học</button>
         <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
         <button class="tab-btn" data-tab="members" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> Thành Viên</button>
+        <button class="tab-btn" data-tab="gifts" onclick="switchTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
         <button class="tab-btn" data-tab="bulkemail" onclick="switchTab('bulkemail')"><i class="fa-solid fa-paper-plane"></i> Gửi Email</button>
         <button class="tab-btn" data-tab="emaillogs" onclick="switchTab('emaillogs')"><i class="fa-solid fa-clock-rotate-left"></i> Lịch Sử Email</button>
       </nav>
@@ -323,6 +325,49 @@
       </div>
     </div>
 
+    <!-- ===================== TAB: HỌC SINH ===================== -->
+    <div class="panel" id="panel-students">
+      <div class="card" style="background:linear-gradient(135deg,#ffffff 0%,#f8fbff 100%); border:1px solid #e0ecfb;">
+        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-child-reaching" style="color:#0284c7;"></i> Thêm / Sửa học sinh</h3>
+        <form id="studentForm">
+          <div class="form-grid">
+            <div>
+              <label>Email phụ huynh *</label>
+              <input type="email" id="studentParentEmail" required list="knownEmailsList" placeholder="Gõ tên hoặc email phụ huynh...">
+            </div>
+            <div><label>Tên học sinh *</label><input type="text" id="studentName" required></div>
+            <div><label>Ngày sinh</label><input type="date" id="studentDob"></div>
+            <div>
+              <label>Gán vào chương trình học</label>
+              <select id="studentProgram" onchange="toggleCustomProgram('student')">
+                <option value="">-- Chưa gán --</option>
+                <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
+                <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
+                <option value="__custom__">+ Chương trình khác...</option>
+              </select>
+              <input type="text" id="studentProgramCustom" placeholder="Nhập tên chương trình mới" style="display:none; margin-top:0.4rem;">
+            </div>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ghi chú</label>
+            <textarea id="studentNote" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:10px; font-family:inherit;"></textarea>
+          </div>
+          <button type="submit" class="btn" id="studentSubmitBtn"><i class="fa-solid fa-check"></i> Lưu Học Sinh</button>
+          <button type="button" class="btn btn-outline" id="studentCancelEditBtn" style="display:none;" onclick="cancelEditStudent()">Huỷ Sửa</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="loading-state" id="studentLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="studentTableWrap">
+          <table>
+            <thead><tr><th>Học sinh</th><th>Ngày sinh</th><th>Email phụ huynh</th><th>Chương trình đã gán</th><th>Ghi chú</th><th>Thao tác</th></tr></thead>
+            <tbody id="studentTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="studentEmpty" style="display:none;">Chưa có học sinh nào được thêm.</div>
+      </div>
+    </div>
+
     <!-- ===================== TAB: LỊCH HỌC ===================== -->
     <div class="panel" id="panel-schedule">
       <div class="card">
@@ -462,6 +507,21 @@
           <button type="button" class="btn btn-outline" onclick="closeMemberOverview()" style="color:#475569; border-color:var(--border);">Đóng</button>
         </div>
         <div id="memberOverviewContent"></div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: ĐỔI QUÀ ===================== -->
+    <div class="panel" id="panel-gifts">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-gift" style="color:#0284c7;"></i> Yêu Cầu Đổi Quà</h3>
+        <div class="loading-state" id="giftLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="giftTableWrap">
+          <table>
+            <thead><tr><th>Email</th><th>Quà tặng</th><th>Mốc học phí</th><th>Ngày yêu cầu</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody id="giftTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="giftEmpty" style="display:none;">Chưa có yêu cầu đổi quà nào.</div>
       </div>
     </div>
 
@@ -1076,6 +1136,156 @@
         btn.innerHTML = editingTuitionId ? '<i class="fa-solid fa-check"></i> Cập Nhật Học Phí' : '<i class="fa-solid fa-check"></i> Lưu Học Phí';
       }
     });
+
+    // ============== HỌC SINH ==============
+    let editingStudentId = null;
+    let editingStudentParentEmail = null;
+
+    async function loadStudents() {
+      try {
+        const { students } = await apiCall('/api/portal-list-students');
+        document.getElementById('studentLoading').style.display = 'none';
+        if (students.length === 0) {
+          document.getElementById('studentEmpty').style.display = 'block';
+          return;
+        }
+        document.getElementById('studentTableWrap').style.display = 'block';
+        document.getElementById('studentTableBody').innerHTML = students.map(s => `
+          <tr>
+            <td style="font-weight:700;">${escapeHtml(s.studentName)}</td>
+            <td>${formatDate(s.dob) !== '—' ? formatDate(s.dob) : (s.dob || '—')}</td>
+            <td>${escapeHtml(s.parentEmail)}</td>
+            <td>${s.program ? `<span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">${escapeHtml(s.program)}</span>` : '<span style="color:var(--text-muted);">Chưa gán</span>'}</td>
+            <td style="color:var(--text-muted);">${escapeHtml(s.note) || '—'}</td>
+            <td style="display:flex; gap:0.5rem;">
+              <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditStudent(${JSON.stringify(s).replace(/'/g, "&#39;")})'>Sửa</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="deleteStudent('${encodeURIComponent(s.parentEmail)}','${s.id}')">Xoá</button>
+            </td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('studentLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function startEditStudent(s) {
+      editingStudentId = s.id;
+      editingStudentParentEmail = s.parentEmail;
+      document.getElementById('studentParentEmail').value = s.parentEmail || '';
+      document.getElementById('studentName').value = s.studentName || '';
+      document.getElementById('studentDob').value = s.dob || '';
+      setProgramSelectValue('student', s.program || '');
+      document.getElementById('studentNote').value = s.note || '';
+      document.getElementById('studentSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Cập Nhật Học Sinh';
+      document.getElementById('studentCancelEditBtn').style.display = 'inline-block';
+      document.getElementById('studentForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function cancelEditStudent() {
+      editingStudentId = null;
+      editingStudentParentEmail = null;
+      document.getElementById('studentForm').reset();
+      document.getElementById('studentProgramCustom').style.display = 'none';
+      document.getElementById('studentSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Lưu Học Sinh';
+      document.getElementById('studentCancelEditBtn').style.display = 'none';
+    }
+
+    async function deleteStudent(parentEmailEnc, id) {
+      if (!confirm('Xoá học sinh này?')) return;
+      try {
+        await apiCall('/api/portal-delete-student', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
+        });
+        showGlobalAlert('Đã xoá học sinh.', false);
+        document.getElementById('studentTableWrap').style.display = 'none';
+        document.getElementById('studentEmpty').style.display = 'none';
+        document.getElementById('studentLoading').style.display = 'block';
+        loadStudents();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('studentForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('studentSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      try {
+        const payload = {
+          parentEmail: document.getElementById('studentParentEmail').value.trim(),
+          studentName: document.getElementById('studentName').value.trim(),
+          dob: document.getElementById('studentDob').value,
+          program: getProgramValue('student'),
+          note: document.getElementById('studentNote').value.trim()
+        };
+        if (editingStudentId) payload.id = editingStudentId;
+
+        await apiCall('/api/portal-add-student', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showGlobalAlert(editingStudentId ? 'Đã cập nhật học sinh.' : 'Đã thêm học sinh.', false);
+        cancelEditStudent();
+        document.getElementById('studentTableWrap').style.display = 'none';
+        document.getElementById('studentEmpty').style.display = 'none';
+        document.getElementById('studentLoading').style.display = 'block';
+        loadStudents();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = editingStudentId ? '<i class="fa-solid fa-check"></i> Cập Nhật Học Sinh' : '<i class="fa-solid fa-check"></i> Lưu Học Sinh';
+      }
+    });
+
+    // ============== ĐỔI QUÀ ==============
+    async function loadGifts() {
+      try {
+        const { redemptions } = await apiCall('/api/portal-list-gift-redemptions');
+        document.getElementById('giftLoading').style.display = 'none';
+        if (redemptions.length === 0) {
+          document.getElementById('giftEmpty').style.display = 'block';
+          return;
+        }
+        document.getElementById('giftTableWrap').style.display = 'block';
+        document.getElementById('giftTableBody').innerHTML = redemptions.map(r => `
+          <tr>
+            <td>${escapeHtml(r.email)}</td>
+            <td style="font-weight:700;">${escapeHtml(r.giftName)}</td>
+            <td>${formatMoney(r.giftCost)}</td>
+            <td>${formatDate(r.requestedAt)}</td>
+            <td>${r.status === 'fulfilled'
+              ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã trao quà</span>'
+              : '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fef3c7; color:#a16207;">Chờ trao quà</span>'}</td>
+            <td>${r.status !== 'fulfilled' ? `<button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="fulfillGift('${encodeURIComponent(r.email)}','${r.id}')">Đã Giao Quà</button>` : '—'}</td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('giftLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function fulfillGift(emailEnc, id) {
+      if (!confirm('Xác nhận đã trao quà tặng này cho thành viên?')) return;
+      try {
+        const result = await apiCall('/api/portal-fulfill-gift-redemption', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc), id })
+        });
+        showGlobalAlert(result.warning || 'Đã đánh dấu trao quà và gửi email báo.', !!result.warning);
+        document.getElementById('giftTableWrap').style.display = 'none';
+        document.getElementById('giftEmpty').style.display = 'none';
+        document.getElementById('giftLoading').style.display = 'block';
+        loadGifts();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
 
     // ============== LỊCH HỌC ==============
     let editingScheduleId = null;
@@ -1859,9 +2069,11 @@
     loadRegistrations();
     loadDonations();
     loadTuition();
+    loadStudents();
     loadSchedule();
     loadGrades();
     loadMembers();
+    loadGifts();
     loadEmailLogs();
   </script>
 </body>
