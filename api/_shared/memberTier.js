@@ -5,24 +5,26 @@ const TUITION_TABLE = "TuitionPayments";
 // Nguồn dữ liệu hạng DUY NHẤT phía server — phải khớp với getMembershipTier()/TIER_PERKS
 // trong thanh-vien-index.html (giao diện). Nếu sửa mốc hạng, sửa ở CẢ HAI nơi.
 //
+// Thứ tự hạng (từ thấp đến cao): Thành Viên Mới -> Thân Thiết -> Bạc -> Titanium -> Vàng -> Kim Cương.
+// (Đã bỏ hạng "Bạch Kim" theo yêu cầu.)
+//
 // earnRate quy định tốc độ tích điểm của mỗi hạng, quy đổi về "hệ số giá trị" (fraction of
 // số tiền học phí), rồi 1 điểm = 1.000đ giá trị:
 //   - mode 'x'   : hạng tính theo bội số điểm — 1x tương ứng hệ số 0.1% (0.001) giá trị/số tiền
 //   - mode '%'   : hạng tính theo % hoàn điểm trực tiếp trên số tiền
-// Theo yêu cầu: Thành viên 1x, Bạc 2x, Titanium 3x, Vàng 5%, Bạch Kim 10%.
-// Thân Thiết và Kim Cương không được nêu cụ thể — tạm suy ra hợp lý (xem ghi chú cuối file).
+// Theo yêu cầu gốc: Thành viên 1x, Bạc 2x, Titanium 3x, Vàng 5%, (Bạch Kim 10% — đã bỏ).
+// Giờ Titanium (3x) nằm dưới Vàng (5%) cả về mốc tiền lẫn tỉ lệ quy đổi điểm -> tăng dần hợp lý.
 const TIERS = [
   { name: "Thành Viên Mới", min: 0, icon: "fa-seedling", color: "#64748b", earnRate: { mode: "x", value: 1 } },
   { name: "Thân Thiết", min: 5000000, icon: "fa-heart", color: "#0284c7", earnRate: { mode: "x", value: 1 } },
   { name: "Bạc", min: 10000000, icon: "fa-medal", color: "#64748b", earnRate: { mode: "x", value: 2 } },
-  { name: "Vàng", min: 15000000, icon: "fa-crown", color: "#c9a227", earnRate: { mode: "%", value: 5 } },
-  { name: "Bạch Kim", min: 30000000, icon: "fa-award", color: "#94a3b8", earnRate: { mode: "%", value: 10 } },
-  { name: "Titanium", min: 45000000, icon: "fa-shield-halved", color: "#5b7c99", earnRate: { mode: "x", value: 3 } },
+  { name: "Titanium", min: 20000000, icon: "fa-shield-halved", color: "#5b7c99", earnRate: { mode: "x", value: 3 } },
+  { name: "Vàng", min: 40000000, icon: "fa-crown", color: "#c9a227", earnRate: { mode: "%", value: 5 } },
   { name: "Kim Cương", min: 70000000, icon: "fa-gem", color: "#0369a1", earnRate: { mode: "%", value: 12 } }
 ];
 
-// Hạng "VIP" (mở khoá giao diện riêng + hiển thị chữ VIP): từ hạng Vàng trở lên.
-const VIP_MIN_TOTAL = 15000000;
+// Hạng "VIP" (mở khoá giao diện riêng, chữ "VIP", email premium): từ hạng Vàng trở lên.
+const VIP_MIN_TOTAL = 40000000;
 
 function getTierByTotal(totalPaid) {
   let current = TIERS[0];
@@ -83,11 +85,3 @@ module.exports = {
   getTotalTuitionPaid,
   getTierInfoForEmail
 };
-
-// GHI CHÚ GIẢ ĐỊNH (vui lòng xác nhận lại nếu cần đổi):
-// - "Thân Thiết" (giữa Thành Viên Mới và Bạc): giữ 1x như Thành Viên Mới, vì đề bài chỉ nêu "Thành viên: 1x".
-// - "Kim Cương" (trên Bạch Kim): đặt 12% (cao hơn Bạch Kim 10%) vì đây là hạng cao nhất.
-// - Titanium (3x) nằm TRÊN Vàng (5%) và Bạch Kim (10%) về mốc chi tiêu, nhưng lại có tỉ lệ quy đổi
-//   điểm thấp hơn theo đúng số bạn cung cấp. Mình giữ nguyên đúng như yêu cầu, nhưng nếu đây là
-//   nhầm lẫn thứ tự, chỉ cần sửa "earnRate" của Titanium trong mảng TIERS ở trên (ví dụ đổi thành
-//   { mode: "%", value: 15 } để luôn tăng dần theo hạng).

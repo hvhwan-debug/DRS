@@ -669,9 +669,8 @@
 
     function getMembershipTier(totalPaid) {
       if (totalPaid >= 70000000) return { name: 'Kim Cương', icon: 'fa-gem', bg: 'rgba(125,211,252,0.18)', color: '#7dd3fc' };
-      if (totalPaid >= 45000000) return { name: 'Titanium', icon: 'fa-shield-halved', bg: 'rgba(100,130,160,0.22)', color: '#a8c0d6' };
-      if (totalPaid >= 30000000) return { name: 'Bạch Kim', icon: 'fa-award', bg: 'rgba(203,213,225,0.22)', color: '#e2e8f0' };
-      if (totalPaid >= 15000000) return { name: 'Vàng', icon: 'fa-crown', bg: 'rgba(201,162,39,0.22)', color: '#f6ecc9' };
+      if (totalPaid >= 40000000) return { name: 'Vàng', icon: 'fa-crown', bg: 'rgba(201,162,39,0.22)', color: '#f6ecc9' };
+      if (totalPaid >= 20000000) return { name: 'Titanium', icon: 'fa-shield-halved', bg: 'rgba(100,130,160,0.22)', color: '#a8c0d6' };
       if (totalPaid >= 10000000) return { name: 'Bạc', icon: 'fa-medal', bg: 'rgba(148,163,184,0.22)', color: '#e2e8f0' };
       if (totalPaid >= 5000000) return { name: 'Thân Thiết', icon: 'fa-heart', bg: 'rgba(56,189,248,0.18)', color: '#7dd3fc' };
       return { name: 'Thành Viên Mới', icon: 'fa-seedling', bg: 'rgba(148,163,184,0.18)', color: '#cbd5e1' };
@@ -691,20 +690,16 @@
         perks: ['Toàn bộ quyền lợi hạng Thân Thiết', 'Giảm 7% phí tài liệu học tập bổ sung', 'Ưu tiên xếp lớp khi có lớp mới mở']
       },
       {
-        name: 'Vàng', min: 15000000, icon: 'fa-crown', color: '#c9a227',
-        perks: ['Toàn bộ quyền lợi hạng Bạc', 'Giảm 10% học phí kỳ tiếp theo', 'Tư vấn lộ trình học miễn phí 1 buổi/kỳ', 'Giao diện khu vực thành viên phong cách VIP riêng']
+        name: 'Titanium', min: 20000000, icon: 'fa-shield-halved', color: '#5b7c99',
+        perks: ['Toàn bộ quyền lợi hạng Bạc', 'Giảm 8% phí tài liệu học tập bổ sung', 'Đường dây hỗ trợ ưu tiên riêng', 'Kiểm tra đánh giá năng lực miễn phí định kỳ']
       },
       {
-        name: 'Bạch Kim', min: 30000000, icon: 'fa-award', color: '#94a3b8',
-        perks: ['Toàn bộ quyền lợi hạng Vàng', 'Giảm 15% học phí kỳ tiếp theo', 'Ưu tiên chọn khung giờ học mong muốn', 'Quà tặng dịp lễ, Tết dành riêng cho gia đình']
-      },
-      {
-        name: 'Titanium', min: 45000000, icon: 'fa-shield-halved', color: '#5b7c99',
-        perks: ['Toàn bộ quyền lợi hạng Bạch Kim', 'Giảm 18% học phí kỳ tiếp theo', 'Đường dây hỗ trợ ưu tiên riêng', 'Kiểm tra đánh giá năng lực miễn phí định kỳ']
+        name: 'Vàng', min: 40000000, icon: 'fa-crown', color: '#c9a227',
+        perks: ['Toàn bộ quyền lợi hạng Titanium', 'Giảm 12% học phí kỳ tiếp theo', 'Tư vấn lộ trình học miễn phí 1 buổi/kỳ', 'Giao diện khu vực thành viên phong cách VIP riêng']
       },
       {
         name: 'Kim Cương', min: 70000000, icon: 'fa-gem', color: '#0369a1',
-        perks: ['Toàn bộ quyền lợi hạng Titanium', 'Giảm 20% học phí kỳ tiếp theo', 'Giáo viên phụ trách tư vấn định kỳ 1-1', 'Mời tham dự các sự kiện đặc biệt của trung tâm']
+        perks: ['Toàn bộ quyền lợi hạng Vàng', 'Giảm 20% học phí kỳ tiếp theo', 'Giáo viên phụ trách tư vấn định kỳ 1-1', 'Mời tham dự các sự kiện đặc biệt của trung tâm']
       }
     ];
 
@@ -800,7 +795,7 @@
 
         const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
         const tier = getMembershipTier(totalTuitionPaid);
-        const isVip = totalTuitionPaid >= 15000000; // từ hạng Vàng trở lên
+        const isVip = totalTuitionPaid >= 40000000; // từ hạng Vàng trở lên
         document.body.classList.toggle('vip-theme', isVip);
 
         // Mục 2: chữ "VIP" trong "Khu vực thành viên" — chỉ hiện từ hạng Vàng trở lên
