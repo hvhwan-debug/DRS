@@ -728,12 +728,31 @@
       return Math.round((amount * fraction) / 1000);
     }
 
-    const GIFT_STATUS_LABELS = {
-      pending: { text: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
-      shipping: { text: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
-      fulfilled: { text: 'Đã nhận quà', bg: '#dcfce7', color: '#15803d' },
-      cancelled: { text: 'Đã huỷ', bg: '#fee2e2', color: '#b91c1c' }
-    };
+    // Thanh tiến trình 3 bước cho đổi quà — để thấy rõ đang ở bước nào thay vì chỉ 1 nhãn đơn lẻ.
+    const GIFT_STEPS = [
+      { key: 'pending', label: 'Chờ duyệt', icon: 'fa-clock' },
+      { key: 'shipping', label: 'Vận chuyển', icon: 'fa-truck-fast' },
+      { key: 'fulfilled', label: 'Đã trao', icon: 'fa-circle-check' }
+    ];
+    function giftStepperHtml(status) {
+      if (status === 'cancelled') {
+        return `<div style="display:flex; align-items:center; gap:0.4rem; color:#b91c1c; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Đã huỷ</div>`;
+      }
+      const currentIdx = GIFT_STEPS.findIndex(s => s.key === status);
+      return `<div style="display:flex; align-items:flex-start;">
+        ${GIFT_STEPS.map((s, i) => {
+          const isDone = i < currentIdx;
+          const isCurrent = i === currentIdx;
+          const color = isDone || isCurrent ? (isDone ? '#15803d' : '#0284c7') : '#cbd5e1';
+          const textColor = isDone ? '#15803d' : isCurrent ? '#0284c7' : '#94a3b8';
+          const circleHtml = `<div style="width:24px; height:24px; border-radius:50%; background:${isDone || isCurrent ? color : '#fff'}; border:2px solid ${color}; display:flex; align-items:center; justify-content:center; color:${isDone || isCurrent ? '#fff' : color}; font-size:0.68rem; flex-shrink:0;">${isDone ? '<i class="fa-solid fa-check"></i>' : `<i class="fa-solid ${s.icon}"></i>`}</div>`;
+          const connectorHtml = i < GIFT_STEPS.length - 1
+            ? `<div style="flex:1; height:2px; background:${i < currentIdx ? '#15803d' : '#e2e8f0'}; margin:11px 3px 0; min-width:14px;"></div>`
+            : '';
+          return `<div style="display:flex; flex-direction:column; align-items:center; width:56px;">${circleHtml}<div style="font-size:0.64rem; color:${textColor}; font-weight:${isCurrent ? '800' : '600'}; margin-top:0.2rem; text-align:center; line-height:1.2;">${s.label}</div></div>${connectorHtml}`;
+        }).join('')}
+      </div>`;
+    }
 
     function renderNotLoggedIn(container) {
       document.body.classList.remove('vip-theme');
@@ -1160,10 +1179,7 @@
                 <div style="font-size:0.95rem; font-weight:800; color:var(--text-dark); margin-bottom:0.3rem;">${g.name}</div>
                 <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.9rem;">Cần tổng học phí ${g.cost.toLocaleString('vi-VN')}đ</div>
                 ${existingRequest
-                  ? (() => {
-                      const s = GIFT_STATUS_LABELS[existingRequest.status] || GIFT_STATUS_LABELS.pending;
-                      return `<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:999px; background:${s.bg}; color:${s.color};">${s.text}</span>`;
-                    })()
+                  ? `<div style="display:flex; justify-content:center; margin-top:0.3rem;">${giftStepperHtml(existingRequest.status)}</div>`
                   : (isEligible
                       ? `<button type="button" class="btn" style="padding:0.5rem 1.1rem; font-size:0.85rem;" onclick="requestGift('${g.id}')">Yêu Cầu Đổi Quà</button>`
                       : `<span style="font-size:0.78rem; color:var(--text-muted);">Cần đóng thêm ${(g.cost - totalTuitionPaid).toLocaleString('vi-VN')}đ</span>`)}
@@ -1200,13 +1216,12 @@
         const giftHistoryRows = [...giftRedemptions]
           .sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt))
           .map(r => {
-            const s = GIFT_STATUS_LABELS[r.status] || GIFT_STATUS_LABELS.pending;
             const lastDate = r.fulfilledAt || r.cancelledAt || r.shippedAt || r.requestedAt;
             return `
               <tr style="border-top:1px solid var(--border);">
                 <td style="padding:0.6rem 0.5rem; font-weight:700;">${r.giftName}</td>
                 <td style="padding:0.6rem 0.5rem; white-space:nowrap;">${formatDate(r.requestedAt)}</td>
-                <td style="padding:0.6rem 0.5rem;"><span style="display:inline-block; font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:${s.bg}; color:${s.color};">${s.text}</span>${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.2rem;">${r.cancelReason}</div>` : ''}</td>
+                <td style="padding:0.6rem 0.5rem;">${giftStepperHtml(r.status)}${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">${r.cancelReason}</div>` : ''}</td>
                 <td style="padding:0.6rem 0.5rem; white-space:nowrap; color:var(--text-muted);">${formatDate(lastDate)}</td>
               </tr>`;
           }).join('');

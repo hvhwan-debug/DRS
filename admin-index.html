@@ -1746,12 +1746,32 @@
     });
 
     // ============== ĐỔI QUÀ ==============
-    const GIFT_STATUS_META = {
-      pending: { label: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
-      shipping: { label: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
-      fulfilled: { label: 'Đã trao quà', bg: '#dcfce7', color: '#15803d' },
-      cancelled: { label: 'Đã huỷ', bg: '#fee2e2', color: '#b91c1c' }
-    };
+    // Thanh tiến trình trực quan 3 bước, để admin lẫn thành viên đều thấy rõ đang ở bước nào,
+    // thay vì chỉ 1 nhãn trạng thái đơn lẻ.
+    const GIFT_STEPS = [
+      { key: 'pending', label: 'Chờ duyệt', icon: 'fa-clock' },
+      { key: 'shipping', label: 'Vận chuyển', icon: 'fa-truck-fast' },
+      { key: 'fulfilled', label: 'Đã trao', icon: 'fa-circle-check' }
+    ];
+    function giftStepperHtml(status) {
+      if (status === 'cancelled') {
+        return `<div style="display:flex; align-items:center; gap:0.4rem; color:#b91c1c; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Đã huỷ</div>`;
+      }
+      const currentIdx = GIFT_STEPS.findIndex(s => s.key === status);
+      return `<div style="display:flex; align-items:flex-start; min-width:220px;">
+        ${GIFT_STEPS.map((s, i) => {
+          const isDone = i < currentIdx;
+          const isCurrent = i === currentIdx;
+          const color = isDone || isCurrent ? (isDone ? '#15803d' : '#0284c7') : '#cbd5e1';
+          const textColor = isDone ? '#15803d' : isCurrent ? '#0284c7' : '#94a3b8';
+          const circleHtml = `<div style="width:24px; height:24px; border-radius:50%; background:${isDone || isCurrent ? color : '#fff'}; border:2px solid ${color}; display:flex; align-items:center; justify-content:center; color:${isDone || isCurrent ? '#fff' : color}; font-size:0.68rem; flex-shrink:0;">${isDone ? '<i class="fa-solid fa-check"></i>' : `<i class="fa-solid ${s.icon}"></i>`}</div>`;
+          const connectorHtml = i < GIFT_STEPS.length - 1
+            ? `<div style="flex:1; height:2px; background:${i < currentIdx ? '#15803d' : '#e2e8f0'}; margin:11px 3px 0;"></div>`
+            : '';
+          return `<div style="display:flex; flex-direction:column; align-items:center; width:56px;">${circleHtml}<div style="font-size:0.66rem; color:${textColor}; font-weight:${isCurrent ? '800' : '600'}; margin-top:0.2rem; text-align:center; line-height:1.2;">${s.label}</div></div>${connectorHtml}`;
+        }).join('')}
+      </div>`;
+    }
 
     function giftActionsHtml(r) {
       const emailEnc = encodeURIComponent(r.email);
@@ -1778,14 +1798,13 @@
         }
         document.getElementById('giftTableWrap').style.display = 'block';
         document.getElementById('giftTableBody').innerHTML = redemptions.map(r => {
-          const meta = GIFT_STATUS_META[r.status] || GIFT_STATUS_META.pending;
           return `
           <tr>
             <td>${escapeHtml(r.email)}</td>
             <td style="font-weight:700;">${escapeHtml(r.giftName)}</td>
             <td>${formatMoney(r.giftCost)}</td>
             <td>${formatDate(r.requestedAt)}</td>
-            <td><span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:${meta.bg}; color:${meta.color};">${meta.label}</span>${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.2rem;">${escapeHtml(r.cancelReason)}</div>` : ''}</td>
+            <td>${giftStepperHtml(r.status)}${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">${escapeHtml(r.cancelReason)}</div>` : ''}</td>
             <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">${giftActionsHtml(r)}</td>
           </tr>`;
         }).join('');
