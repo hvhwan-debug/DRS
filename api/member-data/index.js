@@ -7,6 +7,7 @@ const DONATIONS_TABLE = "Donations";
 const PROFILES_TABLE = "MemberProfiles";
 const GRADES_TABLE = "Grades";
 const TUITION_TABLE = "TuitionPayments";
+const SCHEDULE_TABLE = "ClassSchedules";
 
 const FORM_TITLES = {
   contact: "Liên hệ",
@@ -220,8 +221,32 @@ module.exports = async function (context, req) {
       tuitionPayments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
     } catch (e) {}
 
+    // Lịch học — chỉ hiện đúng những chương trình mà thành viên đang tham gia
+    const memberPrograms = new Set();
+    registrations.forEach(r => { if (r.data && r.data.chuong_trinh) memberPrograms.add(r.data.chuong_trinh); });
+    grades.forEach(g => { if (g.program) memberPrograms.add(g.program); });
+    tuitionPayments.forEach(p => { if (p.program) memberPrograms.add(p.program); });
+
+    let schedules = [];
+    try {
+      const scheduleTable = await getTableClient(SCHEDULE_TABLE);
+      for await (const entity of scheduleTable.listEntities()) {
+        if (memberPrograms.has(entity.program)) {
+          schedules.push({
+            program: entity.program,
+            days: entity.days,
+            startTime: entity.startTime,
+            endTime: entity.endTime,
+            location: entity.location || "",
+            teacherName: entity.teacherName || "",
+            note: entity.note || ""
+          });
+        }
+      }
+    } catch (e) {}
+
     context.res.status = 200;
-    context.res.body = { success: true, email, profile, registrations, donations, grades, tuitionPayments };
+    context.res.body = { success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules };
   } catch (err) {
     context.log.error("Lỗi lấy dữ liệu thành viên:", err.message);
     context.res.status = 500;
