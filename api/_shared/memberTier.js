@@ -6,20 +6,15 @@ const TUITION_TABLE = "TuitionPayments";
 // trong thanh-vien-index.html (giao diện). Nếu sửa mốc hạng, sửa ở CẢ HAI nơi.
 //
 // Thứ tự hạng (từ thấp đến cao): Thành Viên Mới -> Thân Thiết -> Bạc -> Titanium -> Vàng -> Kim Cương.
-// (Đã bỏ hạng "Bạch Kim" theo yêu cầu.)
 //
-// earnRate quy định tốc độ tích điểm của mỗi hạng, quy đổi về "hệ số giá trị" (fraction of
-// số tiền học phí), rồi 1 điểm = 1.000đ giá trị:
-//   - mode 'x'   : hạng tính theo bội số điểm — 1x tương ứng hệ số 0.1% (0.001) giá trị/số tiền
-//   - mode '%'   : hạng tính theo % hoàn điểm trực tiếp trên số tiền
-// Theo yêu cầu gốc: Thành viên 1x, Bạc 2x, Titanium 3x, Vàng 5%, (Bạch Kim 10% — đã bỏ).
-// Giờ Titanium (3x) nằm dưới Vàng (5%) cả về mốc tiền lẫn tỉ lệ quy đổi điểm -> tăng dần hợp lý.
+// earnRate: điểm tích lũy = % trực tiếp trên TỔNG học phí đã đóng, tăng dần theo hạng: 2% - 4% - 6% - 8% - 10% - 12%.
+// Quy đổi ra điểm: 1 điểm = 1.000đ giá trị (vd hạng Bạc 6% trên 10.000.000đ = 600.000đ giá trị = 600 điểm).
 const TIERS = [
-  { name: "Thành Viên Mới", min: 0, icon: "fa-seedling", color: "#64748b", earnRate: { mode: "x", value: 1 } },
-  { name: "Thân Thiết", min: 5000000, icon: "fa-heart", color: "#0284c7", earnRate: { mode: "x", value: 1 } },
-  { name: "Bạc", min: 10000000, icon: "fa-medal", color: "#64748b", earnRate: { mode: "x", value: 2 } },
-  { name: "Titanium", min: 20000000, icon: "fa-shield-halved", color: "#5b7c99", earnRate: { mode: "x", value: 3 } },
-  { name: "Vàng", min: 40000000, icon: "fa-crown", color: "#c9a227", earnRate: { mode: "%", value: 5 } },
+  { name: "Thành Viên Mới", min: 0, icon: "fa-seedling", color: "#64748b", earnRate: { mode: "%", value: 2 } },
+  { name: "Thân Thiết", min: 5000000, icon: "fa-heart", color: "#0284c7", earnRate: { mode: "%", value: 4 } },
+  { name: "Bạc", min: 10000000, icon: "fa-medal", color: "#64748b", earnRate: { mode: "%", value: 6 } },
+  { name: "Titanium", min: 20000000, icon: "fa-shield-halved", color: "#5b7c99", earnRate: { mode: "%", value: 8 } },
+  { name: "Vàng", min: 40000000, icon: "fa-crown", color: "#c9a227", earnRate: { mode: "%", value: 10 } },
   { name: "Kim Cương", min: 70000000, icon: "fa-gem", color: "#0369a1", earnRate: { mode: "%", value: 12 } }
 ];
 

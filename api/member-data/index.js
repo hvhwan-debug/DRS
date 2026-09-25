@@ -12,6 +12,7 @@ const TUITION_TABLE = "TuitionPayments";
 const SCHEDULE_TABLE = "ClassSchedules";
 const STUDENTS_TABLE = "Students";
 const REDEMPTIONS_TABLE = "GiftRedemptions";
+const INVOICES_TABLE = "Invoices";
 
 const FORM_TITLES = {
   contact: "Liên hệ",
@@ -301,6 +302,32 @@ module.exports = async function (context, req) {
       context.log.error("Lỗi lấy danh mục quà tặng:", e.message);
     }
 
+    // Hoá đơn do admin lập cho thành viên này
+    let invoices = [];
+    try {
+      const invoicesTable = await getTableClient(INVOICES_TABLE);
+      const invoiceIterator = invoicesTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of invoiceIterator) {
+        let items = [];
+        try { items = JSON.parse(entity.itemsJson || "[]"); } catch (e) { /* bỏ qua nếu lỗi parse */ }
+        invoices.push({
+          id: entity.rowKey,
+          invoiceNumber: entity.invoiceNumber,
+          studentName: entity.studentName || "",
+          program: entity.program || "",
+          items,
+          totalAmount: Number(entity.totalAmount) || 0,
+          issueDate: entity.issueDate,
+          note: entity.note || ""
+        });
+      }
+      invoices.sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate));
+    } catch (e) {
+      context.log.error("Lỗi lấy hoá đơn:", e.message);
+    }
+
     // Hạng thành viên + điểm tích lũy (tính server-side để đảm bảo đúng và không phụ thuộc client)
     const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
     const tier = getTierByTotal(totalTuitionPaid);
@@ -322,7 +349,7 @@ module.exports = async function (context, req) {
 
     context.res.status = 200;
     context.res.body = {
-      success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions, giftCatalog,
+      success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions, giftCatalog, invoices,
       totalTuitionPaid,
       tier: { name: tier.name, icon: tier.icon, color: tier.color },
       isVip: isVipTotal(totalTuitionPaid),

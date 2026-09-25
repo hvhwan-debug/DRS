@@ -313,6 +313,19 @@
     body.vip-theme .banner-tag {
       background: rgba(201,162,39,0.22); border-color: rgba(232,199,102,0.6); color: #f6ecc9;
     }
+    .invoice-doc { background:#fff; border:1px solid var(--border); border-radius:12px; padding:2rem; max-width:720px; margin:0 auto; }
+    .invoice-doc-header { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; border-bottom:2px solid #0f172a; padding-bottom:1.2rem; margin-bottom:1.2rem; }
+    .invoice-doc-header img { height:44px; }
+    .invoice-doc table { width:100%; border-collapse:collapse; margin:1rem 0; }
+    .invoice-doc th, .invoice-doc td { padding:0.6rem 0.5rem; border-bottom:1px solid var(--border); font-size:0.9rem; text-align:left; }
+    .invoice-doc th:last-child, .invoice-doc td:last-child, .invoice-doc th:nth-child(3), .invoice-doc td:nth-child(3) { text-align:right; }
+    .invoice-doc th:nth-child(2), .invoice-doc td:nth-child(2) { text-align:center; }
+    @media print {
+      body * { visibility: hidden; }
+      #memberInvoiceViewContent, #memberInvoiceViewContent * { visibility: visible; }
+      #memberInvoiceViewContent { position: absolute; top: 0; left: 0; width: 100%; }
+      .no-print { display: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -342,6 +355,7 @@
         <button class="member-tab-btn" data-tab="activity" onclick="switchMemberTab('activity')"><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động</button>
         <button class="member-tab-btn" data-tab="donations" onclick="switchMemberTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
         <button class="member-tab-btn" data-tab="tuition" onclick="switchMemberTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
+        <button class="member-tab-btn" data-tab="invoices" onclick="switchMemberTab('invoices')"><i class="fa-solid fa-file-invoice-dollar"></i> Hoá Đơn</button>
         <button class="member-tab-btn" data-tab="grades" onclick="switchMemberTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
         <button class="member-tab-btn" data-tab="gifts" onclick="switchMemberTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
       </nav>
@@ -699,12 +713,13 @@
 
     // Phải khớp với "earnRate" trong api/_shared/memberTier.js (nguồn phía server) — dùng để hiển thị
     // lại lịch sử điểm theo từng khoản học phí phía client, không gọi thêm API nào.
+    // Điểm = % trực tiếp trên tổng học phí đã đóng, tăng dần theo hạng: 2% - 4% - 6% - 8% - 10% - 12%.
     const EARN_RATES = {
-      'Thành Viên Mới': { mode: 'x', value: 1 },
-      'Thân Thiết': { mode: 'x', value: 1 },
-      'Bạc': { mode: 'x', value: 2 },
-      'Titanium': { mode: 'x', value: 3 },
-      'Vàng': { mode: '%', value: 5 },
+      'Thành Viên Mới': { mode: '%', value: 2 },
+      'Thân Thiết': { mode: '%', value: 4 },
+      'Bạc': { mode: '%', value: 6 },
+      'Titanium': { mode: '%', value: 8 },
+      'Vàng': { mode: '%', value: 10 },
       'Kim Cương': { mode: '%', value: 12 }
     };
     function calcPointsForAmount(amount, tierObj) {
@@ -763,6 +778,59 @@
 
     // Thu gọn/xổ ra khối Đổi Mật Khẩu — mặc định thu gọn, bấm tiêu đề để mở
     // Thu gọn/xổ ra từng thẻ đặc quyền theo hạng — bấm vào tiêu đề thẻ để xem chi tiết
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
+
+    // Khung hoá đơn hiển thị cho thành viên — cùng thiết kế với bản admin dùng khi lập hoá đơn
+    function renderMemberInvoiceDocHtml(inv) {
+      const items = Array.isArray(inv.items) ? inv.items : [];
+      const rowsHtml = items.map(it => `
+        <tr>
+          <td>${escapeHtml(it.description)}</td>
+          <td>${it.quantity}</td>
+          <td>${Number(it.unitPrice).toLocaleString('vi-VN')}đ</td>
+          <td>${Number(it.quantity * it.unitPrice).toLocaleString('vi-VN')}đ</td>
+        </tr>`).join('');
+      return `
+        <div class="invoice-doc">
+          <div class="invoice-doc-header">
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <img src="images/logo-wvn.png" alt="WVN">
+              <div>
+                <div style="font-weight:800; font-size:1.05rem; color:#0f172a;">Mạng Lưới Tri Thức Việt Nam</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);">wvn.vn</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:1.3rem; font-weight:800; color:#0f172a;">HOÁ ĐƠN</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Số: <strong>${inv.invoiceNumber}</strong></div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Ngày lập: ${formatDate(inv.issueDate)}</div>
+            </div>
+          </div>
+          ${inv.studentName ? `<div style="margin-bottom:1rem; font-size:0.92rem; color:#0f172a;">Học sinh: <strong>${escapeHtml(inv.studentName)}</strong>${inv.program ? ` — ${escapeHtml(inv.program)}` : ''}</div>` : ''}
+          <table><thead><tr><th>Mô tả</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+          <div style="text-align:right; font-size:1.15rem; font-weight:800; margin:1rem 0; color:#15803d;">Tổng cộng: ${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</div>
+          ${inv.note ? `<div style="border-top:1px solid var(--border); padding-top:0.8rem; font-size:0.88rem; color:var(--text-muted);"><strong>Ghi chú:</strong> ${escapeHtml(inv.note)}</div>` : ''}
+          <div style="text-align:center; margin-top:2rem; font-size:0.78rem; color:var(--text-muted);">Cảm ơn bạn đã đồng hành cùng Mạng Lưới Tri Thức Việt Nam.</div>
+        </div>`;
+    }
+
+    function viewMemberInvoice(id) {
+      const inv = (window.__memberInvoices || []).find(i => i.id === id);
+      if (!inv) return;
+      document.getElementById('memberInvoiceViewContent').innerHTML = renderMemberInvoiceDocHtml(inv);
+      document.getElementById('memberInvoiceListCard').style.display = 'none';
+      document.getElementById('memberInvoiceViewCard').style.display = 'block';
+    }
+
+    function closeMemberInvoiceView() {
+      document.getElementById('memberInvoiceViewCard').style.display = 'none';
+      document.getElementById('memberInvoiceListCard').style.display = 'block';
+    }
+
     // Thu gọn/xổ ra khối lịch sử điểm / lịch sử nhận quà trong tab Đổi Quà
     function toggleGiftHistorySection(key) {
       const panel = document.getElementById(`giftHistoryPanel-${key}`);
@@ -825,7 +893,7 @@
 
         const {
           email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [],
-          giftCatalog = [], loyaltyPoints = null, tierChanged = false, previousTierName = null
+          giftCatalog = [], invoices = [], loyaltyPoints = null, tierChanged = false, previousTierName = null
         } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
@@ -1148,6 +1216,25 @@
             </table></div>`
           : `<div style="text-align:center; color:var(--text-muted); padding:1rem 0.4rem;">Bạn chưa gửi yêu cầu đổi quà nào.</div>`;
 
+        // Hoá đơn do đội ngũ lập cho thành viên — lưu lại để renderInvoiceDoc dùng khi bấm "Xem"
+        window.__memberInvoices = invoices;
+        const invoicesHtml = invoices.length > 0
+          ? `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+              <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">
+                <th style="padding:0.6rem 0.5rem;">Số hoá đơn</th><th style="padding:0.6rem 0.5rem;">Học sinh</th>
+                <th style="padding:0.6rem 0.5rem;">Ngày lập</th><th style="padding:0.6rem 0.5rem; text-align:right;">Tổng tiền</th><th style="padding:0.6rem 0.5rem;"></th>
+              </tr></thead>
+              <tbody>${invoices.map(inv => `
+                <tr style="border-top:1px solid var(--border);">
+                  <td style="padding:0.6rem 0.5rem; font-weight:700;">${inv.invoiceNumber}</td>
+                  <td style="padding:0.6rem 0.5rem;">${inv.studentName || '—'}</td>
+                  <td style="padding:0.6rem 0.5rem; white-space:nowrap;">${formatDate(inv.issueDate)}</td>
+                  <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap; font-weight:700; color:#15803d;">${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</td>
+                  <td style="padding:0.6rem 0.5rem; text-align:right;"><button type="button" class="btn" style="padding:0.35rem 0.9rem; font-size:0.8rem;" onclick="viewMemberInvoice('${inv.id}')">Xem</button></td>
+                </tr>`).join('')}</tbody>
+            </table></div>`
+          : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-file-invoice-dollar"></i> Bạn chưa có hoá đơn nào.</div>`;
+
         const perksHtml = TIER_PERKS.map((t, idx) => {
           const isCurrent = t.name === tier.name;
           const isUnlocked = totalTuitionPaid >= t.min;
@@ -1373,6 +1460,23 @@
             <div class="card">
               <h2><i class="fa-solid fa-coins"></i> Học Phí Đã Nộp</h2>
               ${tuitionHtml}
+            </div>
+          </div>
+
+          <div class="member-panel" id="memberPanel-invoices">
+            <div class="card" id="memberInvoiceListCard">
+              <h2><i class="fa-solid fa-file-invoice-dollar"></i> Hoá Đơn</h2>
+              ${invoicesHtml}
+            </div>
+            <div class="card" id="memberInvoiceViewCard" style="display:none;">
+              <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2 style="margin:0;"><i class="fa-solid fa-file-invoice-dollar"></i> Xem Hoá Đơn</h2>
+                <div style="display:flex; gap:0.6rem;">
+                  <button type="button" class="btn" onclick="window.print()"><i class="fa-solid fa-print"></i> In / Lưu PDF</button>
+                  <button type="button" class="btn btn-outline" onclick="closeMemberInvoiceView()">Đóng</button>
+                </div>
+              </div>
+              <div id="memberInvoiceViewContent"></div>
             </div>
           </div>
 

@@ -109,6 +109,19 @@
       .sidebar-brand-text span { display: none; }
     }
 
+    .invoice-doc { background:#fff; border:1px solid var(--border); border-radius:12px; padding:2rem; max-width:720px; margin:0 auto; }
+    .invoice-doc-header { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; border-bottom:2px solid var(--navy); padding-bottom:1.2rem; margin-bottom:1.2rem; }
+    .invoice-doc-header img { height:48px; }
+    .invoice-doc table { width:100%; border-collapse:collapse; margin:1rem 0; }
+    .invoice-doc th, .invoice-doc td { padding:0.6rem 0.5rem; border-bottom:1px solid var(--border); font-size:0.9rem; text-align:left; }
+    .invoice-doc th:last-child, .invoice-doc td:last-child { text-align:right; }
+    @media print {
+      body * { visibility: hidden; }
+      #invoiceViewContent, #invoiceViewContent * { visibility: visible; }
+      #invoiceViewContent { position: absolute; top: 0; left: 0; width: 100%; }
+      .no-print { display: none !important; }
+    }
+
     .btn {
       background: var(--blue-grad-btn); color: #fff; border: none; padding: 0.65rem 1.4rem; border-radius: 999px;
       font-weight: 700; cursor: pointer; font-size: 0.9rem;
@@ -163,6 +176,7 @@
         <button class="tab-btn" data-tab="registrations" onclick="switchTab('registrations')"><i class="fa-solid fa-file-lines"></i> Đơn Đăng Ký</button>
         <button class="tab-btn" data-tab="donations" onclick="switchTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
         <button class="tab-btn" data-tab="tuition" onclick="switchTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
+        <button class="tab-btn" data-tab="invoices" onclick="switchTab('invoices')"><i class="fa-solid fa-file-invoice-dollar"></i> Hoá Đơn</button>
         <button class="tab-btn" data-tab="students" onclick="switchTab('students')"><i class="fa-solid fa-child-reaching"></i> Học Sinh</button>
         <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Lịch Học</button>
         <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
@@ -329,6 +343,79 @@
           </table>
         </div>
         <div class="empty-state" id="tuitionEmpty" style="display:none;">Chưa có khoản học phí nào được ghi nhận.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: HOÁ ĐƠN ===================== -->
+    <div class="panel" id="panel-invoices">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-file-invoice-dollar" style="color:#0284c7;"></i> Lập Hoá Đơn Mới</h3>
+        <form id="invoiceForm">
+          <div class="form-grid">
+            <div>
+              <label>Email phụ huynh *</label>
+              <input type="email" id="invoiceParentEmail" required list="knownEmailsList" placeholder="Gõ tên hoặc email phụ huynh..." oninput="onInvoiceParentEmailChange()">
+            </div>
+            <div>
+              <label>Tên học sinh (con em)</label>
+              <input type="text" id="invoiceStudentName" style="display:block;">
+              <select id="invoiceStudentNameSelect" onchange="document.getElementById('invoiceStudentName').value = this.value;" style="display:none; margin-top:0.4rem;"></select>
+            </div>
+            <div>
+              <label>Chương trình học</label>
+              <select id="invoiceProgram" onchange="toggleCustomProgram('invoice')">
+                <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
+                <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
+                <option value="__custom__">+ Chương trình khác...</option>
+              </select>
+              <input type="text" id="invoiceProgramCustom" placeholder="Nhập tên chương trình mới" style="display:none; margin-top:0.4rem;">
+            </div>
+            <div><label>Ngày lập hoá đơn</label><input type="date" id="invoiceIssueDate"></div>
+          </div>
+
+          <div style="margin:1.2rem 0 0.6rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.5rem;">Các khoản trong hoá đơn *</label>
+            <div style="display:grid; grid-template-columns:1fr 90px 140px 34px; gap:0.5rem; margin-bottom:0.4rem; font-size:0.74rem; color:var(--text-muted); text-transform:uppercase;">
+              <div>Mô tả</div><div>SL</div><div>Đơn giá</div><div></div>
+            </div>
+            <div id="invoiceItemsContainer"></div>
+            <button type="button" class="btn btn-outline" style="padding:0.4rem 0.9rem; font-size:0.82rem; margin-top:0.3rem;" onclick="addInvoiceItemRow()"><i class="fa-solid fa-plus"></i> Thêm Dòng</button>
+          </div>
+
+          <div style="text-align:right; margin:1rem 0; font-size:1.1rem; font-weight:800; color:var(--text-dark);">
+            Tổng cộng: <span id="invoiceTotalDisplay" style="color:#15803d;">0đ</span>
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Ghi chú</label>
+            <textarea id="invoiceNote" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;"></textarea>
+          </div>
+          <div id="invoiceAlert" style="display:none; font-size:0.85rem; margin-bottom:1rem;"></div>
+          <button type="submit" class="btn" id="invoiceSubmitBtn"><i class="fa-solid fa-check"></i> Lập Hoá Đơn</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;">Danh Sách Hoá Đơn</h3>
+        <div class="loading-state" id="invoiceLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="invoiceTableWrap">
+          <table>
+            <thead><tr><th>Số HĐ</th><th>Email PH</th><th>Học sinh</th><th>Ngày lập</th><th>Tổng tiền</th><th>Thao tác</th></tr></thead>
+            <tbody id="invoiceTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="invoiceEmpty" style="display:none;">Chưa có hoá đơn nào được lập.</div>
+      </div>
+
+      <div class="card" id="invoiceViewCard" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;" class="no-print">
+          <h3 style="font-size:1.05rem;">Xem Hoá Đơn</h3>
+          <div style="display:flex; gap:0.6rem;">
+            <button type="button" class="btn" onclick="window.print()"><i class="fa-solid fa-print"></i> In Hoá Đơn</button>
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('invoiceViewCard').style.display='none';">Đóng</button>
+          </div>
+        </div>
+        <div id="invoiceViewContent"></div>
       </div>
     </div>
 
@@ -1194,6 +1281,215 @@
       } finally {
         btn.disabled = false;
         btn.innerHTML = editingTuitionId ? '<i class="fa-solid fa-check"></i> Cập Nhật Học Phí' : '<i class="fa-solid fa-check"></i> Lưu Học Phí';
+      }
+    });
+
+    // ============== HOÁ ĐƠN ==============
+    let allInvoicesData = [];
+
+    function onInvoiceParentEmailChange() {
+      const email = document.getElementById('invoiceParentEmail').value.trim().toLowerCase();
+      const students = Array.from(emailToStudents[email] || []);
+      const textInput = document.getElementById('invoiceStudentName');
+      const selectEl = document.getElementById('invoiceStudentNameSelect');
+
+      if (students.length === 1) {
+        textInput.value = students[0];
+        textInput.style.display = 'block';
+        selectEl.style.display = 'none';
+      } else if (students.length > 1) {
+        selectEl.innerHTML = '<option value="">-- Chọn học sinh --</option>' + students.map(s => `<option value="${s}">${s}</option>`).join('');
+        selectEl.style.display = 'block';
+        textInput.value = '';
+        textInput.style.display = 'none';
+      } else {
+        textInput.style.display = 'block';
+        selectEl.style.display = 'none';
+      }
+    }
+
+    function parseMoneyValue(str) {
+      return Number(String(str || '').replace(/[^\d]/g, '')) || 0;
+    }
+
+    function invoiceItemRowHtml() {
+      return `<div class="invoice-item-row" style="display:grid; grid-template-columns:1fr 90px 140px 34px; gap:0.5rem; margin-bottom:0.5rem; align-items:center;">
+        <input type="text" class="inv-desc" placeholder="VD: Học phí tháng 10" style="padding:0.5rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.88rem;">
+        <input type="number" class="inv-qty" value="1" min="0" step="1" oninput="updateInvoiceTotal()" style="padding:0.5rem 0.5rem; border:1px solid var(--border); border-radius:8px; font-size:0.88rem;">
+        <input type="text" inputmode="numeric" class="inv-price" placeholder="Đơn giá" oninput="formatMoneyInput(this); updateInvoiceTotal();" style="padding:0.5rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.88rem;">
+        <button type="button" onclick="this.closest('.invoice-item-row').remove(); updateInvoiceTotal();" style="border:none; background:#fee2e2; color:#b91c1c; border-radius:8px; height:34px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>`;
+    }
+
+    function addInvoiceItemRow() {
+      document.getElementById('invoiceItemsContainer').insertAdjacentHTML('beforeend', invoiceItemRowHtml());
+    }
+
+    function updateInvoiceTotal() {
+      const rows = document.querySelectorAll('#invoiceItemsContainer .invoice-item-row');
+      let total = 0;
+      rows.forEach(row => {
+        const qty = Number(row.querySelector('.inv-qty').value) || 0;
+        const price = parseMoneyValue(row.querySelector('.inv-price').value);
+        total += qty * price;
+      });
+      document.getElementById('invoiceTotalDisplay').textContent = formatMoney(total);
+      return total;
+    }
+
+    function collectInvoiceItems() {
+      const rows = document.querySelectorAll('#invoiceItemsContainer .invoice-item-row');
+      const items = [];
+      rows.forEach(row => {
+        const description = row.querySelector('.inv-desc').value.trim();
+        const quantity = Number(row.querySelector('.inv-qty').value) || 0;
+        const unitPrice = parseMoneyValue(row.querySelector('.inv-price').value);
+        if (description && quantity > 0) items.push({ description, quantity, unitPrice });
+      });
+      return items;
+    }
+
+    function resetInvoiceForm() {
+      document.getElementById('invoiceForm').reset();
+      document.getElementById('invoiceItemsContainer').innerHTML = '';
+      addInvoiceItemRow();
+      updateInvoiceTotal();
+      document.getElementById('invoiceIssueDate').value = new Date().toISOString().slice(0, 10);
+    }
+    resetInvoiceForm();
+
+    // Khung hoá đơn dùng chung cho cả xem trên trang admin lẫn in ấn — style tối giản, chuyên nghiệp
+    function renderInvoiceDocHtml(inv) {
+      const items = Array.isArray(inv.items) ? inv.items : [];
+      const rowsHtml = items.map(it => `
+        <tr>
+          <td>${escapeHtml(it.description)}</td>
+          <td style="text-align:center;">${it.quantity}</td>
+          <td style="text-align:right;">${formatMoney(it.unitPrice)}</td>
+          <td style="text-align:right;">${formatMoney(it.quantity * it.unitPrice)}</td>
+        </tr>`).join('');
+      return `
+        <div class="invoice-doc">
+          <div class="invoice-doc-header">
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <img src="images/logo-wvn.png" alt="WVN">
+              <div>
+                <div style="font-weight:800; font-size:1.05rem;">Mạng Lưới Tri Thức Việt Nam</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);">wvn.vn</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:1.3rem; font-weight:800; color:var(--navy);">HOÁ ĐƠN</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Số: <strong>${inv.invoiceNumber}</strong></div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Ngày lập: ${formatDate(inv.issueDate)}</div>
+            </div>
+          </div>
+          <div style="margin-bottom:1rem; font-size:0.92rem;">
+            <div style="color:var(--text-muted); font-size:0.76rem; text-transform:uppercase; margin-bottom:0.2rem;">Kính gửi</div>
+            <div style="font-weight:700;">${escapeHtml(inv.parentEmail)}</div>
+            ${inv.studentName ? `<div>Học sinh: ${escapeHtml(inv.studentName)}${inv.program ? ` — ${escapeHtml(inv.program)}` : ''}</div>` : ''}
+          </div>
+          <table>
+            <thead><tr><th>Mô tả</th><th style="text-align:center;">SL</th><th style="text-align:right;">Đơn giá</th><th style="text-align:right;">Thành tiền</th></tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+          <div style="text-align:right; font-size:1.15rem; font-weight:800; margin:1rem 0; color:#15803d;">Tổng cộng: ${formatMoney(inv.totalAmount)}</div>
+          ${inv.note ? `<div style="border-top:1px solid var(--border); padding-top:0.8rem; font-size:0.88rem; color:var(--text-muted);"><strong>Ghi chú:</strong> ${escapeHtml(inv.note)}</div>` : ''}
+          <div style="text-align:center; margin-top:2rem; font-size:0.78rem; color:var(--text-muted);">Cảm ơn bạn đã đồng hành cùng Mạng Lưới Tri Thức Việt Nam.</div>
+        </div>`;
+    }
+
+    function viewInvoice(id) {
+      const inv = allInvoicesData.find(i => i.id === id);
+      if (!inv) return;
+      document.getElementById('invoiceViewContent').innerHTML = renderInvoiceDocHtml(inv);
+      document.getElementById('invoiceViewCard').style.display = 'block';
+      document.getElementById('invoiceViewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function deleteInvoiceItem(email, id) {
+      if (!confirm('Xoá hoá đơn này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-invoice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: decodeURIComponent(email), id })
+        });
+        showGlobalAlert('Đã xoá hoá đơn.', false);
+        loadInvoices();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function loadInvoices() {
+      try {
+        const { invoices } = await apiCall('/api/portal-list-invoices');
+        allInvoicesData = invoices;
+        document.getElementById('invoiceLoading').style.display = 'none';
+        if (invoices.length === 0) {
+          document.getElementById('invoiceEmpty').style.display = 'block';
+          document.getElementById('invoiceTableWrap').style.display = 'none';
+          return;
+        }
+        document.getElementById('invoiceEmpty').style.display = 'none';
+        document.getElementById('invoiceTableWrap').style.display = 'block';
+        document.getElementById('invoiceTableBody').innerHTML = invoices.map(inv => `
+          <tr>
+            <td style="font-weight:700; white-space:nowrap;">${inv.invoiceNumber}</td>
+            <td>${escapeHtml(inv.parentEmail)}</td>
+            <td>${escapeHtml(inv.studentName || '—')}</td>
+            <td style="white-space:nowrap;">${formatDate(inv.issueDate)}</td>
+            <td style="white-space:nowrap; font-weight:700; color:#15803d;">${formatMoney(inv.totalAmount)}</td>
+            <td style="white-space:nowrap;">
+              <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="viewInvoice('${inv.id}')">Xem</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteInvoiceItem('${encodeURIComponent(inv.parentEmail)}','${inv.id}')">Xoá</button>
+            </td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('invoiceLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('invoiceForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('invoiceSubmitBtn');
+      const items = collectInvoiceItems();
+      if (items.length === 0) {
+        showGlobalAlert('Vui lòng nhập ít nhất 1 khoản hợp lệ trong hoá đơn (mô tả + số lượng > 0).', true);
+        return;
+      }
+      const total = items.reduce((s, it) => s + it.quantity * it.unitPrice, 0);
+      if (!confirmIfAmountUnusual(total)) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lập hoá đơn...';
+      try {
+        const payload = {
+          parentEmail: document.getElementById('invoiceParentEmail').value.trim(),
+          studentName: document.getElementById('invoiceStudentName').value.trim(),
+          program: getProgramValue('invoice'),
+          issueDate: document.getElementById('invoiceIssueDate').value || undefined,
+          note: document.getElementById('invoiceNote').value.trim(),
+          items
+        };
+        const result = await apiCall('/api/portal-add-invoice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showGlobalAlert(result.warning || 'Đã lập hoá đơn và gửi email báo cho phụ huynh.', !!result.warning);
+        resetInvoiceForm();
+        document.getElementById('invoiceTableWrap').style.display = 'none';
+        document.getElementById('invoiceEmpty').style.display = 'none';
+        document.getElementById('invoiceLoading').style.display = 'block';
+        loadInvoices();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Lập Hoá Đơn';
       }
     });
 
@@ -2310,6 +2606,7 @@
     loadRegistrations();
     loadDonations();
     loadTuition();
+    loadInvoices();
     loadStudents();
     loadSchedule();
     loadGrades();
