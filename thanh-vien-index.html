@@ -78,9 +78,11 @@
         background: linear-gradient(135deg, #0b1120 0%, #16233f 100%); padding: 0.8rem 1rem;
         position: sticky; top: 0; z-index: 55;
       }
-      .mobile-topbar .sidebar-brand { margin-bottom: 0; padding: 0; }
-      .mobile-topbar .sidebar-brand img { height: 28px; }
-      .mobile-topbar .sidebar-brand-text { font-size: 0.82rem; }
+      .mobile-topbar .sidebar-brand { margin-bottom: 0; padding: 0; min-width: 0; flex: 1 1 auto; }
+      .mobile-topbar .sidebar-brand img { height: 28px; flex-shrink: 0; }
+      .mobile-topbar .sidebar-brand-text {
+        font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+      }
       .hamburger-btn {
         width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
         background: rgba(255,255,255,0.06); color: #fff; font-size: 1.1rem; cursor: pointer;
