@@ -3,11 +3,13 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadAttachments } = require("../_shared/blobStorage");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { createConfirmToken } = require("../_shared/confirmToken");
 
 const GRADES_TABLE = "Grades";
 const ASSESSMENT_TYPES = ["Đánh giá đầu vào", "Buổi học", "Đánh giá đầu ra"];
 
-function buildGradeEmailHtml(studentName, program, assessmentType, score, comment, greeting) {
+function buildGradeEmailHtml(studentName, program, assessmentType, score, comment, greeting, confirmToken) {
+  const confirmUrl = `https://wvn.vn/xac-nhan.html?type=grade&token=${confirmToken}`;
   return `<!DOCTYPE html>
 <html lang="vi">
   <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
@@ -25,9 +27,12 @@ function buildGradeEmailHtml(studentName, program, assessmentType, score, commen
             <p style="font-size:13px;color:#64748b;margin:0 0 18px;">${assessmentType}</p>
             ${score != null ? `<div style="text-align:center;margin:18px 0;"><span style="display:inline-block;font-size:22px;font-weight:800;color:#0369a1;background:#f0f9ff;border:1px dashed #7dd3fc;border-radius:10px;padding:10px 24px;">${score}/10</span></div>` : ""}
             ${comment ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:18px;"><p style="font-size:13px;color:#475569;margin:0 0 4px;font-weight:700;">Nhận xét của giáo viên:</p><p style="font-size:14px;color:#334155;margin:0;">${comment}</p></div>` : ""}
-            <div style="text-align:center;margin-top:12px;">
-              <a href="https://wvn.vn/thanh-vien-index.html" style="display:inline-block;background:#0284c7;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:10px 22px;border-radius:8px;">Xem Trong Trang Thành Viên</a>
+            <p style="font-size:13px;color:#64748b;margin:18px 0 14px;text-align:center;">Thông tin trên có chính xác không?</p>
+            <div style="text-align:center;margin-bottom:8px;">
+              <a href="${confirmUrl}&action=confirm" style="display:inline-block;background:#15803d;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:8px;margin:0 6px 10px;">✓ Xác nhận đúng</a>
+              <a href="${confirmUrl}" style="display:inline-block;background:#ffffff;color:#b91c1c;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:8px;border:1.5px solid #fecaca;margin:0 6px 10px;">✗ Báo sai / Cần sửa</a>
             </div>
+            <p style="font-size:12px;color:#94a3b8;margin:16px 0 0;text-align:center;">Hoặc đăng nhập vào <a href="https://wvn.vn/thanh-vien-index.html" style="color:#0284c7;">khu vực thành viên</a> để xem chi tiết đầy đủ.</p>
           </td></tr>
         </table>
       </td></tr>
@@ -82,9 +87,10 @@ module.exports = async function (context, req) {
     }
 
     const gradesTable = await getTableClient(GRADES_TABLE);
+    const rowKey = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     await gradesTable.createEntity({
       partitionKey: parentEmail,
-      rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      rowKey,
       studentName,
       program,
       assessmentType,
@@ -100,6 +106,7 @@ module.exports = async function (context, req) {
     const fromEmail = process.env.SENDGRID_FROM_EMAIL;
     if (apiKey && fromEmail) {
       try {
+        const confirmToken = await createConfirmToken("grade", parentEmail, rowKey);
         const displayName = await getMemberDisplayName(parentEmail);
         const greeting = buildGreeting(displayName);
         sgMail.setApiKey(apiKey);
@@ -107,7 +114,7 @@ module.exports = async function (context, req) {
           to: parentEmail,
           from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
           subject: `Điểm/nhận xét mới cho ${studentName}`,
-          html: buildGradeEmailHtml(studentName, program, assessmentType, score, comment, greeting)
+          html: buildGradeEmailHtml(studentName, program, assessmentType, score, comment, greeting, confirmToken)
         });
       } catch (err) {
         context.log.error("Gửi email báo điểm thất bại:", err?.response?.body || err.message);
