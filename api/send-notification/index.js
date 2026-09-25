@@ -222,19 +222,18 @@ function buildEmailHtml(title, rowsHtml) {
   return `<!DOCTYPE html>
 <html lang="vi">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 16px;">
     <tr>
       <td align="center">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 28px rgba(15,23,42,0.10);">
 
           <tr>
-            <td bgcolor="#0f172a" style="background-color:#0f172a;background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0284c7 100%);padding:28px 32px;">
+            <td bgcolor="#0b1120" style="background-color:#0b1120;background:linear-gradient(135deg,#0b1120 0%,#16233f 50%,#0284c7 100%);padding:28px 32px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td align="center" style="text-align:center;">
                   <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
-                  <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;">Mạng Lưới Tri Thức Việt Nam</div>
-                  <div style="color:#bfdbfe;font-size:11px;font-weight:600;letter-spacing:0.2px;">WISDOM VIETNAM NETWORK | DR SOLUTIONS</div>
+                  <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;font-family:Arial,Helvetica,sans-serif;">Mạng Lưới Tri Thức Việt Nam</div>
                 </td>
               </tr></table>
             </td>
@@ -242,15 +241,15 @@ function buildEmailHtml(title, rowsHtml) {
 
           <tr>
             <td style="padding:28px 32px 6px;">
-              <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:11px;font-weight:700;letter-spacing:0.4px;padding:5px 12px;border-radius:999px;">THÔNG BÁO TỰ ĐỘNG TỪ WEBSITE</span>
-              <h1 style="font-size:20px;line-height:1.35;color:#0f172a;margin:14px 0 6px;font-weight:800;">${escapeHtml(title)}</h1>
-              <p style="font-size:13px;color:#64748b;margin:0 0 22px;line-height:1.6;">Có người vừa gửi thông tin qua biểu mẫu trên website <strong>wvn.vn</strong>. Chi tiết bên dưới:</p>
+              <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:11px;font-weight:700;letter-spacing:0.4px;padding:5px 12px;border-radius:999px;font-family:Arial,Helvetica,sans-serif;">THÔNG BÁO TỰ ĐỘNG TỪ WEBSITE</span>
+              <h1 style="font-size:20px;line-height:1.35;color:#0f172a;margin:14px 0 6px;font-weight:800;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(title)}</h1>
+              <p style="font-size:13px;color:#64748b;margin:0 0 22px;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">Có người vừa gửi thông tin qua biểu mẫu trên website <strong>wvn.vn</strong>. Chi tiết bên dưới:</p>
             </td>
           </tr>
 
           <tr>
             <td style="padding:0 32px 26px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;">
                 ${rowsHtml}
               </table>
             </td>
@@ -258,69 +257,14 @@ function buildEmailHtml(title, rowsHtml) {
 
           <tr>
             <td style="padding:0 32px 30px;">
-              <a href="https://wvn.vn" style="display:inline-block;background:linear-gradient(135deg,#0284c7 0%,#2563eb 100%);color:#ffffff;text-decoration:none;font-weight:700;font-size:13px;padding:11px 22px;border-radius:8px;">Mở website wvn.vn →</a>
+              <a href="https://wvn.vn" style="display:inline-block;background-color:#2563eb;background:linear-gradient(135deg,#2563eb 0%,#0284c7 100%);color:#ffffff;text-decoration:none;font-weight:700;font-size:13px;padding:11px 22px;border-radius:8px;font-family:Arial,Helvetica,sans-serif;">Mở website wvn.vn →</a>
             </td>
           </tr>
 
           <tr>
             <td style="background:#f8fafc;padding:18px 32px;border-top:1px solid #e2e8f0;">
-              <div style="font-size:11px;color:#94a3b8;line-height:1.6;">
+              <div style="font-size:11px;color:#94a3b8;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
                 Đây là email tự động từ hệ thống website Mạng Lưới Tri Thức Việt Nam — vui lòng không trả lời trực tiếp email này.<br>
-                Doanh nghiệp xã hội phi lợi nhuận đồng hành vì cơ hội học tập công bằng cho trẻ em vùng cao.
-              </div>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
-}
-
-function buildAutoReplyHtml(recipientName, introMessage) {
-  const greeting = recipientName ? `Xin chào <strong>${escapeHtml(recipientName)}</strong>,` : "Xin chào,";
-  return `<!DOCTYPE html>
-<html lang="vi">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 16px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 28px rgba(15,23,42,0.10);">
-
-          <tr>
-            <td bgcolor="#0f172a" style="background-color:#0f172a;background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0284c7 100%);padding:28px 32px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-                <td align="center" style="text-align:center;">
-                  <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
-                  <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;">Mạng Lưới Tri Thức Việt Nam</div>
-                  <div style="color:#bfdbfe;font-size:11px;font-weight:600;letter-spacing:0.2px;">WISDOM VIETNAM NETWORK | DR SOLUTIONS</div>
-                </td>
-              </tr></table>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:32px 32px 8px;">
-              <span style="display:inline-block;background:#f0fdf4;color:#166534;font-size:11px;font-weight:700;letter-spacing:0.4px;padding:5px 12px;border-radius:999px;">✓ ĐÃ NHẬN ĐƯỢC THÔNG TIN</span>
-              <h1 style="font-size:20px;line-height:1.35;color:#0f172a;margin:16px 0 14px;font-weight:800;">Chúng tôi đã nhận được thông tin của bạn</h1>
-              <p style="font-size:14px;color:#334155;margin:0 0 12px;line-height:1.7;">${greeting}</p>
-              <p style="font-size:14px;color:#334155;margin:0 0 22px;line-height:1.7;">${escapeHtml(introMessage)}</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:0 32px 30px;">
-              <a href="https://wvn.vn" style="display:inline-block;background:linear-gradient(135deg,#0284c7 0%,#2563eb 100%);color:#ffffff;text-decoration:none;font-weight:700;font-size:13px;padding:11px 22px;border-radius:8px;">Xem thêm về Mạng Lưới Tri Thức Việt Nam →</a>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="background:#f8fafc;padding:18px 32px;border-top:1px solid #e2e8f0;">
-              <div style="font-size:11px;color:#94a3b8;line-height:1.6;">
-                Đây là email tự động, vui lòng không trả lời trực tiếp email này. Cần hỗ trợ gấp? Liên hệ <a href="mailto:hotro@wvn.vn" style="color:#0284c7;">hotro@wvn.vn</a>.<br>
                 Doanh nghiệp xã hội phi lợi nhuận đồng hành vì cơ hội học tập công bằng cho trẻ em vùng cao.
               </div>
             </td>
