@@ -3,14 +3,17 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadAttachments } = require("../_shared/blobStorage");
 const { buildGreeting } = require("../_shared/memberName");
+const { createConfirmToken } = require("../_shared/confirmToken");
 
 const DONATIONS_TABLE = "Donations";
 const TRANSACTIONS_TABLE = "Transactions"; // Bảng dùng chung với trang Tra Cứu Sao Kê
 
-function buildDonationEmailHtml(donationType, amount, itemDescription, greeting) {
+function buildDonationEmailHtml(donationType, amount, itemDescription, greeting, confirmToken) {
   const valueHtml = donationType === "item"
     ? `<p style="font-size:16px;color:#0f172a;margin:0;font-weight:700;">${itemDescription}</p>`
     : `<span style="display:inline-block;font-size:22px;font-weight:800;color:#15803d;background:#f0fdf4;border:1px dashed #86efac;border-radius:10px;padding:10px 24px;">${Number(amount).toLocaleString("vi-VN")}đ</span>`;
+
+  const confirmUrl = `https://wvn.vn/xac-nhan.html?type=donation&token=${confirmToken}`;
 
   return `<!DOCTYPE html>
 <html lang="vi">
@@ -26,10 +29,12 @@ function buildDonationEmailHtml(donationType, amount, itemDescription, greeting)
             <p style="font-size:14px;color:#334155;margin:0 0 16px;">${greeting}</p>
             <p style="font-size:15px;color:#0f172a;margin:0 0 18px;">Chúng tôi vừa ghi nhận một khoản quyên góp ${donationType === "item" ? "hiện vật" : "bằng tiền"} từ bạn:</p>
             <div style="text-align:center;margin:18px 0;">${valueHtml}</div>
-            <p style="font-size:13px;color:#64748b;margin:18px 0 6px;">Cảm ơn sự đồng hành của bạn cùng Mạng Lưới Tri Thức Việt Nam! Đăng nhập vào khu vực thành viên để xem chi tiết đầy đủ.</p>
-            <div style="text-align:center;margin-top:16px;">
-              <a href="https://wvn.vn/thanh-vien-index.html" style="display:inline-block;background:#0284c7;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:10px 22px;border-radius:8px;">Xem Trong Trang Thành Viên</a>
+            <p style="font-size:13px;color:#64748b;margin:18px 0 14px;text-align:center;">Thông tin trên có chính xác không?</p>
+            <div style="text-align:center;margin-bottom:8px;">
+              <a href="${confirmUrl}&action=confirm" style="display:inline-block;background:#15803d;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:8px;margin:0 6px 10px;">✓ Xác nhận đúng</a>
+              <a href="${confirmUrl}" style="display:inline-block;background:#ffffff;color:#b91c1c;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:8px;border:1.5px solid #fecaca;margin:0 6px 10px;">✗ Báo sai / Cần sửa</a>
             </div>
+            <p style="font-size:12px;color:#94a3b8;margin:16px 0 0;text-align:center;">Hoặc đăng nhập vào <a href="https://wvn.vn/thanh-vien-index.html" style="color:#0284c7;">khu vực thành viên</a> để xem chi tiết đầy đủ.</p>
           </td></tr>
         </table>
       </td></tr>
@@ -89,10 +94,11 @@ module.exports = async function (context, req) {
       }
     }
 
+    const rowKey = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const donationsTable = await getTableClient(DONATIONS_TABLE);
     await donationsTable.createEntity({
       partitionKey: "donation",
-      rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      rowKey,
       donationType,
       donorName,
       donorEmail,
@@ -130,13 +136,14 @@ module.exports = async function (context, req) {
       const fromEmail = process.env.SENDGRID_FROM_EMAIL;
       if (apiKey && fromEmail) {
         try {
+          const confirmToken = await createConfirmToken("donation", "donation", rowKey);
           const greeting = buildGreeting(donorName);
           sgMail.setApiKey(apiKey);
           await sgMail.send({
             to: donorEmail,
             from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
             subject: "Xác nhận đã ghi nhận quyên góp của bạn",
-            html: buildDonationEmailHtml(donationType, amount, itemDescription, greeting)
+            html: buildDonationEmailHtml(donationType, amount, itemDescription, greeting, confirmToken)
           });
         } catch (err) {
           context.log.error("Gửi email báo quyên góp thất bại:", err?.response?.body || err.message);
