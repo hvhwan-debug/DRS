@@ -745,6 +745,16 @@
     }
 
     // Thu gọn/xổ ra khối Đổi Mật Khẩu — mặc định thu gọn, bấm tiêu đề để mở
+    // Thu gọn/xổ ra từng thẻ đặc quyền theo hạng — bấm vào tiêu đề thẻ để xem chi tiết
+    function toggleTierPerks(idx, forceOpen) {
+      const list = document.getElementById(`tierPerksList-${idx}`);
+      const chevron = document.getElementById(`tierChevron-${idx}`);
+      if (!list || !chevron) return;
+      const shouldOpen = forceOpen === true ? true : list.style.display === 'none';
+      list.style.display = shouldOpen ? 'block' : 'none';
+      chevron.style.transform = shouldOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
     function toggleChangePassword() {
       const form = document.getElementById('changePasswordForm');
       const chevron = document.getElementById('changePasswordChevron');
@@ -1072,24 +1082,31 @@
           }).join('')}
         </div>`;
 
-        const perksHtml = TIER_PERKS.map(t => {
+        const perksHtml = TIER_PERKS.map((t, idx) => {
           const isCurrent = t.name === tier.name;
           const isUnlocked = totalTuitionPaid >= t.min;
           return `
-            <div class="inner-card ${isCurrent ? 'is-current' : ''}" style="border-width:2px; border-style:solid; ${isCurrent ? `border-color:${t.color};` : ''} border-radius:16px; padding:1.3rem; margin-bottom:1rem; position:relative; ${isUnlocked ? '' : 'opacity:0.55;'}">
+            <div class="inner-card ${isCurrent ? 'is-current' : ''}" style="border-width:2px; border-style:solid; ${isCurrent ? `border-color:${t.color};` : ''} border-radius:16px; padding:1.1rem 1.3rem; margin-bottom:0.8rem; position:relative; ${isUnlocked ? '' : 'opacity:0.55;'}">
               ${isCurrent ? `<span style="position:absolute; top:-12px; right:16px; background:${t.color}; color:#fff; font-size:0.72rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px;">Hạng hiện tại của bạn</span>` : ''}
-              <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
-                <div style="width:44px; height:44px; border-radius:12px; background:${t.color}22; color:${t.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="fa-solid ${t.icon}"></i></div>
-                <div>
+              <div onclick="toggleTierPerks(${idx})" style="display:flex; align-items:center; gap:0.8rem; cursor:pointer; user-select:none;">
+                <div style="width:44px; height:44px; border-radius:12px; background:${t.color}22; color:${t.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid ${t.icon}"></i></div>
+                <div style="flex:1; min-width:0;">
                   <div style="font-size:1.05rem; font-weight:800; color:var(--text-dark);">${t.name}</div>
                   <div style="font-size:0.78rem; color:var(--text-muted);">${t.min === 0 ? 'Mặc định khi tham gia' : `Từ ${t.min.toLocaleString('vi-VN')}đ học phí đã đóng`}</div>
                 </div>
+                <i class="fa-solid fa-chevron-down tier-perks-chevron" id="tierChevron-${idx}" style="font-size:0.85rem; color:var(--text-muted); transition:transform 0.2s; flex-shrink:0;"></i>
               </div>
-              <ul style="margin:0; padding-left:1.2rem; font-size:0.88rem; color:var(--text-dark); line-height:1.9;">
+              <ul id="tierPerksList-${idx}" style="display:none; margin:0.9rem 0 0; padding-left:1.2rem; font-size:0.88rem; color:var(--text-dark); line-height:1.9;">
                 ${t.perks.map(p => `<li>${p}</li>`).join('')}
               </ul>
             </div>`;
         }).join('');
+
+        // Mở sẵn thẻ hạng hiện tại của thành viên ngay sau khi render, các hạng khác thu gọn.
+        setTimeout(() => {
+          const currentIdx = TIER_PERKS.findIndex(t => t.name === tier.name);
+          if (currentIdx >= 0) toggleTierPerks(currentIdx, true);
+        }, 0);
 
         function assessmentBadgeStyle(type) {
           if (type === 'Đánh giá đầu vào') return 'background:#e0f2fe; color:#0369a1;';
