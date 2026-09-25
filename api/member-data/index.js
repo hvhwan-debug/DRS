@@ -8,6 +8,8 @@ const PROFILES_TABLE = "MemberProfiles";
 const GRADES_TABLE = "Grades";
 const TUITION_TABLE = "TuitionPayments";
 const SCHEDULE_TABLE = "ClassSchedules";
+const STUDENTS_TABLE = "Students";
+const REDEMPTIONS_TABLE = "GiftRedemptions";
 
 const FORM_TITLES = {
   contact: "Liên hệ",
@@ -221,11 +223,30 @@ module.exports = async function (context, req) {
       tuitionPayments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
     } catch (e) {}
 
+    // Học sinh đã được admin gán khóa học — dùng để xác định lịch học phù hợp
+    let students = [];
+    try {
+      const studentsTable = await getTableClient(STUDENTS_TABLE);
+      const studentsIterator = studentsTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of studentsIterator) {
+        students.push({
+          id: entity.rowKey,
+          studentName: entity.studentName,
+          dob: entity.dob || "",
+          program: entity.program || "",
+          note: entity.note || ""
+        });
+      }
+    } catch (e) {}
+
     // Lịch học — chỉ hiện đúng những chương trình mà thành viên đang tham gia
     const memberPrograms = new Set();
     registrations.forEach(r => { if (r.data && r.data.chuong_trinh) memberPrograms.add(r.data.chuong_trinh); });
     grades.forEach(g => { if (g.program) memberPrograms.add(g.program); });
     tuitionPayments.forEach(p => { if (p.program) memberPrograms.add(p.program); });
+    students.forEach(s => { if (s.program) memberPrograms.add(s.program); });
 
     let schedules = [];
     try {
@@ -245,8 +266,25 @@ module.exports = async function (context, req) {
       }
     } catch (e) {}
 
+    // Yêu cầu đổi quà của thành viên
+    let giftRedemptions = [];
+    try {
+      const redemptionsTable = await getTableClient(REDEMPTIONS_TABLE);
+      const redemptionsIterator = redemptionsTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of redemptionsIterator) {
+        giftRedemptions.push({
+          giftId: entity.giftId,
+          giftName: entity.giftName,
+          status: entity.status || "pending",
+          requestedAt: entity.requestedAt
+        });
+      }
+    } catch (e) {}
+
     context.res.status = 200;
-    context.res.body = { success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules };
+    context.res.body = { success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions };
   } catch (err) {
     context.log.error("Lỗi lấy dữ liệu thành viên:", err.message);
     context.res.status = 500;
