@@ -23,14 +23,15 @@ module.exports = async function (context, req) {
   }
 
   const giftId = String((req.body && req.body.giftId) || "").trim();
-  const gift = findGift(giftId);
-  if (!gift) {
-    context.res.status = 400;
-    context.res.body = { success: false, message: "Không tìm thấy quà tặng này." };
-    return;
-  }
 
   try {
+    const gift = await findGift(giftId);
+    if (!gift) {
+      context.res.status = 400;
+      context.res.body = { success: false, message: "Không tìm thấy quà tặng này." };
+      return;
+    }
+
     const sessionTable = await getTableClient(SESSION_TABLE);
     let session;
     try {

@@ -55,4 +55,29 @@ async function getAttachmentSasUrl(blobName, expiryMinutes = 15) {
   });
 }
 
-module.exports = { uploadAttachments, getAttachmentSasUrl };
+// Tải 1 ảnh minh hoạ quà tặng (base64) lên Blob Storage, trả về blobName để lưu vào GiftCatalog.
+async function uploadGiftImage(image) {
+  if (!image || !image.content) return null;
+  const containerClient = await getContainerClient();
+  const safeName = (image.filename || "gift.jpg").replace(/[^a-zA-Z0-9._-]/g, "_");
+  const blobName = `gift-catalog/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  const buffer = Buffer.from(image.content, "base64");
+  await blockBlobClient.uploadData(buffer, {
+    blobHTTPHeaders: { blobContentType: image.type || "image/jpeg" }
+  });
+  return blobName;
+}
+
+// Xoá 1 blob đã lưu (best-effort — dùng khi thay ảnh mới hoặc xoá mục quà tặng).
+async function deleteBlob(blobName) {
+  if (!blobName) return;
+  try {
+    const containerClient = await getContainerClient();
+    await containerClient.getBlockBlobClient(blobName).deleteIfExists();
+  } catch (err) {
+    // best-effort — không chặn luồng chính nếu xoá thất bại
+  }
+}
+
+module.exports = { uploadAttachments, getAttachmentSasUrl, uploadGiftImage, deleteBlob };

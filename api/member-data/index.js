@@ -1,6 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 const { getTierByTotal, isVipTotal, calculatePoints, describeEarnRate } = require("../_shared/memberTier");
+const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
 
 const SESSION_TABLE = "AuthSessions";
 const REGISTRATIONS_TABLE = "Registrations";
@@ -292,6 +293,14 @@ module.exports = async function (context, req) {
       }
     } catch (e) {}
 
+    // Danh mục quà tặng hiện đang bật (admin quản lý) — kèm ảnh minh hoạ nếu có
+    let giftCatalog = [];
+    try {
+      giftCatalog = await listActiveGiftCatalog();
+    } catch (e) {
+      context.log.error("Lỗi lấy danh mục quà tặng:", e.message);
+    }
+
     // Hạng thành viên + điểm tích lũy (tính server-side để đảm bảo đúng và không phụ thuộc client)
     const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
     const tier = getTierByTotal(totalTuitionPaid);
@@ -313,7 +322,7 @@ module.exports = async function (context, req) {
 
     context.res.status = 200;
     context.res.body = {
-      success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions,
+      success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions, giftCatalog,
       totalTuitionPaid,
       tier: { name: tier.name, icon: tier.icon, color: tier.color },
       isVip: isVipTotal(totalTuitionPaid),

@@ -825,7 +825,7 @@
 
         const {
           email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [],
-          loyaltyPoints = null, tierChanged = false, previousTierName = null
+          giftCatalog = [], loyaltyPoints = null, tierChanged = false, previousTierName = null
         } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
@@ -1073,22 +1073,18 @@
             </div>`
           : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-calendar-days"></i> Chưa có lịch học nào được thiết lập cho chương trình bạn đang tham gia.</div>`;
 
-        const GIFT_CATALOG = [
-          { id: 'but-may', name: 'Bút máy cao cấp', cost: 5000000, icon: 'fa-pen-fancy' },
-          { id: 'vo-o-ly', name: 'Bộ vở ô ly (10 quyển)', cost: 10000000, icon: 'fa-book' },
-          { id: 'balo', name: 'Balo học sinh', cost: 20000000, icon: 'fa-bag-shopping' },
-          { id: 'buoi-hoc-mien-phi', name: '1 buổi học miễn phí', cost: 35000000, icon: 'fa-chalkboard-user' },
-          { id: 'bo-dung-cu', name: 'Bộ dụng cụ học tập cao cấp', cost: 50000000, icon: 'fa-box-open' },
-          { id: 'khoa-hoc-mien-phi', name: 'Miễn phí học phí 1 kỳ', cost: 80000000, icon: 'fa-graduation-cap' }
-        ];
-
-        const giftsHtml = `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;">
-          ${GIFT_CATALOG.map(g => {
+        const giftsHtml = giftCatalog.length === 0
+          ? `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;">Hiện chưa có quà tặng nào trong danh mục.</div>`
+          : `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;">
+          ${giftCatalog.map(g => {
             const existingRequest = giftRedemptions.find(r => r.giftId === g.id && r.status !== 'cancelled');
             const isEligible = totalTuitionPaid >= g.cost;
+            const imageHtml = g.imageUrl
+              ? `<div style="width:100%; aspect-ratio:1.4; border-radius:12px; overflow:hidden; margin-bottom:0.8rem; background:#f1f5f9;"><img src="${g.imageUrl}" alt="${g.name}" style="width:100%; height:100%; object-fit:cover;"></div>`
+              : `<div style="width:52px; height:52px; border-radius:14px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin:0 auto 0.8rem;"><i class="fa-solid ${g.icon}"></i></div>`;
             return `
               <div class="inner-card" style="border-radius:16px; padding:1.3rem; text-align:center; ${isEligible ? '' : 'opacity:0.6;'}">
-                <div style="width:52px; height:52px; border-radius:14px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin:0 auto 0.8rem;"><i class="fa-solid ${g.icon}"></i></div>
+                ${imageHtml}
                 <div style="font-size:0.95rem; font-weight:800; color:var(--text-dark); margin-bottom:0.3rem;">${g.name}</div>
                 <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.9rem;">Cần tổng học phí ${g.cost.toLocaleString('vi-VN')}đ</div>
                 ${existingRequest
