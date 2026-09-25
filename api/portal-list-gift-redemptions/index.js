@@ -20,7 +20,10 @@ module.exports = async function (context, req) {
         giftCost: entity.giftCost,
         status: entity.status || "pending",
         requestedAt: entity.requestedAt,
-        fulfilledAt: entity.fulfilledAt || null
+        shippedAt: entity.shippedAt || null,
+        fulfilledAt: entity.fulfilledAt || null,
+        cancelledAt: entity.cancelledAt || null,
+        cancelReason: entity.cancelReason || ""
       });
     }
     redemptions.sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt));

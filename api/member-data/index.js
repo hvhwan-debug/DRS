@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
+const { getTierByTotal, isVipTotal, calculatePoints, describeEarnRate } = require("../_shared/memberTier");
 
 const SESSION_TABLE = "AuthSessions";
 const REGISTRATIONS_TABLE = "Registrations";
@@ -180,10 +181,12 @@ module.exports = async function (context, req) {
 
     // Thông tin hồ sơ do chính thành viên tự điền
     let profile = { fullName: "", phone: "", address: "", dob: "" };
+    let lastSeenTier = null;
     try {
       const profilesTable = await getTableClient(PROFILES_TABLE);
       const p = await profilesTable.getEntity("profile", email);
       profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "" };
+      lastSeenTier = p.lastSeenTier || null;
     } catch (e) {
       // Chưa có hồ sơ nào được lưu — dùng giá trị rỗng mặc định ở trên
     }
@@ -276,16 +279,48 @@ module.exports = async function (context, req) {
       });
       for await (const entity of redemptionsIterator) {
         giftRedemptions.push({
+          id: entity.rowKey,
           giftId: entity.giftId,
           giftName: entity.giftName,
           status: entity.status || "pending",
-          requestedAt: entity.requestedAt
+          requestedAt: entity.requestedAt,
+          shippedAt: entity.shippedAt || null,
+          fulfilledAt: entity.fulfilledAt || null,
+          cancelledAt: entity.cancelledAt || null,
+          cancelReason: entity.cancelReason || ""
         });
       }
     } catch (e) {}
 
+    // Hạng thành viên + điểm tích lũy (tính server-side để đảm bảo đúng và không phụ thuộc client)
+    const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+    const tier = getTierByTotal(totalTuitionPaid);
+    const loyaltyPoints = {
+      total: calculatePoints(totalTuitionPaid, tier),
+      rateLabel: describeEarnRate(tier),
+      tierName: tier.name
+    };
+    // Popup thông báo đổi hạng: chỉ báo khi ĐÃ từng ghi nhận 1 hạng trước đó và hạng đó khác hạng hiện tại
+    // (bỏ qua lần đăng nhập đầu tiên, vì lúc đó chưa có "hạng cũ" để so sánh).
+    const tierChanged = !!(lastSeenTier && lastSeenTier !== tier.name);
+    if (!lastSeenTier) {
+      // Lần đầu tiên có dữ liệu hạng cho thành viên này -> âm thầm lưu mốc khởi điểm, không hiện popup.
+      try {
+        const profilesTable2 = await getTableClient(PROFILES_TABLE);
+        await profilesTable2.upsertEntity({ partitionKey: "profile", rowKey: email, lastSeenTier: tier.name }, "Merge");
+      } catch (e) { /* best-effort, không chặn phản hồi chính */ }
+    }
+
     context.res.status = 200;
-    context.res.body = { success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions };
+    context.res.body = {
+      success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions,
+      totalTuitionPaid,
+      tier: { name: tier.name, icon: tier.icon, color: tier.color },
+      isVip: isVipTotal(totalTuitionPaid),
+      loyaltyPoints,
+      tierChanged,
+      previousTierName: tierChanged ? lastSeenTier : null
+    };
   } catch (err) {
     context.log.error("Lỗi lấy dữ liệu thành viên:", err.message);
     context.res.status = 500;

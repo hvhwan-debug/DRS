@@ -1,7 +1,7 @@
-const sgMail = require("@sendgrid/mail");
 const { getTableClient } = require("../_shared/tableStorage");
 const { findGift } = require("../_shared/giftCatalog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const SESSION_TABLE = "AuthSessions";
 const TUITION_TABLE = "TuitionPayments";
@@ -87,32 +87,22 @@ module.exports = async function (context, req) {
       giftId,
       giftName: gift.name,
       giftCost: gift.cost,
-      status: "pending",
+      status: "pending", // pending (Chờ duyệt) -> shipping (Đang vận chuyển) -> fulfilled (Đã trao quà) | cancelled (Huỷ)
       requestedAt: new Date().toISOString()
     });
 
-    // Báo cho đội ngũ qua email admin? Không bắt buộc — chỉ báo lại cho chính thành viên để xác nhận đã ghi nhận
-    const apiKey = process.env.SENDGRID_API_KEY;
-    const fromEmail = process.env.SENDGRID_FROM_EMAIL;
-    if (apiKey && fromEmail) {
-      try {
-        const displayName = await getMemberDisplayName(email);
-        const greeting = buildGreeting(displayName);
-        sgMail.setApiKey(apiKey);
-        await sgMail.send({
-          to: email,
-          from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
-          subject: `Đã ghi nhận yêu cầu đổi quà: ${gift.name}`,
-          html: `<!DOCTYPE html><html lang="vi"><body style="font-family:Arial,sans-serif;padding:24px;color:#0f172a;">
-            <p>${greeting}</p>
-            <p>Chúng tôi đã ghi nhận yêu cầu đổi quà <strong>${gift.name}</strong> của bạn. Đội ngũ sẽ liên hệ sắp xếp trao quà sớm nhất.</p>
-            <p>Trân trọng,<br>Mạng Lưới Tri Thức Việt Nam</p>
-          </body></html>`
-        });
-      } catch (err) {
-        context.log.error("Gửi email báo đổi quà thất bại:", err?.response?.body || err.message);
-      }
-    }
+    // Báo lại cho chính thành viên để xác nhận đã ghi nhận (best-effort, tự chuyển bản premium nếu là VIP)
+    const displayName = await getMemberDisplayName(email);
+    const greeting = buildGreeting(displayName);
+    await sendTrackedEmail(context, {
+      to: email,
+      subject: `Đã ghi nhận yêu cầu đổi quà: ${gift.name}`,
+      type: "gift",
+      eyebrow: "Đổi Quà Tặng",
+      title: "Đã ghi nhận yêu cầu",
+      bodyHtml: `<p style="margin:0 0 16px;">${greeting}</p>
+        <p style="margin:0 0 16px;">Chúng tôi đã ghi nhận yêu cầu đổi quà <strong>${gift.name}</strong> của bạn — trạng thái hiện tại: <strong>Chờ duyệt</strong>. Đội ngũ sẽ xét duyệt và cập nhật trạng thái sớm nhất.</p>`
+    });
 
     context.res.status = 200;
     context.res.body = { success: true };

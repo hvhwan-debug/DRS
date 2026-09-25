@@ -12,12 +12,20 @@ module.exports = async function (context, req) {
     const studentsTable = await getTableClient(STUDENTS_TABLE);
     const students = [];
     for await (const entity of studentsTable.listEntities()) {
+      let programs = [];
+      try {
+        programs = JSON.parse(entity.programsJson || "[]");
+      } catch (e) { /* dữ liệu cũ chưa có programsJson -> dùng fallback bên dưới */ }
+      if (!Array.isArray(programs) || programs.length === 0) {
+        programs = entity.program ? [entity.program] : [];
+      }
       students.push({
         id: entity.rowKey,
         parentEmail: entity.partitionKey,
         studentName: entity.studentName,
         dob: entity.dob || "",
-        program: entity.program || "",
+        program: entity.program || "", // tương thích ngược
+        programs,
         note: entity.note || "",
         enrolledAt: entity.enrolledAt
       });

@@ -334,7 +334,7 @@
     <aside class="sidebar" id="mainSidebar">
       <div class="sidebar-brand">
         <img src="images/logo-wvn.png" alt="Logo">
-        <div class="sidebar-brand-text">Tri Thức Việt Nam<span>Khu vực thành viên</span></div>
+        <div class="sidebar-brand-text">Tri Thức Việt Nam<span id="sidebarBrandSubtitle">Khu vực thành viên</span></div>
       </div>
 
       <div id="sidebarMemberInfo" style="display:none;"></div>
@@ -394,6 +394,17 @@
         <div id="mandatoryProfileAlert" style="display:none; font-size:0.85rem; color:#dc2626;"></div>
         <button type="submit" class="btn" id="mandatoryProfileSubmitBtn" style="width:100%;">Lưu Và Tiếp Tục</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Mục 4: Popup thông báo đổi hạng (hiện đúng 1 lần khi hạng thay đổi) -->
+  <div id="tierChangeOverlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:1100; align-items:center; justify-content:center; padding:1.2rem;">
+    <div style="background:#fff; border-radius:20px; max-width:420px; width:100%; padding:2.2rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,0.35); text-align:center; position:relative; overflow:hidden;">
+      <div id="tierChangeConfetti" style="position:absolute; top:0; left:0; right:0; height:6px;"></div>
+      <div id="tierChangeIcon" style="width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0.6rem auto 1.1rem;"></div>
+      <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">🎉 Chúc mừng bạn lên hạng mới!</h2>
+      <p id="tierChangeText" style="color:var(--text-muted); font-size:0.92rem; margin-bottom:1.4rem; line-height:1.6;"></p>
+      <button type="button" class="btn" id="tierChangeCloseBtn" style="width:100%;">Đã hiểu, cảm ơn!</button>
     </div>
   </div>
 
@@ -721,6 +732,40 @@
       window.location.href = 'dang-nhap.html';
     }
 
+    // Mục 4: hiện popup chúc mừng đổi hạng, rồi báo cho server biết đã xem (để không lặp lại)
+    function showTierChangePopup(newTier, previousTierName) {
+      const overlay = document.getElementById('tierChangeOverlay');
+      document.getElementById('tierChangeConfetti').style.background = `linear-gradient(90deg, ${newTier.color}, #fff, ${newTier.color})`;
+      const iconEl = document.getElementById('tierChangeIcon');
+      iconEl.style.background = newTier.bg;
+      iconEl.style.color = newTier.color;
+      iconEl.innerHTML = `<i class="fa-solid ${newTier.icon}"></i>`;
+      document.getElementById('tierChangeText').innerHTML = previousTierName
+        ? `Bạn vừa thăng hạng từ <strong>${previousTierName}</strong> lên <strong style="color:${newTier.color};">${newTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi mới của bạn.`
+        : `Bạn hiện đang ở hạng <strong style="color:${newTier.color};">${newTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi của hạng này.`;
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Thu gọn/xổ ra khối Đổi Mật Khẩu — mặc định thu gọn, bấm tiêu đề để mở
+    function toggleChangePassword() {
+      const form = document.getElementById('changePasswordForm');
+      const chevron = document.getElementById('changePasswordChevron');
+      const isOpen = form.style.display === 'grid';
+      form.style.display = isOpen ? 'none' : 'grid';
+      chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    document.getElementById('tierChangeCloseBtn').addEventListener('click', async () => {
+      document.getElementById('tierChangeOverlay').style.display = 'none';
+      document.body.style.overflow = '';
+      const token = localStorage.getItem('wvn_member_token');
+      if (!token) return;
+      try {
+        await fetch('/api/member-ack-tier', { method: 'POST', headers: { 'X-Member-Token': token } });
+      } catch (err) { /* best-effort — nếu lỗi mạng, popup có thể hiện lại lần đăng nhập sau, không sao */ }
+    });
+
     async function loadMemberInfo() {
       const container = document.getElementById('pageContent');
       const token = localStorage.getItem('wvn_member_token');
@@ -744,7 +789,10 @@
           return;
         }
 
-        const { email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [] } = payload;
+        const {
+          email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [],
+          loyaltyPoints = null, tierChanged = false, previousTierName = null
+        } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
 
@@ -753,13 +801,23 @@
         const isVip = totalTuitionPaid >= 15000000; // từ hạng Vàng trở lên
         document.body.classList.toggle('vip-theme', isVip);
 
+        // Mục 2: chữ "VIP" trong "Khu vực thành viên" — chỉ hiện từ hạng Vàng trở lên
+        const brandSubtitleEl = document.getElementById('sidebarBrandSubtitle');
+        if (brandSubtitleEl) brandSubtitleEl.textContent = isVip ? 'Khu vực thành viên VIP' : 'Khu vực thành viên';
+
         const memberInfoEl = document.getElementById('sidebarMemberInfo');
         memberInfoEl.style.display = 'block';
         memberInfoEl.innerHTML = `
           <div style="font-size:0.82rem; font-weight:700; color:#fff;">${profile.fullName || email}</div>
           <div style="font-size:0.72rem; color:#94a3b8; margin-top:0.1rem;">${email}</div>
           <div class="tier-badge" style="background:${tier.bg}; color:${tier.color};"><i class="fa-solid ${tier.icon}"></i> ${tier.name}</div>
+          ${loyaltyPoints ? `<div style="margin-top:0.4rem; font-size:0.74rem; color:#e2e8f0;"><i class="fa-solid fa-coins" style="color:#facc15;"></i> ${loyaltyPoints.total.toLocaleString('vi-VN')} điểm tích lũy</div>` : ''}
         `;
+
+        // Mục 4: popup thông báo đổi hạng — chỉ hiện đúng 1 lần cho tới khi thành viên xác nhận đã xem
+        if (tierChanged) {
+          showTierChangePopup(tier, previousTierName);
+        }
 
         const tierThresholds = TIER_PERKS;
         const currentTierIndex = tierThresholds.findIndex(t => t.name === tier.name);
@@ -776,6 +834,14 @@
               <div style="font-size:0.84rem; color:var(--text-muted);">Tổng học phí đã đóng: <strong style="color:#15803d;">${totalTuitionPaid.toLocaleString('vi-VN')}đ</strong></div>
             </div>
           </div>
+          ${loyaltyPoints ? `
+            <div style="display:flex; align-items:center; gap:0.8rem; background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:0.9rem 1.1rem; margin-bottom:1.2rem;">
+              <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="fa-solid fa-coins"></i></div>
+              <div>
+                <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.total.toLocaleString('vi-VN')} điểm</div>
+                <div style="font-size:0.78rem; color:var(--text-muted);">Điểm tích lũy hiện có — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
+              </div>
+            </div>` : ''}
           ${nextTier ? `
             <div style="margin-bottom:0.5rem; display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted);">
               <span>Tiến trình lên hạng <strong>${nextTier.name}</strong></span>
@@ -984,7 +1050,7 @@
 
         const giftsHtml = `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;">
           ${GIFT_CATALOG.map(g => {
-            const existingRequest = giftRedemptions.find(r => r.giftId === g.id);
+            const existingRequest = giftRedemptions.find(r => r.giftId === g.id && r.status !== 'cancelled');
             const isEligible = totalTuitionPaid >= g.cost;
             return `
               <div class="inner-card" style="border-radius:16px; padding:1.3rem; text-align:center; ${isEligible ? '' : 'opacity:0.6;'}">
@@ -992,9 +1058,16 @@
                 <div style="font-size:0.95rem; font-weight:800; color:var(--text-dark); margin-bottom:0.3rem;">${g.name}</div>
                 <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.9rem;">Cần tổng học phí ${g.cost.toLocaleString('vi-VN')}đ</div>
                 ${existingRequest
-                  ? (existingRequest.status === 'fulfilled'
-                      ? '<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã nhận quà</span>'
-                      : '<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:999px; background:#fef3c7; color:#a16207;">Đang chờ trao quà</span>')
+                  ? (() => {
+                      const GIFT_STATUS_LABELS = {
+                        pending: { text: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
+                        shipping: { text: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
+                        fulfilled: { text: 'Đã nhận quà', bg: '#dcfce7', color: '#15803d' },
+                        cancelled: { text: 'Đã huỷ', bg: '#fee2e2', color: '#b91c1c' }
+                      };
+                      const s = GIFT_STATUS_LABELS[existingRequest.status] || GIFT_STATUS_LABELS.pending;
+                      return `<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:999px; background:${s.bg}; color:${s.color};">${s.text}</span>`;
+                    })()
                   : (isEligible
                       ? `<button type="button" class="btn" style="padding:0.5rem 1.1rem; font-size:0.85rem;" onclick="requestGift('${g.id}')">Yêu Cầu Đổi Quà</button>`
                       : `<span style="font-size:0.78rem; color:var(--text-muted);">Cần đóng thêm ${(g.cost - totalTuitionPaid).toLocaleString('vi-VN')}đ</span>`)}
@@ -1120,7 +1193,7 @@
         container.innerHTML = `
           ${systemNoticeHtml}
           <div class="welcome-banner">
-            <span class="banner-tag"><i class="fa-solid fa-star"></i> Khu vực thành viên</span>
+            <span class="banner-tag"><i class="fa-solid fa-star"></i> Khu vực thành viên${isVip ? ' VIP' : ''}</span>
             <h1>Xin chào${profile.fullName ? ', ' + profile.fullName : ''}! 👋</h1>
             <p>Đồng hành cùng con em trên hành trình học tập — theo dõi lịch học, điểm số và đóng góp của bạn tại Mạng Lưới Tri Thức Việt Nam.</p>
           </div>
@@ -1173,8 +1246,11 @@
             </div>
 
             <div class="card">
-              <h2><i class="fa-solid fa-key"></i> Đổi Mật Khẩu</h2>
-              <form id="changePasswordForm" style="display:grid; gap:0.9rem; margin-top:0.6rem; max-width:420px;">
+              <h2 onclick="toggleChangePassword()" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between; user-select:none;">
+                <span><i class="fa-solid fa-key"></i> Đổi Mật Khẩu</span>
+                <i class="fa-solid fa-chevron-down" id="changePasswordChevron" style="font-size:0.85rem; color:var(--text-muted); transition:transform 0.2s;"></i>
+              </h2>
+              <form id="changePasswordForm" style="display:none; gap:0.9rem; margin-top:0.9rem; max-width:420px;">
                 <div>
                   <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Mật khẩu hiện tại</label>
                   <input type="password" id="cpCurrentPassword" autocomplete="current-password" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.92rem;">

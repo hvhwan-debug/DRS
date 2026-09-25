@@ -4,29 +4,6 @@ const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const MAX_RECIPIENTS = 500; // giới hạn an toàn cho 1 lần gửi
 
-function buildBulkEmailHtml(subject, messageHtml, greeting) {
-  return `<!DOCTYPE html>
-<html lang="vi">
-  <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 16px;">
-      <tr><td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 28px rgba(15,23,42,0.10);">
-          <tr><td bgcolor="#0f172a" style="background-color:#0f172a;background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0284c7 100%);padding:28px 32px;text-align:center;">
-            <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
-            <div style="color:#ffffff;font-size:17px;font-weight:800;">Mạng Lưới Tri Thức Việt Nam</div>
-          </td></tr>
-          <tr><td style="padding:32px;">
-            <p style="font-size:14px;color:#334155;margin:0 0 16px;">${greeting}</p>
-            <div style="font-size:14px;color:#334155;line-height:1.7; white-space:pre-wrap;">${messageHtml}</div>
-            <p style="font-size:13px;color:#94a3b8;margin:24px 0 0;">Trân trọng,<br>Mạng Lưới Tri Thức Việt Nam</p>
-          </td></tr>
-        </table>
-      </td></tr>
-    </table>
-  </body>
-</html>`;
-}
-
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -82,11 +59,16 @@ module.exports = async function (context, req) {
   for (const email of recipients) {
     const displayName = await getMemberDisplayName(email);
     const greeting = buildGreeting(displayName);
+    // Mỗi người nhận tự thấy đúng bản giao diện của hạng mình (thường / premium) — sendTrackedEmail lo việc này.
     const result = await sendTrackedEmail(context, {
       to: email,
       subject,
-      html: buildBulkEmailHtml(subject, messageHtml, greeting),
-      type: "bulk"
+      type: "bulk",
+      eyebrow: "Thông Báo Từ Đội Ngũ",
+      title: subject,
+      bodyHtml: `
+        <p style="margin:0 0 16px;">${greeting}</p>
+        <div style="line-height:1.7; white-space:pre-wrap;">${messageHtml}</div>`
     });
     if (result.success) sentCount++;
     else failed.push(email);

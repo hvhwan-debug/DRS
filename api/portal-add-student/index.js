@@ -13,8 +13,19 @@ module.exports = async function (context, req) {
   const parentEmail = String(body.parentEmail || "").trim().toLowerCase();
   const studentName = String(body.studentName || "").trim();
   const dob = String(body.dob || "").trim();
-  const program = String(body.program || "").trim();
   const note = String(body.note || "").trim();
+
+  // Mục 6: 1 học sinh có thể tham gia NHIỀU chương trình cùng lúc.
+  // Chấp nhận body.programs (mảng) — nếu không có thì dùng body.program (chuỗi, tương thích ngược).
+  let programs = [];
+  if (Array.isArray(body.programs)) {
+    programs = body.programs.map(p => String(p || "").trim()).filter(Boolean);
+  } else if (typeof body.programs === "string" && body.programs.trim()) {
+    programs = body.programs.split(",").map(p => p.trim()).filter(Boolean);
+  } else if (body.program) {
+    programs = [String(body.program).trim()].filter(Boolean);
+  }
+  programs = Array.from(new Set(programs)); // bỏ trùng
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parentEmail);
   if (!emailValid || !studentName) {
@@ -31,7 +42,8 @@ module.exports = async function (context, req) {
       rowKey,
       studentName,
       dob,
-      program,
+      program: programs[0] || "", // giữ để tương thích ngược với code cũ chỉ đọc field "program"
+      programsJson: JSON.stringify(programs),
       note,
       enrolledAt: new Date().toISOString()
     }, "Merge");

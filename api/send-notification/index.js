@@ -453,20 +453,21 @@ module.exports = async function (context, req) {
   }
 
   // Email cảm ơn/xác nhận gửi lại cho chính người gửi (best-effort — không chặn phản hồi thành công nếu lỗi)
+  // Dùng khung giao diện thống nhất toàn hệ thống — tự chuyển bản premium nếu người gửi là thành viên VIP.
   if (senderEmail) {
-    try {
-      const introMessage = AUTOREPLY_INTRO[formType] || "Chúng tôi đã nhận được thông tin bạn gửi và đang xử lý. Đội ngũ sẽ phản hồi sớm nhất có thể.";
-      const autoReplyHtml = buildAutoReplyHtml(senderName, introMessage);
-      await sgMail.send({
-        to: senderEmail,
-        from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
-        subject: "Đã nhận được thông tin của bạn - Mạng Lưới Tri Thức Việt Nam",
-        html: autoReplyHtml
-      });
-    } catch (err) {
-      context.log.error("Gửi email cảm ơn cho người gửi thất bại:", err?.response?.body || err.message);
-      // Không return lỗi ở đây — người dùng vẫn nên thấy "gửi thành công" vì admin đã nhận được.
-    }
+    const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+    const introMessage = AUTOREPLY_INTRO[formType] || "Chúng tôi đã nhận được thông tin bạn gửi và đang xử lý. Đội ngũ sẽ phản hồi sớm nhất có thể.";
+    const greeting = senderName ? `Xin chào <strong>${escapeHtml(senderName)}</strong>,` : "Xin chào,";
+    await sendTrackedEmail(context, {
+      to: senderEmail,
+      subject: "Đã nhận được thông tin của bạn - Mạng Lưới Tri Thức Việt Nam",
+      type: "other",
+      eyebrow: "Đã Nhận Được Thông Tin",
+      title: "Cảm ơn bạn đã liên hệ",
+      bodyHtml: `<p style="margin:0 0 12px;">${greeting}</p><p style="margin:0;">${escapeHtml(introMessage)}</p>`,
+      ctas: [{ label: "Xem thêm về WVN →", href: "https://wvn.vn", style: "primary" }]
+    });
+    // Không throw nếu lỗi — người dùng vẫn nên thấy "gửi thành công" vì admin đã nhận được.
   }
 
   context.res.status = 200;

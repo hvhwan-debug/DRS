@@ -1259,6 +1259,28 @@
     });
 
     // ============== ĐỔI QUÀ ==============
+    const GIFT_STATUS_META = {
+      pending: { label: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
+      shipping: { label: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
+      fulfilled: { label: 'Đã trao quà', bg: '#dcfce7', color: '#15803d' },
+      cancelled: { label: 'Đã huỷ', bg: '#fee2e2', color: '#b91c1c' }
+    };
+
+    function giftActionsHtml(r) {
+      const emailEnc = encodeURIComponent(r.email);
+      if (r.status === 'pending') {
+        return `
+          <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="updateGiftStatus('${emailEnc}','${r.id}','shipping')">Duyệt &amp; Chuyển Hàng</button>
+          <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="cancelGift('${emailEnc}','${r.id}')">Huỷ</button>`;
+      }
+      if (r.status === 'shipping') {
+        return `
+          <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="updateGiftStatus('${emailEnc}','${r.id}','fulfilled')">Đã Trao Quà</button>
+          <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="cancelGift('${emailEnc}','${r.id}')">Huỷ</button>`;
+      }
+      return '—';
+    }
+
     async function loadGifts() {
       try {
         const { redemptions } = await apiCall('/api/portal-list-gift-redemptions');
@@ -1268,32 +1290,44 @@
           return;
         }
         document.getElementById('giftTableWrap').style.display = 'block';
-        document.getElementById('giftTableBody').innerHTML = redemptions.map(r => `
+        document.getElementById('giftTableBody').innerHTML = redemptions.map(r => {
+          const meta = GIFT_STATUS_META[r.status] || GIFT_STATUS_META.pending;
+          return `
           <tr>
             <td>${escapeHtml(r.email)}</td>
             <td style="font-weight:700;">${escapeHtml(r.giftName)}</td>
             <td>${formatMoney(r.giftCost)}</td>
             <td>${formatDate(r.requestedAt)}</td>
-            <td>${r.status === 'fulfilled'
-              ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã trao quà</span>'
-              : '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fef3c7; color:#a16207;">Chờ trao quà</span>'}</td>
-            <td>${r.status !== 'fulfilled' ? `<button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="fulfillGift('${encodeURIComponent(r.email)}','${r.id}')">Đã Giao Quà</button>` : '—'}</td>
-          </tr>`).join('');
+            <td><span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:${meta.bg}; color:${meta.color};">${meta.label}</span>${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.2rem;">${escapeHtml(r.cancelReason)}</div>` : ''}</td>
+            <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">${giftActionsHtml(r)}</td>
+          </tr>`;
+        }).join('');
       } catch (err) {
         document.getElementById('giftLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
     }
 
-    async function fulfillGift(emailEnc, id) {
-      if (!confirm('Xác nhận đã trao quà tặng này cho thành viên?')) return;
+    async function cancelGift(emailEnc, id) {
+      const reason = prompt('Lý do huỷ yêu cầu đổi quà này (không bắt buộc):') || '';
+      if (reason === null) return;
+      await updateGiftStatus(emailEnc, id, 'cancelled', reason);
+    }
+
+    async function updateGiftStatus(emailEnc, id, status, reason) {
+      const confirmMsgs = {
+        shipping: 'Xác nhận duyệt và chuyển sang trạng thái "Đang vận chuyển"?',
+        fulfilled: 'Xác nhận đã trao quà tặng này cho thành viên?',
+        cancelled: 'Xác nhận huỷ yêu cầu đổi quà này?'
+      };
+      if (!confirm(confirmMsgs[status] || 'Xác nhận cập nhật trạng thái?')) return;
       try {
         const result = await apiCall('/api/portal-fulfill-gift-redemption', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: decodeURIComponent(emailEnc), id })
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc), id, status, reason: reason || '' })
         });
-        showGlobalAlert(result.warning || 'Đã đánh dấu trao quà và gửi email báo.', !!result.warning);
+        showGlobalAlert(result.warning || 'Đã cập nhật trạng thái và gửi email báo.', !!result.warning);
         document.getElementById('giftTableWrap').style.display = 'none';
         document.getElementById('giftEmpty').style.display = 'none';
         document.getElementById('giftLoading').style.display = 'block';
