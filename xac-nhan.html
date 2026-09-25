@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xác Nhận Thông Tin - Mạng Lưới Tri Thức Việt Nam</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text-dark: #0f172a; --text-muted: #64748b; --border: #e7ecf5;
+      --gold: #c9a227;
+      --blue-grad-primary: linear-gradient(135deg, #0b1120 0%, #16233f 50%, #0284c7 100%);
+      --blue-grad-btn: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif; color: var(--text-dark); line-height: 1.6;
+      background:
+        radial-gradient(1100px 550px at 105% -8%, #e7f0ff 0%, transparent 60%),
+        radial-gradient(900px 480px at -10% 105%, #fbf3de 0%, transparent 55%),
+        linear-gradient(180deg, #f8fafd 0%, #eef2f9 100%);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    h1, h2, h3 { font-family: 'Sora', 'Inter', sans-serif; }
+    .card {
+      background: #fff; border-radius: 22px; border: 1px solid var(--border); max-width: 480px; width: 100%;
+      box-shadow: 0 20px 50px -16px rgba(15,23,42,0.22); overflow: hidden;
+    }
+    .card-header {
+      background: var(--blue-grad-primary); padding: 1.8rem 2rem; text-align: center; color: #fff;
+    }
+    .card-header img { height: 44px; margin-bottom: 0.6rem; }
+    .card-header div { font-weight: 700; font-size: 1rem; }
+    .card-body { padding: 2rem; }
+    .loading { text-align: center; padding: 2rem 0; color: var(--text-muted); }
+    .loading i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.6rem; display: block; }
+    .info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--text-muted); }
+    .info-row span:last-child { font-weight: 600; text-align: right; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700;
+      padding: 0.4rem 0.9rem; border-radius: 999px; margin-bottom: 1.2rem;
+    }
+    .btn {
+      background: var(--blue-grad-btn); color: #fff; padding: 0.7rem 1.4rem; border-radius: 999px;
+      font-weight: 700; cursor: pointer; border: none; font-size: 0.92rem; font-family: 'Sora', 'Inter', sans-serif;
+      box-shadow: 0 10px 22px -8px rgba(37,99,235,0.5); width: 100%;
+    }
+    .btn-confirm { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 10px 22px -8px rgba(21,128,61,0.5); }
+    .btn-reject { background: #fff; color: #b91c1c; border: 1.5px solid #fecaca; box-shadow: none; }
+    textarea {
+      width: 100%; padding: 0.7rem 0.8rem; border: 1px solid var(--border); border-radius: 10px;
+      font-family: inherit; font-size: 0.92rem; margin-bottom: 0.9rem; resize: vertical;
+    }
+    .result-icon { text-align: center; font-size: 2.6rem; margin-bottom: 1rem; }
+    .result-title { text-align: center; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .result-sub { text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+    .error-box { text-align: center; padding: 1rem 0; }
+    .error-box i { font-size: 2rem; color: #dc2626; margin-bottom: 0.8rem; display: block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <img src="images/logo-wvn.png" alt="Logo">
+      <div>Mạng Lưới Tri Thức Việt Nam</div>
+    </div>
+    <div class="card-body" id="cardBody">
+      <div class="loading">
+        <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+        Đang tải thông tin...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const urlAction = params.get('action');
+    let currentSummary = null;
+
+    const TYPE_LABELS = { donation: 'quyên góp', grade: 'điểm/nhận xét', tuition: 'học phí' };
+
+    function statusBadgeHtml(status) {
+      if (status === 'confirmed') return `<span class="status-badge" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-check"></i> Đã xác nhận</span>`;
+      if (status === 'rejected') return `<span class="status-badge" style="background:#fee2e2; color:#b91c1c;"><i class="fa-solid fa-xmark"></i> Đã báo sai</span>`;
+      return '';
+    }
+
+    function renderSummaryLines(summary) {
+      return summary.lines.map(([label, value]) => `
+        <div class="info-row"><span>${label}</span><span>${value}</span></div>
+      `).join('');
+    }
+
+    function renderPending(summary) {
+      document.getElementById('cardBody').innerHTML = `
+        <h2 style="font-size:1.1rem; margin-bottom:1rem;">${summary.title}</h2>
+        <div style="border:1px solid var(--border); border-radius:14px; padding:0.4rem 1rem; margin-bottom:1.4rem;">
+          ${renderSummaryLines(summary)}
+        </div>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1.2rem; text-align:center;">Thông tin trên có chính xác không?</p>
+        <div style="display:flex; flex-direction:column; gap:0.7rem;" id="actionButtons">
+          <button type="button" class="btn btn-confirm" onclick="doConfirm()"><i class="fa-solid fa-check"></i> Xác nhận đúng</button>
+          <button type="button" class="btn btn-reject" onclick="showRejectForm()"><i class="fa-solid fa-xmark"></i> Báo sai / Cần sửa</button>
+        </div>
+        <div id="rejectForm" style="display:none; margin-top:1rem;">
+          <textarea id="rejectFeedback" rows="3" placeholder="Vui lòng cho biết thông tin nào chưa đúng..."></textarea>
+          <div id="rejectAlert" style="display:none; font-size:0.84rem; color:#dc2626; margin-bottom:0.8rem;"></div>
+          <button type="button" class="btn btn-reject" style="background:#fef2f2;" onclick="doReject()">Gửi Báo Cáo</button>
+        </div>
+      `;
+    }
+
+    function renderAlreadyDecided(summary) {
+      document.getElementById('cardBody').innerHTML = `
+        <h2 style="font-size:1.1rem; margin-bottom:0.8rem;">${summary.title}</h2>
+        <div style="text-align:center; margin-bottom:1.2rem;">${statusBadgeHtml(summary.confirmationStatus)}</div>
+        <div style="border:1px solid var(--border); border-radius:14px; padding:0.4rem 1rem; margin-bottom:1rem;">
+          ${renderSummaryLines(summary)}
+        </div>
+        ${summary.confirmationStatus === 'rejected' && summary.memberFeedback ? `
+          <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:0.9rem 1rem;">
+            <div style="font-size:0.78rem; font-weight:700; color:#991b1b; margin-bottom:0.3rem;">Lý do bạn đã báo:</div>
+            <div style="font-size:0.88rem; color:#7f1d1d;">${summary.memberFeedback}</div>
+          </div>` : ''}
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-top:1.2rem; text-align:center;">Mục này đã được xử lý trước đó nên không thể xác nhận lại. Nếu cần thay đổi, vui lòng liên hệ với chúng tôi.</p>
+      `;
+    }
+
+    function renderError(message) {
+      document.getElementById('cardBody').innerHTML = `
+        <div class="error-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div style="font-weight:700; margin-bottom:0.4rem;">Không thể xử lý</div>
+          <div style="color:var(--text-muted); font-size:0.9rem;">${message}</div>
+        </div>`;
+    }
+
+    async function loadInfo() {
+      if (!token) {
+        renderError('Thiếu thông tin xác nhận trong đường dẫn.');
+        return;
+      }
+      try {
+        const res = await fetch('/api/public-get-confirm-info?token=' + encodeURIComponent(token));
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể tải thông tin.');
+        currentSummary = result.summary;
+
+        if (currentSummary.confirmationStatus === 'pending') {
+          if (urlAction === 'confirm') {
+            await doConfirm();
+          } else {
+            renderPending(currentSummary);
+          }
+        } else {
+          renderAlreadyDecided(currentSummary);
+        }
+      } catch (err) {
+        renderError(err.message);
+      }
+    }
+
+    function showRejectForm() {
+      document.getElementById('rejectForm').style.display = 'block';
+    }
+
+    async function doConfirm() {
+      document.getElementById('cardBody').innerHTML = `<div class="loading"><i class="fa-solid fa-spinner fa-spin-pulse"></i> Đang xác nhận...</div>`;
+      try {
+        const res = await fetch('/api/public-confirm-record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, action: 'confirm' })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể xác nhận.');
+        document.getElementById('cardBody').innerHTML = `
+          <div class="result-icon" style="color:#15803d;"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="result-title">Đã xác nhận thành công!</div>
+          <div class="result-sub">Cảm ơn bạn đã xác nhận thông tin ${TYPE_LABELS[currentSummary?.type] || ''}.</div>
+        `;
+      } catch (err) {
+        renderError(err.message);
+      }
+    }
+
+    async function doReject() {
+      const feedback = document.getElementById('rejectFeedback').value.trim();
+      const alertEl = document.getElementById('rejectAlert');
+      if (!feedback) {
+        alertEl.style.display = 'block';
+        alertEl.textContent = 'Vui lòng nhập lý do trước khi gửi.';
+        return;
+      }
+      document.getElementById('cardBody').innerHTML = `<div class="loading"><i class="fa-solid fa-spinner fa-spin-pulse"></i> Đang gửi báo cáo...</div>`;
+      try {
+        const res = await fetch('/api/public-confirm-record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, action: 'reject', feedback })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể gửi báo cáo.');
+        document.getElementById('cardBody').innerHTML = `
+          <div class="result-icon" style="color:#b91c1c;"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="result-title">Đã gửi báo cáo!</div>
+          <div class="result-sub">Đội ngũ sẽ kiểm tra và sửa lại thông tin sớm nhất có thể.</div>
+        `;
+      } catch (err) {
+        renderError(err.message);
+      }
+    }
+
+    loadInfo();
+  </script>
+</body>
+</html>
