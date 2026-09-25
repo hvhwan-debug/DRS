@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <script>
+    // Nếu truy cập qua subdomain riêng, tự động chuyển thẳng vào đúng trang tương ứng
+    (function () {
+      var host = window.location.hostname;
+      if (host === 'thanhvien.wvn.vn' && !/thanh-vien-index\.html/.test(window.location.pathname)) {
+        window.location.replace('/thanh-vien-index.html');
+      } else if (host === 'admin.wvn.vn' && !/admin-index\.html|admin-dang-nhap\.html/.test(window.location.pathname)) {
+        window.location.replace('/admin-index.html');
+      }
+    })();
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-JK8MMT808Y"></script>
   <script>
