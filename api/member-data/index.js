@@ -211,6 +211,7 @@ module.exports = async function (context, req) {
           studentName: entity.studentName,
           program: entity.program,
           amount: entity.amount,
+          expectedAmount: entity.expectedAmount != null ? entity.expectedAmount : entity.amount,
           period: entity.period || "",
           method: entity.method || "",
           note: entity.note || "",
