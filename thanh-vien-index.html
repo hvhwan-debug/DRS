@@ -313,15 +313,6 @@
     body.vip-theme .banner-tag {
       background: rgba(201,162,39,0.22); border-color: rgba(232,199,102,0.6); color: #f6ecc9;
     }
-    .vip-ribbon {
-      position: relative; margin-bottom: 1.4rem; padding: 1rem 1.3rem; border-radius: 16px;
-      background: linear-gradient(120deg, #241f10 0%, #322a15 50%, #241f10 100%);
-      border: 1px solid rgba(232,199,102,0.5); display: flex; align-items: center; gap: 0.9rem;
-      box-shadow: 0 10px 26px -10px rgba(0,0,0,0.5);
-    }
-    .vip-ribbon i { font-size: 1.6rem; color: #e8c766; }
-    .vip-ribbon .vip-ribbon-title { font-family: 'Sora', 'Inter', sans-serif; font-weight: 800; color: #f6ecc9; font-size: 1rem; }
-    .vip-ribbon .vip-ribbon-sub { font-size: 0.82rem; color: #a8935a; }
   </style>
 </head>
 <body>
@@ -1198,15 +1189,6 @@
             </div>`
           : '';
 
-        const vipRibbonHtml = isVip ? `
-          <div class="vip-ribbon">
-            <i class="fa-solid ${tier.icon}"></i>
-            <div>
-              <div class="vip-ribbon-title">Thành viên ${tier.name} — Đặc quyền dành riêng cho bạn</div>
-              <div class="vip-ribbon-sub">Cảm ơn sự đồng hành lâu dài của bạn cùng Mạng Lưới Tri Thức Việt Nam.</div>
-            </div>
-          </div>` : '';
-
         container.innerHTML = `
           ${systemNoticeHtml}
           <div class="welcome-banner">
@@ -1214,7 +1196,6 @@
             <h1>Xin chào${profile.fullName ? ', ' + profile.fullName : ''}! 👋</h1>
             <p>Đồng hành cùng con em trên hành trình học tập — theo dõi lịch học, điểm số và đóng góp của bạn tại Mạng Lưới Tri Thức Việt Nam.</p>
           </div>
-          ${vipRibbonHtml}
 
           <div class="member-panel active" id="memberPanel-account">
             <div class="card">
