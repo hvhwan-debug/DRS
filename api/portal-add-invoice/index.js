@@ -16,19 +16,19 @@ function generateInvoiceNumber(issueDate) {
 function buildInvoiceEmailBody(inv, greeting) {
   const rowsHtml = inv.items.map(it => `
     <tr>
-      <td style="padding:8px 6px; border-bottom:1px solid #e2e8f0;">${it.description}</td>
-      <td style="padding:8px 6px; border-bottom:1px solid #e2e8f0; text-align:center;">${it.quantity}</td>
-      <td style="padding:8px 6px; border-bottom:1px solid #e2e8f0; text-align:right;">${Number(it.unitPrice).toLocaleString("vi-VN")}đ</td>
+      <td style="padding:8px 6px; border-bottom:1px solid #e2e8f0; font-family:Arial,Helvetica,sans-serif;">${it.description}</td>
+      <td style="padding:8px 6px; border-bottom:1px solid #e2e8f0; text-align:center; font-family:Arial,Helvetica,sans-serif;">${it.quantity}</td>
+      <td style="padding:8px 6px; border-bottom:1px solid #e2e8f0; text-align:right; font-family:Arial,Helvetica,sans-serif;">${Number(it.unitPrice).toLocaleString("vi-VN")}đ</td>
     </tr>`).join("");
   return `
-    <p style="margin:0 0 16px;">${greeting}</p>
-    <p style="margin:0 0 10px;">Chúng tôi vừa lập một hoá đơn mới cho bạn${inv.studentName ? ` — học sinh <strong>${inv.studentName}</strong>` : ""}:</p>
-    <p style="margin:0 0 14px; font-size:13px; color:#64748b;">Số hoá đơn: <strong>${inv.invoiceNumber}</strong> — Ngày lập: <strong>${new Date(inv.issueDate).toLocaleDateString("vi-VN")}</strong></p>
+    <p style="margin:0 0 16px; font-family:Arial,Helvetica,sans-serif;">${greeting}</p>
+    <p style="margin:0 0 10px; font-family:Arial,Helvetica,sans-serif;">Chúng tôi vừa lập một hoá đơn mới cho bạn${inv.studentName ? ` — học sinh <strong>${inv.studentName}</strong>` : ""}:</p>
+    <p style="margin:0 0 14px; font-size:13px; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Số hoá đơn: <strong>${inv.invoiceNumber}</strong> — Ngày lập: <strong>${new Date(inv.issueDate).toLocaleDateString("vi-VN")}</strong></p>
     <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-family:Arial,Helvetica,sans-serif;">
-      <thead><tr style="font-size:12px; color:#64748b; text-align:left;"><th style="padding:6px;">Mô tả</th><th style="padding:6px; text-align:center;">SL</th><th style="padding:6px; text-align:right;">Đơn giá</th></tr></thead>
+      <thead><tr style="font-size:12px; color:#64748b; text-align:left;"><th style="padding:6px; font-family:Arial,Helvetica,sans-serif;">Mô tả</th><th style="padding:6px; text-align:center; font-family:Arial,Helvetica,sans-serif;">SL</th><th style="padding:6px; text-align:right; font-family:Arial,Helvetica,sans-serif;">Đơn giá</th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
-    <div style="text-align:right; font-size:16px; font-weight:800; color:#15803d; margin-bottom:10px;">Tổng cộng: ${inv.totalAmount.toLocaleString("vi-VN")}đ</div>
+    <div style="text-align:right; font-size:16px; font-weight:800; color:#15803d; margin-bottom:10px; font-family:Arial,Helvetica,sans-serif;">Tổng cộng: ${inv.totalAmount.toLocaleString("vi-VN")}đ</div>
     <p style="font-size:13px; color:#64748b; margin:0;">Xem đầy đủ hoá đơn trong khu vực thành viên, mục "Hoá Đơn".</p>`;
 }
 

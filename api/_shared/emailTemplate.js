@@ -27,7 +27,9 @@ const STANDARD_BTN_GRADIENT = "linear-gradient(135deg,#2563eb 0%,#0284c7 100%)";
 const STANDARD_ACCENT = "#0284c7";
 
 // Bảng màu VÀNG sang trọng — dùng CỐ ĐỊNH cho mọi hạng VIP (không đổi theo từng hạng riêng).
-const GOLD_DARK = "#161008";          // nền than đen ấm làm nền cho các mảng vàng
+// Nền tối dùng ĐÚNG màu navy thương hiệu (khớp STANDARD_HEADER_SOLID) thay vì đen trung tính,
+// để bản VIP vẫn rõ ràng là "cùng 1 thương hiệu" — chỉ khác ở điểm nhấn vàng sang trọng.
+const VIP_BASE = STANDARD_HEADER_SOLID;          // navy thương hiệu — nền/viền ngoài của bản VIP
 const GOLD_MAIN = "#d4af37";          // vàng kim chủ đạo
 const GOLD_LIGHT = "#f5d67d";         // vàng nhạt dùng cho gradient/nhấn sáng
 const GOLD_SOFT = "#f6ecc9";          // kem vàng — dùng cho chữ trên nền tối, tương phản tốt
@@ -69,10 +71,14 @@ function ctaButtonsHtml(ctas, isVip) {
  */
 function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) {
   const headerStyle = isVip
-    ? `background-color:${GOLD_DARK};background:linear-gradient(135deg, ${GOLD_DARK} 0%, ${GOLD_MAIN} 55%, ${GOLD_DARK} 100%);`
+    ? `background-color:${VIP_BASE};background:linear-gradient(135deg, ${VIP_BASE} 0%, ${GOLD_MAIN} 55%, ${VIP_BASE} 100%);`
     : `background-color:${STANDARD_HEADER_SOLID};background:${STANDARD_HEADER_GRADIENT};`;
   const accentOnWhite = isVip ? "#a97c1f" : STANDARD_ACCENT; // bản vàng đậm hơn 1 chút để đủ tương phản trên nền trắng
-  const outerBg = isVip ? GOLD_DARK : "#f1f5f9";
+  const outerBg = isVip ? VIP_BASE : "#f1f5f9";
+  // Dải ánh kim mảnh phía trên khung — điểm nhấn "web premium" mà không cần đổi cả nền sang đen.
+  const vipTopBar = isVip
+    ? `<tr><td bgcolor="${GOLD_MAIN}" style="background-color:${GOLD_MAIN}; background:linear-gradient(90deg, ${GOLD_MAIN}, ${GOLD_LIGHT}, ${GOLD_MAIN}); height:6px; font-size:0; line-height:0;">&nbsp;</td></tr>`
+    : "";
 
   const eyebrowHtml = eyebrow
     ? `<div style="text-align:center; font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:${accentOnWhite}; font-family:${FONT_STACK}; margin-bottom:10px;">${eyebrow}</div>`
@@ -87,9 +93,11 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${outerBg};padding:32px 16px;font-family:${FONT_STACK};">
       <tr><td align="center">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;background-color:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,0.22);font-family:${FONT_STACK};${isVip ? `border:2px solid ${GOLD_MAIN};` : "border:1px solid #e2e8f0;"}">
-          <tr><td bgcolor="${isVip ? GOLD_DARK : STANDARD_HEADER_SOLID}" style="${headerStyle}padding:30px 32px;text-align:center;">
+          ${vipTopBar}
+          <tr><td bgcolor="${isVip ? VIP_BASE : STANDARD_HEADER_SOLID}" style="${headerStyle}padding:30px 32px;text-align:center;">
             <img src="${LOGO_URL}" alt="WVN" width="52" style="display:block;height:auto;margin:0 auto 10px;">
             <div style="color:#ffffff;font-size:17px;font-weight:800;letter-spacing:0.2px;font-family:${FONT_STACK};">${BRAND_NAME}</div>
+            ${isVip ? `<div style="display:inline-block; margin-top:10px; padding:4px 14px; border-radius:999px; background-color:rgba(212,175,55,0.18); border:1px solid ${GOLD_MAIN};"><span style="color:${GOLD_LIGHT}; font-size:11px; font-weight:800; letter-spacing:1px; font-family:${FONT_STACK};">★ THÀNH VIÊN ƯU TIÊN ★</span></div>` : ""}
           </td></tr>
           <tr><td style="padding:32px 32px 28px;font-family:${FONT_STACK};">
             ${eyebrowHtml}
@@ -99,7 +107,7 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
             ${footerNote ? `<p style="font-size:12px;color:#94a3b8;margin:20px 0 0;text-align:center;font-family:${FONT_STACK};">${footerNote}</p>` : ""}
           </td></tr>
           ${isVip ? `
-          <tr><td bgcolor="${GOLD_DARK}" style="background-color:${GOLD_DARK}; padding:16px 24px; text-align:center; border-top:1px solid rgba(212,175,55,0.35);">
+          <tr><td bgcolor="${VIP_BASE}" style="background-color:${VIP_BASE}; padding:16px 24px; text-align:center; border-top:1px solid rgba(212,175,55,0.35);">
             <div style="font-size:12px; color:${GOLD_SOFT}; font-weight:700; font-family:${FONT_STACK};">Cảm ơn sự đồng hành đặc biệt của bạn cùng ${BRAND_NAME}</div>
           </td></tr>` : `
           <tr><td bgcolor="#f8fafc" style="background-color:#f8fafc; padding:14px 24px; text-align:center; border-top:1px solid #e2e8f0;">

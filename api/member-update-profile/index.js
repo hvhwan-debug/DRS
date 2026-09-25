@@ -75,11 +75,11 @@ module.exports = async function (context, req) {
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
         <p style="margin:0 0 14px;">Thông tin tài khoản của bạn tại Mạng Lưới Tri Thức Việt Nam vừa được cập nhật:</p>
-        <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:14px;">
-          <tr><td style="padding:6px 0; color:#64748b; width:120px;">Họ và tên</td><td style="padding:6px 0; font-weight:700;">${fullName || "—"}</td></tr>
-          <tr><td style="padding:6px 0; color:#64748b;">Số điện thoại</td><td style="padding:6px 0; font-weight:700;">${phone || "—"}</td></tr>
-          <tr><td style="padding:6px 0; color:#64748b;">Ngày sinh</td><td style="padding:6px 0; font-weight:700;">${dob || "—"}</td></tr>
-          <tr><td style="padding:6px 0; color:#64748b;">Địa chỉ</td><td style="padding:6px 0; font-weight:700;">${address || "—"}</td></tr>
+        <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:14px; font-family:Arial,Helvetica,sans-serif;">
+          <tr><td style="padding:6px 0; color:#64748b; width:120px; font-family:Arial,Helvetica,sans-serif;">Họ và tên</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${fullName || "—"}</td></tr>
+          <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Số điện thoại</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${phone || "—"}</td></tr>
+          <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Ngày sinh</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${dob || "—"}</td></tr>
+          <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Địa chỉ</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${address || "—"}</td></tr>
         </table>
         <p style="font-size:13px; color:#64748b; margin:0;">Nếu bạn không thực hiện thay đổi này, vui lòng liên hệ với chúng tôi ngay.</p>`
     });
