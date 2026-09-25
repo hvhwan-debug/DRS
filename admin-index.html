@@ -35,7 +35,8 @@
     .sidebar {
       width: 252px; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto;
       background: linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 100%);
-      color: #e2e8f0; padding: 1.6rem 1.1rem; display: flex; flex-direction: column; z-index: 40;
+      color: #e2e8f0; padding: 1.6rem 1.1rem; display: flex; flex-direction: column; z-index: 60;
+      transition: transform 0.25s ease;
     }
     .sidebar-brand { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.8rem; padding: 0 0.4rem; }
     .sidebar-brand img { height: 34px; width: auto; }
@@ -56,18 +57,42 @@
     .sidebar-footer { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); }
     .sidebar-footer .btn-outline { width: 100%; justify-content: center; display: flex; align-items: center; gap: 0.5rem; }
 
+    .mobile-topbar { display: none; }
+    .sidebar-backdrop { display: none; }
+
     .main-content { margin-left: 252px; flex: 1; min-width: 0; padding: 1.8rem 2rem 3rem; }
     #dashboardMidRow { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
     @media (max-width: 880px) {
-      .sidebar { position: relative; width: 100%; height: auto; flex-direction: row; align-items: center; overflow-x: auto; padding: 0.8rem 0.9rem; }
-      .sidebar-brand { margin-bottom: 0; margin-right: 0.8rem; flex-shrink: 0; }
-      .sidebar-brand-text { font-size: 0.82rem; }
-      .sidebar-brand img { height: 28px; }
-      .sidebar-nav { flex-direction: row; flex: none; gap: 0.15rem; }
-      .sidebar-nav .tab-btn { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; padding: 0.55rem 0.7rem; font-size: 0.82rem; }
-      .sidebar-nav .tab-btn.active { border-left-color: transparent; border-bottom-color: var(--gold); }
-      .sidebar-footer { margin-top: 0; margin-left: auto; padding-top: 0; border-top: none; flex-shrink: 0; }
-      .sidebar-footer .btn-outline { width: auto; padding: 0.5rem 0.9rem; font-size: 0.82rem; }
+      .app-shell { flex-direction: column; }
+      .mobile-topbar {
+        display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
+        background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%); padding: 0.8rem 1rem;
+        position: sticky; top: 0; z-index: 55;
+      }
+      .mobile-topbar .sidebar-brand { margin-bottom: 0; padding: 0; }
+      .mobile-topbar .sidebar-brand img { height: 28px; }
+      .mobile-topbar .sidebar-brand-text { font-size: 0.82rem; }
+      .hamburger-btn {
+        width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.06); color: #fff; font-size: 1.1rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      }
+      .sidebar {
+        position: fixed; top: 0; left: 0; bottom: 0; width: 78vw; max-width: 300px; height: 100vh;
+        transform: translateX(-100%); flex-direction: column; align-items: stretch; overflow-x: hidden; overflow-y: auto;
+        padding: 1.4rem 1.1rem; box-shadow: 8px 0 30px rgba(0,0,0,0.3);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-brand { margin-bottom: 1.4rem; }
+      .sidebar-nav { flex-direction: column; gap: 0.25rem; }
+      .sidebar-nav .tab-btn { white-space: normal; border-left: 3px solid transparent; border-bottom: none; padding: 0.68rem 0.9rem; font-size: 0.87rem; }
+      .sidebar-nav .tab-btn.active { border-left-color: var(--gold); border-bottom-color: transparent; }
+      .sidebar-footer { margin-top: 1rem; margin-left: 0; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); }
+      .sidebar-footer .btn-outline { width: 100%; padding: 0.6rem 0.9rem; font-size: 0.86rem; }
+      .sidebar-backdrop {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50;
+      }
+      .sidebar-backdrop.open { display: block; }
       .main-content { margin-left: 0; padding: 1rem; }
       .card { padding: 1.2rem; border-radius: 16px; }
       #dashboardMidRow { grid-template-columns: 1fr; }
@@ -116,8 +141,17 @@
 </head>
 <body>
 
+  <div class="mobile-topbar">
+    <div class="sidebar-brand">
+      <img src="images/logo-wvn.png" alt="Logo">
+      <div class="sidebar-brand-text">Tri Thức Việt Nam</div>
+    </div>
+    <button class="hamburger-btn" onclick="toggleMobileSidebar()" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button>
+  </div>
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
+
   <div class="app-shell">
-    <aside class="sidebar">
+    <aside class="sidebar" id="mainSidebar">
       <div class="sidebar-brand">
         <img src="images/logo-wvn.png" alt="Logo">
         <div class="sidebar-brand-text">Tri Thức Việt Nam<span>Quản Trị</span></div>
@@ -651,6 +685,17 @@
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.getElementById('panel-' + tab).classList.add('active');
+      closeMobileSidebar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileSidebar() {
+      document.getElementById('mainSidebar').classList.toggle('open');
+      document.getElementById('sidebarBackdrop').classList.toggle('open');
+    }
+    function closeMobileSidebar() {
+      document.getElementById('mainSidebar').classList.remove('open');
+      document.getElementById('sidebarBackdrop').classList.remove('open');
     }
 
     // ============== ĐƠN ĐĂNG KÝ ==============
