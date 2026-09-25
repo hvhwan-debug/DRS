@@ -22,19 +22,17 @@ async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, tit
 
   let finalHtml = html;
   if (!finalHtml) {
-    let tier = null;
     let isVip = false;
     try {
       const looksLikeEmail = typeof to === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to);
       if (looksLikeEmail) {
         const info = await getTierInfoForEmail(to.toLowerCase());
-        tier = info.tier;
         isVip = info.isVip;
       }
     } catch (err) {
       // Tra cứu hạng lỗi (vd. email không phải thành viên có học phí) -> dùng bản thường
     }
-    finalHtml = renderEmailHtml({ tier, isVip, eyebrow, title, bodyHtml, ctas, footerNote });
+    finalHtml = renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote });
   }
 
   if (!apiKey || !fromEmail) {

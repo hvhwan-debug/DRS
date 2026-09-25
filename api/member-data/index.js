@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
-const { getTierByTotal, isVipTotal, calculatePoints, describeEarnRate } = require("../_shared/memberTier");
+const { getEffectiveTierForMember, tierRank, calculatePoints, describeEarnRate } = require("../_shared/memberTier");
 const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
@@ -333,15 +333,20 @@ module.exports = async function (context, req) {
 
     // Hạng thành viên + điểm tích lũy (tính server-side để đảm bảo đúng và không phụ thuộc client)
     const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-    const tier = getTierByTotal(totalTuitionPaid);
+    // getEffectiveTierForMember áp dụng bảo lưu hạng 12 tháng kể từ ngày lên hạng gần nhất — nếu
+    // tổng học phí tính ra thấp hơn hạng đã đạt trong vòng 12 tháng qua, vẫn GIỮ hạng cũ, không tụt ngay.
+    const { tier } = await getEffectiveTierForMember(email, totalTuitionPaid);
     const loyaltyPoints = {
       total: calculatePoints(totalTuitionPaid, tier),
       rateLabel: describeEarnRate(tier),
       tierName: tier.name
     };
-    // Popup thông báo đổi hạng: chỉ báo khi ĐÃ từng ghi nhận 1 hạng trước đó và hạng đó khác hạng hiện tại
-    // (bỏ qua lần đăng nhập đầu tiên, vì lúc đó chưa có "hạng cũ" để so sánh).
+    // Popup/email thông báo đổi hạng: chỉ báo khi ĐÃ từng ghi nhận 1 hạng trước đó và hạng đó khác
+    // hạng hiện tại (bỏ qua lần đăng nhập đầu tiên, vì lúc đó chưa có "hạng cũ" để so sánh).
+    // isUpgrade phân biệt LÊN hạng (đáng chúc mừng) với TỤT hạng (chỉ thông báo bình thường, không
+    // chúc mừng) — chỉ có thể tụt hạng thật sau khi hết 12 tháng bảo lưu.
     const tierChanged = !!(lastSeenTier && lastSeenTier !== tier.name);
+    const isUpgrade = tierChanged && tierRank(tier.name) > tierRank(lastSeenTier);
     if (!lastSeenTier) {
       // Lần đầu tiên có dữ liệu hạng cho thành viên này -> âm thầm lưu mốc khởi điểm, không hiện popup.
       try {
@@ -356,21 +361,27 @@ module.exports = async function (context, req) {
         await profilesTable2.upsertEntity({ partitionKey: "profile", rowKey: email, lastSeenTier: tier.name }, "Merge");
       } catch (e) { /* best-effort, không chặn phản hồi chính */ }
 
-      // Gửi email chúc mừng đổi hạng (best-effort — không chặn phản hồi chính nếu gửi lỗi)
+      // Gửi email báo đổi hạng (best-effort — không chặn phản hồi chính nếu gửi lỗi).
+      // Chỉ dùng lời chúc mừng khi LÊN hạng; tụt hạng thì báo trung tính, không "chúc mừng".
       try {
         const displayName = await getMemberDisplayName(email);
         const greeting = buildGreeting(displayName);
+        const subject = isUpgrade ? `Chúc mừng bạn lên hạng ${tier.name}!` : `Hạng thành viên của bạn đã được cập nhật`;
+        const title = isUpgrade ? `Chúc mừng bạn lên hạng ${tier.name}!` : `Hạng thành viên đã cập nhật`;
+        const bodyText = isUpgrade
+          ? `Bạn vừa thăng hạng từ <strong>${lastSeenTier}</strong> lên <strong>${tier.name}</strong> tại Mạng Lưới Tri Thức Việt Nam. Đăng nhập vào khu vực thành viên, mục "Đặc Quyền" để xem các quyền lợi mới của bạn.`
+          : `Hạng thành viên của bạn đã được cập nhật từ <strong>${lastSeenTier}</strong> thành <strong>${tier.name}</strong>. Đăng nhập vào khu vực thành viên để xem chi tiết.`;
         await sendTrackedEmail(context, {
           to: email,
-          subject: `Chúc mừng bạn lên hạng ${tier.name}!`,
+          subject,
           type: "tier_change",
-          eyebrow: "Thăng Hạng Thành Viên",
-          title: `Chúc mừng bạn lên hạng ${tier.name}!`,
-          bodyHtml: `<p style="margin:0 0 16px;">${greeting}</p><p style="margin:0;">Bạn vừa thăng hạng từ <strong>${lastSeenTier}</strong> lên <strong>${tier.name}</strong> tại Mạng Lưới Tri Thức Việt Nam. Đăng nhập vào khu vực thành viên, mục "Đặc Quyền" để xem các quyền lợi mới của bạn.</p>`,
-          ctas: [{ label: "Xem Đặc Quyền Mới", href: SITE_URL, style: "primary" }]
+          eyebrow: isUpgrade ? "Thăng Hạng Thành Viên" : "Cập Nhật Hạng Thành Viên",
+          title,
+          bodyHtml: `<p style="margin:0 0 16px;">${greeting}</p><p style="margin:0;">${bodyText}</p>`,
+          ctas: [{ label: "Xem Trong Trang Thành Viên", href: SITE_URL, style: "primary" }]
         });
       } catch (e) {
-        context.log.error("Gửi email chúc mừng đổi hạng thất bại:", e.message);
+        context.log.error("Gửi email đổi hạng thất bại:", e.message);
       }
     }
 
@@ -379,9 +390,10 @@ module.exports = async function (context, req) {
       success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions, giftCatalog, invoices,
       totalTuitionPaid,
       tier: { name: tier.name, icon: tier.icon, color: tier.color },
-      isVip: isVipTotal(totalTuitionPaid),
+      isVip: tierRank(tier.name) >= tierRank("Vàng"),
       loyaltyPoints,
       tierChanged,
+      isUpgrade,
       previousTierName: tierChanged ? lastSeenTier : null
     };
   } catch (err) {

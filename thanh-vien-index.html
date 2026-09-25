@@ -412,7 +412,7 @@
     <div style="background:#fff; border-radius:20px; max-width:420px; width:100%; padding:2.2rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,0.35); text-align:center; position:relative; overflow:hidden;">
       <div id="tierChangeConfetti" style="position:absolute; top:0; left:0; right:0; height:6px;"></div>
       <div id="tierChangeIcon" style="width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0.6rem auto 1.1rem;"></div>
-      <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">🎉 Chúc mừng bạn lên hạng mới!</h2>
+      <h2 id="tierChangeTitle" style="font-size:1.25rem; margin-bottom:0.4rem;">🎉 Chúc mừng bạn lên hạng mới!</h2>
       <p id="tierChangeText" style="color:var(--text-muted); font-size:0.92rem; margin-bottom:1.4rem; line-height:1.6;"></p>
       <button type="button" class="btn" id="tierChangeCloseBtn" style="width:100%;">Đã hiểu, cảm ơn!</button>
     </div>
@@ -781,20 +781,30 @@
     }
 
     // Mục 4: hiện popup chúc mừng đổi hạng, rồi báo cho server biết đã xem (để không lặp lại)
-    function showTierChangePopup(newTier, previousTierName) {
+    function showTierChangePopup(newTier, previousTierName, isUpgrade) {
       // Dùng bảng màu "đậm" của TIER_PERKS (thiết kế cho nền sáng) thay vì màu nhạt của newTier
       // (vốn dành cho badge trên nền tối ở sidebar) — nếu không, icon sẽ mờ nhạt/khó thấy trên popup nền trắng.
       const richTier = TIER_PERKS.find(t => t.name === newTier.name) || newTier;
       const overlay = document.getElementById('tierChangeOverlay');
-      document.getElementById('tierChangeConfetti').style.background = `linear-gradient(90deg, ${richTier.color}, #fff, ${richTier.color})`;
+      // Chỉ hiện hiệu ứng confetti + lời chúc mừng khi THẬT SỰ lên hạng — tụt hạng thì báo trung tính, không chúc mừng.
+      document.getElementById('tierChangeConfetti').style.background = isUpgrade
+        ? `linear-gradient(90deg, ${richTier.color}, #fff, ${richTier.color})`
+        : '#e2e8f0';
+      document.getElementById('tierChangeTitle').textContent = isUpgrade ? '🎉 Chúc mừng bạn lên hạng mới!' : 'Hạng thành viên đã cập nhật';
       const iconEl = document.getElementById('tierChangeIcon');
-      iconEl.style.background = `${richTier.color}22`;
-      iconEl.style.color = richTier.color;
-      iconEl.style.border = `2px solid ${richTier.color}55`;
+      // Nền màu ĐẶC (không phải màu nhạt pha alpha) + icon trắng -> luôn tương phản tốt dù màu hạng đậm hay nhạt.
+      iconEl.style.background = richTier.color;
+      iconEl.style.color = '#ffffff';
+      iconEl.style.border = 'none';
+      iconEl.style.boxShadow = `0 6px 18px ${richTier.color}66`;
       iconEl.innerHTML = `<i class="fa-solid ${richTier.icon}"></i>`;
-      document.getElementById('tierChangeText').innerHTML = previousTierName
-        ? `Bạn vừa thăng hạng từ <strong>${previousTierName}</strong> lên <strong style="color:${richTier.color};">${richTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi mới của bạn.`
-        : `Bạn hiện đang ở hạng <strong style="color:${richTier.color};">${richTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi của hạng này.`;
+      if (isUpgrade) {
+        document.getElementById('tierChangeText').innerHTML = previousTierName
+          ? `Bạn vừa thăng hạng từ <strong>${previousTierName}</strong> lên <strong style="color:${richTier.color};">${richTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi mới của bạn.`
+          : `Bạn hiện đang ở hạng <strong style="color:${richTier.color};">${richTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi của hạng này.`;
+      } else {
+        document.getElementById('tierChangeText').innerHTML = `Hạng thành viên của bạn đã được cập nhật từ <strong>${previousTierName}</strong> thành <strong style="color:${richTier.color};">${richTier.name}</strong>.`;
+      }
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
@@ -916,7 +926,7 @@
 
         const {
           email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [],
-          giftCatalog = [], invoices = [], loyaltyPoints = null, tierChanged = false, previousTierName = null
+          giftCatalog = [], invoices = [], loyaltyPoints = null, tierChanged = false, isUpgrade = false, previousTierName = null
         } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
@@ -941,7 +951,7 @@
 
         // Mục 4: popup thông báo đổi hạng — chỉ hiện đúng 1 lần cho tới khi thành viên xác nhận đã xem
         if (tierChanged) {
-          showTierChangePopup(tier, previousTierName);
+          showTierChangePopup(tier, previousTierName, isUpgrade);
         }
 
         const tierThresholds = TIER_PERKS;

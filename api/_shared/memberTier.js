@@ -1,6 +1,7 @@
 const { getTableClient } = require("./tableStorage");
 
 const TUITION_TABLE = "TuitionPayments";
+const PROFILES_TABLE = "MemberProfiles";
 
 // Nguồn dữ liệu hạng DUY NHẤT phía server — phải khớp với getMembershipTier()/TIER_PERKS
 // trong thanh-vien-index.html (giao diện). Nếu sửa mốc hạng, sửa ở CẢ HAI nơi.
@@ -21,6 +22,11 @@ const TIERS = [
 // Hạng "VIP" (mở khoá giao diện riêng, chữ "VIP", email premium): từ hạng Vàng trở lên.
 const VIP_MIN_TOTAL = 40000000;
 
+// Thời gian bảo lưu hạng kể từ ngày lên hạng: 12 tháng. Trong 12 tháng này, nếu tổng học phí
+// tính ra hạng thấp hơn (vd. do admin sửa/xoá 1 khoản học phí), thành viên vẫn được GIỮ hạng cũ,
+// không bị tụt hạng ngay. Hết 12 tháng mới tính lại đúng theo tổng học phí thực tế tại thời điểm đó.
+const TIER_RETENTION_MONTHS = 12;
+
 function getTierByTotal(totalPaid) {
   let current = TIERS[0];
   for (const t of TIERS) {
@@ -29,8 +35,18 @@ function getTierByTotal(totalPaid) {
   return current;
 }
 
+function tierRank(name) {
+  return TIERS.findIndex(t => t.name === name);
+}
+
 function isVipTotal(totalPaid) {
   return totalPaid >= VIP_MIN_TOTAL;
+}
+
+function addMonths(date, months) {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + months);
+  return d;
 }
 
 // Tính điểm tích lũy hiện có, dựa trên TỔNG học phí đã đóng và hạng hiện tại (giống cách
@@ -58,14 +74,77 @@ async function getTotalTuitionPaid(email) {
   return totalPaid;
 }
 
-// Tiện ích cho những nơi cần biết ngay hạng + điểm của 1 email (email hạng màu, popup đổi hạng...)
+// Áp dụng logic bảo lưu hạng 12 tháng, THUẦN TÍNH TOÁN (không đọc/ghi bảng) — cho input là hồ sơ
+// đã đọc sẵn (profile.tierLockedName / tierLockedAt, có thể chưa có) + hạng tính từ tổng học phí.
+// Trả về { tier, isUpgrade, needsLockUpdate, newLockedName, newLockedAtIso }.
+function resolveEffectiveTier(rawTier, lockedName, lockedAtIso) {
+  const rawIdx = tierRank(rawTier.name);
+  const lockedIdx = lockedName ? tierRank(lockedName) : -1;
+  const lockedAt = lockedAtIso ? new Date(lockedAtIso) : null;
+  const now = new Date();
+  const lockExpired = !lockedAt || now >= addMonths(lockedAt, TIER_RETENTION_MONTHS);
+
+  if (lockedIdx === -1) {
+    // Chưa từng có mốc khoá -> khoá ngay theo hạng hiện tại, không có gì để "lên/xuống" so sánh.
+    return { tier: rawTier, isUpgrade: false, needsLockUpdate: true, newLockedName: rawTier.name, newLockedAtIso: now.toISOString() };
+  }
+  if (rawIdx > lockedIdx) {
+    // Lên hạng thật -> khoá lại theo hạng mới, đồng hồ 12 tháng chạy lại từ đầu.
+    return { tier: rawTier, isUpgrade: true, needsLockUpdate: true, newLockedName: rawTier.name, newLockedAtIso: now.toISOString() };
+  }
+  if (rawIdx < lockedIdx) {
+    if (!lockExpired) {
+      // Còn trong 12 tháng bảo lưu -> giữ nguyên hạng đã khoá, KHÔNG tụt hạng.
+      return { tier: TIERS[lockedIdx], isUpgrade: false, needsLockUpdate: false, newLockedName: lockedName, newLockedAtIso: lockedAtIso };
+    }
+    // Hết hạn bảo lưu -> tụt hạng thật theo đúng tổng học phí hiện tại, khoá lại mốc mới.
+    return { tier: rawTier, isUpgrade: false, needsLockUpdate: true, newLockedName: rawTier.name, newLockedAtIso: now.toISOString() };
+  }
+  // Bằng nhau -> không đổi gì.
+  return { tier: rawTier, isUpgrade: false, needsLockUpdate: false, newLockedName: lockedName, newLockedAtIso: lockedAtIso };
+}
+
+// Đọc hồ sơ (tierLockedName/tierLockedAt) + tổng học phí, áp dụng bảo lưu hạng, GHI LẠI mốc khoá
+// nếu cần. Dùng ở member-data — nơi hạng hiển thị cho thành viên cần chính xác và có ghi bảng.
+async function getEffectiveTierForMember(email, totalPaid) {
+  const rawTier = getTierByTotal(totalPaid);
+  const profilesTable = await getTableClient(PROFILES_TABLE);
+  let lockedName = null, lockedAtIso = null;
+  try {
+    const p = await profilesTable.getEntity("profile", email);
+    lockedName = p.tierLockedName || null;
+    lockedAtIso = p.tierLockedAt || null;
+  } catch (e) { /* chưa có hồ sơ hoặc chưa có mốc khoá -> coi như chưa có */ }
+
+  const result = resolveEffectiveTier(rawTier, lockedName, lockedAtIso);
+  if (result.needsLockUpdate) {
+    try {
+      await profilesTable.upsertEntity({
+        partitionKey: "profile", rowKey: email,
+        tierLockedName: result.newLockedName, tierLockedAt: result.newLockedAtIso
+      }, "Merge");
+    } catch (e) { /* best-effort, không chặn phản hồi chính */ }
+  }
+  return result; // { tier, isUpgrade, ... }
+}
+
+// Tiện ích CHỈ ĐỌC cho những nơi cần biết ngay hạng + điểm của 1 email (email hạng màu...) —
+// không ghi lại mốc khoá, tránh tạo hồ sơ rác cho các email không phải thành viên thật sự.
 async function getTierInfoForEmail(email) {
   const totalPaid = await getTotalTuitionPaid(email);
-  const tier = getTierByTotal(totalPaid);
+  const rawTier = getTierByTotal(totalPaid);
+  let lockedName = null, lockedAtIso = null;
+  try {
+    const profilesTable = await getTableClient(PROFILES_TABLE);
+    const p = await profilesTable.getEntity("profile", email);
+    lockedName = p.tierLockedName || null;
+    lockedAtIso = p.tierLockedAt || null;
+  } catch (e) { /* không có hồ sơ -> dùng thẳng hạng tính từ tổng học phí */ }
+  const { tier } = resolveEffectiveTier(rawTier, lockedName, lockedAtIso);
   return {
     totalPaid,
     tier,
-    isVip: isVipTotal(totalPaid),
+    isVip: tierRank(tier.name) >= tierRank("Vàng"),
     points: calculatePoints(totalPaid, tier)
   };
 }
@@ -73,10 +152,14 @@ async function getTierInfoForEmail(email) {
 module.exports = {
   TIERS,
   VIP_MIN_TOTAL,
+  TIER_RETENTION_MONTHS,
   getTierByTotal,
+  tierRank,
   isVipTotal,
   calculatePoints,
   describeEarnRate,
   getTotalTuitionPaid,
-  getTierInfoForEmail
+  getTierInfoForEmail,
+  getEffectiveTierForMember,
+  resolveEffectiveTier
 };
