@@ -1,10 +1,10 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { findGift } = require("../_shared/giftCatalog");
+const { getPointsBalance, adjustSpentPoints } = require("../_shared/memberTier");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const SESSION_TABLE = "AuthSessions";
-const TUITION_TABLE = "TuitionPayments";
 const REDEMPTIONS_TABLE = "GiftRedemptions";
 
 function getMemberToken(req) {
@@ -12,6 +12,9 @@ function getMemberToken(req) {
   return header ? header.trim() : null;
 }
 
+// Đổi quà dùng ĐIỂM TÍCH LŨY làm "tiền tệ" — không giới hạn số lần đổi theo hạng, thành viên có
+// thể đổi CÙNG 1 quà nhiều lần miễn còn đủ điểm (điểm bị trừ ngay khi gửi yêu cầu, hoàn lại nếu
+// yêu cầu bị huỷ — xem portal-fulfill-gift-redemption).
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
@@ -51,43 +54,25 @@ module.exports = async function (context, req) {
     }
     const email = session.email;
 
-    // Tính lại tổng học phí đã đóng ngay tại server để đảm bảo đúng điều kiện, không tin dữ liệu từ client
-    const tuitionTable = await getTableClient(TUITION_TABLE);
-    let totalPaid = 0;
-    const iterator = tuitionTable.listEntities({
-      queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
-    });
-    for await (const entity of iterator) {
-      totalPaid += Number(entity.amount) || 0;
-    }
-
-    if (totalPaid < gift.cost) {
+    // Tính lại điểm khả dụng ngay tại server để đảm bảo đúng điều kiện, không tin dữ liệu từ client
+    const { available } = await getPointsBalance(email);
+    if (available < gift.cost) {
       context.res.status = 403;
-      context.res.body = { success: false, message: `Bạn cần tổng học phí tối thiểu ${gift.cost.toLocaleString("vi-VN")}đ để đổi quà này.` };
+      context.res.body = { success: false, message: `Bạn cần ${gift.cost.toLocaleString("vi-VN")} điểm để đổi quà này (hiện có ${available.toLocaleString("vi-VN")} điểm).` };
       return;
     }
 
+    // Trừ điểm NGAY khi gửi yêu cầu (giữ chỗ) — hoàn lại nếu yêu cầu bị huỷ sau đó.
+    await adjustSpentPoints(email, gift.cost);
+
     const redemptionsTable = await getTableClient(REDEMPTIONS_TABLE);
-
-    // Không cho đổi trùng quà đã yêu cầu hoặc đã nhận trước đó
-    const existingIterator = redemptionsTable.listEntities({
-      queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}' and giftId eq '${giftId}'` }
-    });
-    for await (const existing of existingIterator) {
-      if (existing.status !== "cancelled") {
-        context.res.status = 409;
-        context.res.body = { success: false, message: "Bạn đã yêu cầu đổi quà này rồi." };
-        return;
-      }
-    }
-
     const rowKey = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     await redemptionsTable.createEntity({
       partitionKey: email,
       rowKey,
       giftId,
       giftName: gift.name,
-      giftCost: gift.cost,
+      giftCost: gift.cost, // số ĐIỂM đã dùng cho lần đổi này (dùng để hoàn điểm nếu huỷ)
       status: "pending", // pending (Chờ duyệt) -> shipping (Đang vận chuyển) -> fulfilled (Đã trao quà) | cancelled (Huỷ)
       requestedAt: new Date().toISOString()
     });
@@ -102,7 +87,7 @@ module.exports = async function (context, req) {
       eyebrow: "Đổi Quà Tặng",
       title: "Đã ghi nhận yêu cầu",
       bodyHtml: `<p style="margin:0 0 16px;">${greeting}</p>
-        <p style="margin:0 0 16px;">Chúng tôi đã ghi nhận yêu cầu đổi quà <strong>${gift.name}</strong> của bạn — trạng thái hiện tại: <strong>Chờ duyệt</strong>. Đội ngũ sẽ xét duyệt và cập nhật trạng thái sớm nhất.</p>`
+        <p style="margin:0 0 16px;">Chúng tôi đã ghi nhận yêu cầu đổi quà <strong>${gift.name}</strong> của bạn (đã trừ <strong>${gift.cost.toLocaleString("vi-VN")} điểm</strong>) — trạng thái hiện tại: <strong>Chờ duyệt</strong>. Đội ngũ sẽ xét duyệt và cập nhật trạng thái sớm nhất.</p>`
     });
 
     context.res.status = 200;

@@ -1054,7 +1054,7 @@
           <div style="font-size:0.82rem; font-weight:700; color:#fff;">${profile.fullName || email}</div>
           <div style="font-size:0.72rem; color:#94a3b8; margin-top:0.1rem;">${email}</div>
           <div class="tier-badge" style="background:${tier.bg}; color:${tier.color};"><i class="fa-solid ${tier.icon}"></i> ${tier.name}</div>
-          ${loyaltyPoints ? `<div style="margin-top:0.4rem; font-size:0.74rem; color:#e2e8f0;"><i class="fa-solid fa-coins" style="color:#facc15;"></i> ${loyaltyPoints.total.toLocaleString('vi-VN')} điểm tích lũy</div>` : ''}
+          ${loyaltyPoints ? `<div style="margin-top:0.4rem; font-size:0.74rem; color:#e2e8f0;"><i class="fa-solid fa-coins" style="color:#facc15;"></i> ${loyaltyPoints.available.toLocaleString('vi-VN')} điểm khả dụng</div>` : ''}
         `;
 
         // Mục 4: popup thông báo đổi hạng — chỉ hiện đúng 1 lần cho tới khi thành viên xác nhận đã xem
@@ -1082,11 +1082,11 @@
             </div>
           </div>
           ${loyaltyPoints ? `
-            <div style="display:flex; align-items:center; gap:0.8rem; background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:0.9rem 1.1rem; margin-bottom:1.2rem;">
+            <div style="display:flex; align-items:center; gap:0.8rem; background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:0.9rem 1.1rem; margin-bottom:1.2rem; flex-wrap:wrap;">
               <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="fa-solid fa-coins"></i></div>
               <div>
-                <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.total.toLocaleString('vi-VN')} điểm</div>
-                <div style="font-size:0.78rem; color:#92651b;">Điểm tích lũy hiện có — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
+                <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.available.toLocaleString('vi-VN')} điểm khả dụng</div>
+                <div style="font-size:0.78rem; color:#92651b;">Đã tích lũy ${loyaltyPoints.earned.toLocaleString('vi-VN')} điểm, đã dùng ${loyaltyPoints.spent.toLocaleString('vi-VN')} điểm — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
               </div>
             </div>` : ''}
           ${nextTier ? `
@@ -1290,8 +1290,11 @@
           ? `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;">Hiện chưa có quà tặng nào trong danh mục.</div>`
           : `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;">
           ${giftCatalog.map(g => {
-            const existingRequest = giftRedemptions.find(r => r.giftId === g.id && r.status !== 'cancelled');
-            const isEligible = totalTuitionPaid >= g.cost;
+            const availablePoints = loyaltyPoints ? loyaltyPoints.available : 0;
+            const isEligible = availablePoints >= g.cost;
+            // Không giới hạn "mỗi quà chỉ đổi 1 lần" — có thể đổi lại cùng 1 quà nhiều lần nếu còn đủ điểm.
+            // Các yêu cầu đang xử lý xem đầy đủ ở mục "Lịch sử nhận quà" bên dưới.
+            const pendingCount = giftRedemptions.filter(r => r.giftId === g.id && r.status !== 'cancelled' && r.status !== 'fulfilled').length;
             const imageHtml = g.imageUrl
               ? `<div style="width:100%; aspect-ratio:1.4; border-radius:12px; overflow:hidden; margin-bottom:0.8rem; background:#f1f5f9;"><img src="${g.imageUrl}" alt="${g.name}" style="width:100%; height:100%; object-fit:cover;"></div>`
               : `<div style="width:52px; height:52px; border-radius:14px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin:0 auto 0.8rem;"><i class="fa-solid ${g.icon}"></i></div>`;
@@ -1299,31 +1302,41 @@
               <div class="inner-card" style="border-radius:16px; padding:1.3rem; text-align:center; ${isEligible ? '' : 'opacity:0.6;'}">
                 ${imageHtml}
                 <div style="font-size:0.95rem; font-weight:800; color:var(--text-dark); margin-bottom:0.3rem;">${g.name}</div>
-                <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.9rem;">Cần tổng học phí ${g.cost.toLocaleString('vi-VN')}đ</div>
-                ${existingRequest
-                  ? `<div style="display:flex; justify-content:center; margin-top:0.3rem;">${giftStepperHtml(existingRequest.status)}</div>`
-                  : (isEligible
-                      ? `<button type="button" class="btn" style="padding:0.5rem 1.1rem; font-size:0.85rem;" onclick="requestGift('${g.id}')">Yêu Cầu Đổi Quà</button>`
-                      : `<span style="font-size:0.78rem; color:var(--text-muted);">Cần đóng thêm ${(g.cost - totalTuitionPaid).toLocaleString('vi-VN')}đ</span>`)}
+                <div style="font-size:0.78rem; color:#a16207; font-weight:700; margin-bottom:0.9rem;"><i class="fa-solid fa-coins"></i> ${g.cost.toLocaleString('vi-VN')} điểm</div>
+                ${isEligible
+                  ? `<button type="button" class="btn" style="padding:0.5rem 1.1rem; font-size:0.85rem;" onclick="requestGift('${g.id}')">Yêu Cầu Đổi Quà</button>`
+                  : `<span style="font-size:0.78rem; color:var(--text-muted);">Cần thêm ${(g.cost - availablePoints).toLocaleString('vi-VN')} điểm</span>`}
+                ${pendingCount > 0 ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.5rem;">Đang có ${pendingCount} yêu cầu chờ xử lý cho quà này</div>` : ''}
               </div>`;
           }).join('')}
         </div>`;
 
-        // Lịch sử điểm: mỗi khoản học phí quy đổi ra điểm theo đúng tốc độ tích điểm của hạng hiện tại
-        // (cộng dồn ra đúng bằng loyaltyPoints.total). Hiện chưa có cơ chế trừ điểm (đổi quà dùng
-        // mốc tổng học phí, không trừ điểm), nên lịch sử hiện chỉ có các dòng "+".
-        const pointsHistoryRows = [...tuitionPayments]
-          .sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt))
-          .map(p => {
-            const earned = loyaltyPoints ? calcPointsForAmount(Number(p.amount) || 0, tier) : 0;
-            return `
+        // Lịch sử điểm: mỗi khoản học phí quy đổi ra điểm "+" theo tốc độ tích điểm của hạng hiện tại,
+        // và mỗi lần đổi quà (chưa huỷ) là 1 dòng "-" tương ứng số điểm đã dùng. Cộng dồn đúng bằng
+        // loyaltyPoints.available (đã trừ) — khớp chính xác với server, không cần gọi thêm API riêng.
+        const pointsEarnRows = tuitionPayments.map(p => ({
+          date: p.paidAt,
+          label: `${p.studentName || '—'}${p.program ? ` — ${p.program}` : ''}`,
+          amountLabel: `${Number(p.amount || 0).toLocaleString('vi-VN')}đ`,
+          points: loyaltyPoints ? calcPointsForAmount(Number(p.amount) || 0, tier) : 0,
+          sign: '+'
+        }));
+        const pointsSpendRows = giftRedemptions.filter(r => r.status !== 'cancelled').map(r => ({
+          date: r.requestedAt,
+          label: `Đổi quà: ${r.giftName}`,
+          amountLabel: '—',
+          points: Number(r.giftCost) || 0,
+          sign: '-'
+        }));
+        const pointsHistoryRows = [...pointsEarnRows, ...pointsSpendRows]
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .map(row => `
               <tr style="border-top:1px solid var(--border);">
-                <td style="padding:0.6rem 0.5rem; white-space:nowrap;">${formatDate(p.paidAt)}</td>
-                <td style="padding:0.6rem 0.5rem;">${p.studentName || '—'}${p.program ? ` — ${p.program}` : ''}</td>
-                <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap;">${Number(p.amount || 0).toLocaleString('vi-VN')}đ</td>
-                <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap; font-weight:700; color:#15803d;">+${earned.toLocaleString('vi-VN')} điểm</td>
-              </tr>`;
-          }).join('');
+                <td style="padding:0.6rem 0.5rem; white-space:nowrap;">${formatDate(row.date)}</td>
+                <td style="padding:0.6rem 0.5rem;">${row.label}</td>
+                <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap;">${row.amountLabel}</td>
+                <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap; font-weight:700; color:${row.sign === '+' ? '#15803d' : '#b91c1c'};">${row.sign}${row.points.toLocaleString('vi-VN')} điểm</td>
+              </tr>`).join('');
         const pointsHistoryHtml = pointsHistoryRows
           ? `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.76rem; text-transform:uppercase;">
@@ -1656,14 +1669,14 @@
           <div class="member-panel" id="memberPanel-gifts">
             <div class="card">
               <h2><i class="fa-solid fa-gift"></i> Đổi Quà Tặng</h2>
-              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Quà tặng được mở khoá dựa trên tổng học phí đã đóng tại trung tâm (hiện tại: <strong style="color:#15803d;">${totalTuitionPaid.toLocaleString('vi-VN')}đ</strong>). Đội ngũ sẽ liên hệ để trao quà sau khi bạn gửi yêu cầu.</p>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Quà tặng đổi bằng ĐIỂM TÍCH LŨY — có thể đổi lại cùng 1 quà nhiều lần miễn còn đủ điểm, không giới hạn theo hạng.</p>
 
               ${loyaltyPoints ? `
               <div style="display:flex; align-items:center; gap:0.8rem; background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:0.9rem 1.1rem; margin-bottom:1.2rem; flex-wrap:wrap;">
                 <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid fa-coins"></i></div>
                 <div style="flex:1; min-width:180px;">
-                  <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.total.toLocaleString('vi-VN')} điểm</div>
-                  <div style="font-size:0.78rem; color:#92651b;">Điểm tích lũy hiện có — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
+                  <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.available.toLocaleString('vi-VN')} điểm khả dụng</div>
+                  <div style="font-size:0.78rem; color:#92651b;">Đã tích lũy ${loyaltyPoints.earned.toLocaleString('vi-VN')} điểm, đã dùng ${loyaltyPoints.spent.toLocaleString('vi-VN')} điểm — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
                 </div>
               </div>` : ''}
 

@@ -61,6 +61,38 @@ function describeEarnRate(tier) {
   return tier.earnRate.mode === "%" ? `${tier.earnRate.value}%` : `${tier.earnRate.value}x`;
 }
 
+// Đọc số điểm ĐÃ DÙNG (đổi quà) của 1 email — lưu cộng dồn trong MemberProfiles.spentPoints.
+async function getSpentPoints(email) {
+  try {
+    const profilesTable = await getTableClient(PROFILES_TABLE);
+    const p = await profilesTable.getEntity("profile", email);
+    return Number(p.spentPoints) || 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+// Cộng/trừ vào số điểm đã dùng (delta âm = hoàn điểm khi huỷ đổi quà). Không cho âm tổng đã dùng.
+async function adjustSpentPoints(email, delta) {
+  const profilesTable = await getTableClient(PROFILES_TABLE);
+  const current = await getSpentPoints(email);
+  const next = Math.max(0, current + delta);
+  await profilesTable.upsertEntity({ partitionKey: "profile", rowKey: email, spentPoints: next }, "Merge");
+  return next;
+}
+
+// Điểm tích lũy KHẢ DỤNG để đổi quà = điểm đã tích lũy (tính từ tổng học phí) - điểm đã dùng.
+// Đây là nguồn điểm DUY NHẤT dùng để đổi quà — quà tặng đổi bằng ĐIỂM, không phải mốc học phí,
+// và có thể đổi nhiều lần miễn đủ điểm (không giới hạn "mỗi hạng chỉ đổi 1 lần").
+async function getPointsBalance(email) {
+  const totalPaid = await getTotalTuitionPaid(email);
+  const tier = getTierByTotal(totalPaid);
+  const earned = calculatePoints(totalPaid, tier);
+  const spent = await getSpentPoints(email);
+  const available = Math.max(0, earned - spent);
+  return { earned, spent, available, tier, totalPaid };
+}
+
 // Tổng học phí đã đóng của 1 email — dùng chung cho tính hạng/điểm ở nhiều API.
 async function getTotalTuitionPaid(email) {
   const tuitionTable = await getTableClient(TUITION_TABLE);
@@ -161,5 +193,8 @@ module.exports = {
   getTotalTuitionPaid,
   getTierInfoForEmail,
   getEffectiveTierForMember,
-  resolveEffectiveTier
+  resolveEffectiveTier,
+  getSpentPoints,
+  adjustSpentPoints,
+  getPointsBalance
 };

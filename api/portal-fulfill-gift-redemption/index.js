@@ -2,6 +2,7 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+const { adjustSpentPoints } = require("../_shared/memberTier");
 
 const REDEMPTIONS_TABLE = "GiftRedemptions";
 
@@ -27,7 +28,7 @@ function buildStatusBodyHtml(status, giftName, greeting, reason) {
   const bodyByStatus = {
     shipping: `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đang được <strong>chuẩn bị và vận chuyển</strong>. Chúng tôi sẽ liên hệ khi quà sẵn sàng trao tận nơi.</p>`,
     fulfilled: `<p style="margin:0;">Quà tặng <strong>${giftName}</strong> của bạn đã được <strong>trao thành công</strong>. Cảm ơn sự đồng hành của bạn cùng Mạng Lưới Tri Thức Việt Nam!</p>`,
-    cancelled: `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đã bị <strong>huỷ</strong>.${reason ? ` Lý do: ${reason}` : ""}</p><p style="margin:10px 0 0;">Nếu có thắc mắc, vui lòng liên hệ đội ngũ hỗ trợ.</p>`
+    cancelled: `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đã bị <strong>huỷ</strong>.${reason ? ` Lý do: ${reason}` : ""}</p><p style="margin:10px 0 0;">Số điểm đã dùng cho yêu cầu này đã được hoàn lại vào tài khoản của bạn. Nếu có thắc mắc, vui lòng liên hệ đội ngũ hỗ trợ.</p>`
   };
   return `<p style="margin:0 0 16px;">${greeting}</p>
     <div style="text-align:center;margin:0 0 18px;">
@@ -90,6 +91,15 @@ module.exports = async function (context, req) {
     if (status === "cancelled" && reason) updatePayload.cancelReason = reason;
 
     await redemptionsTable.updateEntity(updatePayload, "Merge");
+
+    // Huỷ yêu cầu -> hoàn lại đúng số điểm đã trừ lúc gửi yêu cầu (giftCost lưu là số điểm, không phải VNĐ).
+    if (status === "cancelled") {
+      try {
+        await adjustSpentPoints(email, -(Number(entity.giftCost) || 0));
+      } catch (e) {
+        context.log.error("Lỗi hoàn điểm khi huỷ đổi quà:", e.message);
+      }
+    }
 
     const displayName = await getMemberDisplayName(email);
     const greeting = buildGreeting(displayName);

@@ -6,13 +6,14 @@ const PARTITION = "gift";
 
 // Danh mục quà tặng ban đầu — dùng để "gieo" (seed) bảng GiftCatalog lần đầu tiên nếu bảng
 // còn trống, để không phá vỡ các bản ghi GiftRedemptions cũ đang tham chiếu đúng các id này.
+// LƯU Ý: "cost" là số ĐIỂM TÍCH LŨY cần có để đổi (không còn là mốc tổng học phí VNĐ nữa).
 const SEED_ITEMS = [
-  { id: "but-may", name: "Bút máy cao cấp", cost: 5000000, icon: "fa-pen-fancy" },
-  { id: "vo-o-ly", name: "Bộ vở ô ly (10 quyển)", cost: 10000000, icon: "fa-book" },
-  { id: "balo", name: "Balo học sinh", cost: 20000000, icon: "fa-bag-shopping" },
-  { id: "buoi-hoc-mien-phi", name: "1 buổi học miễn phí", cost: 35000000, icon: "fa-chalkboard-user" },
-  { id: "bo-dung-cu", name: "Bộ dụng cụ học tập cao cấp", cost: 50000000, icon: "fa-box-open" },
-  { id: "khoa-hoc-mien-phi", name: "Miễn phí học phí 1 kỳ", cost: 80000000, icon: "fa-graduation-cap" }
+  { id: "but-may", name: "Bút máy cao cấp", cost: 150, icon: "fa-pen-fancy" },
+  { id: "vo-o-ly", name: "Bộ vở ô ly (10 quyển)", cost: 300, icon: "fa-book" },
+  { id: "balo", name: "Balo học sinh", cost: 600, icon: "fa-bag-shopping" },
+  { id: "buoi-hoc-mien-phi", name: "1 buổi học miễn phí", cost: 1000, icon: "fa-chalkboard-user" },
+  { id: "bo-dung-cu", name: "Bộ dụng cụ học tập cao cấp", cost: 1500, icon: "fa-box-open" },
+  { id: "khoa-hoc-mien-phi", name: "Miễn phí học phí 1 kỳ", cost: 2500, icon: "fa-graduation-cap" }
 ];
 
 async function seedIfEmpty(table) {
