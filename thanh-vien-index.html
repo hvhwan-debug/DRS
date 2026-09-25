@@ -116,16 +116,25 @@
     .page-wrap { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
 
     .welcome-banner {
-      background: var(--blue-grad-primary);
-      border-radius: 22px; padding: 2.5rem 2rem; color: #fff; margin-bottom: 2rem;
-      box-shadow: var(--shadow-soft); position: relative; overflow: hidden;
+      background:
+        linear-gradient(105deg, rgba(11,17,32,0.94) 0%, rgba(11,17,32,0.78) 42%, rgba(11,17,32,0.35) 68%, rgba(11,17,32,0.05) 100%),
+        url('images/co-giao-huong-dan-hoc-sinh.jpg');
+      background-size: cover; background-position: center 30%;
+      border-radius: 22px; padding: 2.6rem 2rem; color: #fff; margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft); position: relative; overflow: hidden; min-height: 190px;
+      display: flex; flex-direction: column; justify-content: center;
     }
     .welcome-banner::after {
       content: ""; position: absolute; top: -60%; right: -10%; width: 340px; height: 340px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(201,162,39,0.28) 0%, transparent 70%); pointer-events: none;
+      background: radial-gradient(circle, rgba(201,162,39,0.30) 0%, transparent 70%); pointer-events: none;
     }
-    .welcome-banner h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; position: relative; }
-    .welcome-banner p { color: #e0f2fe; font-size: 0.98rem; position: relative; }
+    .welcome-banner h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; position: relative; text-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .welcome-banner p { color: #e6f0fb; font-size: 0.98rem; position: relative; max-width: 520px; }
+    .welcome-banner .banner-tag {
+      display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(201,162,39,0.18);
+      border: 1px solid rgba(201,162,39,0.5); color: #f6ecc9; font-size: 0.76rem; font-weight: 700;
+      padding: 0.3rem 0.8rem; border-radius: 999px; margin-bottom: 0.9rem; position: relative; width: fit-content;
+    }
 
     .card {
       background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem;
@@ -516,7 +525,7 @@
           return;
         }
 
-        const { email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [] } = payload;
+        const { email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [] } = payload;
         document.getElementById('headerActions').style.display = 'block';
 
         const isProfileIncomplete = !profile.fullName || !profile.phone || !profile.dob || !profile.address;
@@ -658,6 +667,20 @@
             </table>
           </div>`;
 
+        const scheduleHtml = schedules.length > 0
+          ? `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:1rem;">
+              ${schedules.map(s => `
+                <div style="border:1px solid var(--border); border-radius:16px; padding:1.2rem; background:linear-gradient(160deg,#fff 0%,#f8fbff 100%);">
+                  <div style="font-size:0.78rem; font-weight:700; color:#0284c7; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:0.4rem;">${s.program}</div>
+                  <div style="font-size:1.3rem; font-weight:800; color:var(--text-dark); margin-bottom:0.3rem;">${s.startTime} - ${s.endTime}</div>
+                  <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:0.7rem;"><i class="fa-solid fa-calendar-week"></i> ${s.days}</div>
+                  ${s.location ? `<div style="font-size:0.86rem; color:var(--text-dark); margin-bottom:0.25rem;"><i class="fa-solid fa-location-dot" style="color:#c9a227; width:16px;"></i> ${s.location}</div>` : ''}
+                  ${s.teacherName ? `<div style="font-size:0.86rem; color:var(--text-dark); margin-bottom:0.25rem;"><i class="fa-solid fa-chalkboard-user" style="color:#c9a227; width:16px;"></i> ${s.teacherName}</div>` : ''}
+                  ${s.note ? `<div style="font-size:0.82rem; color:var(--text-muted); margin-top:0.5rem; padding-top:0.5rem; border-top:1px dashed var(--border);">${s.note}</div>` : ''}
+                </div>`).join('')}
+            </div>`
+          : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-calendar-days"></i> Chưa có lịch học nào được thiết lập cho chương trình bạn đang tham gia.</div>`;
+
         function assessmentBadgeStyle(type) {
           if (type === 'Đánh giá đầu vào') return 'background:#e0f2fe; color:#0369a1;';
           if (type === 'Đánh giá đầu ra') return 'background:#dcfce7; color:#15803d;';
@@ -748,12 +771,14 @@
         container.innerHTML = `
           ${systemNoticeHtml}
           <div class="welcome-banner">
+            <span class="banner-tag"><i class="fa-solid fa-star"></i> Khu vực thành viên</span>
             <h1>Xin chào${profile.fullName ? ', ' + profile.fullName : ''}! 👋</h1>
-            <p>Chào mừng bạn quay trở lại khu vực thành viên của Mạng Lưới Tri Thức Việt Nam.</p>
+            <p>Đồng hành cùng con em trên hành trình học tập — theo dõi lịch học, điểm số và đóng góp của bạn tại Mạng Lưới Tri Thức Việt Nam.</p>
           </div>
 
           <div class="member-tabs">
             <button class="member-tab-btn active" data-tab="account" onclick="switchMemberTab('account')"><i class="fa-solid fa-id-card"></i> Tài Khoản</button>
+            <button class="member-tab-btn" data-tab="schedule" onclick="switchMemberTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Lịch Học</button>
             <button class="member-tab-btn" data-tab="activity" onclick="switchMemberTab('activity')"><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động</button>
             <button class="member-tab-btn" data-tab="donations" onclick="switchMemberTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
             <button class="member-tab-btn" data-tab="tuition" onclick="switchMemberTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
@@ -820,6 +845,13 @@
                 <div id="changePasswordAlert" style="display:none; font-size:0.85rem;"></div>
                 <div><button type="submit" class="btn" id="changePasswordBtn">Đổi Mật Khẩu</button></div>
               </form>
+            </div>
+          </div>
+
+          <div class="member-panel" id="memberPanel-schedule">
+            <div class="card">
+              <h2><i class="fa-solid fa-calendar-days"></i> Lịch Học</h2>
+              ${scheduleHtml}
             </div>
           </div>
 
