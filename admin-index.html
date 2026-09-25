@@ -1845,6 +1845,7 @@
         document.getElementById('giftEmpty').style.display = 'none';
         document.getElementById('giftLoading').style.display = 'block';
         loadGifts();
+        if (currentOverviewEmail === decodeURIComponent(emailEnc)) openMemberOverview(emailEnc);
       } catch (err) {
         showGlobalAlert(err.message, true);
       }
@@ -2082,6 +2083,54 @@
       const isOpen = table.style.display === 'block';
       table.style.display = isOpen ? 'none' : 'block';
       chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    function toggleOverviewStudent(safeId) {
+      const body = document.getElementById('overviewStudentBody-' + safeId);
+      const chevron = document.getElementById('overviewStudentChevron-' + safeId);
+      if (!body || !chevron) return;
+      const isOpen = body.style.display === 'block';
+      body.style.display = isOpen ? 'none' : 'block';
+      chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    function setProgramField(formType, programValue) {
+      const select = document.getElementById(formType + 'Program');
+      const customInput = document.getElementById(formType + 'ProgramCustom');
+      if (!select || !programValue) return;
+      const optionExists = Array.from(select.options).some(o => o.value === programValue);
+      if (optionExists) {
+        select.value = programValue;
+        if (customInput) customInput.style.display = 'none';
+      } else {
+        select.value = '__custom__';
+        if (customInput) { customInput.style.display = 'block'; customInput.value = programValue; }
+      }
+    }
+
+    // Mục 6: từ tổng quan thành viên, bấm 1 nút là nhảy thẳng sang tab tương ứng với
+    // email + tên học sinh + chương trình đã điền sẵn — không cần gõ lại thủ công.
+    function quickAction(tab, emailEnc, studentNameEnc, programEnc) {
+      const email = decodeURIComponent(emailEnc);
+      const studentName = decodeURIComponent(studentNameEnc);
+      const program = decodeURIComponent(programEnc);
+      closeMemberOverview();
+      switchTab(tab);
+
+      const formTypeByTab = { tuition: 'tuition', invoices: 'invoice', grades: 'grade' };
+      const formType = formTypeByTab[tab];
+      if (!formType) return;
+
+      const emailField = document.getElementById(formType + 'ParentEmail');
+      const nameField = document.getElementById(formType + 'StudentName');
+      const nameSelect = document.getElementById(formType + 'StudentNameSelect');
+      if (emailField) emailField.value = email;
+      if (nameField) { nameField.value = studentName; nameField.style.display = 'block'; }
+      if (nameSelect) nameSelect.style.display = 'none';
+      setProgramField(formType, program);
+
+      const form = document.getElementById(formType + 'Form');
+      if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function toggleOverviewProfileEdit(showEdit) {
@@ -2450,6 +2499,79 @@
             </div>
           </div>`;
 
+        // Mục 6: mỗi thành viên có thể có nhiều học sinh — đếm rõ số lượng và cho thao tác luôn tại đây,
+        // không cần rời sang tab khác (dữ liệu học phí/điểm/hoá đơn được lọc sẵn theo từng học sinh).
+        const norm = s => (s || '').trim().toLowerCase();
+        const assignedNames = new Set(data.students.map(s => norm(s.studentName)));
+        const unassignedNames = new Set();
+        [...data.grades, ...data.tuitionPayments, ...data.invoices].forEach(r => {
+          if (r.studentName && !assignedNames.has(norm(r.studentName))) unassignedNames.add(r.studentName);
+        });
+
+        function studentCardHtml(studentName, programs, meta) {
+          const key = norm(studentName);
+          const studentGrades = data.grades.filter(g => norm(g.studentName) === key);
+          const studentTuition = data.tuitionPayments.filter(p => norm(p.studentName) === key);
+          const studentInvoices = data.invoices.filter(i => norm(i.studentName) === key);
+          const studentSchedules = data.schedules.filter(s => programs.includes(s.program));
+          const safeId = key.replace(/[^a-z0-9]/g, '') || Math.random().toString(36).slice(2, 8);
+          const totalPaid = studentTuition.reduce((sum, p) => sum + p.amount, 0);
+
+          return `
+            <div class="inner-card" style="border-radius:12px; padding:0; margin-bottom:0.7rem; overflow:hidden;">
+              <div onclick="toggleOverviewStudent('${safeId}')" style="cursor:pointer; padding:0.8rem 1rem; background:#f8fafc; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                <div>
+                  <strong style="font-size:0.94rem;">${escapeHtml(studentName)}</strong>
+                  ${programs.length ? `<span style="font-size:0.78rem; color:var(--text-muted); margin-left:0.4rem;">${programs.map(escapeHtml).join(', ')}</span>` : ''}
+                  ${meta ? `<div style="font-size:0.76rem; color:var(--text-muted); margin-top:0.15rem;">${meta}</div>` : ''}
+                </div>
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                  <span style="font-size:0.78rem; color:#15803d; font-weight:700;">${totalPaid > 0 ? formatMoney(totalPaid) + ' đã đóng' : ''}</span>
+                  <i class="fa-solid fa-chevron-down" id="overviewStudentChevron-${safeId}" style="font-size:0.8rem; color:var(--text-muted);"></i>
+                </div>
+              </div>
+              <div id="overviewStudentBody-${safeId}" style="display:none; padding:1rem;">
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+                  <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="quickAction('tuition', '${encodeURIComponent(email)}', '${encodeURIComponent(studentName)}', '${encodeURIComponent(programs[0] || '')}')"><i class="fa-solid fa-coins"></i> Thêm Học Phí</button>
+                  <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="quickAction('invoices', '${encodeURIComponent(email)}', '${encodeURIComponent(studentName)}', '${encodeURIComponent(programs[0] || '')}')"><i class="fa-solid fa-file-invoice-dollar"></i> Lập Hoá Đơn</button>
+                  <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="quickAction('grades', '${encodeURIComponent(email)}', '${encodeURIComponent(studentName)}', '${encodeURIComponent(programs[0] || '')}')"><i class="fa-solid fa-graduation-cap"></i> Thêm Điểm</button>
+                </div>
+
+                <div style="margin-bottom:1rem;">
+                  <h5 style="font-size:0.78rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Lịch học (${studentSchedules.length})</h5>
+                  ${studentSchedules.length > 0 ? studentSchedules.map(s => `<div style="font-size:0.86rem; padding:0.35rem 0; border-top:1px solid var(--border);">${escapeHtml(s.program)} — ${escapeHtml(s.days)} ${s.startTime}-${s.endTime}${s.teacherName ? ' — GV: ' + escapeHtml(s.teacherName) : ''}${s.location ? ' — ' + escapeHtml(s.location) : ''}</div>`).join('') : '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có lịch.</div>'}
+                </div>
+
+                <div style="margin-bottom:1rem;">
+                  <h5 style="font-size:0.78rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Học phí (${studentTuition.length})</h5>
+                  ${studentTuition.length > 0 ? studentTuition.map(p => `<div style="font-size:0.86rem; padding:0.35rem 0; border-top:1px solid var(--border); display:flex; justify-content:space-between;"><span>${escapeHtml(p.program)} ${p.period ? '— ' + escapeHtml(p.period) : ''}</span><strong style="color:#15803d;">${formatMoney(p.amount)}</strong></div>`).join('') : '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có khoản học phí nào.</div>'}
+                </div>
+
+                <div style="margin-bottom:1rem;">
+                  <h5 style="font-size:0.78rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Hoá đơn (${studentInvoices.length})</h5>
+                  ${studentInvoices.length > 0 ? studentInvoices.map(i => `<div style="font-size:0.86rem; padding:0.35rem 0; border-top:1px solid var(--border); display:flex; justify-content:space-between;"><span>${escapeHtml(i.invoiceNumber)} — ${formatDate(i.issueDate)}</span><strong>${formatMoney(i.totalAmount)}</strong></div>`).join('') : '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có hoá đơn nào.</div>'}
+                </div>
+
+                <div>
+                  <h5 style="font-size:0.78rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Bảng điểm (${studentGrades.length})</h5>
+                  ${studentGrades.length > 0 ? studentGrades.map(g => `<div style="font-size:0.86rem; padding:0.35rem 0; border-top:1px solid var(--border);">${escapeHtml(g.assessmentType)}${g.term ? ' — Buổi ' + escapeHtml(g.term) : ''} ${g.score != null ? '— <strong style="color:#0369a1;">' + g.score + '/10</strong>' : ''}${g.comment ? ' — ' + escapeHtml(g.comment) : ''}</div>`).join('') : '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có điểm nào.</div>'}
+                </div>
+              </div>
+            </div>`;
+        }
+
+        const studentsHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Học Sinh (${data.students.length})</h4>
+            ${data.students.length > 0
+              ? data.students.map(s => studentCardHtml(s.studentName, s.programs && s.programs.length ? s.programs : (s.program ? [s.program] : []), s.dob ? `Sinh: ${escapeHtml(s.dob)}${s.note ? ' — ' + escapeHtml(s.note) : ''}` : (s.note ? escapeHtml(s.note) : ''))).join('')
+              : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa gán học sinh nào. Vào tab "Học Sinh" để thêm.</div>'}
+            ${unassignedNames.size > 0 ? `
+              <div style="margin-top:0.8rem; padding:0.7rem 0.9rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; font-size:0.82rem; color:#92651b;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Có dữ liệu (điểm/học phí/hoá đơn) ghi nhận cho tên chưa được gán vào danh sách học sinh: <strong>${[...unassignedNames].map(escapeHtml).join(', ')}</strong>. Vào tab "Học Sinh" để gán chính xác.
+              </div>` : ''}
+          </div>`;
+
         const regHtml = `
           <div style="margin-bottom:1.4rem;">
             <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Đơn đăng ký (${data.registrations.length})</h4>
@@ -2515,7 +2637,25 @@
               </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có điểm nào.</div>'}
           </div>`;
 
-        content.innerHTML = profileHtml + regHtml + donHtml + gradeHtml;
+        const giftHtml = `
+          <div style="margin-top:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Đổi Quà (${data.giftRedemptions.length})</h4>
+            ${data.giftRedemptions.length > 0 ? data.giftRedemptions.map(r => {
+              const meta = GIFT_STATUS_META[r.status] || GIFT_STATUS_META.pending;
+              return `
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
+                <div>
+                  <strong>${escapeHtml(r.giftName)}</strong>
+                  <span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:${meta.bg}; color:${meta.color}; margin-left:0.4rem;">${meta.label}</span>
+                  <div style="font-size:0.78rem; color:var(--text-muted);">Yêu cầu: ${formatDate(r.requestedAt)}</div>
+                </div>
+                <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">${giftActionsHtml({ ...r, email })}</div>
+              </div>`;
+            }).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có yêu cầu đổi quà nào.</div>'}
+          </div>`;
+
+        document.getElementById('memberOverviewTitle').textContent = `Tổng quan: ${email} — ${data.students.length} học sinh`;
+        content.innerHTML = profileHtml + studentsHtml + regHtml + donHtml + gradeHtml + giftHtml;
       } catch (err) {
         content.innerHTML = `<div style="color:#dc2626;">${err.message}</div>`;
       }

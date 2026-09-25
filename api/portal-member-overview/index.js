@@ -7,6 +7,11 @@ const PROFILES_TABLE = "MemberProfiles";
 const REGISTRATIONS_TABLE = "Registrations";
 const DONATIONS_TABLE = "Donations";
 const GRADES_TABLE = "Grades";
+const TUITION_TABLE = "TuitionPayments";
+const STUDENTS_TABLE = "Students";
+const SCHEDULE_TABLE = "ClassSchedules";
+const REDEMPTIONS_TABLE = "GiftRedemptions";
+const INVOICES_TABLE = "Invoices";
 
 const FORM_TITLES = {
   contact: "Liên hệ",
@@ -131,8 +136,125 @@ module.exports = async function (context, req) {
       grades.sort((a, b) => new Date(b.recordedAt) - new Date(a.recordedAt));
     } catch (e) {}
 
+    // Học phí đã đóng
+    const tuitionPayments = [];
+    try {
+      const tuitionTable = await getTableClient(TUITION_TABLE);
+      const iterator = tuitionTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of iterator) {
+        tuitionPayments.push({
+          studentName: entity.studentName,
+          program: entity.program,
+          amount: Number(entity.amount) || 0,
+          period: entity.period || "",
+          confirmationStatus: entity.confirmationStatus,
+          paidAt: entity.paidAt
+        });
+      }
+      tuitionPayments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
+    } catch (e) {}
+
+    // Học sinh đã được gán (kèm nhiều chương trình nếu có)
+    const students = [];
+    try {
+      const studentsTable = await getTableClient(STUDENTS_TABLE);
+      const iterator = studentsTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of iterator) {
+        let programs = [];
+        try { programs = JSON.parse(entity.programsJson || "[]"); } catch (e) {}
+        if (!Array.isArray(programs) || programs.length === 0) programs = entity.program ? [entity.program] : [];
+        students.push({
+          id: entity.rowKey,
+          studentName: entity.studentName,
+          dob: entity.dob || "",
+          program: entity.program || "",
+          programs,
+          note: entity.note || ""
+        });
+      }
+    } catch (e) {}
+
+    // Lịch học — chỉ hiện đúng những chương trình mà thành viên/con em đang tham gia
+    const memberPrograms = new Set();
+    registrations.forEach(r => { if (r.data && r.data.chuong_trinh) memberPrograms.add(r.data.chuong_trinh); });
+    grades.forEach(g => { if (g.program) memberPrograms.add(g.program); });
+    tuitionPayments.forEach(p => { if (p.program) memberPrograms.add(p.program); });
+    students.forEach(s => (s.programs.length ? s.programs : [s.program]).forEach(p => p && memberPrograms.add(p)));
+
+    const schedules = [];
+    try {
+      const scheduleTable = await getTableClient(SCHEDULE_TABLE);
+      for await (const entity of scheduleTable.listEntities()) {
+        if (memberPrograms.has(entity.program)) {
+          schedules.push({
+            program: entity.program,
+            days: entity.days,
+            startTime: entity.startTime,
+            endTime: entity.endTime,
+            location: entity.location || "",
+            teacherName: entity.teacherName || "",
+            note: entity.note || ""
+          });
+        }
+      }
+    } catch (e) {}
+
+    // Yêu cầu đổi quà
+    const giftRedemptions = [];
+    try {
+      const redemptionsTable = await getTableClient(REDEMPTIONS_TABLE);
+      const iterator = redemptionsTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of iterator) {
+        giftRedemptions.push({
+          id: entity.rowKey,
+          giftId: entity.giftId,
+          giftName: entity.giftName,
+          status: entity.status || "pending",
+          requestedAt: entity.requestedAt,
+          shippedAt: entity.shippedAt || null,
+          fulfilledAt: entity.fulfilledAt || null,
+          cancelledAt: entity.cancelledAt || null,
+          cancelReason: entity.cancelReason || ""
+        });
+      }
+      giftRedemptions.sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt));
+    } catch (e) {}
+
+    // Hoá đơn
+    const invoices = [];
+    try {
+      const invoicesTable = await getTableClient(INVOICES_TABLE);
+      const iterator = invoicesTable.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+      });
+      for await (const entity of iterator) {
+        let items = [];
+        try { items = JSON.parse(entity.itemsJson || "[]"); } catch (e) {}
+        invoices.push({
+          id: entity.rowKey,
+          invoiceNumber: entity.invoiceNumber,
+          studentName: entity.studentName || "",
+          program: entity.program || "",
+          items,
+          totalAmount: Number(entity.totalAmount) || 0,
+          issueDate: entity.issueDate,
+          note: entity.note || ""
+        });
+      }
+      invoices.sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate));
+    } catch (e) {}
+
     context.res.status = 200;
-    context.res.body = { success: true, email, hasAccount, isBlocked, profile, registrations, donations, grades };
+    context.res.body = {
+      success: true, email, hasAccount, isBlocked, profile, registrations, donations, grades,
+      tuitionPayments, students, schedules, giftRedemptions, invoices
+    };
   } catch (err) {
     context.log.error("Lỗi lấy tổng quan thành viên:", err.message);
     context.res.status = 500;
