@@ -899,10 +899,28 @@
             </table>
           </div>`;
 
-        const tuitionHtml = `<div style="overflow-x:auto;">
+        function tuitionBalanceCellHtml(p) {
+          const balance = (p.amount || 0) - (p.expectedAmount != null ? p.expectedAmount : p.amount);
+          if (balance === 0) return '<span style="font-size:0.78rem; color:var(--text-muted);">Đủ</span>';
+          if (balance < 0) return `<span style="font-size:0.78rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fee2e2; color:#b91c1c;">Thiếu ${Math.abs(balance).toLocaleString('vi-VN')}đ</span>`;
+          return `<span style="font-size:0.78rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#dcfce7; color:#15803d;">Dư ${balance.toLocaleString('vi-VN')}đ</span>`;
+        }
+
+        const totalTuitionBalance = tuitionPayments.reduce((sum, p) => sum + ((p.amount || 0) - (p.expectedAmount != null ? p.expectedAmount : p.amount)), 0);
+        const tuitionBalanceSummaryHtml = totalTuitionBalance !== 0
+          ? `<div style="border-radius:12px; padding:0.8rem 1.1rem; margin-bottom:1rem; ${totalTuitionBalance < 0 ? 'background:#fef2f2; border:1px solid #fecaca;' : 'background:#f0fdf4; border:1px solid #86efac;'}">
+              <span style="font-size:0.9rem; font-weight:700; ${totalTuitionBalance < 0 ? 'color:#991b1b;' : 'color:#15803d;'}">
+                ${totalTuitionBalance < 0
+                  ? `Bạn còn thiếu tổng cộng ${Math.abs(totalTuitionBalance).toLocaleString('vi-VN')}đ học phí.`
+                  : `Bạn đang dư ${totalTuitionBalance.toLocaleString('vi-VN')}đ học phí (sẽ được cấn trừ cho kỳ sau).`}
+              </span>
+            </div>`
+          : '';
+
+        const tuitionHtml = `${tuitionBalanceSummaryHtml}<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Học sinh</th><th style="padding:0.4rem;">Chương trình</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Kỳ học phí</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ngày nộp</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
+                <th style="padding:0.4rem;">Học sinh</th><th style="padding:0.4rem;">Chương trình</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Chênh lệch</th><th style="padding:0.4rem;">Kỳ học phí</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ngày nộp</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
               </tr></thead>
               <tbody>
                 ${tuitionPayments.length > 0 ? tuitionPayments.map(p => `
@@ -910,6 +928,7 @@
                     <td style="padding:0.5rem 0.4rem; font-weight:700;">${p.studentName}</td>
                     <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${p.program || '—'}</td>
                     <td style="padding:0.5rem 0.4rem;"><span style="font-size:0.9rem; font-weight:800; color:#15803d; background:#f0fdf4; border:1px dashed #86efac; border-radius:8px; padding:0.2rem 0.6rem;">${Number(p.amount).toLocaleString('vi-VN')}đ</span></td>
+                    <td style="padding:0.5rem 0.4rem;">${tuitionBalanceCellHtml(p)}</td>
                     <td style="padding:0.5rem 0.4rem;">${p.period || '—'}</td>
                     <td style="padding:0.5rem 0.4rem;">${p.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${formatDate(p.paidAt)}</td>
@@ -918,7 +937,7 @@
                   </tr>
                 `).join('') : `
                   <tr>
-                    <td colspan="8" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
+                    <td colspan="9" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
                       <i class="fa-solid fa-coins"></i> Chưa có khoản học phí nào được ghi nhận với email này.
                     </td>
                   </tr>
