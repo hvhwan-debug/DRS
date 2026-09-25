@@ -249,12 +249,18 @@
             </div>
             <div>
               <label>Chương trình học</label>
-              <select id="tuitionProgram">
+              <select id="tuitionProgram" onchange="toggleCustomProgram('tuition')">
                 <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
                 <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
+                <option value="__custom__">+ Chương trình khác...</option>
               </select>
+              <input type="text" id="tuitionProgramCustom" placeholder="Nhập tên chương trình mới" style="display:none; margin-top:0.4rem;">
             </div>
-            <div><label>Số tiền (VNĐ) *</label><input type="number" id="tuitionAmount" min="1" required></div>
+            <div>
+              <label>Số tiền (VNĐ) *</label>
+              <input type="text" inputmode="numeric" id="tuitionAmount" placeholder="VD: 3.500.000" oninput="formatMoneyInput(this)" required>
+              <div id="tuitionAmountPreview" style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem; min-height:1.1em;"></div>
+            </div>
             <div><label>Kỳ học phí</label><input type="text" id="tuitionPeriod" placeholder="VD: Tháng 10/2026"></div>
             <div><label>Hình thức</label><input type="text" id="tuitionMethod" placeholder="VD: Chuyển khoản / Tiền mặt"></div>
             <div><label>Ngày nộp</label><input type="date" id="tuitionDate"></div>
@@ -291,10 +297,12 @@
           <div class="form-grid">
             <div>
               <label>Chương trình học *</label>
-              <select id="scheduleProgram">
+              <select id="scheduleProgram" onchange="toggleCustomProgram('schedule')">
                 <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
                 <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
+                <option value="__custom__">+ Chương trình khác...</option>
               </select>
+              <input type="text" id="scheduleProgramCustom" placeholder="Nhập tên chương trình mới" style="display:none; margin-top:0.4rem;">
             </div>
             <div><label>Ngày học trong tuần *</label><input type="text" id="scheduleDays" placeholder="VD: Thứ 3, Thứ 5"></div>
             <div><label>Giờ bắt đầu *</label><input type="time" id="scheduleStartTime"></div>
@@ -340,10 +348,12 @@
             </div>
             <div>
               <label>Chương trình học</label>
-              <select id="gradeProgram">
+              <select id="gradeProgram" onchange="toggleCustomProgram('grade')">
                 <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
                 <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
+                <option value="__custom__">+ Chương trình khác...</option>
               </select>
+              <input type="text" id="gradeProgramCustom" placeholder="Nhập tên chương trình mới" style="display:none; margin-top:0.4rem;">
             </div>
             <div>
               <label>Loại đánh giá *</label>
@@ -544,6 +554,58 @@
       el.style.color = isError ? '#b91c1c' : '#15803d';
       el.textContent = message;
       setTimeout(() => { el.style.display = 'none'; }, isError ? 9000 : 4000);
+    }
+
+    function toggleCustomProgram(formType) {
+      const select = document.getElementById(formType + 'Program');
+      const customInput = document.getElementById(formType + 'ProgramCustom');
+      const isCustom = select.value === '__custom__';
+      customInput.style.display = isCustom ? 'block' : 'none';
+      if (isCustom) customInput.focus();
+    }
+
+    function getProgramValue(formType) {
+      const select = document.getElementById(formType + 'Program');
+      if (select.value === '__custom__') {
+        return document.getElementById(formType + 'ProgramCustom').value.trim();
+      }
+      return select.value;
+    }
+
+    function setProgramSelectValue(formType, programValue) {
+      const select = document.getElementById(formType + 'Program');
+      const customInput = document.getElementById(formType + 'ProgramCustom');
+      const fixedOptions = Array.from(select.options).map(o => o.value).filter(v => v !== '__custom__');
+      if (fixedOptions.includes(programValue)) {
+        select.value = programValue;
+        customInput.style.display = 'none';
+        customInput.value = '';
+      } else {
+        select.value = '__custom__';
+        customInput.style.display = 'block';
+        customInput.value = programValue || '';
+      }
+    }
+
+    // Định dạng số tiền có dấu chấm phân cách hàng nghìn ngay khi gõ, giúp admin dễ phát hiện gõ nhầm số 0
+    function formatMoneyInput(input) {
+      const raw = input.value.replace(/[^\d]/g, '');
+      input.value = raw ? Number(raw).toLocaleString('vi-VN') : '';
+      const previewEl = document.getElementById(input.id + 'Preview');
+      if (previewEl) previewEl.textContent = raw ? `= ${Number(raw).toLocaleString('vi-VN')}đ` : '';
+    }
+
+    function getAmountValue(inputId) {
+      const raw = document.getElementById(inputId).value.replace(/[^\d]/g, '');
+      return raw ? Number(raw) : 0;
+    }
+
+    // Cảnh báo nếu số tiền bất thường lớn (khả năng gõ nhầm thừa số 0) trước khi lưu
+    function confirmIfAmountUnusual(amount) {
+      if (amount > 50000000) {
+        return confirm(`Số tiền bạn nhập là ${amount.toLocaleString('vi-VN')}đ — khá lớn so với thông thường.\n\nBạn có chắc chắn số này đúng không (không bị thừa số 0)?`);
+      }
+      return true;
     }
 
     function escapeHtml(str) {
@@ -890,8 +952,8 @@
       document.getElementById('tuitionStudentName').value = p.studentName || '';
       document.getElementById('tuitionStudentName').style.display = 'block';
       document.getElementById('tuitionStudentNameSelect').style.display = 'none';
-      document.getElementById('tuitionProgram').value = p.program || 'Luyện Chữ Đẹp';
-      document.getElementById('tuitionAmount').value = p.amount || '';
+      setProgramSelectValue('tuition', p.program || 'Luyện Chữ Đẹp');
+      document.getElementById('tuitionAmount').value = p.amount ? Number(p.amount).toLocaleString('vi-VN') : '';
       document.getElementById('tuitionPeriod').value = p.period || '';
       document.getElementById('tuitionMethod').value = p.method || '';
       document.getElementById('tuitionDate').value = p.paidAt ? p.paidAt.slice(0, 10) : '';
@@ -907,6 +969,8 @@
       document.getElementById('tuitionForm').reset();
       document.getElementById('tuitionStudentName').style.display = 'block';
       document.getElementById('tuitionStudentNameSelect').style.display = 'none';
+      document.getElementById('tuitionProgramCustom').style.display = 'none';
+      document.getElementById('tuitionAmountPreview').textContent = '';
       document.getElementById('tuitionSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Lưu Học Phí';
       document.getElementById('tuitionCancelEditBtn').style.display = 'none';
     }
@@ -914,6 +978,12 @@
     document.getElementById('tuitionForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const btn = document.getElementById('tuitionSubmitBtn');
+      const amountValue = getAmountValue('tuitionAmount');
+      if (!amountValue || amountValue <= 0) {
+        showGlobalAlert('Vui lòng nhập số tiền hợp lệ.', true);
+        return;
+      }
+      if (!confirmIfAmountUnusual(amountValue)) return;
       try {
         const fileInput = document.getElementById('tuitionAttachment');
         let attachments = [];
@@ -932,8 +1002,8 @@
         const payload = {
           parentEmail: document.getElementById('tuitionParentEmail').value.trim(),
           studentName: document.getElementById('tuitionStudentName').value.trim(),
-          program: document.getElementById('tuitionProgram').value,
-          amount: document.getElementById('tuitionAmount').value,
+          program: getProgramValue('tuition'),
+          amount: amountValue,
           period: document.getElementById('tuitionPeriod').value.trim(),
           method: document.getElementById('tuitionMethod').value.trim(),
           note: document.getElementById('tuitionNote').value.trim(),
@@ -995,7 +1065,7 @@
 
     function startEditSchedule(s) {
       editingScheduleId = s.id;
-      document.getElementById('scheduleProgram').value = s.program || 'Luyện Chữ Đẹp';
+      setProgramSelectValue('schedule', s.program || 'Luyện Chữ Đẹp');
       document.getElementById('scheduleDays').value = s.days || '';
       document.getElementById('scheduleStartTime').value = s.startTime || '';
       document.getElementById('scheduleEndTime').value = s.endTime || '';
@@ -1010,6 +1080,7 @@
     function cancelEditSchedule() {
       editingScheduleId = null;
       document.getElementById('scheduleForm').reset();
+      document.getElementById('scheduleProgramCustom').style.display = 'none';
       document.getElementById('scheduleSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Lưu Lịch Học';
       document.getElementById('scheduleCancelEditBtn').style.display = 'none';
     }
@@ -1039,7 +1110,7 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
         const payload = {
-          program: document.getElementById('scheduleProgram').value,
+          program: getProgramValue('schedule'),
           days: document.getElementById('scheduleDays').value.trim(),
           startTime: document.getElementById('scheduleStartTime').value,
           endTime: document.getElementById('scheduleEndTime').value,
@@ -1111,7 +1182,7 @@
       document.getElementById('gradeStudentName').value = g.studentName || '';
       document.getElementById('gradeStudentName').style.display = 'block';
       document.getElementById('gradeStudentNameSelect').style.display = 'none';
-      document.getElementById('gradeProgram').value = g.program || 'Luyện Chữ Đẹp';
+      setProgramSelectValue('grade', g.program || 'Luyện Chữ Đẹp');
       document.getElementById('gradeAssessmentType').value = g.assessmentType || 'Buổi học';
       document.getElementById('gradeTerm').value = g.term || '';
       document.getElementById('gradeScore').value = g.score != null ? g.score : '';
@@ -1127,6 +1198,7 @@
       document.getElementById('gradeForm').reset();
       document.getElementById('gradeStudentName').style.display = 'block';
       document.getElementById('gradeStudentNameSelect').style.display = 'none';
+      document.getElementById('gradeProgramCustom').style.display = 'none';
       document.getElementById('gradeSubmitBtn').textContent = 'Lưu Điểm/Nhận Xét';
       document.getElementById('gradeCancelEditBtn').style.display = 'none';
     }
@@ -1152,7 +1224,7 @@
         const payload = {
           parentEmail: document.getElementById('gradeParentEmail').value.trim(),
           studentName: document.getElementById('gradeStudentName').value.trim(),
-          program: document.getElementById('gradeProgram').value,
+          program: getProgramValue('grade'),
           assessmentType: document.getElementById('gradeAssessmentType').value,
           term: document.getElementById('gradeTerm').value.trim(),
           score: document.getElementById('gradeScore').value,
