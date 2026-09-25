@@ -697,6 +697,29 @@
       }
     ];
 
+    // Phải khớp với "earnRate" trong api/_shared/memberTier.js (nguồn phía server) — dùng để hiển thị
+    // lại lịch sử điểm theo từng khoản học phí phía client, không gọi thêm API nào.
+    const EARN_RATES = {
+      'Thành Viên Mới': { mode: 'x', value: 1 },
+      'Thân Thiết': { mode: 'x', value: 1 },
+      'Bạc': { mode: 'x', value: 2 },
+      'Titanium': { mode: 'x', value: 3 },
+      'Vàng': { mode: '%', value: 5 },
+      'Kim Cương': { mode: '%', value: 12 }
+    };
+    function calcPointsForAmount(amount, tierObj) {
+      const rate = EARN_RATES[tierObj && tierObj.name] || EARN_RATES['Thành Viên Mới'];
+      const fraction = rate.mode === '%' ? rate.value / 100 : rate.value * 0.001;
+      return Math.round((amount * fraction) / 1000);
+    }
+
+    const GIFT_STATUS_LABELS = {
+      pending: { text: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
+      shipping: { text: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
+      fulfilled: { text: 'Đã nhận quà', bg: '#dcfce7', color: '#15803d' },
+      cancelled: { text: 'Đã huỷ', bg: '#fee2e2', color: '#b91c1c' }
+    };
+
     function renderNotLoggedIn(container) {
       document.body.classList.remove('vip-theme');
       container.innerHTML = `
@@ -740,6 +763,16 @@
 
     // Thu gọn/xổ ra khối Đổi Mật Khẩu — mặc định thu gọn, bấm tiêu đề để mở
     // Thu gọn/xổ ra từng thẻ đặc quyền theo hạng — bấm vào tiêu đề thẻ để xem chi tiết
+    // Thu gọn/xổ ra khối lịch sử điểm / lịch sử nhận quà trong tab Đổi Quà
+    function toggleGiftHistorySection(key) {
+      const panel = document.getElementById(`giftHistoryPanel-${key}`);
+      const chevron = document.getElementById(`giftHistoryChevron-${key}`);
+      if (!panel || !chevron) return;
+      const shouldOpen = panel.style.display === 'none';
+      panel.style.display = shouldOpen ? 'block' : 'none';
+      chevron.style.transform = shouldOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
     function toggleTierPerks(idx, forceOpen) {
       const list = document.getElementById(`tierPerksList-${idx}`);
       const chevron = document.getElementById(`tierChevron-${idx}`);
@@ -1060,12 +1093,6 @@
                 <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.9rem;">Cần tổng học phí ${g.cost.toLocaleString('vi-VN')}đ</div>
                 ${existingRequest
                   ? (() => {
-                      const GIFT_STATUS_LABELS = {
-                        pending: { text: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
-                        shipping: { text: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
-                        fulfilled: { text: 'Đã nhận quà', bg: '#dcfce7', color: '#15803d' },
-                        cancelled: { text: 'Đã huỷ', bg: '#fee2e2', color: '#b91c1c' }
-                      };
                       const s = GIFT_STATUS_LABELS[existingRequest.status] || GIFT_STATUS_LABELS.pending;
                       return `<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:999px; background:${s.bg}; color:${s.color};">${s.text}</span>`;
                     })()
@@ -1075,6 +1102,55 @@
               </div>`;
           }).join('')}
         </div>`;
+
+        // Lịch sử điểm: mỗi khoản học phí quy đổi ra điểm theo đúng tốc độ tích điểm của hạng hiện tại
+        // (cộng dồn ra đúng bằng loyaltyPoints.total). Hiện chưa có cơ chế trừ điểm (đổi quà dùng
+        // mốc tổng học phí, không trừ điểm), nên lịch sử hiện chỉ có các dòng "+".
+        const pointsHistoryRows = [...tuitionPayments]
+          .sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt))
+          .map(p => {
+            const earned = loyaltyPoints ? calcPointsForAmount(Number(p.amount) || 0, tier) : 0;
+            return `
+              <tr style="border-top:1px solid var(--border);">
+                <td style="padding:0.6rem 0.5rem; white-space:nowrap;">${formatDate(p.paidAt)}</td>
+                <td style="padding:0.6rem 0.5rem;">${p.studentName || '—'}${p.program ? ` — ${p.program}` : ''}</td>
+                <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap;">${Number(p.amount || 0).toLocaleString('vi-VN')}đ</td>
+                <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap; font-weight:700; color:#15803d;">+${earned.toLocaleString('vi-VN')} điểm</td>
+              </tr>`;
+          }).join('');
+        const pointsHistoryHtml = pointsHistoryRows
+          ? `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+              <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.76rem; text-transform:uppercase;">
+                <th style="padding:0.5rem;">Ngày</th><th style="padding:0.5rem;">Học sinh / chương trình</th>
+                <th style="padding:0.5rem; text-align:right;">Số tiền</th><th style="padding:0.5rem; text-align:right;">Điểm</th>
+              </tr></thead>
+              <tbody>${pointsHistoryRows}</tbody>
+            </table></div>`
+          : `<div style="text-align:center; color:var(--text-muted); padding:1rem 0.4rem;">Chưa có khoản học phí nào để tính điểm.</div>`;
+
+        // Lịch sử nhận quà: toàn bộ yêu cầu đổi quà đã gửi, kèm mốc thời gian từng trạng thái
+        const giftHistoryRows = [...giftRedemptions]
+          .sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt))
+          .map(r => {
+            const s = GIFT_STATUS_LABELS[r.status] || GIFT_STATUS_LABELS.pending;
+            const lastDate = r.fulfilledAt || r.cancelledAt || r.shippedAt || r.requestedAt;
+            return `
+              <tr style="border-top:1px solid var(--border);">
+                <td style="padding:0.6rem 0.5rem; font-weight:700;">${r.giftName}</td>
+                <td style="padding:0.6rem 0.5rem; white-space:nowrap;">${formatDate(r.requestedAt)}</td>
+                <td style="padding:0.6rem 0.5rem;"><span style="display:inline-block; font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:${s.bg}; color:${s.color};">${s.text}</span>${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.2rem;">${r.cancelReason}</div>` : ''}</td>
+                <td style="padding:0.6rem 0.5rem; white-space:nowrap; color:var(--text-muted);">${formatDate(lastDate)}</td>
+              </tr>`;
+          }).join('');
+        const giftHistoryHtml = giftHistoryRows
+          ? `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+              <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.76rem; text-transform:uppercase;">
+                <th style="padding:0.5rem;">Quà tặng</th><th style="padding:0.5rem;">Ngày yêu cầu</th>
+                <th style="padding:0.5rem;">Trạng thái</th><th style="padding:0.5rem;">Cập nhật gần nhất</th>
+              </tr></thead>
+              <tbody>${giftHistoryRows}</tbody>
+            </table></div>`
+          : `<div style="text-align:center; color:var(--text-muted); padding:1rem 0.4rem;">Bạn chưa gửi yêu cầu đổi quà nào.</div>`;
 
         const perksHtml = TIER_PERKS.map((t, idx) => {
           const isCurrent = t.name === tier.name;
@@ -1315,8 +1391,36 @@
             <div class="card">
               <h2><i class="fa-solid fa-gift"></i> Đổi Quà Tặng</h2>
               <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Quà tặng được mở khoá dựa trên tổng học phí đã đóng tại trung tâm (hiện tại: <strong style="color:#15803d;">${totalTuitionPaid.toLocaleString('vi-VN')}đ</strong>). Đội ngũ sẽ liên hệ để trao quà sau khi bạn gửi yêu cầu.</p>
+
+              ${loyaltyPoints ? `
+              <div style="display:flex; align-items:center; gap:0.8rem; background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:0.9rem 1.1rem; margin-bottom:1.2rem; flex-wrap:wrap;">
+                <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid fa-coins"></i></div>
+                <div style="flex:1; min-width:180px;">
+                  <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.total.toLocaleString('vi-VN')} điểm</div>
+                  <div style="font-size:0.78rem; color:#92651b;">Điểm tích lũy hiện có — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
+                </div>
+              </div>` : ''}
+
               <div id="giftRequestAlert" style="display:none; font-size:0.85rem; margin-bottom:1rem;"></div>
               ${giftsHtml}
+
+              <div class="inner-card" style="border-radius:14px; padding:0.9rem 1.2rem; margin-top:1.2rem;">
+                <div onclick="toggleGiftHistorySection('points')" style="display:flex; align-items:center; gap:0.7rem; cursor:pointer; user-select:none;">
+                  <i class="fa-solid fa-clock-rotate-left" style="color:#a16207;"></i>
+                  <div style="flex:1; font-weight:700; color:var(--text-dark); font-size:0.92rem;">Lịch sử điểm (cộng / trừ)</div>
+                  <i class="fa-solid fa-chevron-down" id="giftHistoryChevron-points" style="font-size:0.8rem; color:var(--text-muted); transition:transform 0.2s;"></i>
+                </div>
+                <div id="giftHistoryPanel-points" style="display:none; margin-top:0.9rem;">${pointsHistoryHtml}</div>
+              </div>
+
+              <div class="inner-card" style="border-radius:14px; padding:0.9rem 1.2rem; margin-top:0.8rem;">
+                <div onclick="toggleGiftHistorySection('gifts')" style="display:flex; align-items:center; gap:0.7rem; cursor:pointer; user-select:none;">
+                  <i class="fa-solid fa-gifts" style="color:#a16207;"></i>
+                  <div style="flex:1; font-weight:700; color:var(--text-dark); font-size:0.92rem;">Lịch sử nhận quà</div>
+                  <i class="fa-solid fa-chevron-down" id="giftHistoryChevron-gifts" style="font-size:0.8rem; color:var(--text-muted); transition:transform 0.2s;"></i>
+                </div>
+                <div id="giftHistoryPanel-gifts" style="display:none; margin-top:0.9rem;">${giftHistoryHtml}</div>
+              </div>
             </div>
           </div>
         `;
