@@ -68,16 +68,30 @@
 
     .main-content { margin-left: 260px; flex: 1; min-width: 0; }
     @media (max-width: 880px) {
-      .sidebar { position: relative; width: 100%; height: auto; flex-direction: row; align-items: center; overflow-x: auto; padding: 0.9rem; }
-      .sidebar-brand { margin-bottom: 0; margin-right: 1rem; flex-shrink: 0; }
+      .sidebar { position: relative; width: 100%; height: auto; flex-direction: row; align-items: center; overflow-x: auto; padding: 0.8rem 0.9rem; }
+      .sidebar-brand { margin-bottom: 0; margin-right: 0.8rem; flex-shrink: 0; }
+      .sidebar-brand img { height: 28px; }
+      .sidebar-brand-text { font-size: 0.82rem; }
       #sidebarMemberInfo { display: none !important; }
-      .sidebar-nav { flex-direction: row; flex: none; }
-      .sidebar-nav .member-tab-btn { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; width: auto; }
+      .sidebar-nav { flex-direction: row; flex: none; gap: 0.15rem; }
+      .sidebar-nav .member-tab-btn { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; width: auto; padding: 0.55rem 0.7rem; font-size: 0.82rem; }
       .sidebar-nav .member-tab-btn.active { border-left-color: transparent; border-bottom-color: var(--gold); }
       .sidebar-footer { margin-top: 0; margin-left: auto; padding-top: 0; border-top: none; flex-shrink: 0; }
-      .sidebar-footer .btn-outline { width: auto; }
+      .sidebar-footer .btn-outline { width: auto; padding: 0.5rem 0.9rem; font-size: 0.82rem; }
       .main-content { margin-left: 0; }
       .app-shell { flex-direction: column; }
+      .page-wrap { padding: 1.5rem 1rem 2.5rem; }
+      .card { padding: 1.2rem; border-radius: 16px; }
+      .welcome-banner { padding: 1.8rem 1.4rem; min-height: 150px; }
+      .welcome-banner h1 { font-size: 1.4rem; }
+      table { font-size: 0.82rem; }
+      .btn { padding: 0.6rem 1.1rem; font-size: 0.86rem; }
+    }
+    @media (max-width: 480px) {
+      .page-wrap { padding: 1rem 0.7rem 2rem; }
+      .card { padding: 0.9rem; }
+      .sidebar-brand-text span { display: none; }
+      .welcome-banner { padding: 1.5rem 1.1rem; }
     }
 
     header {
