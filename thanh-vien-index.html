@@ -498,7 +498,7 @@
           return;
         }
 
-        const { email, profile = {}, registrations, donations = [], grades = [] } = payload;
+        const { email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [] } = payload;
         document.getElementById('headerActions').style.display = 'block';
 
         const isProfileIncomplete = !profile.fullName || !profile.phone || !profile.dob || !profile.address;
@@ -612,6 +612,34 @@
             </table>
           </div>`;
 
+        const tuitionHtml = `<div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+              <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
+                <th style="padding:0.4rem;">Học sinh</th><th style="padding:0.4rem;">Chương trình</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Kỳ học phí</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ngày nộp</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
+              </tr></thead>
+              <tbody>
+                ${tuitionPayments.length > 0 ? tuitionPayments.map(p => `
+                  <tr style="border-top:1px solid var(--border);">
+                    <td style="padding:0.5rem 0.4rem; font-weight:700;">${p.studentName}</td>
+                    <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${p.program || '—'}</td>
+                    <td style="padding:0.5rem 0.4rem;"><span style="font-size:0.9rem; font-weight:800; color:#15803d; background:#f0fdf4; border:1px dashed #86efac; border-radius:8px; padding:0.2rem 0.6rem;">${Number(p.amount).toLocaleString('vi-VN')}đ</span></td>
+                    <td style="padding:0.5rem 0.4rem;">${p.period || '—'}</td>
+                    <td style="padding:0.5rem 0.4rem;">${p.method || '—'}</td>
+                    <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${formatDate(p.paidAt)}</td>
+                    <td style="padding:0.5rem 0.4rem;">${(p.attachments && p.attachments.length > 0) ? p.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
+                    <td style="padding:0.5rem 0.4rem;">${confirmationCellHtml('tuition', p.id, p.confirmationStatus, p.memberFeedback)}</td>
+                  </tr>
+                `).join('') : `
+                  <tr>
+                    <td colspan="8" style="padding:1.4rem 0.4rem; text-align:center; color:var(--text-muted);">
+                      <i class="fa-solid fa-coins"></i> Chưa có khoản học phí nào được ghi nhận với email này.
+                    </td>
+                  </tr>
+                `}
+              </tbody>
+            </table>
+          </div>`;
+
         function assessmentBadgeStyle(type) {
           if (type === 'Đánh giá đầu vào') return 'background:#e0f2fe; color:#0369a1;';
           if (type === 'Đánh giá đầu ra') return 'background:#dcfce7; color:#15803d;';
@@ -678,12 +706,13 @@
         const rejectedRegistrations = registrations.filter(r => r.status === 'Từ chối').length;
         const pendingDonationConfirms = donations.filter(d => (d.confirmationStatus || 'pending') === 'pending').length;
         const pendingGradeConfirms = grades.filter(g => (g.confirmationStatus || 'pending') === 'pending').length;
-        const totalPendingConfirms = pendingDonationConfirms + pendingGradeConfirms;
+        const pendingTuitionConfirms = tuitionPayments.filter(p => (p.confirmationStatus || 'pending') === 'pending').length;
+        const totalPendingConfirms = pendingDonationConfirms + pendingGradeConfirms + pendingTuitionConfirms;
 
         const noticeItems = [];
         if (pendingRegistrations > 0) noticeItems.push(`<strong>${pendingRegistrations}</strong> đơn đăng ký đang chờ xử lý`);
         if (rejectedRegistrations > 0) noticeItems.push(`<strong>${rejectedRegistrations}</strong> đơn đăng ký bị từ chối — xem lý do trong tab "Đăng Ký & Hoạt Động"`);
-        if (totalPendingConfirms > 0) noticeItems.push(`<strong>${totalPendingConfirms}</strong> mục quyên góp/điểm đang chờ bạn xác nhận`);
+        if (totalPendingConfirms > 0) noticeItems.push(`<strong>${totalPendingConfirms}</strong> mục quyên góp/học phí/điểm đang chờ bạn xác nhận`);
 
         // Chỉ hiện lại nếu nội dung thông báo thay đổi so với lần người dùng đã bấm tắt trước đó
         const noticeSignature = `${pendingRegistrations}|${rejectedRegistrations}|${totalPendingConfirms}`;
@@ -709,6 +738,7 @@
             <button class="member-tab-btn active" data-tab="account" onclick="switchMemberTab('account')"><i class="fa-solid fa-id-card"></i> Tài Khoản</button>
             <button class="member-tab-btn" data-tab="activity" onclick="switchMemberTab('activity')"><i class="fa-solid fa-hand-holding-heart"></i> Đăng Ký &amp; Hoạt Động</button>
             <button class="member-tab-btn" data-tab="donations" onclick="switchMemberTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
+            <button class="member-tab-btn" data-tab="tuition" onclick="switchMemberTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
             <button class="member-tab-btn" data-tab="grades" onclick="switchMemberTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
           </div>
 
@@ -786,6 +816,13 @@
             <div class="card">
               <h2><i class="fa-solid fa-hand-holding-dollar"></i> Lịch Sử Quyên Góp</h2>
               ${donationsHtml}
+            </div>
+          </div>
+
+          <div class="member-panel" id="memberPanel-tuition">
+            <div class="card">
+              <h2><i class="fa-solid fa-coins"></i> Học Phí Đã Nộp</h2>
+              ${tuitionHtml}
             </div>
           </div>
 
