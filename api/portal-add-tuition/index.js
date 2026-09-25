@@ -7,8 +7,21 @@ const { createConfirmToken } = require("../_shared/confirmToken");
 
 const TUITION_TABLE = "TuitionPayments";
 
-function buildTuitionEmailHtml(studentName, program, amount, period, greeting, confirmToken) {
+function buildTuitionEmailHtml(studentName, program, amount, period, greeting, confirmToken, expectedAmount) {
   const confirmUrl = `https://wvn.vn/xac-nhan.html?type=tuition&token=${confirmToken}`;
+  const balance = expectedAmount != null ? amount - expectedAmount : 0;
+  let balanceHtml = "";
+  if (expectedAmount != null && balance !== 0) {
+    if (balance < 0) {
+      balanceHtml = `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px 16px;margin-bottom:18px;text-align:center;">
+        <p style="font-size:13px;color:#991b1b;margin:0;">Còn <strong>thiếu ${Math.abs(balance).toLocaleString("vi-VN")}đ</strong> so với số tiền cần đóng kỳ này (${expectedAmount.toLocaleString("vi-VN")}đ).</p>
+      </div>`;
+    } else {
+      balanceHtml = `<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 16px;margin-bottom:18px;text-align:center;">
+        <p style="font-size:13px;color:#15803d;margin:0;">Bạn đã đóng <strong>dư ${balance.toLocaleString("vi-VN")}đ</strong> so với số tiền cần đóng kỳ này (${expectedAmount.toLocaleString("vi-VN")}đ) — sẽ được cấn trừ cho kỳ sau.</p>
+      </div>`;
+    }
+  }
   return `<!DOCTYPE html>
 <html lang="vi">
   <body style="margin:0;padding:0;background:#f1f5f9;font-family:Arial,Helvetica,sans-serif;">
@@ -27,6 +40,7 @@ function buildTuitionEmailHtml(studentName, program, amount, period, greeting, c
               <span style="display:inline-block;font-size:22px;font-weight:800;color:#15803d;background:#f0fdf4;border:1px dashed #86efac;border-radius:10px;padding:10px 24px;">${Number(amount).toLocaleString("vi-VN")}đ</span>
             </div>
             ${period ? `<p style="font-size:13px;color:#64748b;margin:0 0 18px;text-align:center;">Kỳ học phí: <strong>${period}</strong></p>` : ""}
+            ${balanceHtml}
             <p style="font-size:13px;color:#64748b;margin:18px 0 14px;text-align:center;">Thông tin trên có chính xác không?</p>
             <div style="text-align:center;margin-bottom:8px;">
               <a href="${confirmUrl}&action=confirm" style="display:inline-block;background:#15803d;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:8px;margin:0 6px 10px;">✓ Xác nhận đúng</a>
@@ -51,6 +65,10 @@ module.exports = async function (context, req) {
   const studentName = String(body.studentName || "").trim();
   const program = String(body.program || "").trim();
   const amount = Number(body.amount);
+  const expectedAmountRaw = body.expectedAmount;
+  const expectedAmount = expectedAmountRaw !== undefined && expectedAmountRaw !== null && expectedAmountRaw !== ""
+    ? Number(expectedAmountRaw)
+    : amount; // Nếu không nhập, mặc định coi như đóng đủ (không thiếu/thừa)
   const period = String(body.period || "").trim();
   const method = String(body.method || "").trim();
   const note = String(body.note || "").trim();
@@ -60,6 +78,11 @@ module.exports = async function (context, req) {
   if (!emailValid || !studentName || !amount || amount <= 0) {
     context.res.status = 400;
     context.res.body = { success: false, message: "Vui lòng nhập đủ email phụ huynh, tên học sinh và số tiền hợp lệ." };
+    return;
+  }
+  if (isNaN(expectedAmount) || expectedAmount < 0) {
+    context.res.status = 400;
+    context.res.body = { success: false, message: "Số tiền cần đóng không hợp lệ." };
     return;
   }
 
@@ -83,6 +106,7 @@ module.exports = async function (context, req) {
       studentName,
       program,
       amount,
+      expectedAmount,
       period,
       method,
       note,
@@ -103,7 +127,7 @@ module.exports = async function (context, req) {
           to: parentEmail,
           from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
           subject: `Xác nhận học phí cho ${studentName}`,
-          html: buildTuitionEmailHtml(studentName, program, amount, period, greeting, confirmToken)
+          html: buildTuitionEmailHtml(studentName, program, amount, period, greeting, confirmToken, expectedAmount)
         });
       } catch (err) {
         context.log.error("Gửi email báo học phí thất bại:", err?.response?.body || err.message);
