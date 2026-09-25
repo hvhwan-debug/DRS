@@ -347,6 +347,7 @@
         <button class="member-tab-btn" data-tab="donations" onclick="switchMemberTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
         <button class="member-tab-btn" data-tab="tuition" onclick="switchMemberTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
         <button class="member-tab-btn" data-tab="grades" onclick="switchMemberTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
+        <button class="member-tab-btn" data-tab="gifts" onclick="switchMemberTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
       </nav>
 
       <div class="sidebar-footer" id="sidebarFooter" style="display:none;">
@@ -526,6 +527,23 @@
       rows.forEach(row => {
         row.style.display = (value === 'all' || row.dataset.courseKey === value) ? '' : 'none';
       });
+    }
+
+    async function requestGift(giftId) {
+      if (!confirm('Gửi yêu cầu đổi quà này? Đội ngũ sẽ liên hệ để sắp xếp trao quà.')) return;
+      const token = localStorage.getItem('wvn_member_token');
+      try {
+        const res = await fetch('/api/member-request-gift', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+          body: JSON.stringify({ giftId })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể gửi yêu cầu.');
+        loadMemberInfo();
+      } catch (err) {
+        alert(err.message);
+      }
     }
 
     function dismissSystemNotice() {
@@ -726,7 +744,7 @@
           return;
         }
 
-        const { email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [] } = payload;
+        const { email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [] } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
 
@@ -909,6 +927,19 @@
             </table>
           </div>`;
 
+        const studentsListHtml = students.length > 0
+          ? `<div style="display:flex; flex-wrap:wrap; gap:0.7rem; margin-bottom:1.4rem;">
+              ${students.map(s => `
+                <div style="display:flex; align-items:center; gap:0.6rem; border:1px solid var(--border); border-radius:999px; padding:0.5rem 1rem 0.5rem 0.6rem; background:#fff;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="fa-solid fa-user-graduate"></i></div>
+                  <div>
+                    <div style="font-size:0.86rem; font-weight:700; color:var(--text-dark);">${s.studentName}</div>
+                    <div style="font-size:0.74rem; color:var(--text-muted);">${s.program || 'Chưa gán chương trình'}</div>
+                  </div>
+                </div>`).join('')}
+            </div>`
+          : '';
+
         const scheduleHtml = schedules.length > 0
           ? `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:1rem;">
               ${schedules.map(s => `
@@ -922,6 +953,35 @@
                 </div>`).join('')}
             </div>`
           : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-calendar-days"></i> Chưa có lịch học nào được thiết lập cho chương trình bạn đang tham gia.</div>`;
+
+        const GIFT_CATALOG = [
+          { id: 'but-may', name: 'Bút máy cao cấp', cost: 5000000, icon: 'fa-pen-fancy' },
+          { id: 'vo-o-ly', name: 'Bộ vở ô ly (10 quyển)', cost: 10000000, icon: 'fa-book' },
+          { id: 'balo', name: 'Balo học sinh', cost: 20000000, icon: 'fa-bag-shopping' },
+          { id: 'buoi-hoc-mien-phi', name: '1 buổi học miễn phí', cost: 35000000, icon: 'fa-chalkboard-user' },
+          { id: 'bo-dung-cu', name: 'Bộ dụng cụ học tập cao cấp', cost: 50000000, icon: 'fa-box-open' },
+          { id: 'khoa-hoc-mien-phi', name: 'Miễn phí học phí 1 kỳ', cost: 80000000, icon: 'fa-graduation-cap' }
+        ];
+
+        const giftsHtml = `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;">
+          ${GIFT_CATALOG.map(g => {
+            const existingRequest = giftRedemptions.find(r => r.giftId === g.id);
+            const isEligible = totalTuitionPaid >= g.cost;
+            return `
+              <div class="inner-card" style="border-radius:16px; padding:1.3rem; text-align:center; ${isEligible ? '' : 'opacity:0.6;'}">
+                <div style="width:52px; height:52px; border-radius:14px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin:0 auto 0.8rem;"><i class="fa-solid ${g.icon}"></i></div>
+                <div style="font-size:0.95rem; font-weight:800; color:var(--text-dark); margin-bottom:0.3rem;">${g.name}</div>
+                <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.9rem;">Cần tổng học phí ${g.cost.toLocaleString('vi-VN')}đ</div>
+                ${existingRequest
+                  ? (existingRequest.status === 'fulfilled'
+                      ? '<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã nhận quà</span>'
+                      : '<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.3rem 0.8rem; border-radius:999px; background:#fef3c7; color:#a16207;">Đang chờ trao quà</span>')
+                  : (isEligible
+                      ? `<button type="button" class="btn" style="padding:0.5rem 1.1rem; font-size:0.85rem;" onclick="requestGift('${g.id}')">Yêu Cầu Đổi Quà</button>`
+                      : `<span style="font-size:0.78rem; color:var(--text-muted);">Cần đóng thêm ${(g.cost - totalTuitionPaid).toLocaleString('vi-VN')}đ</span>`)}
+              </div>`;
+          }).join('')}
+        </div>`;
 
         const perksHtml = TIER_PERKS.map(t => {
           const isCurrent = t.name === tier.name;
@@ -1125,6 +1185,7 @@
           <div class="member-panel" id="memberPanel-schedule">
             <div class="card">
               <h2><i class="fa-solid fa-calendar-days"></i> Lịch Học</h2>
+              ${studentsListHtml}
               ${scheduleHtml}
             </div>
           </div>
@@ -1154,6 +1215,15 @@
             <div class="card">
               <h2><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm / Nhận Xét Học Tập Của Con Em</h2>
               ${gradesHtml}
+            </div>
+          </div>
+
+          <div class="member-panel" id="memberPanel-gifts">
+            <div class="card">
+              <h2><i class="fa-solid fa-gift"></i> Đổi Quà Tặng</h2>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Quà tặng được mở khoá dựa trên tổng học phí đã đóng tại trung tâm (hiện tại: <strong style="color:#15803d;">${totalTuitionPaid.toLocaleString('vi-VN')}đ</strong>). Đội ngũ sẽ liên hệ để trao quà sau khi bạn gửi yêu cầu.</p>
+              <div id="giftRequestAlert" style="display:none; font-size:0.85rem; margin-bottom:1rem;"></div>
+              ${giftsHtml}
             </div>
           </div>
         `;
