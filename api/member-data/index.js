@@ -2,6 +2,9 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 const { getTierByTotal, isVipTotal, calculatePoints, describeEarnRate } = require("../_shared/memberTier");
 const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
+const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+const { SITE_URL } = require("../_shared/emailTemplate");
 
 const SESSION_TABLE = "AuthSessions";
 const REGISTRATIONS_TABLE = "Registrations";
@@ -345,6 +348,30 @@ module.exports = async function (context, req) {
         const profilesTable2 = await getTableClient(PROFILES_TABLE);
         await profilesTable2.upsertEntity({ partitionKey: "profile", rowKey: email, lastSeenTier: tier.name }, "Merge");
       } catch (e) { /* best-effort, không chặn phản hồi chính */ }
+    } else if (tierChanged) {
+      // Lưu NGAY lastSeenTier (không đợi thành viên bấm "Đã hiểu") để tránh gửi trùng email nếu họ
+      // tải lại trang nhiều lần trước khi đóng popup — popup vẫn hiện đúng 1 lần nhờ tierChanged trả về lần này.
+      try {
+        const profilesTable2 = await getTableClient(PROFILES_TABLE);
+        await profilesTable2.upsertEntity({ partitionKey: "profile", rowKey: email, lastSeenTier: tier.name }, "Merge");
+      } catch (e) { /* best-effort, không chặn phản hồi chính */ }
+
+      // Gửi email chúc mừng đổi hạng (best-effort — không chặn phản hồi chính nếu gửi lỗi)
+      try {
+        const displayName = await getMemberDisplayName(email);
+        const greeting = buildGreeting(displayName);
+        await sendTrackedEmail(context, {
+          to: email,
+          subject: `Chúc mừng bạn lên hạng ${tier.name}!`,
+          type: "tier_change",
+          eyebrow: "Thăng Hạng Thành Viên",
+          title: `Chúc mừng bạn lên hạng ${tier.name}!`,
+          bodyHtml: `<p style="margin:0 0 16px;">${greeting}</p><p style="margin:0;">Bạn vừa thăng hạng từ <strong>${lastSeenTier}</strong> lên <strong>${tier.name}</strong> tại Mạng Lưới Tri Thức Việt Nam. Đăng nhập vào khu vực thành viên, mục "Đặc Quyền" để xem các quyền lợi mới của bạn.</p>`,
+          ctas: [{ label: "Xem Đặc Quyền Mới", href: SITE_URL, style: "primary" }]
+        });
+      } catch (e) {
+        context.log.error("Gửi email chúc mừng đổi hạng thất bại:", e.message);
+      }
     }
 
     context.res.status = 200;

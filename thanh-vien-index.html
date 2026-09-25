@@ -763,15 +763,19 @@
 
     // Mục 4: hiện popup chúc mừng đổi hạng, rồi báo cho server biết đã xem (để không lặp lại)
     function showTierChangePopup(newTier, previousTierName) {
+      // Dùng bảng màu "đậm" của TIER_PERKS (thiết kế cho nền sáng) thay vì màu nhạt của newTier
+      // (vốn dành cho badge trên nền tối ở sidebar) — nếu không, icon sẽ mờ nhạt/khó thấy trên popup nền trắng.
+      const richTier = TIER_PERKS.find(t => t.name === newTier.name) || newTier;
       const overlay = document.getElementById('tierChangeOverlay');
-      document.getElementById('tierChangeConfetti').style.background = `linear-gradient(90deg, ${newTier.color}, #fff, ${newTier.color})`;
+      document.getElementById('tierChangeConfetti').style.background = `linear-gradient(90deg, ${richTier.color}, #fff, ${richTier.color})`;
       const iconEl = document.getElementById('tierChangeIcon');
-      iconEl.style.background = newTier.bg;
-      iconEl.style.color = newTier.color;
-      iconEl.innerHTML = `<i class="fa-solid ${newTier.icon}"></i>`;
+      iconEl.style.background = `${richTier.color}22`;
+      iconEl.style.color = richTier.color;
+      iconEl.style.border = `2px solid ${richTier.color}55`;
+      iconEl.innerHTML = `<i class="fa-solid ${richTier.icon}"></i>`;
       document.getElementById('tierChangeText').innerHTML = previousTierName
-        ? `Bạn vừa thăng hạng từ <strong>${previousTierName}</strong> lên <strong style="color:${newTier.color};">${newTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi mới của bạn.`
-        : `Bạn hiện đang ở hạng <strong style="color:${newTier.color};">${newTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi của hạng này.`;
+        ? `Bạn vừa thăng hạng từ <strong>${previousTierName}</strong> lên <strong style="color:${richTier.color};">${richTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi mới của bạn.`
+        : `Bạn hiện đang ở hạng <strong style="color:${richTier.color};">${richTier.name}</strong>! Ghé tab "Đặc Quyền" để xem các quyền lợi của hạng này.`;
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
