@@ -83,6 +83,7 @@ module.exports = async function (context, req) {
       totalAmount,
       issueDate,
       note,
+      status: "unpaid", // unpaid -> pending_review (đã gửi biên lai) -> paid (admin duyệt) | unpaid (bị từ chối, gửi lại)
       createdAt: new Date().toISOString()
     });
 

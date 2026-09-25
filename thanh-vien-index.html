@@ -423,6 +423,19 @@
     </div>
   </div>
 
+  <!-- Popup hoá đơn mới — mời thanh toán ngay, hiện đúng 1 lần cho mỗi hoá đơn chưa thanh toán -->
+  <div id="invoicePopupOverlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:1100; align-items:center; justify-content:center; padding:1.2rem;">
+    <div style="background:#fff; border-radius:20px; max-width:420px; width:100%; padding:2.2rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,0.35); text-align:center;">
+      <div style="width:72px; height:72px; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0.6rem auto 1.1rem;"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+      <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">🧾 Bạn có hoá đơn mới</h2>
+      <p id="invoicePopupText" style="color:var(--text-muted); font-size:0.92rem; margin-bottom:1.4rem; line-height:1.6;"></p>
+      <div style="display:flex; flex-direction:column; gap:0.6rem;">
+        <button type="button" class="btn" id="invoicePopupPayBtn" style="width:100%;">Thanh Toán Ngay</button>
+        <button type="button" class="btn btn-outline" id="invoicePopupLaterBtn" style="width:100%;">Để sau</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==============================================================
     // Khu vực thành viên — đăng nhập bằng email + mã OTP
@@ -814,6 +827,38 @@
       document.body.style.overflow = 'hidden';
     }
 
+    // Popup hoá đơn mới — mời thanh toán ngay, chỉ hiện 1 lần cho mỗi hoá đơn (dựa vào member-ack-invoice)
+    function showInvoicePopup(invoice) {
+      document.getElementById('invoicePopupText').innerHTML = `Hoá đơn <strong>${invoice.invoiceNumber}</strong> — <strong style="color:#15803d;">${Number(invoice.totalAmount).toLocaleString('vi-VN')}đ</strong>${invoice.studentName ? ` (học sinh: ${invoice.studentName})` : ''}. Bạn có thể thanh toán và gửi kèm biên lai ngay tại đây.`;
+      document.getElementById('invoicePopupOverlay').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      const ackInvoicePopup = async () => {
+        const token = localStorage.getItem('wvn_member_token');
+        if (!token) return;
+        try {
+          await fetch('/api/member-ack-invoice', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+            body: JSON.stringify({ invoiceId: invoice.id })
+          });
+        } catch (err) { /* best-effort */ }
+      };
+
+      document.getElementById('invoicePopupPayBtn').onclick = async () => {
+        document.getElementById('invoicePopupOverlay').style.display = 'none';
+        document.body.style.overflow = '';
+        await ackInvoicePopup();
+        switchMemberTab('invoices');
+        setTimeout(() => openInvoicePaymentForm(invoice.id), 150);
+      };
+      document.getElementById('invoicePopupLaterBtn').onclick = async () => {
+        document.getElementById('invoicePopupOverlay').style.display = 'none';
+        document.body.style.overflow = '';
+        await ackInvoicePopup();
+      };
+    }
+
     // Thu gọn/xổ ra khối Đổi Mật Khẩu — mặc định thu gọn, bấm tiêu đề để mở
     // Thu gọn/xổ ra từng thẻ đặc quyền theo hạng — bấm vào tiêu đề thẻ để xem chi tiết
     function escapeHtml(str) {
@@ -867,6 +912,63 @@
     function closeMemberInvoiceView() {
       document.getElementById('memberInvoiceViewCard').style.display = 'none';
       document.getElementById('memberInvoiceListCard').style.display = 'block';
+    }
+
+    // Mở/đóng form gửi biên lai thanh toán ngay dưới thẻ hoá đơn tương ứng
+    function openInvoicePaymentForm(id) {
+      document.querySelectorAll('[id^="invoicePayForm-"]').forEach(el => { if (el.id !== `invoicePayForm-${id}`) el.style.display = 'none'; });
+      const form = document.getElementById(`invoicePayForm-${id}`);
+      if (form) {
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        if (form.style.display === 'block') form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    async function submitInvoicePayment(id) {
+      const fileInput = document.getElementById(`invoiceReceiptFile-${id}`);
+      const noteInput = document.getElementById(`invoiceReceiptNote-${id}`);
+      const alertEl = document.getElementById(`invoicePayAlert-${id}`);
+      const btn = document.getElementById(`invoicePaySubmitBtn-${id}`);
+      alertEl.style.display = 'none';
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#b91c1c';
+        alertEl.textContent = 'Vui lòng chọn ảnh biên lai / xác nhận chuyển khoản.';
+        return;
+      }
+      const file = fileInput.files[0];
+      if (file.size > 4 * 1024 * 1024) {
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#b91c1c';
+        alertEl.textContent = `Ảnh "${file.name}" vượt quá 4MB, vui lòng chọn ảnh nhỏ hơn.`;
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+      try {
+        const content = await readFileAsBase64Member(file);
+        const token = localStorage.getItem('wvn_member_token');
+        const res = await fetch('/api/member-submit-invoice-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+          body: JSON.stringify({
+            invoiceId: id,
+            note: noteInput.value.trim(),
+            receipt: { filename: file.name, content, type: file.type }
+          })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Không thể gửi biên lai.');
+        loadMemberInfo();
+      } catch (err) {
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#b91c1c';
+        alertEl.textContent = err.message;
+        btn.disabled = false;
+        btn.innerHTML = 'Gửi Biên Lai';
+      }
     }
 
     // Thu gọn/xổ ra khối lịch sử điểm / lịch sử nhận quà trong tab Đổi Quà
@@ -931,7 +1033,8 @@
 
         const {
           email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [],
-          giftCatalog = [], invoices = [], loyaltyPoints = null, tierChanged = false, isUpgrade = false, previousTierName = null
+          giftCatalog = [], invoices = [], loyaltyPoints = null, tierChanged = false, isUpgrade = false, previousTierName = null,
+          pendingInvoicePopup = null
         } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
@@ -957,6 +1060,9 @@
         // Mục 4: popup thông báo đổi hạng — chỉ hiện đúng 1 lần cho tới khi thành viên xác nhận đã xem
         if (tierChanged) {
           showTierChangePopup(tier, previousTierName, isUpgrade);
+        } else if (pendingInvoicePopup) {
+          // Popup hoá đơn mới — chỉ hiện khi không có popup đổi hạng đang tranh chỗ (ưu tiên hiện 1 popup/lần tải trang)
+          showInvoicePopup(pendingInvoicePopup);
         }
 
         const tierThresholds = TIER_PERKS;
@@ -1253,21 +1359,46 @@
 
         // Hoá đơn do đội ngũ lập cho thành viên — lưu lại để renderInvoiceDoc dùng khi bấm "Xem"
         window.__memberInvoices = invoices;
+        const INVOICE_STATUS_META = {
+          unpaid: { text: 'Chưa thanh toán', bg: '#f1f5f9', color: '#475569' },
+          pending_review: { text: 'Đang chờ duyệt', bg: '#fef3c7', color: '#a16207' },
+          paid: { text: 'Đã thanh toán', bg: '#dcfce7', color: '#15803d' }
+        };
+        // Danh sách hoá đơn dạng THẺ XẾP CHỒNG (không phải bảng) để tối ưu hiển thị trên di động —
+        // không cần cuộn ngang, mỗi hoá đơn là 1 khối gọn gàng tự xuống dòng theo màn hình.
         const invoicesHtml = invoices.length > 0
-          ? `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
-              <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">
-                <th style="padding:0.6rem 0.5rem;">Số hoá đơn</th><th style="padding:0.6rem 0.5rem;">Học sinh</th>
-                <th style="padding:0.6rem 0.5rem;">Ngày lập</th><th style="padding:0.6rem 0.5rem; text-align:right;">Tổng tiền</th><th style="padding:0.6rem 0.5rem;"></th>
-              </tr></thead>
-              <tbody>${invoices.map(inv => `
-                <tr style="border-top:1px solid var(--border);">
-                  <td style="padding:0.6rem 0.5rem; font-weight:700;">${inv.invoiceNumber}</td>
-                  <td style="padding:0.6rem 0.5rem;">${inv.studentName || '—'}</td>
-                  <td style="padding:0.6rem 0.5rem; white-space:nowrap;">${formatDate(inv.issueDate)}</td>
-                  <td style="padding:0.6rem 0.5rem; text-align:right; white-space:nowrap; font-weight:700; color:#15803d;">${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</td>
-                  <td style="padding:0.6rem 0.5rem; text-align:right;"><button type="button" class="btn" style="padding:0.35rem 0.9rem; font-size:0.8rem;" onclick="viewMemberInvoice('${inv.id}')">Xem</button></td>
-                </tr>`).join('')}</tbody>
-            </table></div>`
+          ? invoices.map(inv => {
+              const meta = INVOICE_STATUS_META[inv.status] || INVOICE_STATUS_META.unpaid;
+              const canPay = inv.status === 'unpaid';
+              return `
+              <div class="invoice-list-card" style="border:1px solid var(--border); border-radius:14px; padding:1rem 1.1rem; margin-bottom:0.8rem;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.6rem; flex-wrap:wrap;">
+                  <div style="min-width:0;">
+                    <div style="font-weight:800; font-size:0.98rem; color:var(--text-dark);">${inv.invoiceNumber}</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem;">${inv.studentName ? inv.studentName + ' • ' : ''}${formatDate(inv.issueDate)}</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-weight:800; color:#15803d; font-size:1.02rem; white-space:nowrap;">${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</div>
+                    <span style="display:inline-block; margin-top:0.3rem; font-size:0.74rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:${meta.bg}; color:${meta.color};">${meta.text}</span>
+                  </div>
+                </div>
+                ${inv.rejectReason ? `<div style="margin-top:0.6rem; padding:0.6rem 0.7rem; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; font-size:0.8rem; color:#991b1b;">Biên lai trước chưa hợp lệ: ${inv.rejectReason}. Vui lòng gửi lại.</div>` : ''}
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem;">
+                  <button type="button" class="btn btn-outline" style="flex:1; min-width:90px; padding:0.5rem 0.8rem; font-size:0.82rem;" onclick="viewMemberInvoice('${inv.id}')">Xem</button>
+                  ${canPay ? `<button type="button" class="btn" style="flex:1; min-width:130px; padding:0.5rem 0.8rem; font-size:0.82rem;" onclick="openInvoicePaymentForm('${inv.id}')"><i class="fa-solid fa-credit-card"></i> Thanh Toán</button>` : ''}
+                </div>
+                <div id="invoicePayForm-${inv.id}" style="display:none; margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--border);">
+                  <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Ảnh chụp biên lai / xác nhận chuyển khoản *</label>
+                  <input type="file" accept="image/*" id="invoiceReceiptFile-${inv.id}" style="margin-bottom:0.6rem; font-size:0.85rem;">
+                  <textarea id="invoiceReceiptNote-${inv.id}" placeholder="Ghi chú thêm (không bắt buộc)" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.85rem; margin-bottom:0.6rem;"></textarea>
+                  <div id="invoicePayAlert-${inv.id}" style="display:none; font-size:0.8rem; margin-bottom:0.6rem;"></div>
+                  <div style="display:flex; gap:0.5rem;">
+                    <button type="button" class="btn" style="flex:1;" id="invoicePaySubmitBtn-${inv.id}" onclick="submitInvoicePayment('${inv.id}')">Gửi Biên Lai</button>
+                    <button type="button" class="btn btn-outline" style="flex:1;" onclick="document.getElementById('invoicePayForm-${inv.id}').style.display='none';">Huỷ</button>
+                  </div>
+                </div>
+              </div>`;
+            }).join('')
           : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-file-invoice-dollar"></i> Bạn chưa có hoá đơn nào.</div>`;
 
         const perksHtml = TIER_PERKS.map((t, idx) => {

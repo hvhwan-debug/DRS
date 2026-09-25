@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 
 const INVOICES_TABLE = "Invoices";
 
@@ -24,6 +25,12 @@ module.exports = async function (context, req) {
         totalAmount: Number(entity.totalAmount) || 0,
         issueDate: entity.issueDate,
         note: entity.note || "",
+        status: entity.status || "unpaid",
+        receiptUrl: entity.receiptBlobName ? await getAttachmentSasUrl(entity.receiptBlobName, 60) : null,
+        paymentNote: entity.paymentNote || "",
+        submittedAt: entity.submittedAt || null,
+        paidAt: entity.paidAt || null,
+        rejectReason: entity.rejectReason || "",
         createdAt: entity.createdAt
       });
     }

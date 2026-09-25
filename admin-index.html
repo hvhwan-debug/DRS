@@ -407,7 +407,7 @@
         <div class="loading-state" id="invoiceLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="invoiceTableWrap">
           <table>
-            <thead><tr><th>Số HĐ</th><th>Email PH</th><th>Học sinh</th><th>Ngày lập</th><th>Tổng tiền</th><th>Thao tác</th></tr></thead>
+            <thead><tr><th>Số HĐ</th><th>Email PH</th><th>Học sinh</th><th>Ngày lập</th><th>Tổng tiền</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
             <tbody id="invoiceTableBody"></tbody>
           </table>
         </div>
@@ -1429,6 +1429,12 @@
       }
     }
 
+    const INVOICE_STATUS_META = {
+      unpaid: { text: 'Chưa thanh toán', bg: '#f1f5f9', color: '#475569' },
+      pending_review: { text: 'Chờ duyệt biên lai', bg: '#fef3c7', color: '#a16207' },
+      paid: { text: 'Đã thanh toán', bg: '#dcfce7', color: '#15803d' }
+    };
+
     async function loadInvoices() {
       try {
         const { invoices } = await apiCall('/api/portal-list-invoices');
@@ -1441,7 +1447,10 @@
         }
         document.getElementById('invoiceEmpty').style.display = 'none';
         document.getElementById('invoiceTableWrap').style.display = 'block';
-        document.getElementById('invoiceTableBody').innerHTML = invoices.map(inv => `
+        document.getElementById('invoiceTableBody').innerHTML = invoices.map(inv => {
+          const meta = INVOICE_STATUS_META[inv.status] || INVOICE_STATUS_META.unpaid;
+          const emailEnc = encodeURIComponent(inv.parentEmail);
+          return `
           <tr>
             <td style="font-weight:700; white-space:nowrap;">${inv.invoiceNumber}</td>
             <td>${escapeHtml(inv.parentEmail)}</td>
@@ -1449,12 +1458,44 @@
             <td style="white-space:nowrap;">${formatDate(inv.issueDate)}</td>
             <td style="white-space:nowrap; font-weight:700; color:#15803d;">${formatMoney(inv.totalAmount)}</td>
             <td style="white-space:nowrap;">
-              <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="viewInvoice('${inv.id}')">Xem</button>
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteInvoiceItem('${encodeURIComponent(inv.parentEmail)}','${inv.id}')">Xoá</button>
+              <span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:${meta.bg}; color:${meta.color};">${meta.text}</span>
+              ${inv.status === 'pending_review' && inv.receiptUrl ? `<div style="margin-top:0.3rem;"><a href="${inv.receiptUrl}" target="_blank" rel="noopener" style="font-size:0.78rem; color:#0284c7;"><i class="fa-solid fa-image"></i> Xem biên lai</a></div>` : ''}
             </td>
-          </tr>`).join('');
+            <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="viewInvoice('${inv.id}')">Xem</button>
+              ${inv.status === 'pending_review' ? `
+                <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="reviewInvoicePayment('${emailEnc}','${inv.id}','approve')">Duyệt</button>
+                <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="reviewInvoicePayment('${emailEnc}','${inv.id}','reject')">Từ chối</button>
+              ` : `<button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteInvoiceItem('${emailEnc}','${inv.id}')">Xoá</button>`}
+            </td>
+          </tr>`;
+        }).join('');
       } catch (err) {
         document.getElementById('invoiceLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function reviewInvoicePayment(emailEnc, id, action) {
+      const confirmMsg = action === 'approve'
+        ? 'Xác nhận biên lai hợp lệ? Hệ thống sẽ tự động cộng khoản này vào học phí và điểm tích lũy của thành viên.'
+        : 'Từ chối biên lai này và yêu cầu thành viên gửi lại?';
+      if (!confirm(confirmMsg)) return;
+      let reason = '';
+      if (action === 'reject') {
+        reason = prompt('Lý do từ chối (sẽ gửi cho thành viên):') || '';
+        if (reason === null) return;
+      }
+      try {
+        const result = await apiCall('/api/portal-review-invoice-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: decodeURIComponent(emailEnc), id, action, reason })
+        });
+        showGlobalAlert(result.warning || (action === 'approve' ? 'Đã duyệt thanh toán và cộng điểm cho thành viên.' : 'Đã từ chối và báo cho thành viên gửi lại.'), !!result.warning);
+        loadInvoices();
+        if (currentOverviewEmail === decodeURIComponent(emailEnc)) openMemberOverview(emailEnc);
+      } catch (err) {
         showGlobalAlert(err.message, true);
       }
     }

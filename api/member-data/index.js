@@ -187,11 +187,13 @@ module.exports = async function (context, req) {
     // Thông tin hồ sơ do chính thành viên tự điền
     let profile = { fullName: "", phone: "", address: "", dob: "" };
     let lastSeenTier = null;
+    let ackedInvoiceIdsRaw = "[]";
     try {
       const profilesTable = await getTableClient(PROFILES_TABLE);
       const p = await profilesTable.getEntity("profile", email);
       profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "" };
       lastSeenTier = p.lastSeenTier || null;
+      ackedInvoiceIdsRaw = p.ackedInvoiceIds || "[]";
     } catch (e) {
       // Chưa có hồ sơ nào được lưu — dùng giá trị rỗng mặc định ở trên
     }
@@ -323,13 +325,24 @@ module.exports = async function (context, req) {
           items,
           totalAmount: Number(entity.totalAmount) || 0,
           issueDate: entity.issueDate,
-          note: entity.note || ""
+          note: entity.note || "",
+          status: entity.status || "unpaid",
+          paymentNote: entity.paymentNote || "",
+          submittedAt: entity.submittedAt || null,
+          paidAt: entity.paidAt || null,
+          rejectReason: entity.rejectReason || ""
         });
       }
       invoices.sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate));
     } catch (e) {
       context.log.error("Lỗi lấy hoá đơn:", e.message);
     }
+
+    // Popup hoá đơn mới: hiện đúng 1 lần cho mỗi hoá đơn "unpaid" chưa từng được xem/đóng popup,
+    // để mời thành viên thanh toán ngay (kèm nút gửi biên lai) — dùng ackedInvoiceIds lưu trong hồ sơ.
+    let ackedInvoiceIds = [];
+    try { ackedInvoiceIds = JSON.parse(ackedInvoiceIdsRaw || "[]"); } catch (e) { ackedInvoiceIds = []; }
+    const pendingInvoicePopup = invoices.find(i => i.status === "unpaid" && !ackedInvoiceIds.includes(i.id)) || null;
 
     // Hạng thành viên + điểm tích lũy (tính server-side để đảm bảo đúng và không phụ thuộc client)
     const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
@@ -388,6 +401,7 @@ module.exports = async function (context, req) {
     context.res.status = 200;
     context.res.body = {
       success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions, giftCatalog, invoices,
+      pendingInvoicePopup,
       totalTuitionPaid,
       tier: { name: tier.name, icon: tier.icon, color: tier.color },
       isVip: tierRank(tier.name) >= tierRank("Vàng"),
