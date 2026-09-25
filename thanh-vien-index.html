@@ -207,6 +207,71 @@
     }
     .member-panel { display: none; }
     .member-panel.active { display: block; }
+
+    /* ============ GIAO DIỆN VIP (hạng Vàng trở lên) ============ */
+    body.vip-theme {
+      background:
+        radial-gradient(1100px 550px at 105% -8%, rgba(201,162,39,0.14) 0%, transparent 60%),
+        radial-gradient(900px 480px at -10% 105%, rgba(201,162,39,0.10) 0%, transparent 55%),
+        linear-gradient(180deg, #14120c 0%, #1c1a12 100%);
+      color: #f1ede0;
+    }
+    body.vip-theme .sidebar {
+      background: linear-gradient(180deg, #17140b 0%, #241f10 55%, #0f0d08 100%);
+      border-right: 1px solid rgba(201,162,39,0.35);
+    }
+    body.vip-theme .sidebar-brand-text { color: #f6ecc9; }
+    body.vip-theme .sidebar-brand-text span { color: #a8935a; }
+    body.vip-theme #sidebarMemberInfo {
+      background: linear-gradient(135deg, rgba(201,162,39,0.16), rgba(201,162,39,0.04));
+      border: 1px solid rgba(201,162,39,0.4);
+    }
+    body.vip-theme .member-tab-btn { color: #cbb98a; }
+    body.vip-theme .member-tab-btn:hover { background: rgba(201,162,39,0.10); color: #f6ecc9; }
+    body.vip-theme .member-tab-btn.active {
+      background: linear-gradient(135deg, rgba(201,162,39,0.28), rgba(201,162,39,0.06));
+      color: #f6ecc9; border-left-color: #e8c766;
+    }
+    body.vip-theme .sidebar-footer { border-top-color: rgba(201,162,39,0.25); }
+    body.vip-theme .card {
+      background: #211d13; border: 1px solid rgba(201,162,39,0.28); color: #f1ede0;
+      box-shadow: 0 14px 34px -14px rgba(0,0,0,0.5);
+    }
+    body.vip-theme .card h2 { color: #e8c766; }
+    body.vip-theme .card h2 i { color: #e8c766; }
+    body.vip-theme .info-row { border-bottom-color: rgba(201,162,39,0.15); }
+    body.vip-theme .info-row span:first-child { color: #a8935a; }
+    body.vip-theme .info-row span:last-child { color: #f1ede0; }
+    body.vip-theme .empty-state, body.vip-theme .loading-state { color: #a8935a; }
+    body.vip-theme .btn {
+      background: linear-gradient(135deg, #c9a227 0%, #e8c766 100%); color: #1a1508;
+      box-shadow: 0 10px 22px -8px rgba(201,162,39,0.55);
+    }
+    body.vip-theme .btn:hover { background: linear-gradient(135deg, #b3901f 0%, #d4b355 100%); }
+    body.vip-theme .btn-outline { background: #2a2416; color: #f87171; border-color: rgba(248,113,113,0.4); }
+    body.vip-theme .welcome-banner {
+      background:
+        linear-gradient(105deg, rgba(20,17,10,0.94) 0%, rgba(20,17,10,0.8) 45%, rgba(20,17,10,0.3) 75%, transparent 100%),
+        url('images/co-giao-huong-dan-hoc-sinh.jpg');
+      background-size: cover; background-position: center 30%;
+      border: 1px solid rgba(201,162,39,0.4);
+    }
+    body.vip-theme .welcome-banner::after {
+      background: radial-gradient(circle, rgba(232,199,102,0.35) 0%, transparent 70%);
+    }
+    body.vip-theme .welcome-banner p { color: #d9c99a; }
+    body.vip-theme .banner-tag {
+      background: rgba(201,162,39,0.22); border-color: rgba(232,199,102,0.6); color: #f6ecc9;
+    }
+    .vip-ribbon {
+      position: relative; margin-bottom: 1.4rem; padding: 1rem 1.3rem; border-radius: 16px;
+      background: linear-gradient(120deg, #241f10 0%, #322a15 50%, #241f10 100%);
+      border: 1px solid rgba(232,199,102,0.5); display: flex; align-items: center; gap: 0.9rem;
+      box-shadow: 0 10px 26px -10px rgba(0,0,0,0.5);
+    }
+    .vip-ribbon i { font-size: 1.6rem; color: #e8c766; }
+    .vip-ribbon .vip-ribbon-title { font-family: 'Sora', 'Inter', sans-serif; font-weight: 800; color: #f6ecc9; font-size: 1rem; }
+    .vip-ribbon .vip-ribbon-sub { font-size: 0.82rem; color: #a8935a; }
   </style>
 </head>
 <body>
@@ -514,6 +579,7 @@
     }
 
     function renderNotLoggedIn(container) {
+      document.body.classList.remove('vip-theme');
       container.innerHTML = `
         <div class="not-logged-in">
           <i class="fa-solid fa-lock"></i>
@@ -567,6 +633,9 @@
 
         const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
         const tier = getMembershipTier(totalTuitionPaid);
+        const isVip = totalTuitionPaid >= 15000000; // từ hạng Vàng trở lên
+        document.body.classList.toggle('vip-theme', isVip);
+
         const memberInfoEl = document.getElementById('sidebarMemberInfo');
         memberInfoEl.style.display = 'block';
         memberInfoEl.innerHTML = `
@@ -848,6 +917,15 @@
             </div>`
           : '';
 
+        const vipRibbonHtml = isVip ? `
+          <div class="vip-ribbon">
+            <i class="fa-solid ${tier.icon}"></i>
+            <div>
+              <div class="vip-ribbon-title">Thành viên ${tier.name} — Đặc quyền dành riêng cho bạn</div>
+              <div class="vip-ribbon-sub">Cảm ơn sự đồng hành lâu dài của bạn cùng Mạng Lưới Tri Thức Việt Nam.</div>
+            </div>
+          </div>` : '';
+
         container.innerHTML = `
           ${systemNoticeHtml}
           <div class="welcome-banner">
@@ -855,6 +933,7 @@
             <h1>Xin chào${profile.fullName ? ', ' + profile.fullName : ''}! 👋</h1>
             <p>Đồng hành cùng con em trên hành trình học tập — theo dõi lịch học, điểm số và đóng góp của bạn tại Mạng Lưới Tri Thức Việt Nam.</p>
           </div>
+          ${vipRibbonHtml}
 
           <div class="member-panel active" id="memberPanel-account">
             <div class="card">
