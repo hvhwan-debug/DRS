@@ -15,6 +15,10 @@ module.exports = async function (context, req) {
   const studentName = String(body.studentName || "").trim();
   const program = String(body.program || "").trim();
   const amount = Number(body.amount);
+  const expectedAmountRaw = body.expectedAmount;
+  const expectedAmount = expectedAmountRaw !== undefined && expectedAmountRaw !== null && expectedAmountRaw !== ""
+    ? Number(expectedAmountRaw)
+    : amount;
   const period = String(body.period || "").trim();
   const method = String(body.method || "").trim();
   const note = String(body.note || "").trim();
@@ -58,6 +62,7 @@ module.exports = async function (context, req) {
       studentName,
       program,
       amount,
+      expectedAmount,
       period,
       method,
       note,
