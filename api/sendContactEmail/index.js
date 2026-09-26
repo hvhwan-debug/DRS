@@ -58,8 +58,8 @@ module.exports = async function (context, req) {
     }
 
     // ====== 2. GỬI EMAIL QUA SMTP (Microsoft 365) ======
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      context.log.error("Thiếu cấu hình SMTP_USER hoặc SMTP_PASS.");
+    if (!process.env.GRAPH_TENANT_ID || !process.env.GRAPH_CLIENT_ID || !process.env.GRAPH_CLIENT_SECRET || !process.env.GRAPH_SENDER_EMAIL) {
+      context.log.error("Thiếu GRAPH_TENANT_ID/GRAPH_CLIENT_ID/GRAPH_CLIENT_SECRET/GRAPH_SENDER_EMAIL trong Application settings.");
       context.res = { status: 500, jsonBody: { error: "Máy chủ chưa cấu hình gửi email." } };
       return;
     }
@@ -105,7 +105,7 @@ module.exports = async function (context, req) {
 
     const emailTasks = [
       sendEmail({
-        from: process.env.SMTP_USER,
+        from: process.env.GRAPH_SENDER_EMAIL,
         fromName: "Mạng Lưới Tri Thức Việt Nam",
         to: email,
         subject: "Cảm ơn bạn đã liên hệ - Mạng Lưới Tri Thức Việt Nam",
@@ -116,7 +116,7 @@ module.exports = async function (context, req) {
     if (ADMIN_EMAIL) {
       emailTasks.push(
         sendEmail({
-          from: process.env.SMTP_USER,
+          from: process.env.GRAPH_SENDER_EMAIL,
           fromName: "Website DRS - Thông báo liên hệ",
           to: ADMIN_EMAIL,
           subject: `[Liên hệ mới] ${subject} - ${name}`,

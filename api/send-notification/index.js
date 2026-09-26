@@ -285,8 +285,8 @@ module.exports = async function (context, req) {
 
   const toEmail = process.env.NOTIFY_TO_EMAIL || "hotro@wvn.vn";
 
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    context.log.error("Thiếu SMTP_USER hoặc SMTP_PASS trong Application settings.");
+  if (!process.env.GRAPH_TENANT_ID || !process.env.GRAPH_CLIENT_ID || !process.env.GRAPH_CLIENT_SECRET || !process.env.GRAPH_SENDER_EMAIL) {
+    context.log.error("Thiếu GRAPH_TENANT_ID/GRAPH_CLIENT_ID/GRAPH_CLIENT_SECRET/GRAPH_SENDER_EMAIL trong Application settings.");
     context.res.status = 500;
     context.res.body = { success: false, message: "Hệ thống gửi email chưa được cấu hình." };
     return;
