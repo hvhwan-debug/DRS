@@ -188,6 +188,7 @@
         <button class="tab-btn" data-tab="invoices" onclick="switchTab('invoices')"><i class="fa-solid fa-file-invoice-dollar"></i> Hoá Đơn</button>
         <button class="tab-btn" data-tab="students" onclick="switchTab('students')"><i class="fa-solid fa-child-reaching"></i> Học Sinh</button>
         <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Lịch Học</button>
+        <button class="tab-btn" data-tab="attendance" onclick="switchTab('attendance')"><i class="fa-solid fa-clipboard-check"></i> Điểm Danh</button>
         <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
         <button class="tab-btn" data-tab="members" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> Thành Viên</button>
         <button class="tab-btn" data-tab="gifts" onclick="switchTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
@@ -206,6 +207,11 @@
     <!-- ===================== TAB: ĐƠN ĐĂNG KÝ ===================== -->
     <!-- ===================== TAB: TỔNG QUAN ===================== -->
     <div class="panel active" id="panel-dashboard">
+      <div class="card" style="border:1.5px solid #bae6fd; background:#f0f9ff;">
+        <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-list-check" style="color:#0284c7;"></i> Việc Cần Làm Hôm Nay</h3>
+        <div id="todoTodayList"><div class="loading-state" style="padding:0.5rem 0;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div></div>
+      </div>
+
       <div id="dashboardStatsRow" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:1.2rem;"></div>
 
       <div id="dashboardMidRow">
@@ -238,7 +244,10 @@
 
     <div class="panel" id="panel-registrations">
       <div class="card">
-        <input type="text" id="regSearchInput" placeholder="Tìm theo email, tên, chương trình..." oninput="renderRegistrationsTable()" style="width:100%; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; margin-bottom:1rem;">
+        <div style="display:flex; gap:0.6rem; margin-bottom:1rem;">
+          <input type="text" id="regSearchInput" placeholder="Tìm theo email, tên, chương trình..." oninput="renderRegistrationsTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
+          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('don-dang-ky.csv', allRegistrationsData, [{key:'formTitle',label:'Chương trình'},{key:'email',label:'Email'},{key:'submittedAt',label:'Ngày gửi'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        </div>
         <div class="loading-state" id="regLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="regTableWrap">
           <table>
@@ -293,6 +302,9 @@
         </form>
       </div>
       <div class="card">
+        <div style="text-align:right; margin-bottom:0.8rem;">
+          <button type="button" class="btn btn-outline" onclick="exportToCsv('quyen-gop.csv', allDonationsData, [{key:'donorName',label:'Người quyên góp'},{key:'donorEmail',label:'Email'},{key:'amount',label:'Số tiền'},{key:'itemDescription',label:'Hiện vật'},{key:'transactionCode',label:'Mã GD'},{key:'donatedAt',label:'Ngày'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        </div>
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
           <table>
@@ -355,6 +367,9 @@
         </form>
       </div>
       <div class="card">
+        <div style="text-align:right; margin-bottom:0.8rem;">
+          <button type="button" class="btn btn-outline" onclick="exportToCsv('hoc-phi.csv', allTuitionData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'amount',label:'Số tiền'},{key:'period',label:'Kỳ học phí'},{key:'paidAt',label:'Ngày nộp'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        </div>
         <div class="loading-state" id="tuitionLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="tuitionTableWrap">
           <table>
@@ -416,7 +431,10 @@
       </div>
 
       <div class="card">
-        <h3 style="margin-bottom:1rem; font-size:1rem;">Danh Sách Hoá Đơn</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.6rem;">
+          <h3 style="font-size:1rem; margin:0;">Danh Sách Hoá Đơn</h3>
+          <button type="button" class="btn btn-outline" onclick="exportToCsv('hoa-don.csv', allInvoicesData, [{key:'invoiceNumber',label:'Số HĐ'},{key:'parentEmail',label:'Email PH'},{key:'studentName',label:'Học sinh'},{key:'issueDate',label:'Ngày lập'},{key:'totalAmount',label:'Tổng tiền'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        </div>
         <div class="loading-state" id="invoiceLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="invoiceTableWrap">
           <table>
@@ -474,6 +492,7 @@
             <input type="text" id="studentSearchInput" placeholder="Tìm theo tên học sinh hoặc email phụ huynh..." style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--border); border-radius:10px;" oninput="renderStudentCards()">
           </div>
           <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="mergeDuplicateStudents()"><i class="fa-solid fa-code-merge"></i> Gộp học sinh trùng lặp</button>
+          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="exportToCsv('hoc-sinh.csv', allStudentsData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'dob',label:'Ngày sinh'},{key:'note',label:'Ghi chú'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="studentLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div id="studentCardsWrap" style="display:none; display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1rem;"></div>
@@ -520,6 +539,49 @@
           </table>
         </div>
         <div class="empty-state" id="scheduleEmpty" style="display:none;">Chưa có lịch học nào được thiết lập.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: ĐIỂM DANH ===================== -->
+    <div class="panel" id="panel-attendance">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-clipboard-check" style="color:#0284c7;"></i> Điểm Danh Theo Buổi</h3>
+        <div class="form-grid" style="margin-bottom:1rem;">
+          <div>
+            <label>Chương trình</label>
+            <select id="attendanceProgram" onchange="loadAttendanceRoster()"></select>
+          </div>
+          <div>
+            <label>Ngày học</label>
+            <input type="date" id="attendanceDate" onchange="loadAttendanceRoster()">
+          </div>
+        </div>
+        <div id="attendanceRosterWrap" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:0.5rem;">
+            <div style="font-size:0.85rem; color:var(--text-muted);"><span id="attendanceRosterCount">0</span> học sinh — bấm để đổi trạng thái, mặc định Có Mặt</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="markAllAttendance('present')">Tất cả Có Mặt</button>
+              <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="markAllAttendance('absent')">Tất cả Vắng</button>
+            </div>
+          </div>
+          <div id="attendanceRosterList"></div>
+          <div id="attendanceAlert" style="display:none; font-size:0.85rem; margin:0.8rem 0;"></div>
+          <button type="button" class="btn" id="attendanceSaveBtn" onclick="saveAttendance()" style="margin-top:0.5rem;"><i class="fa-solid fa-check"></i> Lưu Điểm Danh</button>
+        </div>
+        <div id="attendanceEmptyRoster" style="display:none; color:var(--text-muted); font-size:0.88rem; padding:1rem 0;">Chương trình này chưa có học sinh nào được gán.</div>
+        <div id="attendancePickPrompt" style="color:var(--text-muted); font-size:0.88rem; padding:1rem 0;">Chọn chương trình và ngày để tải danh sách điểm danh.</div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;">Lịch Sử Điểm Danh Gần Đây</h3>
+        <div class="loading-state" id="attendanceHistoryLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="attendanceHistoryWrap">
+          <table>
+            <thead><tr><th>Ngày</th><th>Chương trình</th><th>Có mặt</th><th>Vắng</th><th>Trễ</th><th>Sĩ số</th></tr></thead>
+            <tbody id="attendanceHistoryBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="attendanceHistoryEmpty" style="display:none;">Chưa có buổi điểm danh nào.</div>
       </div>
     </div>
 
@@ -572,6 +634,9 @@
         </form>
       </div>
       <div class="card">
+        <div style="text-align:right; margin-bottom:0.8rem;">
+          <button type="button" class="btn btn-outline" onclick="exportToCsv('bang-diem.csv', allGradesData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'assessmentType',label:'Loại đánh giá'},{key:'score',label:'Điểm'},{key:'comment',label:'Đánh giá GV'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        </div>
         <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="gradeTableWrap">
           <table>
@@ -866,6 +931,33 @@
       return div.innerHTML;
     }
 
+    // Xuất CSV dùng chung — đơn giản nhất: không cần thư viện, không cần gọi API riêng, chỉ
+    // chuyển thẳng dữ liệu ĐÃ TẢI SẴN trên trang (đúng những gì admin đang thấy) thành file tải về.
+    // columns: [{ key, label }] — key có thể là "a.b" để lấy field lồng nhau.
+    function exportToCsv(filename, rows, columns) {
+      if (!rows || rows.length === 0) {
+        showGlobalAlert('Không có dữ liệu để xuất.', true);
+        return;
+      }
+      const getVal = (row, key) => key.split('.').reduce((o, k) => (o == null ? '' : o[k]), row);
+      const escapeCsv = (val) => {
+        const s = val == null ? '' : String(val);
+        return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      };
+      const header = columns.map(c => escapeCsv(c.label)).join(',');
+      const body = rows.map(row => columns.map(c => escapeCsv(getVal(row, c.key))).join(',')).join('\n');
+      const csvContent = '\uFEFF' + header + '\n' + body; // BOM để Excel mở đúng tiếng Việt có dấu
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
     function confirmationStatusHtml(status, feedback) {
       if (status === 'confirmed') return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã xác nhận</span>`;
       if (status === 'rejected') return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeHtml(feedback)}">Từ chối: ${escapeHtml(feedback)}</span>`;
@@ -923,6 +1015,7 @@
         allRegistrationsData = registrations;
         renderMemberDashboardStats();
         renderMainDashboard();
+        renderTodoToday();
         document.getElementById('regLoading').style.display = 'none';
         if (registrations.length === 0) {
           document.getElementById('regEmpty').style.display = 'block';
@@ -1365,6 +1458,7 @@
 
     // ============== HOÁ ĐƠN ==============
     let allInvoicesData = [];
+    let allGiftRedemptionsData = [];
 
     function onInvoiceParentEmailChange() {
       const email = document.getElementById('invoiceParentEmail').value.trim().toLowerCase();
@@ -1511,6 +1605,7 @@
       try {
         const { invoices } = await apiCall('/api/portal-list-invoices');
         allInvoicesData = invoices;
+        renderTodoToday();
         document.getElementById('invoiceLoading').style.display = 'none';
         if (invoices.length === 0) {
           document.getElementById('invoiceEmpty').style.display = 'block';
@@ -1688,6 +1783,7 @@
       try {
         const { students } = await apiCall('/api/portal-list-students');
         allStudentsData = students;
+        populateAttendanceProgramSelect();
         renderStudentProgramsChecklist(getSelectedStudentPrograms());
         document.getElementById('studentLoading').style.display = 'none';
         if (students.length === 0) {
@@ -2117,6 +2213,8 @@
     async function loadGifts() {
       try {
         const { redemptions } = await apiCall('/api/portal-list-gift-redemptions');
+        allGiftRedemptionsData = redemptions;
+        renderTodoToday();
         document.getElementById('giftLoading').style.display = 'none';
         if (redemptions.length === 0) {
           document.getElementById('giftEmpty').style.display = 'block';
@@ -2177,6 +2275,7 @@
       try {
         const { schedules } = await apiCall('/api/portal-list-schedule');
         allScheduleData = schedules;
+        renderTodoToday();
         document.getElementById('scheduleLoading').style.display = 'none';
         if (schedules.length === 0) {
           document.getElementById('scheduleEmpty').style.display = 'block';
@@ -2277,6 +2376,173 @@
         btn.innerHTML = editingScheduleId ? '<i class="fa-solid fa-check"></i> Cập Nhật Lịch Học' : '<i class="fa-solid fa-check"></i> Lưu Lịch Học';
       }
     });
+
+    // ============== ĐIỂM DANH ==============
+    let attendanceState = {}; // { studentId: { status, note, studentName, parentEmail } }
+    let attendanceHistoryData = [];
+
+    function populateAttendanceProgramSelect() {
+      const sel = document.getElementById('attendanceProgram');
+      const prev = sel.value;
+      sel.innerHTML = allKnownPrograms().map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('');
+      if (prev && allKnownPrograms().includes(prev)) sel.value = prev;
+      if (!document.getElementById('attendanceDate').value) {
+        document.getElementById('attendanceDate').value = new Date().toISOString().slice(0, 10);
+      }
+    }
+
+    function attendanceRosterRowHtml(student) {
+      const state = attendanceState[student.id] || { status: 'present', note: '' };
+      const STATUS_BTNS = [
+        { key: 'present', label: 'Có Mặt', color: '#15803d', bg: '#dcfce7' },
+        { key: 'absent', label: 'Vắng', color: '#b91c1c', bg: '#fee2e2' },
+        { key: 'late', label: 'Trễ', color: '#a16207', bg: '#fef3c7' }
+      ];
+      return `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.6rem; flex-wrap:wrap; padding:0.6rem 0; border-top:1px solid var(--border);">
+          <div style="font-weight:600; min-width:160px;">${escapeHtml(student.studentName)}</div>
+          <div style="display:flex; gap:0.4rem;">
+            ${STATUS_BTNS.map(b => `
+              <button type="button" onclick="setAttendanceStatus('${student.id}','${b.key}')"
+                style="padding:0.3rem 0.75rem; font-size:0.78rem; font-weight:700; border-radius:999px; cursor:pointer;
+                border:1.5px solid ${state.status === b.key ? b.color : 'var(--border)'};
+                background:${state.status === b.key ? b.bg : '#fff'}; color:${state.status === b.key ? b.color : 'var(--text-muted)'};">
+                ${b.label}
+              </button>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    function renderAttendanceRoster(students) {
+      document.getElementById('attendanceRosterList').innerHTML = students.map(attendanceRosterRowHtml).join('');
+      document.getElementById('attendanceRosterCount').textContent = students.length;
+    }
+
+    function setAttendanceStatus(studentId, status) {
+      if (!attendanceState[studentId]) attendanceState[studentId] = { status: 'present', note: '' };
+      attendanceState[studentId].status = status;
+      renderAttendanceRoster(window.__attendanceRosterStudents || []);
+    }
+
+    function markAllAttendance(status) {
+      (window.__attendanceRosterStudents || []).forEach(s => {
+        attendanceState[s.id] = attendanceState[s.id] || { status: 'present', note: '' };
+        attendanceState[s.id].status = status;
+      });
+      renderAttendanceRoster(window.__attendanceRosterStudents || []);
+    }
+
+    async function loadAttendanceRoster() {
+      const program = document.getElementById('attendanceProgram').value;
+      const date = document.getElementById('attendanceDate').value;
+      document.getElementById('attendanceRosterWrap').style.display = 'none';
+      document.getElementById('attendanceEmptyRoster').style.display = 'none';
+      document.getElementById('attendancePickPrompt').style.display = 'none';
+      if (!program || !date) {
+        document.getElementById('attendancePickPrompt').style.display = 'block';
+        return;
+      }
+
+      const students = allStudentsData.filter(s => (s.programs || (s.program ? [s.program] : [])).includes(program) && s.id);
+      window.__attendanceRosterStudents = students;
+      if (students.length === 0) {
+        document.getElementById('attendanceEmptyRoster').style.display = 'block';
+        return;
+      }
+
+      attendanceState = {};
+      students.forEach(s => { attendanceState[s.id] = { status: 'present', note: '', studentName: s.studentName, parentEmail: s.parentEmail }; });
+
+      try {
+        const { records } = await apiCall('/api/portal-list-attendance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ program, date })
+        });
+        records.forEach(r => {
+          if (attendanceState[r.studentId]) attendanceState[r.studentId].status = r.status;
+        });
+      } catch (err) {
+        // Không chặn điểm danh mới nếu tải lịch sử cũ lỗi — cứ mặc định "Có Mặt" cho tất cả
+      }
+
+      renderAttendanceRoster(students);
+      document.getElementById('attendanceRosterWrap').style.display = 'block';
+    }
+
+    async function saveAttendance() {
+      const program = document.getElementById('attendanceProgram').value;
+      const date = document.getElementById('attendanceDate').value;
+      const students = window.__attendanceRosterStudents || [];
+      const alertEl = document.getElementById('attendanceAlert');
+      const btn = document.getElementById('attendanceSaveBtn');
+
+      const records = students.map(s => ({
+        studentId: s.id,
+        studentName: s.studentName,
+        parentEmail: s.parentEmail,
+        status: (attendanceState[s.id] || {}).status || 'present',
+        note: (attendanceState[s.id] || {}).note || ''
+      }));
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      try {
+        await apiCall('/api/portal-save-attendance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ program, date, records })
+        });
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#15803d';
+        alertEl.textContent = `Đã lưu điểm danh cho ${records.length} học sinh.`;
+        loadAttendanceHistory();
+      } catch (err) {
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#b91c1c';
+        alertEl.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Lưu Điểm Danh';
+      }
+    }
+
+    async function loadAttendanceHistory() {
+      try {
+        const { records } = await apiCall('/api/portal-list-attendance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        attendanceHistoryData = records;
+        document.getElementById('attendanceHistoryLoading').style.display = 'none';
+        if (records.length === 0) {
+          document.getElementById('attendanceHistoryEmpty').style.display = 'block';
+          return;
+        }
+        const sessions = {};
+        records.forEach(r => {
+          const key = `${r.date}|${r.program}`;
+          if (!sessions[key]) sessions[key] = { date: r.date, program: r.program, present: 0, absent: 0, late: 0, total: 0 };
+          sessions[key][r.status] = (sessions[key][r.status] || 0) + 1;
+          sessions[key].total++;
+        });
+        const rows = Object.values(sessions).sort((a, b) => new Date(b.date) - new Date(a.date));
+        document.getElementById('attendanceHistoryWrap').style.display = 'block';
+        document.getElementById('attendanceHistoryBody').innerHTML = rows.map(s => `
+          <tr>
+            <td style="white-space:nowrap;">${formatDate(s.date)}</td>
+            <td style="font-weight:700;">${escapeHtml(s.program)}</td>
+            <td style="color:#15803d; font-weight:700;">${s.present || 0}</td>
+            <td style="color:#b91c1c; font-weight:700;">${s.absent || 0}</td>
+            <td style="color:#a16207; font-weight:700;">${s.late || 0}</td>
+            <td>${s.total}</td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('attendanceHistoryLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
 
     // ============== BẢNG ĐIỂM ==============
     async function loadGrades() {
@@ -2506,6 +2772,68 @@
         btn.disabled = false;
         btn.innerHTML = 'Lưu';
       }
+    }
+
+    // "Việc Cần Làm Hôm Nay" — gộp từ dữ liệu đã tải sẵn (không gọi thêm API riêng), để admin
+    // mở trang lên là biết ngay hôm nay có lớp gì, và những gì đang chờ xử lý.
+    function getTodayScheduleMatches() {
+      const dayIdx = new Date().getDay(); // 0 = Chủ Nhật
+      const labelsByDay = {
+        0: ['chủ nhật', 'cn'],
+        1: ['thứ 2', 'thứ hai', 't2'],
+        2: ['thứ 3', 'thứ ba', 't3'],
+        3: ['thứ 4', 'thứ tư', 't4'],
+        4: ['thứ 5', 'thứ năm', 't5'],
+        5: ['thứ 6', 'thứ sáu', 't6'],
+        6: ['thứ 7', 'thứ bảy', 't7']
+      };
+      const labels = labelsByDay[dayIdx];
+      return (allScheduleData || []).filter(s => {
+        const daysNorm = (s.days || '').toLowerCase();
+        return labels.some(l => daysNorm.includes(l));
+      });
+    }
+
+    function renderTodoToday() {
+      const container = document.getElementById('todoTodayList');
+      if (!container) return;
+      const items = [];
+
+      const todayClasses = getTodayScheduleMatches();
+      if (todayClasses.length > 0) {
+        items.push({
+          icon: 'fa-calendar-day', color: '#0284c7',
+          text: `Hôm nay có ${todayClasses.length} lớp: ${todayClasses.map(s => `${escapeHtml(s.program)} (${escapeHtml(s.startTime)}-${escapeHtml(s.endTime)})`).join(', ')}`,
+          tab: 'schedule'
+        });
+      }
+
+      const pendingInvoices = (allInvoicesData || []).filter(i => i.status === 'pending_review');
+      if (pendingInvoices.length > 0) {
+        items.push({ icon: 'fa-file-invoice-dollar', color: '#a16207', text: `${pendingInvoices.length} hoá đơn đang chờ duyệt biên lai thanh toán`, tab: 'invoices' });
+      }
+
+      const pendingGifts = (allGiftRedemptionsData || []).filter(r => r.status === 'pending');
+      if (pendingGifts.length > 0) {
+        items.push({ icon: 'fa-gift', color: '#a16207', text: `${pendingGifts.length} yêu cầu đổi quà đang chờ duyệt`, tab: 'gifts' });
+      }
+
+      const pendingRegs = (allRegistrationsData || []).filter(r => r.status === 'Đã ghi nhận - Chờ xử lý');
+      if (pendingRegs.length > 0) {
+        items.push({ icon: 'fa-file-lines', color: '#a16207', text: `${pendingRegs.length} đơn đăng ký chưa xử lý`, tab: 'registrations' });
+      }
+
+      if (items.length === 0) {
+        container.innerHTML = `<div style="color:#15803d; font-size:0.9rem;"><i class="fa-solid fa-circle-check"></i> Không có việc gì cần xử lý gấp hôm nay.</div>`;
+        return;
+      }
+
+      container.innerHTML = items.map((item, idx) => `
+        <div onclick="switchTab('${item.tab}')" style="display:flex; align-items:center; gap:0.7rem; padding:0.6rem 0.2rem; border-top:${idx === 0 ? 'none' : '1px solid #dbeafe'}; cursor:pointer;">
+          <i class="fa-solid ${item.icon}" style="color:${item.color}; width:20px; text-align:center;"></i>
+          <div style="font-size:0.9rem; color:#0f172a; flex:1;">${item.text}</div>
+          <i class="fa-solid fa-chevron-right" style="color:#94a3b8; font-size:0.8rem;"></i>
+        </div>`).join('');
     }
 
     function renderMainDashboard() {
@@ -3288,6 +3616,8 @@
     loadGiftCatalog();
     loadGifts();
     loadEmailLogs();
+    populateAttendanceProgramSelect();
+    loadAttendanceHistory();
   </script>
 </body>
 </html>
