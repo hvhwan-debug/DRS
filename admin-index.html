@@ -2876,6 +2876,43 @@
           if (r.studentName && !assignedNames.has(norm(r.studentName))) unassignedNames.add(r.studentName);
         });
 
+        // Hạng thành viên/tổng quan tài chính — tính nhanh theo tổng học phí đã đóng, để nhìn
+        // toàn cảnh ngay mà không cần mở từng tab riêng (Học Phí, Quyên Góp, Hoá Đơn).
+        function adminTierByTotal(totalPaid) {
+          const tiers = [
+            { name: 'Kim Cương', min: 70000000, color: '#0369a1' },
+            { name: 'Vàng', min: 40000000, color: '#c9a227' },
+            { name: 'Titanium', min: 20000000, color: '#5b7c99' },
+            { name: 'Bạc', min: 10000000, color: '#64748b' },
+            { name: 'Thân Thiết', min: 5000000, color: '#0284c7' },
+            { name: 'Thành Viên Mới', min: 0, color: '#64748b' }
+          ];
+          return tiers.find(t => totalPaid >= t.min);
+        }
+        const totalTuitionAll = data.tuitionPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+        const totalDonationAll = data.donations.reduce((s, d) => s + (Number(d.amount) || 0), 0);
+        const totalInvoiceAll = data.invoices.reduce((s, i) => s + (Number(i.totalAmount) || 0), 0);
+        const quickTier = adminTierByTotal(totalTuitionAll);
+        const tierSummaryHtml = `
+          <div style="display:flex; flex-wrap:wrap; gap:0.7rem; margin-bottom:1.4rem;">
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Hạng (theo tổng học phí)</div>
+              <div style="font-weight:800; color:${quickTier.color};">${quickTier.name}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng học phí đã đóng</div>
+              <div style="font-weight:800; color:#15803d;">${formatMoney(totalTuitionAll)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng quyên góp</div>
+              <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalDonationAll)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng giá trị hoá đơn</div>
+              <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalInvoiceAll)}</div>
+            </div>
+          </div>`;
+
         function studentCardHtml(studentName, programs, meta) {
           const key = norm(studentName);
           const studentGrades = data.grades.filter(g => norm(g.studentName) === key);
@@ -2947,6 +2984,37 @@
               <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
                 <strong>${escapeHtml(r.formTitle)}</strong> — ${formatDate(r.submittedAt)} — <span style="color:var(--text-muted);">${escapeHtml(r.status)}</span>
               </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có đơn nào.</div>'}
+          </div>`;
+
+        // 3 khối tổng hợp cấp toàn thành viên (không chỉ riêng theo từng học sinh) — để không bỏ sót
+        // dữ liệu chưa gán đúng tên học sinh, và xem toàn cảnh nhanh mà không cần mở tab khác.
+        const tuitionHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Học Phí (${data.tuitionPayments.length})</h4>
+            ${data.tuitionPayments.length > 0 ? data.tuitionPayments.map(p => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.4rem;">
+                <span>${escapeHtml(p.studentName)} — ${escapeHtml(p.program) || '—'} ${p.period ? '— ' + escapeHtml(p.period) : ''} <span style="color:var(--text-muted);">(${formatDate(p.paidAt)})</span></span>
+                <strong style="color:#15803d; white-space:nowrap;">${formatMoney(p.amount)}</strong>
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có khoản học phí nào.</div>'}
+          </div>`;
+
+        const invoiceHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Hoá Đơn (${data.invoices.length})</h4>
+            ${data.invoices.length > 0 ? data.invoices.map(i => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.4rem;">
+                <span>${escapeHtml(i.invoiceNumber)} — ${escapeHtml(i.studentName) || '—'} <span style="color:var(--text-muted);">(${formatDate(i.issueDate)})</span></span>
+                <strong style="white-space:nowrap;">${formatMoney(i.totalAmount)}</strong>
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có hoá đơn nào.</div>'}
+          </div>`;
+
+        const scheduleHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Lịch Học (${data.schedules.length})</h4>
+            ${data.schedules.length > 0 ? data.schedules.map(s => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
+                ${escapeHtml(s.program)} — ${escapeHtml(s.days)} ${escapeHtml(s.startTime)}-${escapeHtml(s.endTime)}${s.teacherName ? ' — GV: ' + escapeHtml(s.teacherName) : ''}${s.location ? ' — ' + escapeHtml(s.location) : ''}
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có lịch học nào cho các chương trình đang tham gia.</div>'}
           </div>`;
 
         const donHtml = `
@@ -3023,7 +3091,7 @@
           </div>`;
 
         document.getElementById('memberOverviewTitle').textContent = `Tổng quan: ${email} — ${data.students.length} học sinh`;
-        content.innerHTML = profileHtml + studentsHtml + regHtml + donHtml + gradeHtml + giftHtml;
+        content.innerHTML = profileHtml + tierSummaryHtml + studentsHtml + tuitionHtml + invoiceHtml + scheduleHtml + regHtml + donHtml + gradeHtml + giftHtml;
       } catch (err) {
         content.innerHTML = `<div style="color:#dc2626;">${err.message}</div>`;
       }
