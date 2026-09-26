@@ -550,7 +550,7 @@
         showAlert('Đăng ký hoàn tất! Đang chuyển hướng...', false);
         localStorage.setItem('wvn_member_token', pendingMemberToken);
         localStorage.setItem('wvn_member_email', pendingMemberEmail);
-        window.location.href = 'thanh-vien-index.html';
+        window.location.href = 'thanh-vien';
       } catch (err) {
         showAlert(err.message, true);
         btn.disabled = false;
@@ -568,7 +568,7 @@
 
     // Nếu đã đăng nhập sẵn (còn phiên hợp lệ), chuyển thẳng vào khu vực thành viên
     if (localStorage.getItem('wvn_member_token')) {
-      window.location.href = 'thanh-vien-index.html';
+      window.location.href = 'thanh-vien';
     }
   </script>
 
