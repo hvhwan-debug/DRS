@@ -102,7 +102,7 @@ module.exports = async function (context, req) {
     const safeName = escapeHtml(name);
     const safeSubject = escapeHtml(subject);
     const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
-    const logoUrl = "https://wvn.vn/logo.png"; // TODO: thay bằng URL logo thật đã upload lên GitHub
+    const logoUrl = "https://wvn.vn/images/logo-wvn.png";
 
     const autoReplyHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color:#0f172a;">
