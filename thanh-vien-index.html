@@ -1188,14 +1188,14 @@
 
         function confirmationCellHtml(type, id, status, feedback) {
           if (status === 'confirmed') {
-            return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;"><i class="fa-solid fa-check"></i> Đã xác nhận</span>`;
+            return `<span style="display:inline-block; white-space:nowrap; font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;"><i class="fa-solid fa-check"></i> Đã xác nhận</span>`;
           }
           if (status === 'rejected') {
-            return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeAttr(feedback)}"><i class="fa-solid fa-xmark"></i> Đã từ chối</span>`;
+            return `<span style="display:inline-block; white-space:nowrap; font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeAttr(feedback)}"><i class="fa-solid fa-xmark"></i> Đã từ chối</span>`;
           }
-          return `<div style="display:flex; gap:0.4rem;">
-              <button type="button" onclick="confirmRecord('${type}','${id}','confirm')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #86efac; background:#f0fdf4; color:#15803d; font-size:0.78rem; cursor:pointer;">Xác nhận</button>
-              <button type="button" onclick="confirmRecord('${type}','${id}','reject')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #fca5a5; background:#fef2f2; color:#b91c1c; font-size:0.78rem; cursor:pointer;">Từ chối</button>
+          return `<div style="display:flex; gap:0.4rem; white-space:nowrap;">
+              <button type="button" onclick="confirmRecord('${type}','${id}','confirm')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #86efac; background:#f0fdf4; color:#15803d; font-size:0.78rem; cursor:pointer; white-space:nowrap;">Xác nhận</button>
+              <button type="button" onclick="confirmRecord('${type}','${id}','reject')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #fca5a5; background:#fef2f2; color:#b91c1c; font-size:0.78rem; cursor:pointer; white-space:nowrap;">Từ chối</button>
             </div>`;
         }
 
@@ -1208,7 +1208,7 @@
         const donationsHtml = `<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Loại</th><th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Giá trị / Hiện vật</th><th style="padding:0.4rem;">Mã giao dịch</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
+                <th style="padding:0.4rem; white-space:nowrap;">Loại</th><th style="padding:0.4rem; white-space:nowrap;">Ngày</th><th style="padding:0.4rem; white-space:nowrap;">Giá trị / Hiện vật</th><th style="padding:0.4rem; white-space:nowrap;">Mã giao dịch</th><th style="padding:0.4rem; white-space:nowrap;">Hình thức</th><th style="padding:0.4rem; white-space:nowrap;">Ghi chú</th><th style="padding:0.4rem; white-space:nowrap;">Ảnh</th><th style="padding:0.4rem; white-space:nowrap;">Xác nhận</th>
               </tr></thead>
               <tbody>
                 ${donations.length > 0 ? donations.map(d => `
@@ -1220,7 +1220,7 @@
                     <td style="padding:0.5rem 0.4rem;">${d.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${d.note || '—'}</td>
                     <td style="padding:0.5rem 0.4rem;">${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
-                    <td style="padding:0.5rem 0.4rem;">${confirmationCellHtml('donation', d.id, d.confirmationStatus, d.memberFeedback)}</td>
+                    <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${confirmationCellHtml('donation', d.id, d.confirmationStatus, d.memberFeedback)}</td>
                   </tr>
                 `).join('') : `
                   <tr>
@@ -1254,7 +1254,7 @@
         const tuitionHtml = `${tuitionBalanceSummaryHtml}<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Học sinh</th><th style="padding:0.4rem;">Chương trình</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Chênh lệch</th><th style="padding:0.4rem;">Kỳ học phí</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ngày nộp</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
+                <th style="padding:0.4rem; white-space:nowrap;">Học sinh</th><th style="padding:0.4rem; white-space:nowrap;">Chương trình</th><th style="padding:0.4rem; white-space:nowrap;">Số tiền</th><th style="padding:0.4rem; white-space:nowrap;">Chênh lệch</th><th style="padding:0.4rem; white-space:nowrap;">Kỳ học phí</th><th style="padding:0.4rem; white-space:nowrap;">Hình thức</th><th style="padding:0.4rem; white-space:nowrap;">Ngày nộp</th><th style="padding:0.4rem; white-space:nowrap;">Ảnh</th><th style="padding:0.4rem; white-space:nowrap;">Xác nhận</th>
               </tr></thead>
               <tbody>
                 ${tuitionPayments.length > 0 ? tuitionPayments.map(p => `
@@ -1267,7 +1267,7 @@
                     <td style="padding:0.5rem 0.4rem;">${p.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${formatDate(p.paidAt)}</td>
                     <td style="padding:0.5rem 0.4rem;">${(p.attachments && p.attachments.length > 0) ? p.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
-                    <td style="padding:0.5rem 0.4rem;">${confirmationCellHtml('tuition', p.id, p.confirmationStatus, p.memberFeedback)}</td>
+                    <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${confirmationCellHtml('tuition', p.id, p.confirmationStatus, p.memberFeedback)}</td>
                   </tr>
                 `).join('') : `
                   <tr>
@@ -1488,15 +1488,15 @@
               <table style="width:100%; border-collapse:collapse; font-size:0.88rem;" id="gradesTable">
                 <thead>
                   <tr style="text-align:left; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">
-                    <th style="padding:0.5rem 0.6rem;">STT</th>
-                    <th style="padding:0.5rem 0.6rem;">Họ tên</th>
-                    <th style="padding:0.5rem 0.6rem;">Chương trình học</th>
-                    <th style="padding:0.5rem 0.6rem;">Loại đánh giá</th>
-                    <th style="padding:0.5rem 0.6rem;">Ngày học</th>
-                    <th style="padding:0.5rem 0.6rem;">Điểm</th>
-                    <th style="padding:0.5rem 0.6rem;">Nhận xét của giáo viên</th>
-                    <th style="padding:0.5rem 0.6rem;">Ảnh bài làm</th>
-                    <th style="padding:0.5rem 0.6rem;">Xác nhận</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">STT</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Họ tên</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Chương trình học</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Loại đánh giá</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ngày học</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Điểm</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Nhận xét của giáo viên</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ảnh bài làm</th>
+                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Xác nhận</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1510,7 +1510,7 @@
                       <td style="padding:0.6rem; font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
                       <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
                       <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
-                      <td style="padding:0.6rem;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
+                      <td style="padding:0.6rem; white-space:nowrap;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
                     </tr>
                   `).join('') : `
                     <tr>
