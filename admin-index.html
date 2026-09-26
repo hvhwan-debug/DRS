@@ -429,7 +429,7 @@
     <!-- ===================== TAB: HỌC SINH ===================== -->
     <div class="panel" id="panel-students">
       <div class="card" style="background:linear-gradient(135deg,#ffffff 0%,#f8fbff 100%); border:1px solid #e0ecfb;">
-        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-child-reaching" style="color:#0284c7;"></i> Thêm / Sửa học sinh</h3>
+        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-child-reaching" style="color:#0284c7;"></i> <span id="studentFormTitle">Thêm học sinh mới</span></h3>
         <form id="studentForm">
           <div class="form-grid">
             <div>
@@ -438,15 +438,13 @@
             </div>
             <div><label>Tên học sinh *</label><input type="text" id="studentName" required></div>
             <div><label>Ngày sinh</label><input type="date" id="studentDob"></div>
-            <div>
-              <label>Gán vào chương trình học</label>
-              <select id="studentProgram" onchange="toggleCustomProgram('student')">
-                <option value="">-- Chưa gán --</option>
-                <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
-                <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
-                <option value="__custom__">+ Chương trình khác...</option>
-              </select>
-              <input type="text" id="studentProgramCustom" placeholder="Nhập tên chương trình mới" style="display:none; margin-top:0.4rem;">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Gán vào chương trình học (có thể chọn nhiều)</label>
+            <div id="studentProgramsChecklist" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;"></div>
+            <div style="display:flex; gap:0.5rem; max-width:360px;">
+              <input type="text" id="studentProgramNewInput" placeholder="+ Thêm chương trình mới..." style="flex:1;">
+              <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="addStudentProgramOption()">Thêm</button>
             </div>
           </div>
           <div style="margin-bottom:1rem;">
@@ -458,16 +456,18 @@
         </form>
       </div>
       <div class="card">
-        <div class="loading-state" id="studentLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
-        <div class="table-scroll" style="display:none;" id="studentTableWrap">
-          <table>
-            <thead><tr><th>Học sinh</th><th>Ngày sinh</th><th>Email phụ huynh</th><th>Chương trình đã gán</th><th>Ghi chú</th><th>Thao tác</th></tr></thead>
-            <tbody id="studentTableBody"></tbody>
-          </table>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem; margin-bottom:1rem;">
+          <div style="position:relative; flex:1; min-width:220px; max-width:340px;">
+            <input type="text" id="studentSearchInput" placeholder="Tìm theo tên học sinh hoặc email phụ huynh..." style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--border); border-radius:10px;" oninput="renderStudentCards()">
+          </div>
+          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="mergeDuplicateStudents()"><i class="fa-solid fa-code-merge"></i> Gộp học sinh trùng lặp</button>
         </div>
+        <div class="loading-state" id="studentLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div id="studentCardsWrap" style="display:none; display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1rem;"></div>
         <div class="empty-state" id="studentEmpty" style="display:none;">Chưa có học sinh nào được thêm.</div>
       </div>
     </div>
+
 
     <!-- ===================== TAB: LỊCH HỌC ===================== -->
     <div class="panel" id="panel-schedule">
@@ -736,6 +736,7 @@
     let allRegistrationsData = [];
     let allDonationsData = [];
     let allGradesData = [];
+    let allScheduleData = [];
 
     function onGradeParentEmailChange() {
       const email = document.getElementById('gradeParentEmail').value.trim().toLowerCase();
@@ -1544,42 +1545,201 @@
     // ============== HỌC SINH ==============
     let editingStudentId = null;
     let editingStudentParentEmail = null;
+    let editingStudentExtraIds = []; // các bản ghi trùng (cùng học sinh, chương trình cũ tách rời) sẽ bị gộp/xoá khi lưu
+    let allStudentsData = [];
+    let studentGroupsCache = [];
+    const expandedStudentKeys = new Set();
+
+    function studentGroupKey(parentEmail, studentName) {
+      return `${(parentEmail || '').trim().toLowerCase()}|||${(studentName || '').trim().toLowerCase()}`;
+    }
+
+    // Gom các bản ghi Students theo (email phụ huynh + tên học sinh) thành 1 "hồ sơ học sinh" duy nhất,
+    // hợp nhất toàn bộ chương trình đã gán — để không còn hiện trùng nhiều dòng cho cùng 1 học sinh.
+    function groupStudents(students) {
+      const map = new Map();
+      for (const s of students) {
+        const key = studentGroupKey(s.parentEmail, s.studentName);
+        if (!map.has(key)) {
+          map.set(key, {
+            key,
+            parentEmail: s.parentEmail,
+            studentName: s.studentName,
+            dob: s.dob || '',
+            note: s.note || '',
+            programs: new Set(),
+            ids: []
+          });
+        }
+        const g = map.get(key);
+        g.ids.push(s.id);
+        (s.programs && s.programs.length ? s.programs : (s.program ? [s.program] : [])).forEach(p => g.programs.add(p));
+        if (!g.dob && s.dob) g.dob = s.dob;
+        if (!g.note && s.note) g.note = s.note;
+      }
+      return Array.from(map.values()).map(g => ({ ...g, programs: Array.from(g.programs) }))
+        .sort((a, b) => a.studentName.localeCompare(b.studentName));
+    }
+
+    function allKnownPrograms() {
+      const set = new Set(['Luyện Chữ Đẹp', 'Tiền Tiểu Học']);
+      allStudentsData.forEach(s => (s.programs || (s.program ? [s.program] : [])).forEach(p => p && set.add(p)));
+      allScheduleData.forEach(s => s.program && set.add(s.program));
+      return Array.from(set);
+    }
+
+    function renderStudentProgramsChecklist(selected = []) {
+      const wrap = document.getElementById('studentProgramsChecklist');
+      const selectedSet = new Set(selected);
+      wrap.innerHTML = allKnownPrograms().map(p => `
+        <label style="display:inline-flex; align-items:center; gap:0.35rem; border:1px solid var(--border); border-radius:999px; padding:0.35rem 0.8rem; font-size:0.85rem; cursor:pointer; background:${selectedSet.has(p) ? '#e0f2fe' : '#fff'};">
+          <input type="checkbox" value="${escapeHtml(p)}" ${selectedSet.has(p) ? 'checked' : ''} style="margin:0;" onchange="this.closest('label').style.background = this.checked ? '#e0f2fe' : '#fff';">
+          ${escapeHtml(p)}
+        </label>`).join('');
+    }
+
+    function addStudentProgramOption() {
+      const input = document.getElementById('studentProgramNewInput');
+      const val = input.value.trim();
+      if (!val) return;
+      const alreadySelected = getSelectedStudentPrograms();
+      if (!alreadySelected.includes(val)) alreadySelected.push(val);
+      if (!allKnownPrograms().includes(val)) allStudentsData.push({ programs: [val] }); // để allKnownPrograms() nhận diện ngay
+      renderStudentProgramsChecklist(alreadySelected);
+      input.value = '';
+    }
+
+    function getSelectedStudentPrograms() {
+      return Array.from(document.querySelectorAll('#studentProgramsChecklist input[type="checkbox"]:checked')).map(cb => cb.value);
+    }
 
     async function loadStudents() {
       try {
         const { students } = await apiCall('/api/portal-list-students');
+        allStudentsData = students;
+        renderStudentProgramsChecklist(getSelectedStudentPrograms());
         document.getElementById('studentLoading').style.display = 'none';
         if (students.length === 0) {
           document.getElementById('studentEmpty').style.display = 'block';
+          document.getElementById('studentCardsWrap').style.display = 'none';
           return;
         }
-        document.getElementById('studentTableWrap').style.display = 'block';
-        document.getElementById('studentTableBody').innerHTML = students.map(s => `
-          <tr>
-            <td style="font-weight:700;">${escapeHtml(s.studentName)}</td>
-            <td>${formatDate(s.dob) !== '—' ? formatDate(s.dob) : (s.dob || '—')}</td>
-            <td>${escapeHtml(s.parentEmail)}</td>
-            <td>${s.program ? `<span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">${escapeHtml(s.program)}</span>` : '<span style="color:var(--text-muted);">Chưa gán</span>'}</td>
-            <td style="color:var(--text-muted);">${escapeHtml(s.note) || '—'}</td>
-            <td style="display:flex; gap:0.5rem;">
-              <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditStudent(${JSON.stringify(s).replace(/'/g, "&#39;")})'>Sửa</button>
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="deleteStudent('${encodeURIComponent(s.parentEmail)}','${s.id}')">Xoá</button>
-            </td>
-          </tr>`).join('');
+        document.getElementById('studentEmpty').style.display = 'none';
+        document.getElementById('studentCardsWrap').style.display = 'grid';
+        renderStudentCards();
       } catch (err) {
         document.getElementById('studentLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
     }
 
-    function startEditStudent(s) {
-      editingStudentId = s.id;
-      editingStudentParentEmail = s.parentEmail;
-      document.getElementById('studentParentEmail').value = s.parentEmail || '';
-      document.getElementById('studentName').value = s.studentName || '';
-      document.getElementById('studentDob').value = s.dob || '';
-      setProgramSelectValue('student', s.program || '');
-      document.getElementById('studentNote').value = s.note || '';
+    function studentDetailHtml(g) {
+      const programSet = new Set(g.programs);
+      const grades = allGradesData.filter(x => (x.studentName || '').trim().toLowerCase() === g.studentName.trim().toLowerCase())
+        .sort((a, b) => new Date(b.recordedAt || 0) - new Date(a.recordedAt || 0)).slice(0, 5);
+      const tuitionForParent = allTuitionData.filter(x => (x.parentEmail || '').toLowerCase() === g.parentEmail.toLowerCase());
+      const totalTuition = tuitionForParent.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+      const relevantSchedules = allScheduleData.filter(x => programSet.has(x.program));
+
+      return `
+        <div style="border-top:1px dashed var(--border); margin-top:0.9rem; padding-top:0.9rem; font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.6rem;">
+            <span style="color:var(--text-muted);">Tổng học phí (theo email phụ huynh)</span>
+            <strong style="color:#15803d;">${formatMoney(totalTuition)}</strong>
+          </div>
+          <div style="margin-bottom:0.5rem; font-weight:700; color:var(--text-dark);">Lịch học</div>
+          ${relevantSchedules.length > 0 ? relevantSchedules.map(s => `
+            <div style="padding:0.4rem 0; color:var(--text-muted);">${escapeHtml(s.program)} — ${escapeHtml(s.days)}, ${escapeHtml(s.startTime)}-${escapeHtml(s.endTime)}${s.location ? ' @ ' + escapeHtml(s.location) : ''}</div>
+          `).join('') : '<div style="color:var(--text-muted); margin-bottom:0.5rem;">Chưa có lịch cho chương trình đã gán.</div>'}
+          <div style="margin:0.6rem 0 0.5rem; font-weight:700; color:var(--text-dark);">Điểm gần đây</div>
+          ${grades.length > 0 ? grades.map(gr => `
+            <div style="padding:0.4rem 0; color:var(--text-muted);">${escapeHtml(gr.program)} — ${escapeHtml(gr.assessmentType || 'Buổi học')}: <strong style="color:#0369a1;">${gr.score != null ? gr.score : '—'}</strong> (${formatDate(gr.recordedAt)})</div>
+          `).join('') : '<div style="color:var(--text-muted);">Chưa có điểm nào được ghi nhận.</div>'}
+          <div style="display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap;">
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="jumpToGradeFor('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.studentName)}')"><i class="fa-solid fa-graduation-cap"></i> Ghi điểm mới</button>
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="jumpToTuitionFor('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.studentName)}')"><i class="fa-solid fa-coins"></i> Thêm học phí</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Quản lý lịch học</button>
+          </div>
+        </div>`;
+    }
+
+    function toggleStudentDetail(key) {
+      if (expandedStudentKeys.has(key)) expandedStudentKeys.delete(key); else expandedStudentKeys.add(key);
+      renderStudentCards();
+    }
+
+    function jumpToGradeFor(emailEnc, nameEnc) {
+      switchTab('grades');
+      const email = decodeURIComponent(emailEnc), name = decodeURIComponent(nameEnc);
+      document.getElementById('gradeParentEmail').value = email;
+      onGradeParentEmailChange();
+      setTimeout(() => {
+        const sel = document.getElementById('gradeStudentNameSelect');
+        if (sel.style.display !== 'none') sel.value = name; else document.getElementById('gradeStudentName').value = name;
+      }, 50);
+      document.getElementById('gradeForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function jumpToTuitionFor(emailEnc, nameEnc) {
+      switchTab('tuition');
+      const email = decodeURIComponent(emailEnc), name = decodeURIComponent(nameEnc);
+      document.getElementById('tuitionParentEmail').value = email;
+      onTuitionParentEmailChange();
+      setTimeout(() => {
+        const sel = document.getElementById('tuitionStudentNameSelect');
+        if (sel.style.display !== 'none') sel.value = name; else document.getElementById('tuitionStudentName').value = name;
+      }, 50);
+      document.getElementById('tuitionForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderStudentCards() {
+      const query = (document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
+      studentGroupsCache = groupStudents(allStudentsData);
+      let groups = studentGroupsCache;
+      if (query) {
+        groups = groups.filter(g => g.studentName.toLowerCase().includes(query) || g.parentEmail.toLowerCase().includes(query));
+      }
+      if (groups.length === 0) {
+        document.getElementById('studentCardsWrap').innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); text-align:center; padding:1rem;">Không tìm thấy học sinh phù hợp.</div>`;
+        return;
+      }
+      document.getElementById('studentCardsWrap').innerHTML = groups.map(g => {
+        const initials = g.studentName.trim().split(/\s+/).slice(-1)[0]?.charAt(0).toUpperCase() || '?';
+        const isExpanded = expandedStudentKeys.has(g.key);
+        return `
+        <div class="inner-card" style="border:1px solid var(--border); border-radius:16px; padding:1.1rem 1.2rem; background:#fff;">
+          <div style="display:flex; gap:0.8rem; align-items:flex-start;">
+            <div style="width:42px; height:42px; flex-shrink:0; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-weight:800;">${initials}</div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-weight:800; font-size:1rem; color:var(--text-dark);">${escapeHtml(g.studentName)}</div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(g.parentEmail)}${g.dob ? ' · ' + (formatDate(g.dob) !== '—' ? formatDate(g.dob) : g.dob) : ''}</div>
+            </div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.7rem;">
+            ${g.programs.length > 0 ? g.programs.map(p => `<span style="font-size:0.75rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">${escapeHtml(p)}</span>`).join('')
+              : '<span style="font-size:0.78rem; color:var(--text-muted);">Chưa gán chương trình</span>'}
+          </div>
+          ${g.note ? `<div style="margin-top:0.6rem; font-size:0.82rem; color:var(--text-muted); font-style:italic;">"${escapeHtml(g.note)}"</div>` : ''}
+          <div style="display:flex; gap:0.5rem; margin-top:0.9rem; flex-wrap:wrap;">
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick='startEditStudentGroup(${JSON.stringify(g).replace(/'/g, "&#39;")})'>Sửa</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick='deleteStudentGroup(${JSON.stringify({ parentEmail: g.parentEmail, ids: g.ids }).replace(/'/g, "&#39;")})'>Xoá</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="toggleStudentDetail('${g.key}')">${isExpanded ? 'Thu gọn' : 'Xem chi tiết'} <i class="fa-solid fa-chevron-${isExpanded ? 'up' : 'down'}"></i></button>
+          </div>
+          ${isExpanded ? studentDetailHtml(g) : ''}
+        </div>`;
+      }).join('');
+    }
+
+    function startEditStudentGroup(g) {
+      editingStudentId = g.ids[0];
+      editingStudentExtraIds = g.ids.slice(1); // các bản ghi trùng còn lại -> xoá khi lưu để gộp về 1 hồ sơ duy nhất
+      editingStudentParentEmail = g.parentEmail;
+      document.getElementById('studentParentEmail').value = g.parentEmail || '';
+      document.getElementById('studentName').value = g.studentName || '';
+      document.getElementById('studentDob').value = g.dob || '';
+      document.getElementById('studentNote').value = g.note || '';
+      renderStudentProgramsChecklist(g.programs || []);
+      document.getElementById('studentFormTitle').textContent = `Sửa hồ sơ: ${g.studentName}`;
       document.getElementById('studentSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Cập Nhật Học Sinh';
       document.getElementById('studentCancelEditBtn').style.display = 'inline-block';
       document.getElementById('studentForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1588,24 +1748,56 @@
     function cancelEditStudent() {
       editingStudentId = null;
       editingStudentParentEmail = null;
+      editingStudentExtraIds = [];
       document.getElementById('studentForm').reset();
-      document.getElementById('studentProgramCustom').style.display = 'none';
+      renderStudentProgramsChecklist([]);
+      document.getElementById('studentFormTitle').textContent = 'Thêm học sinh mới';
       document.getElementById('studentSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Lưu Học Sinh';
       document.getElementById('studentCancelEditBtn').style.display = 'none';
     }
 
-    async function deleteStudent(parentEmailEnc, id) {
-      if (!confirm('Xoá học sinh này?')) return;
+    async function deleteStudentGroup({ parentEmail, ids }) {
+      if (!confirm('Xoá toàn bộ hồ sơ học sinh này (kể cả các chương trình đã gán)?')) return;
       try {
-        await apiCall('/api/portal-delete-student', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
-        });
+        for (const id of ids) {
+          await apiCall('/api/portal-delete-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parentEmail, id })
+          });
+        }
         showGlobalAlert('Đã xoá học sinh.', false);
-        document.getElementById('studentTableWrap').style.display = 'none';
-        document.getElementById('studentEmpty').style.display = 'none';
-        document.getElementById('studentLoading').style.display = 'block';
+        loadStudents();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    // Gom tất cả bản ghi Students trùng (cùng tên + cùng email phụ huynh, ví dụ do trước đây mỗi
+    // chương trình được lưu thành 1 dòng riêng) thành 1 hồ sơ duy nhất chứa đủ mọi chương trình.
+    async function mergeDuplicateStudents() {
+      const groups = groupStudents(allStudentsData).filter(g => g.ids.length > 1);
+      if (groups.length === 0) {
+        showGlobalAlert('Không có học sinh nào bị trùng lặp.', false);
+        return;
+      }
+      if (!confirm(`Tìm thấy ${groups.length} học sinh có bản ghi bị tách trùng. Gộp lại thành 1 hồ sơ mỗi học sinh (giữ đủ mọi chương trình đã gán)?`)) return;
+      try {
+        for (const g of groups) {
+          await apiCall('/api/portal-add-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: g.ids[0], parentEmail: g.parentEmail, studentName: g.studentName, dob: g.dob, note: g.note, programs: g.programs })
+          });
+          for (const extraId of g.ids.slice(1)) {
+            await apiCall('/api/portal-delete-student', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ parentEmail: g.parentEmail, id: extraId })
+            });
+          }
+        }
+        showGlobalAlert(`Đã gộp xong ${groups.length} học sinh bị trùng.`, false);
         loadStudents();
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -1622,7 +1814,7 @@
           parentEmail: document.getElementById('studentParentEmail').value.trim(),
           studentName: document.getElementById('studentName').value.trim(),
           dob: document.getElementById('studentDob').value,
-          program: getProgramValue('student'),
+          programs: getSelectedStudentPrograms(),
           note: document.getElementById('studentNote').value.trim()
         };
         if (editingStudentId) payload.id = editingStudentId;
@@ -1632,11 +1824,18 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+
+        // Nếu đang sửa 1 hồ sơ được gộp từ nhiều dòng cũ -> xoá các dòng thừa để không còn trùng nữa
+        for (const extraId of editingStudentExtraIds) {
+          await apiCall('/api/portal-delete-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parentEmail: editingStudentParentEmail, id: extraId })
+          });
+        }
+
         showGlobalAlert(editingStudentId ? 'Đã cập nhật học sinh.' : 'Đã thêm học sinh.', false);
         cancelEditStudent();
-        document.getElementById('studentTableWrap').style.display = 'none';
-        document.getElementById('studentEmpty').style.display = 'none';
-        document.getElementById('studentLoading').style.display = 'block';
         loadStudents();
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -1898,6 +2097,7 @@
     async function loadSchedule() {
       try {
         const { schedules } = await apiCall('/api/portal-list-schedule');
+        allScheduleData = schedules;
         document.getElementById('scheduleLoading').style.display = 'none';
         if (schedules.length === 0) {
           document.getElementById('scheduleEmpty').style.display = 'block';
