@@ -62,6 +62,7 @@
 
     .main-content { margin-left: 252px; flex: 1; min-width: 0; padding: 1.8rem 2rem 3rem; }
     #dashboardMidRow { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+    #dashboardTuitionRow { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; margin-top: 1.2rem; }
     @media (max-width: 880px) {
       .app-shell { flex-direction: column; }
       .mobile-topbar {
@@ -98,6 +99,7 @@
       .main-content { margin-left: 0; padding: 1rem; }
       .card { padding: 1.2rem; border-radius: 16px; }
       #dashboardMidRow { grid-template-columns: 1fr; }
+      #dashboardTuitionRow { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
       table { font-size: 0.82rem; }
       th, td { padding: 0.5rem 0.4rem; }
@@ -220,6 +222,17 @@
       <div class="card">
         <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-chart-column" style="color:#0284c7;"></i> Quyên Góp Tiền Mặt Theo Tháng (6 tháng gần nhất)</h3>
         <div id="dashboardDonationChart"></div>
+      </div>
+
+      <div id="dashboardTuitionRow">
+        <div class="card">
+          <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-chart-column" style="color:#c9a227;"></i> Học Phí Thu Theo Tháng (6 tháng gần nhất)</h3>
+          <div id="dashboardTuitionChart"></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-triangle-exclamation" style="color:#dc2626;"></i> Công Nợ Học Phí Cao Nhất</h3>
+          <div id="dashboardTuitionDebtors"></div>
+        </div>
       </div>
     </div>
 
@@ -1175,6 +1188,8 @@
       try {
         const { payments } = await apiCall('/api/portal-list-tuition');
         allTuitionData = payments;
+        renderMemberDashboardStats();
+        renderMainDashboard();
         document.getElementById('tuitionLoading').style.display = 'none';
         if (payments.length === 0) {
           document.getElementById('tuitionEmpty').style.display = 'block';
@@ -2434,6 +2449,8 @@
       const activityEl = document.getElementById('dashboardRecentActivity');
       const statusEl = document.getElementById('dashboardStatusBreakdown');
       const chartEl = document.getElementById('dashboardDonationChart');
+      const tuitionChartEl = document.getElementById('dashboardTuitionChart');
+      const tuitionDebtorsEl = document.getElementById('dashboardTuitionDebtors');
       if (!statsEl) return; // Chưa vào tab Tổng Quan lần nào -> khỏi vẽ
 
       // ---------- 1. Thẻ thống kê chính ----------
@@ -2449,10 +2466,20 @@
       const pendingConfirms = allDonationsData.filter(d => (d.confirmationStatus || 'pending') === 'pending').length
         + allGradesData.filter(g => (g.confirmationStatus || 'pending') === 'pending').length;
 
+      // Học phí: tổng đã thu, tổng công nợ (thiếu), số khoản chờ xác nhận
+      const totalTuitionCollected = allTuitionData.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+      const tuitionShortfalls = allTuitionData
+        .map(p => Math.max(0, (p.expectedAmount != null ? Number(p.expectedAmount) : Number(p.amount) || 0) - (Number(p.amount) || 0)))
+        .filter(v => v > 0);
+      const totalTuitionDebt = tuitionShortfalls.reduce((sum, v) => sum + v, 0);
+      const pendingTuitionConfirms = allTuitionData.filter(p => (p.confirmationStatus || 'pending') === 'pending').length;
+
       const mainStats = [
         { icon: 'fa-users', label: 'Tổng Thành Viên', value: totalMembers, sub: blockedMembers > 0 ? `${blockedMembers} bị chặn` : 'Đang hoạt động tốt', color: '#0284c7', bg: '#eff6ff' },
         { icon: 'fa-file-lines', label: 'Đơn Đăng Ký', value: totalRegistrations, sub: `${pendingRegistrations} chờ · ${approvedRegistrations} duyệt · ${rejectedRegistrations} từ chối`, color: '#7c3aed', bg: '#f5f3ff' },
         { icon: 'fa-hand-holding-dollar', label: 'Quyên Góp Tiền Mặt', value: totalCashDonated.toLocaleString('vi-VN') + 'đ', sub: totalItemDonations > 0 ? `+ ${totalItemDonations} lượt hiện vật` : 'Chưa có hiện vật', color: '#15803d', bg: '#f0fdf4' },
+        { icon: 'fa-coins', label: 'Học Phí Đã Thu', value: totalTuitionCollected.toLocaleString('vi-VN') + 'đ', sub: pendingTuitionConfirms > 0 ? `${pendingTuitionConfirms} khoản chờ xác nhận` : 'Đã xác nhận hết', color: '#c9a227', bg: '#fffbeb' },
+        { icon: 'fa-triangle-exclamation', label: 'Công Nợ Học Phí', value: totalTuitionDebt.toLocaleString('vi-VN') + 'đ', sub: tuitionShortfalls.length > 0 ? `${tuitionShortfalls.length} khoản bị thiếu` : 'Không có công nợ', color: totalTuitionDebt > 0 ? '#dc2626' : '#15803d', bg: totalTuitionDebt > 0 ? '#fef2f2' : '#f0fdf4' },
         { icon: 'fa-graduation-cap', label: 'Bản Ghi Điểm', value: totalGrades, sub: pendingConfirms > 0 ? `${pendingConfirms} chờ xác nhận` : 'Đã xác nhận hết', color: '#d97706', bg: '#fffbeb' }
       ];
       statsEl.innerHTML = mainStats.map(s => `
@@ -2540,6 +2567,56 @@
               <div style="font-size:0.74rem; color:var(--text-muted); margin-top:0.4rem;">${b.label}</div>
             </div>`).join('')}
         </div>`;
+
+      // ---------- 5. Học phí thu theo tháng (6 tháng gần nhất) ----------
+      if (tuitionChartEl) {
+        const tuitionBuckets = [];
+        for (let i = 5; i >= 0; i--) {
+          const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          tuitionBuckets.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: `T${d.getMonth() + 1}/${d.getFullYear()}`, total: 0 });
+        }
+        allTuitionData.forEach(p => {
+          const dt = new Date(p.paidAt);
+          if (isNaN(dt.getTime())) return;
+          const key = `${dt.getFullYear()}-${dt.getMonth()}`;
+          const bucket = tuitionBuckets.find(b => b.key === key);
+          if (bucket) bucket.total += Number(p.amount) || 0;
+        });
+        const maxTuitionTotal = Math.max(...tuitionBuckets.map(b => b.total), 1);
+        tuitionChartEl.innerHTML = `
+          <div style="display:flex; align-items:flex-end; gap:1rem; height:160px; padding-top:1rem;">
+            ${tuitionBuckets.map(b => `
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.3rem;">${b.total > 0 ? b.total.toLocaleString('vi-VN') : ''}</div>
+                <div style="width:70%; max-width:44px; height:${b.total > 0 ? Math.max((b.total / maxTuitionTotal * 110), 4) : 2}px; background:linear-gradient(180deg,#e8c766,#c9a227); border-radius:6px 6px 0 0;"></div>
+                <div style="font-size:0.74rem; color:var(--text-muted); margin-top:0.4rem;">${b.label}</div>
+              </div>`).join('')}
+          </div>`;
+      }
+
+      // ---------- 6. Công nợ học phí cao nhất (nhóm theo học sinh, hiện top 5) ----------
+      if (tuitionDebtorsEl) {
+        const debtByStudent = new Map();
+        allTuitionData.forEach(p => {
+          const expected = p.expectedAmount != null ? Number(p.expectedAmount) : Number(p.amount) || 0;
+          const shortfall = Math.max(0, expected - (Number(p.amount) || 0));
+          if (shortfall <= 0) return;
+          const key = `${(p.parentEmail || '').toLowerCase()}|||${p.studentName || ''}`;
+          if (!debtByStudent.has(key)) debtByStudent.set(key, { studentName: p.studentName || '—', parentEmail: p.parentEmail || '', total: 0 });
+          debtByStudent.get(key).total += shortfall;
+        });
+        const topDebtors = Array.from(debtByStudent.values()).sort((a, b) => b.total - a.total).slice(0, 5);
+        tuitionDebtorsEl.innerHTML = topDebtors.length > 0
+          ? topDebtors.map(d => `
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:0.55rem 0; border-top:1px solid var(--border);">
+                <div style="min-width:0;">
+                  <div style="font-size:0.86rem; font-weight:700; color:var(--text-dark);">${escapeHtml(d.studentName)}</div>
+                  <div style="font-size:0.74rem; color:var(--text-muted);">${escapeHtml(d.parentEmail)}</div>
+                </div>
+                <strong style="color:#dc2626; white-space:nowrap; margin-left:0.6rem;">${formatMoney(d.total)}</strong>
+              </div>`).join('')
+          : '<div style="color:var(--text-muted); font-size:0.88rem; padding:1rem 0;">Không có học sinh nào đang thiếu học phí. 🎉</div>';
+      }
     }
 
     function renderMemberDashboardStats() {
