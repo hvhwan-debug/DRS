@@ -367,8 +367,9 @@
         </form>
       </div>
       <div class="card">
-        <div style="text-align:right; margin-bottom:0.8rem;">
-          <button type="button" class="btn btn-outline" onclick="exportToCsv('hoc-phi.csv', allTuitionData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'amount',label:'Số tiền'},{key:'period',label:'Kỳ học phí'},{key:'paidAt',label:'Ngày nộp'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        <div style="display:flex; gap:0.6rem; margin-bottom:0.8rem;">
+          <input type="text" id="tuitionSearchInput" placeholder="Tìm theo học sinh, email, chương trình..." oninput="renderTuitionTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
+          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('hoc-phi.csv', allTuitionData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'amount',label:'Số tiền'},{key:'period',label:'Kỳ học phí'},{key:'paidAt',label:'Ngày nộp'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="tuitionLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="tuitionTableWrap">
@@ -634,8 +635,9 @@
         </form>
       </div>
       <div class="card">
-        <div style="text-align:right; margin-bottom:0.8rem;">
-          <button type="button" class="btn btn-outline" onclick="exportToCsv('bang-diem.csv', allGradesData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'assessmentType',label:'Loại đánh giá'},{key:'score',label:'Điểm'},{key:'comment',label:'Đánh giá GV'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        <div style="display:flex; gap:0.6rem; margin-bottom:0.8rem;">
+          <input type="text" id="gradeSearchInput" placeholder="Tìm theo học sinh, email, chương trình..." oninput="renderGradesTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
+          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('bang-diem.csv', allGradesData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'assessmentType',label:'Loại đánh giá'},{key:'score',label:'Điểm'},{key:'comment',label:'Đánh giá GV'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="gradeTableWrap">
@@ -1319,12 +1321,28 @@
         renderMemberDashboardStats();
         renderMainDashboard();
         document.getElementById('tuitionLoading').style.display = 'none';
-        if (payments.length === 0) {
-          document.getElementById('tuitionEmpty').style.display = 'block';
-          return;
-        }
-        document.getElementById('tuitionTableWrap').style.display = 'block';
-        document.getElementById('tuitionTableBody').innerHTML = payments.map(p => `
+        renderTuitionTable();
+      } catch (err) {
+        document.getElementById('tuitionLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderTuitionTable() {
+      const query = ((document.getElementById('tuitionSearchInput') || {}).value || '').trim().toLowerCase();
+      const payments = !query ? allTuitionData : allTuitionData.filter(p =>
+        (p.studentName || '').toLowerCase().includes(query) ||
+        (p.parentEmail || '').toLowerCase().includes(query) ||
+        (p.program || '').toLowerCase().includes(query));
+
+      if (allTuitionData.length === 0) {
+        document.getElementById('tuitionEmpty').style.display = 'block';
+        document.getElementById('tuitionTableWrap').style.display = 'none';
+        return;
+      }
+      document.getElementById('tuitionEmpty').style.display = 'none';
+      document.getElementById('tuitionTableWrap').style.display = 'block';
+      document.getElementById('tuitionTableBody').innerHTML = payments.map(p => `
           <tr>
             <td style="font-weight:700;">${escapeHtml(p.studentName)}</td>
             <td>${escapeHtml(p.parentEmail)}</td>
@@ -1341,9 +1359,8 @@
               <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" onclick="deleteTuition('${encodeURIComponent(p.parentEmail)}','${p.id}')">Xoá</button>
             </td>
           </tr>`).join('');
-      } catch (err) {
-        document.getElementById('tuitionLoading').style.display = 'none';
-        showGlobalAlert(err.message, true);
+      if (payments.length === 0) {
+        document.getElementById('tuitionTableBody').innerHTML = `<tr><td colspan="11" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
       }
     }
 
@@ -2552,12 +2569,28 @@
         renderMemberDashboardStats();
         renderMainDashboard();
         document.getElementById('gradeLoading').style.display = 'none';
-        if (grades.length === 0) {
-          document.getElementById('gradeEmpty').style.display = 'block';
-          return;
-        }
-        document.getElementById('gradeTableWrap').style.display = 'block';
-        document.getElementById('gradeTableBody').innerHTML = grades.map(g => `
+        renderGradesTable();
+      } catch (err) {
+        document.getElementById('gradeLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderGradesTable() {
+      const query = ((document.getElementById('gradeSearchInput') || {}).value || '').trim().toLowerCase();
+      const grades = !query ? allGradesData : allGradesData.filter(g =>
+        (g.studentName || '').toLowerCase().includes(query) ||
+        (g.parentEmail || '').toLowerCase().includes(query) ||
+        (g.program || '').toLowerCase().includes(query));
+
+      if (allGradesData.length === 0) {
+        document.getElementById('gradeEmpty').style.display = 'block';
+        document.getElementById('gradeTableWrap').style.display = 'none';
+        return;
+      }
+      document.getElementById('gradeEmpty').style.display = 'none';
+      document.getElementById('gradeTableWrap').style.display = 'block';
+      document.getElementById('gradeTableBody').innerHTML = grades.map(g => `
           <tr>
             <td>${escapeHtml(g.studentName)}</td>
             <td>${escapeHtml(g.parentEmail)}</td>
@@ -2573,9 +2606,8 @@
               <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" onclick="deleteGrade('${encodeURIComponent(g.parentEmail)}','${g.id}')">Xoá</button>
             </td>
           </tr>`).join('');
-      } catch (err) {
-        document.getElementById('gradeLoading').style.display = 'none';
-        showGlobalAlert(err.message, true);
+      if (grades.length === 0) {
+        document.getElementById('gradeTableBody').innerHTML = `<tr><td colspan="10" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
       }
     }
 
