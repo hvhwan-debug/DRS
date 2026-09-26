@@ -2820,6 +2820,22 @@
       document.getElementById('memberOverviewCard').style.display = 'none';
     }
 
+    async function recalcMemberTier(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      if (!confirm(`Xoá mốc khoá hạng bảo lưu và tính lại NGAY hạng thành viên của ${email} theo đúng tổng học phí hiện tại?`)) return;
+      try {
+        const result = await apiCall('/api/portal-recalculate-tier', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: email })
+        });
+        showGlobalAlert(`Đã tính lại — hạng đúng hiện tại: ${result.tierName} (tổng học phí ${formatMoney(result.totalPaid)}).`, false);
+        openMemberOverview(encodeURIComponent(email));
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
     async function openMemberOverview(emailEnc) {
       const email = decodeURIComponent(emailEnc);
       const card = document.getElementById('memberOverviewCard');
@@ -2910,6 +2926,10 @@
             <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
               <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng giá trị hoá đơn</div>
               <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalInvoiceAll)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:190px; border-radius:12px; padding:0.8rem 1rem; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Hạng hiển thị cho thành viên có thể đang bị khoá bảo lưu 12 tháng (khác với hạng tính ở trên)</div>
+              <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="recalcMemberTier('${encodeURIComponent(email)}')">Tính Lại Hạng Ngay</button>
             </div>
           </div>`;
 
