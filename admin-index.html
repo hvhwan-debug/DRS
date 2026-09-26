@@ -1208,10 +1208,31 @@
             <td>${formatDate(p.paidAt)}</td>
             <td>${(p.attachments && p.attachments.length > 0) ? p.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${tuitionStatusHtml(p.confirmationStatus, p.memberFeedback)}</td>
-            <td><button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${p.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
+            <td style="display:flex; gap:0.4rem; white-space:nowrap;">
+              <button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${p.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" onclick="deleteTuition('${encodeURIComponent(p.parentEmail)}','${p.id}')">Xoá</button>
+            </td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('tuitionLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function deleteTuition(parentEmailEnc, id) {
+      if (!confirm('Xoá vĩnh viễn khoản học phí này? Hạng thành viên sẽ được tính lại ngay theo tổng học phí còn lại. Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-tuition', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
+        });
+        showGlobalAlert('Đã xoá khoản học phí.', false);
+        document.getElementById('tuitionTableWrap').style.display = 'none';
+        document.getElementById('tuitionEmpty').style.display = 'none';
+        document.getElementById('tuitionLoading').style.display = 'block';
+        loadTuition();
+      } catch (err) {
         showGlobalAlert(err.message, true);
       }
     }

@@ -1,6 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadAttachments } = require("../_shared/blobStorage");
+const { resetTierLock } = require("../_shared/memberTier");
 
 const TUITION_TABLE = "TuitionPayments";
 
@@ -73,6 +74,10 @@ module.exports = async function (context, req) {
     if (paidAt) update.paidAt = paidAt;
 
     await tuitionTable.updateEntity(update, "Merge");
+
+    // Vừa sửa 1 khoản học phí (thường là do nhập nhầm) -> xoá mốc khoá hạng để hạng được
+    // tính lại NGAY theo đúng tổng học phí đã sửa, không giữ hạng cũ (có thể sai) thêm 12 tháng.
+    await resetTierLock(parentEmail);
 
     context.res.status = 200;
     context.res.body = { success: true, warning };

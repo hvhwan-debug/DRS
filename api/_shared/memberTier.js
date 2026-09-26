@@ -214,6 +214,18 @@ async function getTierInfoForEmail(email) {
   };
 }
 
+// Sau khi admin SỬA hoặc XOÁ 1 khoản học phí (thường là để sửa một lần nhập nhầm), phải xoá mốc
+// khoá hạng đang lưu để lần đọc tiếp theo tính lại NGAY theo đúng tổng học phí đã sửa — không để
+// hạng cũ (có thể sai do nhập nhầm) được "bảo lưu" hiệu lực thêm 12 tháng nữa. Chính sách bảo lưu
+// 12 tháng chỉ áp dụng cho hạng đạt được và duy trì thật sự (qua các lần thêm học phí hợp lệ), chứ
+// không áp dụng khi dữ liệu vừa được admin chỉnh sửa lại.
+async function resetTierLock(email) {
+  try {
+    const profilesTable = await getTableClient(PROFILES_TABLE);
+    await profilesTable.upsertEntity({ partitionKey: "profile", rowKey: email, tierLockedName: "", tierLockedAt: "" }, "Merge");
+  } catch (e) { /* best-effort — không chặn phản hồi chính của API gọi hàm này */ }
+}
+
 module.exports = {
   TIERS,
   VIP_MIN_TOTAL,
@@ -227,6 +239,7 @@ module.exports = {
   getTierInfoForEmail,
   getEffectiveTierForMember,
   resolveEffectiveTier,
+  resetTierLock,
   getSpentPoints,
   adjustSpentPoints,
   getPointsBalance
