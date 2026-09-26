@@ -311,8 +311,9 @@
         </form>
       </div>
       <div class="card">
-        <div style="text-align:right; margin-bottom:0.8rem;">
-          <button type="button" class="btn btn-outline" onclick="exportToCsv('quyen-gop.csv', allDonationsData, [{key:'donorName',label:'Người quyên góp'},{key:'donorEmail',label:'Email'},{key:'amount',label:'Số tiền'},{key:'itemDescription',label:'Hiện vật'},{key:'transactionCode',label:'Mã GD'},{key:'donatedAt',label:'Ngày'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+        <div style="display:flex; gap:0.6rem; margin-bottom:0.8rem;">
+          <input type="text" id="donationSearchInput" placeholder="Tìm theo tên, email, mã giao dịch..." oninput="renderDonationsTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
+          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('quyen-gop.csv', allDonationsData, [{key:'donorName',label:'Người quyên góp'},{key:'donorEmail',label:'Email'},{key:'amount',label:'Số tiền'},{key:'itemDescription',label:'Hiện vật'},{key:'transactionCode',label:'Mã GD'},{key:'donatedAt',label:'Ngày'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
@@ -445,6 +446,7 @@
           <h3 style="font-size:1rem; margin:0;">Danh Sách Hoá Đơn</h3>
           <button type="button" class="btn btn-outline" onclick="exportToCsv('hoa-don.csv', allInvoicesData, [{key:'invoiceNumber',label:'Số HĐ'},{key:'parentEmail',label:'Email PH'},{key:'studentName',label:'Học sinh'},{key:'issueDate',label:'Ngày lập'},{key:'totalAmount',label:'Tổng tiền'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
+        <input type="text" id="invoiceSearchInput" placeholder="Tìm theo số hoá đơn, email, học sinh..." oninput="renderInvoicesTable()" style="width:100%; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; margin-bottom:1rem;">
         <div class="loading-state" id="invoiceLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="invoiceTableWrap">
           <table>
@@ -748,6 +750,7 @@
 
       <div class="card">
         <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-gift" style="color:#0284c7;"></i> Yêu Cầu Đổi Quà</h3>
+        <input type="text" id="giftSearchInput" placeholder="Tìm theo email, tên quà tặng..." oninput="renderGiftRedemptionsTable()" style="width:100%; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; margin-bottom:1rem;">
         <div class="loading-state" id="giftLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="giftTableWrap">
           <table>
@@ -1242,12 +1245,28 @@
         renderMemberDashboardStats();
         renderMainDashboard();
         document.getElementById('donLoading').style.display = 'none';
-        if (donations.length === 0) {
-          document.getElementById('donEmpty').style.display = 'block';
-          return;
-        }
-        document.getElementById('donTableWrap').style.display = 'block';
-        document.getElementById('donTableBody').innerHTML = donations.map(d => `
+        renderDonationsTable();
+      } catch (err) {
+        document.getElementById('donLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderDonationsTable() {
+      const query = ((document.getElementById('donationSearchInput') || {}).value || '').trim().toLowerCase();
+      const donations = !query ? allDonationsData : allDonationsData.filter(d =>
+        (d.donorName || '').toLowerCase().includes(query) ||
+        (d.donorEmail || '').toLowerCase().includes(query) ||
+        (d.transactionCode || '').toLowerCase().includes(query));
+
+      if (allDonationsData.length === 0) {
+        document.getElementById('donEmpty').style.display = 'block';
+        document.getElementById('donTableWrap').style.display = 'none';
+        return;
+      }
+      document.getElementById('donEmpty').style.display = 'none';
+      document.getElementById('donTableWrap').style.display = 'block';
+      document.getElementById('donTableBody').innerHTML = donations.map(d => `
           <tr>
             <td>${d.donationType === 'item' ? '<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fef3c7; color:#a16207;">Hiện vật</span>' : '<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dbeafe; color:#1e40af;">Tiền mặt</span>'}</td>
             <td>${escapeHtml(d.donorName)}</td>
@@ -1264,9 +1283,8 @@
               <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteDonation('${encodeURIComponent(d.id)}')">Xoá</button>
             </td>
           </tr>`).join('');
-      } catch (err) {
-        document.getElementById('donLoading').style.display = 'none';
-        showGlobalAlert(err.message, true);
+      if (donations.length === 0) {
+        document.getElementById('donTableBody').innerHTML = `<tr><td colspan="11" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
       }
     }
 
@@ -1711,14 +1729,28 @@
         allInvoicesData = invoices;
         renderTodoToday();
         document.getElementById('invoiceLoading').style.display = 'none';
-        if (invoices.length === 0) {
-          document.getElementById('invoiceEmpty').style.display = 'block';
-          document.getElementById('invoiceTableWrap').style.display = 'none';
-          return;
-        }
-        document.getElementById('invoiceEmpty').style.display = 'none';
-        document.getElementById('invoiceTableWrap').style.display = 'block';
-        document.getElementById('invoiceTableBody').innerHTML = invoices.map(inv => {
+        renderInvoicesTable();
+      } catch (err) {
+        document.getElementById('invoiceLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderInvoicesTable() {
+      const query = ((document.getElementById('invoiceSearchInput') || {}).value || '').trim().toLowerCase();
+      const invoices = !query ? allInvoicesData : allInvoicesData.filter(inv =>
+        (inv.invoiceNumber || '').toLowerCase().includes(query) ||
+        (inv.parentEmail || '').toLowerCase().includes(query) ||
+        (inv.studentName || '').toLowerCase().includes(query));
+
+      if (allInvoicesData.length === 0) {
+        document.getElementById('invoiceEmpty').style.display = 'block';
+        document.getElementById('invoiceTableWrap').style.display = 'none';
+        return;
+      }
+      document.getElementById('invoiceEmpty').style.display = 'none';
+      document.getElementById('invoiceTableWrap').style.display = 'block';
+      document.getElementById('invoiceTableBody').innerHTML = invoices.map(inv => {
           const meta = INVOICE_STATUS_META[inv.status] || INVOICE_STATUS_META.unpaid;
           const emailEnc = encodeURIComponent(inv.parentEmail);
           return `
@@ -1741,9 +1773,8 @@
             </td>
           </tr>`;
         }).join('');
-      } catch (err) {
-        document.getElementById('invoiceLoading').style.display = 'none';
-        showGlobalAlert(err.message, true);
+      if (invoices.length === 0) {
+        document.getElementById('invoiceTableBody').innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
       }
     }
 
@@ -2320,12 +2351,27 @@
         allGiftRedemptionsData = redemptions;
         renderTodoToday();
         document.getElementById('giftLoading').style.display = 'none';
-        if (redemptions.length === 0) {
-          document.getElementById('giftEmpty').style.display = 'block';
-          return;
-        }
-        document.getElementById('giftTableWrap').style.display = 'block';
-        document.getElementById('giftTableBody').innerHTML = redemptions.map(r => {
+        renderGiftRedemptionsTable();
+      } catch (err) {
+        document.getElementById('giftLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderGiftRedemptionsTable() {
+      const query = ((document.getElementById('giftSearchInput') || {}).value || '').trim().toLowerCase();
+      const redemptions = !query ? allGiftRedemptionsData : allGiftRedemptionsData.filter(r =>
+        (r.email || '').toLowerCase().includes(query) ||
+        (r.giftName || '').toLowerCase().includes(query));
+
+      if (allGiftRedemptionsData.length === 0) {
+        document.getElementById('giftEmpty').style.display = 'block';
+        document.getElementById('giftTableWrap').style.display = 'none';
+        return;
+      }
+      document.getElementById('giftEmpty').style.display = 'none';
+      document.getElementById('giftTableWrap').style.display = 'block';
+      document.getElementById('giftTableBody').innerHTML = redemptions.map(r => {
           return `
           <tr>
             <td>${escapeHtml(r.email)}</td>
@@ -2336,9 +2382,8 @@
             <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">${giftActionsHtml(r)}</td>
           </tr>`;
         }).join('');
-      } catch (err) {
-        document.getElementById('giftLoading').style.display = 'none';
-        showGlobalAlert(err.message, true);
+      if (redemptions.length === 0) {
+        document.getElementById('giftTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
       }
     }
 
