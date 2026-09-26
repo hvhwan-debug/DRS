@@ -73,12 +73,45 @@ async function getSpentPoints(email) {
 }
 
 // Cộng/trừ vào số điểm đã dùng (delta âm = hoàn điểm khi huỷ đổi quà). Không cho âm tổng đã dùng.
+// Dùng ETag (optimistic concurrency) + thử lại: nếu thành viên bấm đổi quà nhiều lần liên tiếp/nhanh
+// (hoặc mở 2 tab), 2 request có thể cùng đọc "đã dùng" trước khi request kia ghi xong, dẫn đến
+// GHI ĐÈ và làm mất 1 lần trừ điểm — đây là nguyên nhân đã gây ra tình trạng "đổi quà nhưng
+// không trừ điểm" trước đây. Việc chỉ ghi lại nếu ETag còn khớp (và thử lại khi không khớp) đảm
+// bảo không lần trừ/hoàn điểm nào bị mất do 2 yêu cầu chạy song song.
 async function adjustSpentPoints(email, delta) {
   const profilesTable = await getTableClient(PROFILES_TABLE);
-  const current = await getSpentPoints(email);
-  const next = Math.max(0, current + delta);
-  await profilesTable.upsertEntity({ partitionKey: "profile", rowKey: email, spentPoints: next }, "Merge");
-  return next;
+  const maxAttempts = 8;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    let entity = null;
+    try {
+      entity = await profilesTable.getEntity("profile", email);
+    } catch (e) {
+      if (e.statusCode !== 404) throw e;
+    }
+    const current = Number(entity && entity.spentPoints) || 0;
+    const next = Math.max(0, current + delta);
+    try {
+      if (entity) {
+        await profilesTable.updateEntity(
+          { partitionKey: "profile", rowKey: email, spentPoints: next },
+          "Merge",
+          { etag: entity.etag }
+        );
+      } else {
+        // Chưa có hồ sơ -> tạo mới; nếu 2 request cùng tạo lần đầu, request thua sẽ nhận lỗi 409 -> thử lại ở vòng sau
+        await profilesTable.createEntity({ partitionKey: "profile", rowKey: email, spentPoints: next });
+      }
+      return next;
+    } catch (err) {
+      // 412 = ETag không còn khớp (bị ghi đè bởi request khác), 409 = vừa được tạo bởi request khác -> đọc lại và thử lại
+      if (err.statusCode === 412 || err.statusCode === 409) {
+        await new Promise(r => setTimeout(r, 60 + Math.random() * 120));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error("Không thể cập nhật điểm tích lũy do có quá nhiều yêu cầu cùng lúc, vui lòng thử lại.");
 }
 
 // Điểm tích lũy KHẢ DỤNG để đổi quà = điểm đã tích lũy (tính từ tổng học phí) - điểm đã dùng.
