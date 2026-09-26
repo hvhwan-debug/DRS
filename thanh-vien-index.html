@@ -454,7 +454,9 @@
     // (không dùng Microsoft/Azure AD B2C)
     // ==============================================================
 
-    let currentActiveMemberTab = 'account';
+    const MEMBER_TAB_NAMES = ['account', 'perks', 'schedule', 'activity', 'donations', 'tuition', 'invoices', 'grades', 'gifts'];
+    const savedMemberTab = localStorage.getItem('wvn_member_last_tab');
+    let currentActiveMemberTab = MEMBER_TAB_NAMES.includes(savedMemberTab) ? savedMemberTab : 'account';
     let currentRegistrations = [];
 
     const FIELD_LABELS = {
@@ -551,6 +553,7 @@
 
     function switchMemberTab(tab) {
       currentActiveMemberTab = tab;
+      localStorage.setItem('wvn_member_last_tab', tab); // nhớ tab đang xem để F5 không bị nhảy về "Tài Khoản"
       document.querySelectorAll('.member-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       document.querySelectorAll('.member-panel').forEach(p => p.classList.remove('active'));
       const panel = document.getElementById('memberPanel-' + tab);
