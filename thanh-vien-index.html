@@ -577,9 +577,9 @@
     }
 
     function filterGradesByCourse(value) {
-      const rows = document.querySelectorAll('#gradesTable tbody tr[data-course-key]');
-      rows.forEach(row => {
-        row.style.display = (value === 'all' || row.dataset.courseKey === value) ? '' : 'none';
+      const groups = document.querySelectorAll('.grade-course-group[data-course-key]');
+      groups.forEach(el => {
+        el.style.display = (value === 'all' || el.dataset.courseKey === value) ? '' : 'none';
       });
     }
 
@@ -1475,7 +1475,7 @@
           return `<option value="${k.replace(/"/g, '&quot;')}">${student} — ${program}</option>`;
         }).join('');
         const gradeFilterHtml = courseKeys.size > 1
-          ? `<div style="margin-bottom:1rem;">
+          ? `<div style="margin-bottom:1.2rem;">
               <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Lọc theo học sinh / khóa học</label>
               <select id="gradeCourseFilter" onchange="filterGradesByCourse(this.value)" style="padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; max-width:320px; width:100%;">
                 <option value="all">Tất cả (${courseKeys.size} khóa học)</option>
@@ -1484,44 +1484,75 @@
             </div>`
           : '';
 
-        const gradesHtml = `${gradeFilterHtml}<div style="overflow-x:auto;">
-              <table style="width:100%; border-collapse:collapse; font-size:0.88rem;" id="gradesTable">
-                <thead>
-                  <tr style="text-align:left; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">STT</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Họ tên</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Chương trình học</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Loại đánh giá</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ngày học</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Điểm</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Nhận xét của giáo viên</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ảnh bài làm</th>
-                    <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Xác nhận</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${gradesChrono.length > 0 ? gradesChrono.map((g, i) => `
-                    <tr style="border-top:1px solid var(--border);" data-course-key="${g.studentName}|||${g.program || 'Chưa rõ chương trình'}">
-                      <td style="padding:0.6rem; color:var(--text-muted);">${i + 1}</td>
-                      <td style="padding:0.6rem; font-weight:700; white-space:nowrap;">${g.studentName}</td>
-                      <td style="padding:0.6rem; color:var(--text-muted);">${g.program || '—'}</td>
-                      <td style="padding:0.6rem; white-space:nowrap;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; white-space:nowrap; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
-                      <td style="padding:0.6rem; color:var(--text-muted); white-space:nowrap;">${formatDate(g.recordedAt)}</td>
-                      <td style="padding:0.6rem; font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
-                      <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
-                      <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
-                      <td style="padding:0.6rem; white-space:nowrap;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
-                    </tr>
-                  `).join('') : `
-                    <tr>
-                      <td colspan="9" style="padding:1.4rem 0.6rem; text-align:center; color:var(--text-muted);">
-                        <i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận.
-                      </td>
-                    </tr>
-                  `}
-                </tbody>
-              </table>
-            </div>`;
+        // Nhóm điểm theo từng (học sinh, chương trình) thành 1 khối riêng — thay vì 1 bảng
+        // phẳng dồn hết mọi học sinh/khoá học lẫn lộn vào nhau, dễ gây rối mắt.
+        const gradeGroupsMap = new Map();
+        gradesChrono.forEach(g => {
+          const key = `${g.studentName}|||${g.program || 'Chưa rõ chương trình'}`;
+          if (!gradeGroupsMap.has(key)) {
+            gradeGroupsMap.set(key, { key, studentName: g.studentName, program: g.program || 'Chưa rõ chương trình', entries: [] });
+          }
+          gradeGroupsMap.get(key).entries.push(g);
+        });
+        const gradeGroups = Array.from(gradeGroupsMap.values())
+          .sort((a, b) => a.studentName.localeCompare(b.studentName) || a.program.localeCompare(b.program));
+
+        function gradeGroupTableHtml(entries) {
+          return `<div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+              <thead>
+                <tr style="text-align:left; color:var(--text-muted); font-size:0.76rem; text-transform:uppercase;">
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Buổi</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ngày học</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Loại đánh giá</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Điểm</th>
+                  <th style="padding:0.5rem 0.6rem;">Nhận xét của giáo viên</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ảnh bài làm</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Xác nhận</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${entries.map((g, i) => `
+                  <tr style="border-top:1px solid var(--border);">
+                    <td style="padding:0.6rem; color:var(--text-muted);">${i + 1}</td>
+                    <td style="padding:0.6rem; color:var(--text-muted); white-space:nowrap;">${formatDate(g.recordedAt)}</td>
+                    <td style="padding:0.6rem; white-space:nowrap;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; white-space:nowrap; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
+                    <td style="padding:0.6rem; font-weight:700; color:#0369a1; white-space:nowrap;">${g.score != null ? g.score + '/10' : '—'}</td>
+                    <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
+                    <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
+                    <td style="padding:0.6rem; white-space:nowrap;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>`;
+        }
+
+        const gradesHtml = gradeGroups.length > 0
+          ? `${gradeFilterHtml}<div style="display:flex; flex-direction:column; gap:1.1rem;">
+              ${gradeGroups.map(grp => {
+                const scored = grp.entries.filter(g => g.score != null);
+                const avgScore = scored.length > 0 ? (scored.reduce((s, g) => s + Number(g.score), 0) / scored.length) : null;
+                const latest = grp.entries[grp.entries.length - 1];
+                return `
+                <div class="inner-card grade-course-group" data-course-key="${grp.key.replace(/"/g, '&quot;')}" style="border-radius:16px; padding:1.1rem 1.2rem;">
+                  <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.7rem; margin-bottom:0.9rem;">
+                    <div style="display:flex; align-items:center; gap:0.7rem; min-width:0;">
+                      <div style="width:38px; height:38px; flex-shrink:0; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-weight:800;"><i class="fa-solid fa-user-graduate"></i></div>
+                      <div style="min-width:0;">
+                        <div style="font-weight:800; font-size:1rem; color:var(--text-dark);">${grp.studentName}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">${grp.program} · ${grp.entries.length} buổi đã ghi nhận</div>
+                      </div>
+                    </div>
+                    <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                      ${avgScore != null ? `<div style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#eff6ff;"><div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">TB</div><div style="font-weight:800; color:#0369a1;">${avgScore.toFixed(1)}/10</div></div>` : ''}
+                      <div style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#f8fafc;"><div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">Gần nhất</div><div style="font-weight:700; color:var(--text-dark); font-size:0.85rem; white-space:nowrap;">${formatDate(latest.recordedAt)}</div></div>
+                    </div>
+                  </div>
+                  ${gradeGroupTableHtml(grp.entries)}
+                </div>`;
+              }).join('')}
+            </div>`
+          : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.6rem;"><i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận.</div>`;
 
         const pendingRegistrations = registrations.filter(r => r.status === 'Đã ghi nhận - Chờ xử lý').length;
         const rejectedRegistrations = registrations.filter(r => r.status === 'Từ chối').length;
