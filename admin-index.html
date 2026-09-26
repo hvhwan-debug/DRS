@@ -2015,6 +2015,14 @@
       { key: 'shipping', label: 'Vận chuyển', icon: 'fa-truck-fast' },
       { key: 'fulfilled', label: 'Đã trao', icon: 'fa-circle-check' }
     ];
+    // Nhãn/màu badge gọn cho từng trạng thái đổi quà — dùng ở khung "Tổng quan" 1 thành viên
+    // (khác với giftStepperHtml — hiện đủ 3 bước dạng thanh tiến trình, dùng ở bảng Đổi Quà chính).
+    const GIFT_STATUS_META = {
+      pending: { label: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
+      shipping: { label: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
+      fulfilled: { label: 'Đã trao quà', bg: '#dcfce7', color: '#15803d' },
+      cancelled: { label: 'Đã huỷ (hoàn điểm)', bg: '#fee2e2', color: '#b91c1c' }
+    };
     function giftStepperHtml(status) {
       if (status === 'cancelled') {
         return `<div style="display:flex; align-items:center; gap:0.4rem; color:#b91c1c; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Đã huỷ</div>`;
