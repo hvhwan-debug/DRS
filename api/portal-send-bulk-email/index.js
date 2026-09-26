@@ -43,11 +43,9 @@ module.exports = async function (context, req) {
     return;
   }
 
-  const apiKey = process.env.SENDGRID_API_KEY;
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL;
-  if (!apiKey || !fromEmail) {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
     context.res.status = 500;
-    context.res.body = { success: false, message: "Chưa cấu hình dịch vụ gửi email (thiếu SENDGRID_API_KEY/SENDGRID_FROM_EMAIL)." };
+    context.res.body = { success: false, message: "Chưa cấu hình dịch vụ gửi email (thiếu SMTP_USER/SMTP_PASS)." };
     return;
   }
 

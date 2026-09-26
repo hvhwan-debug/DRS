@@ -1,4 +1,4 @@
-const sgMail = require("@sendgrid/mail");
+const { sendEmail } = require("./mailer");
 const { getTableClient } = require("./tableStorage");
 const { getTierInfoForEmail } = require("./memberTier");
 const { renderEmailHtml } = require("./emailTemplate");
@@ -15,8 +15,6 @@ const EMAIL_LOGS_TABLE = "EmailLogs";
 // CÁCH DÙNG CŨ (vẫn hỗ trợ, không khuyến khích): truyền thẳng `html` đầy đủ — dùng khi cần 1 email
 // có cấu trúc đặc biệt không theo khung chung (hiếm khi cần).
 async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, title, bodyHtml, ctas, footerNote }) {
-  const apiKey = process.env.SENDGRID_API_KEY;
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL;
   let success = false;
   let errorMessage = "";
 
@@ -35,22 +33,12 @@ async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, tit
     finalHtml = renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote });
   }
 
-  if (!apiKey || !fromEmail) {
-    errorMessage = "Thiếu SENDGRID_API_KEY hoặc SENDGRID_FROM_EMAIL.";
-  } else {
-    try {
-      sgMail.setApiKey(apiKey);
-      await sgMail.send({
-        to,
-        from: { email: fromEmail, name: "Mạng Lưới Tri Thức Việt Nam" },
-        subject,
-        html: finalHtml
-      });
-      success = true;
-    } catch (err) {
-      errorMessage = (err && err.response && JSON.stringify(err.response.body)) || err.message || "Lỗi không rõ.";
-      if (context && context.log) context.log.error(`Gửi email tới ${to} thất bại:`, errorMessage);
-    }
+  try {
+    await sendEmail({ to, subject, html: finalHtml });
+    success = true;
+  } catch (err) {
+    errorMessage = err.message || "Lỗi không rõ.";
+    if (context && context.log) context.log.error(`Gửi email tới ${to} thất bại:`, errorMessage);
   }
 
   try {
