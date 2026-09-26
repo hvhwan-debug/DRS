@@ -230,7 +230,7 @@
         <div class="table-scroll" style="display:none;" id="regTableWrap">
           <table>
             <thead>
-              <tr><th>Chương trình</th><th>Email</th><th>Ngày gửi</th><th>Chi tiết</th><th>Trạng thái</th></tr>
+              <tr><th>Chương trình</th><th>Email</th><th>Ngày gửi</th><th>Chi tiết</th><th>Trạng thái</th><th>Thao tác</th></tr>
             </thead>
             <tbody id="regTableBody"></tbody>
           </table>
@@ -956,7 +956,7 @@
 
       const statuses = ['Đã ghi nhận - Chờ xử lý', 'Đã duyệt', 'Từ chối'];
       if (filtered.length === 0) {
-        document.getElementById('regTableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy đơn phù hợp.</td></tr>`;
+        document.getElementById('regTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy đơn phù hợp.</td></tr>`;
         return;
       }
       document.getElementById('regTableBody').innerHTML = filtered.map(r => {
@@ -977,8 +977,24 @@
             </select>
             ${r.status === 'Từ chối' && r.rejectionReason ? `<div style="font-size:0.76rem; color:#b91c1c; margin-top:0.3rem;">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : ''}
           </td>
+          <td><button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteRegistration('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}')">Xoá</button></td>
         </tr>`;
       }).join('');
+    }
+
+    async function deleteRegistration(emailEnc, idEnc) {
+      if (!confirm('Xoá vĩnh viễn đơn đăng ký này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-registration', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc) })
+        });
+        showGlobalAlert('Đã xoá đơn đăng ký.', false);
+        loadRegistrations();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
     }
 
     async function updateStatus(emailEnc, idEnc, selectEl) {
@@ -1046,7 +1062,10 @@
             <td>${escapeHtml(d.note)}</td>
             <td>${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(d.confirmationStatus, d.memberFeedback)}</td>
-            <td><button type="button" class="btn ${d.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${d.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
+            <td style="white-space:nowrap;">
+              <button type="button" class="btn ${d.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" title="${d.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteDonation('${encodeURIComponent(d.id)}')">Xoá</button>
+            </td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('donLoading').style.display = 'none';
@@ -1091,6 +1110,21 @@
       document.getElementById('donationSubmitBtn').textContent = 'Cập Nhật Quyên Góp';
       document.getElementById('donationCancelEditBtn').style.display = 'inline-block';
       document.getElementById('donationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function deleteDonation(id) {
+      if (!confirm('Xoá vĩnh viễn khoản quyên góp này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-donation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showGlobalAlert('Đã xoá khoản quyên góp.', false);
+        loadDonations();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
     }
 
     function cancelEditDonation() {
@@ -1192,10 +1226,28 @@
             <td>${formatDate(p.paidAt)}</td>
             <td>${(p.attachments && p.attachments.length > 0) ? p.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${tuitionStatusHtml(p.confirmationStatus, p.memberFeedback)}</td>
-            <td><button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${p.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
+            <td style="white-space:nowrap;">
+              <button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" title="${p.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteTuition('${encodeURIComponent(p.parentEmail)}','${encodeURIComponent(p.id)}')">Xoá</button>
+            </td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('tuitionLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function deleteTuition(emailEnc, idEnc) {
+      if (!confirm('Xoá vĩnh viễn khoản học phí này? Không thể hoàn tác.')) return;
+      try {
+        const result = await apiCall('/api/portal-delete-tuition', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc) })
+        });
+        showGlobalAlert(result.warning || 'Đã xoá khoản học phí.', !!result.warning);
+        loadTuition();
+      } catch (err) {
         showGlobalAlert(err.message, true);
       }
     }
@@ -2023,7 +2075,10 @@
             <td>${escapeHtml(g.comment)}</td>
             <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
-            <td><button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${g.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
+            <td style="white-space:nowrap;">
+              <button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" title="${g.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteGrade('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.id)}')">Xoá</button>
+            </td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('gradeLoading').style.display = 'none';
@@ -2033,6 +2088,21 @@
 
     let editingGradeId = null;
     let editingGradeParentEmail = null;
+
+    async function deleteGrade(emailEnc, idEnc) {
+      if (!confirm('Xoá vĩnh viễn bản ghi điểm này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-grade', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc) })
+        });
+        showGlobalAlert('Đã xoá bản ghi điểm.', false);
+        loadGrades();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
 
     function startEditGrade(g) {
       if (g.confirmationStatus === 'confirmed' && !confirm('Mục này đã được thành viên xác nhận. Sửa lại sẽ đưa về trạng thái "Chờ xác nhận" và họ cần xác nhận lại. Tiếp tục?')) return;
