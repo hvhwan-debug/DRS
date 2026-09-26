@@ -604,6 +604,7 @@
       <div class="card">
         <div style="display:flex; gap:0.8rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
           <input type="text" id="memberSearchInput" placeholder="Tìm theo email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
+          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem; white-space:nowrap;" title="Dọn 1 lần: xoá mọi mốc khoá hạng bảo lưu bị kẹt từ dữ liệu cũ, để hạng của TẤT CẢ thành viên được tính lại đúng ngay lần tới — không cần bấm từng người." onclick="recalcAllTiers()"><i class="fa-solid fa-arrows-rotate"></i> Tính Lại Hạng Cho Tất Cả (1 lần)</button>
         </div>
         <div class="loading-state" id="memberLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="memberTableWrap">
@@ -2818,6 +2819,16 @@
 
     function closeMemberOverview() {
       document.getElementById('memberOverviewCard').style.display = 'none';
+    }
+
+    async function recalcAllTiers() {
+      if (!confirm('Xoá mốc khoá hạng bảo lưu cho TẤT CẢ thành viên đang bị khoá, để hạng được tính lại đúng ngay theo tổng học phí thực tế? Chỉ cần chạy 1 lần để dọn dữ liệu cũ — không ảnh hưởng gì tới các hạng đang khoá đúng.')) return;
+      try {
+        const result = await apiCall('/api/portal-recalculate-all-tiers', { method: 'POST' });
+        showGlobalAlert(result.count > 0 ? `Đã dọn xong ${result.count} hồ sơ bị khoá hạng.` : 'Không có hồ sơ nào cần dọn — mọi hạng đã đúng.', false);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
     }
 
     async function recalcMemberTier(emailEnc) {
