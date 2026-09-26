@@ -1,10 +1,10 @@
 const { requireAdmin } = require("../_shared/adminAuth");
-const { resetTierLock, recomputeTuitionPoints, getTotalTuitionPaid, getTierByTotal } = require("../_shared/memberTier");
+const { resetTierLock, recomputeTuitionPoints, getTotalTuitionPaidRolling12Months, getTierByTotal } = require("../_shared/memberTier");
 
-// Dùng khi 1 thành viên đang bị "kẹt" ở hạng cũ (mốc khoá bảo lưu 12 tháng được tạo ra từ dữ liệu
-// test/nhập nhầm trước đây, trước khi có cơ chế tự xoá khoá khi sửa/xoá học phí) — admin bấm 1 nút
-// để xoá mốc khoá và buộc tính lại NGAY theo đúng tổng học phí hiện tại, không cần chờ sửa/xoá thêm
-// 1 khoản học phí nào khác mới kích hoạt việc tính lại.
+// Hạng giờ tính SỐNG theo chu kỳ trượt 12 tháng (không còn cơ chế khoá thủ công), nên bản thân hạng
+// không thể bị "kẹt" nữa. Nút này giờ chủ yếu dùng để CHỐT LẠI (backfill) điểm tích lũy theo đúng
+// ledger cho 1 thành viên cụ thể (vd. dữ liệu học phí của họ vừa được admin sửa/xoá) mà không cần
+// đợi lần thêm/sửa/xoá học phí tiếp theo mới kích hoạt việc chốt lại.
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
@@ -19,12 +19,12 @@ module.exports = async function (context, req) {
   }
 
   try {
-    await resetTierLock(email);
+    await resetTierLock(email); // no-op, giữ lại để tương thích ngược
     const earnedPoints = await recomputeTuitionPoints(email);
-    const totalPaid = await getTotalTuitionPaid(email);
-    const tier = getTierByTotal(totalPaid);
+    const totalPaid12mo = await getTotalTuitionPaidRolling12Months(email);
+    const tier = getTierByTotal(totalPaid12mo);
     context.res.status = 200;
-    context.res.body = { success: true, totalPaid, tierName: tier.name, earnedPoints };
+    context.res.body = { success: true, totalPaid: totalPaid12mo, tierName: tier.name, earnedPoints };
   } catch (err) {
     context.log.error("Lỗi tính lại hạng:", err.message);
     context.res.status = 500;

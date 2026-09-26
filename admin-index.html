@@ -604,7 +604,7 @@
       <div class="card">
         <div style="display:flex; gap:0.8rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
           <input type="text" id="memberSearchInput" placeholder="Tìm theo email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
-          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem; white-space:nowrap;" title="Dọn 1 lần: xoá mọi mốc khoá hạng bảo lưu bị kẹt từ dữ liệu cũ, để hạng của TẤT CẢ thành viên được tính lại đúng ngay lần tới — không cần bấm từng người." onclick="recalcAllTiers()"><i class="fa-solid fa-arrows-rotate"></i> Tính Lại Hạng Cho Tất Cả (1 lần)</button>
+          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem; white-space:nowrap;" title="Chốt lại điểm tích lũy cho TOÀN BỘ thành viên theo đúng lịch sử học phí — cần chạy 1 lần sau khi đổi cách tính điểm/hạng." onclick="recalcAllTiers()"><i class="fa-solid fa-arrows-rotate"></i> Chốt Lại Điểm Cho Tất Cả (1 lần)</button>
         </div>
         <div class="loading-state" id="memberLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="memberTableWrap">
@@ -2822,10 +2822,10 @@
     }
 
     async function recalcAllTiers() {
-      if (!confirm('Xoá mốc khoá hạng bảo lưu cho TẤT CẢ thành viên đang bị khoá, để hạng được tính lại đúng ngay theo tổng học phí thực tế? Chỉ cần chạy 1 lần để dọn dữ liệu cũ — không ảnh hưởng gì tới các hạng đang khoá đúng.')) return;
+      if (!confirm('Chốt lại điểm tích lũy cho TOÀN BỘ thành viên theo đúng lịch sử học phí (hạng thì không cần — đã tự tính theo 12 tháng gần nhất). Chỉ cần chạy 1 lần, an toàn khi chạy lại nhiều lần.')) return;
       try {
         const result = await apiCall('/api/portal-recalculate-all-tiers', { method: 'POST' });
-        showGlobalAlert(result.count > 0 ? `Đã dọn xong ${result.count} hồ sơ bị khoá hạng.` : 'Không có hồ sơ nào cần dọn — mọi hạng đã đúng.', false);
+        showGlobalAlert(`Đã chốt lại điểm cho ${result.pointsCount} thành viên có học phí.`, false);
       } catch (err) {
         showGlobalAlert(err.message, true);
       }
@@ -2833,14 +2833,14 @@
 
     async function recalcMemberTier(emailEnc) {
       const email = decodeURIComponent(emailEnc);
-      if (!confirm(`Xoá mốc khoá hạng bảo lưu và tính lại NGAY hạng thành viên của ${email} theo đúng tổng học phí hiện tại?`)) return;
+      if (!confirm(`Chốt lại điểm tích lũy cho ${email} theo đúng lịch sử học phí hiện tại? (Hạng thành viên giờ tự tính theo học phí 12 tháng gần nhất, không cần thao tác gì thêm.)`)) return;
       try {
         const result = await apiCall('/api/portal-recalculate-tier', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ parentEmail: email })
         });
-        showGlobalAlert(`Đã tính lại — hạng đúng hiện tại: ${result.tierName} (tổng học phí ${formatMoney(result.totalPaid)}).`, false);
+        showGlobalAlert(`Đã chốt lại điểm — hạng hiện tại (12 tháng gần nhất): ${result.tierName}, điểm tích lũy: ${result.earnedPoints.toLocaleString('vi-VN')}.`, false);
         openMemberOverview(encodeURIComponent(email));
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -2903,8 +2903,8 @@
           if (r.studentName && !assignedNames.has(norm(r.studentName))) unassignedNames.add(r.studentName);
         });
 
-        // Hạng thành viên/tổng quan tài chính — tính nhanh theo tổng học phí đã đóng, để nhìn
-        // toàn cảnh ngay mà không cần mở từng tab riêng (Học Phí, Quyên Góp, Hoá Đơn).
+        // Hạng thành viên tính theo chu kỳ TRƯỢT 12 THÁNG GẦN NHẤT (khớp đúng với hạng thật hiển thị
+        // cho thành viên/email — xem api/_shared/memberTier.js), không phải tổng học phí trọn đời.
         function adminTierByTotal(totalPaid) {
           const tiers = [
             { name: 'Kim Cương', min: 70000000, color: '#0369a1' },
@@ -2916,19 +2916,26 @@
           ];
           return tiers.find(t => totalPaid >= t.min);
         }
+        const twelveMonthsAgo = new Date();
+        twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
         const totalTuitionAll = data.tuitionPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+        const totalTuition12mo = data.tuitionPayments.reduce((s, p) => (new Date(p.paidAt) >= twelveMonthsAgo ? s + (Number(p.amount) || 0) : s), 0);
         const totalDonationAll = data.donations.reduce((s, d) => s + (Number(d.amount) || 0), 0);
         const totalInvoiceAll = data.invoices.reduce((s, i) => s + (Number(i.totalAmount) || 0), 0);
-        const quickTier = adminTierByTotal(totalTuitionAll);
+        const quickTier = adminTierByTotal(totalTuition12mo);
         const tierSummaryHtml = `
           <div style="display:flex; flex-wrap:wrap; gap:0.7rem; margin-bottom:1.4rem;">
             <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
-              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Hạng (theo tổng học phí)</div>
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Hạng (học phí 12 tháng gần nhất)</div>
               <div style="font-weight:800; color:${quickTier.color};">${quickTier.name}</div>
             </div>
             <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
-              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng học phí đã đóng</div>
-              <div style="font-weight:800; color:#15803d;">${formatMoney(totalTuitionAll)}</div>
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Học phí 12 tháng gần nhất</div>
+              <div style="font-weight:800; color:#15803d;">${formatMoney(totalTuition12mo)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng học phí trọn đời</div>
+              <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalTuitionAll)}</div>
             </div>
             <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
               <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng quyên góp</div>
@@ -2939,8 +2946,8 @@
               <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalInvoiceAll)}</div>
             </div>
             <div class="inner-card" style="flex:1; min-width:190px; border-radius:12px; padding:0.8rem 1rem; display:flex; flex-direction:column; justify-content:center;">
-              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Hạng hiển thị cho thành viên có thể đang bị khoá bảo lưu 12 tháng (khác với hạng tính ở trên)</div>
-              <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="recalcMemberTier('${encodeURIComponent(email)}')">Tính Lại Hạng Ngay</button>
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Chốt lại điểm tích lũy nếu học phí vừa được sửa/xoá</div>
+              <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="recalcMemberTier('${encodeURIComponent(email)}')">Chốt Lại Điểm Ngay</button>
             </div>
           </div>`;
 
