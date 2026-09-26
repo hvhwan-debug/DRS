@@ -2223,7 +2223,10 @@
             <td>${escapeHtml(g.comment)}</td>
             <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
-            <td><button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${g.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button></td>
+            <td style="display:flex; gap:0.4rem; white-space:nowrap;">
+              <button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${g.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" onclick="deleteGrade('${encodeURIComponent(g.parentEmail)}','${g.id}')">Xoá</button>
+            </td>
           </tr>`).join('');
       } catch (err) {
         document.getElementById('gradeLoading').style.display = 'none';
@@ -2233,6 +2236,24 @@
 
     let editingGradeId = null;
     let editingGradeParentEmail = null;
+
+    async function deleteGrade(parentEmailEnc, id) {
+      if (!confirm('Xoá vĩnh viễn bản ghi điểm/nhận xét này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-grade', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
+        });
+        showGlobalAlert('Đã xoá bản ghi.', false);
+        document.getElementById('gradeTableWrap').style.display = 'none';
+        document.getElementById('gradeEmpty').style.display = 'none';
+        document.getElementById('gradeLoading').style.display = 'block';
+        loadGrades();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
 
     function startEditGrade(g) {
       if (g.confirmationStatus === 'confirmed' && !confirm('Mục này đã được thành viên xác nhận. Sửa lại sẽ đưa về trạng thái "Chờ xác nhận" và họ cần xác nhận lại. Tiếp tục?')) return;
