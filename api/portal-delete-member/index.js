@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
@@ -25,6 +26,7 @@ module.exports = async function (context, req) {
 
     const membersTable = await getTableClient(MEMBERS_TABLE);
     await membersTable.deleteEntity("member", email);
+    await logAdminActivity(req, "Xoá tài khoản thành viên", email);
 
     // Huỷ luôn mọi phiên đăng nhập hiện tại của email này (best-effort)
     try {

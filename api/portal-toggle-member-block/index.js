@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
@@ -41,6 +42,7 @@ module.exports = async function (context, req) {
         rowKey: email,
         isBlocked: blocked
       }, "Merge");
+      await logAdminActivity(req, blocked ? "Chặn tài khoản" : "Mở khoá tài khoản", email);
     } catch (err) {
       if (err.statusCode === 404) {
         context.res.status = 404;

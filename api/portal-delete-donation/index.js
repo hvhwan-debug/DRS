@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { deleteBlob } = require("../_shared/blobStorage");
 
 const DONATIONS_TABLE = "Donations";
@@ -48,6 +49,7 @@ module.exports = async function (context, req) {
     }
 
     await donationsTable.deleteEntity("donation", id);
+    await logAdminActivity(req, "Xoá quyên góp", `${entity.donorName || ""} - id: ${id}`);
     context.res.status = 200;
     context.res.body = { success: true };
   } catch (err) {

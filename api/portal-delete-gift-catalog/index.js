@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { deleteBlob } = require("../_shared/blobStorage");
 const { CATALOG_TABLE, PARTITION } = require("../_shared/giftCatalog");
 
@@ -31,6 +32,7 @@ module.exports = async function (context, req) {
 
     await table.deleteEntity(PARTITION, id);
     if (existing.imageBlobName) await deleteBlob(existing.imageBlobName);
+    await logAdminActivity(req, "Xoá quà tặng", `${existing.name || id}`);
 
     context.res.status = 200;
     context.res.body = { success: true };

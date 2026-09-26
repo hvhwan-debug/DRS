@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 
 const INVOICES_TABLE = "Invoices";
 
@@ -20,6 +21,7 @@ module.exports = async function (context, req) {
     const invoicesTable = await getTableClient(INVOICES_TABLE);
     try {
       await invoicesTable.deleteEntity(parentEmail, id);
+    await logAdminActivity(req, "Xoá hoá đơn", `${parentEmail} - id: ${id}`);
     } catch (err) {
       if (err.statusCode === 404) {
         context.res.status = 404;

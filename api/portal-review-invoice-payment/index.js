@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
@@ -72,6 +73,7 @@ module.exports = async function (context, req) {
         paidAt: new Date().toISOString(),
         linkedTuitionPaymentId: tuitionRowKey
       }, "Merge");
+      await logAdminActivity(req, "Duyệt thanh toán hoá đơn", `${parentEmail} - ${invoice.invoiceNumber} - ${Number(invoice.totalAmount).toLocaleString("vi-VN")}đ`);
 
       const emailResult = await sendTrackedEmail(context, {
         to: parentEmail,
@@ -94,6 +96,7 @@ module.exports = async function (context, req) {
         status: "unpaid",
         rejectReason: reason
       }, "Merge");
+      await logAdminActivity(req, "Từ chối biên lai thanh toán", `${parentEmail} - ${invoice.invoiceNumber}${reason ? " - Lý do: " + reason : ""}`);
 
       const emailResult = await sendTrackedEmail(context, {
         to: parentEmail,

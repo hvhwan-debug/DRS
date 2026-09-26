@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { resetTierLock, recomputeTuitionPoints } = require("../_shared/memberTier");
 
 const TUITION_TABLE = "TuitionPayments";
@@ -21,6 +22,7 @@ module.exports = async function (context, req) {
   try {
     const tuitionTable = await getTableClient(TUITION_TABLE);
     await tuitionTable.deleteEntity(parentEmail, id);
+    await logAdminActivity(req, "Xoá học phí", `${parentEmail} - id: ${id}`);
 
     // Vừa xoá 1 khoản học phí (thường do nhập nhầm) -> xoá mốc khoá hạng để hạng được tính
     // lại NGAY theo đúng tổng học phí còn lại, không giữ hạng cũ (bị đẩy sai do khoản đã xoá).

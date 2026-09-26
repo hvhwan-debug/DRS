@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 
 const SCHEDULE_TABLE = "ClassSchedules";
 
@@ -18,6 +19,7 @@ module.exports = async function (context, req) {
   try {
     const scheduleTable = await getTableClient(SCHEDULE_TABLE);
     await scheduleTable.deleteEntity("schedule", id);
+    await logAdminActivity(req, "Xoá lịch học", `id: ${id}`);
     context.res.status = 200;
     context.res.body = { success: true };
   } catch (err) {

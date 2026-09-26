@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { deleteBlob } = require("../_shared/blobStorage");
 
 const REGISTRATIONS_TABLE = "Registrations";
@@ -41,6 +42,7 @@ module.exports = async function (context, req) {
     } catch (e) { /* bỏ qua nếu attachmentsJson lỗi hoặc không có */ }
 
     await regTable.deleteEntity(email, id);
+    await logAdminActivity(req, "Xoá đơn đăng ký", `${email} - ${entity.formTitle || ""}`);
     context.res.status = 200;
     context.res.body = { success: true };
   } catch (err) {

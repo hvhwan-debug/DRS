@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { logAdminActivity } = require("../_shared/activityLog");
 const { hashPassword } = require("../_shared/password");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
@@ -52,6 +53,7 @@ module.exports = async function (context, req) {
       failedAttempts: 0,
       updatedAt: new Date().toISOString()
     }, "Merge");
+    await logAdminActivity(req, "Đặt lại mật khẩu thành viên", email);
 
     const displayName = await getMemberDisplayName(email);
     const greeting = buildGreeting(displayName);
