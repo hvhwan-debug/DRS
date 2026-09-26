@@ -325,6 +325,18 @@
     .invoice-doc th, .invoice-doc td { padding:0.6rem 0.5rem; border-bottom:1px solid var(--border); font-size:0.9rem; text-align:left; }
     .invoice-doc th:last-child, .invoice-doc td:last-child, .invoice-doc th:nth-child(3), .invoice-doc td:nth-child(3) { text-align:right; }
     .invoice-doc th:nth-child(2), .invoice-doc td:nth-child(2) { text-align:center; }
+    /* Hoá đơn phong cách VIP — chỉ áp dụng cho thành viên từ hạng Vàng trở lên */
+    .invoice-doc.invoice-doc-vip {
+      background: linear-gradient(160deg,#211d13 0%,#17140b 100%);
+      border: 1px solid rgba(201,162,39,0.4);
+      box-shadow: 0 14px 34px -14px rgba(0,0,0,0.5);
+    }
+    .invoice-doc.invoice-doc-vip .invoice-doc-header { border-bottom-color: rgba(201,162,39,0.5); }
+    .invoice-doc.invoice-doc-vip th, .invoice-doc.invoice-doc-vip td { border-bottom-color: rgba(201,162,39,0.18); color:#f1ede0; }
+    .invoice-doc.invoice-doc-vip th { color:#e8c766; font-weight:700; }
+    @media print {
+      .invoice-doc.invoice-doc-vip { background:#17140b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
     @media print {
       body * { visibility: hidden; }
       #memberInvoiceViewContent, #memberInvoiceViewContent * { visibility: visible; }
@@ -868,7 +880,12 @@
     }
 
     // Khung hoá đơn hiển thị cho thành viên — cùng thiết kế với bản admin dùng khi lập hoá đơn
+    // Hạng Vàng trở lên: hoá đơn dùng giao diện VIP (đen-vàng đồng), hạng thường: giữ nguyên bản trắng mặc định
     function renderMemberInvoiceDocHtml(inv) {
+      const isVipInvoice = !!window.__memberIsVip;
+      const c = isVipInvoice
+        ? { heading: '#f6ecc9', muted: '#a8935a', total: '#e8c766', note: '#a8935a' }
+        : { heading: '#0f172a', muted: 'var(--text-muted)', total: '#15803d', note: 'var(--text-muted)' };
       const items = Array.isArray(inv.items) ? inv.items : [];
       const rowsHtml = items.map(it => `
         <tr>
@@ -878,26 +895,26 @@
           <td>${Number(it.quantity * it.unitPrice).toLocaleString('vi-VN')}đ</td>
         </tr>`).join('');
       return `
-        <div class="invoice-doc">
+        <div class="invoice-doc${isVipInvoice ? ' invoice-doc-vip' : ''}">
           <div class="invoice-doc-header">
             <div style="display:flex; align-items:center; gap:0.8rem;">
               <img src="images/logo-wvn.png" alt="WVN">
               <div>
-                <div style="font-weight:800; font-size:1.05rem; color:#0f172a;">Mạng Lưới Tri Thức Việt Nam</div>
-                <div style="font-size:0.8rem; color:var(--text-muted);">wvn.vn</div>
+                <div style="font-weight:800; font-size:1.05rem; color:${c.heading};">Mạng Lưới Tri Thức Việt Nam</div>
+                <div style="font-size:0.8rem; color:${c.muted};">wvn.vn</div>
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:1.3rem; font-weight:800; color:#0f172a;">HOÁ ĐƠN</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Số: <strong>${inv.invoiceNumber}</strong></div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Ngày lập: ${formatDate(inv.issueDate)}</div>
+              <div style="font-size:1.3rem; font-weight:800; color:${c.heading};">HOÁ ĐƠN${isVipInvoice ? ' <span style="font-size:0.7rem; font-weight:700; color:#e8c766; border:1px solid rgba(232,199,102,0.6); border-radius:999px; padding:0.1rem 0.5rem; vertical-align:middle;">VIP</span>' : ''}</div>
+              <div style="font-size:0.85rem; color:${c.muted};">Số: <strong>${inv.invoiceNumber}</strong></div>
+              <div style="font-size:0.85rem; color:${c.muted};">Ngày lập: ${formatDate(inv.issueDate)}</div>
             </div>
           </div>
-          ${inv.studentName ? `<div style="margin-bottom:1rem; font-size:0.92rem; color:#0f172a;">Học sinh: <strong>${escapeHtml(inv.studentName)}</strong>${inv.program ? ` — ${escapeHtml(inv.program)}` : ''}</div>` : ''}
+          ${inv.studentName ? `<div style="margin-bottom:1rem; font-size:0.92rem; color:${c.heading};">Học sinh: <strong>${escapeHtml(inv.studentName)}</strong>${inv.program ? ` — ${escapeHtml(inv.program)}` : ''}</div>` : ''}
           <table><thead><tr><th>Mô tả</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>${rowsHtml}</tbody></table>
-          <div style="text-align:right; font-size:1.15rem; font-weight:800; margin:1rem 0; color:#15803d;">Tổng cộng: ${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</div>
-          ${inv.note ? `<div style="border-top:1px solid var(--border); padding-top:0.8rem; font-size:0.88rem; color:var(--text-muted);"><strong>Ghi chú:</strong> ${escapeHtml(inv.note)}</div>` : ''}
-          <div style="text-align:center; margin-top:2rem; font-size:0.78rem; color:var(--text-muted);">Cảm ơn bạn đã đồng hành cùng Mạng Lưới Tri Thức Việt Nam.</div>
+          <div style="text-align:right; font-size:1.15rem; font-weight:800; margin:1rem 0; color:${c.total};">Tổng cộng: ${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</div>
+          ${inv.note ? `<div style="border-top:1px solid ${isVipInvoice ? 'rgba(201,162,39,0.25)' : 'var(--border)'}; padding-top:0.8rem; font-size:0.88rem; color:${c.note};"><strong>Ghi chú:</strong> ${escapeHtml(inv.note)}</div>` : ''}
+          <div style="text-align:center; margin-top:2rem; font-size:0.78rem; color:${c.note};">Cảm ơn bạn đã đồng hành cùng Mạng Lưới Tri Thức Việt Nam.</div>
         </div>`;
     }
 
@@ -1043,6 +1060,7 @@
         const tier = getMembershipTier(totalTuitionPaid);
         const isVip = totalTuitionPaid >= 40000000; // từ hạng Vàng trở lên
         document.body.classList.toggle('vip-theme', isVip);
+        window.__memberIsVip = isVip;
 
         // Mục 2: chữ "VIP" trong "Khu vực thành viên" — chỉ hiện từ hạng Vàng trở lên
         const brandSubtitleEl = document.getElementById('sidebarBrandSubtitle');
