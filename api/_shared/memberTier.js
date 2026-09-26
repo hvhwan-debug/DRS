@@ -114,13 +114,59 @@ async function adjustSpentPoints(email, delta) {
   throw new Error("Không thể cập nhật điểm tích lũy do có quá nhiều yêu cầu cùng lúc, vui lòng thử lại.");
 }
 
+// Điểm tích lũy của MỖI khoản học phí được "chốt" ngay tại thời điểm đóng, theo đúng hạng tại thời
+// điểm đó (tính lũy kế theo thứ tự thời gian) — rồi lưu vào field pointsEarned trên chính bản ghi
+// TuitionPayments đó. Đây là cách làm ĐÚNG: điểm đã có không được phép "co lại" mỗi khi hạng hiện
+// tại thay đổi sau này (vd. do sửa/xoá 1 khoản khác khiến hạng tụt) — nếu không, thành viên đã thật
+// sự đóng tiền và đã dùng điểm đổi quà sẽ bỗng dưng bị âm/về 0 điểm dù không hề mất tiền đã đóng.
+// Gọi lại hàm này mỗi khi có khoản học phí được THÊM/SỬA/XOÁ, để chốt lại đúng theo đúng thứ tự
+// thời gian còn lại (một thay đổi có thể làm dịch chuyển mốc hạng của các khoản đóng SAU nó).
+async function recomputeTuitionPoints(email) {
+  const tuitionTable = await getTableClient(TUITION_TABLE);
+  const entities = [];
+  const iterator = tuitionTable.listEntities({
+    queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+  });
+  for await (const e of iterator) entities.push(e);
+  entities.sort((a, b) => new Date(a.paidAt) - new Date(b.paidAt));
+
+  let runningTotal = 0;
+  let totalPoints = 0;
+  for (const e of entities) {
+    const amount = Number(e.amount) || 0;
+    runningTotal += amount;
+    const tierAtThatTime = getTierByTotal(runningTotal);
+    const pts = calculatePoints(amount, tierAtThatTime);
+    totalPoints += pts;
+    if (Number(e.pointsEarned) !== pts) {
+      try {
+        await tuitionTable.updateEntity({ partitionKey: e.partitionKey, rowKey: e.rowKey, pointsEarned: pts }, "Merge");
+      } catch (err) { /* best-effort — 1 bản ghi lỗi không chặn các bản ghi còn lại */ }
+    }
+  }
+  return totalPoints;
+}
+
+// Tổng điểm đã tích lũy = tổng field pointsEarned đã chốt sẵn trên từng khoản học phí (xem
+// recomputeTuitionPoints ở trên) — KHÔNG tính lại theo "tổng học phí × hạng hiện tại", vì cách đó
+// khiến điểm của các khoản cũ bị tính lại sai mỗi khi hạng hiện tại thay đổi.
+async function getEarnedPointsSum(email) {
+  const tuitionTable = await getTableClient(TUITION_TABLE);
+  let sum = 0;
+  const iterator = tuitionTable.listEntities({
+    queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` }
+  });
+  for await (const e of iterator) sum += Number(e.pointsEarned) || 0;
+  return sum;
+}
+
 // Điểm tích lũy KHẢ DỤNG để đổi quà = điểm đã tích lũy (tính từ tổng học phí) - điểm đã dùng.
 // Đây là nguồn điểm DUY NHẤT dùng để đổi quà — quà tặng đổi bằng ĐIỂM, không phải mốc học phí,
 // và có thể đổi nhiều lần miễn đủ điểm (không giới hạn "mỗi hạng chỉ đổi 1 lần").
 async function getPointsBalance(email) {
   const totalPaid = await getTotalTuitionPaid(email);
   const tier = getTierByTotal(totalPaid);
-  const earned = calculatePoints(totalPaid, tier);
+  const earned = await getEarnedPointsSum(email);
   const spent = await getSpentPoints(email);
   const available = Math.max(0, earned - spent);
   return { earned, spent, available, tier, totalPaid };
@@ -206,11 +252,12 @@ async function getTierInfoForEmail(email) {
     lockedAtIso = p.tierLockedAt || null;
   } catch (e) { /* không có hồ sơ -> dùng thẳng hạng tính từ tổng học phí */ }
   const { tier } = resolveEffectiveTier(rawTier, lockedName, lockedAtIso);
+  const points = await getEarnedPointsSum(email);
   return {
     totalPaid,
     tier,
     isVip: tierRank(tier.name) >= tierRank("Vàng"),
-    points: calculatePoints(totalPaid, tier)
+    points
   };
 }
 
@@ -242,5 +289,7 @@ module.exports = {
   resetTierLock,
   getSpentPoints,
   adjustSpentPoints,
-  getPointsBalance
+  getPointsBalance,
+  recomputeTuitionPoints,
+  getEarnedPointsSum
 };

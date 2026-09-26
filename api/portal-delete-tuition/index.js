@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
-const { resetTierLock } = require("../_shared/memberTier");
+const { resetTierLock, recomputeTuitionPoints } = require("../_shared/memberTier");
 
 const TUITION_TABLE = "TuitionPayments";
 
@@ -24,7 +24,9 @@ module.exports = async function (context, req) {
 
     // Vừa xoá 1 khoản học phí (thường do nhập nhầm) -> xoá mốc khoá hạng để hạng được tính
     // lại NGAY theo đúng tổng học phí còn lại, không giữ hạng cũ (bị đẩy sai do khoản đã xoá).
+    // Đồng thời chốt lại điểm tích lũy cho các khoản còn lại (mốc hạng của chúng có thể đã dịch chuyển).
     await resetTierLock(parentEmail);
+    await recomputeTuitionPoints(parentEmail);
 
     context.res.status = 200;
     context.res.body = { success: true };

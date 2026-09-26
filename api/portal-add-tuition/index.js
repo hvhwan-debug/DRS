@@ -5,6 +5,7 @@ const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName")
 const { createConfirmToken } = require("../_shared/confirmToken");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
+const { recomputeTuitionPoints } = require("../_shared/memberTier");
 
 const TUITION_TABLE = "TuitionPayments";
 
@@ -92,6 +93,10 @@ module.exports = async function (context, req) {
       paidAt,
       recordedAt: new Date().toISOString()
     });
+
+    // Chốt lại điểm tích lũy cho TOÀN BỘ khoản học phí của phụ huynh này theo đúng thứ tự thời
+    // gian (khoản mới thêm có thể làm dịch chuyển mốc hạng của các khoản đóng sau nó, nếu có).
+    await recomputeTuitionPoints(parentEmail);
 
     // Email dùng khung giao diện thống nhất toàn hệ thống; tự chuyển bản premium nếu là thành viên VIP.
     const confirmToken = await createConfirmToken("tuition", parentEmail, rowKey);

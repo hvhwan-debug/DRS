@@ -1,5 +1,5 @@
 const { requireAdmin } = require("../_shared/adminAuth");
-const { resetTierLock, getTotalTuitionPaid, getTierByTotal } = require("../_shared/memberTier");
+const { resetTierLock, recomputeTuitionPoints, getTotalTuitionPaid, getTierByTotal } = require("../_shared/memberTier");
 
 // Dùng khi 1 thành viên đang bị "kẹt" ở hạng cũ (mốc khoá bảo lưu 12 tháng được tạo ra từ dữ liệu
 // test/nhập nhầm trước đây, trước khi có cơ chế tự xoá khoá khi sửa/xoá học phí) — admin bấm 1 nút
@@ -20,10 +20,11 @@ module.exports = async function (context, req) {
 
   try {
     await resetTierLock(email);
+    const earnedPoints = await recomputeTuitionPoints(email);
     const totalPaid = await getTotalTuitionPaid(email);
     const tier = getTierByTotal(totalPaid);
     context.res.status = 200;
-    context.res.body = { success: true, totalPaid, tierName: tier.name };
+    context.res.body = { success: true, totalPaid, tierName: tier.name, earnedPoints };
   } catch (err) {
     context.log.error("Lỗi tính lại hạng:", err.message);
     context.res.status = 500;

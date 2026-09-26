@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
-const { getEffectiveTierForMember, tierRank, calculatePoints, describeEarnRate, getSpentPoints } = require("../_shared/memberTier");
+const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum } = require("../_shared/memberTier");
 const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
@@ -228,7 +228,8 @@ module.exports = async function (context, req) {
           attachments,
           confirmationStatus: entity.confirmationStatus || "pending",
           memberFeedback: entity.memberFeedback || "",
-          paidAt: entity.paidAt
+          paidAt: entity.paidAt,
+          pointsEarned: Number(entity.pointsEarned) || 0
         });
       }
       tuitionPayments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
@@ -350,9 +351,10 @@ module.exports = async function (context, req) {
     // getEffectiveTierForMember áp dụng bảo lưu hạng 12 tháng kể từ ngày lên hạng gần nhất — nếu
     // tổng học phí tính ra thấp hơn hạng đã đạt trong vòng 12 tháng qua, vẫn GIỮ hạng cũ, không tụt ngay.
     const { tier } = await getEffectiveTierForMember(email, totalTuitionPaid);
-    // Điểm tích lũy dùng làm "tiền tệ" đổi quà: earned (tính từ tổng học phí × tỉ lệ hạng) - spent
-    // (đã dùng để đổi quà, cộng dồn trong hồ sơ) = available (điểm khả dụng để đổi quà tiếp).
-    const earnedPoints = calculatePoints(totalTuitionPaid, tier);
+    // Điểm tích lũy dùng làm "tiền tệ" đổi quà: earned (tổng điểm đã CHỐT theo từng khoản học phí,
+    // theo đúng hạng tại thời điểm đóng — xem recomputeTuitionPoints) - spent (đã dùng để đổi quà,
+    // cộng dồn trong hồ sơ) = available (điểm khả dụng để đổi quà tiếp).
+    const earnedPoints = await getEarnedPointsSum(email);
     const spentPoints = await getSpentPoints(email);
     const loyaltyPoints = {
       earned: earnedPoints,

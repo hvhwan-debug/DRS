@@ -1351,14 +1351,16 @@
           }).join('')}
         </div>`;
 
-        // Lịch sử điểm: mỗi khoản học phí quy đổi ra điểm "+" theo tốc độ tích điểm của hạng hiện tại,
-        // và mỗi lần đổi quà (chưa huỷ) là 1 dòng "-" tương ứng số điểm đã dùng. Cộng dồn đúng bằng
-        // loyaltyPoints.available (đã trừ) — khớp chính xác với server, không cần gọi thêm API riêng.
+        // Lịch sử điểm: mỗi khoản học phí đã CHỐT sẵn điểm "+" ngay khi đóng, theo đúng hạng tại
+        // thời điểm đó (tính lũy kế theo thời gian — xem recomputeTuitionPoints phía server), không
+        // tính lại theo hạng hiện tại nữa (cách cũ khiến điểm bị co lại mỗi khi hạng hiện tại đổi,
+        // dù thành viên không hề mất khoản học phí đã đóng). Mỗi lần đổi quà (chưa huỷ) là 1 dòng
+        // "-" tương ứng số điểm đã dùng. Cộng dồn đúng bằng loyaltyPoints.available (đã trừ).
         const pointsEarnRows = tuitionPayments.map(p => ({
           date: p.paidAt,
           label: `${p.studentName || '—'}${p.program ? ` — ${p.program}` : ''}`,
           amountLabel: `${Number(p.amount || 0).toLocaleString('vi-VN')}đ`,
-          points: loyaltyPoints ? calcPointsForAmount(Number(p.amount) || 0, tier) : 0,
+          points: Number(p.pointsEarned) || 0,
           sign: '+'
         }));
         const pointsSpendRows = giftRedemptions.filter(r => r.status !== 'cancelled').map(r => ({
