@@ -717,6 +717,20 @@
       return { name: 'Thành Viên Mới', icon: 'fa-seedling', bg: 'rgba(148,163,184,0.18)', color: '#cbd5e1' };
     }
 
+    // Tra hạng theo TÊN (không theo tổng học phí) — dùng khi server đã trả sẵn hạng hiệu lực
+    // (có áp dụng bảo lưu 12 tháng), để lấy icon/màu hiển thị khớp đúng tên hạng đó.
+    function getTierByName(name) {
+      const all = [
+        { name: 'Thành Viên Mới', icon: 'fa-seedling', bg: 'rgba(148,163,184,0.18)', color: '#cbd5e1' },
+        { name: 'Thân Thiết', icon: 'fa-heart', bg: 'rgba(56,189,248,0.18)', color: '#7dd3fc' },
+        { name: 'Bạc', icon: 'fa-medal', bg: 'rgba(148,163,184,0.22)', color: '#e2e8f0' },
+        { name: 'Titanium', icon: 'fa-shield-halved', bg: 'rgba(100,130,160,0.22)', color: '#a8c0d6' },
+        { name: 'Vàng', icon: 'fa-crown', bg: 'rgba(201,162,39,0.22)', color: '#f6ecc9' },
+        { name: 'Kim Cương', icon: 'fa-gem', bg: 'rgba(125,211,252,0.18)', color: '#7dd3fc' }
+      ];
+      return all.find(t => t.name === name) || null;
+    }
+
     const TIER_PERKS = [
       {
         name: 'Thành Viên Mới', min: 0, icon: 'fa-seedling', color: '#64748b',
@@ -1054,14 +1068,19 @@
         const {
           email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [],
           giftCatalog = [], invoices = [], loyaltyPoints = null, tierChanged = false, isUpgrade = false, previousTierName = null,
-          pendingInvoicePopup = null
+          pendingInvoicePopup = null, tier: serverTier = null, isVip: serverIsVip = null
         } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
 
         const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-        const tier = getMembershipTier(totalTuitionPaid);
-        const isVip = totalTuitionPaid >= 40000000; // từ hạng Vàng trở lên
+        // Hạng/VIP hiển thị PHẢI lấy từ server (payload.tier/isVip) chứ không tự tính lại theo tổng học phí
+        // hiện tại: server áp dụng chính sách bảo lưu hạng 12 tháng (không tụt hạng ngay nếu học phí bị
+        // sửa/giảm), và email cũng dùng đúng hạng bảo lưu này để tô màu. Nếu web tự tính riêng, sẽ có lúc
+        // web hiện hạng thấp (đã tụt theo học phí hiện tại) trong khi email vẫn tô màu premium theo hạng
+        // được bảo lưu — gây lệch nhau giữa web và email như phản ánh trước đó.
+        const tier = serverTier ? (getTierByName(serverTier.name) || getMembershipTier(totalTuitionPaid)) : getMembershipTier(totalTuitionPaid);
+        const isVip = typeof serverIsVip === 'boolean' ? serverIsVip : totalTuitionPaid >= 40000000;
         document.body.classList.toggle('vip-theme', isVip);
         window.__memberIsVip = isVip;
 
@@ -1090,7 +1109,7 @@
         const currentTierIndex = tierThresholds.findIndex(t => t.name === tier.name);
         const nextTier = tierThresholds[currentTierIndex + 1];
         const progressPct = nextTier
-          ? Math.min(100, Math.round((totalTuitionPaid - tierThresholds[currentTierIndex].min) / (nextTier.min - tierThresholds[currentTierIndex].min) * 100))
+          ? Math.min(100, Math.max(0, Math.round((totalTuitionPaid - tierThresholds[currentTierIndex].min) / (nextTier.min - tierThresholds[currentTierIndex].min) * 100)))
           : 100;
 
         const richTier = TIER_PERKS.find(t => t.name === tier.name) || tier;
@@ -1435,9 +1454,10 @@
             }).join('')
           : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-file-invoice-dollar"></i> Bạn chưa có hoá đơn nào.</div>`;
 
+        const currentTierIdx = TIER_PERKS.findIndex(t => t.name === tier.name);
         const perksHtml = TIER_PERKS.map((t, idx) => {
           const isCurrent = t.name === tier.name;
-          const isUnlocked = totalTuitionPaid >= t.min;
+          const isUnlocked = currentTierIdx >= 0 ? idx <= currentTierIdx : totalTuitionPaid >= t.min;
           return `
             <div class="inner-card ${isCurrent ? 'is-current' : ''}" style="border-width:2px; border-style:solid; ${isCurrent ? `border-color:${t.color};` : ''} border-radius:16px; padding:1.1rem 1.3rem; margin-bottom:0.8rem; position:relative; ${isUnlocked ? '' : 'opacity:0.55;'}">
               ${isCurrent ? `<span style="position:absolute; top:-12px; right:16px; background:${t.color}; color:#fff; font-size:0.72rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px;">Hạng hiện tại của bạn</span>` : ''}
@@ -1457,8 +1477,7 @@
 
         // Mở sẵn thẻ hạng hiện tại của thành viên ngay sau khi render, các hạng khác thu gọn.
         setTimeout(() => {
-          const currentIdx = TIER_PERKS.findIndex(t => t.name === tier.name);
-          if (currentIdx >= 0) toggleTierPerks(currentIdx, true);
+          if (currentTierIdx >= 0) toggleTierPerks(currentTierIdx, true);
         }, 0);
 
         function assessmentBadgeStyle(type) {
