@@ -1015,13 +1015,34 @@
       chevron.style.transform = shouldOpen ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 
-    function toggleTierPerks(idx, forceOpen) {
-      const list = document.getElementById(`tierPerksList-${idx}`);
-      const chevron = document.getElementById(`tierChevron-${idx}`);
-      if (!list || !chevron) return;
-      const shouldOpen = forceOpen === true ? true : list.style.display === 'none';
-      list.style.display = shouldOpen ? 'block' : 'none';
-      chevron.style.transform = shouldOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    function renderTierDetail(idx) {
+      const t = TIER_PERKS[idx];
+      if (!t) return;
+      const isUnlocked = (window.__tierUnlocked || [])[idx];
+      const isCurrent = idx === window.__currentTierIdx;
+
+      // Cập nhật trạng thái "đang chọn" trên dải bước lộ trình
+      TIER_PERKS.forEach((_, i) => {
+        const step = document.getElementById(`tierStep-${i}`);
+        if (step) step.firstElementChild.style.transform = i === idx ? 'scale(1.1)' : 'scale(1)';
+      });
+
+      const panel = document.getElementById('tierDetailPanel');
+      if (!panel) return;
+      panel.innerHTML = `
+        <div class="inner-card" style="border-width:2px; border-style:solid; border-color:${t.color}; border-radius:16px; padding:1.2rem 1.3rem; position:relative; ${isUnlocked ? '' : 'opacity:0.7;'}">
+          ${isCurrent ? `<span style="position:absolute; top:-12px; right:16px; background:${t.color}; color:#fff; font-size:0.72rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px;">Hạng hiện tại của bạn</span>` : ''}
+          <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.9rem;">
+            <div style="width:44px; height:44px; border-radius:12px; background:${t.color}22; color:${t.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid ${t.icon}"></i></div>
+            <div>
+              <div style="font-size:1.05rem; font-weight:800; color:var(--text-dark);">${t.name}</div>
+              <div style="font-size:0.78rem; color:var(--text-muted);">${t.min === 0 ? 'Mặc định khi tham gia' : `Từ ${t.min.toLocaleString('vi-VN')}đ học phí đã đóng`}${!isUnlocked ? ' · Chưa đạt hạng này' : ''}</div>
+            </div>
+          </div>
+          <ul style="margin:0; padding-left:1.2rem; font-size:0.88rem; color:var(--text-dark); line-height:1.9;">
+            ${t.perks.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>`;
     }
 
     function toggleChangePassword() {
@@ -1461,30 +1482,34 @@
           : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-file-invoice-dollar"></i> Bạn chưa có hoá đơn nào.</div>`;
 
         const currentTierIdx = TIER_PERKS.findIndex(t => t.name === tier.name);
-        const perksHtml = TIER_PERKS.map((t, idx) => {
-          const isCurrent = t.name === tier.name;
-          const isUnlocked = currentTierIdx >= 0 ? idx <= currentTierIdx : totalTuitionPaid >= t.min;
+        window.__tierUnlocked = TIER_PERKS.map((t, idx) => currentTierIdx >= 0 ? idx <= currentTierIdx : totalTuitionPaid >= t.min);
+        window.__currentTierIdx = currentTierIdx;
+
+        // Lộ trình hạng: 1 dải bước ngang gọn gàng (cuộn ngang trên màn hình hẹp), bấm vào từng
+        // bước để xem quyền lợi của hạng đó ở khung chi tiết bên dưới — thay vì xổ hết quyền lợi
+        // của mọi hạng ra cùng lúc thành 1 danh sách dài.
+        const roadmapStepsHtml = TIER_PERKS.map((t, idx) => {
+          const isUnlocked = window.__tierUnlocked[idx];
+          const isCurrent = idx === currentTierIdx;
           return `
-            <div class="inner-card ${isCurrent ? 'is-current' : ''}" style="border-width:2px; border-style:solid; ${isCurrent ? `border-color:${t.color};` : ''} border-radius:16px; padding:1.1rem 1.3rem; margin-bottom:0.8rem; position:relative; ${isUnlocked ? '' : 'opacity:0.55;'}">
-              ${isCurrent ? `<span style="position:absolute; top:-12px; right:16px; background:${t.color}; color:#fff; font-size:0.72rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px;">Hạng hiện tại của bạn</span>` : ''}
-              <div onclick="toggleTierPerks(${idx})" style="display:flex; align-items:center; gap:0.8rem; cursor:pointer; user-select:none;">
-                <div style="width:44px; height:44px; border-radius:12px; background:${t.color}22; color:${t.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid ${t.icon}"></i></div>
-                <div style="flex:1; min-width:0;">
-                  <div style="font-size:1.05rem; font-weight:800; color:var(--text-dark);">${t.name}</div>
-                  <div style="font-size:0.78rem; color:var(--text-muted);">${t.min === 0 ? 'Mặc định khi tham gia' : `Từ ${t.min.toLocaleString('vi-VN')}đ học phí đã đóng`}</div>
-                </div>
-                <i class="fa-solid fa-chevron-down tier-perks-chevron" id="tierChevron-${idx}" style="font-size:0.85rem; color:var(--text-muted); transition:transform 0.2s; flex-shrink:0;"></i>
+          <div style="display:flex; align-items:center; ${idx < TIER_PERKS.length - 1 ? 'flex:1;' : ''}">
+            <div onclick="renderTierDetail(${idx})" id="tierStep-${idx}" style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; cursor:pointer; flex-shrink:0; min-width:64px;">
+              <div style="width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.05rem; border:2px solid ${isUnlocked ? t.color : 'var(--border)'}; background:${isUnlocked ? t.color + '22' : '#f8fafc'}; color:${isUnlocked ? t.color : '#94a3b8'}; ${isCurrent ? `box-shadow:0 0 0 3px ${t.color}33;` : ''} transition:transform 0.15s;">
+                <i class="fa-solid ${t.icon}"></i>
               </div>
-              <ul id="tierPerksList-${idx}" style="display:none; margin:0.9rem 0 0; padding-left:1.2rem; font-size:0.88rem; color:var(--text-dark); line-height:1.9;">
-                ${t.perks.map(p => `<li>${p}</li>`).join('')}
-              </ul>
-            </div>`;
+              <div style="font-size:0.72rem; font-weight:${isCurrent ? '800' : '600'}; color:${isUnlocked ? 'var(--text-dark)' : 'var(--text-muted)'}; text-align:center; white-space:nowrap;">${t.name}</div>
+            </div>
+            ${idx < TIER_PERKS.length - 1 ? `<div style="flex:1; height:3px; min-width:20px; margin:0 0.2rem 1.3rem; border-radius:999px; background:${window.__tierUnlocked[idx + 1] ? t.color : 'var(--border)'};"></div>` : ''}
+          </div>`;
         }).join('');
 
-        // Mở sẵn thẻ hạng hiện tại của thành viên ngay sau khi render, các hạng khác thu gọn.
-        setTimeout(() => {
-          if (currentTierIdx >= 0) toggleTierPerks(currentTierIdx, true);
-        }, 0);
+        const perksHtml = `
+          <div style="overflow-x:auto; padding-bottom:0.4rem; margin-bottom:1.3rem;">
+            <div style="display:flex; align-items:flex-start; min-width:${TIER_PERKS.length * 90}px;">${roadmapStepsHtml}</div>
+          </div>
+          <div id="tierDetailPanel"></div>`;
+
+        setTimeout(() => { renderTierDetail(currentTierIdx >= 0 ? currentTierIdx : 0); }, 0);
 
         function assessmentBadgeStyle(type) {
           if (type === 'Đánh giá đầu vào') return 'background:#e0f2fe; color:#0369a1;';
@@ -1685,7 +1710,7 @@
           <div class="member-panel" id="memberPanel-perks">
             <div class="card">
               <h2><i class="fa-solid fa-gem"></i> Đặc Quyền Theo Hạng Thành Viên</h2>
-              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Hạng thành viên được tính tự động dựa trên tổng học phí đã đóng tại trung tâm. Đóng góp càng nhiều, quyền lợi càng cao.</p>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Hạng thành viên được tính tự động dựa trên học phí đã đóng trong 12 tháng gần nhất. Đóng góp càng nhiều, quyền lợi càng cao. Bấm vào từng hạng trong lộ trình bên dưới để xem quyền lợi chi tiết.</p>
               ${perksHtml}
             </div>
           </div>
