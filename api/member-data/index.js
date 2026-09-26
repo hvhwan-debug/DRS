@@ -289,6 +289,7 @@ module.exports = async function (context, req) {
           id: entity.rowKey,
           giftId: entity.giftId,
           giftName: entity.giftName,
+          giftCost: Number(entity.giftCost) || 0,
           status: entity.status || "pending",
           requestedAt: entity.requestedAt,
           shippedAt: entity.shippedAt || null,
