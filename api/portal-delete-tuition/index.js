@@ -1,9 +1,8 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
-const { deleteBlob } = require("../_shared/blobStorage");
+const { resetTierLock, recomputeTuitionPoints } = require("../_shared/memberTier");
 
 const TUITION_TABLE = "TuitionPayments";
-const INVOICES_TABLE = "Invoices";
 
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
@@ -21,50 +20,22 @@ module.exports = async function (context, req) {
 
   try {
     const tuitionTable = await getTableClient(TUITION_TABLE);
-    let entity;
-    try {
-      entity = await tuitionTable.getEntity(parentEmail, id);
-    } catch (err) {
-      if (err.statusCode === 404) {
-        context.res.status = 404;
-        context.res.body = { success: false, message: "Không tìm thấy khoản học phí này." };
-        return;
-      }
-      throw err;
-    }
-
-    try {
-      const attachments = JSON.parse(entity.attachmentsJson || "[]");
-      for (const att of attachments) {
-        if (att && att.blobName) await deleteBlob(att.blobName);
-      }
-    } catch (e) { /* bỏ qua nếu lỗi parse */ }
-
     await tuitionTable.deleteEntity(parentEmail, id);
 
-    // Khoản học phí này được tạo tự động khi admin duyệt biên lai 1 hoá đơn (rowKey dạng "invoice-<id>")
-    // -> xoá đi thì đưa hoá đơn đó về lại "chưa thanh toán" để không bị lệch trạng thái.
-    let warning = null;
-    if (id.startsWith("invoice-")) {
-      const invoiceId = id.slice("invoice-".length);
-      try {
-        const invoicesTable = await getTableClient(INVOICES_TABLE);
-        await invoicesTable.updateEntity({
-          partitionKey: parentEmail,
-          rowKey: invoiceId,
-          status: "unpaid",
-          paidAt: "",
-          linkedTuitionPaymentId: ""
-        }, "Merge");
-        warning = "Đã xoá khoản học phí. Hoá đơn liên kết đã được đưa về trạng thái 'Chưa thanh toán'.";
-      } catch (e) {
-        context.log.error("Lỗi cập nhật lại hoá đơn liên kết:", e.message);
-      }
-    }
+    // Vừa xoá 1 khoản học phí (thường do nhập nhầm) -> xoá mốc khoá hạng để hạng được tính
+    // lại NGAY theo đúng tổng học phí còn lại, không giữ hạng cũ (bị đẩy sai do khoản đã xoá).
+    // Đồng thời chốt lại điểm tích lũy cho các khoản còn lại (mốc hạng của chúng có thể đã dịch chuyển).
+    await resetTierLock(parentEmail);
+    await recomputeTuitionPoints(parentEmail);
 
     context.res.status = 200;
-    context.res.body = { success: true, warning };
+    context.res.body = { success: true };
   } catch (err) {
+    if (err.statusCode === 404) {
+      context.res.status = 404;
+      context.res.body = { success: false, message: "Không tìm thấy bản ghi này." };
+      return;
+    }
     context.log.error("Lỗi xoá học phí:", err.message);
     context.res.status = 500;
     context.res.body = { success: false, message: "Đã có lỗi xảy ra, vui lòng thử lại sau." };

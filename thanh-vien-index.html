@@ -57,7 +57,7 @@
     .sidebar-brand-text { font-weight: 700; font-size: 0.8rem; line-height: 1.25; color: #fff; min-width: 0; white-space: nowrap; }
     .sidebar-brand-text span {
       display: block; font-family: 'Inter'; font-weight: 400; font-size: 0.7rem; color: #94a3b8;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      white-space: normal; overflow: visible; line-height: 1.3; word-break: break-word;
     }
 
     #sidebarMemberInfo { padding: 0.9rem; margin-bottom: 1rem; border-radius: 14px; background: rgba(255,255,255,0.05); }
@@ -111,7 +111,7 @@
       .main-content { margin-left: 0; }
       .page-wrap { padding: 1.5rem 1rem 2.5rem; }
       .card { padding: 1.2rem; border-radius: 16px; }
-      .welcome-banner { padding: 1.8rem 1.4rem; min-height: 150px; }
+      .welcome-banner { padding: 1.8rem 1.4rem; min-height: 220px; }
       .welcome-banner h1 { font-size: 1.4rem; }
       table { font-size: 0.82rem; }
       .btn { padding: 0.6rem 1.1rem; font-size: 0.86rem; }
@@ -120,7 +120,7 @@
       .page-wrap { padding: 1rem 0.7rem 2rem; }
       .card { padding: 0.9rem; }
       .sidebar-brand-text span { display: none; }
-      .welcome-banner { padding: 1.5rem 1.1rem; }
+      .welcome-banner { padding: 1.5rem 1.1rem; min-height: 200px; }
       .invoice-doc { padding: 1.1rem; }
       .invoice-doc-header { flex-wrap: wrap; }
       .invoice-doc-header > div:last-child { text-align: left; width: 100%; margin-top: 0.6rem; }
@@ -199,9 +199,9 @@
       background:
         linear-gradient(105deg, rgba(11,17,32,0.94) 0%, rgba(11,17,32,0.78) 42%, rgba(11,17,32,0.35) 68%, rgba(11,17,32,0.05) 100%),
         url('images/co-giao-huong-dan-hoc-sinh.jpg');
-      background-size: cover; background-position: center 30%;
+      background-size: cover; background-position: center 62%;
       border-radius: 22px; padding: 2.6rem 2rem; color: #fff; margin-bottom: 2rem;
-      box-shadow: var(--shadow-soft); position: relative; overflow: hidden; min-height: 190px;
+      box-shadow: var(--shadow-soft); position: relative; overflow: hidden; min-height: 260px;
       display: flex; flex-direction: column; justify-content: center;
     }
     .welcome-banner::after {
@@ -308,7 +308,7 @@
       background:
         linear-gradient(105deg, rgba(20,17,10,0.94) 0%, rgba(20,17,10,0.8) 45%, rgba(20,17,10,0.3) 75%, transparent 100%),
         url('images/co-giao-huong-dan-hoc-sinh.jpg');
-      background-size: cover; background-position: center 30%;
+      background-size: cover; background-position: center 62%;
       border: 1px solid rgba(201,162,39,0.4);
     }
     body.vip-theme .welcome-banner::after {
@@ -325,6 +325,18 @@
     .invoice-doc th, .invoice-doc td { padding:0.6rem 0.5rem; border-bottom:1px solid var(--border); font-size:0.9rem; text-align:left; }
     .invoice-doc th:last-child, .invoice-doc td:last-child, .invoice-doc th:nth-child(3), .invoice-doc td:nth-child(3) { text-align:right; }
     .invoice-doc th:nth-child(2), .invoice-doc td:nth-child(2) { text-align:center; }
+    /* Hoá đơn phong cách VIP — chỉ áp dụng cho thành viên từ hạng Vàng trở lên */
+    .invoice-doc.invoice-doc-vip {
+      background: linear-gradient(160deg,#211d13 0%,#17140b 100%);
+      border: 1px solid rgba(201,162,39,0.4);
+      box-shadow: 0 14px 34px -14px rgba(0,0,0,0.5);
+    }
+    .invoice-doc.invoice-doc-vip .invoice-doc-header { border-bottom-color: rgba(201,162,39,0.5); }
+    .invoice-doc.invoice-doc-vip th, .invoice-doc.invoice-doc-vip td { border-bottom-color: rgba(201,162,39,0.18); color:#f1ede0; }
+    .invoice-doc.invoice-doc-vip th { color:#e8c766; font-weight:700; }
+    @media print {
+      .invoice-doc.invoice-doc-vip { background:#17140b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
     @media print {
       body * { visibility: hidden; }
       #memberInvoiceViewContent, #memberInvoiceViewContent * { visibility: visible; }
@@ -442,7 +454,9 @@
     // (không dùng Microsoft/Azure AD B2C)
     // ==============================================================
 
-    let currentActiveMemberTab = 'account';
+    const MEMBER_TAB_NAMES = ['account', 'perks', 'schedule', 'activity', 'donations', 'tuition', 'invoices', 'grades', 'gifts'];
+    const savedMemberTab = localStorage.getItem('wvn_member_last_tab');
+    let currentActiveMemberTab = MEMBER_TAB_NAMES.includes(savedMemberTab) ? savedMemberTab : 'account';
     let currentRegistrations = [];
 
     const FIELD_LABELS = {
@@ -539,6 +553,7 @@
 
     function switchMemberTab(tab) {
       currentActiveMemberTab = tab;
+      localStorage.setItem('wvn_member_last_tab', tab); // nhớ tab đang xem để F5 không bị nhảy về "Tài Khoản"
       document.querySelectorAll('.member-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       document.querySelectorAll('.member-panel').forEach(p => p.classList.remove('active'));
       const panel = document.getElementById('memberPanel-' + tab);
@@ -562,9 +577,9 @@
     }
 
     function filterGradesByCourse(value) {
-      const rows = document.querySelectorAll('#gradesTable tbody tr[data-course-key]');
-      rows.forEach(row => {
-        row.style.display = (value === 'all' || row.dataset.courseKey === value) ? '' : 'none';
+      const groups = document.querySelectorAll('.grade-course-group[data-course-key]');
+      groups.forEach(el => {
+        el.style.display = (value === 'all' || el.dataset.courseKey === value) ? '' : 'none';
       });
     }
 
@@ -700,6 +715,20 @@
       if (totalPaid >= 10000000) return { name: 'Bạc', icon: 'fa-medal', bg: 'rgba(148,163,184,0.22)', color: '#e2e8f0' };
       if (totalPaid >= 5000000) return { name: 'Thân Thiết', icon: 'fa-heart', bg: 'rgba(56,189,248,0.18)', color: '#7dd3fc' };
       return { name: 'Thành Viên Mới', icon: 'fa-seedling', bg: 'rgba(148,163,184,0.18)', color: '#cbd5e1' };
+    }
+
+    // Tra hạng theo TÊN (không theo tổng học phí) — dùng khi server đã trả sẵn hạng hiệu lực
+    // (có áp dụng bảo lưu 12 tháng), để lấy icon/màu hiển thị khớp đúng tên hạng đó.
+    function getTierByName(name) {
+      const all = [
+        { name: 'Thành Viên Mới', icon: 'fa-seedling', bg: 'rgba(148,163,184,0.18)', color: '#cbd5e1' },
+        { name: 'Thân Thiết', icon: 'fa-heart', bg: 'rgba(56,189,248,0.18)', color: '#7dd3fc' },
+        { name: 'Bạc', icon: 'fa-medal', bg: 'rgba(148,163,184,0.22)', color: '#e2e8f0' },
+        { name: 'Titanium', icon: 'fa-shield-halved', bg: 'rgba(100,130,160,0.22)', color: '#a8c0d6' },
+        { name: 'Vàng', icon: 'fa-crown', bg: 'rgba(201,162,39,0.22)', color: '#f6ecc9' },
+        { name: 'Kim Cương', icon: 'fa-gem', bg: 'rgba(125,211,252,0.18)', color: '#7dd3fc' }
+      ];
+      return all.find(t => t.name === name) || null;
     }
 
     const TIER_PERKS = [
@@ -868,7 +897,12 @@
     }
 
     // Khung hoá đơn hiển thị cho thành viên — cùng thiết kế với bản admin dùng khi lập hoá đơn
+    // Hạng Vàng trở lên: hoá đơn dùng giao diện VIP (đen-vàng đồng), hạng thường: giữ nguyên bản trắng mặc định
     function renderMemberInvoiceDocHtml(inv) {
+      const isVipInvoice = !!window.__memberIsVip;
+      const c = isVipInvoice
+        ? { heading: '#f6ecc9', muted: '#a8935a', total: '#e8c766', note: '#a8935a' }
+        : { heading: '#0f172a', muted: 'var(--text-muted)', total: '#15803d', note: 'var(--text-muted)' };
       const items = Array.isArray(inv.items) ? inv.items : [];
       const rowsHtml = items.map(it => `
         <tr>
@@ -878,26 +912,26 @@
           <td>${Number(it.quantity * it.unitPrice).toLocaleString('vi-VN')}đ</td>
         </tr>`).join('');
       return `
-        <div class="invoice-doc">
+        <div class="invoice-doc${isVipInvoice ? ' invoice-doc-vip' : ''}">
           <div class="invoice-doc-header">
             <div style="display:flex; align-items:center; gap:0.8rem;">
               <img src="images/logo-wvn.png" alt="WVN">
               <div>
-                <div style="font-weight:800; font-size:1.05rem; color:#0f172a;">Mạng Lưới Tri Thức Việt Nam</div>
-                <div style="font-size:0.8rem; color:var(--text-muted);">wvn.vn</div>
+                <div style="font-weight:800; font-size:1.05rem; color:${c.heading};">Mạng Lưới Tri Thức Việt Nam</div>
+                <div style="font-size:0.8rem; color:${c.muted};">wvn.vn</div>
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:1.3rem; font-weight:800; color:#0f172a;">HOÁ ĐƠN</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Số: <strong>${inv.invoiceNumber}</strong></div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Ngày lập: ${formatDate(inv.issueDate)}</div>
+              <div style="font-size:1.3rem; font-weight:800; color:${c.heading};">HOÁ ĐƠN${isVipInvoice ? ' <span style="font-size:0.7rem; font-weight:700; color:#e8c766; border:1px solid rgba(232,199,102,0.6); border-radius:999px; padding:0.1rem 0.5rem; vertical-align:middle;">VIP</span>' : ''}</div>
+              <div style="font-size:0.85rem; color:${c.muted};">Số: <strong>${inv.invoiceNumber}</strong></div>
+              <div style="font-size:0.85rem; color:${c.muted};">Ngày lập: ${formatDate(inv.issueDate)}</div>
             </div>
           </div>
-          ${inv.studentName ? `<div style="margin-bottom:1rem; font-size:0.92rem; color:#0f172a;">Học sinh: <strong>${escapeHtml(inv.studentName)}</strong>${inv.program ? ` — ${escapeHtml(inv.program)}` : ''}</div>` : ''}
+          ${inv.studentName ? `<div style="margin-bottom:1rem; font-size:0.92rem; color:${c.heading};">Học sinh: <strong>${escapeHtml(inv.studentName)}</strong>${inv.program ? ` — ${escapeHtml(inv.program)}` : ''}</div>` : ''}
           <table><thead><tr><th>Mô tả</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>${rowsHtml}</tbody></table>
-          <div style="text-align:right; font-size:1.15rem; font-weight:800; margin:1rem 0; color:#15803d;">Tổng cộng: ${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</div>
-          ${inv.note ? `<div style="border-top:1px solid var(--border); padding-top:0.8rem; font-size:0.88rem; color:var(--text-muted);"><strong>Ghi chú:</strong> ${escapeHtml(inv.note)}</div>` : ''}
-          <div style="text-align:center; margin-top:2rem; font-size:0.78rem; color:var(--text-muted);">Cảm ơn bạn đã đồng hành cùng Mạng Lưới Tri Thức Việt Nam.</div>
+          <div style="text-align:right; font-size:1.15rem; font-weight:800; margin:1rem 0; color:${c.total};">Tổng cộng: ${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</div>
+          ${inv.note ? `<div style="border-top:1px solid ${isVipInvoice ? 'rgba(201,162,39,0.25)' : 'var(--border)'}; padding-top:0.8rem; font-size:0.88rem; color:${c.note};"><strong>Ghi chú:</strong> ${escapeHtml(inv.note)}</div>` : ''}
+          <div style="text-align:center; margin-top:2rem; font-size:0.78rem; color:${c.note};">Cảm ơn bạn đã đồng hành cùng Mạng Lưới Tri Thức Việt Nam.</div>
         </div>`;
     }
 
@@ -981,13 +1015,34 @@
       chevron.style.transform = shouldOpen ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 
-    function toggleTierPerks(idx, forceOpen) {
-      const list = document.getElementById(`tierPerksList-${idx}`);
-      const chevron = document.getElementById(`tierChevron-${idx}`);
-      if (!list || !chevron) return;
-      const shouldOpen = forceOpen === true ? true : list.style.display === 'none';
-      list.style.display = shouldOpen ? 'block' : 'none';
-      chevron.style.transform = shouldOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    function renderTierDetail(idx) {
+      const t = TIER_PERKS[idx];
+      if (!t) return;
+      const isUnlocked = (window.__tierUnlocked || [])[idx];
+      const isCurrent = idx === window.__currentTierIdx;
+
+      // Cập nhật trạng thái "đang chọn" trên dải bước lộ trình
+      TIER_PERKS.forEach((_, i) => {
+        const step = document.getElementById(`tierStep-${i}`);
+        if (step) step.firstElementChild.style.transform = i === idx ? 'scale(1.1)' : 'scale(1)';
+      });
+
+      const panel = document.getElementById('tierDetailPanel');
+      if (!panel) return;
+      panel.innerHTML = `
+        <div class="inner-card" style="border-width:2px; border-style:solid; border-color:${t.color}; border-radius:16px; padding:1.2rem 1.3rem; position:relative; ${isUnlocked ? '' : 'opacity:0.7;'}">
+          ${isCurrent ? `<span style="position:absolute; top:-12px; right:16px; background:${t.color}; color:#fff; font-size:0.72rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px;">Hạng hiện tại của bạn</span>` : ''}
+          <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.9rem;">
+            <div style="width:44px; height:44px; border-radius:12px; background:${t.color}22; color:${t.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid ${t.icon}"></i></div>
+            <div>
+              <div style="font-size:1.05rem; font-weight:800; color:var(--text-dark);">${t.name}</div>
+              <div style="font-size:0.78rem; color:var(--text-muted);">${t.min === 0 ? 'Mặc định khi tham gia' : `Từ ${t.min.toLocaleString('vi-VN')}đ học phí đã đóng`}${!isUnlocked ? ' · Chưa đạt hạng này' : ''}</div>
+            </div>
+          </div>
+          <ul style="margin:0; padding-left:1.2rem; font-size:0.88rem; color:var(--text-dark); line-height:1.9;">
+            ${t.perks.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>`;
     }
 
     function toggleChangePassword() {
@@ -1034,15 +1089,22 @@
         const {
           email, profile = {}, registrations, donations = [], grades = [], tuitionPayments = [], schedules = [], students = [], giftRedemptions = [],
           giftCatalog = [], invoices = [], loyaltyPoints = null, tierChanged = false, isUpgrade = false, previousTierName = null,
-          pendingInvoicePopup = null
+          pendingInvoicePopup = null, tier: serverTier = null, isVip: serverIsVip = null,
+          totalTuitionPaidRolling12mo = null
         } = payload;
         document.getElementById('sidebarNav').style.display = 'flex';
         document.getElementById('sidebarFooter').style.display = 'block';
 
         const totalTuitionPaid = tuitionPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-        const tier = getMembershipTier(totalTuitionPaid);
-        const isVip = totalTuitionPaid >= 40000000; // từ hạng Vàng trở lên
+        // Hạng/VIP hiển thị PHẢI lấy từ server (payload.tier/isVip) chứ không tự tính lại theo tổng học phí
+        // hiện tại: server áp dụng chính sách bảo lưu hạng 12 tháng (không tụt hạng ngay nếu học phí bị
+        // sửa/giảm), và email cũng dùng đúng hạng bảo lưu này để tô màu. Nếu web tự tính riêng, sẽ có lúc
+        // web hiện hạng thấp (đã tụt theo học phí hiện tại) trong khi email vẫn tô màu premium theo hạng
+        // được bảo lưu — gây lệch nhau giữa web và email như phản ánh trước đó.
+        const tier = serverTier ? (getTierByName(serverTier.name) || getMembershipTier(totalTuitionPaid)) : getMembershipTier(totalTuitionPaid);
+        const isVip = typeof serverIsVip === 'boolean' ? serverIsVip : totalTuitionPaid >= 40000000;
         document.body.classList.toggle('vip-theme', isVip);
+        window.__memberIsVip = isVip;
 
         // Mục 2: chữ "VIP" trong "Khu vực thành viên" — chỉ hiện từ hạng Vàng trở lên
         const brandSubtitleEl = document.getElementById('sidebarBrandSubtitle');
@@ -1065,11 +1127,14 @@
           showInvoicePopup(pendingInvoicePopup);
         }
 
+        // Hạng thành viên giờ tính theo học phí trong 12 THÁNG GẦN NHẤT (không phải tổng học phí trọn
+        // đời), nên thanh tiến trình lên hạng cũng phải dùng đúng con số này để khớp với hạng đang hiện.
+        const tuitionForTier = totalTuitionPaidRolling12mo != null ? totalTuitionPaidRolling12mo : totalTuitionPaid;
         const tierThresholds = TIER_PERKS;
         const currentTierIndex = tierThresholds.findIndex(t => t.name === tier.name);
         const nextTier = tierThresholds[currentTierIndex + 1];
         const progressPct = nextTier
-          ? Math.min(100, Math.round((totalTuitionPaid - tierThresholds[currentTierIndex].min) / (nextTier.min - tierThresholds[currentTierIndex].min) * 100))
+          ? Math.min(100, Math.max(0, Math.round((tuitionForTier - tierThresholds[currentTierIndex].min) / (nextTier.min - tierThresholds[currentTierIndex].min) * 100)))
           : 100;
 
         const richTier = TIER_PERKS.find(t => t.name === tier.name) || tier;
@@ -1078,7 +1143,7 @@
             <div style="width:56px; height:56px; border-radius:16px; background:${richTier.color}22; color:${richTier.color}; display:flex; align-items:center; justify-content:center; font-size:1.5rem;"><i class="fa-solid ${tier.icon}"></i></div>
             <div>
               <div style="font-size:1.2rem; font-weight:800; color:var(--text-dark);">${tier.name}</div>
-              <div style="font-size:0.84rem; color:var(--text-muted);">Tổng học phí đã đóng: <strong style="color:#15803d;">${totalTuitionPaid.toLocaleString('vi-VN')}đ</strong></div>
+              <div style="font-size:0.84rem; color:var(--text-muted);">Học phí 12 tháng gần nhất: <strong style="color:#15803d;">${tuitionForTier.toLocaleString('vi-VN')}đ</strong> · Tổng đã đóng từ trước tới nay: ${totalTuitionPaid.toLocaleString('vi-VN')}đ</div>
             </div>
           </div>
           ${loyaltyPoints ? `
@@ -1091,13 +1156,13 @@
             </div>` : ''}
           ${nextTier ? `
             <div style="margin-bottom:0.5rem; display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted);">
-              <span>Tiến trình lên hạng <strong>${nextTier.name}</strong></span>
+              <span>Tiến trình lên hạng <strong>${nextTier.name}</strong> (theo học phí 12 tháng gần nhất)</span>
               <span>${progressPct}%</span>
             </div>
             <div class="progress-track" style="height:10px; background:#f1f5f9; border-radius:999px; overflow:hidden;">
               <div style="height:100%; width:${progressPct}%; background:linear-gradient(90deg, #38bdf8, #c9a227); border-radius:999px;"></div>
             </div>
-            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.5rem;">Đóng thêm <strong>${(nextTier.min - totalTuitionPaid).toLocaleString('vi-VN')}đ</strong> học phí để lên hạng ${nextTier.name}.</div>
+            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.5rem;">Đóng thêm <strong>${(nextTier.min - tuitionForTier).toLocaleString('vi-VN')}đ</strong> học phí (trong 12 tháng gần nhất) để lên hạng ${nextTier.name}.</div>
           ` : `<div style="font-size:0.86rem; color:#0369a1; font-weight:600;"><i class="fa-solid fa-check-circle"></i> Bạn đã đạt hạng cao nhất!</div>`}
         `;
 
@@ -1167,14 +1232,14 @@
 
         function confirmationCellHtml(type, id, status, feedback) {
           if (status === 'confirmed') {
-            return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;"><i class="fa-solid fa-check"></i> Đã xác nhận</span>`;
+            return `<span style="display:inline-block; white-space:nowrap; font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;"><i class="fa-solid fa-check"></i> Đã xác nhận</span>`;
           }
           if (status === 'rejected') {
-            return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeAttr(feedback)}"><i class="fa-solid fa-xmark"></i> Đã từ chối</span>`;
+            return `<span style="display:inline-block; white-space:nowrap; font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeAttr(feedback)}"><i class="fa-solid fa-xmark"></i> Đã từ chối</span>`;
           }
-          return `<div style="display:flex; gap:0.4rem;">
-              <button type="button" onclick="confirmRecord('${type}','${id}','confirm')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #86efac; background:#f0fdf4; color:#15803d; font-size:0.78rem; cursor:pointer;">Xác nhận</button>
-              <button type="button" onclick="confirmRecord('${type}','${id}','reject')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #fca5a5; background:#fef2f2; color:#b91c1c; font-size:0.78rem; cursor:pointer;">Từ chối</button>
+          return `<div style="display:flex; gap:0.4rem; white-space:nowrap;">
+              <button type="button" onclick="confirmRecord('${type}','${id}','confirm')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #86efac; background:#f0fdf4; color:#15803d; font-size:0.78rem; cursor:pointer; white-space:nowrap;">Xác nhận</button>
+              <button type="button" onclick="confirmRecord('${type}','${id}','reject')" style="padding:0.25rem 0.6rem; border-radius:6px; border:1px solid #fca5a5; background:#fef2f2; color:#b91c1c; font-size:0.78rem; cursor:pointer; white-space:nowrap;">Từ chối</button>
             </div>`;
         }
 
@@ -1187,7 +1252,7 @@
         const donationsHtml = `<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Loại</th><th style="padding:0.4rem;">Ngày</th><th style="padding:0.4rem;">Giá trị / Hiện vật</th><th style="padding:0.4rem;">Mã giao dịch</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ghi chú</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
+                <th style="padding:0.4rem; white-space:nowrap;">Loại</th><th style="padding:0.4rem; white-space:nowrap;">Ngày</th><th style="padding:0.4rem; white-space:nowrap;">Giá trị / Hiện vật</th><th style="padding:0.4rem; white-space:nowrap;">Mã giao dịch</th><th style="padding:0.4rem; white-space:nowrap;">Hình thức</th><th style="padding:0.4rem; white-space:nowrap;">Ghi chú</th><th style="padding:0.4rem; white-space:nowrap;">Ảnh</th><th style="padding:0.4rem; white-space:nowrap;">Xác nhận</th>
               </tr></thead>
               <tbody>
                 ${donations.length > 0 ? donations.map(d => `
@@ -1199,7 +1264,7 @@
                     <td style="padding:0.5rem 0.4rem;">${d.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; color:var(--text-muted);">${d.note || '—'}</td>
                     <td style="padding:0.5rem 0.4rem;">${(d.attachments && d.attachments.length > 0) ? d.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
-                    <td style="padding:0.5rem 0.4rem;">${confirmationCellHtml('donation', d.id, d.confirmationStatus, d.memberFeedback)}</td>
+                    <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${confirmationCellHtml('donation', d.id, d.confirmationStatus, d.memberFeedback)}</td>
                   </tr>
                 `).join('') : `
                   <tr>
@@ -1233,7 +1298,7 @@
         const tuitionHtml = `${tuitionBalanceSummaryHtml}<div style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
               <thead><tr style="text-align:left; color:var(--text-muted); font-size:0.78rem;">
-                <th style="padding:0.4rem;">Học sinh</th><th style="padding:0.4rem;">Chương trình</th><th style="padding:0.4rem;">Số tiền</th><th style="padding:0.4rem;">Chênh lệch</th><th style="padding:0.4rem;">Kỳ học phí</th><th style="padding:0.4rem;">Hình thức</th><th style="padding:0.4rem;">Ngày nộp</th><th style="padding:0.4rem;">Ảnh</th><th style="padding:0.4rem;">Xác nhận</th>
+                <th style="padding:0.4rem; white-space:nowrap;">Học sinh</th><th style="padding:0.4rem; white-space:nowrap;">Chương trình</th><th style="padding:0.4rem; white-space:nowrap;">Số tiền</th><th style="padding:0.4rem; white-space:nowrap;">Chênh lệch</th><th style="padding:0.4rem; white-space:nowrap;">Kỳ học phí</th><th style="padding:0.4rem; white-space:nowrap;">Hình thức</th><th style="padding:0.4rem; white-space:nowrap;">Ngày nộp</th><th style="padding:0.4rem; white-space:nowrap;">Ảnh</th><th style="padding:0.4rem; white-space:nowrap;">Xác nhận</th>
               </tr></thead>
               <tbody>
                 ${tuitionPayments.length > 0 ? tuitionPayments.map(p => `
@@ -1246,7 +1311,7 @@
                     <td style="padding:0.5rem 0.4rem;">${p.method || '—'}</td>
                     <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${formatDate(p.paidAt)}</td>
                     <td style="padding:0.5rem 0.4rem;">${(p.attachments && p.attachments.length > 0) ? p.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
-                    <td style="padding:0.5rem 0.4rem;">${confirmationCellHtml('tuition', p.id, p.confirmationStatus, p.memberFeedback)}</td>
+                    <td style="padding:0.5rem 0.4rem; white-space:nowrap;">${confirmationCellHtml('tuition', p.id, p.confirmationStatus, p.memberFeedback)}</td>
                   </tr>
                 `).join('') : `
                   <tr>
@@ -1311,14 +1376,16 @@
           }).join('')}
         </div>`;
 
-        // Lịch sử điểm: mỗi khoản học phí quy đổi ra điểm "+" theo tốc độ tích điểm của hạng hiện tại,
-        // và mỗi lần đổi quà (chưa huỷ) là 1 dòng "-" tương ứng số điểm đã dùng. Cộng dồn đúng bằng
-        // loyaltyPoints.available (đã trừ) — khớp chính xác với server, không cần gọi thêm API riêng.
+        // Lịch sử điểm: mỗi khoản học phí đã CHỐT sẵn điểm "+" ngay khi đóng, theo đúng hạng tại
+        // thời điểm đó (tính lũy kế theo thời gian — xem recomputeTuitionPoints phía server), không
+        // tính lại theo hạng hiện tại nữa (cách cũ khiến điểm bị co lại mỗi khi hạng hiện tại đổi,
+        // dù thành viên không hề mất khoản học phí đã đóng). Mỗi lần đổi quà (chưa huỷ) là 1 dòng
+        // "-" tương ứng số điểm đã dùng. Cộng dồn đúng bằng loyaltyPoints.available (đã trừ).
         const pointsEarnRows = tuitionPayments.map(p => ({
           date: p.paidAt,
           label: `${p.studentName || '—'}${p.program ? ` — ${p.program}` : ''}`,
           amountLabel: `${Number(p.amount || 0).toLocaleString('vi-VN')}đ`,
-          points: loyaltyPoints ? calcPointsForAmount(Number(p.amount) || 0, tier) : 0,
+          points: Number(p.pointsEarned) || 0,
           sign: '+'
         }));
         const pointsSpendRows = giftRedemptions.filter(r => r.status !== 'cancelled').map(r => ({
@@ -1414,31 +1481,35 @@
             }).join('')
           : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-file-invoice-dollar"></i> Bạn chưa có hoá đơn nào.</div>`;
 
-        const perksHtml = TIER_PERKS.map((t, idx) => {
-          const isCurrent = t.name === tier.name;
-          const isUnlocked = totalTuitionPaid >= t.min;
+        const currentTierIdx = TIER_PERKS.findIndex(t => t.name === tier.name);
+        window.__tierUnlocked = TIER_PERKS.map((t, idx) => currentTierIdx >= 0 ? idx <= currentTierIdx : totalTuitionPaid >= t.min);
+        window.__currentTierIdx = currentTierIdx;
+
+        // Lộ trình hạng: 1 dải bước ngang gọn gàng (cuộn ngang trên màn hình hẹp), bấm vào từng
+        // bước để xem quyền lợi của hạng đó ở khung chi tiết bên dưới — thay vì xổ hết quyền lợi
+        // của mọi hạng ra cùng lúc thành 1 danh sách dài.
+        const roadmapStepsHtml = TIER_PERKS.map((t, idx) => {
+          const isUnlocked = window.__tierUnlocked[idx];
+          const isCurrent = idx === currentTierIdx;
           return `
-            <div class="inner-card ${isCurrent ? 'is-current' : ''}" style="border-width:2px; border-style:solid; ${isCurrent ? `border-color:${t.color};` : ''} border-radius:16px; padding:1.1rem 1.3rem; margin-bottom:0.8rem; position:relative; ${isUnlocked ? '' : 'opacity:0.55;'}">
-              ${isCurrent ? `<span style="position:absolute; top:-12px; right:16px; background:${t.color}; color:#fff; font-size:0.72rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:999px;">Hạng hiện tại của bạn</span>` : ''}
-              <div onclick="toggleTierPerks(${idx})" style="display:flex; align-items:center; gap:0.8rem; cursor:pointer; user-select:none;">
-                <div style="width:44px; height:44px; border-radius:12px; background:${t.color}22; color:${t.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid ${t.icon}"></i></div>
-                <div style="flex:1; min-width:0;">
-                  <div style="font-size:1.05rem; font-weight:800; color:var(--text-dark);">${t.name}</div>
-                  <div style="font-size:0.78rem; color:var(--text-muted);">${t.min === 0 ? 'Mặc định khi tham gia' : `Từ ${t.min.toLocaleString('vi-VN')}đ học phí đã đóng`}</div>
-                </div>
-                <i class="fa-solid fa-chevron-down tier-perks-chevron" id="tierChevron-${idx}" style="font-size:0.85rem; color:var(--text-muted); transition:transform 0.2s; flex-shrink:0;"></i>
+          <div style="display:flex; align-items:center; ${idx < TIER_PERKS.length - 1 ? 'flex:1;' : ''}">
+            <div onclick="renderTierDetail(${idx})" id="tierStep-${idx}" style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; cursor:pointer; flex-shrink:0; min-width:64px;">
+              <div style="width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.05rem; border:2px solid ${isUnlocked ? t.color : 'var(--border)'}; background:${isUnlocked ? t.color + '22' : '#f8fafc'}; color:${isUnlocked ? t.color : '#94a3b8'}; ${isCurrent ? `box-shadow:0 0 0 3px ${t.color}33;` : ''} transition:transform 0.15s;">
+                <i class="fa-solid ${t.icon}"></i>
               </div>
-              <ul id="tierPerksList-${idx}" style="display:none; margin:0.9rem 0 0; padding-left:1.2rem; font-size:0.88rem; color:var(--text-dark); line-height:1.9;">
-                ${t.perks.map(p => `<li>${p}</li>`).join('')}
-              </ul>
-            </div>`;
+              <div style="font-size:0.72rem; font-weight:${isCurrent ? '800' : '600'}; color:${isUnlocked ? 'var(--text-dark)' : 'var(--text-muted)'}; text-align:center; white-space:nowrap;">${t.name}</div>
+            </div>
+            ${idx < TIER_PERKS.length - 1 ? `<div style="flex:1; height:3px; min-width:20px; margin:0 0.2rem 1.3rem; border-radius:999px; background:${window.__tierUnlocked[idx + 1] ? t.color : 'var(--border)'};"></div>` : ''}
+          </div>`;
         }).join('');
 
-        // Mở sẵn thẻ hạng hiện tại của thành viên ngay sau khi render, các hạng khác thu gọn.
-        setTimeout(() => {
-          const currentIdx = TIER_PERKS.findIndex(t => t.name === tier.name);
-          if (currentIdx >= 0) toggleTierPerks(currentIdx, true);
-        }, 0);
+        const perksHtml = `
+          <div style="overflow-x:auto; padding-bottom:0.4rem; margin-bottom:1.3rem;">
+            <div style="display:flex; align-items:flex-start; min-width:${TIER_PERKS.length * 90}px;">${roadmapStepsHtml}</div>
+          </div>
+          <div id="tierDetailPanel"></div>`;
+
+        setTimeout(() => { renderTierDetail(currentTierIdx >= 0 ? currentTierIdx : 0); }, 0);
 
         function assessmentBadgeStyle(type) {
           if (type === 'Đánh giá đầu vào') return 'background:#e0f2fe; color:#0369a1;';
@@ -1454,7 +1525,7 @@
           return `<option value="${k.replace(/"/g, '&quot;')}">${student} — ${program}</option>`;
         }).join('');
         const gradeFilterHtml = courseKeys.size > 1
-          ? `<div style="margin-bottom:1rem;">
+          ? `<div style="margin-bottom:1.2rem;">
               <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Lọc theo học sinh / khóa học</label>
               <select id="gradeCourseFilter" onchange="filterGradesByCourse(this.value)" style="padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; max-width:320px; width:100%;">
                 <option value="all">Tất cả (${courseKeys.size} khóa học)</option>
@@ -1463,44 +1534,75 @@
             </div>`
           : '';
 
-        const gradesHtml = `${gradeFilterHtml}<div style="overflow-x:auto;">
-              <table style="width:100%; border-collapse:collapse; font-size:0.88rem;" id="gradesTable">
-                <thead>
-                  <tr style="text-align:left; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">
-                    <th style="padding:0.5rem 0.6rem;">STT</th>
-                    <th style="padding:0.5rem 0.6rem;">Họ tên</th>
-                    <th style="padding:0.5rem 0.6rem;">Chương trình học</th>
-                    <th style="padding:0.5rem 0.6rem;">Loại đánh giá</th>
-                    <th style="padding:0.5rem 0.6rem;">Ngày học</th>
-                    <th style="padding:0.5rem 0.6rem;">Điểm</th>
-                    <th style="padding:0.5rem 0.6rem;">Nhận xét của giáo viên</th>
-                    <th style="padding:0.5rem 0.6rem;">Ảnh bài làm</th>
-                    <th style="padding:0.5rem 0.6rem;">Xác nhận</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${gradesChrono.length > 0 ? gradesChrono.map((g, i) => `
-                    <tr style="border-top:1px solid var(--border);" data-course-key="${g.studentName}|||${g.program || 'Chưa rõ chương trình'}">
-                      <td style="padding:0.6rem; color:var(--text-muted);">${i + 1}</td>
-                      <td style="padding:0.6rem; font-weight:700; white-space:nowrap;">${g.studentName}</td>
-                      <td style="padding:0.6rem; color:var(--text-muted);">${g.program || '—'}</td>
-                      <td style="padding:0.6rem; white-space:nowrap;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; white-space:nowrap; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
-                      <td style="padding:0.6rem; color:var(--text-muted); white-space:nowrap;">${formatDate(g.recordedAt)}</td>
-                      <td style="padding:0.6rem; font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
-                      <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
-                      <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
-                      <td style="padding:0.6rem;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
-                    </tr>
-                  `).join('') : `
-                    <tr>
-                      <td colspan="9" style="padding:1.4rem 0.6rem; text-align:center; color:var(--text-muted);">
-                        <i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận.
-                      </td>
-                    </tr>
-                  `}
-                </tbody>
-              </table>
-            </div>`;
+        // Nhóm điểm theo từng (học sinh, chương trình) thành 1 khối riêng — thay vì 1 bảng
+        // phẳng dồn hết mọi học sinh/khoá học lẫn lộn vào nhau, dễ gây rối mắt.
+        const gradeGroupsMap = new Map();
+        gradesChrono.forEach(g => {
+          const key = `${g.studentName}|||${g.program || 'Chưa rõ chương trình'}`;
+          if (!gradeGroupsMap.has(key)) {
+            gradeGroupsMap.set(key, { key, studentName: g.studentName, program: g.program || 'Chưa rõ chương trình', entries: [] });
+          }
+          gradeGroupsMap.get(key).entries.push(g);
+        });
+        const gradeGroups = Array.from(gradeGroupsMap.values())
+          .sort((a, b) => a.studentName.localeCompare(b.studentName) || a.program.localeCompare(b.program));
+
+        function gradeGroupTableHtml(entries) {
+          return `<div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+              <thead>
+                <tr style="text-align:left; color:var(--text-muted); font-size:0.76rem; text-transform:uppercase;">
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Buổi</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ngày học</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Loại đánh giá</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Điểm</th>
+                  <th style="padding:0.5rem 0.6rem;">Nhận xét của giáo viên</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Ảnh bài làm</th>
+                  <th style="padding:0.5rem 0.6rem; white-space:nowrap;">Xác nhận</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${entries.map((g, i) => `
+                  <tr style="border-top:1px solid var(--border);">
+                    <td style="padding:0.6rem; color:var(--text-muted);">${i + 1}</td>
+                    <td style="padding:0.6rem; color:var(--text-muted); white-space:nowrap;">${formatDate(g.recordedAt)}</td>
+                    <td style="padding:0.6rem; white-space:nowrap;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; white-space:nowrap; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
+                    <td style="padding:0.6rem; font-weight:700; color:#0369a1; white-space:nowrap;">${g.score != null ? g.score + '/10' : '—'}</td>
+                    <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
+                    <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
+                    <td style="padding:0.6rem; white-space:nowrap;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>`;
+        }
+
+        const gradesHtml = gradeGroups.length > 0
+          ? `${gradeFilterHtml}<div style="display:flex; flex-direction:column; gap:1.1rem;">
+              ${gradeGroups.map(grp => {
+                const scored = grp.entries.filter(g => g.score != null);
+                const avgScore = scored.length > 0 ? (scored.reduce((s, g) => s + Number(g.score), 0) / scored.length) : null;
+                const latest = grp.entries[grp.entries.length - 1];
+                return `
+                <div class="inner-card grade-course-group" data-course-key="${grp.key.replace(/"/g, '&quot;')}" style="border-radius:16px; padding:1.1rem 1.2rem;">
+                  <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.7rem; margin-bottom:0.9rem;">
+                    <div style="display:flex; align-items:center; gap:0.7rem; min-width:0;">
+                      <div style="width:38px; height:38px; flex-shrink:0; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-weight:800;"><i class="fa-solid fa-user-graduate"></i></div>
+                      <div style="min-width:0;">
+                        <div style="font-weight:800; font-size:1rem; color:var(--text-dark);">${grp.studentName}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">${grp.program} · ${grp.entries.length} buổi đã ghi nhận</div>
+                      </div>
+                    </div>
+                    <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                      ${avgScore != null ? `<div style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#eff6ff;"><div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">TB</div><div style="font-weight:800; color:#0369a1;">${avgScore.toFixed(1)}/10</div></div>` : ''}
+                      <div style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#f8fafc;"><div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">Gần nhất</div><div style="font-weight:700; color:var(--text-dark); font-size:0.85rem; white-space:nowrap;">${formatDate(latest.recordedAt)}</div></div>
+                    </div>
+                  </div>
+                  ${gradeGroupTableHtml(grp.entries)}
+                </div>`;
+              }).join('')}
+            </div>`
+          : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.6rem;"><i class="fa-solid fa-graduation-cap"></i> Chưa có điểm/nhận xét nào được ghi nhận.</div>`;
 
         const pendingRegistrations = registrations.filter(r => r.status === 'Đã ghi nhận - Chờ xử lý').length;
         const rejectedRegistrations = registrations.filter(r => r.status === 'Từ chối').length;
@@ -1532,7 +1634,7 @@
           <div class="welcome-banner">
             <span class="banner-tag"><i class="fa-solid fa-star"></i> Khu vực thành viên${isVip ? ' VIP' : ''}</span>
             <h1>Xin chào${profile.fullName ? ', ' + profile.fullName : ''}! 👋</h1>
-            <p>Đồng hành cùng con em trên hành trình học tập — theo dõi lịch học, điểm số và đóng góp của bạn tại Mạng Lưới Tri Thức Việt Nam.</p>
+            <p>Cùng con kiến tạo hành trình học tập — nơi mỗi bước tiến được ghi nhận, mỗi đóng góp tạo nên giá trị.</p>
           </div>
 
           <div class="member-panel active" id="memberPanel-account">
@@ -1608,7 +1710,7 @@
           <div class="member-panel" id="memberPanel-perks">
             <div class="card">
               <h2><i class="fa-solid fa-gem"></i> Đặc Quyền Theo Hạng Thành Viên</h2>
-              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Hạng thành viên được tính tự động dựa trên tổng học phí đã đóng tại trung tâm. Đóng góp càng nhiều, quyền lợi càng cao.</p>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.2rem;">Hạng thành viên được tính tự động dựa trên học phí đã đóng trong 12 tháng gần nhất. Đóng góp càng nhiều, quyền lợi càng cao. Bấm vào từng hạng trong lộ trình bên dưới để xem quyền lợi chi tiết.</p>
               ${perksHtml}
             </div>
           </div>

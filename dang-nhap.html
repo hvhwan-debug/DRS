@@ -406,7 +406,7 @@
         localStorage.setItem('wvn_member_token', result.token);
         localStorage.setItem('wvn_member_email', result.email);
         showAlert('Đăng nhập thành công! Đang chuyển hướng...', false);
-        window.location.href = 'thanh-vien-index.html';
+        window.location.href = 'thanh-vien';
       } catch (err) {
         showAlert(err.message, true);
       } finally {
@@ -516,7 +516,7 @@
         localStorage.setItem('wvn_member_token', result.token);
         localStorage.setItem('wvn_member_email', result.email);
         showAlert('Đặt mật khẩu thành công! Đang chuyển hướng...', false);
-        window.location.href = 'thanh-vien-index.html';
+        window.location.href = 'thanh-vien';
       } catch (err) {
         showAlert(err.message, true);
         btn.disabled = false;
@@ -533,7 +533,7 @@
 
     // Nếu đã đăng nhập sẵn (còn phiên hợp lệ), chuyển thẳng vào khu vực thành viên
     if (localStorage.getItem('wvn_member_token')) {
-      window.location.href = 'thanh-vien-index.html';
+      window.location.href = 'thanh-vien';
     }
   </script>
 

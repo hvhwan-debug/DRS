@@ -1,5 +1,5 @@
 const { TableClient } = require("@azure/data-tables");
-const https = require("https");
+const { sendEmail } = require("../_shared/mailer");
 
 // Escape đơn giản để tránh chèn HTML/script độc hại từ dữ liệu người dùng vào email
 function escapeHtml(str) {
@@ -11,38 +11,7 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-function sendGridEmail({ apiKey, from, fromName, to, subject, html }) {
-  const body = JSON.stringify({
-    personalizations: [{ to: [{ email: to }] }],
-    from: { email: from, name: fromName },
-    subject,
-    content: [{ type: "text/html", value: html }]
-  });
-
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: "api.sendgrid.com",
-      path: "/v3/mail/send",
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(body)
-      }
-    };
-    const r = https.request(options, (res) => {
-      let data = "";
-      res.on("data", (chunk) => (data += chunk));
-      res.on("end", () => {
-        if (res.statusCode >= 200 && res.statusCode < 300) resolve(data);
-        else reject(new Error(`SendGrid lỗi ${res.statusCode}: ${data}`));
-      });
-    });
-    r.on("error", reject);
-    r.write(body);
-    r.end();
-  });
-}
+// (Gửi email dùng chung qua ../_shared/mailer.js — SMTP Microsoft 365, thay cho SendGrid trước đây)
 
 module.exports = async function (context, req) {
   try {
@@ -88,21 +57,18 @@ module.exports = async function (context, req) {
       context.log.warn("Chưa cấu hình AZURE_STORAGE_CONNECTION_STRING -> bỏ qua bước lưu trữ.");
     }
 
-    // ====== 2. GỬI EMAIL QUA SENDGRID ======
-    const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-    const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL;
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-
-    if (!SENDGRID_API_KEY || !FROM_EMAIL) {
-      context.log.error("Thiếu cấu hình SENDGRID_API_KEY hoặc SENDGRID_FROM_EMAIL.");
+    // ====== 2. GỬI EMAIL QUA SMTP (Microsoft 365) ======
+    if (!process.env.GRAPH_TENANT_ID || !process.env.GRAPH_CLIENT_ID || !process.env.GRAPH_CLIENT_SECRET || !process.env.GRAPH_SENDER_EMAIL) {
+      context.log.error("Thiếu GRAPH_TENANT_ID/GRAPH_CLIENT_ID/GRAPH_CLIENT_SECRET/GRAPH_SENDER_EMAIL trong Application settings.");
       context.res = { status: 500, jsonBody: { error: "Máy chủ chưa cấu hình gửi email." } };
       return;
     }
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
     const safeName = escapeHtml(name);
     const safeSubject = escapeHtml(subject);
     const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
-    const logoUrl = "https://wvn.vn/logo.png"; // TODO: thay bằng URL logo thật đã upload lên GitHub
+    const logoUrl = "https://wvn.vn/images/logo-wvn.png";
 
     const autoReplyHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color:#0f172a;">
@@ -138,9 +104,8 @@ module.exports = async function (context, req) {
       </div>`;
 
     const emailTasks = [
-      sendGridEmail({
-        apiKey: SENDGRID_API_KEY,
-        from: FROM_EMAIL,
+      sendEmail({
+        from: process.env.GRAPH_SENDER_EMAIL,
         fromName: "Mạng Lưới Tri Thức Việt Nam",
         to: email,
         subject: "Cảm ơn bạn đã liên hệ - Mạng Lưới Tri Thức Việt Nam",
@@ -150,9 +115,8 @@ module.exports = async function (context, req) {
 
     if (ADMIN_EMAIL) {
       emailTasks.push(
-        sendGridEmail({
-          apiKey: SENDGRID_API_KEY,
-          from: FROM_EMAIL,
+        sendEmail({
+          from: process.env.GRAPH_SENDER_EMAIL,
           fromName: "Website DRS - Thông báo liên hệ",
           to: ADMIN_EMAIL,
           subject: `[Liên hệ mới] ${subject} - ${name}`,

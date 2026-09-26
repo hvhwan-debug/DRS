@@ -16,7 +16,7 @@
 
 const BRAND_NAME = "Mạng Lưới Tri Thức Việt Nam";
 const LOGO_URL = "https://wvn.vn/images/logo-wvn.png";
-const SITE_URL = "https://wvn.vn/thanh-vien-index.html";
+const SITE_URL = "https://wvn.vn/thanh-vien";
 const FONT_STACK = "Arial,Helvetica,sans-serif"; // 1 phông DUY NHẤT cho toàn bộ email
 
 // Mỗi mode định nghĩa ĐẦY ĐỦ các vai trò màu giống hệt nhau về cấu trúc — chỉ đổi giá trị màu.

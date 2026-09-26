@@ -1,1 +1,6 @@
-{}
+{
+  "routes": [
+    { "route": "/admin", "rewrite": "/admin-index.html" },
+    { "route": "/thanh-vien", "rewrite": "/thanh-vien-index.html" }
+  ]
+}

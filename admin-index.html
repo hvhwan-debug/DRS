@@ -62,6 +62,7 @@
 
     .main-content { margin-left: 252px; flex: 1; min-width: 0; padding: 1.8rem 2rem 3rem; }
     #dashboardMidRow { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+    #dashboardTuitionRow { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; margin-top: 1.2rem; }
     @media (max-width: 880px) {
       .app-shell { flex-direction: column; }
       .mobile-topbar {
@@ -98,6 +99,7 @@
       .main-content { margin-left: 0; padding: 1rem; }
       .card { padding: 1.2rem; border-radius: 16px; }
       #dashboardMidRow { grid-template-columns: 1fr; }
+      #dashboardTuitionRow { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
       table { font-size: 0.82rem; }
       th, td { padding: 0.5rem 0.4rem; }
@@ -220,6 +222,17 @@
       <div class="card">
         <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-chart-column" style="color:#0284c7;"></i> Quyên Góp Tiền Mặt Theo Tháng (6 tháng gần nhất)</h3>
         <div id="dashboardDonationChart"></div>
+      </div>
+
+      <div id="dashboardTuitionRow">
+        <div class="card">
+          <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-chart-column" style="color:#c9a227;"></i> Học Phí Thu Theo Tháng (6 tháng gần nhất)</h3>
+          <div id="dashboardTuitionChart"></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:0.95rem; margin-bottom:1rem;"><i class="fa-solid fa-triangle-exclamation" style="color:#dc2626;"></i> Công Nợ Học Phí Cao Nhất</h3>
+          <div id="dashboardTuitionDebtors"></div>
+        </div>
       </div>
     </div>
 
@@ -429,7 +442,7 @@
     <!-- ===================== TAB: HỌC SINH ===================== -->
     <div class="panel" id="panel-students">
       <div class="card" style="background:linear-gradient(135deg,#ffffff 0%,#f8fbff 100%); border:1px solid #e0ecfb;">
-        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-child-reaching" style="color:#0284c7;"></i> Thêm / Sửa học sinh</h3>
+        <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-child-reaching" style="color:#0284c7;"></i> <span id="studentFormTitle">Thêm học sinh mới</span></h3>
         <form id="studentForm">
           <div class="form-grid">
             <div>
@@ -438,15 +451,13 @@
             </div>
             <div><label>Tên học sinh *</label><input type="text" id="studentName" required></div>
             <div><label>Ngày sinh</label><input type="date" id="studentDob"></div>
-            <div>
-              <label>Gán vào chương trình học</label>
-              <select id="studentProgram" onchange="toggleCustomProgram('student')">
-                <option value="">-- Chưa gán --</option>
-                <option value="Luyện Chữ Đẹp">Luyện Chữ Đẹp</option>
-                <option value="Tiền Tiểu Học">Tiền Tiểu Học</option>
-                <option value="__custom__">+ Chương trình khác...</option>
-              </select>
-              <input type="text" id="studentProgramCustom" placeholder="Nhập tên chương trình mới" style="display:none; margin-top:0.4rem;">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Gán vào chương trình học (có thể chọn nhiều)</label>
+            <div id="studentProgramsChecklist" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;"></div>
+            <div style="display:flex; gap:0.5rem; max-width:360px;">
+              <input type="text" id="studentProgramNewInput" placeholder="+ Thêm chương trình mới..." style="flex:1;">
+              <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="addStudentProgramOption()">Thêm</button>
             </div>
           </div>
           <div style="margin-bottom:1rem;">
@@ -458,16 +469,18 @@
         </form>
       </div>
       <div class="card">
-        <div class="loading-state" id="studentLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
-        <div class="table-scroll" style="display:none;" id="studentTableWrap">
-          <table>
-            <thead><tr><th>Học sinh</th><th>Ngày sinh</th><th>Email phụ huynh</th><th>Chương trình đã gán</th><th>Ghi chú</th><th>Thao tác</th></tr></thead>
-            <tbody id="studentTableBody"></tbody>
-          </table>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem; margin-bottom:1rem;">
+          <div style="position:relative; flex:1; min-width:220px; max-width:340px;">
+            <input type="text" id="studentSearchInput" placeholder="Tìm theo tên học sinh hoặc email phụ huynh..." style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--border); border-radius:10px;" oninput="renderStudentCards()">
+          </div>
+          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="mergeDuplicateStudents()"><i class="fa-solid fa-code-merge"></i> Gộp học sinh trùng lặp</button>
         </div>
+        <div class="loading-state" id="studentLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div id="studentCardsWrap" style="display:none; display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1rem;"></div>
         <div class="empty-state" id="studentEmpty" style="display:none;">Chưa có học sinh nào được thêm.</div>
       </div>
     </div>
+
 
     <!-- ===================== TAB: LỊCH HỌC ===================== -->
     <div class="panel" id="panel-schedule">
@@ -591,6 +604,7 @@
       <div class="card">
         <div style="display:flex; gap:0.8rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
           <input type="text" id="memberSearchInput" placeholder="Tìm theo email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
+          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem; white-space:nowrap;" title="Chốt lại điểm tích lũy cho TOÀN BỘ thành viên theo đúng lịch sử học phí — cần chạy 1 lần sau khi đổi cách tính điểm/hạng." onclick="recalcAllTiers()"><i class="fa-solid fa-arrows-rotate"></i> Chốt Lại Điểm Cho Tất Cả (1 lần)</button>
         </div>
         <div class="loading-state" id="memberLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="memberTableWrap">
@@ -736,6 +750,7 @@
     let allRegistrationsData = [];
     let allDonationsData = [];
     let allGradesData = [];
+    let allScheduleData = [];
 
     function onGradeParentEmailChange() {
       const email = document.getElementById('gradeParentEmail').value.trim().toLowerCase();
@@ -1094,6 +1109,21 @@
 
     let editingDonationId = null;
 
+    async function deleteDonation(id) {
+      if (!confirm('Xoá vĩnh viễn khoản quyên góp này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-donation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        showGlobalAlert('Đã xoá khoản quyên góp.', false);
+        loadDonations();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
     function startEditDonation(d) {
       if (d.confirmationStatus === 'confirmed' && !confirm('Mục này đã được thành viên xác nhận. Sửa lại sẽ đưa về trạng thái "Chờ xác nhận" và họ cần xác nhận lại. Tiếp tục?')) return;
       editingDonationId = d.id;
@@ -1110,21 +1140,6 @@
       document.getElementById('donationSubmitBtn').textContent = 'Cập Nhật Quyên Góp';
       document.getElementById('donationCancelEditBtn').style.display = 'inline-block';
       document.getElementById('donationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    async function deleteDonation(id) {
-      if (!confirm('Xoá vĩnh viễn khoản quyên góp này? Không thể hoàn tác.')) return;
-      try {
-        await apiCall('/api/portal-delete-donation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id })
-        });
-        showGlobalAlert('Đã xoá khoản quyên góp.', false);
-        loadDonations();
-      } catch (err) {
-        showGlobalAlert(err.message, true);
-      }
     }
 
     function cancelEditDonation() {
@@ -1208,6 +1223,8 @@
       try {
         const { payments } = await apiCall('/api/portal-list-tuition');
         allTuitionData = payments;
+        renderMemberDashboardStats();
+        renderMainDashboard();
         document.getElementById('tuitionLoading').style.display = 'none';
         if (payments.length === 0) {
           document.getElementById('tuitionEmpty').style.display = 'block';
@@ -1226,9 +1243,9 @@
             <td>${formatDate(p.paidAt)}</td>
             <td>${(p.attachments && p.attachments.length > 0) ? p.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${tuitionStatusHtml(p.confirmationStatus, p.memberFeedback)}</td>
-            <td style="white-space:nowrap;">
-              <button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" title="${p.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteTuition('${encodeURIComponent(p.parentEmail)}','${encodeURIComponent(p.id)}')">Xoá</button>
+            <td style="display:flex; gap:0.4rem; white-space:nowrap;">
+              <button type="button" class="btn ${p.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${p.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditTuition(${JSON.stringify(p).replace(/'/g, "&#39;")})'>${p.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" onclick="deleteTuition('${encodeURIComponent(p.parentEmail)}','${p.id}')">Xoá</button>
             </td>
           </tr>`).join('');
       } catch (err) {
@@ -1237,15 +1254,18 @@
       }
     }
 
-    async function deleteTuition(emailEnc, idEnc) {
-      if (!confirm('Xoá vĩnh viễn khoản học phí này? Không thể hoàn tác.')) return;
+    async function deleteTuition(parentEmailEnc, id) {
+      if (!confirm('Xoá vĩnh viễn khoản học phí này? Hạng thành viên sẽ được tính lại ngay theo tổng học phí còn lại. Không thể hoàn tác.')) return;
       try {
-        const result = await apiCall('/api/portal-delete-tuition', {
+        await apiCall('/api/portal-delete-tuition', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ parentEmail: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc) })
+          body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
         });
-        showGlobalAlert(result.warning || 'Đã xoá khoản học phí.', !!result.warning);
+        showGlobalAlert('Đã xoá khoản học phí.', false);
+        document.getElementById('tuitionTableWrap').style.display = 'none';
+        document.getElementById('tuitionEmpty').style.display = 'none';
+        document.getElementById('tuitionLoading').style.display = 'block';
         loadTuition();
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -1596,42 +1616,201 @@
     // ============== HỌC SINH ==============
     let editingStudentId = null;
     let editingStudentParentEmail = null;
+    let editingStudentExtraIds = []; // các bản ghi trùng (cùng học sinh, chương trình cũ tách rời) sẽ bị gộp/xoá khi lưu
+    let allStudentsData = [];
+    let studentGroupsCache = [];
+    const expandedStudentKeys = new Set();
+
+    function studentGroupKey(parentEmail, studentName) {
+      return `${(parentEmail || '').trim().toLowerCase()}|||${(studentName || '').trim().toLowerCase()}`;
+    }
+
+    // Gom các bản ghi Students theo (email phụ huynh + tên học sinh) thành 1 "hồ sơ học sinh" duy nhất,
+    // hợp nhất toàn bộ chương trình đã gán — để không còn hiện trùng nhiều dòng cho cùng 1 học sinh.
+    function groupStudents(students) {
+      const map = new Map();
+      for (const s of students) {
+        const key = studentGroupKey(s.parentEmail, s.studentName);
+        if (!map.has(key)) {
+          map.set(key, {
+            key,
+            parentEmail: s.parentEmail,
+            studentName: s.studentName,
+            dob: s.dob || '',
+            note: s.note || '',
+            programs: new Set(),
+            ids: []
+          });
+        }
+        const g = map.get(key);
+        g.ids.push(s.id);
+        (s.programs && s.programs.length ? s.programs : (s.program ? [s.program] : [])).forEach(p => g.programs.add(p));
+        if (!g.dob && s.dob) g.dob = s.dob;
+        if (!g.note && s.note) g.note = s.note;
+      }
+      return Array.from(map.values()).map(g => ({ ...g, programs: Array.from(g.programs) }))
+        .sort((a, b) => a.studentName.localeCompare(b.studentName));
+    }
+
+    function allKnownPrograms() {
+      const set = new Set(['Luyện Chữ Đẹp', 'Tiền Tiểu Học']);
+      allStudentsData.forEach(s => (s.programs || (s.program ? [s.program] : [])).forEach(p => p && set.add(p)));
+      allScheduleData.forEach(s => s.program && set.add(s.program));
+      return Array.from(set);
+    }
+
+    function renderStudentProgramsChecklist(selected = []) {
+      const wrap = document.getElementById('studentProgramsChecklist');
+      const selectedSet = new Set(selected);
+      wrap.innerHTML = allKnownPrograms().map(p => `
+        <label style="display:inline-flex; align-items:center; gap:0.35rem; border:1px solid var(--border); border-radius:999px; padding:0.35rem 0.8rem; font-size:0.85rem; cursor:pointer; background:${selectedSet.has(p) ? '#e0f2fe' : '#fff'};">
+          <input type="checkbox" value="${escapeHtml(p)}" ${selectedSet.has(p) ? 'checked' : ''} style="margin:0;" onchange="this.closest('label').style.background = this.checked ? '#e0f2fe' : '#fff';">
+          ${escapeHtml(p)}
+        </label>`).join('');
+    }
+
+    function addStudentProgramOption() {
+      const input = document.getElementById('studentProgramNewInput');
+      const val = input.value.trim();
+      if (!val) return;
+      const alreadySelected = getSelectedStudentPrograms();
+      if (!alreadySelected.includes(val)) alreadySelected.push(val);
+      if (!allKnownPrograms().includes(val)) allStudentsData.push({ programs: [val] }); // để allKnownPrograms() nhận diện ngay
+      renderStudentProgramsChecklist(alreadySelected);
+      input.value = '';
+    }
+
+    function getSelectedStudentPrograms() {
+      return Array.from(document.querySelectorAll('#studentProgramsChecklist input[type="checkbox"]:checked')).map(cb => cb.value);
+    }
 
     async function loadStudents() {
       try {
         const { students } = await apiCall('/api/portal-list-students');
+        allStudentsData = students;
+        renderStudentProgramsChecklist(getSelectedStudentPrograms());
         document.getElementById('studentLoading').style.display = 'none';
         if (students.length === 0) {
           document.getElementById('studentEmpty').style.display = 'block';
+          document.getElementById('studentCardsWrap').style.display = 'none';
           return;
         }
-        document.getElementById('studentTableWrap').style.display = 'block';
-        document.getElementById('studentTableBody').innerHTML = students.map(s => `
-          <tr>
-            <td style="font-weight:700;">${escapeHtml(s.studentName)}</td>
-            <td>${formatDate(s.dob) !== '—' ? formatDate(s.dob) : (s.dob || '—')}</td>
-            <td>${escapeHtml(s.parentEmail)}</td>
-            <td>${s.program ? `<span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">${escapeHtml(s.program)}</span>` : '<span style="color:var(--text-muted);">Chưa gán</span>'}</td>
-            <td style="color:var(--text-muted);">${escapeHtml(s.note) || '—'}</td>
-            <td style="display:flex; gap:0.5rem;">
-              <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick='startEditStudent(${JSON.stringify(s).replace(/'/g, "&#39;")})'>Sửa</button>
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="deleteStudent('${encodeURIComponent(s.parentEmail)}','${s.id}')">Xoá</button>
-            </td>
-          </tr>`).join('');
+        document.getElementById('studentEmpty').style.display = 'none';
+        document.getElementById('studentCardsWrap').style.display = 'grid';
+        renderStudentCards();
       } catch (err) {
         document.getElementById('studentLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
     }
 
-    function startEditStudent(s) {
-      editingStudentId = s.id;
-      editingStudentParentEmail = s.parentEmail;
-      document.getElementById('studentParentEmail').value = s.parentEmail || '';
-      document.getElementById('studentName').value = s.studentName || '';
-      document.getElementById('studentDob').value = s.dob || '';
-      setProgramSelectValue('student', s.program || '');
-      document.getElementById('studentNote').value = s.note || '';
+    function studentDetailHtml(g) {
+      const programSet = new Set(g.programs);
+      const grades = allGradesData.filter(x => (x.studentName || '').trim().toLowerCase() === g.studentName.trim().toLowerCase())
+        .sort((a, b) => new Date(b.recordedAt || 0) - new Date(a.recordedAt || 0)).slice(0, 5);
+      const tuitionForParent = allTuitionData.filter(x => (x.parentEmail || '').toLowerCase() === g.parentEmail.toLowerCase());
+      const totalTuition = tuitionForParent.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+      const relevantSchedules = allScheduleData.filter(x => programSet.has(x.program));
+
+      return `
+        <div style="border-top:1px dashed var(--border); margin-top:0.9rem; padding-top:0.9rem; font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.6rem;">
+            <span style="color:var(--text-muted);">Tổng học phí (theo email phụ huynh)</span>
+            <strong style="color:#15803d;">${formatMoney(totalTuition)}</strong>
+          </div>
+          <div style="margin-bottom:0.5rem; font-weight:700; color:var(--text-dark);">Lịch học</div>
+          ${relevantSchedules.length > 0 ? relevantSchedules.map(s => `
+            <div style="padding:0.4rem 0; color:var(--text-muted);">${escapeHtml(s.program)} — ${escapeHtml(s.days)}, ${escapeHtml(s.startTime)}-${escapeHtml(s.endTime)}${s.location ? ' @ ' + escapeHtml(s.location) : ''}</div>
+          `).join('') : '<div style="color:var(--text-muted); margin-bottom:0.5rem;">Chưa có lịch cho chương trình đã gán.</div>'}
+          <div style="margin:0.6rem 0 0.5rem; font-weight:700; color:var(--text-dark);">Điểm gần đây</div>
+          ${grades.length > 0 ? grades.map(gr => `
+            <div style="padding:0.4rem 0; color:var(--text-muted);">${escapeHtml(gr.program)} — ${escapeHtml(gr.assessmentType || 'Buổi học')}: <strong style="color:#0369a1;">${gr.score != null ? gr.score : '—'}</strong> (${formatDate(gr.recordedAt)})</div>
+          `).join('') : '<div style="color:var(--text-muted);">Chưa có điểm nào được ghi nhận.</div>'}
+          <div style="display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap;">
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="jumpToGradeFor('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.studentName)}')"><i class="fa-solid fa-graduation-cap"></i> Ghi điểm mới</button>
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="jumpToTuitionFor('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.studentName)}')"><i class="fa-solid fa-coins"></i> Thêm học phí</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Quản lý lịch học</button>
+          </div>
+        </div>`;
+    }
+
+    function toggleStudentDetail(key) {
+      if (expandedStudentKeys.has(key)) expandedStudentKeys.delete(key); else expandedStudentKeys.add(key);
+      renderStudentCards();
+    }
+
+    function jumpToGradeFor(emailEnc, nameEnc) {
+      switchTab('grades');
+      const email = decodeURIComponent(emailEnc), name = decodeURIComponent(nameEnc);
+      document.getElementById('gradeParentEmail').value = email;
+      onGradeParentEmailChange();
+      setTimeout(() => {
+        const sel = document.getElementById('gradeStudentNameSelect');
+        if (sel.style.display !== 'none') sel.value = name; else document.getElementById('gradeStudentName').value = name;
+      }, 50);
+      document.getElementById('gradeForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function jumpToTuitionFor(emailEnc, nameEnc) {
+      switchTab('tuition');
+      const email = decodeURIComponent(emailEnc), name = decodeURIComponent(nameEnc);
+      document.getElementById('tuitionParentEmail').value = email;
+      onTuitionParentEmailChange();
+      setTimeout(() => {
+        const sel = document.getElementById('tuitionStudentNameSelect');
+        if (sel.style.display !== 'none') sel.value = name; else document.getElementById('tuitionStudentName').value = name;
+      }, 50);
+      document.getElementById('tuitionForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderStudentCards() {
+      const query = (document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
+      studentGroupsCache = groupStudents(allStudentsData);
+      let groups = studentGroupsCache;
+      if (query) {
+        groups = groups.filter(g => g.studentName.toLowerCase().includes(query) || g.parentEmail.toLowerCase().includes(query));
+      }
+      if (groups.length === 0) {
+        document.getElementById('studentCardsWrap').innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); text-align:center; padding:1rem;">Không tìm thấy học sinh phù hợp.</div>`;
+        return;
+      }
+      document.getElementById('studentCardsWrap').innerHTML = groups.map(g => {
+        const initials = g.studentName.trim().split(/\s+/).slice(-1)[0]?.charAt(0).toUpperCase() || '?';
+        const isExpanded = expandedStudentKeys.has(g.key);
+        return `
+        <div class="inner-card" style="border:1px solid var(--border); border-radius:16px; padding:1.1rem 1.2rem; background:#fff;">
+          <div style="display:flex; gap:0.8rem; align-items:flex-start;">
+            <div style="width:42px; height:42px; flex-shrink:0; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-weight:800;">${initials}</div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-weight:800; font-size:1rem; color:var(--text-dark);">${escapeHtml(g.studentName)}</div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(g.parentEmail)}${g.dob ? ' · ' + (formatDate(g.dob) !== '—' ? formatDate(g.dob) : g.dob) : ''}</div>
+            </div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.7rem;">
+            ${g.programs.length > 0 ? g.programs.map(p => `<span style="font-size:0.75rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">${escapeHtml(p)}</span>`).join('')
+              : '<span style="font-size:0.78rem; color:var(--text-muted);">Chưa gán chương trình</span>'}
+          </div>
+          ${g.note ? `<div style="margin-top:0.6rem; font-size:0.82rem; color:var(--text-muted); font-style:italic;">"${escapeHtml(g.note)}"</div>` : ''}
+          <div style="display:flex; gap:0.5rem; margin-top:0.9rem; flex-wrap:wrap;">
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick='startEditStudentGroup(${JSON.stringify(g).replace(/'/g, "&#39;")})'>Sửa</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick='deleteStudentGroup(${JSON.stringify({ parentEmail: g.parentEmail, ids: g.ids }).replace(/'/g, "&#39;")})'>Xoá</button>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="toggleStudentDetail('${g.key}')">${isExpanded ? 'Thu gọn' : 'Xem chi tiết'} <i class="fa-solid fa-chevron-${isExpanded ? 'up' : 'down'}"></i></button>
+          </div>
+          ${isExpanded ? studentDetailHtml(g) : ''}
+        </div>`;
+      }).join('');
+    }
+
+    function startEditStudentGroup(g) {
+      editingStudentId = g.ids[0];
+      editingStudentExtraIds = g.ids.slice(1); // các bản ghi trùng còn lại -> xoá khi lưu để gộp về 1 hồ sơ duy nhất
+      editingStudentParentEmail = g.parentEmail;
+      document.getElementById('studentParentEmail').value = g.parentEmail || '';
+      document.getElementById('studentName').value = g.studentName || '';
+      document.getElementById('studentDob').value = g.dob || '';
+      document.getElementById('studentNote').value = g.note || '';
+      renderStudentProgramsChecklist(g.programs || []);
+      document.getElementById('studentFormTitle').textContent = `Sửa hồ sơ: ${g.studentName}`;
       document.getElementById('studentSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Cập Nhật Học Sinh';
       document.getElementById('studentCancelEditBtn').style.display = 'inline-block';
       document.getElementById('studentForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1640,24 +1819,56 @@
     function cancelEditStudent() {
       editingStudentId = null;
       editingStudentParentEmail = null;
+      editingStudentExtraIds = [];
       document.getElementById('studentForm').reset();
-      document.getElementById('studentProgramCustom').style.display = 'none';
+      renderStudentProgramsChecklist([]);
+      document.getElementById('studentFormTitle').textContent = 'Thêm học sinh mới';
       document.getElementById('studentSubmitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Lưu Học Sinh';
       document.getElementById('studentCancelEditBtn').style.display = 'none';
     }
 
-    async function deleteStudent(parentEmailEnc, id) {
-      if (!confirm('Xoá học sinh này?')) return;
+    async function deleteStudentGroup({ parentEmail, ids }) {
+      if (!confirm('Xoá toàn bộ hồ sơ học sinh này (kể cả các chương trình đã gán)?')) return;
       try {
-        await apiCall('/api/portal-delete-student', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
-        });
+        for (const id of ids) {
+          await apiCall('/api/portal-delete-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parentEmail, id })
+          });
+        }
         showGlobalAlert('Đã xoá học sinh.', false);
-        document.getElementById('studentTableWrap').style.display = 'none';
-        document.getElementById('studentEmpty').style.display = 'none';
-        document.getElementById('studentLoading').style.display = 'block';
+        loadStudents();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    // Gom tất cả bản ghi Students trùng (cùng tên + cùng email phụ huynh, ví dụ do trước đây mỗi
+    // chương trình được lưu thành 1 dòng riêng) thành 1 hồ sơ duy nhất chứa đủ mọi chương trình.
+    async function mergeDuplicateStudents() {
+      const groups = groupStudents(allStudentsData).filter(g => g.ids.length > 1);
+      if (groups.length === 0) {
+        showGlobalAlert('Không có học sinh nào bị trùng lặp.', false);
+        return;
+      }
+      if (!confirm(`Tìm thấy ${groups.length} học sinh có bản ghi bị tách trùng. Gộp lại thành 1 hồ sơ mỗi học sinh (giữ đủ mọi chương trình đã gán)?`)) return;
+      try {
+        for (const g of groups) {
+          await apiCall('/api/portal-add-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: g.ids[0], parentEmail: g.parentEmail, studentName: g.studentName, dob: g.dob, note: g.note, programs: g.programs })
+          });
+          for (const extraId of g.ids.slice(1)) {
+            await apiCall('/api/portal-delete-student', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ parentEmail: g.parentEmail, id: extraId })
+            });
+          }
+        }
+        showGlobalAlert(`Đã gộp xong ${groups.length} học sinh bị trùng.`, false);
         loadStudents();
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -1674,7 +1885,7 @@
           parentEmail: document.getElementById('studentParentEmail').value.trim(),
           studentName: document.getElementById('studentName').value.trim(),
           dob: document.getElementById('studentDob').value,
-          program: getProgramValue('student'),
+          programs: getSelectedStudentPrograms(),
           note: document.getElementById('studentNote').value.trim()
         };
         if (editingStudentId) payload.id = editingStudentId;
@@ -1684,11 +1895,18 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+
+        // Nếu đang sửa 1 hồ sơ được gộp từ nhiều dòng cũ -> xoá các dòng thừa để không còn trùng nữa
+        for (const extraId of editingStudentExtraIds) {
+          await apiCall('/api/portal-delete-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parentEmail: editingStudentParentEmail, id: extraId })
+          });
+        }
+
         showGlobalAlert(editingStudentId ? 'Đã cập nhật học sinh.' : 'Đã thêm học sinh.', false);
         cancelEditStudent();
-        document.getElementById('studentTableWrap').style.display = 'none';
-        document.getElementById('studentEmpty').style.display = 'none';
-        document.getElementById('studentLoading').style.display = 'block';
         loadStudents();
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -1853,6 +2071,14 @@
       { key: 'shipping', label: 'Vận chuyển', icon: 'fa-truck-fast' },
       { key: 'fulfilled', label: 'Đã trao', icon: 'fa-circle-check' }
     ];
+    // Nhãn/màu badge gọn cho từng trạng thái đổi quà — dùng ở khung "Tổng quan" 1 thành viên
+    // (khác với giftStepperHtml — hiện đủ 3 bước dạng thanh tiến trình, dùng ở bảng Đổi Quà chính).
+    const GIFT_STATUS_META = {
+      pending: { label: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
+      shipping: { label: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
+      fulfilled: { label: 'Đã trao quà', bg: '#dcfce7', color: '#15803d' },
+      cancelled: { label: 'Đã huỷ (hoàn điểm)', bg: '#fee2e2', color: '#b91c1c' }
+    };
     function giftStepperHtml(status) {
       if (status === 'cancelled') {
         return `<div style="display:flex; align-items:center; gap:0.4rem; color:#b91c1c; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Đã huỷ</div>`;
@@ -1950,6 +2176,7 @@
     async function loadSchedule() {
       try {
         const { schedules } = await apiCall('/api/portal-list-schedule');
+        allScheduleData = schedules;
         document.getElementById('scheduleLoading').style.display = 'none';
         if (schedules.length === 0) {
           document.getElementById('scheduleEmpty').style.display = 'block';
@@ -2075,9 +2302,9 @@
             <td>${escapeHtml(g.comment)}</td>
             <td>${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
             <td>${confirmationStatusHtml(g.confirmationStatus, g.memberFeedback)}</td>
-            <td style="white-space:nowrap;">
-              <button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" title="${g.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteGrade('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.id)}')">Xoá</button>
+            <td style="display:flex; gap:0.4rem; white-space:nowrap;">
+              <button type="button" class="btn ${g.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" title="${g.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditGrade(${JSON.stringify(g).replace(/'/g, "&#39;")})'>${g.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; white-space:nowrap;" onclick="deleteGrade('${encodeURIComponent(g.parentEmail)}','${g.id}')">Xoá</button>
             </td>
           </tr>`).join('');
       } catch (err) {
@@ -2089,15 +2316,18 @@
     let editingGradeId = null;
     let editingGradeParentEmail = null;
 
-    async function deleteGrade(emailEnc, idEnc) {
-      if (!confirm('Xoá vĩnh viễn bản ghi điểm này? Không thể hoàn tác.')) return;
+    async function deleteGrade(parentEmailEnc, id) {
+      if (!confirm('Xoá vĩnh viễn bản ghi điểm/nhận xét này? Không thể hoàn tác.')) return;
       try {
         await apiCall('/api/portal-delete-grade', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ parentEmail: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc) })
+          body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
         });
-        showGlobalAlert('Đã xoá bản ghi điểm.', false);
+        showGlobalAlert('Đã xoá bản ghi.', false);
+        document.getElementById('gradeTableWrap').style.display = 'none';
+        document.getElementById('gradeEmpty').style.display = 'none';
+        document.getElementById('gradeLoading').style.display = 'block';
         loadGrades();
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -2283,6 +2513,8 @@
       const activityEl = document.getElementById('dashboardRecentActivity');
       const statusEl = document.getElementById('dashboardStatusBreakdown');
       const chartEl = document.getElementById('dashboardDonationChart');
+      const tuitionChartEl = document.getElementById('dashboardTuitionChart');
+      const tuitionDebtorsEl = document.getElementById('dashboardTuitionDebtors');
       if (!statsEl) return; // Chưa vào tab Tổng Quan lần nào -> khỏi vẽ
 
       // ---------- 1. Thẻ thống kê chính ----------
@@ -2298,10 +2530,20 @@
       const pendingConfirms = allDonationsData.filter(d => (d.confirmationStatus || 'pending') === 'pending').length
         + allGradesData.filter(g => (g.confirmationStatus || 'pending') === 'pending').length;
 
+      // Học phí: tổng đã thu, tổng công nợ (thiếu), số khoản chờ xác nhận
+      const totalTuitionCollected = allTuitionData.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+      const tuitionShortfalls = allTuitionData
+        .map(p => Math.max(0, (p.expectedAmount != null ? Number(p.expectedAmount) : Number(p.amount) || 0) - (Number(p.amount) || 0)))
+        .filter(v => v > 0);
+      const totalTuitionDebt = tuitionShortfalls.reduce((sum, v) => sum + v, 0);
+      const pendingTuitionConfirms = allTuitionData.filter(p => (p.confirmationStatus || 'pending') === 'pending').length;
+
       const mainStats = [
         { icon: 'fa-users', label: 'Tổng Thành Viên', value: totalMembers, sub: blockedMembers > 0 ? `${blockedMembers} bị chặn` : 'Đang hoạt động tốt', color: '#0284c7', bg: '#eff6ff' },
         { icon: 'fa-file-lines', label: 'Đơn Đăng Ký', value: totalRegistrations, sub: `${pendingRegistrations} chờ · ${approvedRegistrations} duyệt · ${rejectedRegistrations} từ chối`, color: '#7c3aed', bg: '#f5f3ff' },
         { icon: 'fa-hand-holding-dollar', label: 'Quyên Góp Tiền Mặt', value: totalCashDonated.toLocaleString('vi-VN') + 'đ', sub: totalItemDonations > 0 ? `+ ${totalItemDonations} lượt hiện vật` : 'Chưa có hiện vật', color: '#15803d', bg: '#f0fdf4' },
+        { icon: 'fa-coins', label: 'Học Phí Đã Thu', value: totalTuitionCollected.toLocaleString('vi-VN') + 'đ', sub: pendingTuitionConfirms > 0 ? `${pendingTuitionConfirms} khoản chờ xác nhận` : 'Đã xác nhận hết', color: '#c9a227', bg: '#fffbeb' },
+        { icon: 'fa-triangle-exclamation', label: 'Công Nợ Học Phí', value: totalTuitionDebt.toLocaleString('vi-VN') + 'đ', sub: tuitionShortfalls.length > 0 ? `${tuitionShortfalls.length} khoản bị thiếu` : 'Không có công nợ', color: totalTuitionDebt > 0 ? '#dc2626' : '#15803d', bg: totalTuitionDebt > 0 ? '#fef2f2' : '#f0fdf4' },
         { icon: 'fa-graduation-cap', label: 'Bản Ghi Điểm', value: totalGrades, sub: pendingConfirms > 0 ? `${pendingConfirms} chờ xác nhận` : 'Đã xác nhận hết', color: '#d97706', bg: '#fffbeb' }
       ];
       statsEl.innerHTML = mainStats.map(s => `
@@ -2389,6 +2631,56 @@
               <div style="font-size:0.74rem; color:var(--text-muted); margin-top:0.4rem;">${b.label}</div>
             </div>`).join('')}
         </div>`;
+
+      // ---------- 5. Học phí thu theo tháng (6 tháng gần nhất) ----------
+      if (tuitionChartEl) {
+        const tuitionBuckets = [];
+        for (let i = 5; i >= 0; i--) {
+          const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          tuitionBuckets.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: `T${d.getMonth() + 1}/${d.getFullYear()}`, total: 0 });
+        }
+        allTuitionData.forEach(p => {
+          const dt = new Date(p.paidAt);
+          if (isNaN(dt.getTime())) return;
+          const key = `${dt.getFullYear()}-${dt.getMonth()}`;
+          const bucket = tuitionBuckets.find(b => b.key === key);
+          if (bucket) bucket.total += Number(p.amount) || 0;
+        });
+        const maxTuitionTotal = Math.max(...tuitionBuckets.map(b => b.total), 1);
+        tuitionChartEl.innerHTML = `
+          <div style="display:flex; align-items:flex-end; gap:1rem; height:160px; padding-top:1rem;">
+            ${tuitionBuckets.map(b => `
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.3rem;">${b.total > 0 ? b.total.toLocaleString('vi-VN') : ''}</div>
+                <div style="width:70%; max-width:44px; height:${b.total > 0 ? Math.max((b.total / maxTuitionTotal * 110), 4) : 2}px; background:linear-gradient(180deg,#e8c766,#c9a227); border-radius:6px 6px 0 0;"></div>
+                <div style="font-size:0.74rem; color:var(--text-muted); margin-top:0.4rem;">${b.label}</div>
+              </div>`).join('')}
+          </div>`;
+      }
+
+      // ---------- 6. Công nợ học phí cao nhất (nhóm theo học sinh, hiện top 5) ----------
+      if (tuitionDebtorsEl) {
+        const debtByStudent = new Map();
+        allTuitionData.forEach(p => {
+          const expected = p.expectedAmount != null ? Number(p.expectedAmount) : Number(p.amount) || 0;
+          const shortfall = Math.max(0, expected - (Number(p.amount) || 0));
+          if (shortfall <= 0) return;
+          const key = `${(p.parentEmail || '').toLowerCase()}|||${p.studentName || ''}`;
+          if (!debtByStudent.has(key)) debtByStudent.set(key, { studentName: p.studentName || '—', parentEmail: p.parentEmail || '', total: 0 });
+          debtByStudent.get(key).total += shortfall;
+        });
+        const topDebtors = Array.from(debtByStudent.values()).sort((a, b) => b.total - a.total).slice(0, 5);
+        tuitionDebtorsEl.innerHTML = topDebtors.length > 0
+          ? topDebtors.map(d => `
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:0.55rem 0; border-top:1px solid var(--border);">
+                <div style="min-width:0;">
+                  <div style="font-size:0.86rem; font-weight:700; color:var(--text-dark);">${escapeHtml(d.studentName)}</div>
+                  <div style="font-size:0.74rem; color:var(--text-muted);">${escapeHtml(d.parentEmail)}</div>
+                </div>
+                <strong style="color:#dc2626; white-space:nowrap; margin-left:0.6rem;">${formatMoney(d.total)}</strong>
+              </div>`).join('')
+          : '<div style="color:var(--text-muted); font-size:0.88rem; padding:1rem 0;">Không có học sinh nào đang thiếu học phí. 🎉</div>';
+      }
     }
 
     function renderMemberDashboardStats() {
@@ -2563,6 +2855,32 @@
       document.getElementById('memberOverviewCard').style.display = 'none';
     }
 
+    async function recalcAllTiers() {
+      if (!confirm('Chốt lại điểm tích lũy cho TOÀN BỘ thành viên theo đúng lịch sử học phí (hạng thì không cần — đã tự tính theo 12 tháng gần nhất). Chỉ cần chạy 1 lần, an toàn khi chạy lại nhiều lần.')) return;
+      try {
+        const result = await apiCall('/api/portal-recalculate-all-tiers', { method: 'POST' });
+        showGlobalAlert(`Đã chốt lại điểm cho ${result.pointsCount} thành viên có học phí.`, false);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function recalcMemberTier(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      if (!confirm(`Chốt lại điểm tích lũy cho ${email} theo đúng lịch sử học phí hiện tại? (Hạng thành viên giờ tự tính theo học phí 12 tháng gần nhất, không cần thao tác gì thêm.)`)) return;
+      try {
+        const result = await apiCall('/api/portal-recalculate-tier', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentEmail: email })
+        });
+        showGlobalAlert(`Đã chốt lại điểm — hạng hiện tại (12 tháng gần nhất): ${result.tierName}, điểm tích lũy: ${result.earnedPoints.toLocaleString('vi-VN')}.`, false);
+        openMemberOverview(encodeURIComponent(email));
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
     async function openMemberOverview(emailEnc) {
       const email = decodeURIComponent(emailEnc);
       const card = document.getElementById('memberOverviewCard');
@@ -2618,6 +2936,54 @@
         [...data.grades, ...data.tuitionPayments, ...data.invoices].forEach(r => {
           if (r.studentName && !assignedNames.has(norm(r.studentName))) unassignedNames.add(r.studentName);
         });
+
+        // Hạng thành viên tính theo chu kỳ TRƯỢT 12 THÁNG GẦN NHẤT (khớp đúng với hạng thật hiển thị
+        // cho thành viên/email — xem api/_shared/memberTier.js), không phải tổng học phí trọn đời.
+        function adminTierByTotal(totalPaid) {
+          const tiers = [
+            { name: 'Kim Cương', min: 70000000, color: '#0369a1' },
+            { name: 'Vàng', min: 40000000, color: '#c9a227' },
+            { name: 'Titanium', min: 20000000, color: '#5b7c99' },
+            { name: 'Bạc', min: 10000000, color: '#64748b' },
+            { name: 'Thân Thiết', min: 5000000, color: '#0284c7' },
+            { name: 'Thành Viên Mới', min: 0, color: '#64748b' }
+          ];
+          return tiers.find(t => totalPaid >= t.min);
+        }
+        const twelveMonthsAgo = new Date();
+        twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+        const totalTuitionAll = data.tuitionPayments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+        const totalTuition12mo = data.tuitionPayments.reduce((s, p) => (new Date(p.paidAt) >= twelveMonthsAgo ? s + (Number(p.amount) || 0) : s), 0);
+        const totalDonationAll = data.donations.reduce((s, d) => s + (Number(d.amount) || 0), 0);
+        const totalInvoiceAll = data.invoices.reduce((s, i) => s + (Number(i.totalAmount) || 0), 0);
+        const quickTier = adminTierByTotal(totalTuition12mo);
+        const tierSummaryHtml = `
+          <div style="display:flex; flex-wrap:wrap; gap:0.7rem; margin-bottom:1.4rem;">
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Hạng (học phí 12 tháng gần nhất)</div>
+              <div style="font-weight:800; color:${quickTier.color};">${quickTier.name}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Học phí 12 tháng gần nhất</div>
+              <div style="font-weight:800; color:#15803d;">${formatMoney(totalTuition12mo)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng học phí trọn đời</div>
+              <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalTuitionAll)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng quyên góp</div>
+              <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalDonationAll)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:150px; border-radius:12px; padding:0.8rem 1rem;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted);">Tổng giá trị hoá đơn</div>
+              <div style="font-weight:800; color:var(--text-dark);">${formatMoney(totalInvoiceAll)}</div>
+            </div>
+            <div class="inner-card" style="flex:1; min-width:190px; border-radius:12px; padding:0.8rem 1rem; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Chốt lại điểm tích lũy nếu học phí vừa được sửa/xoá</div>
+              <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="recalcMemberTier('${encodeURIComponent(email)}')">Chốt Lại Điểm Ngay</button>
+            </div>
+          </div>`;
 
         function studentCardHtml(studentName, programs, meta) {
           const key = norm(studentName);
@@ -2690,6 +3056,37 @@
               <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
                 <strong>${escapeHtml(r.formTitle)}</strong> — ${formatDate(r.submittedAt)} — <span style="color:var(--text-muted);">${escapeHtml(r.status)}</span>
               </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có đơn nào.</div>'}
+          </div>`;
+
+        // 3 khối tổng hợp cấp toàn thành viên (không chỉ riêng theo từng học sinh) — để không bỏ sót
+        // dữ liệu chưa gán đúng tên học sinh, và xem toàn cảnh nhanh mà không cần mở tab khác.
+        const tuitionHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Học Phí (${data.tuitionPayments.length})</h4>
+            ${data.tuitionPayments.length > 0 ? data.tuitionPayments.map(p => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.4rem;">
+                <span>${escapeHtml(p.studentName)} — ${escapeHtml(p.program) || '—'} ${p.period ? '— ' + escapeHtml(p.period) : ''} <span style="color:var(--text-muted);">(${formatDate(p.paidAt)})</span></span>
+                <strong style="color:#15803d; white-space:nowrap;">${formatMoney(p.amount)}</strong>
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có khoản học phí nào.</div>'}
+          </div>`;
+
+        const invoiceHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Hoá Đơn (${data.invoices.length})</h4>
+            ${data.invoices.length > 0 ? data.invoices.map(i => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.4rem;">
+                <span>${escapeHtml(i.invoiceNumber)} — ${escapeHtml(i.studentName) || '—'} <span style="color:var(--text-muted);">(${formatDate(i.issueDate)})</span></span>
+                <strong style="white-space:nowrap;">${formatMoney(i.totalAmount)}</strong>
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có hoá đơn nào.</div>'}
+          </div>`;
+
+        const scheduleHtml = `
+          <div style="margin-bottom:1.4rem;">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Lịch Học (${data.schedules.length})</h4>
+            ${data.schedules.length > 0 ? data.schedules.map(s => `
+              <div style="padding:0.6rem 0; border-top:1px solid var(--border); font-size:0.88rem;">
+                ${escapeHtml(s.program)} — ${escapeHtml(s.days)} ${escapeHtml(s.startTime)}-${escapeHtml(s.endTime)}${s.teacherName ? ' — GV: ' + escapeHtml(s.teacherName) : ''}${s.location ? ' — ' + escapeHtml(s.location) : ''}
+              </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có lịch học nào cho các chương trình đang tham gia.</div>'}
           </div>`;
 
         const donHtml = `
@@ -2766,7 +3163,7 @@
           </div>`;
 
         document.getElementById('memberOverviewTitle').textContent = `Tổng quan: ${email} — ${data.students.length} học sinh`;
-        content.innerHTML = profileHtml + studentsHtml + regHtml + donHtml + gradeHtml + giftHtml;
+        content.innerHTML = profileHtml + tierSummaryHtml + studentsHtml + tuitionHtml + invoiceHtml + scheduleHtml + regHtml + donHtml + gradeHtml + giftHtml;
       } catch (err) {
         content.innerHTML = `<div style="color:#dc2626;">${err.message}</div>`;
       }

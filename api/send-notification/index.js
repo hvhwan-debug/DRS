@@ -1,4 +1,4 @@
-const sgMail = require("@sendgrid/mail");
+const { sendEmail } = require("../_shared/mailer");
 
 // ===== Tên hiển thị cho từng loại biểu mẫu =====
 const FORM_TITLES = {
@@ -283,12 +283,10 @@ module.exports = async function (context, req) {
     headers: { "Content-Type": "application/json" }
   };
 
-  const apiKey = process.env.SENDGRID_API_KEY;
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL;
   const toEmail = process.env.NOTIFY_TO_EMAIL || "hotro@wvn.vn";
 
-  if (!apiKey || !fromEmail) {
-    context.log.error("Thiếu SENDGRID_API_KEY hoặc SENDGRID_FROM_EMAIL trong Application settings.");
+  if (!process.env.GRAPH_TENANT_ID || !process.env.GRAPH_CLIENT_ID || !process.env.GRAPH_CLIENT_SECRET || !process.env.GRAPH_SENDER_EMAIL) {
+    context.log.error("Thiếu GRAPH_TENANT_ID/GRAPH_CLIENT_ID/GRAPH_CLIENT_SECRET/GRAPH_SENDER_EMAIL trong Application settings.");
     context.res.status = 500;
     context.res.body = { success: false, message: "Hệ thống gửi email chưa được cấu hình." };
     return;
@@ -309,13 +307,11 @@ module.exports = async function (context, req) {
   const rowsHtml = buildRowsHtml(data);
   const adminHtml = buildEmailHtml(title, rowsHtml);
 
-  sgMail.setApiKey(apiKey);
-
   const senderName = data.fullname || data.fullName || data.name || "";
   const senderEmail = pickField(data, ["email", "email_phu_huynh", "email_tnv", "email_tai_tro"]);
 
   // Đính kèm ảnh minh chứng (nếu form gửi kèm) — giới hạn tổng dung lượng
-  // để tránh vượt hạn mức SendGrid (thường ~30MB mỗi email tính cả header).
+  // để tránh vượt hạn mức đính kèm thông thường của hộp thư (~20-25MB mỗi email).
   const MAX_TOTAL_ATTACHMENT_MB = 20;
   let attachments;
   if (Array.isArray(body.attachments) && body.attachments.length > 0) {
@@ -332,26 +328,23 @@ module.exports = async function (context, req) {
       attachments.push({
         content: att.content,
         filename: att.filename,
-        type: att.type || "application/octet-stream",
-        disposition: "attachment"
+        type: att.type || "application/octet-stream"
       });
     }
   }
 
-  const adminMsg = {
-    to: toEmail,
-    from: { email: fromEmail, name: "Website Mạng Lưới Tri Thức Việt Nam" },
-    replyTo: senderEmail || undefined,
-    subject: `[WVN Website] ${title}`,
-    html: adminHtml,
-    ...(attachments && attachments.length > 0 ? { attachments } : {})
-  };
-
   try {
     // Email báo cho admin — bắt buộc phải thành công, nếu lỗi thì báo lỗi cho người dùng
-    await sgMail.send(adminMsg);
+    await sendEmail({
+      to: toEmail,
+      fromName: "Website Mạng Lưới Tri Thức Việt Nam",
+      replyTo: senderEmail || undefined,
+      subject: `[WVN Website] ${title}`,
+      html: adminHtml,
+      attachments
+    });
   } catch (err) {
-    context.log.error("Gửi email thông báo admin thất bại:", err?.response?.body || err.message);
+    context.log.error("Gửi email thông báo admin thất bại:", err.message);
     context.res.status = 502;
     context.res.body = { success: false, message: "Gửi email thất bại, vui lòng thử lại sau." };
     return;
