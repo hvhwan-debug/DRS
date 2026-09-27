@@ -16,7 +16,7 @@ function slugify(name) {
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "gifts"))) return;
 
   const body = req.body || {};
   const id = String(body.id || "").trim();

@@ -22,7 +22,7 @@ function buildGradeBodyHtml(studentName, program, assessmentType, score, comment
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "grades"))) return;
 
   const body = req.body || {};
   const parentEmail = String(body.parentEmail || "").trim().toLowerCase();

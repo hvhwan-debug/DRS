@@ -11,7 +11,7 @@ const TUITION_TABLE = "TuitionPayments";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "invoices"))) return;
 
   const body = req.body || {};
   const parentEmail = String(body.parentEmail || "").trim().toLowerCase();

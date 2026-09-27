@@ -8,7 +8,7 @@ const MEMBERS_TABLE = "Members";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "members"))) return;
 
   const email = String((req.body && req.body.email) || "").trim().toLowerCase();
   if (!email) {

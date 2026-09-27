@@ -22,7 +22,7 @@ function buildDonationBodyHtml(donationType, amount, itemDescription) {
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "donations"))) return;
 
   const body = req.body || {};
   const donationType = body.donationType === "item" ? "item" : "cash"; // 'cash' (tiền) | 'item' (hiện vật)

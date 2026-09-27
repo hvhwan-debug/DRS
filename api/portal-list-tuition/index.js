@@ -7,7 +7,7 @@ const TUITION_TABLE = "TuitionPayments";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "tuition"))) return;
 
   try {
     const tuitionTable = await getTableClient(TUITION_TABLE);

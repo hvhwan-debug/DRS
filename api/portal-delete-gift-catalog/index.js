@@ -7,7 +7,7 @@ const { CATALOG_TABLE, PARTITION } = require("../_shared/giftCatalog");
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "gifts"))) return;
 
   const id = String((req.body && req.body.id) || "").trim();
   if (!id) {

@@ -1,5 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireAdmin } = require("../_shared/adminAuth");
+const { requireSuperAdmin } = require("../_shared/adminAuth");
 const { ACTIVITY_LOG_TABLE } = require("../_shared/activityLog");
 
 const MAX_ROWS = 200;
@@ -7,7 +7,7 @@ const MAX_ROWS = 200;
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireSuperAdmin(context, req))) return;
 
   try {
     const table = await getTableClient(ACTIVITY_LOG_TABLE);

@@ -8,7 +8,7 @@ const ATTENDANCE_TABLE = "Attendance";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "attendance"))) return;
 
   const body = req.body || {};
   const program = String(body.program || "").trim();

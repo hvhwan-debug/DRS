@@ -183,19 +183,19 @@
       </div>
       <nav class="sidebar-nav">
         <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-simple"></i> Tổng Quan</button>
-        <button class="tab-btn" data-tab="registrations" onclick="switchTab('registrations')"><i class="fa-solid fa-file-lines"></i> Đơn Đăng Ký</button>
-        <button class="tab-btn" data-tab="donations" onclick="switchTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
-        <button class="tab-btn" data-tab="tuition" onclick="switchTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
-        <button class="tab-btn" data-tab="invoices" onclick="switchTab('invoices')"><i class="fa-solid fa-file-invoice-dollar"></i> Hoá Đơn</button>
-        <button class="tab-btn" data-tab="students" onclick="switchTab('students')"><i class="fa-solid fa-child-reaching"></i> Học Sinh</button>
-        <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Lịch Học</button>
-        <button class="tab-btn" data-tab="attendance" onclick="switchTab('attendance')"><i class="fa-solid fa-clipboard-check"></i> Điểm Danh</button>
-        <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
-        <button class="tab-btn" data-tab="members" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> Thành Viên</button>
-        <button class="tab-btn" data-tab="gifts" onclick="switchTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
-        <button class="tab-btn" data-tab="bulkemail" onclick="switchTab('bulkemail')"><i class="fa-solid fa-paper-plane"></i> Gửi Email</button>
-        <button class="tab-btn" data-tab="emaillogs" onclick="switchTab('emaillogs')"><i class="fa-solid fa-clock-rotate-left"></i> Lịch Sử Email</button>
-        <button class="tab-btn" data-tab="activitylog" onclick="switchTab('activitylog')"><i class="fa-solid fa-user-clock"></i> Lịch Sử Thao Tác</button>
+        <button class="tab-btn" data-tab="registrations" data-permission="registrations" onclick="switchTab('registrations')"><i class="fa-solid fa-file-lines"></i> Đơn Đăng Ký</button>
+        <button class="tab-btn" data-tab="donations" data-permission="donations" onclick="switchTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
+        <button class="tab-btn" data-tab="tuition" data-permission="tuition" onclick="switchTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
+        <button class="tab-btn" data-tab="invoices" data-permission="invoices" onclick="switchTab('invoices')"><i class="fa-solid fa-file-invoice-dollar"></i> Hoá Đơn</button>
+        <button class="tab-btn" data-tab="students" data-permission="students" onclick="switchTab('students')"><i class="fa-solid fa-child-reaching"></i> Học Sinh</button>
+        <button class="tab-btn" data-tab="schedule" data-permission="schedule" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Lịch Học</button>
+        <button class="tab-btn" data-tab="attendance" data-permission="attendance" onclick="switchTab('attendance')"><i class="fa-solid fa-clipboard-check"></i> Điểm Danh</button>
+        <button class="tab-btn" data-tab="grades" data-permission="grades" onclick="switchTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
+        <button class="tab-btn" data-tab="members" data-permission="members" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> Thành Viên</button>
+        <button class="tab-btn" data-tab="gifts" data-permission="gifts" onclick="switchTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
+        <button class="tab-btn" data-tab="bulkemail" data-permission="bulkemail" onclick="switchTab('bulkemail')"><i class="fa-solid fa-paper-plane"></i> Gửi Email</button>
+        <button class="tab-btn" data-tab="emaillogs" data-permission="bulkemail" onclick="switchTab('emaillogs')"><i class="fa-solid fa-clock-rotate-left"></i> Lịch Sử Email</button>
+        <button class="tab-btn" data-tab="activitylog" data-super-only="1" onclick="switchTab('activitylog')"><i class="fa-solid fa-user-clock"></i> Lịch Sử Thao Tác</button>
         <button class="tab-btn" data-tab="staffaccounts" onclick="switchTab('staffaccounts')"><i class="fa-solid fa-users-gear"></i> Tài Khoản Quản Trị</button>
       </nav>
       <div class="sidebar-footer">
@@ -217,7 +217,7 @@
       <div class="card" style="border:1.5px solid #bae6fd; background:#f0f9ff;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.8rem; margin-bottom:1rem;">
           <h3 style="font-size:0.95rem; margin:0;"><i class="fa-solid fa-list-check" style="color:#0284c7;"></i> Việc Cần Làm Hôm Nay</h3>
-          <button type="button" class="btn btn-outline" style="font-size:0.8rem; padding:0.4rem 0.9rem;" onclick="downloadBackup()"><i class="fa-solid fa-database"></i> Sao Lưu Dữ Liệu (.json)</button>
+          <button type="button" class="btn btn-outline" id="backupBtn" data-super-only="1" style="font-size:0.8rem; padding:0.4rem 0.9rem;" onclick="downloadBackup()"><i class="fa-solid fa-database"></i> Sao Lưu Dữ Liệu (.json)</button>
         </div>
         <div id="todoTodayList"><div class="loading-state" style="padding:0.5rem 0;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div></div>
       </div>
@@ -838,30 +838,58 @@
 
     <!-- ===================== TAB: TÀI KHOẢN QUẢN TRỊ ===================== -->
     <div class="panel" id="panel-staffaccounts">
-      <div class="card">
-        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-user-plus" style="color:#0284c7;"></i> Thêm Tài Khoản Quản Trị Mới</h3>
-        <form id="staffAddForm" class="form-grid">
-          <div>
-            <label>Email</label>
-            <input type="email" id="staffNewEmail" placeholder="nhanvien@wvn.vn" required>
-          </div>
-          <div>
-            <label>Tên hiển thị</label>
-            <input type="text" id="staffNewDisplayName" placeholder="Nguyễn Văn A" required>
-          </div>
-        </form>
-        <div id="staffAddAlert" style="display:none; font-size:0.85rem; margin:0.8rem 0;"></div>
-        <button type="submit" form="staffAddForm" class="btn" id="staffAddBtn"><i class="fa-solid fa-check"></i> Tạo Tài Khoản</button>
-      </div>
+      <div id="superAdminOnlySection">
+        <div class="card">
+          <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-user-plus" style="color:#0284c7;"></i> Thêm Tài Khoản Quản Trị Mới</h3>
+          <form id="staffAddForm" class="form-grid">
+            <div>
+              <label>Email</label>
+              <input type="email" id="staffNewEmail" placeholder="nhanvien@wvn.vn" required>
+            </div>
+            <div>
+              <label>Tên hiển thị</label>
+              <input type="text" id="staffNewDisplayName" placeholder="Nguyễn Văn A" required>
+            </div>
+            <div>
+              <label>Vai trò</label>
+              <select id="staffNewRole" onchange="toggleStaffPermissionChecklist('staffNewRole', 'staffNewPermissions')">
+                <option value="staff">Nhân viên (chỉ thấy chức năng được cấp quyền)</option>
+                <option value="super">Quản trị viên chính (toàn quyền)</option>
+              </select>
+            </div>
+          </form>
+          <div id="staffNewPermissions" style="margin:0.6rem 0 1rem;"></div>
+          <div id="staffAddAlert" style="display:none; font-size:0.85rem; margin:0.8rem 0;"></div>
+          <button type="submit" form="staffAddForm" class="btn" id="staffAddBtn"><i class="fa-solid fa-check"></i> Tạo Tài Khoản</button>
+        </div>
 
-      <div class="card">
-        <h3 style="margin-bottom:1rem; font-size:1rem;">Danh Sách Tài Khoản Quản Trị</h3>
-        <div class="loading-state" id="staffLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
-        <div class="table-scroll" style="display:none;" id="staffTableWrap">
-          <table>
-            <thead><tr><th>Tên hiển thị</th><th>Email</th><th>Trạng thái</th><th>Đăng nhập gần nhất</th><th>Thao tác</th></tr></thead>
-            <tbody id="staffTableBody"></tbody>
-          </table>
+        <div class="card">
+          <h3 style="margin-bottom:1rem; font-size:1rem;">Danh Sách Tài Khoản Quản Trị</h3>
+          <div class="loading-state" id="staffLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+          <div class="table-scroll" style="display:none;" id="staffTableWrap">
+            <table>
+              <thead><tr><th>Tên hiển thị</th><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th>Đăng nhập gần nhất</th><th>Thao tác</th></tr></thead>
+              <tbody id="staffTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="editPermissionsCard" style="display:none;">
+          <h3 style="margin-bottom:1rem; font-size:1rem;">Sửa Vai Trò / Quyền: <span id="editPermissionsEmail" style="color:#0284c7;"></span></h3>
+          <div class="form-grid" style="margin-bottom:0.8rem;">
+            <div>
+              <label>Vai trò</label>
+              <select id="editRole" onchange="toggleStaffPermissionChecklist('editRole', 'editPermissions')">
+                <option value="staff">Nhân viên (chỉ thấy chức năng được cấp quyền)</option>
+                <option value="super">Quản trị viên chính (toàn quyền)</option>
+              </select>
+            </div>
+          </div>
+          <div id="editPermissions" style="margin-bottom:1rem;"></div>
+          <div style="display:flex; gap:0.6rem;">
+            <button type="button" class="btn" onclick="saveStaffPermissions()"><i class="fa-solid fa-check"></i> Lưu</button>
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('editPermissionsCard').style.display='none';">Huỷ</button>
+          </div>
         </div>
       </div>
 
@@ -893,6 +921,14 @@
     // không còn tự nhập tên tự do như trước, nên không thể bị gõ sai/giả mạo. Giá trị dưới đây
     // chỉ để HIỂN THỊ ngay trên giao diện; nhật ký thao tác đọc lại đúng từ phiên đăng nhập.
     const currentAdminDisplayName = localStorage.getItem('wvn_admin_display_name') || 'Quản trị viên';
+
+    // Vai trò/quyền hạn — mặc định an toàn nhất (không quyền gì) cho tới khi xác nhận được qua whoami,
+    // để tránh chớp hiện các tab/chức năng chưa được cấp quyền trước khi ẩn kịp.
+    let myRole = 'staff';
+    let myPermissions = [];
+    function hasPermission(key) {
+      return myRole === 'super' || myPermissions.includes(key);
+    }
 
     let emailToStudents = {};
     let emailToParentName = {};
@@ -3836,20 +3872,59 @@
     }
 
     // ============== TÀI KHOẢN QUẢN TRỊ ==============
+    const PERMISSION_DEFS = [
+      { key: 'registrations', label: 'Đơn Đăng Ký' },
+      { key: 'donations', label: 'Quyên Góp' },
+      { key: 'tuition', label: 'Học Phí' },
+      { key: 'invoices', label: 'Hoá Đơn' },
+      { key: 'students', label: 'Học Sinh' },
+      { key: 'schedule', label: 'Lịch Học' },
+      { key: 'attendance', label: 'Điểm Danh' },
+      { key: 'grades', label: 'Bảng Điểm' },
+      { key: 'members', label: 'Thành Viên' },
+      { key: 'gifts', label: 'Danh Mục & Yêu Cầu Đổi Quà' },
+      { key: 'bulkemail', label: 'Gửi Email Hàng Loạt' }
+    ];
+    let allStaffAccountsData = [];
+
+    function permissionChecklistHtml(containerId, checkedKeys) {
+      return PERMISSION_DEFS.map(p => `
+        <label style="display:flex; align-items:center; gap:0.5rem; padding:0.3rem 0; font-size:0.88rem; cursor:pointer;">
+          <input type="checkbox" class="${containerId}-checkbox" value="${p.key}" ${checkedKeys.includes(p.key) ? 'checked' : ''}>
+          ${p.label}
+        </label>`).join('');
+    }
+
+    function toggleStaffPermissionChecklist(roleSelectId, containerId) {
+      const role = document.getElementById(roleSelectId).value;
+      const container = document.getElementById(containerId);
+      if (role === 'super') {
+        container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">Quản trị viên chính có toàn quyền — không cần chọn từng mục.</div>`;
+      } else {
+        const checked = container.dataset.checked ? JSON.parse(container.dataset.checked) : [];
+        container.innerHTML = permissionChecklistHtml(containerId, checked);
+      }
+    }
+
     async function loadStaffAccounts() {
       try {
         const { accounts } = await apiCall('/api/portal-admin-list-accounts');
+        allStaffAccountsData = accounts;
         document.getElementById('staffLoading').style.display = 'none';
         document.getElementById('staffTableWrap').style.display = 'block';
         document.getElementById('staffTableBody').innerHTML = accounts.map(a => `
           <tr>
             <td style="font-weight:700;">${escapeHtml(a.displayName)}</td>
             <td>${escapeHtml(a.email)}</td>
+            <td>${a.role === 'super'
+              ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#fef3c7; color:#a16207;">Quản trị viên chính</span>'
+              : '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">Nhân viên</span>'}</td>
             <td>${a.isActive
               ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Hoạt động</span>'
               : '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#f1f5f9; color:#64748b;">Đã vô hiệu hoá</span>'}</td>
             <td style="white-space:nowrap; color:var(--text-muted);">${a.lastLoginAt ? formatDate(a.lastLoginAt) : 'Chưa đăng nhập'}</td>
             <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="openEditPermissions('${encodeURIComponent(a.email)}')">Sửa Quyền</button>
               <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="resetStaffPassword('${encodeURIComponent(a.email)}')">Đặt Lại MK</button>
               <button type="button" class="btn ${a.isActive ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.78rem; ${a.isActive ? 'color:#b91c1c; border-color:#fecaca;' : ''}" onclick="toggleStaffAccount('${encodeURIComponent(a.email)}', ${!a.isActive})">${a.isActive ? 'Vô Hiệu Hoá' : 'Kích Hoạt'}</button>
               <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteStaffAccount('${encodeURIComponent(a.email)}')">Xoá</button>
@@ -3857,6 +3932,38 @@
           </tr>`).join('');
       } catch (err) {
         document.getElementById('staffLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function openEditPermissions(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      const account = allStaffAccountsData.find(a => a.email === email);
+      if (!account) return;
+      document.getElementById('editPermissionsEmail').textContent = `${account.displayName} (${account.email})`;
+      document.getElementById('editPermissionsCard').dataset.email = email;
+      document.getElementById('editRole').value = account.role;
+      const container = document.getElementById('editPermissions');
+      container.dataset.checked = JSON.stringify(account.permissions || []);
+      toggleStaffPermissionChecklist('editRole', 'editPermissions');
+      document.getElementById('editPermissionsCard').style.display = 'block';
+      document.getElementById('editPermissionsCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    async function saveStaffPermissions() {
+      const email = document.getElementById('editPermissionsCard').dataset.email;
+      const role = document.getElementById('editRole').value;
+      const permissions = role === 'super' ? [] : Array.from(document.querySelectorAll('.editPermissions-checkbox:checked')).map(el => el.value);
+      try {
+        await apiCall('/api/portal-admin-update-permissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, role, permissions })
+        });
+        showGlobalAlert('Đã cập nhật vai trò/quyền.', false);
+        document.getElementById('editPermissionsCard').style.display = 'none';
+        loadStaffAccounts();
+      } catch (err) {
         showGlobalAlert(err.message, true);
       }
     }
@@ -3871,15 +3978,18 @@
       try {
         const email = document.getElementById('staffNewEmail').value.trim();
         const displayName = document.getElementById('staffNewDisplayName').value.trim();
+        const role = document.getElementById('staffNewRole').value;
+        const permissions = role === 'super' ? [] : Array.from(document.querySelectorAll('.staffNewPermissions-checkbox:checked')).map(el => el.value);
         const result = await apiCall('/api/portal-admin-create-account', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, displayName })
+          body: JSON.stringify({ email, displayName, role, permissions })
         });
         alertEl.style.display = 'block';
         alertEl.style.color = '#15803d';
         alertEl.innerHTML = `Đã tạo tài khoản cho <strong>${escapeHtml(displayName)}</strong>. Mật khẩu tạm thời: <strong>${result.tempPassword}</strong> — hãy gửi cho họ và nhắc đổi mật khẩu ngay sau khi đăng nhập.`;
         document.getElementById('staffAddForm').reset();
+        document.getElementById('staffNewPermissions').innerHTML = '';
         loadStaffAccounts();
       } catch (err) {
         alertEl.style.display = 'block';
@@ -3890,6 +4000,7 @@
         btn.innerHTML = '<i class="fa-solid fa-check"></i> Tạo Tài Khoản';
       }
     });
+    toggleStaffPermissionChecklist('staffNewRole', 'staffNewPermissions');
 
     async function resetStaffPassword(emailEnc) {
       if (!confirm('Đặt lại mật khẩu cho tài khoản này?')) return;
@@ -3961,21 +4072,44 @@
 
     document.getElementById('currentAdminNameLabel').textContent = currentAdminDisplayName;
 
-    loadRegistrations();
-    loadDonations();
-    loadTuition();
-    loadInvoices();
-    loadStudents();
-    loadSchedule();
-    loadGrades();
-    loadMembers();
-    loadGiftCatalog();
-    loadGifts();
-    loadEmailLogs();
-    populateAttendanceProgramSelect();
-    loadAttendanceHistory();
-    loadActivityLog();
-    loadStaffAccounts();
+    // Xác định vai trò/quyền TRƯỚC khi tải bất kỳ dữ liệu nào — chỉ hiện tab và gọi API cho
+    // đúng những chức năng đã được Quản Trị Viên Chính cấp quyền.
+    async function initPermissionGatingAndLoadAll() {
+      try {
+        const who = await apiCall('/api/portal-admin-whoami');
+        myRole = who.role;
+        myPermissions = who.permissions || [];
+      } catch (err) {
+        myRole = 'staff';
+        myPermissions = [];
+      }
+
+      document.querySelectorAll('.tab-btn[data-permission]').forEach(btn => {
+        if (!hasPermission(btn.dataset.permission)) btn.style.display = 'none';
+      });
+      document.querySelectorAll('[data-super-only]').forEach(el => {
+        if (myRole !== 'super') el.style.display = 'none';
+      });
+      if (myRole !== 'super') {
+        const section = document.getElementById('superAdminOnlySection');
+        if (section) section.style.display = 'none';
+      }
+
+      if (hasPermission('registrations')) loadRegistrations();
+      if (hasPermission('donations')) loadDonations();
+      if (hasPermission('tuition')) loadTuition();
+      if (hasPermission('invoices')) loadInvoices();
+      if (hasPermission('students')) loadStudents();
+      if (hasPermission('schedule')) loadSchedule();
+      if (hasPermission('grades')) loadGrades();
+      if (hasPermission('members')) loadMembers();
+      if (hasPermission('gifts')) { loadGiftCatalog(); loadGifts(); }
+      if (hasPermission('bulkemail')) loadEmailLogs();
+      if (hasPermission('attendance')) { populateAttendanceProgramSelect(); loadAttendanceHistory(); }
+      if (myRole === 'super') { loadActivityLog(); loadStaffAccounts(); }
+    }
+
+    initPermissionGatingAndLoadAll();
   </script>
 
   <div id="printableArea" style="display:none;"></div>

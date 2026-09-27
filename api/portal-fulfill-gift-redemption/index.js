@@ -40,7 +40,7 @@ function buildStatusBodyHtml(status, giftName, greeting, reason) {
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "gifts"))) return;
 
   const body = req.body || {};
   const email = String(body.email || "").trim().toLowerCase();

@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireAdmin, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
+const { requireSuperAdmin, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
 const { hashPassword } = require("../_shared/password");
 const { logAdminActivity } = require("../_shared/activityLog");
 
@@ -14,7 +14,7 @@ function generateTempPassword() {
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireSuperAdmin(context, req))) return;
 
   const email = String((req.body && req.body.email) || "").trim().toLowerCase();
   if (!email) {

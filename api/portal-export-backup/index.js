@@ -1,5 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireAdmin } = require("../_shared/adminAuth");
+const { requireSuperAdmin } = require("../_shared/adminAuth");
 
 // Sao lưu "đơn giản nhất": đọc toàn bộ các bảng nghiệp vụ chính, trả về 1 file JSON duy nhất
 // để admin tải về lưu ngoài. KHÔNG gồm các bảng phiên đăng nhập/OTP (không cần backup, sẽ tự
@@ -14,7 +14,7 @@ const TABLES = [
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireSuperAdmin(context, req))) return;
 
   try {
     const backup = { exportedAt: new Date().toISOString(), tables: {} };

@@ -6,7 +6,7 @@ const SCHEDULE_TABLE = "ClassSchedules";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "schedule"))) return;
 
   const body = req.body || {};
   const id = String(body.id || "").trim(); // nếu có id -> sửa, không có -> tạo mới

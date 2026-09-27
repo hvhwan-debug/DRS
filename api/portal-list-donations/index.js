@@ -7,7 +7,7 @@ const DONATIONS_TABLE = "Donations";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "donations"))) return;
 
   try {
     const donationsTable = await getTableClient(DONATIONS_TABLE);

@@ -6,7 +6,7 @@ const REDEMPTIONS_TABLE = "GiftRedemptions";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "gifts"))) return;
 
   try {
     const redemptionsTable = await getTableClient(REDEMPTIONS_TABLE);

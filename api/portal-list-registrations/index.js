@@ -19,7 +19,7 @@ const FORM_TITLES = {
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "registrations"))) return;
 
   try {
     const regTable = await getTableClient(REGISTRATIONS_TABLE);

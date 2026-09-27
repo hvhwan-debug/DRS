@@ -42,7 +42,7 @@ function buildStatusBodyHtml(formTitle, status, reason) {
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "registrations"))) return;
 
   const email = String((req.body && req.body.email) || "").trim();
   const id = String((req.body && req.body.id) || "").trim();

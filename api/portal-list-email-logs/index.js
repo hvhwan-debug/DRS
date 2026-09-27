@@ -7,7 +7,7 @@ const MAX_LOGS = 300;
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "bulkemail"))) return;
 
   try {
     const logsTable = await getTableClient(EMAIL_LOGS_TABLE);

@@ -7,7 +7,7 @@ const STUDENTS_TABLE = "Students";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "students"))) return;
 
   const body = req.body || {};
   const parentEmail = String(body.parentEmail || "").trim().toLowerCase();

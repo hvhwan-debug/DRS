@@ -7,7 +7,7 @@ const INVOICES_TABLE = "Invoices";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "invoices"))) return;
 
   const parentEmail = String((req.body && req.body.parentEmail) || "").trim().toLowerCase();
   const id = String((req.body && req.body.id) || "").trim();

@@ -4,7 +4,7 @@ const { listAllGiftCatalog } = require("../_shared/giftCatalog");
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "gifts"))) return;
 
   try {
     const items = await listAllGiftCatalog();

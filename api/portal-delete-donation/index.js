@@ -9,7 +9,7 @@ const TRANSACTIONS_TABLE = "Transactions";
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
 
-  if (!(await requireAdmin(context, req))) return;
+  if (!(await requireAdmin(context, req, "donations"))) return;
 
   const id = String((req.body && req.body.id) || "").trim();
   if (!id) {
