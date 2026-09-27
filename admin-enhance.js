@@ -367,6 +367,14 @@
   }
   ['tuitionForm', 'invoiceForm'].forEach(fid => { const f = $(fid); if (f) f.addEventListener('reset', () => setTimeout(defaultDates, 0)); });
 
+  // ---------- Mở đúng mục khi đến từ đường dẫn /admin#ten-muc (vd. từ trang Công Việc) ----------
+  function openTabFromHash() {
+    const tab = (location.hash || '').slice(1);
+    if (tab && document.getElementById('panel-' + tab) && typeof switchTab === 'function') switchTab(tab);
+  }
+  window.addEventListener('hashchange', openTabFromHash);
+  setTimeout(openTabFromHash, 300);
+
   // ---------- Khởi động: chờ dữ liệu của trang tải xong rồi mới gắn các lựa chọn dựa trên dữ liệu ----------
   tuitionEnhance(); invoiceEnhance(); gradeEnhance(); scheduleEnhance(); studentFormEnhance(); defaultDates();
   let tries = 0;

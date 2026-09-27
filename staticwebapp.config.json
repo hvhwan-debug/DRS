@@ -15,6 +15,13 @@
       }
     },
     {
+      "route": "/admin/cong-viec",
+      "rewrite": "/admin-cong-viec.html",
+      "headers": {
+        "Cache-Control": "no-store"
+      }
+    },
+    {
       "route": "/thanh-vien",
       "rewrite": "/thanh-vien-index.html"
     }
