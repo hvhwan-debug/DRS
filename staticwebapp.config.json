@@ -1,6 +1,16 @@
 {
   "routes": [
-    { "route": "/admin", "rewrite": "/admin-index.html" },
-    { "route": "/thanh-vien", "rewrite": "/thanh-vien-index.html" }
+    {
+      "route": "/admin",
+      "rewrite": "/admin-index.html"
+    },
+    {
+      "route": "/admin/crm",
+      "rewrite": "/admin-crm.html"
+    },
+    {
+      "route": "/thanh-vien",
+      "rewrite": "/thanh-vien-index.html"
+    }
   ]
 }
