@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { buildParentDirectory } = require("../_shared/parentDirectory");
 
 const MEMBERS_TABLE = "Members";
 
@@ -10,10 +11,13 @@ module.exports = async function (context, req) {
 
   try {
     const membersTable = await getTableClient(MEMBERS_TABLE);
+    const { parents } = await buildParentDirectory();
     const members = [];
     for await (const entity of membersTable.listEntities()) {
       members.push({
         email: entity.rowKey,
+        fullName: (parents[String(entity.rowKey).toLowerCase()] || {}).name || "",
+        phone: (parents[String(entity.rowKey).toLowerCase()] || {}).phone || "",
         isBlocked: !!entity.isBlocked,
         createdAt: entity.createdAt || entity.updatedAt || null,
         updatedAt: entity.updatedAt || null

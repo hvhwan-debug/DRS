@@ -603,9 +603,10 @@
         });
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Không thể gửi yêu cầu.');
+        memberToast('Đã gửi yêu cầu đổi quà. Trung tâm sẽ liên hệ để trao quà.');
         loadMemberInfo();
       } catch (err) {
-        alert(err.message);
+        memberToast(err.message, true);
       }
     }
 
@@ -625,19 +626,59 @@
       chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     }
 
+    // ----- Thông báo nhỏ + bảng chọn lý do (thay cho alert/prompt của trình duyệt) -----
+    function memberToast(msg, isError) {
+      let t = document.getElementById('memberToast');
+      if (!t) {
+        t = document.createElement('div'); t.id = 'memberToast'; t.setAttribute('role', 'status');
+        t.style.cssText = 'position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);padding:0.7rem 1.1rem;border-radius:10px;color:#fff;font-size:0.9rem;z-index:10050;box-shadow:0 10px 30px rgba(15,23,42,0.25);max-width:calc(100% - 2rem);transition:opacity .2s;';
+        document.body.appendChild(t);
+      }
+      t.style.background = isError ? '#b91c1c' : '#0f172a'; t.textContent = msg; t.style.opacity = '1';
+      clearTimeout(memberToast._t); memberToast._t = setTimeout(() => { t.style.opacity = '0'; }, isError ? 6000 : 2800);
+    }
+    function askRejectReason() {
+      return new Promise(resolve => {
+        const reasons = ['Sai số tiền', 'Sai ngày', 'Sai tên học sinh', 'Sai chương trình', 'Gia đình chưa nộp khoản này', 'Điểm / nhận xét chưa đúng'];
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:10040;display:flex;align-items:flex-end;justify-content:center;padding:1rem;';
+        wrap.innerHTML = `<div role="dialog" aria-modal="true" aria-labelledby="rjTitle" style="background:#fff;border-radius:16px;padding:1.2rem;width:100%;max-width:460px;margin-bottom:auto;margin-top:auto;box-shadow:0 20px 50px rgba(15,23,42,0.3);">
+          <h3 id="rjTitle" style="font-size:1.05rem;margin:0 0 0.3rem;">Thông tin nào chưa đúng?</h3>
+          <p style="font-size:0.85rem;color:#64748b;margin:0 0 0.9rem;">Chạm một hoặc nhiều lý do. Có thể ghi thêm nếu cần.</p>
+          <div id="rjChips" style="display:flex;flex-wrap:wrap;gap:0.45rem;margin-bottom:0.8rem;">${reasons.map(r => `<button type="button" data-r="${r}" aria-pressed="false" style="border:1px solid #e2e8f0;background:#fff;border-radius:999px;padding:0.45rem 0.85rem;font:inherit;font-size:0.86rem;cursor:pointer;">${r}</button>`).join('')}</div>
+          <textarea id="rjText" rows="2" placeholder="Ghi thêm (không bắt buộc)" style="width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:0.55rem 0.7rem;font:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
+          <div style="display:flex;gap:0.6rem;justify-content:flex-end;margin-top:0.9rem;">
+            <button type="button" id="rjCancel" style="border:1px solid #e2e8f0;background:#fff;border-radius:10px;padding:0.6rem 1rem;font:inherit;cursor:pointer;">Huỷ</button>
+            <button type="button" id="rjSend" disabled style="border:none;background:#b91c1c;color:#fff;border-radius:10px;padding:0.6rem 1.1rem;font:inherit;font-weight:600;cursor:pointer;opacity:0.5;">Gửi phản hồi</button>
+          </div></div>`;
+        document.body.appendChild(wrap);
+        const send = wrap.querySelector('#rjSend'), text = wrap.querySelector('#rjText');
+        const picked = () => Array.from(wrap.querySelectorAll('#rjChips [aria-pressed="true"]')).map(b => b.dataset.r);
+        const refresh = () => { const ok = picked().length || text.value.trim(); send.disabled = !ok; send.style.opacity = ok ? '1' : '0.5'; };
+        wrap.querySelector('#rjChips').addEventListener('click', e => {
+          const b = e.target.closest('button'); if (!b) return;
+          const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on);
+          b.style.background = on ? '#0f172a' : '#fff'; b.style.color = on ? '#fff' : ''; b.style.borderColor = on ? '#0f172a' : '#e2e8f0';
+          refresh();
+        });
+        text.addEventListener('input', refresh);
+        const close = v => { wrap.remove(); document.removeEventListener('keydown', onKey); resolve(v); };
+        const onKey = e => { if (e.key === 'Escape') close(null); };
+        document.addEventListener('keydown', onKey);
+        wrap.addEventListener('click', e => { if (e.target === wrap) close(null); });
+        wrap.querySelector('#rjCancel').addEventListener('click', () => close(null));
+        send.addEventListener('click', () => close([picked().join(', '), text.value.trim()].filter(Boolean).join('. ')));
+        setTimeout(() => wrap.querySelector('#rjChips button').focus(), 30);
+      });
+    }
+
+    // Xác nhận: 1 chạm (không cần hộp thoại "OK"). Từ chối: chạm chọn lý do thay vì gõ tay.
     async function confirmRecord(type, id, action) {
       let feedback = '';
       if (action === 'reject') {
-        feedback = prompt('Vui lòng cho biết lý do từ chối / thông tin nào chưa đúng:');
-        if (feedback === null) return; // người dùng bấm Huỷ
-        if (!feedback.trim()) {
-          alert('Vui lòng nhập lý do từ chối.');
-          return;
-        }
-      } else {
-        if (!confirm('Xác nhận thông tin này là chính xác?')) return;
+        feedback = await askRejectReason();
+        if (feedback === null) return;
       }
-
       const token = localStorage.getItem('wvn_member_token');
       try {
         const res = await fetch('/api/member-confirm-record', {
@@ -646,10 +687,11 @@
           body: JSON.stringify({ type, id, action, feedback })
         });
         const result = await res.json().catch(() => ({}));
-        if (!res.ok || !result.success) throw new Error(result.message || 'Có lỗi xảy ra.');
+        if (!res.ok || !result.success) throw new Error(result.message || 'Chưa gửi được phản hồi. Kiểm tra mạng rồi thử lại.');
+        memberToast(action === 'reject' ? 'Đã gửi phản hồi. Trung tâm sẽ kiểm tra lại.' : 'Đã xác nhận. Cảm ơn bạn!');
         loadMemberInfo();
       } catch (err) {
-        alert(err.message);
+        memberToast(err.message, true);
       }
     }
 

@@ -1,6 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin, loadSessionAndAccount, accountPermissions, isSuperAdmin } = require("../_shared/adminAuth");
 const { CRM_TABLE, INTERACTIONS_TABLE, CRM_PARTITION, DEFAULT_STAGE } = require("../_shared/crm");
+const { buildParentDirectory, childKey } = require("../_shared/parentDirectory");
 
 // Trả toàn bộ dữ liệu cho màn hình CRM trong 1 lần gọi: học sinh + hồ sơ chăm sóc + lịch sử
 // chăm sóc, kèm TÓM TẮT điểm / học phí / điểm danh. Phần tóm tắt chỉ trả khi tài khoản có đúng
@@ -28,8 +29,9 @@ module.exports = async function (context, req) {
     const perms = accountPermissions(account);
     const can = key => superAdmin || perms.includes(key);
 
-    const [studentRows, crmRows, interactionRows] = await Promise.all([
-      listAll("Students"), listAll(CRM_TABLE), listAll(INTERACTIONS_TABLE)
+    const [studentRows, crmRows, interactionRows, directory, scheduleRows] = await Promise.all([
+      listAll("Students"), listAll(CRM_TABLE), listAll(INTERACTIONS_TABLE),
+      buildParentDirectory(), listAll("ClassSchedules").catch(() => [])
     ]);
 
     const profiles = {};
@@ -124,6 +126,8 @@ module.exports = async function (context, req) {
         programs,
         note: e.note || "",
         enrolledAt: e.enrolledAt || null,
+        parent: directory.parents[String(e.partitionKey).toLowerCase()] || null,
+        registration: directory.children[childKey(e.partitionKey, e.studentName)] || null,
         profile: profiles[e.rowKey] || null,
         interactions: interactions[e.rowKey] || [],
         grades: can("grades") ? (gradeSummary[k] || null) : undefined,
@@ -136,7 +140,17 @@ module.exports = async function (context, req) {
     context.res.body = {
       success: true,
       students,
-      access: { grades: can("grades"), tuition: can("tuition"), attendance: can("attendance") }
+      access: { grades: can("grades"), tuition: can("tuition"), attendance: can("attendance") },
+      // Gợi ý để chọn bằng 1 chạm thay vì gõ tay: tên giáo viên trong Lịch Học + người phụ trách đã dùng
+      suggestions: {
+        caretakers: Array.from(new Set(
+          scheduleRows.map(r => String(r.teacherName || "").trim())
+            .concat(Object.values(profiles).map(p => p.caretaker))
+            .filter(Boolean)
+        )).sort((a, b) => a.localeCompare(b, "vi")),
+        schools: Array.from(new Set(Object.values(profiles).map(p => p.school).filter(Boolean))).sort((a, b) => a.localeCompare(b, "vi")),
+        tags: Array.from(new Set(Object.values(profiles).flatMap(p => p.tags || []))).sort((a, b) => a.localeCompare(b, "vi"))
+      }
     };
   } catch (err) {
     context.log.error("Lỗi tải dữ liệu CRM:", err.message);

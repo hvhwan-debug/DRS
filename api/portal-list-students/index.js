@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { buildParentDirectory } = require("../_shared/parentDirectory");
 
 const STUDENTS_TABLE = "Students";
 
@@ -10,6 +11,7 @@ module.exports = async function (context, req) {
 
   try {
     const studentsTable = await getTableClient(STUDENTS_TABLE);
+    const { parents } = await buildParentDirectory();
     const students = [];
     for await (const entity of studentsTable.listEntities()) {
       let programs = [];
@@ -22,6 +24,8 @@ module.exports = async function (context, req) {
       students.push({
         id: entity.rowKey,
         parentEmail: entity.partitionKey,
+        parentName: (parents[entity.partitionKey] || {}).name || "",
+        parentPhone: (parents[entity.partitionKey] || {}).phone || "",
         studentName: entity.studentName,
         dob: entity.dob || "",
         program: entity.program || "", // tương thích ngược

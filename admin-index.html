@@ -503,7 +503,7 @@
       <div class="card">
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem; margin-bottom:1rem;">
           <div style="position:relative; flex:1; min-width:220px; max-width:340px;">
-            <input type="text" id="studentSearchInput" placeholder="Tìm theo tên học sinh hoặc email phụ huynh..." style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--border); border-radius:10px;" oninput="renderStudentCards()">
+            <input type="text" id="studentSearchInput" placeholder="Tìm theo tên học sinh, tên phụ huynh, SĐT hoặc email..." style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--border); border-radius:10px;" oninput="renderStudentCards()">
           </div>
           <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="mergeDuplicateStudents()"><i class="fa-solid fa-code-merge"></i> Gộp học sinh trùng lặp</button>
           <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="exportToCsv('hoc-sinh.csv', allStudentsData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'dob',label:'Ngày sinh'},{key:'note',label:'Ghi chú'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
@@ -685,13 +685,13 @@
 
       <div class="card">
         <div style="display:flex; gap:0.8rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
-          <input type="text" id="memberSearchInput" placeholder="Tìm theo email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
+          <input type="text" id="memberSearchInput" placeholder="Tìm theo tên, số điện thoại hoặc email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
           <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem; white-space:nowrap;" title="Chốt lại điểm tích lũy cho TOÀN BỘ thành viên theo đúng lịch sử học phí — cần chạy 1 lần sau khi đổi cách tính điểm/hạng." onclick="recalcAllTiers()"><i class="fa-solid fa-arrows-rotate"></i> Chốt Lại Điểm Cho Tất Cả (1 lần)</button>
         </div>
         <div class="loading-state" id="memberLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="memberTableWrap">
           <table>
-            <thead><tr><th>Email</th><th>Cập nhật gần nhất</th><th>Thao tác</th></tr></thead>
+            <thead><tr><th>Thành viên</th><th>Cập nhật gần nhất</th><th>Thao tác</th></tr></thead>
             <tbody id="memberTableBody"></tbody>
           </table>
         </div>
@@ -783,7 +783,7 @@
 
         <div id="bulkEmailSelectedField" style="display:none; margin-bottom:1rem;">
           <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Chọn thành viên</label>
-          <input type="text" id="bulkEmailMemberSearch" placeholder="Tìm theo email..." oninput="renderBulkEmailMemberChecklist()" style="width:100%; padding:0.5rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.88rem; margin-bottom:0.5rem;">
+          <input type="text" id="bulkEmailMemberSearch" placeholder="Tìm theo tên, số điện thoại hoặc email..." oninput="renderBulkEmailMemberChecklist()" style="width:100%; padding:0.5rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.88rem; margin-bottom:0.5rem;">
           <div id="bulkEmailMemberChecklist" style="max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:8px; padding:0.6rem 0.8rem;"></div>
         </div>
 
@@ -1237,7 +1237,7 @@
           if (parentName) emailToParentName[em] = String(parentName).trim();
         });
         document.getElementById('knownEmailsList').innerHTML =
-          Object.keys(emailToStudents).map(em => `<option value="${escapeHtml(em)}">${escapeHtml(emailToParentName[em] || '')}</option>`).join('');
+          Object.keys(emailToStudents).map(em => `<option value="${escapeHtml(em)}">${escapeHtml([emailToParentName[em], Array.from(emailToStudents[em] || []).join(', ')].filter(Boolean).join(' · con: '))}</option>`).join('');
       } catch (err) {
         document.getElementById('regLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
@@ -2096,7 +2096,13 @@
       studentGroupsCache = groupStudents(allStudentsData);
       let groups = studentGroupsCache;
       if (query) {
-        groups = groups.filter(g => g.studentName.toLowerCase().includes(query) || g.parentEmail.toLowerCase().includes(query));
+        const nq = x => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase();
+        const words = nq(query).split(/\s+/).filter(Boolean);
+        groups = groups.filter(g => {
+          const par = allStudentsData.find(s => s.parentEmail === g.parentEmail) || {};
+          const hay = nq([g.studentName, g.parentEmail, par.parentName, par.parentPhone, String(par.parentPhone || '').replace(/\D/g, '')].join(' '));
+          return words.every(w => hay.includes(w));
+        });
       }
       if (groups.length === 0) {
         document.getElementById('studentCardsWrap').innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); text-align:center; padding:1rem;">Không tìm thấy học sinh phù hợp.</div>`;
@@ -2111,7 +2117,7 @@
             <div style="width:42px; height:42px; flex-shrink:0; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-weight:800;">${initials}</div>
             <div style="flex:1; min-width:0;">
               <div style="font-weight:800; font-size:1rem; color:var(--text-dark);">${escapeHtml(g.studentName)}</div>
-              <div style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(g.parentEmail)}${g.dob ? ' · ' + (formatDate(g.dob) !== '—' ? formatDate(g.dob) : g.dob) : ''}</div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">${(() => { const par = allStudentsData.find(s => s.parentEmail === g.parentEmail) || {}; return par.parentName ? `PH: ${escapeHtml(par.parentName)}${par.parentPhone ? ' · ' + escapeHtml(par.parentPhone) : ''}` : escapeHtml(g.parentEmail); })()}${g.dob ? ' · ' + (formatDate(g.dob) !== '—' ? formatDate(g.dob) : g.dob) : ''}</div>
             </div>
           </div>
           <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.7rem;">
@@ -2123,6 +2129,7 @@
             <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick='startEditStudentGroup(${JSON.stringify(g).replace(/'/g, "&#39;")})'>Sửa</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick='deleteStudentGroup(${JSON.stringify({ parentEmail: g.parentEmail, ids: g.ids }).replace(/'/g, "&#39;")})'>Xoá</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="toggleStudentDetail('${g.key}')">${isExpanded ? 'Thu gọn' : 'Xem chi tiết'} <i class="fa-solid fa-chevron-${isExpanded ? 'up' : 'down'}"></i></button>
+            ${g.ids && g.ids[0] ? `<a class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem; text-decoration:none;" href="/admin/crm?hs=${encodeURIComponent(g.ids[0])}"><i class="fa-solid fa-address-card"></i> Chăm sóc</a>` : ''}
           </div>
           ${isExpanded ? studentDetailHtml(g) : ''}
         </div>`;
@@ -3331,7 +3338,12 @@
 
     function renderMembersList() {
       const query = (document.getElementById('memberSearchInput').value || '').trim().toLowerCase();
-      const filtered = allMembers.filter(m => m.email.toLowerCase().includes(query));
+      const nq = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase();
+      const words = nq(query).split(/\s+/).filter(Boolean);
+      const filtered = allMembers.filter(m => {
+        const hay = nq([m.email, m.fullName, m.phone, String(m.phone || '').replace(/\D/g, '')].join(' '));
+        return words.every(w => hay.includes(w));
+      });
 
       if (allMembers.length === 0) {
         document.getElementById('memberEmpty').style.display = 'block';
@@ -3342,7 +3354,7 @@
       document.getElementById('memberTableWrap').style.display = 'block';
       document.getElementById('memberTableBody').innerHTML = filtered.map(m => `
         <tr>
-          <td>${escapeHtml(m.email)} ${m.isBlocked ? '<span style="font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fee2e2; color:#b91c1c; margin-left:0.4rem;">Đã khoá</span>' : ''}</td>
+          <td>${m.fullName ? `<strong>${escapeHtml(m.fullName)}</strong>${m.phone ? ` · <a href="tel:${escapeHtml(String(m.phone).replace(/[^0-9+]/g, ''))}" style="color:#0284c7;">${escapeHtml(m.phone)}</a>` : ''}<br><span style="font-size:0.82rem; color:var(--text-muted);">${escapeHtml(m.email)}</span>` : escapeHtml(m.email)} ${m.isBlocked ? '<span style="font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fee2e2; color:#b91c1c; margin-left:0.4rem;">Đã khoá</span>' : ''}</td>
           <td>${formatDate(m.updatedAt)}</td>
           <td style="display:flex; gap:0.5rem; flex-wrap:wrap;">
             <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="openMemberOverview('${encodeURIComponent(m.email)}')">Xem chi tiết</button>
@@ -3785,7 +3797,12 @@
     function renderBulkEmailMemberChecklist() {
       const el = document.getElementById('bulkEmailMemberChecklist');
       const query = (document.getElementById('bulkEmailMemberSearch').value || '').trim().toLowerCase();
-      const filtered = allMembers.filter(m => m.email.toLowerCase().includes(query));
+      const nq = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase();
+      const words = nq(query).split(/\s+/).filter(Boolean);
+      const filtered = allMembers.filter(m => {
+        const hay = nq([m.email, m.fullName, m.phone, String(m.phone || '').replace(/\D/g, '')].join(' '));
+        return words.every(w => hay.includes(w));
+      });
 
       if (allMembers.length === 0) {
         el.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">Chưa có thành viên nào.</div>';
@@ -4144,5 +4161,6 @@
   </script>
 
   <div id="printableArea" style="display:none;"></div>
+  <script src="admin-enhance.js?v=20260928"></script>
 </body>
 </html>

@@ -234,6 +234,28 @@ tbody tr:last-child td { border-bottom: none; }
 .locked { color: var(--muted); font-size: 0.8rem; }
 .callout { background: var(--brand-soft); color: #0b4a6f; border-radius: var(--radius-m); padding: 0.75rem 0.9rem; font-size: 0.85rem; }
 
+/* Lựa chọn 1 chạm */
+.opts { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.opt { border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); border-radius: 999px; padding: 0.38rem 0.8rem; font-size: 0.84rem; font-weight: 500; line-height: 1.2; }
+.opt:hover { border-color: #b9c8da; color: var(--ink); }
+.opt[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.opt.add { border-style: dashed; color: var(--muted); }
+.opt-input { border: 1px solid var(--line); border-radius: 999px; padding: 0.36rem 0.8rem; font-size: 0.84rem; min-width: 150px; }
+.opt-input:focus { outline: none; border-color: var(--brand-2); box-shadow: 0 0 0 3px rgba(2,132,199,0.14); }
+.q { margin-bottom: 1rem; }
+.q > .q-label { font-size: 0.78rem; font-weight: 600; color: var(--ink-2); margin-bottom: 0.4rem; display: flex; gap: 0.5rem; align-items: baseline; }
+.q-label .src { font-weight: 500; color: var(--green); font-size: 0.74rem; }
+.save-state { font-size: 0.78rem; color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; }
+.save-state.saving { color: var(--brand); }
+.save-state.err { color: var(--red); }
+.quicklog { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.45rem; margin-bottom: 1rem; }
+.quicklog button { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-m); padding: 0.6rem 0.7rem; font-size: 0.84rem; display: flex; gap: 0.55rem; align-items: center; }
+.quicklog button:hover { border-color: var(--brand-2); background: var(--brand-soft); }
+.quicklog i { color: var(--brand); width: 1rem; text-align: center; }
+.quicklog small { display: block; color: var(--muted); font-size: 0.74rem; }
+details.more > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--brand); margin-bottom: 0.7rem; list-style: none; }
+details.more > summary::-webkit-details-marker { display: none; }
+
 /* ---------- Thông báo & trạng thái tải ---------- */
 .toast { position: fixed; bottom: 1.2rem; left: 50%; transform: translate(-50%, 20px); background: var(--ink); color: #fff; padding: 0.65rem 1rem; border-radius: var(--radius-m); font-size: 0.88rem; opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 60; max-width: calc(100% - 2rem); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
@@ -260,6 +282,7 @@ tbody tr:last-child td { border-bottom: none; }
   .journey-step { min-width: 110px; }
   .form-grid, .facts { grid-template-columns: 1fr; }
   .stat-blocks { grid-template-columns: 1fr; }
+  .quicklog { grid-template-columns: 1fr; }
   .rail { overflow-x: auto; border-radius: var(--radius-m); }
   .rail button { min-width: 84px; }
 }
@@ -405,6 +428,7 @@ tbody tr:last-child td { border-bottom: none; }
   let students = [];
   let access = { grades: false, tuition: false, attendance: false };
   let me = { displayName: '' };
+  let suggestions = { caretakers: [], schools: [], tags: [] };
   let state = { view: 'overview', q: '', stage: '', program: '', flag: '', sort: 'name', dir: 1, openId: null, pane: 'care' };
 
   // ---------- Tiện ích ----------
@@ -440,6 +464,21 @@ tbody tr:last-child td { border-bottom: none; }
 
   // ---------- Suy luận trạng thái từng học sinh ----------
   function profileOf(s) { return s.profile || { stage: DEFAULT_STAGE, priority: 'thuong', tags: [] }; }
+  // Giá trị hiển thị: ưu tiên dữ liệu đã nhập trong CRM, nếu trống thì lấy từ hồ sơ thành viên
+  // hoặc đơn đăng ký, để không phải gõ lại những gì phụ huynh đã khai.
+  function eff(s) {
+    const p = profileOf(s), par = s.parent || {}, reg = s.registration || {};
+    return {
+      guardianName: p.guardianName || par.name || '',
+      guardianPhone: p.guardianPhone || par.phone || '',
+      address: p.address || reg.address || par.address || '',
+      school: p.school || reg.school || '',
+      nameFrom: !p.guardianName && par.name ? 'lấy từ hồ sơ phụ huynh' : '',
+      phoneFrom: !p.guardianPhone && par.phone ? 'lấy từ hồ sơ phụ huynh' : '',
+      schoolFrom: !p.school && reg.school ? 'lấy từ đơn đăng ký' : '',
+      addressFrom: !p.address && (reg.address || par.address) ? 'lấy từ đơn đăng ký' : ''
+    };
+  }
   function stageOf(s) { return STAGE[profileOf(s).stage] ? profileOf(s).stage : DEFAULT_STAGE; }
   function lastContact(s) { return s.interactions && s.interactions.length ? s.interactions[0].happenedAt : null; }
   function flagsOf(s) {
@@ -458,7 +497,7 @@ tbody tr:last-child td { border-bottom: none; }
 
   function matches(s) {
     if (state.q) {
-      const hay = norm([s.studentName, s.parentEmail, profileOf(s).guardianName, profileOf(s).guardianPhone, profileOf(s).school, (profileOf(s).tags || []).join(' ')].join(' '));
+      const e = eff(s); const hay = norm([s.studentName, s.parentEmail, e.guardianName, e.guardianPhone, e.guardianPhone.replace(/\D/g, ''), e.school, (profileOf(s).tags || []).join(' ')].join(' '));
       if (!norm(state.q).split(/\s+/).every(w => hay.includes(w))) return false;
     }
     if (state.stage && stageOf(s) !== state.stage) return false;
@@ -547,7 +586,7 @@ tbody tr:last-child td { border-bottom: none; }
         <td><div class="name-cell"><span class="avatar">${esc(initials(s.studentName))}</span><div><strong>${esc(s.studentName)}</strong><small>${esc([p.gradeLevel, s.dob ? 'SN ' + fmtDate(s.dob) : ''].filter(Boolean).join(' · ') || s.parentEmail)}</small></div></div></td>
         <td>${esc(s.programs.join(', ')) || '<span class="locked">Chưa gán</span>'}</td>
         <td>${stageChip(stageOf(s))}</td>
-        <td>${esc(p.guardianName || '')}${p.guardianPhone ? `<br><small class="locked">${esc(p.guardianPhone)}</small>` : (p.guardianName ? '' : `<small class="locked">${esc(s.parentEmail)}</small>`)}</td>
+        <td>${(() => { const e = eff(s); return e.guardianName ? `${esc(e.guardianName)}${e.guardianPhone ? `<br><small class="locked">${esc(e.guardianPhone)}</small>` : ''}` : `<small class="locked">${esc(s.parentEmail)}</small>`; })()}</td>
         <td>${last ? `${esc(fmtDate(last))}<br><small class="locked">${esc(relDays(last))}</small>` : '<span class="locked">Chưa có</span>'}</td>
         <td>${next ? `<span class="${nextCls}">${esc(fmtDate(next))}</span><br><small class="locked">${esc(relDays(next))}</small>` : '<span class="locked">—</span>'}</td>
         <td>${flagChips(s)}</td>
@@ -562,7 +601,7 @@ tbody tr:last-child td { border-bottom: none; }
       const items = list.filter(s => stageOf(s) === st.key);
       return `<div class="column" data-stage="${st.key}" style="--c:${st.c}">
         <div class="column-head"><strong>${esc(st.label)}</strong><span>${items.length}</span></div>
-        <div class="column-body">${items.map(s => `<button class="card" draggable="true" data-open="${esc(s.id)}" data-id="${esc(s.id)}"><strong>${esc(s.studentName)}</strong><small>${esc(s.programs.join(', ') || s.parentEmail)}</small>${flagChips(s)}</button>`).join('') || '<div class="empty" style="padding:0.8rem 0.4rem;font-size:0.8rem;">Chưa có học sinh.</div>'}</div>
+        <div class="column-body">${items.map(s => `<button class="card" draggable="true" data-open="${esc(s.id)}" data-id="${esc(s.id)}"><strong>${esc(s.studentName)}</strong><small>${esc(eff(s).guardianName ? 'PH: ' + eff(s).guardianName : (s.programs.join(', ') || s.parentEmail))}</small>${flagChips(s)}</button>`).join('') || '<div class="empty" style="padding:0.8rem 0.4rem;font-size:0.8rem;">Chưa có học sinh.</div>'}</div>
       </div>`;
     }).join('');
   }
@@ -631,84 +670,112 @@ tbody tr:last-child td { border-bottom: none; }
     renderCare(s); renderProfile(s); renderStudy(s);
   }
 
+  // ----- Bộ lựa chọn 1 chạm dùng chung -----
+  const GRADE_LEVELS = ['Mầm non 3 tuổi', 'Mầm non 4 tuổi', 'Mầm non 5 tuổi', 'Lớp 1', 'Lớp 2', 'Lớp 3', 'Lớp 4', 'Lớp 5'];
+  const RELATIONS = ['Mẹ', 'Bố', 'Ông', 'Bà', 'Anh/Chị', 'Người giám hộ khác'];
+  const SOURCES = ['Website', 'Facebook', 'Zalo', 'Người quen giới thiệu', 'Trường học', 'Sự kiện', 'Khác'];
+  const PRESET_TAGS = ['Học bổng', 'Anh chị em cùng học', 'Cần kèm thêm', 'Học cuối tuần', 'Hoàn cảnh khó khăn', 'Năng khiếu'];
+  const FOLLOW_TODO = ['Nhắc lịch học', 'Nhắc học phí', 'Báo kết quả học tập', 'Mời học thử', 'Hỏi thăm tình hình', 'Tư vấn lên lớp'];
+  const FOLLOW_DAYS = [[1, 'Ngày mai'], [3, '3 ngày'], [7, '1 tuần'], [14, '2 tuần'], [30, '1 tháng']];
+
+  function optGroup(field, values, current, opts) {
+    opts = opts || {};
+    const cur = Array.isArray(current) ? current : [current];
+    return `<div class="opts" role="group">${values.map(v => {
+      const val = Array.isArray(v) ? v[0] : v, label = Array.isArray(v) ? v[1] : v;
+      return `<button type="button" class="opt" data-field="${field}" data-value="${esc(val)}" ${opts.multi ? 'data-multi="1"' : ''} aria-pressed="${cur.includes(String(val))}">${esc(label)}</button>`;
+    }).join('')}${opts.other ? `<input class="opt-input" data-field="${field}" ${opts.multi ? 'data-multi="1"' : ''} placeholder="${esc(opts.other)}" ${!opts.multi && current && !values.map(v => Array.isArray(v) ? String(v[0]) : v).includes(current) ? `value="${esc(current)}"` : ''}>` : ''}</div>`;
+  }
+  function uniq(arr) { return Array.from(new Set(arr.filter(Boolean))); }
+
   function renderCare(s) {
-    const p = profileOf(s); const today = todayStr();
-    const phone = p.guardianPhone ? p.guardianPhone.replace(/[^0-9+]/g, '') : '';
+    const p = profileOf(s), e = eff(s); const today = todayStr();
+    const phone = e.guardianPhone ? e.guardianPhone.replace(/[^0-9+]/g, '') : '';
+    const nextVal = p.nextFollowUp && p.nextFollowUp >= today ? p.nextFollowUp : '';
     $('pane-care').innerHTML = `
       <dl class="facts">
-        <div><dt>Người giám hộ</dt><dd>${esc(p.guardianName || '—')}${p.guardianRelation ? ` (${esc(p.guardianRelation)})` : ''}</dd></div>
-        <div><dt>Điện thoại</dt><dd>${phone ? `<a href="tel:${esc(phone)}">${esc(p.guardianPhone)}</a> · <a href="https://zalo.me/${esc(phone.replace(/^\+?84/, '0'))}" target="_blank" rel="noopener">Zalo</a>` : '—'}</dd></div>
+        <div><dt>Người giám hộ</dt><dd>${esc(e.guardianName || '—')}${p.guardianRelation ? ` (${esc(p.guardianRelation)})` : ''}</dd></div>
+        <div><dt>Điện thoại</dt><dd>${phone ? `<a href="tel:${esc(phone)}"><i class="fa-solid fa-phone" aria-hidden="true"></i> ${esc(e.guardianPhone)}</a> · <a href="https://zalo.me/${esc(phone.replace(/^\+?84/, '0'))}" target="_blank" rel="noopener">Zalo</a>` : '<span class="locked">Chưa có, thêm ở tab Hồ sơ</span>'}</dd></div>
         <div><dt>Email phụ huynh</dt><dd><a href="mailto:${esc(s.parentEmail)}">${esc(s.parentEmail)}</a></dd></div>
-        <div><dt>Hẹn liên hệ</dt><dd class="${p.nextFollowUp && p.nextFollowUp < today ? 'overdue' : ''}">${p.nextFollowUp ? `${esc(fmtDate(p.nextFollowUp))} (${esc(relDays(p.nextFollowUp))})` : '—'}</dd></div>
+        <div><dt>Hẹn liên hệ</dt><dd class="${p.nextFollowUp && p.nextFollowUp < today ? 'overdue' : ''}">${p.nextFollowUp ? `${esc(fmtDate(p.nextFollowUp))} (${esc(relDays(p.nextFollowUp))})${p.followUpNote ? ' · ' + esc(p.followUpNote) : ''}` : '—'}</dd></div>
       </dl>
       ${flagsOf(s).length ? `<div style="margin:-0.4rem 0 1rem;">${flagChips(s)}</div>` : ''}
-      <form class="log-form" id="logForm">
-        <div class="type-pills" role="radiogroup" aria-label="Hình thức">
-          ${TYPES.map((t, i) => `<label><input type="radio" name="type" value="${t.key}" ${i === 0 ? 'checked' : ''}><span><i class="fa-solid ${t.icon}" aria-hidden="true"></i>${esc(t.label)}</span></label>`).join('')}
-        </div>
-        <div class="field"><label for="logContent">Nội dung trao đổi</label><textarea id="logContent" name="content" required maxlength="2000" placeholder="Ví dụ: Gọi mẹ bé, bé tiến bộ phần viết nét thanh nét đậm, gia đình muốn đăng ký thêm lớp cuối tuần."></textarea></div>
-        <div class="form-grid" style="margin-top:0.7rem;">
-          <div class="field"><label for="logDate">Ngày</label><input id="logDate" name="happenedAt" type="date" value="${today}" max="${today}"></div>
-          <div class="field"><label for="logNext">Hẹn liên hệ tiếp</label><input id="logNext" name="nextFollowUp" type="date" value="${esc(p.nextFollowUp && p.nextFollowUp >= today ? p.nextFollowUp : '')}" min="${today}"></div>
-          <div class="field full"><label for="logOutcome">Kết quả / việc cần làm (không bắt buộc)</label><input id="logOutcome" name="outcome" maxlength="300" placeholder="Ví dụ: Gửi lịch học tháng 10 qua Zalo"></div>
-        </div>
-        <div class="form-actions">
-          <span class="note">Hẹn nhanh:
-            <button type="button" class="btn-ghost btn" style="padding:0.1rem 0.4rem;font-size:0.78rem;" data-quick="7">1 tuần</button>
-            <button type="button" class="btn-ghost btn" style="padding:0.1rem 0.4rem;font-size:0.78rem;" data-quick="14">2 tuần</button>
-            <button type="button" class="btn-ghost btn" style="padding:0.1rem 0.4rem;font-size:0.78rem;" data-quick="30">1 tháng</button>
-          </span>
-          <button class="btn btn-primary" type="submit"><i class="fa-solid fa-check" aria-hidden="true"></i> Lưu ghi nhận</button>
-        </div>
-      </form>
-      <h3 style="font-size:0.9rem;margin-bottom:0.8rem;">Lịch sử chăm sóc <span class="locked" style="font-weight:500;">${s.interactions.length || ''}</span></h3>
+
+      <div class="q-label" style="font-size:0.85rem;font-weight:700;margin-bottom:0.5rem;">Ghi nhanh 1 chạm</div>
+      <div class="quicklog">
+        <button type="button" data-quicklog="noanswer"><i class="fa-solid fa-phone-slash" aria-hidden="true"></i><span>Gọi không nghe máy<small>Tự hẹn gọi lại ngày mai</small></span></button>
+        <button type="button" data-quicklog="schedule"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i><span>Đã nhắc lịch học<small>Hẹn lại sau 1 tuần</small></span></button>
+        <button type="button" data-quicklog="tuition"><i class="fa-solid fa-coins" aria-hidden="true"></i><span>Đã nhắc học phí<small>Hẹn kiểm tra sau 3 ngày</small></span></button>
+        <button type="button" data-quicklog="progress"><i class="fa-solid fa-star" aria-hidden="true"></i><span>Đã báo tiến bộ cho phụ huynh<small>Hẹn lại sau 2 tuần</small></span></button>
+      </div>
+
+      <details class="more" ${s.interactions.length ? '' : 'open'}>
+        <summary><i class="fa-solid fa-pen" aria-hidden="true"></i> Ghi chi tiết cuộc trao đổi</summary>
+        <form class="log-form" id="logForm">
+          <div class="type-pills" role="radiogroup" aria-label="Hình thức">
+            ${TYPES.map((t, i) => `<label><input type="radio" name="type" value="${t.key}" ${i === 0 ? 'checked' : ''}><span><i class="fa-solid ${t.icon}" aria-hidden="true"></i>${esc(t.label)}</span></label>`).join('')}
+          </div>
+          <div class="field"><label for="logContent">Nội dung trao đổi</label>
+            <div class="opts" style="margin-bottom:0.45rem;">${['Phụ huynh hài lòng', 'Con tiến bộ rõ', 'Con cần luyện thêm ở nhà', 'Gia đình muốn học thêm lớp', 'Gia đình xin nghỉ tạm', 'Hỏi về học phí'].map(t => `<button type="button" class="opt" data-append="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+            <textarea id="logContent" name="content" maxlength="2000" placeholder="Chạm các gợi ý phía trên hoặc gõ thêm chi tiết"></textarea></div>
+          <div class="q" style="margin-top:0.7rem;"><div class="q-label">Hẹn liên hệ tiếp</div>
+            <div class="opts">${FOLLOW_DAYS.map(([d, l]) => `<button type="button" class="opt" data-lognext="${addDays(today, d)}" aria-pressed="${nextVal === addDays(today, d)}">${l}</button>`).join('')}<button type="button" class="opt" data-lognext="" aria-pressed="${!nextVal}">Không hẹn</button></div>
+            <input type="hidden" id="logNext" name="nextFollowUp" value="${esc(nextVal)}"></div>
+          <div class="form-actions" style="margin-top:0.4rem;">
+            <label class="note" style="display:flex;align-items:center;gap:0.4rem;">Ngày <input id="logDate" name="happenedAt" type="date" value="${today}" max="${today}" style="border:1px solid var(--line);border-radius:6px;padding:0.2rem 0.4rem;"></label>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-check" aria-hidden="true"></i> Lưu ghi nhận</button>
+          </div>
+        </form>
+      </details>
+
+      <h3 style="font-size:0.9rem;margin:0.4rem 0 0.8rem;">Lịch sử chăm sóc <span class="locked" style="font-weight:500;">${s.interactions.length || ''}</span></h3>
       ${s.interactions.length ? `<ul class="timeline">${s.interactions.map(i => {
         const t = TYPE[i.type] || TYPE.khac;
         return `<li><span class="dot"><i class="fa-solid ${t.icon}" aria-hidden="true"></i></span>
           <div class="meta"><b>${esc(t.label)}</b><span>${esc(fmtDate(i.happenedAt))}</span>${i.createdBy ? `<span>bởi ${esc(i.createdBy)}</span>` : ''}
           <button class="del" data-del="${esc(i.id)}" aria-label="Xoá ghi nhận này"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></div>
-          <p>${esc(i.content)}</p>${i.outcome ? `<div class="outcome"><i class="fa-solid fa-arrow-turn-down fa-rotate-270" aria-hidden="true"></i> ${esc(i.outcome)}</div>` : ''}</li>`;
-      }).join('')}</ul>` : '<div class="empty" style="padding:0.5rem 0;">Chưa có ghi nhận nào. Ghi lại lần liên hệ đầu tiên ở khung phía trên.</div>'}`;
+          <p>${esc(i.content)}</p>${i.outcome ? `<div class="outcome">${esc(i.outcome)}</div>` : ''}</li>`;
+      }).join('')}</ul>` : '<div class="empty" style="padding:0.5rem 0;">Chưa có ghi nhận nào. Chạm một nút "Ghi nhanh" ở trên sau mỗi lần liên hệ.</div>'}`;
   }
 
   function renderProfile(s) {
-    const p = profileOf(s);
-    const f = (id, label, val, attrs) => `<div class="field"><label for="${id}">${label}</label><input id="${id}" name="${id}" value="${esc(val || '')}" ${attrs || ''}></div>`;
+    const p = profileOf(s), e = eff(s), today = todayStr();
+    const src = t => t ? `<span class="src"><i class="fa-solid fa-link" aria-hidden="true"></i> ${esc(t)}</span>` : '';
+    const caretakers = uniq([me.displayName].concat(suggestions.caretakers || [], p.caretaker ? [p.caretaker] : []));
+    const schools = uniq((e.school ? [e.school] : []).concat(suggestions.schools || [])).slice(0, 8);
+    const tags = uniq(PRESET_TAGS.concat(suggestions.tags || [], p.tags || []));
+    const nextSel = FOLLOW_DAYS.map(([d]) => addDays(today, d)).includes(p.nextFollowUp) ? p.nextFollowUp : null;
     $('pane-profile').innerHTML = `
-      <form id="profileForm">
-        <div class="fieldset-title">Thông tin học sinh</div>
-        <div class="form-grid">
-          ${f('gradeLevel', 'Lớp / khối', p.gradeLevel, 'maxlength="30" placeholder="Ví dụ: Lớp 2, Mầm non 5 tuổi"')}
-          ${f('school', 'Trường đang học', p.school, 'maxlength="120"')}
-          <div class="field full"><label for="address">Địa chỉ</label><input id="address" name="address" value="${esc(p.address || '')}" maxlength="200"></div>
-        </div>
-        <div class="fieldset-title">Người giám hộ</div>
-        <div class="form-grid">
-          ${f('guardianName', 'Họ tên', p.guardianName, 'maxlength="80"')}
-          <div class="field"><label for="guardianRelation">Quan hệ</label><select id="guardianRelation" name="guardianRelation">
-            ${['', 'Mẹ', 'Bố', 'Ông', 'Bà', 'Anh/Chị', 'Người giám hộ khác'].map(v => `<option value="${v}" ${p.guardianRelation === v ? 'selected' : ''}>${v || '—'}</option>`).join('')}
-          </select></div>
-          ${f('guardianPhone', 'Số điện thoại', p.guardianPhone, 'type="tel" inputmode="tel" maxlength="20" pattern="[0-9+\\s().\\-]{8,20}"')}
-          <div class="field"><label>Email tài khoản phụ huynh</label><input value="${esc(s.parentEmail)}" disabled></div>
-        </div>
-        <div class="fieldset-title">Chăm sóc</div>
-        <div class="form-grid">
-          <div class="field"><label for="stage">Giai đoạn</label><select id="stage" name="stage">${STAGES.map(st => `<option value="${st.key}" ${stageOf(s) === st.key ? 'selected' : ''}>${esc(st.label)}</option>`).join('')}</select></div>
-          <div class="field"><label for="priority">Mức ưu tiên</label><select id="priority" name="priority">${Object.entries(PRIORITY).map(([k, v]) => `<option value="${k}" ${(p.priority || 'thuong') === k ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
-          ${f('caretaker', 'Người phụ trách', p.caretaker, 'maxlength="80" placeholder="Tên giáo viên / tư vấn viên"')}
-          <div class="field"><label for="source">Nguồn biết đến</label><select id="source" name="source">
-            ${['', 'Website', 'Facebook', 'Zalo', 'Người quen giới thiệu', 'Sự kiện / hội thảo', 'Trường học', 'Khác'].map(v => `<option value="${v}" ${p.source === v ? 'selected' : ''}>${v || '—'}</option>`).join('')}
-          </select></div>
-          ${f('nextFollowUp', 'Hẹn liên hệ tiếp', p.nextFollowUp, 'type="date"')}
-          ${f('followUpNote', 'Việc cần làm khi liên hệ', p.followUpNote, 'maxlength="300"')}
-          <div class="field full"><label for="tags">Nhãn (phân cách bằng dấu phẩy)</label><input id="tags" name="tags" value="${esc((p.tags || []).join(', '))}" placeholder="Ví dụ: cần kèm thêm, anh chị em cùng học, học bổng"></div>
-        </div>
-        ${s.note ? `<div class="fieldset-title">Ghi chú từ hồ sơ gốc</div><p class="locked" style="white-space:pre-wrap;">${esc(s.note)}</p>` : ''}
-        <div class="form-actions">
-          <span class="note">${p.updatedAt ? `Cập nhật ${esc(relDays(p.updatedAt))}${p.updatedBy ? ' bởi ' + esc(p.updatedBy) : ''}` : 'Chưa có hồ sơ chăm sóc.'}</span>
-          <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Lưu hồ sơ</button>
-        </div>
-      </form>`;
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:0.5rem;">
+        <p class="locked" style="margin:0;">Chạm để chọn. Mọi thay đổi được <b>tự động lưu</b>.</p>
+        <span class="save-state" id="saveState">${p.updatedAt ? `<i class="fa-solid fa-check" aria-hidden="true"></i> Đã lưu ${esc(relDays(p.updatedAt))}${p.updatedBy ? ' bởi ' + esc(p.updatedBy) : ''}` : ''}</span>
+      </div>
+
+      <div class="fieldset-title">Học sinh</div>
+      <div class="q"><div class="q-label">Lớp / khối</div>${optGroup('gradeLevel', GRADE_LEVELS, p.gradeLevel || '', { other: 'Khác…' })}</div>
+      <div class="q"><div class="q-label">Trường đang học ${src(e.schoolFrom)}</div>${optGroup('school', schools, e.school, { other: schools.length ? 'Trường khác…' : 'Nhập tên trường' })}</div>
+      <div class="q"><div class="q-label">Địa chỉ ${src(e.addressFrom)}</div><input class="opt-input" style="width:100%;border-radius:8px;" data-field="address" value="${esc(e.address)}" maxlength="200"></div>
+
+      <div class="fieldset-title">Người giám hộ</div>
+      <div class="form-grid">
+        <div class="field"><label>Họ tên ${src(e.nameFrom)}</label><input data-field="guardianName" value="${esc(e.guardianName)}" maxlength="80"></div>
+        <div class="field"><label>Số điện thoại ${src(e.phoneFrom)}</label><input data-field="guardianPhone" type="tel" inputmode="tel" value="${esc(e.guardianPhone)}" maxlength="20"></div>
+      </div>
+      <div class="q" style="margin-top:0.8rem;"><div class="q-label">Quan hệ với học sinh</div>${optGroup('guardianRelation', RELATIONS, p.guardianRelation || '')}</div>
+      <p class="locked" style="margin-bottom:0.5rem;">Tài khoản phụ huynh: ${esc(s.parentEmail)}</p>
+
+      <div class="fieldset-title">Chăm sóc</div>
+      <div class="q"><div class="q-label">Mức ưu tiên</div>${optGroup('priority', Object.entries(PRIORITY), p.priority || 'thuong')}</div>
+      <div class="q"><div class="q-label">Người phụ trách</div>${optGroup('caretaker', caretakers, p.caretaker || '', { other: 'Người khác…' })}</div>
+      <div class="q"><div class="q-label">Hẹn liên hệ tiếp</div>
+        <div class="opts">${FOLLOW_DAYS.map(([d, l]) => `<button type="button" class="opt" data-field="nextFollowUp" data-value="${addDays(today, d)}" aria-pressed="${nextSel === addDays(today, d)}">${l}</button>`).join('')}
+          <button type="button" class="opt" data-field="nextFollowUp" data-value="" aria-pressed="${!p.nextFollowUp}">Không hẹn</button>
+          <input type="date" class="opt-input" data-field="nextFollowUp" value="${esc(nextSel ? '' : (p.nextFollowUp || ''))}" aria-label="Chọn ngày khác" style="min-width:0;">
+        </div></div>
+      <div class="q"><div class="q-label">Việc cần làm khi liên hệ</div>${optGroup('followUpNote', FOLLOW_TODO, p.followUpNote || '', { other: 'Việc khác…' })}</div>
+      <div class="q"><div class="q-label">Biết đến trung tâm qua</div>${optGroup('source', SOURCES, p.source || '')}</div>
+      <div class="q"><div class="q-label">Nhãn (chọn nhiều)</div>${optGroup('tags', tags, p.tags || [], { multi: true, other: '+ Nhãn mới' })}</div>
+      ${s.note ? `<div class="fieldset-title">Ghi chú từ hồ sơ gốc</div><p class="locked" style="white-space:pre-wrap;">${esc(s.note)}</p>` : ''}`;
   }
 
   function renderStudy(s) {
@@ -732,29 +799,78 @@ tbody tr:last-child td { border-bottom: none; }
 
   // ---------- Ghi dữ liệu ----------
   function profilePayload(s, overrides) {
-    const p = profileOf(s);
+    const p = profileOf(s), e = eff(s);
     return {
       studentId: s.id, stage: stageOf(s), priority: p.priority || 'thuong',
-      gradeLevel: p.gradeLevel || '', school: p.school || '', address: p.address || '',
-      guardianName: p.guardianName || '', guardianPhone: p.guardianPhone || '', guardianRelation: p.guardianRelation || '',
+      gradeLevel: p.gradeLevel || '', school: e.school, address: e.address,
+      guardianName: e.guardianName, guardianPhone: e.guardianPhone, guardianRelation: p.guardianRelation || '',
       source: p.source || '', tags: p.tags || [], nextFollowUp: p.nextFollowUp || '', followUpNote: p.followUpNote || '',
       caretaker: p.caretaker || '', ...overrides
     };
   }
+  function setSaveState(text, cls) { const el = $('saveState'); if (el) { el.className = 'save-state ' + (cls || ''); el.innerHTML = text; } }
+
+  // Lưu ngay (dùng cho đổi giai đoạn) — vẽ lại toàn bộ.
   async function saveProfile(s, overrides, successMsg) {
     const payload = profilePayload(s, overrides);
     const before = s.profile;
-    s.profile = { ...profileOf(s), ...payload, tags: Array.isArray(payload.tags) ? payload.tags : String(payload.tags).split(',').map(x => x.trim()).filter(Boolean) };
+    s.profile = { ...profileOf(s), ...payload };
     renderAll();
     try {
       const r = await api('/api/portal-crm-save-profile', { method: 'POST', body: JSON.stringify(payload) });
       s.profile.updatedAt = r.updatedAt; s.profile.updatedBy = r.updatedBy;
-      renderAll(); toast(successMsg || 'Đã lưu hồ sơ.');
+      renderAll(); if (successMsg) toast(successMsg);
     } catch (e) { s.profile = before; renderAll(); toast(e.message, true); }
+  }
+
+  // Tự động lưu khi chạm lựa chọn / rời ô nhập — gom nhiều thay đổi liên tiếp thành 1 lần gửi,
+  // và KHÔNG vẽ lại ô đang nhập để không mất con trỏ.
+  const pendingSave = {};
+  function autoSave(s) {
+    setSaveState('<i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Đang lưu…', 'saving');
+    clearTimeout(pendingSave[s.id]);
+    pendingSave[s.id] = setTimeout(async () => {
+      try {
+        const r = await api('/api/portal-crm-save-profile', { method: 'POST', body: JSON.stringify(profilePayload(s)) });
+        s.profile.updatedAt = r.updatedAt; s.profile.updatedBy = r.updatedBy;
+        if (state.openId === s.id) setSaveState('<i class="fa-solid fa-check" aria-hidden="true"></i> Đã lưu', '');
+        renderOverview(); renderList(); renderBoard(); renderAgenda();
+        if (state.openId === s.id && state.pane !== 'care') renderCare(s);
+      } catch (e) { setSaveState('<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> ' + esc(e.message), 'err'); }
+    }, 600);
+  }
+  function setField(s, field, value, multi) {
+    const p = { ...profileOf(s) };
+    if (multi) {
+      const set = new Set(p[field] || []);
+      if (set.has(value)) set.delete(value); else set.add(value);
+      p[field] = Array.from(set);
+    } else {
+      p[field] = value;
+    }
+    s.profile = p;
+    autoSave(s);
   }
   function setStage(id, stage) {
     const s = findStudent(id); if (!s || stageOf(s) === stage) return;
     saveProfile(s, { stage }, `Đã chuyển ${s.studentName} sang "${STAGE[stage].label}".`);
+  }
+
+  // Ghi nhận 1 chạm
+  const QUICK_LOGS = {
+    noanswer: { type: 'goi-dien', content: 'Gọi điện nhưng phụ huynh không nghe máy.', days: 1, todo: 'Gọi lại' },
+    schedule: { type: 'goi-dien', content: 'Đã nhắc phụ huynh lịch học sắp tới.', days: 7, todo: 'Hỏi thăm tình hình' },
+    tuition: { type: 'goi-dien', content: 'Đã nhắc phụ huynh về học phí kỳ này.', days: 3, todo: 'Kiểm tra học phí' },
+    progress: { type: 'zalo', content: 'Đã báo phụ huynh về tiến bộ của con.', days: 14, todo: 'Báo kết quả học tập' }
+  };
+  async function logInteraction(s, payload, btn) {
+    if (btn) btn.disabled = true;
+    try {
+      const r = await api('/api/portal-crm-add-interaction', { method: 'POST', body: JSON.stringify({ studentId: s.id, ...payload }) });
+      s.interactions = [r.interaction].concat(s.interactions).sort((a, b) => new Date(b.happenedAt) - new Date(a.happenedAt));
+      if ('nextFollowUp' in payload) s.profile = { ...profileOf(s), nextFollowUp: payload.nextFollowUp, followUpNote: payload.nextFollowUp ? (payload.followUpNote || '') : '' };
+      renderAll(); toast('Đã ghi nhận' + (payload.nextFollowUp ? `, hẹn liên hệ ${relDays(payload.nextFollowUp)}.` : '.'));
+    } catch (err) { if (btn) btn.disabled = false; toast(err.message, true); }
   }
 
   // ---------- Xuất CSV ----------
@@ -789,7 +905,21 @@ tbody tr:last-child td { border-bottom: none; }
     const del = t.closest('[data-del]');
     if (del) { e.stopPropagation(); return deleteInteraction(del.dataset.del); }
     const stageBtn = t.closest('[data-set-stage]'); if (stageBtn) return setStage(state.openId, stageBtn.dataset.setStage);
-    const quick = t.closest('[data-quick]'); if (quick) { $('logNext').value = addDays(todayStr(), +quick.dataset.quick); return; }
+    const opt = t.closest('button.opt[data-field]');
+    if (opt && state.openId) {
+      const s = findStudent(state.openId); const multi = !!opt.dataset.multi;
+      if (!multi) opt.parentElement.querySelectorAll('button.opt').forEach(b => b.setAttribute('aria-pressed', b === opt));
+      else opt.setAttribute('aria-pressed', opt.getAttribute('aria-pressed') !== 'true');
+      const other = opt.parentElement.querySelector('.opt-input'); if (other && !multi) other.value = '';
+      return setField(s, opt.dataset.field, opt.dataset.value, multi);
+    }
+    const ap = t.closest('[data-append]'); if (ap) { const ta = $('logContent'); ta.value = (ta.value.trim() ? ta.value.trim().replace(/[.]?$/, '. ') : '') + ap.dataset.append + '.'; ta.focus(); return; }
+    const ln = t.closest('[data-lognext]'); if (ln) { $('logNext').value = ln.dataset.lognext; ln.parentElement.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', b === ln)); return; }
+    const ql = t.closest('[data-quicklog]');
+    if (ql && state.openId) {
+      const q = QUICK_LOGS[ql.dataset.quicklog]; const s = findStudent(state.openId);
+      return logInteraction(s, { type: q.type, content: q.content, happenedAt: todayStr(), nextFollowUp: addDays(todayStr(), q.days), followUpNote: q.todo }, ql);
+    }
     const sf = t.closest('[data-stage-filter]'); if (sf) return setView('list', { stage: sf.dataset.stageFilter, flag: '' });
     const go = t.closest('[data-goto]'); if (go) return setView(go.dataset.goto, go.dataset.flag ? { flag: go.dataset.flag } : undefined);
     const open = t.closest('[data-open]'); if (open) return openDrawer(open.dataset.open);
@@ -802,6 +932,15 @@ tbody tr:last-child td { border-bottom: none; }
     if (e.key === 'Enter' && e.target.matches('tr[data-open]')) openDrawer(e.target.dataset.open);
     if (e.key === '/' && !e.target.matches('input, textarea, select')) { e.preventDefault(); $('globalSearch').focus(); }
   });
+  $('pane-profile').addEventListener('change', e => {
+    const el = e.target.closest('input[data-field]'); if (!el || !state.openId) return;
+    const s = findStudent(state.openId); const v = el.value.trim();
+    if (el.dataset.multi) { if (!v) return; el.value = ''; setField(s, el.dataset.field, v, true); renderProfile(s); return; }
+    if (el.dataset.field === 'guardianPhone' && v && !/^[0-9+\s().-]{8,20}$/.test(v)) { setSaveState('Số điện thoại chưa đúng, kiểm tra lại', 'err'); return; }
+    el.closest('.opts') && el.closest('.opts').querySelectorAll('button.opt').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    setField(s, el.dataset.field, v, false);
+  });
+  $('pane-profile').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input[data-field]')) { e.preventDefault(); e.target.blur(); } });
   $('drawerClose').addEventListener('click', closeDrawer);
   $('scrim').addEventListener('click', closeDrawer);
   $('exportBtn').addEventListener('click', exportCsv);
@@ -817,28 +956,11 @@ tbody tr:last-child td { border-bottom: none; }
 
   document.addEventListener('submit', async e => {
     e.preventDefault();
-    const s = findStudent(state.openId); if (!s) return;
-    const form = e.target; const btn = form.querySelector('[type=submit]');
-    if (form.id === 'logForm') {
-      const fd = new FormData(form);
-      const payload = { studentId: s.id, type: fd.get('type'), content: String(fd.get('content') || '').trim(), happenedAt: fd.get('happenedAt'), outcome: fd.get('outcome'), nextFollowUp: fd.get('nextFollowUp') || '' };
-      if (!payload.content) { toast('Nhập nội dung trao đổi trước khi lưu.', true); return; }
-      btn.disabled = true;
-      try {
-        const r = await api('/api/portal-crm-add-interaction', { method: 'POST', body: JSON.stringify(payload) });
-        s.interactions = [r.interaction].concat(s.interactions).sort((a, b) => new Date(b.happenedAt) - new Date(a.happenedAt));
-        s.profile = { ...profileOf(s), nextFollowUp: payload.nextFollowUp, followUpNote: payload.nextFollowUp ? (payload.outcome || '') : '' };
-        renderAll(); toast('Đã lưu ghi nhận chăm sóc.');
-      } catch (err) { btn.disabled = false; toast(err.message, true); }
-    }
-    if (form.id === 'profileForm') {
-      if (!form.reportValidity()) return;
-      const fd = new FormData(form);
-      const o = {}; for (const [k, v] of fd.entries()) o[k] = String(v).trim();
-      o.tags = o.tags ? o.tags.split(',').map(x => x.trim()).filter(Boolean) : [];
-      btn.disabled = true;
-      await saveProfile(s, o, 'Đã lưu hồ sơ.');
-    }
+    const s = findStudent(state.openId); if (!s || e.target.id !== 'logForm') return;
+    const fd = new FormData(e.target);
+    const content = String(fd.get('content') || '').trim();
+    if (!content) { toast('Chạm một gợi ý hoặc gõ nội dung trao đổi trước khi lưu.', true); return; }
+    await logInteraction(s, { type: fd.get('type'), content, happenedAt: fd.get('happenedAt'), nextFollowUp: fd.get('nextFollowUp') || '', followUpNote: profileOf(s).followUpNote || '' }, e.target.querySelector('[type=submit]'));
   });
 
   async function deleteInteraction(id) {
@@ -861,7 +983,7 @@ tbody tr:last-child td { border-bottom: none; }
   async function load() {
     try {
       const [data, who] = await Promise.all([api('/api/portal-crm-data'), api('/api/portal-admin-whoami').catch(() => null)]);
-      students = data.students || []; access = data.access || access;
+      students = data.students || []; access = data.access || access; suggestions = data.suggestions || suggestions;
       if (who) { me = who; $('whoLabel').textContent = who.displayName || ''; }
       $('fStage').innerHTML = '<option value="">Mọi giai đoạn</option>' + STAGES.map(s => `<option value="${s.key}">${esc(s.label)}</option>`).join('');
       $('fProgram').innerHTML = '<option value="">Mọi chương trình</option>' + programsAll().map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
