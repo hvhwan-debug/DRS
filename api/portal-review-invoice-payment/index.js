@@ -4,9 +4,18 @@ const { logAdminActivity } = require("../_shared/activityLog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
+const { recomputeTuitionPoints } = require("../_shared/memberTier");
 
 const INVOICES_TABLE = "Invoices";
 const TUITION_TABLE = "TuitionPayments";
+
+// Tổng điểm đã chốt của phụ huynh, không tính khoản vừa tạo (để biết lần duyệt này được cộng bao nhiêu).
+async function sumPoints(table, email, excludeRowKey) {
+  let sum = 0;
+  const it = table.listEntities({ queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` } });
+  for await (const e of it) if (e.rowKey !== excludeRowKey) sum += Number(e.pointsEarned) || 0;
+  return sum;
+}
 
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
@@ -59,12 +68,24 @@ module.exports = async function (context, req) {
         studentName: invoice.studentName || "",
         program: invoice.program || "",
         amount: Number(invoice.totalAmount) || 0,
+        expectedAmount: Number(invoice.totalAmount) || 0,
+        method: "Chuyển khoản (thanh toán hoá đơn)",
+        // Chính phụ huynh gửi biên lai và admin đã duyệt -> không bắt phụ huynh xác nhận lại lần nữa
+        confirmationStatus: "confirmed",
+        confirmedAt: new Date().toISOString(),
         period: invoice.invoiceNumber,
         note: `Thanh toán hoá đơn ${invoice.invoiceNumber}`,
         attachmentsJson: invoice.receiptBlobName ? JSON.stringify([{ filename: "bien-lai.jpg", blobName: invoice.receiptBlobName }]) : "[]",
         paidAt: new Date().toISOString(),
         recordedAt: new Date().toISOString()
       }, "Merge");
+
+      // LỖI CŨ: trước đây chỉ tạo khoản học phí mà KHÔNG chốt điểm (pointsEarned), trong khi điểm
+      // của thành viên được tính bằng tổng pointsEarned -> duyệt hoá đơn xong vẫn 0 điểm.
+      // Chốt lại điểm cho toàn bộ học phí của phụ huynh này theo đúng thứ tự thời gian.
+      const pointsBefore = await sumPoints(tuitionTable, parentEmail, tuitionRowKey);
+      const pointsTotal = await recomputeTuitionPoints(parentEmail);
+      const pointsGained = Math.max(0, pointsTotal - pointsBefore);
 
       await invoicesTable.updateEntity({
         partitionKey: parentEmail,
@@ -83,12 +104,12 @@ module.exports = async function (context, req) {
         title: "Thanh toán đã được xác nhận",
         bodyHtml: `
           <p style="margin:0 0 16px;">${greeting}</p>
-          <p style="margin:0;">Thanh toán cho hoá đơn <strong>${invoice.invoiceNumber}</strong> (${Number(invoice.totalAmount).toLocaleString("vi-VN")}đ) đã được xác nhận. Khoản này đã được cộng vào tổng học phí và điểm tích lũy của bạn.</p>`,
+          <p style="margin:0;">Thanh toán cho hoá đơn <strong>${invoice.invoiceNumber}</strong> (${Number(invoice.totalAmount).toLocaleString("vi-VN")}đ) đã được xác nhận. Khoản này đã được cộng vào tổng học phí${pointsGained ? ` và bạn được cộng <strong>${pointsGained.toLocaleString("vi-VN")} điểm tích lũy</strong>` : " và điểm tích lũy"} của bạn.</p>`,
         ctas: [{ label: "Xem Trong Trang Thành Viên", href: SITE_URL, style: "primary" }]
       });
 
       context.res.status = 200;
-      context.res.body = { success: true, warning: emailResult.success ? null : "Đã duyệt thanh toán, nhưng gửi email báo thất bại." };
+      context.res.body = { success: true, pointsGained, warning: emailResult.success ? null : "Đã duyệt thanh toán, nhưng gửi email báo thất bại." };
     } else {
       await invoicesTable.updateEntity({
         partitionKey: parentEmail,

@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
-const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum } = require("../_shared/memberTier");
+const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum, recomputeTuitionPoints } = require("../_shared/memberTier");
 const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
@@ -200,6 +200,7 @@ module.exports = async function (context, req) {
 
     // Học phí đã nộp, khớp theo email phụ huynh
     const tuitionPayments = [];
+    let needsPointsBackfill = false;
     try {
       const tuitionTable = await getTableClient(TUITION_TABLE);
       const tuitionIterator = tuitionTable.listEntities({
@@ -231,6 +232,7 @@ module.exports = async function (context, req) {
           paidAt: entity.paidAt,
           pointsEarned: Number(entity.pointsEarned) || 0
         });
+        if ((entity.pointsEarned === undefined || entity.pointsEarned === null) && (Number(entity.amount) || 0) > 0) needsPointsBackfill = true;
       }
       tuitionPayments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
     } catch (e) {}
@@ -354,6 +356,17 @@ module.exports = async function (context, req) {
     // Điểm tích lũy dùng làm "tiền tệ" đổi quà: earned (tổng điểm đã CHỐT theo từng khoản học phí,
     // theo đúng hạng tại thời điểm đóng — xem recomputeTuitionPoints) - spent (đã dùng để đổi quà,
     // cộng dồn trong hồ sơ) = available (điểm khả dụng để đổi quà tiếp).
+    // Tự vá: khoản học phí nào chưa có điểm chốt (vd. tạo từ hoá đơn trước khi sửa lỗi) -> chốt ngay.
+    if (needsPointsBackfill) {
+      try {
+        await recomputeTuitionPoints(email);
+        // cập nhật lại điểm từng khoản để giao diện hiển thị đúng ngay lần tải này
+        const t = await getTableClient(TUITION_TABLE);
+        const fresh = {};
+        for await (const e of t.listEntities({ queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` } })) fresh[e.rowKey] = Number(e.pointsEarned) || 0;
+        tuitionPayments.forEach(p => { if (fresh[p.id] !== undefined) p.pointsEarned = fresh[p.id]; });
+      } catch (e) { context.log.error("Chốt bù điểm thất bại:", e.message); }
+    }
     const earnedPoints = await getEarnedPointsSum(email);
     const spentPoints = await getSpentPoints(email);
     const loyaltyPoints = {

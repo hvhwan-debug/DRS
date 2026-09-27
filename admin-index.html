@@ -1891,7 +1891,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ parentEmail: decodeURIComponent(emailEnc), id, action, reason })
         });
-        showGlobalAlert(result.warning || (action === 'approve' ? 'Đã duyệt thanh toán và cộng điểm cho thành viên.' : 'Đã từ chối và báo cho thành viên gửi lại.'), !!result.warning);
+        showGlobalAlert(result.warning || (action === 'approve' ? `Đã duyệt thanh toán${result.pointsGained ? ` và cộng ${Number(result.pointsGained).toLocaleString('vi-VN')} điểm` : ''} cho thành viên.` : 'Đã từ chối và báo cho thành viên gửi lại.'), !!result.warning);
         loadInvoices();
         if (currentOverviewEmail === decodeURIComponent(emailEnc)) openMemberOverview(emailEnc);
       } catch (err) {
