@@ -74,8 +74,24 @@ function isSuperAdmin(account) {
 // Trả về true nếu token hợp lệ, còn hạn, tài khoản đang hoạt động. Nếu truyền permissionKey,
 // còn kiểm tra thêm: quản trị viên chính (role 'super') luôn qua; tài khoản 'staff' phải được
 // gán ĐÚNG quyền đó mới qua — nếu không, trả lời 403 và trả về false.
+// Lỗi kết nối kho dữ liệu (mạng chập chờn, Functions vừa khởi động lạnh...) xảy ra NGOÀI khối
+// try/catch của từng API, nên trước đây Azure trả về lỗi 500 rỗng và trình duyệt chỉ hiện
+// "Có lỗi xảy ra." chung chung. Bắt ở đây để luôn trả JSON có lý do rõ ràng (503 = thử lại được).
+async function safeLoad(context, req) {
+  try {
+    return await loadSessionAndAccount(context, req);
+  } catch (err) {
+    if (context && context.log) context.log.error("Lỗi kiểm tra phiên quản trị:", err.message);
+    if (context) {
+      context.res.status = 503;
+      context.res.body = { success: false, retryable: true, message: "Máy chủ đang bận khởi động, vui lòng thử lại sau vài giây." };
+    }
+    return null;
+  }
+}
+
 async function requireAdmin(context, req, permissionKey) {
-  const result = await loadSessionAndAccount(context, req);
+  const result = await safeLoad(context, req);
   if (!result) return false; // loadSessionAndAccount đã tự trả lời lỗi phù hợp
 
   if (permissionKey && !isSuperAdmin(result.account)) {
@@ -92,7 +108,7 @@ async function requireAdmin(context, req, permissionKey) {
 // Chỉ Quản Trị Viên Chính mới qua được — dùng cho các API quản lý tài khoản/vai trò,
 // sao lưu dữ liệu, và xem nhật ký thao tác.
 async function requireSuperAdmin(context, req) {
-  const result = await loadSessionAndAccount(context, req);
+  const result = await safeLoad(context, req);
   if (!result) return false;
   if (!isSuperAdmin(result.account)) {
     context.res.status = 403;

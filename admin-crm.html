@@ -426,9 +426,13 @@ tbody tr:last-child td { border-bottom: none; }
   function norm(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase(); }
   function toast(msg, isError) { const t = $('toast'); t.textContent = msg; t.className = 'toast show' + (isError ? ' error' : ''); clearTimeout(toast._t); toast._t = setTimeout(() => t.className = 'toast', isError ? 6000 : 2800); }
 
-  async function api(path, options = {}) {
-    const res = await fetch(path, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}), 'X-Admin-Token': token } });
+  async function api(path, options = {}, attempt = 0) {
+    const canRetry = (!options.method || options.method === 'GET') && attempt < 2;
+    let res;
+    try { res = await fetch(path, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}), 'X-Admin-Token': token } }); }
+    catch (e) { if (canRetry) { await new Promise(r => setTimeout(r, 800 * (attempt + 1))); return api(path, options, attempt + 1); } throw new Error('Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.'); }
     const data = await res.json().catch(() => ({}));
+    if (res.status >= 500 && (!data.message || data.retryable) && canRetry) { await new Promise(r => setTimeout(r, 800 * (attempt + 1))); return api(path, options, attempt + 1); }
     if (res.status === 401) { localStorage.removeItem('wvn_admin_token'); window.location.replace('admin-dang-nhap.html'); throw new Error('Phiên đăng nhập đã hết hạn.'); }
     if (!res.ok || !data.success) throw new Error(data.message || 'Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.');
     return data;
