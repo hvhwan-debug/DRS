@@ -3888,7 +3888,7 @@
           return;
         }
         document.getElementById('emailLogsTableWrap').style.display = 'block';
-        const typeLabels = { status: 'Đơn đăng ký', grade: 'Điểm', donation: 'Quyên góp', tuition: 'Học phí', block: 'Chặn/Mở TK', reset_password: 'Reset MK', create_account: 'Tạo TK', bulk: 'Hàng loạt', other: 'Khác' };
+        const typeLabels = { crm: 'CRM chăm sóc', status: 'Đơn đăng ký', grade: 'Điểm', donation: 'Quyên góp', tuition: 'Học phí', block: 'Chặn/Mở TK', reset_password: 'Reset MK', create_account: 'Tạo TK', bulk: 'Hàng loạt', other: 'Khác' };
         document.getElementById('emailLogsTableBody').innerHTML = logs.map(l => `
           <tr>
             <td>${l.success

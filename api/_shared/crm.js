@@ -10,7 +10,7 @@ const CRM_PARTITION = "crm";
 const STAGES = ["tiem-nang", "hoc-thu", "dang-hoc", "tam-nghi", "da-nghi", "hoan-thanh"];
 const DEFAULT_STAGE = "dang-hoc";
 const PRIORITIES = ["thuong", "cao", "khan"];
-const INTERACTION_TYPES = ["goi-dien", "zalo", "gap-mat", "email", "tham-nha", "phan-hoi-hoc-tap", "khac"];
+const INTERACTION_TYPES = ["goi-dien", "zalo", "sms", "gap-mat", "email", "tham-nha", "phan-hoi-hoc-tap", "khac"];
 
 function clean(value, max) {
   return String(value == null ? "" : value).trim().slice(0, max || 500);

@@ -274,6 +274,23 @@ details.more > summary::-webkit-details-marker { display: none; }
 .after-contact p { font-size: 0.86rem; font-weight: 600; margin-bottom: 0.5rem; }
 .after-contact .opts .opt { background: #fff; }
 
+.contact .mail, .contact .sms { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.contact .mail:hover, .contact .sms:hover { border-color: var(--brand-2); color: var(--brand); }
+.compose { border: 1px solid var(--brand-2); border-radius: var(--radius-m); padding: 0.9rem; margin-bottom: 1.1rem; background: #fbfdff; box-shadow: 0 0 0 3px rgba(2,132,199,0.08); }
+.compose-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; }
+.compose-head b { font-size: 0.92rem; }
+.compose-head small { color: var(--muted); font-size: 0.8rem; }
+.compose-head button { margin-left: auto; width: 30px; height: 30px; border-radius: 50%; border: none; background: none; color: var(--muted); }
+.compose-head button:hover { background: var(--paper); color: var(--ink); }
+.compose input, .compose textarea { width: 100%; border: 1px solid var(--line); border-radius: var(--radius-s); padding: 0.55rem 0.7rem; background: #fff; margin-top: 0.5rem; }
+.compose textarea { min-height: 150px; resize: vertical; line-height: 1.55; }
+.compose input:focus, .compose textarea:focus { outline: none; border-color: var(--brand-2); box-shadow: 0 0 0 3px rgba(2,132,199,0.14); }
+.compose .meta { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem; flex-wrap: wrap; }
+.compose .acts { display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 0.7rem; align-items: center; }
+.compose .acts .grow { margin-right: auto; }
+.btn-zalo { background: #0068ff; border-color: #0068ff; color: #fff; }
+.btn-zalo:hover { background: #0055d4; border-color: #0055d4; }
+
 /* ---------- Thông báo & trạng thái tải ---------- */
 .toast { position: fixed; bottom: 1.2rem; left: 50%; transform: translate(-50%, 20px); background: var(--ink); color: #fff; padding: 0.65rem 1rem; border-radius: var(--radius-m); font-size: 0.88rem; opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 60; max-width: calc(100% - 2rem); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
@@ -436,6 +453,7 @@ details.more > summary::-webkit-details-marker { display: none; }
   const TYPES = [
     { key: 'goi-dien', label: 'Gọi điện', icon: 'fa-phone' },
     { key: 'zalo', label: 'Zalo', icon: 'fa-comment-dots' },
+    { key: 'sms', label: 'SMS', icon: 'fa-comment-sms' },
     { key: 'gap-mat', label: 'Gặp trực tiếp', icon: 'fa-handshake' },
     { key: 'email', label: 'Email', icon: 'fa-envelope' },
     { key: 'tham-nha', label: 'Thăm nhà', icon: 'fa-house' },
@@ -486,16 +504,22 @@ details.more > summary::-webkit-details-marker { display: none; }
   function profileOf(s) { return s.profile || { stage: DEFAULT_STAGE, priority: 'thuong', tags: [] }; }
   // Giá trị hiển thị: ưu tiên dữ liệu đã nhập trong CRM, nếu trống thì lấy từ hồ sơ thành viên
   // hoặc đơn đăng ký, để không phải gõ lại những gì phụ huynh đã khai.
+  // Ô "trường/lớp" trong form đăng ký thường chỉ ghi lớp ("Lớp 3", "Mầm non 4 tuổi"...) -> không
+  // coi đó là tên trường, mà dùng làm gợi ý Lớp / khối.
+  const looksLikeClass = v => /^\s*(l[oớ]p|kh[oố]i|m[aầ]m non|m[aẫ]u gi[aá]o|nh[aà] tr[eẻ]|mn\b|\d+\s*tu[oổ]i)/i.test(String(v || '')) && !/tr[uư][oờ]ng/i.test(String(v || ''));
   function eff(s) {
     const p = profileOf(s), par = s.parent || {}, reg = s.registration || {};
+    const pSchool = looksLikeClass(p.school) ? '' : (p.school || '');
+    const rSchool = looksLikeClass(reg.school) ? '' : (reg.school || '');
     return {
       guardianName: p.guardianName || par.name || '',
       guardianPhone: p.guardianPhone || par.phone || '',
       address: p.address || reg.address || par.address || '',
-      school: p.school || reg.school || '',
+      school: pSchool || rSchool,
+      gradeHint: !p.gradeLevel ? ([p.school, reg.school].find(looksLikeClass) || '') : '',
       nameFrom: !p.guardianName && par.name ? 'lấy từ hồ sơ phụ huynh' : '',
       phoneFrom: !p.guardianPhone && par.phone ? 'lấy từ hồ sơ phụ huynh' : '',
-      schoolFrom: !p.school && reg.school ? 'lấy từ đơn đăng ký' : '',
+      schoolFrom: !pSchool && rSchool ? 'lấy từ đơn đăng ký' : '',
       addressFrom: !p.address && (reg.address || par.address) ? 'lấy từ đơn đăng ký' : ''
     };
   }
@@ -507,10 +531,80 @@ details.more > summary::-webkit-details-marker { display: none; }
   }
   function contactButtons(s, size) {
     const ph = vnPhone(eff(s).guardianPhone);
-    if (!ph) return size === 'mini' ? '' : '<div class="contact"><a class="nophone" href="#" data-goto-profile="1"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm số điện thoại phụ huynh</a></div>';
+    if (!ph) return size === 'mini' ? '' : `<div class="contact"><a class="nophone" href="#" data-goto-profile="1"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm số điện thoại phụ huynh</a>${s.parentEmail ? `<a class="mail" href="#" data-compose="email" data-id="${esc(s.id)}"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Email</a>` : ''}</div>`;
     const call = `<a class="call" href="tel:${ph}" data-contact="call" data-id="${esc(s.id)}" title="Gọi ${esc(ph)}" aria-label="Gọi ${esc(ph)}"><i class="fa-solid fa-phone" aria-hidden="true"></i>${size === 'mini' ? '' : ' Gọi ' + esc(ph)}</a>`;
     const zalo = `<a class="zalo" href="https://zalo.me/${ph}" target="_blank" rel="noopener" data-contact="zalo" data-id="${esc(s.id)}" data-phone="${ph}" title="Nhắn Zalo ${esc(ph)}" aria-label="Nhắn Zalo ${esc(ph)}">${size === 'mini' ? 'Zalo' : '<span class="zalo-mark">Zalo</span> Nhắn Zalo'}</a>`;
-    return size === 'mini' ? `<span class="mini-contact">${call}${zalo}</span>` : `<div class="contact">${call}${zalo}</div>`;
+    if (size === 'mini') return `<span class="mini-contact">${call}${zalo}</span>`;
+    const mail = s.parentEmail ? `<a class="mail" href="#" data-compose="email" data-id="${esc(s.id)}"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Email</a>` : '';
+    const sms = `<a class="sms" href="#" data-compose="sms" data-id="${esc(s.id)}"><i class="fa-solid fa-comment-sms" aria-hidden="true"></i> SMS</a>`;
+    return `<div class="contact">${call}${zalo}${sms}${mail}</div>`;
+  }
+  // ----- Mẫu tin nhắn: {PH} người giám hộ, {HS} học sinh, {CT} chương trình, {NGUOIGUI} người gửi -----
+  const MSG_TEMPLATES = [
+    { key: 'lich', label: 'Nhắc lịch học',
+      subject: 'Nhắc lịch học của con {HS}',
+      email: 'Kính gửi {PH},\n\nTrung tâm xin nhắc lịch học sắp tới của con {HS} tại lớp {CT}. Gia đình vui lòng cho con đến đúng giờ và mang đủ đồ dùng học tập.\n\nNếu con cần nghỉ hoặc đổi lịch, gia đình trả lời email này hoặc nhắn cho trung tâm để được sắp xếp buổi học bù.\n\nTrân trọng.',
+      sms: 'MLTTVN: Kinh gui {PH}, nhac lich hoc sap toi cua con {HS} lop {CT}. Can doi lich xin nhan lai so nay. Cam on!' },
+    { key: 'hocphi', label: 'Nhắc học phí',
+      subject: 'Thông báo học phí của con {HS}',
+      email: 'Kính gửi {PH},\n\nTrung tâm xin thông báo học phí kỳ này của con {HS} (lớp {CT}). Gia đình có thể xem hoá đơn và gửi biên lai chuyển khoản ngay trong Trang Thành Viên.\n\nNếu gia đình đã đóng, xin bỏ qua thông báo này. Mọi thắc mắc xin liên hệ trung tâm.\n\nTrân trọng.',
+      sms: 'MLTTVN: Kinh gui {PH}, hoc phi ky nay cua con {HS} da co tren Trang Thanh Vien wvn.vn. Neu da dong xin bo qua. Cam on!' },
+    { key: 'tienbo', label: 'Báo tiến bộ',
+      subject: 'Tin vui về việc học của con {HS}',
+      email: 'Kính gửi {PH},\n\nTrung tâm rất vui được chia sẻ: thời gian gần đây con {HS} có nhiều tiến bộ ở lớp {CT}. Con tập trung hơn và hoàn thành bài tốt.\n\nGia đình có thể xem nhận xét chi tiết trong Trang Thành Viên. Cảm ơn gia đình đã luôn đồng hành cùng con.\n\nTrân trọng.',
+      sms: 'MLTTVN: Chuc mung gia dinh! Con {HS} tien bo ro o lop {CT}. Xem nhan xet tai Trang Thanh Vien wvn.vn. Cam on!' },
+    { key: 'hoithu', label: 'Hỏi thăm khi con nghỉ',
+      subject: 'Trung tâm hỏi thăm con {HS}',
+      email: 'Kính gửi {PH},\n\nTrung tâm thấy con {HS} vắng mặt ở các buổi học gần đây của lớp {CT}. Không biết con có khoẻ không, gia đình có cần trung tâm hỗ trợ sắp xếp học bù không ạ?\n\nRất mong nhận được phản hồi từ gia đình.\n\nTrân trọng.',
+      sms: 'MLTTVN: Kinh gui {PH}, con {HS} vang buoi hoc gan day. Can sap xep hoc bu xin nhan lai so nay a. Cam on!' },
+    { key: 'moihoc', label: 'Mời học thử / khoá mới',
+      subject: 'Mời con {HS} tham gia lớp học mới',
+      email: 'Kính gửi {PH},\n\nTrung tâm sắp mở lớp mới và trân trọng mời con {HS} tham gia buổi học thử miễn phí. Buổi học giúp gia đình và con làm quen với phương pháp của trung tâm trước khi đăng ký.\n\nGia đình trả lời email này để trung tâm giữ chỗ cho con.\n\nTrân trọng.',
+      sms: 'MLTTVN: Trung tam moi con {HS} hoc thu mien phi lop moi. Gia dinh nhan lai so nay de giu cho. Cam on!' },
+    { key: 'trong', label: 'Tự viết', subject: '', email: 'Kính gửi {PH},\n\n\n\nTrân trọng.', sms: '' }
+  ];
+  function fillTemplate(str, s) {
+    const e = eff(s);
+    return String(str || '')
+      .replace(/\{PH\}/g, e.guardianName ? (profileOf(s).guardianRelation ? `${profileOf(s).guardianRelation.toLowerCase() === 'bố' ? 'anh' : 'chị'} ${e.guardianName.split(/\s+/).pop()}` : e.guardianName) : 'Quý phụ huynh')
+      .replace(/\{HS\}/g, s.studentName.split(/\s+/).slice(-2).join(' '))
+      .replace(/\{CT\}/g, s.programs[0] || 'của trung tâm')
+      .replace(/\{NGUOIGUI\}/g, me.displayName || '');
+  }
+  const stripVN = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  function smsSegments(t) {
+    const unicode = /[^\x00-\x7F]/.test(t); const per = unicode ? 70 : 160; const multi = unicode ? 67 : 153;
+    return { n: t.length <= per ? 1 : Math.ceil(t.length / multi), unicode };
+  }
+  function composeHtml(s) {
+    const c = state.compose; if (!c || c.id !== s.id) return '';
+    const today = todayStr();
+    const tplChips = MSG_TEMPLATES.filter(t => c.mode === 'email' || t.sms !== '' || t.key === 'trong').map(t => `<button type="button" class="opt" data-tpl="${t.key}" aria-pressed="${c.tpl === t.key}">${esc(t.label)}</button>`).join('');
+    const follow = `<div class="opts" style="margin-top:0.6rem;"><span class="locked" style="font-size:0.78rem;align-self:center;margin-right:0.2rem;">Hẹn kiểm tra phản hồi:</span>${[[0, 'Không hẹn'], [2, '2 ngày'], [7, '1 tuần']].map(([d, l]) => `<button type="button" class="opt" data-cfollow="${d}" aria-pressed="${(c.follow || 0) === d}">${l}</button>`).join('')}</div>`;
+    if (c.mode === 'email') {
+      return `<div class="compose" id="composeBox">
+        <div class="compose-head"><i class="fa-regular fa-envelope" aria-hidden="true" style="color:var(--brand)"></i><b>Gửi email</b><small>tới ${esc(s.parentEmail)}</small><button type="button" data-compose-close="1" aria-label="Đóng"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+        <div class="opts">${tplChips}</div>
+        <label class="sr-only" for="cSubject">Tiêu đề</label><input id="cSubject" maxlength="150" placeholder="Tiêu đề email" value="${esc(c.subject || '')}">
+        <label class="sr-only" for="cBody">Nội dung</label><textarea id="cBody" maxlength="5000" placeholder="Nội dung email">${esc(c.body || '')}</textarea>
+        <div class="meta"><span>Gửi bằng mẫu email thương hiệu của trung tâm, kèm nút mở Trang Thành Viên.</span><span>Có trong Lịch Sử Email</span></div>
+        ${follow}
+        <div class="acts"><button type="button" class="btn" data-compose-close="1">Huỷ</button><button type="button" class="btn btn-primary" id="cSend"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Gửi email</button></div>
+      </div>`;
+    }
+    const ph = vnPhone(eff(s).guardianPhone);
+    const seg = smsSegments(c.body || '');
+    return `<div class="compose" id="composeBox">
+      <div class="compose-head"><i class="fa-solid fa-comment-sms" aria-hidden="true" style="color:var(--brand)"></i><b>Soạn tin nhắn</b><small>tới ${esc(ph)}</small><button type="button" data-compose-close="1" aria-label="Đóng"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+      <div class="opts">${tplChips}</div>
+      <label class="sr-only" for="cBody">Nội dung tin nhắn</label><textarea id="cBody" maxlength="800" style="min-height:96px" placeholder="Nội dung tin nhắn">${esc(c.body || '')}</textarea>
+      <div class="meta"><span id="cCount">${(c.body || '').length} ký tự · ${seg.n} tin${seg.unicode ? ' (có dấu, tốn gấp đôi)' : ''}</span><button type="button" class="btn-ghost btn" style="padding:0.1rem 0.4rem;font-size:0.76rem;" data-strip="1">Bỏ dấu tiếng Việt</button></div>
+      ${follow}
+      <div class="acts">
+        <button type="button" class="btn btn-zalo grow" id="cZalo"><span class="zalo-mark">Zalo</span> Sao chép & mở Zalo</button>
+        <button type="button" class="btn" data-compose-close="1">Huỷ</button>
+        <a class="btn btn-primary" id="cSms" href="sms:${ph}?&body=${encodeURIComponent(c.body || '')}" style="text-decoration:none;"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Mở ứng dụng SMS</a>
+      </div></div>`;
   }
   function stageOf(s) { return STAGE[profileOf(s).stage] ? profileOf(s).stage : DEFAULT_STAGE; }
   function lastContact(s) { return s.interactions && s.interactions.length ? s.interactions[0].happenedAt : null; }
@@ -675,6 +769,7 @@ details.more > summary::-webkit-details-marker { display: none; }
   function openDrawer(id) {
     if (!findStudent(id)) return;
     lastFocus = document.activeElement;
+    if (state.compose && state.compose.id !== id) state.compose = null;
     state.openId = id; state.pane = 'care';
     renderDrawer();
     $('drawer').classList.add('open'); $('drawer').setAttribute('aria-hidden', 'false'); $('scrim').classList.add('open');
@@ -735,11 +830,12 @@ details.more > summary::-webkit-details-marker { display: none; }
       </dl>
       ${flagsOf(s).length ? `<div style="margin:-0.4rem 0 1rem;">${flagChips(s)}</div>` : ''}
 
+      ${composeHtml(s)}
       ${state.contacted && state.contacted.id === s.id ? `<div class="after-contact">
-        <p><i class="fa-solid fa-${state.contacted.via === 'zalo' ? 'comment-dots' : 'phone'}" aria-hidden="true"></i> Vừa ${state.contacted.via === 'zalo' ? 'nhắn Zalo' : 'gọi'} cho phụ huynh. Kết quả thế nào?</p>
+        <p><i class="fa-solid fa-${state.contacted.via === 'zalo' ? 'comment-dots' : state.contacted.via === 'sms' ? 'comment-sms' : 'phone'}" aria-hidden="true"></i> Vừa ${state.contacted.via === 'zalo' ? 'nhắn Zalo' : state.contacted.via === 'sms' ? 'mở tin nhắn SMS' : 'gọi'} cho phụ huynh. Kết quả thế nào?</p>
         <div class="opts">
-          <button type="button" class="opt" data-aftercontact="ok">Đã trao đổi xong</button>
-          <button type="button" class="opt" data-aftercontact="noanswer">${state.contacted.via === 'zalo' ? 'Chưa trả lời' : 'Không nghe máy'}</button>
+          <button type="button" class="opt" data-aftercontact="ok">${state.contacted.via === 'sms' || (state.contacted.via === 'zalo' && state.contacted.text) ? 'Đã gửi tin' : 'Đã trao đổi xong'}</button>
+          ${state.contacted.text ? '' : `<button type="button" class="opt" data-aftercontact="noanswer">${state.contacted.via === 'zalo' ? 'Chưa trả lời' : 'Không nghe máy'}</button>`}
           <button type="button" class="opt" data-aftercontact="detail">Ghi chi tiết</button>
           <button type="button" class="opt" data-aftercontact="skip">Bỏ qua</button>
         </div></div>` : ''}
@@ -794,7 +890,7 @@ details.more > summary::-webkit-details-marker { display: none; }
       </div>
 
       <div class="fieldset-title">Học sinh</div>
-      <div class="q"><div class="q-label">Lớp / khối</div>${optGroup('gradeLevel', GRADE_LEVELS, p.gradeLevel || '', { other: 'Khác…' })}</div>
+      <div class="q"><div class="q-label">Lớp / khối ${src(e.gradeHint ? 'lấy từ đơn đăng ký' : '')}</div>${optGroup('gradeLevel', GRADE_LEVELS, p.gradeLevel || e.gradeHint || '', { other: 'Khác…' })}</div>
       <div class="q"><div class="q-label">Trường đang học ${src(e.schoolFrom)}</div>${optGroup('school', schools, e.school, { other: schools.length ? 'Trường khác…' : 'Nhập tên trường' })}</div>
       <div class="q"><div class="q-label">Địa chỉ ${src(e.addressFrom)}</div><input class="opt-input" style="width:100%;border-radius:8px;" data-field="address" value="${esc(e.address)}" maxlength="200"></div>
 
@@ -844,7 +940,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     const p = profileOf(s), e = eff(s);
     return {
       studentId: s.id, stage: stageOf(s), priority: p.priority || 'thuong',
-      gradeLevel: p.gradeLevel || '', school: e.school, address: e.address,
+      gradeLevel: p.gradeLevel || e.gradeHint || '', school: e.school, address: e.address,
       guardianName: e.guardianName, guardianPhone: e.guardianPhone, guardianRelation: p.guardianRelation || '',
       source: p.source || '', tags: p.tags || [], nextFollowUp: p.nextFollowUp || '', followUpNote: p.followUpNote || '',
       caretaker: p.caretaker || '', ...overrides
@@ -896,6 +992,31 @@ details.more > summary::-webkit-details-marker { display: none; }
   function setStage(id, stage) {
     const s = findStudent(id); if (!s || stageOf(s) === stage) return;
     saveProfile(s, { stage }, `Đã chuyển ${s.studentName} sang "${STAGE[stage].label}".`);
+  }
+
+  // ----- Soạn email / SMS -----
+  function applyTemplate(s, key) {
+    const t = MSG_TEMPLATES.find(x => x.key === key) || MSG_TEMPLATES[0]; const c = state.compose;
+    c.tpl = t.key;
+    if (c.mode === 'email') { c.subject = fillTemplate(t.subject, s); c.body = fillTemplate(t.email, s); }
+    else c.body = stripVN(fillTemplate(t.sms, s)); // mẫu SMS không dấu -> 1 tin 160 ký tự thay vì 70
+  }
+  function syncCompose() {
+    const c = state.compose; if (!c) return;
+    const sub = $('cSubject'), body = $('cBody');
+    if (sub) c.subject = sub.value; if (body) c.body = body.value;
+  }
+  async function sendEmail(btn) {
+    syncCompose(); const c = state.compose; if (!c) return;
+    const s = findStudent(c.id);
+    if (!c.subject.trim() || !c.body.trim()) { toast('Nhập tiêu đề và nội dung email.', true); return; }
+    btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Đang gửi…';
+    try {
+      const r = await api('/api/portal-crm-send-email', { method: 'POST', body: JSON.stringify({ studentId: s.id, subject: c.subject.trim(), message: c.body.trim(), nextFollowUp: c.follow ? addDays(todayStr(), c.follow) : '' }) });
+      s.interactions = [r.interaction].concat(s.interactions);
+      s.profile = { ...profileOf(s), nextFollowUp: c.follow ? addDays(todayStr(), c.follow) : '', followUpNote: c.follow ? 'Kiểm tra phản hồi email' : '' };
+      state.compose = null; renderAll(); toast(`Đã gửi email tới ${r.to}.`);
+    } catch (err) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Gửi email'; toast(err.message, true); }
   }
 
   // Ghi nhận 1 chạm
@@ -960,14 +1081,60 @@ details.more > summary::-webkit-details-marker { display: none; }
       setTimeout(() => { if (state.openId !== s.id) openDrawer(s.id); state.pane = 'care'; renderDrawer(); }, 300);
       return; // không chặn mặc định: trình duyệt tự mở cuộc gọi / Zalo
     }
+    const cp = t.closest('[data-compose]');
+    if (cp) {
+      e.preventDefault();
+      const s = findStudent(cp.dataset.id); if (!s) return;
+      state.compose = { id: s.id, mode: cp.dataset.compose, tpl: '', subject: '', body: '', follow: cp.dataset.compose === 'email' ? 7 : 0 };
+      const first = MSG_TEMPLATES[0]; applyTemplate(s, first.key);
+      if (state.openId !== s.id) openDrawer(s.id);
+      state.pane = 'care'; renderDrawer();
+      setTimeout(() => { const box = $('composeBox'); if (box) box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 60);
+      return;
+    }
+    if (t.closest('[data-compose-close]')) { state.compose = null; return renderDrawer(); }
+    const tp = t.closest('[data-tpl]'); if (tp && state.compose) { syncCompose(); applyTemplate(findStudent(state.compose.id), tp.dataset.tpl); return renderDrawer(); }
+    const cf = t.closest('[data-cfollow]'); if (cf && state.compose) { syncCompose(); state.compose.follow = +cf.dataset.cfollow; return renderDrawer(); }
+    if (t.closest('[data-strip]') && state.compose) { syncCompose(); state.compose.body = stripVN(state.compose.body); return renderDrawer(); }
+    if (t.closest('#cSend')) return sendEmail(t.closest('#cSend'));
+    if (t.closest('#cZalo') && state.compose) {
+      syncCompose(); const c = state.compose; const s = findStudent(c.id); const ph = vnPhone(eff(s).guardianPhone);
+      if (!c.body.trim()) { toast('Nhập nội dung tin nhắn trước.', true); return; }
+      try { navigator.clipboard && navigator.clipboard.writeText(c.body).catch(() => {}); } catch (err) {}
+      window.open('https://zalo.me/' + ph, '_blank', 'noopener');
+      state.contacted = { id: s.id, via: 'zalo', text: c.body, follow: c.follow }; state.compose = null;
+      toast('Đã sao chép tin nhắn. Dán (Cmd+V hoặc giữ để dán) vào khung chat Zalo.');
+      return renderDrawer();
+    }
+    if (t.closest('#cSms') && state.compose) {
+      syncCompose(); const c = state.compose;
+      if (!c.body.trim()) { e.preventDefault(); toast('Nhập nội dung tin nhắn trước.', true); return; }
+      const s = findStudent(c.id);
+      t.closest('#cSms').href = `sms:${vnPhone(eff(s).guardianPhone)}?&body=${encodeURIComponent(c.body)}`;
+      state.contacted = { id: s.id, via: 'sms', text: c.body, follow: c.follow }; state.compose = null;
+      setTimeout(renderDrawer, 400);
+      return; // để trình duyệt mở ứng dụng Tin nhắn
+    }
     const gp = t.closest('[data-goto-profile]'); if (gp) { e.preventDefault(); state.pane = 'profile'; renderDrawer(); setTimeout(() => { const el = document.querySelector('#pane-profile [data-field="guardianPhone"]'); if (el) el.focus(); }, 50); return; }
     const ac = t.closest('[data-aftercontact]');
     if (ac && state.openId && state.contacted) {
       const s = findStudent(state.openId); const via = state.contacted.via; const kind = ac.dataset.aftercontact;
+      const contactedText = state.contacted.text || ''; const contactedFollow = state.contacted.follow || 0;
       state.contacted = null;
       if (kind === 'skip') return renderDrawer();
       if (kind === 'detail') { renderDrawer(); const d = document.querySelector('#pane-care details.more'); if (d) { d.open = true; const r = d.querySelector(`input[name=type][value="${via === 'zalo' ? 'zalo' : 'goi-dien'}"]`); if (r) r.checked = true; $('logContent').focus(); } return; }
       const ok = kind === 'ok';
+      const sent = contactedText;
+      if (sent) {
+        const fd = contactedFollow;
+        return logInteraction(s, {
+          type: via === 'zalo' ? 'zalo' : 'sms',
+          content: `Đã nhắn ${via === 'zalo' ? 'Zalo' : 'SMS'}: "${sent.length > 160 ? sent.slice(0, 157) + '…' : sent}"`,
+          happenedAt: todayStr(),
+          nextFollowUp: fd ? addDays(todayStr(), fd) : '',
+          followUpNote: fd ? 'Kiểm tra phản hồi tin nhắn' : ''
+        }, ac);
+      }
       return logInteraction(s, {
         type: via === 'zalo' ? 'zalo' : 'goi-dien',
         content: ok ? (via === 'zalo' ? 'Đã nhắn Zalo và trao đổi với phụ huynh.' : 'Đã gọi điện trao đổi với phụ huynh.') : (via === 'zalo' ? 'Đã nhắn Zalo, phụ huynh chưa trả lời.' : 'Gọi điện nhưng phụ huynh không nghe máy.'),
@@ -1005,6 +1172,11 @@ details.more > summary::-webkit-details-marker { display: none; }
     if (e.key === 'Escape' && state.openId) closeDrawer();
     if (e.key === 'Enter' && e.target.matches('tr[data-open]')) openDrawer(e.target.dataset.open);
     if (e.key === '/' && !e.target.matches('input, textarea, select')) { e.preventDefault(); $('globalSearch').focus(); }
+  });
+  $('pane-care').addEventListener('input', e => {
+    if (e.target.id !== 'cBody' || !state.compose || state.compose.mode !== 'sms') return;
+    const v = e.target.value; const sg = smsSegments(v); const el = $('cCount');
+    if (el) el.textContent = `${v.length} ký tự · ${sg.n} tin${sg.unicode ? ' (có dấu, tốn gấp đôi)' : ''}`;
   });
   $('pane-profile').addEventListener('change', e => {
     const el = e.target.closest('input[data-field]'); if (!el || !state.openId) return;
