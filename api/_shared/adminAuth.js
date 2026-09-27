@@ -64,9 +64,10 @@ function accountPermissions(account) {
 }
 
 function isSuperAdmin(account) {
-  // Phiên cũ từ trước khi có hệ thống vai trò (không gắn account nào) coi như quản trị viên
-  // chính, để không đột ngột khoá quyền của người đang thao tác giữa chừng lúc vừa nâng cấp.
-  if (!account) return true;
+  // Phiên KHÔNG gắn tài khoản nào thì KHÔNG được coi là quản trị viên chính. Trước đây cho qua để
+  // tương thích phiên cũ (trước khi có hệ thống vai trò), nhưng mọi phiên hiện nay đều gắn email
+  // khi đăng nhập và phiên chỉ sống 12 giờ, nên giữ ngoại lệ này chỉ tạo rủi ro leo thang quyền.
+  if (!account) return false;
   return account.role === "super";
 }
 
