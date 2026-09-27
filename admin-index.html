@@ -755,7 +755,7 @@
         <div class="loading-state" id="giftLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="giftTableWrap">
           <table>
-            <thead><tr><th>Email</th><th>Quà tặng</th><th>Điểm đã dùng</th><th>Ngày yêu cầu</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <thead><tr><th>Email</th><th>Quà tặng</th><th>Điểm đã dùng</th><th>Ngày yêu cầu</th><th>Trạng thái</th></tr></thead>
             <tbody id="giftTableBody"></tbody>
           </table>
         </div>
@@ -2363,52 +2363,40 @@
     // ============== ĐỔI QUÀ ==============
     // Thanh tiến trình trực quan 3 bước, để admin lẫn thành viên đều thấy rõ đang ở bước nào,
     // thay vì chỉ 1 nhãn trạng thái đơn lẻ.
-    const GIFT_STEPS = [
-      { key: 'pending', label: 'Chờ duyệt', icon: 'fa-clock' },
-      { key: 'shipping', label: 'Vận chuyển', icon: 'fa-truck-fast' },
-      { key: 'fulfilled', label: 'Đã trao', icon: 'fa-circle-check' }
-    ];
-    // Nhãn/màu badge gọn cho từng trạng thái đổi quà — dùng ở khung "Tổng quan" 1 thành viên
-    // (khác với giftStepperHtml — hiện đủ 3 bước dạng thanh tiến trình, dùng ở bảng Đổi Quà chính).
+    // Nhãn/màu badge cho từng trạng thái đổi quà.
     const GIFT_STATUS_META = {
       pending: { label: 'Chờ duyệt', bg: '#fef3c7', color: '#a16207' },
       shipping: { label: 'Đang vận chuyển', bg: '#e0f2fe', color: '#0369a1' },
       fulfilled: { label: 'Đã trao quà', bg: '#dcfce7', color: '#15803d' },
       cancelled: { label: 'Đã huỷ (hoàn điểm)', bg: '#fee2e2', color: '#b91c1c' }
     };
-    function giftStepperHtml(status) {
-      if (status === 'cancelled') {
-        return `<div style="display:flex; align-items:center; gap:0.4rem; color:#b91c1c; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Đã huỷ</div>`;
-      }
-      const currentIdx = GIFT_STEPS.findIndex(s => s.key === status);
-      return `<div style="display:flex; align-items:flex-start; min-width:220px;">
-        ${GIFT_STEPS.map((s, i) => {
-          const isDone = i < currentIdx;
-          const isCurrent = i === currentIdx;
-          const color = isDone || isCurrent ? (isDone ? '#15803d' : '#0284c7') : '#cbd5e1';
-          const textColor = isDone ? '#15803d' : isCurrent ? '#0284c7' : '#94a3b8';
-          const circleHtml = `<div style="width:24px; height:24px; border-radius:50%; background:${isDone || isCurrent ? color : '#fff'}; border:2px solid ${color}; display:flex; align-items:center; justify-content:center; color:${isDone || isCurrent ? '#fff' : color}; font-size:0.68rem; flex-shrink:0;">${isDone ? '<i class="fa-solid fa-check"></i>' : `<i class="fa-solid ${s.icon}"></i>`}</div>`;
-          const connectorHtml = i < GIFT_STEPS.length - 1
-            ? `<div style="flex:1; height:2px; background:${i < currentIdx ? '#15803d' : '#e2e8f0'}; margin:11px 3px 0;"></div>`
-            : '';
-          return `<div style="display:flex; flex-direction:column; align-items:center; width:56px;">${circleHtml}<div style="font-size:0.66rem; color:${textColor}; font-weight:${isCurrent ? '800' : '600'}; margin-top:0.2rem; text-align:center; line-height:1.2;">${s.label}</div></div>${connectorHtml}`;
-        }).join('')}
-      </div>`;
-    }
 
-    function giftActionsHtml(r) {
-      const emailEnc = encodeURIComponent(r.email);
-      if (r.status === 'pending') {
-        return `
-          <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="updateGiftStatus('${emailEnc}','${r.id}','shipping')">Duyệt &amp; Chuyển Hàng</button>
-          <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="cancelGift('${emailEnc}','${r.id}')">Huỷ</button>`;
+    // Trạng thái đã xong (fulfilled/cancelled) chỉ hiện badge, không sửa được nữa.
+    // Trạng thái đang xử lý (pending/shipping) hiện Ô CHỌN — gọn, không còn thanh tiến trình
+    // nhiều icon rối mắt như trước; chọn mục khác trong ô là chuyển trạng thái luôn.
+    const GIFT_NEXT_OPTIONS = {
+      pending: [
+        { value: 'pending', label: 'Chờ duyệt (chưa xử lý)' },
+        { value: 'shipping', label: '→ Duyệt & Chuyển hàng' },
+        { value: 'cancelled', label: '→ Huỷ yêu cầu' }
+      ],
+      shipping: [
+        { value: 'shipping', label: 'Đang vận chuyển' },
+        { value: 'fulfilled', label: '→ Đã trao quà' },
+        { value: 'cancelled', label: '→ Huỷ yêu cầu' }
+      ]
+    };
+
+    function giftStatusControlHtml(r) {
+      const meta = GIFT_STATUS_META[r.status] || GIFT_STATUS_META.pending;
+      if (r.status === 'fulfilled' || r.status === 'cancelled') {
+        return `<span style="display:inline-block; font-size:0.78rem; font-weight:700; padding:0.25rem 0.7rem; border-radius:999px; background:${meta.bg}; color:${meta.color};">${meta.label}</span>`;
       }
-      if (r.status === 'shipping') {
-        return `
-          <button type="button" class="btn" style="padding:0.3rem 0.7rem; font-size:0.8rem;" onclick="updateGiftStatus('${emailEnc}','${r.id}','fulfilled')">Đã Trao Quà</button>
-          <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="cancelGift('${emailEnc}','${r.id}')">Huỷ</button>`;
-      }
-      return '—';
+      const options = GIFT_NEXT_OPTIONS[r.status] || [];
+      return `<select onchange="onGiftStatusSelect(this)" data-email="${encodeURIComponent(r.email)}" data-id="${r.id}" data-current="${r.status}"
+        style="padding:0.4rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-size:0.84rem; background:#fff; cursor:pointer; max-width:230px;">
+        ${options.map(o => `<option value="${o.value}" ${o.value === r.status ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+      </select>`;
     }
 
     async function loadGifts() {
@@ -2444,28 +2432,39 @@
             <td style="font-weight:700;">${escapeHtml(r.giftName)}</td>
             <td>${Number(r.giftCost).toLocaleString('vi-VN')} điểm</td>
             <td>${formatDate(r.requestedAt)}</td>
-            <td>${giftStepperHtml(r.status)}${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">${escapeHtml(r.cancelReason)}</div>` : ''}</td>
-            <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">${giftActionsHtml(r)}</td>
+            <td>${giftStatusControlHtml(r)}${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">${escapeHtml(r.cancelReason)}</div>` : ''}</td>
           </tr>`;
         }).join('');
       if (redemptions.length === 0) {
-        document.getElementById('giftTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
+        document.getElementById('giftTableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
       }
     }
 
-    async function cancelGift(emailEnc, id) {
-      const reason = prompt('Lý do huỷ yêu cầu đổi quà này (không bắt buộc):') || '';
-      if (reason === null) return;
-      await updateGiftStatus(emailEnc, id, 'cancelled', reason);
-    }
+    async function onGiftStatusSelect(selectEl) {
+      const emailEnc = selectEl.dataset.email;
+      const id = selectEl.dataset.id;
+      const currentStatus = selectEl.dataset.current;
+      const newStatus = selectEl.value;
+      if (newStatus === currentStatus) return;
 
-    async function updateGiftStatus(emailEnc, id, status, reason) {
+      let reason = '';
       const confirmMsgs = {
         shipping: 'Xác nhận duyệt và chuyển sang trạng thái "Đang vận chuyển"?',
         fulfilled: 'Xác nhận đã trao quà tặng này cho thành viên?',
-        cancelled: 'Xác nhận huỷ yêu cầu đổi quà này?'
+        cancelled: 'Xác nhận huỷ yêu cầu đổi quà này? Điểm đã dùng sẽ được hoàn lại.'
       };
-      if (!confirm(confirmMsgs[status] || 'Xác nhận cập nhật trạng thái?')) return;
+      if (newStatus === 'cancelled') {
+        reason = prompt('Lý do huỷ yêu cầu đổi quà này (không bắt buộc):');
+        if (reason === null) { selectEl.value = currentStatus; return; } // bấm Huỷ ở hộp thoại nhập lý do
+      } else if (!confirm(confirmMsgs[newStatus] || 'Xác nhận cập nhật trạng thái?')) {
+        selectEl.value = currentStatus;
+        return;
+      }
+
+      await updateGiftStatus(emailEnc, id, newStatus, reason || '', () => { selectEl.value = currentStatus; });
+    }
+
+    async function updateGiftStatus(emailEnc, id, status, reason, onFail) {
       try {
         const result = await apiCall('/api/portal-fulfill-gift-redemption', {
           method: 'POST',
@@ -2480,6 +2479,7 @@
         if (currentOverviewEmail === decodeURIComponent(emailEnc)) openMemberOverview(emailEnc);
       } catch (err) {
         showGlobalAlert(err.message, true);
+        if (onFail) onFail();
       }
     }
 
@@ -3729,7 +3729,7 @@
                   <span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:${meta.bg}; color:${meta.color}; margin-left:0.4rem;">${meta.label}</span>
                   <div style="font-size:0.78rem; color:var(--text-muted);">Yêu cầu: ${formatDate(r.requestedAt)}</div>
                 </div>
-                <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">${giftActionsHtml({ ...r, email })}</div>
+                <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">${(r.status === 'pending' || r.status === 'shipping') ? giftStatusControlHtml({ ...r, email }) : '—'}</div>
               </div>`;
             }).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có yêu cầu đổi quà nào.</div>'}
           </div>`;
