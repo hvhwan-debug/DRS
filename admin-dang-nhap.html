@@ -13,7 +13,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background: var(--bg-page); color: var(--text-dark); min-height: 100vh; display:flex; align-items:center; justify-content:center; padding: 1.5rem; }
-    .card { background:#fff; border-radius:16px; box-shadow:0 12px 32px rgba(15,23,42,0.12); padding:2.4rem; width:100%; max-width:380px; }
+    .card { background:#fff; border-radius:16px; box-shadow:0 12px 32px rgba(15,23,42,0.12); padding:2.4rem; width:100%; max-width:400px; }
     .badge { font-size:0.72rem; font-weight:800; letter-spacing:0.5px; color:#0284c7; text-transform:uppercase; margin-bottom:0.6rem; }
     h1 { font-size:1.4rem; margin-bottom:0.4rem; }
     p.sub { color:var(--text-muted); font-size:0.88rem; margin-bottom:1.6rem; }
@@ -26,35 +26,76 @@
       font-size:1rem; font-weight:700; cursor:pointer; margin-top:0.5rem;
     }
     .btn-continue:disabled { opacity:0.7; cursor:default; }
-    #loginAlert { font-size:0.85rem; text-align:center; margin:0.8rem 0; }
+    #loginAlert, #bootstrapAlert { font-size:0.85rem; text-align:center; margin:0.8rem 0; }
+    .switch-link { display:block; text-align:center; font-size:0.84rem; color:#0284c7; margin-top:1.2rem; cursor:pointer; text-decoration:underline; background:none; border:none; }
+    .hint { font-size:0.78rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6; }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="loginCard">
     <div class="badge">WVN ADMIN</div>
     <h1>Đăng Nhập Quản Trị</h1>
-    <p class="sub">Khu vực nội bộ dành cho đội ngũ điều hành.</p>
+    <p class="sub">Khu vực nội bộ dành cho đội ngũ điều hành — mỗi người dùng tài khoản riêng.</p>
 
     <form id="adminLoginForm">
       <div class="form-field">
-        <label for="password">Mật khẩu quản trị</label>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="ban@wvn.vn" autocomplete="username" required>
+      </div>
+      <div class="form-field">
+        <label for="password">Mật khẩu</label>
         <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
       </div>
       <div id="loginAlert" style="display:none;"></div>
       <button type="submit" class="btn-continue" id="submitBtn">Đăng Nhập</button>
     </form>
+    <button type="button" class="switch-link" onclick="showBootstrap()">Lần đầu thiết lập / khôi phục tài khoản quản trị</button>
+  </div>
+
+  <div class="card" id="bootstrapCard" style="display:none;">
+    <div class="badge">WVN ADMIN</div>
+    <h1>Thiết Lập Tài Khoản Quản Trị</h1>
+    <p class="hint">Dùng khi hệ thống chưa có tài khoản quản trị nào, hoặc mọi tài khoản hiện có đã bị khoá/quên mật khẩu. Cần đúng <strong>mật khẩu chủ (ADMIN_PASSWORD)</strong> được cấu hình trong Azure Application Settings — chỉ người quản lý hệ thống mới nắm mật khẩu này.</p>
+
+    <form id="bootstrapForm">
+      <div class="form-field">
+        <label for="masterPassword">Mật khẩu chủ (ADMIN_PASSWORD)</label>
+        <input id="masterPassword" name="masterPassword" type="password" placeholder="Nhập mật khẩu chủ" required>
+      </div>
+      <div class="form-field">
+        <label for="newEmail">Email tài khoản quản trị</label>
+        <input id="newEmail" name="newEmail" type="email" placeholder="ban@wvn.vn" required>
+      </div>
+      <div class="form-field">
+        <label for="newDisplayName">Tên hiển thị</label>
+        <input id="newDisplayName" name="newDisplayName" type="text" placeholder="Nguyễn Văn A" required>
+      </div>
+      <div id="bootstrapAlert" style="display:none;"></div>
+      <button type="submit" class="btn-continue" id="bootstrapBtn">Tạo Tài Khoản</button>
+    </form>
+    <button type="button" class="switch-link" onclick="showLogin()">Quay lại đăng nhập</button>
   </div>
 
   <script>
-    function showAlert(message, isError) {
-      const el = document.getElementById('loginAlert');
+    function showAlert(elId, message, isError) {
+      const el = document.getElementById(elId);
       el.style.display = 'block';
       el.style.color = isError ? '#dc2626' : '#16a34a';
       el.innerHTML = (isError ? '<i class="fa-solid fa-circle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ') + message;
     }
 
+    function showBootstrap() {
+      document.getElementById('loginCard').style.display = 'none';
+      document.getElementById('bootstrapCard').style.display = 'block';
+    }
+    function showLogin() {
+      document.getElementById('bootstrapCard').style.display = 'none';
+      document.getElementById('loginCard').style.display = 'block';
+    }
+
     document.getElementById('adminLoginForm').addEventListener('submit', async function (e) {
       e.preventDefault();
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
@@ -64,17 +105,47 @@
         const res = await fetch('/api/portal-admin-login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password })
+          body: JSON.stringify({ email, password })
         });
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Đăng nhập thất bại.');
 
         localStorage.setItem('wvn_admin_token', result.token);
+        localStorage.setItem('wvn_admin_display_name', result.displayName || email);
         window.location.href = 'admin';
       } catch (err) {
-        showAlert(err.message, true);
+        showAlert('loginAlert', err.message, true);
         btn.disabled = false;
         btn.innerHTML = 'Đăng Nhập';
+      }
+    });
+
+    document.getElementById('bootstrapForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const masterPassword = document.getElementById('masterPassword').value;
+      const email = document.getElementById('newEmail').value.trim();
+      const displayName = document.getElementById('newDisplayName').value.trim();
+      const btn = document.getElementById('bootstrapBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...';
+
+      try {
+        const res = await fetch('/api/portal-admin-create-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ masterPassword, email, displayName })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) throw new Error(result.message || 'Tạo tài khoản thất bại.');
+
+        showAlert('bootstrapAlert', `Đã tạo tài khoản. Mật khẩu tạm thời: <strong>${result.tempPassword}</strong> — hãy lưu lại và đổi mật khẩu ngay sau khi đăng nhập.`, false);
+        document.getElementById('email').value = email;
+        setTimeout(() => { showLogin(); }, 4000);
+      } catch (err) {
+        showAlert('bootstrapAlert', err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Tạo Tài Khoản';
       }
     });
 

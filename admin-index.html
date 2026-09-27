@@ -196,11 +196,12 @@
         <button class="tab-btn" data-tab="bulkemail" onclick="switchTab('bulkemail')"><i class="fa-solid fa-paper-plane"></i> Gửi Email</button>
         <button class="tab-btn" data-tab="emaillogs" onclick="switchTab('emaillogs')"><i class="fa-solid fa-clock-rotate-left"></i> Lịch Sử Email</button>
         <button class="tab-btn" data-tab="activitylog" onclick="switchTab('activitylog')"><i class="fa-solid fa-user-clock"></i> Lịch Sử Thao Tác</button>
+        <button class="tab-btn" data-tab="staffaccounts" onclick="switchTab('staffaccounts')"><i class="fa-solid fa-users-gear"></i> Tài Khoản Quản Trị</button>
       </nav>
       <div class="sidebar-footer">
         <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.6rem; display:flex; align-items:center; gap:0.4rem;">
-          <i class="fa-solid fa-user-pen"></i> Đang thao tác: <strong id="currentAdminNameLabel" style="color:var(--text-dark);"></strong>
-          <button type="button" onclick="changeAdminName()" style="background:none; border:none; color:#0284c7; cursor:pointer; font-size:0.76rem; text-decoration:underline; padding:0;">Đổi</button>
+          <i class="fa-solid fa-user-pen"></i> Đang đăng nhập: <strong id="currentAdminNameLabel" style="color:var(--text-dark);"></strong>
+          <button type="button" onclick="switchTab('staffaccounts')" style="background:none; border:none; color:#0284c7; cursor:pointer; font-size:0.76rem; text-decoration:underline; padding:0;">Tài khoản</button>
         </div>
         <button class="btn btn-outline" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</button>
       </div>
@@ -823,7 +824,7 @@
     <div class="panel" id="panel-activitylog">
       <div class="card">
         <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-user-clock" style="color:#0284c7;"></i> Lịch Sử Thao Tác (200 gần nhất)</h3>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">Ghi lại theo tên người thao tác tự nhập (hệ thống chỉ có 1 mật khẩu quản trị chung, không phân biệt tài khoản) — dùng để tra lại ai đã xử lý việc gì khi cần.</p>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">Ghi theo tài khoản quản trị đã đăng nhập (đã xác thực, không thể gõ sai hay giả mạo) — dùng để tra lại ai đã xử lý việc gì khi cần.</p>
         <div class="loading-state" id="activityLogLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="activityLogTableWrap">
           <table>
@@ -834,6 +835,52 @@
         <div class="empty-state" id="activityLogEmpty" style="display:none;">Chưa có thao tác nào được ghi nhận.</div>
       </div>
     </div>
+
+    <!-- ===================== TAB: TÀI KHOẢN QUẢN TRỊ ===================== -->
+    <div class="panel" id="panel-staffaccounts">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-user-plus" style="color:#0284c7;"></i> Thêm Tài Khoản Quản Trị Mới</h3>
+        <form id="staffAddForm" class="form-grid">
+          <div>
+            <label>Email</label>
+            <input type="email" id="staffNewEmail" placeholder="nhanvien@wvn.vn" required>
+          </div>
+          <div>
+            <label>Tên hiển thị</label>
+            <input type="text" id="staffNewDisplayName" placeholder="Nguyễn Văn A" required>
+          </div>
+        </form>
+        <div id="staffAddAlert" style="display:none; font-size:0.85rem; margin:0.8rem 0;"></div>
+        <button type="submit" form="staffAddForm" class="btn" id="staffAddBtn"><i class="fa-solid fa-check"></i> Tạo Tài Khoản</button>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;">Danh Sách Tài Khoản Quản Trị</h3>
+        <div class="loading-state" id="staffLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="staffTableWrap">
+          <table>
+            <thead><tr><th>Tên hiển thị</th><th>Email</th><th>Trạng thái</th><th>Đăng nhập gần nhất</th><th>Thao tác</th></tr></thead>
+            <tbody id="staffTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-key" style="color:#0284c7;"></i> Đổi Mật Khẩu Của Tôi</h3>
+        <form id="myPasswordForm" class="form-grid">
+          <div>
+            <label>Mật khẩu hiện tại</label>
+            <input type="password" id="myCurrentPassword" autocomplete="current-password" required>
+          </div>
+          <div>
+            <label>Mật khẩu mới (tối thiểu 6 ký tự)</label>
+            <input type="password" id="myNewPassword" autocomplete="new-password" required minlength="6">
+          </div>
+        </form>
+        <div id="myPasswordAlert" style="display:none; font-size:0.85rem; margin:0.8rem 0;"></div>
+        <button type="submit" form="myPasswordForm" class="btn"><i class="fa-solid fa-check"></i> Đổi Mật Khẩu</button>
+      </div>
+    </div>
       </div>
     </div>
   </div>
@@ -842,28 +889,10 @@
     const token = localStorage.getItem('wvn_admin_token');
     if (!token) window.location.href = 'admin-dang-nhap.html';
 
-    // Hệ thống chỉ có 1 mật khẩu quản trị dùng chung — để vẫn biết "ai vừa làm gì" khi có nhiều
-    // người cùng thao tác, mỗi người tự nhập tên của mình 1 lần (lưu trên máy/trình duyệt đó),
-    // tên này được gửi kèm mọi yêu cầu tới server để ghi vào Lịch Sử Thao Tác.
-    function getOrPromptAdminName() {
-      let name = localStorage.getItem('wvn_admin_staff_name');
-      if (!name) {
-        name = (prompt('Nhập tên của bạn (để ghi vào Lịch Sử Thao Tác — ai vừa xử lý việc gì):') || '').trim();
-        if (!name) name = 'Không rõ';
-        localStorage.setItem('wvn_admin_staff_name', name);
-      }
-      return name;
-    }
-
-    function changeAdminName() {
-      const name = (prompt('Nhập tên mới của bạn:', localStorage.getItem('wvn_admin_staff_name') || '') || '').trim();
-      if (!name) return;
-      localStorage.setItem('wvn_admin_staff_name', name);
-      currentAdminName = name;
-      document.getElementById('currentAdminNameLabel').textContent = name;
-    }
-
-    let currentAdminName = getOrPromptAdminName();
+    // Danh tính người thao tác giờ lấy từ tài khoản đăng nhập THẬT (xác thực phía server) —
+    // không còn tự nhập tên tự do như trước, nên không thể bị gõ sai/giả mạo. Giá trị dưới đây
+    // chỉ để HIỂN THỊ ngay trên giao diện; nhật ký thao tác đọc lại đúng từ phiên đăng nhập.
+    const currentAdminDisplayName = localStorage.getItem('wvn_admin_display_name') || 'Quản trị viên';
 
     let emailToStudents = {};
     let emailToParentName = {};
@@ -916,6 +945,7 @@
 
     function adminLogout() {
       localStorage.removeItem('wvn_admin_token');
+      localStorage.removeItem('wvn_admin_display_name');
       window.location.href = 'admin-dang-nhap.html';
     }
 
@@ -1071,7 +1101,7 @@
     async function apiCall(path, options = {}) {
       const res = await fetch(path, {
         ...options,
-        headers: { ...(options.headers || {}), 'X-Admin-Token': token, 'X-Admin-Name': encodeURIComponent(currentAdminName) }
+        headers: { ...(options.headers || {}), 'X-Admin-Token': token }
       });
       const result = await res.json().catch(() => ({}));
       if (res.status === 401) {
@@ -3805,7 +3835,131 @@
       }
     }
 
-    document.getElementById('currentAdminNameLabel').textContent = currentAdminName;
+    // ============== TÀI KHOẢN QUẢN TRỊ ==============
+    async function loadStaffAccounts() {
+      try {
+        const { accounts } = await apiCall('/api/portal-admin-list-accounts');
+        document.getElementById('staffLoading').style.display = 'none';
+        document.getElementById('staffTableWrap').style.display = 'block';
+        document.getElementById('staffTableBody').innerHTML = accounts.map(a => `
+          <tr>
+            <td style="font-weight:700;">${escapeHtml(a.displayName)}</td>
+            <td>${escapeHtml(a.email)}</td>
+            <td>${a.isActive
+              ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Hoạt động</span>'
+              : '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#f1f5f9; color:#64748b;">Đã vô hiệu hoá</span>'}</td>
+            <td style="white-space:nowrap; color:var(--text-muted);">${a.lastLoginAt ? formatDate(a.lastLoginAt) : 'Chưa đăng nhập'}</td>
+            <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="resetStaffPassword('${encodeURIComponent(a.email)}')">Đặt Lại MK</button>
+              <button type="button" class="btn ${a.isActive ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.78rem; ${a.isActive ? 'color:#b91c1c; border-color:#fecaca;' : ''}" onclick="toggleStaffAccount('${encodeURIComponent(a.email)}', ${!a.isActive})">${a.isActive ? 'Vô Hiệu Hoá' : 'Kích Hoạt'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteStaffAccount('${encodeURIComponent(a.email)}')">Xoá</button>
+            </td>
+          </tr>`).join('');
+      } catch (err) {
+        document.getElementById('staffLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('staffAddForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('staffAddBtn');
+      const alertEl = document.getElementById('staffAddAlert');
+      alertEl.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...';
+      try {
+        const email = document.getElementById('staffNewEmail').value.trim();
+        const displayName = document.getElementById('staffNewDisplayName').value.trim();
+        const result = await apiCall('/api/portal-admin-create-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, displayName })
+        });
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#15803d';
+        alertEl.innerHTML = `Đã tạo tài khoản cho <strong>${escapeHtml(displayName)}</strong>. Mật khẩu tạm thời: <strong>${result.tempPassword}</strong> — hãy gửi cho họ và nhắc đổi mật khẩu ngay sau khi đăng nhập.`;
+        document.getElementById('staffAddForm').reset();
+        loadStaffAccounts();
+      } catch (err) {
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#b91c1c';
+        alertEl.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Tạo Tài Khoản';
+      }
+    });
+
+    async function resetStaffPassword(emailEnc) {
+      if (!confirm('Đặt lại mật khẩu cho tài khoản này?')) return;
+      try {
+        const result = await apiCall('/api/portal-admin-reset-account-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc) })
+        });
+        alert(`Mật khẩu tạm thời mới: ${result.tempPassword}\n\nHãy gửi cho người này và nhắc họ đổi mật khẩu ngay sau khi đăng nhập.`);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function toggleStaffAccount(emailEnc, nextActive) {
+      const msg = nextActive ? 'Kích hoạt lại tài khoản này?' : 'Vô hiệu hoá tài khoản này? Người này sẽ không thể đăng nhập cho tới khi được kích hoạt lại.';
+      if (!confirm(msg)) return;
+      try {
+        await apiCall('/api/portal-admin-toggle-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc), isActive: nextActive })
+        });
+        showGlobalAlert(nextActive ? 'Đã kích hoạt tài khoản.' : 'Đã vô hiệu hoá tài khoản.', false);
+        loadStaffAccounts();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function deleteStaffAccount(emailEnc) {
+      if (!confirm('Xoá vĩnh viễn tài khoản quản trị này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-admin-delete-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc) })
+        });
+        showGlobalAlert('Đã xoá tài khoản.', false);
+        loadStaffAccounts();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('myPasswordForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const alertEl = document.getElementById('myPasswordAlert');
+      alertEl.style.display = 'none';
+      try {
+        const currentPassword = document.getElementById('myCurrentPassword').value;
+        const newPassword = document.getElementById('myNewPassword').value;
+        await apiCall('/api/portal-admin-change-my-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#15803d';
+        alertEl.textContent = 'Đã đổi mật khẩu thành công.';
+        document.getElementById('myPasswordForm').reset();
+      } catch (err) {
+        alertEl.style.display = 'block';
+        alertEl.style.color = '#b91c1c';
+        alertEl.textContent = err.message;
+      }
+    });
+
+    document.getElementById('currentAdminNameLabel').textContent = currentAdminDisplayName;
 
     loadRegistrations();
     loadDonations();
@@ -3821,6 +3975,7 @@
     populateAttendanceProgramSelect();
     loadAttendanceHistory();
     loadActivityLog();
+    loadStaffAccounts();
   </script>
 
   <div id="printableArea" style="display:none;"></div>
