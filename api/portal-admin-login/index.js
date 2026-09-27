@@ -4,6 +4,9 @@ const { verifyPassword } = require("../_shared/password");
 const { ADMIN_SESSION_TABLE, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
 
 const SESSION_TTL_HOURS = 12;
+// Chống dò mật khẩu: sai liên tiếp MAX_FAILED lần thì khoá đăng nhập tài khoản đó LOCK_MINUTES phút.
+const MAX_FAILED = 5;
+const LOCK_MINUTES = 15;
 
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
@@ -30,6 +33,13 @@ module.exports = async function (context, req) {
       throw err;
     }
 
+    if (account.lockedUntil && new Date(account.lockedUntil).getTime() > Date.now()) {
+      const mins = Math.ceil((new Date(account.lockedUntil).getTime() - Date.now()) / 60000);
+      context.res.status = 429;
+      context.res.body = { success: false, message: `Tài khoản tạm khoá do nhập sai mật khẩu nhiều lần. Thử lại sau ${mins} phút.` };
+      return;
+    }
+
     if (account.isActive === false) {
       context.res.status = 401;
       context.res.body = { success: false, message: "Tài khoản của bạn đã bị vô hiệu hoá. Liên hệ quản trị viên khác để được hỗ trợ." };
@@ -38,6 +48,15 @@ module.exports = async function (context, req) {
 
     const isValid = verifyPassword(password, account.passwordSalt, account.passwordHash);
     if (!isValid) {
+      const failed = (account.failedAttempts || 0) + 1;
+      const patch = { partitionKey: "admin", rowKey: email, failedAttempts: failed >= MAX_FAILED ? 0 : failed };
+      if (failed >= MAX_FAILED) patch.lockedUntil = new Date(Date.now() + LOCK_MINUTES * 60 * 1000).toISOString();
+      await accountsTable.upsertEntity(patch, "Merge");
+      if (failed >= MAX_FAILED) {
+        context.res.status = 429;
+        context.res.body = { success: false, message: `Nhập sai quá ${MAX_FAILED} lần. Tài khoản tạm khoá ${LOCK_MINUTES} phút.` };
+        return;
+      }
       context.res.status = 401;
       context.res.body = { success: false, message: "Email hoặc mật khẩu không đúng." };
       return;
@@ -55,7 +74,7 @@ module.exports = async function (context, req) {
       createdAt: new Date().toISOString()
     }, "Replace");
 
-    await accountsTable.upsertEntity({ partitionKey: "admin", rowKey: email, lastLoginAt: new Date().toISOString() }, "Merge");
+    await accountsTable.upsertEntity({ partitionKey: "admin", rowKey: email, lastLoginAt: new Date().toISOString(), failedAttempts: 0, lockedUntil: "" }, "Merge");
 
     context.res.status = 200;
     context.res.body = { success: true, token, displayName: account.displayName || email };

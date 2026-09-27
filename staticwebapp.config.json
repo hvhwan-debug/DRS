@@ -2,15 +2,28 @@
   "routes": [
     {
       "route": "/admin",
-      "rewrite": "/admin-index.html"
+      "rewrite": "/admin-index.html",
+      "headers": {
+        "Cache-Control": "no-store"
+      }
     },
     {
       "route": "/admin/crm",
-      "rewrite": "/admin-crm.html"
+      "rewrite": "/admin-crm.html",
+      "headers": {
+        "Cache-Control": "no-store"
+      }
     },
     {
       "route": "/thanh-vien",
       "rewrite": "/thanh-vien-index.html"
     }
-  ]
+  ],
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Permissions-Policy": "camera=(), microphone=(), payment=()"
+  }
 }

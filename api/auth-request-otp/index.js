@@ -33,7 +33,7 @@ module.exports = async function (context, req) {
       if (err.statusCode !== 404) throw err;
     }
 
-    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const code = String(require("crypto").randomInt(100000, 1000000));
     const expiresAt = new Date(Date.now() + OTP_TTL_MINUTES * 60 * 1000).toISOString();
 
     await table.upsertEntity({

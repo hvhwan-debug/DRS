@@ -28,12 +28,29 @@ module.exports = async function (context, req) {
   let viaMasterKey = false;
 
   if (masterPassword) {
+    // Chống dò "chìa khoá khôi phục": sai 5 lần -> khoá kênh này 30 phút (tính chung mọi nơi gọi).
+    const throttle = await getTableClient("AdminLoginThrottle");
+    let t = { failed: 0, lockedUntil: "" };
+    try { t = await throttle.getEntity("master", "key"); } catch (e) { /* chưa có */ }
+    if (t.lockedUntil && new Date(t.lockedUntil).getTime() > Date.now()) {
+      context.res.status = 429;
+      context.res.body = { success: false, message: "Đã nhập sai mật khẩu khôi phục quá nhiều lần. Thử lại sau 30 phút." };
+      return;
+    }
     const expected = process.env.ADMIN_PASSWORD || "";
     const a = Buffer.from(masterPassword);
     const b = Buffer.from(expected);
     if (expected && a.length === b.length && crypto.timingSafeEqual(a, b)) {
       isAuthorized = true;
       viaMasterKey = true;
+      await throttle.upsertEntity({ partitionKey: "master", rowKey: "key", failed: 0, lockedUntil: "" }, "Replace");
+    } else {
+      const failed = (t.failed || 0) + 1;
+      await throttle.upsertEntity({
+        partitionKey: "master", rowKey: "key",
+        failed: failed >= 5 ? 0 : failed,
+        lockedUntil: failed >= 5 ? new Date(Date.now() + 30 * 60 * 1000).toISOString() : ""
+      }, "Replace");
     }
   }
   if (!isAuthorized) {
