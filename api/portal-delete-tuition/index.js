@@ -1,7 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
-const { resetTierLock, recomputeTuitionPoints } = require("../_shared/memberTier");
+const { resetTierLock, recomputeTuitionPoints, getPointsBalance } = require("../_shared/memberTier");
 
 const TUITION_TABLE = "TuitionPayments";
 
@@ -30,8 +30,25 @@ module.exports = async function (context, req) {
     await resetTierLock(parentEmail);
     await recomputeTuitionPoints(parentEmail);
 
+    // Khoản học phí sinh ra từ việc duyệt hoá đơn (id "invoice-<mã>"): đưa hoá đơn về "Chưa thanh
+    // toán" để hoá đơn không còn hiện "Đã thanh toán" trong khi khoản tiền đã bị xoá.
+    let invoiceReverted = false;
+    if (id.startsWith("invoice-")) {
+      try {
+        const invoicesTable = await getTableClient("Invoices");
+        await invoicesTable.updateEntity({ partitionKey: parentEmail, rowKey: id.slice(8), status: "unpaid", paidAt: "", linkedTuitionPaymentId: "" }, "Merge");
+        invoiceReverted = true;
+      } catch (e) { /* hoá đơn đã bị xoá trước đó -> bỏ qua */ }
+    }
+
+    const bal = await getPointsBalance(parentEmail);
+    const deficit = bal.spent - bal.earned;
+    const warnings = [];
+    if (invoiceReverted) warnings.push("Hoá đơn liên quan đã được chuyển về trạng thái Chưa thanh toán.");
+    if (deficit > 0) warnings.push(`Lưu ý: thành viên đã dùng nhiều hơn số điểm còn lại ${deficit.toLocaleString("vi-VN")} điểm (điểm khả dụng hiển thị 0). Cân nhắc huỷ bớt yêu cầu đổi quà nếu khoản tiền bị xoá là nhập nhầm.`);
+
     context.res.status = 200;
-    context.res.body = { success: true };
+    context.res.body = { success: true, warning: warnings.join(" ") || null };
   } catch (err) {
     if (err.statusCode === 404) {
       context.res.status = 404;

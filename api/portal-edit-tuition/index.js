@@ -81,6 +81,10 @@ module.exports = async function (context, req) {
     // vì sửa 1 khoản có thể làm dịch chuyển mốc hạng của các khoản đóng sau nó.
     await resetTierLock(parentEmail);
     await recomputeTuitionPoints(parentEmail);
+    if (id.startsWith("invoice-") && Number(entity.amount) !== amount) {
+      const note = `Khoản này đến từ hoá đơn đã thanh toán; số tiền mới (${amount.toLocaleString("vi-VN")}đ) khác tổng hoá đơn (${(Number(entity.amount) || 0).toLocaleString("vi-VN")}đ). Kiểm tra lại hoá đơn nếu cần.`;
+      warning = warning ? warning + " " + note : note;
+    }
 
     context.res.status = 200;
     context.res.body = { success: true, warning };

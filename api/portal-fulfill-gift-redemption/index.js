@@ -2,7 +2,6 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
-const { adjustSpentPoints } = require("../_shared/memberTier");
 
 const REDEMPTIONS_TABLE = "GiftRedemptions";
 
@@ -75,8 +74,15 @@ module.exports = async function (context, req) {
     }
 
     const currentStatus = entity.status || "pending";
+    // Bấm lặp lại đúng trạng thái hiện tại (vd. bấm "Huỷ" 2 lần): không làm gì, không gửi email lặp.
+    // Trước đây trường hợp này vẫn chạy tiếp và HOÀN ĐIỂM THÊM 1 LẦN NỮA.
+    if (currentStatus === status) {
+      context.res.status = 200;
+      context.res.body = { success: true, status, unchanged: true };
+      return;
+    }
     const allowedNext = ALLOWED_TRANSITIONS[currentStatus] || [];
-    if (currentStatus !== status && !allowedNext.includes(status)) {
+    if (!allowedNext.includes(status)) {
       context.res.status = 409;
       context.res.body = {
         success: false,
@@ -92,14 +98,7 @@ module.exports = async function (context, req) {
 
     await redemptionsTable.updateEntity(updatePayload, "Merge");
 
-    // Huỷ yêu cầu -> hoàn lại đúng số điểm đã trừ lúc gửi yêu cầu (giftCost lưu là số điểm, không phải VNĐ).
-    if (status === "cancelled") {
-      try {
-        await adjustSpentPoints(email, -(Number(entity.giftCost) || 0));
-      } catch (e) {
-        context.log.error("Lỗi hoàn điểm khi huỷ đổi quà:", e.message);
-      }
-    }
+    // Huỷ yêu cầu -> điểm TỰ ĐƯỢC HOÀN vì điểm đã dùng chỉ tính các yêu cầu chưa huỷ (xem getSpentPoints).
 
     const displayName = await getMemberDisplayName(email);
     const greeting = buildGreeting(displayName);

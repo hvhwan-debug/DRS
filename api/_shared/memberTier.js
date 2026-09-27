@@ -43,6 +43,13 @@ function isVipTotal(totalPaid) {
   return totalPaid >= VIP_MIN_TOTAL;
 }
 
+// Khoản học phí bị phụ huynh BÁO SAI (confirmationStatus = "rejected") tạm KHÔNG tính vào điểm
+// và hạng, cho tới khi admin sửa lại (sửa -> trạng thái về "chờ xác nhận" -> tính lại bình thường).
+// Tránh cộng điểm/đẩy hạng từ một khoản tiền nhập sai.
+function countsForRewards(e) {
+  return (e.confirmationStatus || "pending") !== "rejected";
+}
+
 function addMonths(date, months) {
   const d = new Date(date);
   d.setMonth(d.getMonth() + months);
@@ -61,23 +68,23 @@ function describeEarnRate(tier) {
   return tier.earnRate.mode === "%" ? `${tier.earnRate.value}%` : `${tier.earnRate.value}x`;
 }
 
-// Đọc số điểm ĐÃ DÙNG (đổi quà) của 1 email — lưu cộng dồn trong MemberProfiles.spentPoints.
+// Số điểm ĐÃ DÙNG = tổng điểm của mọi yêu cầu đổi quà CHƯA BỊ HUỶ (tính trực tiếp từ bảng
+// GiftRedemptions). Trước đây dùng 1 con số cộng/trừ tay (MemberProfiles.spentPoints) nên có thể
+// lệch: huỷ 2 lần thì hoàn điểm 2 lần, lỗi giữa chừng thì mất điểm... Tính từ chính các yêu cầu
+// đổi quà thì luôn khớp: huỷ yêu cầu = tự hoàn điểm, không cần bước cộng/trừ riêng.
+const REDEMPTIONS_TABLE = "GiftRedemptions";
 async function getSpentPoints(email) {
-  try {
-    const profilesTable = await getTableClient(PROFILES_TABLE);
-    const p = await profilesTable.getEntity("profile", email);
-    return Number(p.spentPoints) || 0;
-  } catch (e) {
-    return 0;
+  const table = await getTableClient(REDEMPTIONS_TABLE);
+  let spent = 0;
+  const it = table.listEntities({ queryOptions: { filter: `PartitionKey eq '${String(email).replace(/'/g, "''")}'` } });
+  for await (const r of it) {
+    if ((r.status || "pending") !== "cancelled") spent += Number(r.giftCost) || 0;
   }
+  return spent;
 }
 
-// Cộng/trừ vào số điểm đã dùng (delta âm = hoàn điểm khi huỷ đổi quà). Không cho âm tổng đã dùng.
-// Dùng ETag (optimistic concurrency) + thử lại: nếu thành viên bấm đổi quà nhiều lần liên tiếp/nhanh
-// (hoặc mở 2 tab), 2 request có thể cùng đọc "đã dùng" trước khi request kia ghi xong, dẫn đến
-// GHI ĐÈ và làm mất 1 lần trừ điểm — đây là nguyên nhân đã gây ra tình trạng "đổi quà nhưng
-// không trừ điểm" trước đây. Việc chỉ ghi lại nếu ETag còn khớp (và thử lại khi không khớp) đảm
-// bảo không lần trừ/hoàn điểm nào bị mất do 2 yêu cầu chạy song song.
+// GIỮ LẠI để tương thích — không còn được dùng trong luồng đổi quà (điểm đã dùng giờ tính trực tiếp
+// từ GiftRedemptions, xem getSpentPoints). Chỉ cập nhật con số tham khảo trong hồ sơ.
 async function adjustSpentPoints(email, delta) {
   const profilesTable = await getTableClient(PROFILES_TABLE);
   const maxAttempts = 8;
@@ -130,13 +137,19 @@ async function recomputeTuitionPoints(email) {
   for await (const e of iterator) entities.push(e);
   entities.sort((a, b) => new Date(a.paidAt) - new Date(b.paidAt));
 
-  let runningTotal = 0;
+  // Hạng tại thời điểm đóng = tổng học phí trong 12 THÁNG TÍNH ĐẾN LÚC ĐÓNG (gồm cả khoản đang xét),
+  // đúng cùng quy tắc với hạng hiển thị cho thành viên (chu kỳ trượt 12 tháng). Trước đây dùng tổng
+  // TRỌN ĐỜI nên sau 1 năm thành viên thấy hạng thấp nhưng vẫn được tích điểm theo tỉ lệ hạng cao.
   let totalPoints = 0;
-  for (const e of entities) {
-    const amount = Number(e.amount) || 0;
-    runningTotal += amount;
-    const tierAtThatTime = getTierByTotal(runningTotal);
-    const pts = calculatePoints(amount, tierAtThatTime);
+  const counted = entities.map(e => ({ at: new Date(e.paidAt).getTime() || 0, amount: countsForRewards(e) ? (Number(e.amount) || 0) : 0 }));
+  for (let i = 0; i < entities.length; i++) {
+    const e = entities[i];
+    const amount = counted[i].amount;
+    const windowStart = addMonths(new Date(counted[i].at), -TIER_RETENTION_MONTHS).getTime();
+    let windowTotal = 0;
+    for (let j = 0; j <= i; j++) if (counted[j].at > windowStart) windowTotal += counted[j].amount;
+    const tierAtThatTime = getTierByTotal(windowTotal);
+    const pts = amount > 0 ? calculatePoints(amount, tierAtThatTime) : 0;
     totalPoints += pts;
     if (Number(e.pointsEarned) !== pts) {
       try {
@@ -203,7 +216,7 @@ async function getTotalTuitionPaidRolling12Months(email) {
   });
   for await (const entity of iterator) {
     const paidAt = entity.paidAt ? new Date(entity.paidAt) : null;
-    if (paidAt && paidAt >= cutoff) total += Number(entity.amount) || 0;
+    if (paidAt && paidAt >= cutoff && countsForRewards(entity)) total += Number(entity.amount) || 0;
   }
   return total;
 }

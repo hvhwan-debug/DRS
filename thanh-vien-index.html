@@ -592,8 +592,12 @@
       });
     }
 
+    let giftRequestInFlight = false;
     async function requestGift(giftId) {
+      if (giftRequestInFlight) return; // chặn bấm đúp tạo 2 yêu cầu
       if (!confirm('Gửi yêu cầu đổi quà này? Đội ngũ sẽ liên hệ để sắp xếp trao quà.')) return;
+      giftRequestInFlight = true;
+      document.querySelectorAll(`[onclick*="requestGift('${giftId}')"]`).forEach(b => { b.disabled = true; b.dataset.label = b.innerHTML; b.innerHTML = 'Đang gửi…'; });
       const token = localStorage.getItem('wvn_member_token');
       try {
         const res = await fetch('/api/member-request-gift', {
@@ -603,10 +607,13 @@
         });
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Không thể gửi yêu cầu.');
-        memberToast('Đã gửi yêu cầu đổi quà. Trung tâm sẽ liên hệ để trao quà.');
+        memberToast(`Đã gửi yêu cầu đổi quà${typeof result.available === 'number' ? `, còn ${result.available.toLocaleString('vi-VN')} điểm` : ''}. Trung tâm sẽ liên hệ để trao quà.`);
         loadMemberInfo();
       } catch (err) {
         memberToast(err.message, true);
+      } finally {
+        giftRequestInFlight = false;
+        document.querySelectorAll(`[onclick*="requestGift('${giftId}')"]`).forEach(b => { b.disabled = false; if (b.dataset.label) b.innerHTML = b.dataset.label; });
       }
     }
 

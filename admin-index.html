@@ -1567,14 +1567,14 @@
     }
 
     async function deleteTuition(parentEmailEnc, id) {
-      if (!confirm('Xoá vĩnh viễn khoản học phí này? Hạng thành viên sẽ được tính lại ngay theo tổng học phí còn lại. Không thể hoàn tác.')) return;
+      if (!confirm('Xoá vĩnh viễn khoản học phí này? Hạng và điểm tích lũy sẽ được tính lại ngay. Nếu khoản này đến từ hoá đơn, hoá đơn sẽ về trạng thái Chưa thanh toán. Không thể hoàn tác.')) return;
       try {
-        await apiCall('/api/portal-delete-tuition', {
+        const delRes = await apiCall('/api/portal-delete-tuition', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ parentEmail: decodeURIComponent(parentEmailEnc), id })
         });
-        showGlobalAlert('Đã xoá khoản học phí.', false);
+        showGlobalAlert('Đã xoá khoản học phí.' + (delRes.warning ? ' ' + delRes.warning : ''), false);
         document.getElementById('tuitionTableWrap').style.display = 'none';
         document.getElementById('tuitionEmpty').style.display = 'none';
         document.getElementById('tuitionLoading').style.display = 'block';
@@ -1800,14 +1800,14 @@
     }
 
     async function deleteInvoiceItem(email, id) {
-      if (!confirm('Xoá hoá đơn này? Không thể hoàn tác.')) return;
+      if (!confirm('Xoá hoá đơn này? Nếu hoá đơn đã thanh toán, khoản học phí và điểm tích lũy đi kèm cũng bị xoá. Không thể hoàn tác.')) return;
       try {
-        await apiCall('/api/portal-delete-invoice', {
+        const delInv = await apiCall('/api/portal-delete-invoice', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ parentEmail: decodeURIComponent(email), id })
         });
-        showGlobalAlert('Đã xoá hoá đơn.', false);
+        showGlobalAlert(delInv.warning || 'Đã xoá hoá đơn.', false);
         loadInvoices();
       } catch (err) {
         showGlobalAlert(err.message, true);
@@ -3760,7 +3760,14 @@
               </div>`).join('') : '<div style="color:var(--text-muted); font-size:0.88rem;">Chưa có điểm nào.</div>'}
           </div>`;
 
-        const giftHtml = `
+        const pts = data.points;
+        const pointsHtml = pts ? `
+          <div style="margin-top:1.4rem; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0.6rem;">
+            <div style="border:1px solid var(--border); border-radius:12px; padding:0.7rem 0.9rem;"><div style="font-size:0.75rem; color:var(--text-muted);">Điểm đã tích lũy</div><div style="font-size:1.2rem; font-weight:800;">${pts.earned.toLocaleString('vi-VN')}</div></div>
+            <div style="border:1px solid var(--border); border-radius:12px; padding:0.7rem 0.9rem;"><div style="font-size:0.75rem; color:var(--text-muted);">Đã dùng đổi quà</div><div style="font-size:1.2rem; font-weight:800;">${pts.spent.toLocaleString('vi-VN')}</div></div>
+            <div style="border:1px solid ${pts.deficit ? '#fecaca' : '#bbf7d0'}; background:${pts.deficit ? '#fef2f2' : '#f0fdf4'}; border-radius:12px; padding:0.7rem 0.9rem;"><div style="font-size:0.75rem; color:var(--text-muted);">Còn lại</div><div style="font-size:1.2rem; font-weight:800; color:${pts.deficit ? '#b91c1c' : '#15803d'};">${pts.deficit ? '−' + pts.deficit.toLocaleString('vi-VN') : pts.available.toLocaleString('vi-VN')}</div></div>
+          </div>${pts.deficit ? '<div style="font-size:0.8rem; color:#b91c1c; margin-top:0.4rem;">Thành viên đã dùng nhiều điểm hơn số đang có (thường do học phí bị sửa/xoá sau khi đổi quà).</div>' : ''}` : '';
+        const giftHtml = pointsHtml + `
           <div style="margin-top:1.4rem;">
             <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Đổi Quà (${data.giftRedemptions.length})</h4>
             ${data.giftRedemptions.length > 0 ? data.giftRedemptions.map(r => {

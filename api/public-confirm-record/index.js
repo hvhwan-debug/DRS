@@ -1,4 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
+const { recomputeTuitionPoints } = require("../_shared/memberTier");
 
 const TOKENS_TABLE = "PublicConfirmTokens";
 const DONATIONS_TABLE = "Donations";
@@ -55,6 +56,7 @@ module.exports = async function (context, req) {
       memberFeedback: action === "reject" ? feedback : "",
       confirmedAt: new Date().toISOString()
     }, "Merge");
+    if (type === "tuition") await recomputeTuitionPoints(recordPartitionKey);
 
     context.res.status = 200;
     context.res.body = { success: true, confirmationStatus };

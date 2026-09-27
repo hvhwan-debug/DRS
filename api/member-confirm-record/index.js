@@ -1,4 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
+const { recomputeTuitionPoints } = require("../_shared/memberTier");
 
 const SESSION_TABLE = "AuthSessions";
 const DONATIONS_TABLE = "Donations";
@@ -102,6 +103,7 @@ module.exports = async function (context, req) {
         return;
       }
       await table.updateEntity({ partitionKey: email, rowKey: id, ...update }, "Merge");
+      await recomputeTuitionPoints(email);
     }
 
     context.res.status = 200;
