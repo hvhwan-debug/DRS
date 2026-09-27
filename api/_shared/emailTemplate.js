@@ -15,7 +15,7 @@
 // (kể cả lồng trong bảng) đều tự khai lại font-family, không dựa vào kế thừa từ thẻ cha.
 
 const BRAND_NAME = "Mạng Lưới Tri Thức Việt Nam";
-const LOGO_URL = "https://wvn.vn/images/logo-wvn.png";
+const LOGO_URL = "https://wvn.vn/images/logo-wvn.png?v=20260927b";
 const SITE_URL = "https://wvn.vn/thanh-vien";
 const FONT_STACK = "Arial,Helvetica,sans-serif"; // 1 phông DUY NHẤT cho toàn bộ email
 

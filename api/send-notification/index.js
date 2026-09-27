@@ -232,7 +232,7 @@ function buildEmailHtml(title, rowsHtml) {
             <td bgcolor="#0b1120" style="background-color:#0b1120;background:linear-gradient(135deg,#0b1120 0%,#16233f 50%,#0284c7 100%);padding:28px 32px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td align="center" style="text-align:center;">
-                  <img src="https://wvn.vn/images/logo-wvn.png" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
+                  <img src="https://wvn.vn/images/logo-wvn.png?v=20260927b" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
                   <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;font-family:Arial,Helvetica,sans-serif;">Mạng Lưới Tri Thức Việt Nam</div>
                 </td>
               </tr></table>
