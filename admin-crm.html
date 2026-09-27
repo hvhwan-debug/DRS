@@ -375,7 +375,7 @@ details.more > summary::-webkit-details-marker { display: none; }
       </select>
       <span class="spacer"></span>
       <span class="result" id="listResult"></span>
-      <button class="btn" id="exportBtn"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Xuất CSV</button>
+      <button class="btn" id="exportBtn"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Xuất Excel</button>
     </div>
     <div class="table-wrap">
       <table>
@@ -432,6 +432,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 </aside>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/xlsx-export.js?v=20260928"></script>
 
 <script>
 (function () {
@@ -1037,19 +1038,43 @@ details.more > summary::-webkit-details-marker { display: none; }
   }
 
   // ---------- Xuất CSV ----------
-  function exportCsv() {
+  async function exportCsv() {
     const rows = sortedFiltered();
-    const head = ['Học sinh', 'Ngày sinh', 'Chương trình', 'Giai đoạn', 'Ưu tiên', 'Lớp', 'Trường', 'Người giám hộ', 'Quan hệ', 'Điện thoại', 'Email phụ huynh', 'Người phụ trách', 'Liên hệ gần nhất', 'Hẹn liên hệ', 'Nhãn', 'Cần chú ý'];
-    const cell = v => { const x = String(v == null ? '' : v); return /[",\n;]/.test(x) ? '"' + x.replace(/"/g, '""') + '"' : x; };
-    const lines = [head.join(',')].concat(rows.map(s => { const p = profileOf(s); return [
-      s.studentName, fmtDate(s.dob), s.programs.join(' | '), STAGE[stageOf(s)].label, PRIORITY[p.priority || 'thuong'], p.gradeLevel, p.school,
-      p.guardianName, p.guardianRelation, p.guardianPhone, s.parentEmail, p.caretaker, fmtDate(lastContact(s)), fmtDate(p.nextFollowUp),
-      (p.tags || []).join(' | '), flagsOf(s).map(f => f.label).join(' | ')
-    ].map(cell).join(','); }));
-    const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `crm-hoc-sinh-${todayStr()}.csv`;
-    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-    toast(`Đã xuất ${rows.length} học sinh.`);
+    if (!rows.length) { toast('Không có học sinh nào để xuất.', true); return; }
+    const btn = $('exportBtn'); const label = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Đang tạo file…';
+    const flagsText = st => flagsOf(st).map(f => f.label).join(', ');
+    const filterDesc = [state.stage && STAGE[state.stage].label, state.program, state.q && `tìm "${state.q}"`].filter(Boolean).join(' · ');
+    try {
+      const name = await WVNExcel.download({
+        filename: `crm-hoc-sinh-${todayStr()}`,
+        sheetName: 'Học sinh',
+        title: 'Danh sách học sinh · CRM',
+        subtitle: (filterDesc ? 'Lọc: ' + filterDesc + ' · ' : '') + (me.displayName ? 'Người xuất: ' + me.displayName : ''),
+        columns: [
+          { label: 'Học sinh', get: st => st.studentName },
+          { label: 'Ngày sinh', type: 'date', get: st => st.dob },
+          { label: 'Lớp / khối', get: st => profileOf(st).gradeLevel || eff(st).gradeHint },
+          { label: 'Chương trình', get: st => st.programs.join(', ') },
+          { label: 'Giai đoạn', get: st => STAGE[stageOf(st)].label, style: (v, st) => { const x = STAGE[stageOf(st)]; return { fill: x.cs, color: x.c, bold: true }; } },
+          { label: 'Người giám hộ', get: st => eff(st).guardianName },
+          { label: 'Quan hệ', get: st => profileOf(st).guardianRelation || '' },
+          { label: 'Điện thoại', type: 'phone', get: st => eff(st).guardianPhone },
+          { label: 'Email phụ huynh', get: st => st.parentEmail },
+          { label: 'Trường', get: st => eff(st).school },
+          { label: 'Người phụ trách', get: st => profileOf(st).caretaker || '' },
+          { label: 'Ưu tiên', get: st => PRIORITY[profileOf(st).priority || 'thuong'], style: (v, st) => profileOf(st).priority === 'khan' ? { color: '#b42318', bold: true } : profileOf(st).priority === 'cao' ? { color: '#a15c07', bold: true } : null },
+          { label: 'Liên hệ gần nhất', type: 'date', get: st => lastContact(st) ? lastContact(st).slice(0, 10) : '' },
+          { label: 'Hẹn liên hệ', type: 'date', get: st => profileOf(st).nextFollowUp, style: v => v && v < todayStr() ? { color: '#b42318', bold: true } : null },
+          { label: 'Việc cần làm', get: st => profileOf(st).followUpNote || '' },
+          { label: 'Nhãn', get: st => (profileOf(st).tags || []).join(', ') },
+          { label: 'Cần chú ý', get: flagsText, style: v => v ? { color: '#b42318' } : null, wrap: true }
+        ],
+        rows
+      });
+      toast(`Đã tải ${name} (${rows.length} học sinh).`);
+    } catch (e) { toast(e.message, true); }
+    finally { btn.disabled = false; btn.innerHTML = label; }
   }
 
   // ---------- Sự kiện ----------

@@ -367,6 +367,26 @@
   }
   ['tuitionForm', 'invoiceForm'].forEach(fid => { const f = $(fid); if (f) f.addEventListener('reset', () => setTimeout(defaultDates, 0)); });
 
+  // ---------- Xuất Excel (.xlsx) có định dạng thay cho CSV ----------
+  const EXPORT_TITLES = { 'hoc-phi': 'Học phí đã thu', 'hoa-don': 'Danh sách hoá đơn', 'hoc-sinh': 'Danh sách học sinh', 'quyen-gop': 'Quyên góp', 'bang-diem': 'Bảng điểm', 'don-dang-ky': 'Đơn đăng ký', 'thanh-vien': 'Thành viên', 'diem-danh': 'Điểm danh' };
+  window.exportToCsv = async function (filename, rows, columns) {
+    if (!rows || !rows.length) { if (typeof showGlobalAlert === 'function') showGlobalAlert('Không có dữ liệu để xuất.', true); return; }
+    const base = String(filename || 'du-lieu').replace(/\.(csv|xlsx)$/i, '');
+    const getVal = (row, key) => String(key).split('.').reduce((o, k) => (o == null ? '' : o[k]), row);
+    const flat = rows.map(r => { const o = {}; columns.forEach(c => { o[c.key] = getVal(r, c.key); }); return o; });
+    const cols = columns.map(c => {
+      const type = window.WVNExcel.guessType(c, flat);
+      const col = { label: c.label, key: c.key, type };
+      if (/trạng thái|status|xác nhận/i.test(c.label)) col.style = v => /từ chối|rejected|huỷ|cancel|chưa|unpaid/i.test(String(v)) ? { color: '#b42318', bold: true } : /duyệt|confirmed|paid|đã|fulfilled/i.test(String(v)) ? { color: '#1f7a4d', bold: true } : null;
+      return col;
+    });
+    try {
+      const name = await window.WVNExcel.download({ filename: base, sheetName: EXPORT_TITLES[base] || 'Dữ liệu', title: EXPORT_TITLES[base] || base, subtitle: 'Mạng Lưới Tri Thức Việt Nam', columns: cols, rows: flat });
+      if (typeof showGlobalAlert === 'function') showGlobalAlert(`Đã tải ${name}.`, false);
+    } catch (e) { if (typeof showGlobalAlert === 'function') showGlobalAlert(e.message, true); }
+  };
+  document.querySelectorAll('button[onclick*="exportToCsv("]').forEach(b => { b.innerHTML = b.innerHTML.replace(/Xuất CSV/g, 'Xuất Excel'); });
+
   // ---------- Mở đúng mục khi đến từ đường dẫn /admin#ten-muc (vd. từ trang Công Việc) ----------
   function openTabFromHash() {
     const tab = (location.hash || '').slice(1);
