@@ -256,6 +256,24 @@ tbody tr:last-child td { border-bottom: none; }
 details.more > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--brand); margin-bottom: 0.7rem; list-style: none; }
 details.more > summary::-webkit-details-marker { display: none; }
 
+/* Gọi điện / Zalo */
+.contact { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+.contact a { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.95rem; border-radius: 999px; font-weight: 600; font-size: 0.88rem; text-decoration: none; border: 1px solid transparent; }
+.contact .call { background: var(--green); color: #fff; }
+.contact .call:hover { background: #266640; }
+.contact .zalo { background: #0068ff; color: #fff; }
+.contact .zalo:hover { background: #0055d4; }
+.contact .nophone { color: var(--muted); font-size: 0.84rem; background: none; border: 1px dashed var(--line); }
+.zalo-mark { display: inline-grid; place-items: center; width: 1.15rem; height: 1.15rem; border-radius: 4px; background: #fff; color: #0068ff; font-size: 0.62rem; font-weight: 800; letter-spacing: -0.3px; }
+.mini-contact { display: inline-flex; gap: 0.3rem; margin-left: 0.4rem; vertical-align: middle; }
+.mini-contact a { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; text-decoration: none; font-size: 0.72rem; }
+.mini-contact .call { background: var(--green-soft); color: var(--green); }
+.mini-contact .zalo { background: #e5efff; color: #0068ff; font-weight: 800; font-size: 0.6rem; }
+.mini-contact a:hover { filter: brightness(0.95); }
+.after-contact { background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-m); padding: 0.75rem 0.85rem; margin-bottom: 1rem; }
+.after-contact p { font-size: 0.86rem; font-weight: 600; margin-bottom: 0.5rem; }
+.after-contact .opts .opt { background: #fff; }
+
 /* ---------- Thông báo & trạng thái tải ---------- */
 .toast { position: fixed; bottom: 1.2rem; left: 50%; transform: translate(-50%, 20px); background: var(--ink); color: #fff; padding: 0.65rem 1rem; border-radius: var(--radius-m); font-size: 0.88rem; opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 60; max-width: calc(100% - 2rem); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
@@ -377,6 +395,7 @@ details.more > summary::-webkit-details-marker { display: none; }
       <div style="min-width:0;">
         <h2 id="dName"></h2>
         <p id="dSub"></p>
+        <div id="dContact"></div>
       </div>
       <button class="drawer-close" id="drawerClose" aria-label="Đóng hồ sơ"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     </div>
@@ -478,6 +497,19 @@ details.more > summary::-webkit-details-marker { display: none; }
       schoolFrom: !p.school && reg.school ? 'lấy từ đơn đăng ký' : '',
       addressFrom: !p.address && (reg.address || par.address) ? 'lấy từ đơn đăng ký' : ''
     };
+  }
+  // Chuẩn hoá số điện thoại Việt Nam về dạng 0xxxxxxxxx (dùng cho cả gọi điện và Zalo).
+  function vnPhone(raw) {
+    let d = String(raw || '').replace(/\D/g, '');
+    if (d.startsWith('84') && d.length >= 11) d = '0' + d.slice(2);
+    return d.length >= 9 ? d : '';
+  }
+  function contactButtons(s, size) {
+    const ph = vnPhone(eff(s).guardianPhone);
+    if (!ph) return size === 'mini' ? '' : '<div class="contact"><a class="nophone" href="#" data-goto-profile="1"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm số điện thoại phụ huynh</a></div>';
+    const call = `<a class="call" href="tel:${ph}" data-contact="call" data-id="${esc(s.id)}" title="Gọi ${esc(ph)}" aria-label="Gọi ${esc(ph)}"><i class="fa-solid fa-phone" aria-hidden="true"></i>${size === 'mini' ? '' : ' Gọi ' + esc(ph)}</a>`;
+    const zalo = `<a class="zalo" href="https://zalo.me/${ph}" target="_blank" rel="noopener" data-contact="zalo" data-id="${esc(s.id)}" data-phone="${ph}" title="Nhắn Zalo ${esc(ph)}" aria-label="Nhắn Zalo ${esc(ph)}">${size === 'mini' ? 'Zalo' : '<span class="zalo-mark">Zalo</span> Nhắn Zalo'}</a>`;
+    return size === 'mini' ? `<span class="mini-contact">${call}${zalo}</span>` : `<div class="contact">${call}${zalo}</div>`;
   }
   function stageOf(s) { return STAGE[profileOf(s).stage] ? profileOf(s).stage : DEFAULT_STAGE; }
   function lastContact(s) { return s.interactions && s.interactions.length ? s.interactions[0].happenedAt : null; }
@@ -586,7 +618,7 @@ details.more > summary::-webkit-details-marker { display: none; }
         <td><div class="name-cell"><span class="avatar">${esc(initials(s.studentName))}</span><div><strong>${esc(s.studentName)}</strong><small>${esc([p.gradeLevel, s.dob ? 'SN ' + fmtDate(s.dob) : ''].filter(Boolean).join(' · ') || s.parentEmail)}</small></div></div></td>
         <td>${esc(s.programs.join(', ')) || '<span class="locked">Chưa gán</span>'}</td>
         <td>${stageChip(stageOf(s))}</td>
-        <td>${(() => { const e = eff(s); return e.guardianName ? `${esc(e.guardianName)}${e.guardianPhone ? `<br><small class="locked">${esc(e.guardianPhone)}</small>` : ''}` : `<small class="locked">${esc(s.parentEmail)}</small>`; })()}</td>
+        <td>${(() => { const e = eff(s); return (e.guardianName ? `${esc(e.guardianName)}${e.guardianPhone ? `<br><small class="locked">${esc(e.guardianPhone)}</small>` : ''}` : `<small class="locked">${esc(s.parentEmail)}</small>`) + contactButtons(s, 'mini'); })()}</td>
         <td>${last ? `${esc(fmtDate(last))}<br><small class="locked">${esc(relDays(last))}</small>` : '<span class="locked">Chưa có</span>'}</td>
         <td>${next ? `<span class="${nextCls}">${esc(fmtDate(next))}</span><br><small class="locked">${esc(relDays(next))}</small>` : '<span class="locked">—</span>'}</td>
         <td>${flagChips(s)}</td>
@@ -661,6 +693,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     $('dAvatar').textContent = initials(s.studentName);
     $('dName').textContent = s.studentName;
     $('dSub').textContent = [s.programs.join(', '), p.gradeLevel, s.dob ? 'Sinh ngày ' + fmtDate(s.dob) : ''].filter(Boolean).join(' · ') || s.parentEmail;
+    $('dContact').innerHTML = contactButtons(s);
     $('dRail').innerHTML = STAGES.map((st, i) => {
       const cls = i === curIdx ? 'current' : (i < curIdx && curIdx <= 2 && i <= 2 ? 'passed' : '');
       return `<button class="${cls}" style="--c:${st.c};--cs:${st.cs}" data-set-stage="${st.key}" aria-pressed="${i === curIdx}">${esc(st.label)}</button>`;
@@ -695,12 +728,20 @@ details.more > summary::-webkit-details-marker { display: none; }
     $('pane-care').innerHTML = `
       <dl class="facts">
         <div><dt>Người giám hộ</dt><dd>${esc(e.guardianName || '—')}${p.guardianRelation ? ` (${esc(p.guardianRelation)})` : ''}</dd></div>
-        <div><dt>Điện thoại</dt><dd>${phone ? `<a href="tel:${esc(phone)}"><i class="fa-solid fa-phone" aria-hidden="true"></i> ${esc(e.guardianPhone)}</a> · <a href="https://zalo.me/${esc(phone.replace(/^\+?84/, '0'))}" target="_blank" rel="noopener">Zalo</a>` : '<span class="locked">Chưa có, thêm ở tab Hồ sơ</span>'}</dd></div>
+        <div><dt>Điện thoại</dt><dd>${phone ? `${esc(e.guardianPhone)}${contactButtons(s, 'mini')}` : '<span class="locked">Chưa có, thêm ở tab Hồ sơ</span>'}</dd></div>
         <div><dt>Email phụ huynh</dt><dd><a href="mailto:${esc(s.parentEmail)}">${esc(s.parentEmail)}</a></dd></div>
         <div><dt>Hẹn liên hệ</dt><dd class="${p.nextFollowUp && p.nextFollowUp < today ? 'overdue' : ''}">${p.nextFollowUp ? `${esc(fmtDate(p.nextFollowUp))} (${esc(relDays(p.nextFollowUp))})${p.followUpNote ? ' · ' + esc(p.followUpNote) : ''}` : '—'}</dd></div>
       </dl>
       ${flagsOf(s).length ? `<div style="margin:-0.4rem 0 1rem;">${flagChips(s)}</div>` : ''}
 
+      ${state.contacted && state.contacted.id === s.id ? `<div class="after-contact">
+        <p><i class="fa-solid fa-${state.contacted.via === 'zalo' ? 'comment-dots' : 'phone'}" aria-hidden="true"></i> Vừa ${state.contacted.via === 'zalo' ? 'nhắn Zalo' : 'gọi'} cho phụ huynh. Kết quả thế nào?</p>
+        <div class="opts">
+          <button type="button" class="opt" data-aftercontact="ok">Đã trao đổi xong</button>
+          <button type="button" class="opt" data-aftercontact="noanswer">${state.contacted.via === 'zalo' ? 'Chưa trả lời' : 'Không nghe máy'}</button>
+          <button type="button" class="opt" data-aftercontact="detail">Ghi chi tiết</button>
+          <button type="button" class="opt" data-aftercontact="skip">Bỏ qua</button>
+        </div></div>` : ''}
       <div class="q-label" style="font-size:0.85rem;font-weight:700;margin-bottom:0.5rem;">Ghi nhanh 1 chạm</div>
       <div class="quicklog">
         <button type="button" data-quicklog="noanswer"><i class="fa-solid fa-phone-slash" aria-hidden="true"></i><span>Gọi không nghe máy<small>Tự hẹn gọi lại ngày mai</small></span></button>
@@ -902,6 +943,38 @@ details.more > summary::-webkit-details-marker { display: none; }
 
   document.addEventListener('click', e => {
     const t = e.target;
+    const contact = t.closest('a[data-contact]');
+    if (contact) {
+      e.stopPropagation();
+      const s = findStudent(contact.dataset.id); if (!s) return;
+      state.contacted = { id: s.id, via: contact.dataset.contact, at: Date.now() };
+      if (contact.dataset.contact === 'zalo') {
+        // Zalo mở trong tab/ứng dụng mới; sao chép sẵn số để dán nếu Zalo trên máy tính yêu cầu tìm kiếm
+        try { navigator.clipboard && navigator.clipboard.writeText(contact.dataset.phone).catch(() => {}); } catch (err) {}
+        toast(`Đang mở Zalo với ${contact.dataset.phone} (đã sao chép số).`);
+      } else {
+        toast(`Đang gọi ${contact.getAttribute('href').slice(4)}…`);
+      }
+      // Mở sẵn hồ sơ ở tab Chăm sóc để ghi nhận ngay sau khi gọi/nhắn xong
+      setTimeout(() => { if (state.openId !== s.id) openDrawer(s.id); state.pane = 'care'; renderDrawer(); }, 300);
+      return; // không chặn mặc định: trình duyệt tự mở cuộc gọi / Zalo
+    }
+    const gp = t.closest('[data-goto-profile]'); if (gp) { e.preventDefault(); state.pane = 'profile'; renderDrawer(); setTimeout(() => { const el = document.querySelector('#pane-profile [data-field="guardianPhone"]'); if (el) el.focus(); }, 50); return; }
+    const ac = t.closest('[data-aftercontact]');
+    if (ac && state.openId && state.contacted) {
+      const s = findStudent(state.openId); const via = state.contacted.via; const kind = ac.dataset.aftercontact;
+      state.contacted = null;
+      if (kind === 'skip') return renderDrawer();
+      if (kind === 'detail') { renderDrawer(); const d = document.querySelector('#pane-care details.more'); if (d) { d.open = true; const r = d.querySelector(`input[name=type][value="${via === 'zalo' ? 'zalo' : 'goi-dien'}"]`); if (r) r.checked = true; $('logContent').focus(); } return; }
+      const ok = kind === 'ok';
+      return logInteraction(s, {
+        type: via === 'zalo' ? 'zalo' : 'goi-dien',
+        content: ok ? (via === 'zalo' ? 'Đã nhắn Zalo và trao đổi với phụ huynh.' : 'Đã gọi điện trao đổi với phụ huynh.') : (via === 'zalo' ? 'Đã nhắn Zalo, phụ huynh chưa trả lời.' : 'Gọi điện nhưng phụ huynh không nghe máy.'),
+        happenedAt: todayStr(),
+        nextFollowUp: addDays(todayStr(), ok ? 14 : 1),
+        followUpNote: ok ? 'Hỏi thăm tình hình' : (via === 'zalo' ? 'Kiểm tra tin nhắn Zalo' : 'Gọi lại')
+      }, ac);
+    }
     const del = t.closest('[data-del]');
     if (del) { e.stopPropagation(); return deleteInteraction(del.dataset.del); }
     const stageBtn = t.closest('[data-set-stage]'); if (stageBtn) return setStage(state.openId, stageBtn.dataset.setStage);
