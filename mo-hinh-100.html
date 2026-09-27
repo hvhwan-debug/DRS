@@ -309,13 +309,13 @@
     .footer-transparency-strip .transparency-claim { font-weight: 500; color: #7dd3fc; text-decoration: none; }
     .footer-bottom {
       max-width: 1240px; margin: 1.3rem auto 0; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);
-      font-size: 0.85rem; color: #94a3b8; display: grid; grid-template-columns: 112px 1fr 112px; align-items: center; column-gap: 0.8rem;
+      font-size: 0.85rem; color: #94a3b8; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; text-align: center;
     }
     .footer-bottom a { color: #94a3b8; text-decoration: none; }
     .footer-bottom a:hover { color: #e0f2fe; text-decoration: underline; }
-    .footer-bottom-socials { grid-column: 1; display: flex; align-items: center; gap: 0.6rem; justify-self: start; }
+    .footer-bottom-socials { display: flex; align-items: center; justify-content: center; gap: 0.6rem; order: 2; }
     .footer-bottom-socials .footer-bottom-social { width: 30px; height: 30px; font-size: 0.85rem; }
-    .footer-bottom-text { grid-column: 2; text-align: center; }
+    .footer-bottom-text { text-align: center; order: 1; }
     .social-link {
       width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
       color: #cbd5e1; border: 1px solid rgba(255,255,255,.18); text-decoration: none; transition: all .2s;
