@@ -18,7 +18,7 @@
 const BRAND_NAME = "Mạng Lưới Tri Thức Việt Nam";
 const LOGO_URL = "https://wvn.vn/images/logo-wvn.png?v=20260927b";
 // Logo đầy đủ bản CHỮ TRẮNG, nền trong suốt (chữ W + Tri Thức Việt Nam + khẩu hiệu) cho phần đầu email nền tối; ảnh 900px hiển thị 250px để nét trên màn hình retina
-const HEADER_LOGO_URL = "https://wvn.vn/images/email-logo-wvn-dark.png?v=20260928c";
+const HEADER_LOGO_URL = "https://wvn.vn/images/email-logo-wvn-dark.png?v=20260928d";
 const SITE_URL = "https://wvn.vn/thanh-vien";
 const FONT_STACK = "Arial,Helvetica,sans-serif"; // 1 phông DUY NHẤT cho toàn bộ email
 
@@ -113,7 +113,7 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
             ${isVip ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
               <tr><td align="right" style="text-align:right;padding:12px 14px 0;font-family:${FONT_STACK};line-height:14px;">${VIP_BADGE_SPAN}</td></tr>
               <tr><td align="center" style="text-align:center;padding:2px 32px 24px;">` : ""}
-            <img src="${HEADER_LOGO_URL}" alt="${BRAND_NAME} · Kiến tạo giá trị vượt thời gian" width="380" style="display:block;width:380px;max-width:90%;height:auto;margin:0 auto;border:0;outline:none;text-decoration:none;">
+            <img src="${HEADER_LOGO_URL}" alt="${BRAND_NAME} · Kiến tạo giá trị vượt thời gian" width="300" style="display:block;width:300px;max-width:80%;height:auto;margin:0 auto;border:0;outline:none;text-decoration:none;">
             ${isVip ? `</td></tr></table>` : ""}
           </td></tr>
           <tr><td height="4" bgcolor="${p.headerSolid}" style="height:4px;line-height:4px;font-size:0;background-color:${p.headerSolid};background:${isVip ? "linear-gradient(90deg,#8a6d1a 0%,#d4af37 50%,#f5d67d 100%)" : "linear-gradient(90deg,#00d2ff 0%,#1f5bff 55%,#b8f23a 100%)"};">&nbsp;</td></tr>
