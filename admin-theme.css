@@ -120,6 +120,30 @@ body.wvn-admin .el-stat b { font-family: var(--t-display); font-weight: 600; }
   .t-hero::after { width: 200px; height: 200px; right: -40px; bottom: -60px; }
 }
 
+/* Thành phần bên trong các mục */
+body.wvn-admin #memberDashboardStats > .card { text-align: left !important; padding: 1.1rem 1.25rem !important; }
+body.wvn-admin #memberDashboardStats > .card > div:first-child { font-family: var(--t-display); font-weight: 600 !important; font-size: 1.85rem !important; color: var(--t-ink) !important; letter-spacing: -0.4px; line-height: 1.15; }
+body.wvn-admin #memberDashboardStats > .card > div:nth-child(2) { font-weight: 500; }
+/* Chọn quyền cho nhân viên: lưới ô chọn gọn gàng */
+body.wvn-admin #staffNewPermissions, body.wvn-admin [id^="editPermissions"] { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.45rem; }
+body.wvn-admin #staffNewPermissions > label, body.wvn-admin [id^="editPermissions"] > label { border: 1px solid var(--t-hair); border-radius: 12px; padding: 0.55rem 0.75rem !important; background: #fff; transition: border-color .12s, background .12s; }
+body.wvn-admin #staffNewPermissions > label:hover, body.wvn-admin [id^="editPermissions"] > label:hover { border-color: #93c5fd; background: #f7faff; }
+body.wvn-admin #staffNewPermissions > label:has(input:checked), body.wvn-admin [id^="editPermissions"] > label:has(input:checked) { border-color: #60a5fa; background: #eef5ff; box-shadow: 0 0 0 1px #60a5fa inset; }
+body.wvn-admin #staffNewPermissions > div, body.wvn-admin [id^="editPermissions"] > div { grid-column: 1 / -1; }
+/* Ô chọn nhanh học sinh */
+body.wvn-admin .main-content .qx-box { background: #f7f9fd; border: 1px solid var(--t-hair); border-radius: 16px; }
+body.wvn-admin .main-content .qx-box > label { color: var(--t-ink-2); font-weight: 600; }
+body.wvn-admin .main-content .qx-chip[aria-pressed="true"] { background: var(--t-night); border-color: var(--t-night); color: #fff; box-shadow: none; }
+/* Tải ảnh */
+body.wvn-admin .main-content input[type=file] { border-color: #d5dae6; border-radius: 14px; background: #fbfcfe; }
+body.wvn-admin .main-content input[type=file]::file-selector-button { background: #fff; border: 1px solid var(--t-hair); color: var(--t-ink-2); border-radius: 10px; }
+/* Nhãn trạng thái bo tròn trong bảng: dịu và đều hơn */
+body.wvn-admin .main-content span[style*="border-radius:999px"] { border-radius: 8px !important; padding-left: 0.55rem !important; padding-right: 0.55rem !important; }
+/* Thẻ "Việc cần làm" & danh sách hoạt động */
+body.wvn-admin #dashboardRecentActivity > div { border-bottom-color: var(--t-hair-2) !important; }
+/* Hộp thoại & lớp phủ */
+body.wvn-admin [id$="Modal"] > div, body.wvn-admin [id$="Overlay"] > div { border-radius: 20px !important; box-shadow: 0 40px 80px -30px rgba(10,18,48,0.55) !important; }
+
 /* Đầu trang của từng mục quản trị (chèn bằng JS) */
 .t-page { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--t-hair); border-radius: 22px; padding: 1.5rem 1.7rem; margin-bottom: 1.3rem; box-shadow: var(--t-lift); }
 .t-page::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--t-cyan), #60a5fa 50%, var(--t-lime)); }
@@ -163,6 +187,47 @@ body.wvn-crm table th { text-transform: none !important; letter-spacing: 0 !impo
   body.wvn-crm .brand-crm .crm-logo { height: 26px; }
   body.wvn-crm .pulse b { font-size: 1.6rem; }
 }
+
+/* ============================ KHU THÀNH VIÊN ============================
+   Bản thường dùng bộ nhận diện đêm + xanh logo; bản VIP giữ tông vàng riêng, chỉ tinh chỉnh chữ & nhịp. */
+body.wvn-member, body.wvn-member h1, body.wvn-member h2, body.wvn-member h3, body.wvn-member .btn,
+body.wvn-member .member-tab-btn { font-family: var(--t-sans); }
+body.wvn-member { letter-spacing: -0.005em; }
+body.wvn-member .sidebar .sidebar-brand { display: block; padding: 0.1rem 0.45rem 1.1rem; margin-bottom: 1rem; position: relative; }
+body.wvn-member .sidebar .sidebar-brand::after { content: ""; position: absolute; left: 0.45rem; right: 0.45rem; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(56,189,248,0.4), rgba(190,242,100,0.18) 50%, transparent); }
+body.wvn-member .brand-lockup { display: block; width: 100%; max-width: 200px; height: auto; filter: drop-shadow(0 4px 14px rgba(56,189,248,0.22)); }
+body.wvn-member .brand-role { display: block; margin-top: 0.55rem; font-size: 0.74rem; font-weight: 500; color: #8f9cc2; }
+body.wvn-member .mobile-topbar .brand-lockup { height: 30px; width: auto; max-width: none; }
+body.wvn-member .mobile-topbar .sidebar-brand { display: flex; }
+body.wvn-member .member-tab-btn { font-weight: 450; font-size: 0.88rem; padding: 0.56rem 0.8rem; border-radius: 10px; border-left: none !important; position: relative; }
+body.wvn-member .member-tab-btn.active { font-weight: 500; }
+body.wvn-member .member-tab-btn.active::before { content: ""; position: absolute; left: -1rem; top: 22%; bottom: 22%; width: 3px; border-radius: 0 3px 3px 0; background: linear-gradient(180deg, var(--t-cyan), var(--t-lime)); }
+body.wvn-member .card { border-radius: 20px; }
+body.wvn-member .card h2 { font-family: var(--t-display); font-weight: 600; font-size: 1.45rem; letter-spacing: -0.3px; }
+body.wvn-member .card h2 i { font-family: "Font Awesome 6 Free"; font-size: 0.9rem; width: 32px; height: 32px; border-radius: 10px; display: inline-grid; place-items: center; }
+/* Bản thường */
+body.wvn-member:not(.vip-theme) { background: radial-gradient(900px 420px at 100% -10%, #e6f2ff 0%, transparent 60%), var(--t-canvas); color: var(--t-ink); }
+body.wvn-member:not(.vip-theme) .sidebar { background: var(--t-night-bg); box-shadow: inset -1px 0 0 rgba(255,255,255,0.05); }
+body.wvn-member:not(.vip-theme) .mobile-topbar { background: var(--t-night); }
+body.wvn-member:not(.vip-theme) #sidebarMemberInfo { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 14px; }
+body.wvn-member:not(.vip-theme) .member-tab-btn { color: #aeb8d6; }
+body.wvn-member:not(.vip-theme) .member-tab-btn i { color: #6f7ca3; }
+body.wvn-member:not(.vip-theme) .member-tab-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+body.wvn-member:not(.vip-theme) .member-tab-btn.active { background: rgba(255,255,255,0.07); color: #fff; }
+body.wvn-member:not(.vip-theme) .member-tab-btn.active i { color: var(--t-cyan); }
+body.wvn-member:not(.vip-theme) .card { border-color: var(--t-hair); box-shadow: var(--t-lift); }
+body.wvn-member:not(.vip-theme) .card h2 { color: var(--t-ink); }
+body.wvn-member:not(.vip-theme) .card h2 i { background: #eef4ff; color: #1d4ed8; }
+body.wvn-member:not(.vip-theme) .btn { background: var(--t-night); box-shadow: 0 10px 24px -14px rgba(10,18,48,0.8); font-weight: 600; }
+body.wvn-member:not(.vip-theme) .btn:hover { background: var(--t-night-3); }
+body.wvn-member:not(.vip-theme) .btn.btn-outline { background: #fff; color: var(--t-ink-2); border: 1px solid var(--t-hair); box-shadow: none; }
+body.wvn-member:not(.vip-theme) .sidebar-footer { border-top-color: rgba(255,255,255,0.07); }
+body.wvn-member:not(.vip-theme) .sidebar-footer .btn-outline { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #cbd3ea; border-radius: 12px; font-weight: 500; }
+body.wvn-member:not(.vip-theme) .sidebar-footer .btn-outline:hover { background: rgba(254,202,202,0.1); border-color: rgba(254,202,202,0.35); color: #fecaca; }
+/* Bản VIP: vạch chọn và biểu tượng tiêu đề theo tông vàng */
+body.wvn-member.vip-theme .member-tab-btn.active::before { background: linear-gradient(180deg, #f6e3a1, #c9a227); }
+body.wvn-member.vip-theme .card h2 i { background: rgba(232,199,102,0.14); }
+@media (max-width: 880px) { body.wvn-member .member-tab-btn.active::before { left: -1.1rem; } }
 
 /* ============================== ĐĂNG NHẬP ============================== */
 body.wvn-login {
