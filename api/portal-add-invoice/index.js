@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
@@ -100,6 +101,7 @@ module.exports = async function (context, req) {
       ctas: [{ label: "Xem Hoá Đơn Trong Trang Thành Viên", href: SITE_URL, style: "primary" }]
     });
 
+    await logAdminActivity(req, "Lập hoá đơn", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = {
       success: true,

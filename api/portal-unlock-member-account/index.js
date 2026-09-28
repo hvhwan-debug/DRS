@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
@@ -50,6 +51,7 @@ module.exports = async function (context, req) {
       ctas: [{ label: "Đăng Nhập Ngay", href: "https://wvn.vn/dang-nhap.html", style: "primary" }]
     });
 
+    await logAdminActivity(req, "Mở khoá tài khoản thành viên", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, warning: emailResult.success ? null : "Đã mở khoá tài khoản, nhưng gửi email báo thất bại." };
   } catch (err) {

@@ -1,3 +1,4 @@
+const { logAdminActivity } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin, getAdminIdentity } = require("../_shared/adminAuth");
 const W = require("../_shared/work");
@@ -24,6 +25,7 @@ module.exports = async function (context, req) {
     const tasks = await getTableClient(W.TASKS_TABLE);
     let n = 0; for await (const _ of comments.listEntities({ queryOptions: { filter: `PartitionKey eq '${taskId}'` } })) n++;
     await tasks.updateEntity({ partitionKey: "task", rowKey: taskId, commentCount: n, updatedAt: c.createdAt }, "Merge").catch(() => {});
+    await logAdminActivity(req, "Công việc: bình luận", `việc ${String((req.body && req.body.taskId) || "")}: ${String(text).slice(0, 80)}`);
     context.res.status = 200; context.res.body = { success: true, comment: { id: c.rowKey, text, by: c.byName || c.by, at: c.createdAt }, commentCount: n };
   } catch (err) {
     context.log.error("Lỗi bình luận:", err.message);

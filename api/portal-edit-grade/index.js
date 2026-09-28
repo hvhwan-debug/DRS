@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadAttachments } = require("../_shared/blobStorage");
@@ -81,6 +82,7 @@ module.exports = async function (context, req) {
       memberFeedback: ""
     }, "Merge");
 
+    await logAdminActivity(req, "Sửa điểm", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, warning };
   } catch (err) {

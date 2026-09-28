@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
@@ -98,6 +99,7 @@ module.exports = async function (context, req) {
     });
     const emailWarning = emailResult.success ? null : "Đã cập nhật trạng thái, nhưng gửi email thông báo thất bại.";
 
+    await logAdminActivity(req, "Đổi trạng thái đơn đăng ký", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, warning: emailWarning };
   } catch (err) {

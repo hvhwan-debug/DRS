@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 
@@ -48,6 +49,7 @@ module.exports = async function (context, req) {
       enrolledAt: new Date().toISOString()
     }, "Merge");
 
+    await logAdminActivity(req, "Thêm học sinh", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true };
   } catch (err) {

@@ -1,3 +1,4 @@
+const { logAdminActivity } = require("../_shared/activityLog");
 const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
 const { verifyPassword } = require("../_shared/password");
@@ -52,6 +53,7 @@ module.exports = async function (context, req) {
       const patch = { partitionKey: "admin", rowKey: email, failedAttempts: failed >= MAX_FAILED ? 0 : failed };
       if (failed >= MAX_FAILED) patch.lockedUntil = new Date(Date.now() + LOCK_MINUTES * 60 * 1000).toISOString();
       await accountsTable.upsertEntity(patch, "Merge");
+      await logAdminActivity(req, "Đăng nhập thất bại", `${email} - sai mật khẩu lần ${failed}${failed >= MAX_FAILED ? " (đã tạm khoá)" : ""}`, { email, displayName: account.displayName || email });
       if (failed >= MAX_FAILED) {
         context.res.status = 429;
         context.res.body = { success: false, message: `Nhập sai quá ${MAX_FAILED} lần. Tài khoản tạm khoá ${LOCK_MINUTES} phút.` };
@@ -76,6 +78,7 @@ module.exports = async function (context, req) {
 
     await accountsTable.upsertEntity({ partitionKey: "admin", rowKey: email, lastLoginAt: new Date().toISOString(), failedAttempts: 0, lockedUntil: "" }, "Merge");
 
+    await logAdminActivity(req, "Đăng nhập", email, { email, displayName: account.displayName || email });
     context.res.status = 200;
     context.res.body = { success: true, token, displayName: account.displayName || email };
   } catch (err) {

@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireSuperAdmin } = require("../_shared/adminAuth");
 
@@ -34,6 +35,7 @@ module.exports = async function (context, req) {
       }
     }
 
+    await logAdminActivity(req, "Tải bản sao lưu dữ liệu", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, backup };
   } catch (err) {

@@ -149,6 +149,18 @@ body.wvn-admin #dashboardRecentActivity > div { border-bottom-color: var(--t-hai
 /* Hộp thoại & lớp phủ */
 body.wvn-admin [id$="Modal"] > div, body.wvn-admin [id$="Overlay"] > div { border-radius: 20px !important; box-shadow: 0 40px 80px -30px rgba(10,18,48,0.55) !important; }
 
+/* Tra cứu nhật ký thao tác */
+body.wvn-admin .al-quick { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+body.wvn-admin .al-quick button { font: inherit; font-size: 0.82rem; font-weight: 500; padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--t-hair); background: #fff; color: var(--t-ink-2); cursor: pointer; transition: all .12s; }
+body.wvn-admin .al-quick button:hover { border-color: #93c5fd; }
+body.wvn-admin .al-quick button[aria-pressed="true"] { background: var(--t-night); border-color: var(--t-night); color: #fff; }
+body.wvn-admin .al-filters .al-q { grid-column: 1 / -1; }
+body.wvn-admin .al-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.2rem 0 0.8rem; }
+body.wvn-admin .al-summary { font-size: 0.85rem; color: var(--t-muted); }
+body.wvn-admin .al-act { display: inline-block; font-size: 0.78rem; font-weight: 500; padding: 0.18rem 0.6rem; border-radius: 8px; background: #eef5ff; color: #1d4ed8; white-space: nowrap; }
+body.wvn-admin .al-act.danger { background: #fff1f0; color: #b42318; }
+body.wvn-admin .al-act.warn { background: #fdf6e7; color: #9a6412; }
+
 /* Đầu trang của từng mục quản trị (chèn bằng JS) */
 .t-page { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--t-hair); border-radius: 22px; padding: 1.5rem 1.7rem; margin-bottom: 1.3rem; box-shadow: var(--t-lift); }
 .t-page::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--t-cyan), #60a5fa 50%, var(--t-lime)); }

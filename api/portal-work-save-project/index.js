@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const W = require("../_shared/work");
@@ -19,6 +20,7 @@ module.exports = async function (context, req) {
     if (!b.id) { patch.createdAt = patch.updatedAt; patch.order = Date.now(); if (!patch.color) patch.color = COLORS[Math.floor(Math.random() * COLORS.length)]; }
     await table.upsertEntity(patch, "Merge");
     const e = await table.getEntity("project", id);
+    await logAdminActivity(req, "Công việc: lưu dự án", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, project: { id, name: e.name, color: e.color, description: e.description || "", archived: !!e.archived, order: Number(e.order) || 0 } };
   } catch (err) {

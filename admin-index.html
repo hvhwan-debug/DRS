@@ -347,7 +347,7 @@
       .el-subj { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260928f">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260928g">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1022,8 +1022,29 @@
     <!-- ===================== TAB: LỊCH SỬ THAO TÁC ===================== -->
     <div class="panel" id="panel-activitylog">
       <div class="card">
-        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-user-clock" style="color:#0284c7;"></i> Lịch Sử Thao Tác (200 gần nhất)</h3>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">Ghi theo tài khoản quản trị đã đăng nhập (đã xác thực, không thể gõ sai hay giả mạo) — dùng để tra lại ai đã xử lý việc gì khi cần.</p>
+        <h3 style="margin-bottom:0.4rem; font-size:1rem;"><i class="fa-solid fa-user-clock" style="color:#0284c7;"></i> Tra cứu nhật ký</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">Mọi thao tác được lưu vĩnh viễn theo tài khoản đã đăng nhập (không thể gõ sai hay giả mạo). Chọn khoảng ngày, người, loại thao tác hoặc gõ từ khoá để tra bất kỳ lúc nào.</p>
+        <div class="al-quick" role="group" aria-label="Khoảng thời gian">
+          <button type="button" data-al-range="0">Hôm nay</button>
+          <button type="button" data-al-range="7">7 ngày</button>
+          <button type="button" data-al-range="30" aria-pressed="true">30 ngày</button>
+          <button type="button" data-al-range="90">3 tháng</button>
+          <button type="button" data-al-range="365">1 năm</button>
+          <button type="button" data-al-range="all">Toàn bộ</button>
+        </div>
+        <div class="form-grid al-filters">
+          <div><label for="alFrom">Từ ngày</label><input type="date" id="alFrom"></div>
+          <div><label for="alTo">Đến ngày</label><input type="date" id="alTo"></div>
+          <div><label for="alActor">Người thao tác</label><select id="alActor"><option value="">Tất cả mọi người</option></select></div>
+          <div><label for="alAction">Loại thao tác</label><select id="alAction"><option value="">Tất cả thao tác</option></select></div>
+          <div class="al-q"><label for="alQ">Từ khoá</label><input type="search" id="alQ" class="qx-search" placeholder="Tên học sinh, email, số hoá đơn, mã…"></div>
+        </div>
+        <div class="al-bar">
+          <span id="alSummary" class="al-summary"></span>
+          <span style="flex:1"></span>
+          <button type="button" class="btn btn-outline" id="alReset">Xoá bộ lọc</button>
+          <button type="button" class="btn btn-outline" id="alExport"><i class="fa-solid fa-file-excel"></i> Xuất Excel</button>
+        </div>
         <div class="loading-state" id="activityLogLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="activityLogTableWrap">
           <table>
@@ -1031,7 +1052,8 @@
             <tbody id="activityLogTableBody"></tbody>
           </table>
         </div>
-        <div class="empty-state" id="activityLogEmpty" style="display:none;">Chưa có thao tác nào được ghi nhận.</div>
+        <div class="empty-state" id="activityLogEmpty" style="display:none;">Không có thao tác nào khớp bộ lọc.</div>
+        <div style="text-align:center; margin-top:1rem;"><button type="button" class="btn btn-outline" id="alMore" style="display:none;">Tải thêm</button></div>
       </div>
     </div>
 
@@ -4207,27 +4229,81 @@
       more.textContent = `Xem thêm (${list.length - shown.length} email)`;
     }
 
-    async function loadActivityLog() {
-      try {
-        const { entries } = await apiCall('/api/portal-list-activity-log');
-        document.getElementById('activityLogLoading').style.display = 'none';
-        if (entries.length === 0) {
-          document.getElementById('activityLogEmpty').style.display = 'block';
-          return;
-        }
-        document.getElementById('activityLogTableWrap').style.display = 'block';
-        document.getElementById('activityLogTableBody').innerHTML = entries.map(e => `
+    // ============== NHẬT KÝ THAO TÁC: tra cứu theo ngày / người / thao tác / từ khoá ==============
+    const AL = { offset: 0, limit: 200, entries: [], total: 0, timer: null, filtersBuilt: false };
+    const alYmd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const alTime = iso => { const d = new Date(iso); return isNaN(d) ? '' : `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`; };
+    function alSetRange(days) {
+      const to = new Date(); const from = new Date();
+      if (days === 'all') { document.getElementById('alFrom').value = ''; document.getElementById('alTo').value = ''; }
+      else { from.setDate(from.getDate() - Number(days)); document.getElementById('alFrom').value = alYmd(from); document.getElementById('alTo').value = alYmd(to); }
+      document.querySelectorAll('[data-al-range]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.alRange === String(days))));
+    }
+    function alParams(extra) {
+      const v = id => document.getElementById(id).value.trim();
+      const p = new URLSearchParams({ from: v('alFrom'), to: v('alTo'), actor: v('alActor'), action: v('alAction'), q: v('alQ'), limit: String(AL.limit), offset: String(AL.offset), ...(extra || {}) });
+      [...p.keys()].forEach(k => { if (!p.get(k)) p.delete(k); });
+      return p.toString();
+    }
+    function alFillSelect(id, items, allLabel) {
+      const el = document.getElementById(id); const cur = el.value;
+      el.innerHTML = `<option value="">${allLabel}</option>` + items.map(i => `<option value="${escapeHtml(i.value)}">${escapeHtml(i.label)}</option>`).join('');
+      if ([...el.options].some(o => o.value === cur)) el.value = cur;
+    }
+    function alRender() {
+      document.getElementById('activityLogLoading').style.display = 'none';
+      const has = AL.entries.length > 0;
+      document.getElementById('activityLogTableWrap').style.display = has ? 'block' : 'none';
+      document.getElementById('activityLogEmpty').style.display = has ? 'none' : 'block';
+      document.getElementById('activityLogTableBody').innerHTML = AL.entries.map(e => `
           <tr>
-            <td style="white-space:nowrap; color:var(--text-muted);">${formatDate(e.createdAt)}</td>
-            <td style="font-weight:700;">${escapeHtml(e.adminName)}</td>
-            <td><span style="font-size:0.78rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">${escapeHtml(e.action)}</span></td>
-            <td style="color:var(--text-muted);">${escapeHtml(e.details)}</td>
+            <td style="white-space:nowrap; color:var(--text-muted); font-variant-numeric:tabular-nums;">${alTime(e.createdAt)}</td>
+            <td><div style="font-weight:600;">${escapeHtml(e.adminName)}</div>${e.adminEmail && e.adminEmail !== e.adminName ? `<div style="font-size:0.76rem; color:var(--text-muted);">${escapeHtml(e.adminEmail)}</div>` : ''}</td>
+            <td><span class="al-act${/xoá|thất bại/i.test(e.action) ? ' danger' : /xuất|sao lưu/i.test(e.action) ? ' warn' : ''}">${escapeHtml(e.action)}</span></td>
+            <td style="color:var(--text-muted); overflow-wrap:anywhere;">${escapeHtml(e.details)}</td>
           </tr>`).join('');
+      document.getElementById('alSummary').textContent = `${AL.total.toLocaleString('vi-VN')} thao tác khớp bộ lọc` + (AL.total > AL.entries.length ? `, đang hiện ${AL.entries.length.toLocaleString('vi-VN')}` : '');
+      const more = document.getElementById('alMore');
+      more.style.display = AL.total > AL.entries.length ? '' : 'none';
+      more.textContent = `Tải thêm (${(AL.total - AL.entries.length).toLocaleString('vi-VN')} dòng nữa)`;
+    }
+    async function loadActivityLog(append) {
+      if (!append) { AL.offset = 0; document.getElementById('activityLogLoading').style.display = 'block'; }
+      try {
+        const r = await apiCall('/api/portal-list-activity-log?' + alParams());
+        AL.total = r.total || 0;
+        AL.entries = append ? AL.entries.concat(r.entries || []) : (r.entries || []);
+        alFillSelect('alActor', (r.actors || []).map(a => ({ value: a.key, label: a.name + (a.key !== a.name ? ` (${a.key})` : '') })), 'Tất cả mọi người');
+        alFillSelect('alAction', (r.actions || []).map(a => ({ value: a.name, label: `${a.name} (${a.count})` })), 'Tất cả thao tác');
+        alRender();
       } catch (err) {
         document.getElementById('activityLogLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
     }
+    (function initActivityLogFilters() {
+      if (!document.getElementById('alFrom')) return;
+      alSetRange(30);
+      document.querySelectorAll('[data-al-range]').forEach(b => b.addEventListener('click', () => { alSetRange(b.dataset.alRange === 'all' ? 'all' : b.dataset.alRange); loadActivityLog(); }));
+      ['alFrom', 'alTo', 'alActor', 'alAction'].forEach(id => document.getElementById(id).addEventListener('change', () => {
+        if (id === 'alFrom' || id === 'alTo') document.querySelectorAll('[data-al-range]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        loadActivityLog();
+      }));
+      document.getElementById('alQ').addEventListener('input', () => { clearTimeout(AL.timer); AL.timer = setTimeout(() => loadActivityLog(), 350); });
+      document.getElementById('alMore').addEventListener('click', () => { AL.offset = AL.entries.length; loadActivityLog(true); });
+      document.getElementById('alReset').addEventListener('click', () => { ['alActor', 'alAction', 'alQ'].forEach(id => document.getElementById(id).value = ''); alSetRange(30); loadActivityLog(); });
+      document.getElementById('alExport').addEventListener('click', async () => {
+        try {
+          const r = await apiCall('/api/portal-list-activity-log?' + alParams({ limit: '5000', offset: '0' }));
+          if (!r.entries || !r.entries.length) { showGlobalAlert('Không có dữ liệu để xuất.', true); return; }
+          const name = await window.WVNExcel.download({ filename: 'nhat-ky-thao-tac', sheetName: 'Nhật ký', title: 'Nhật ký thao tác quản trị', subtitle: document.getElementById('alSummary').textContent,
+            columns: [ { label: 'Thời gian', get: e => alTime(e.createdAt), type: 'text', width: 20 }, { label: 'Người thao tác', get: e => e.adminName, type: 'text', width: 22 },
+              { label: 'Email', get: e => e.adminEmail, type: 'text', width: 26 }, { label: 'Hành động', get: e => e.action, type: 'text', width: 28 }, { label: 'Chi tiết', get: e => e.details, type: 'text', width: 60 } ],
+            rows: r.entries });
+          showGlobalAlert(`Đã tải ${name}.`, false);
+        } catch (e) { showGlobalAlert(e.message, true); }
+      });
+    })();
 
     // ============== TÀI KHOẢN QUẢN TRỊ ==============
     const PERMISSION_DEFS = [
@@ -4506,7 +4582,7 @@
   </script>
 
   <div id="printableArea" style="display:none;"></div>
-  <script src="/xlsx-export.js?v=20260928b"></script>
+  <script src="/xlsx-export.js?v=20260928c"></script>
   <script src="admin-enhance.js?v=20260928c"></script>
     <script>
     // Khung chào ở Tổng quan: lời chào, ngày, một câu nhắc về ý nghĩa công việc (đổi theo ngày)

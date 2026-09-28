@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin, getAdminIdentity } = require("../_shared/adminAuth");
 const W = require("../_shared/work");
@@ -93,6 +94,7 @@ module.exports = async function (context, req) {
     }
 
     const saved = W.toTask(await table.getEntity("task", id));
+    await logAdminActivity(req, "Công việc: lưu việc", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, task: saved, spawned };
   } catch (err) {

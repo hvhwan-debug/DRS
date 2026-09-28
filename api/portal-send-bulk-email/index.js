@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, getMemberGender, buildGreeting, salutationFor } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
@@ -78,6 +79,7 @@ module.exports = async function (context, req) {
     else failed.push(email);
   }
 
+  await logAdminActivity(req, "Gửi email hàng loạt", summarizeBody(req.body));
   context.res.status = 200;
   context.res.body = {
     success: true,

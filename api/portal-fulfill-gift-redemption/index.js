@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
@@ -79,6 +80,7 @@ module.exports = async function (context, req) {
     // Bấm lặp lại đúng trạng thái hiện tại (vd. bấm "Huỷ" 2 lần): không làm gì, không gửi email lặp.
     // Trước đây trường hợp này vẫn chạy tiếp và HOÀN ĐIỂM THÊM 1 LẦN NỮA.
     if (currentStatus === status) {
+      await logAdminActivity(req, "Xử lý đổi quà", summarizeBody(req.body));
       context.res.status = 200;
       context.res.body = { success: true, status, unchanged: true };
       return;
@@ -113,6 +115,7 @@ module.exports = async function (context, req) {
       bodyHtml: buildStatusBodyHtml(status, entity.giftName + (Number(entity.quantity) > 1 ? ` × ${Number(entity.quantity)}` : ""), greeting, reason, entity.deliveryMethod)
     });
 
+    await logAdminActivity(req, "Xử lý đổi quà", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, status, warning: emailResult.success ? null : "Đã cập nhật trạng thái, nhưng gửi email báo thất bại." };
   } catch (err) {

@@ -154,6 +154,12 @@
     a.href = URL.createObjectURL(blob); a.download = name;
     document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    // Ghi nhật ký thao tác: ai đã xuất file nào, bao nhiêu dòng (không chặn việc tải file nếu ghi lỗi)
+    try {
+      const token = localStorage.getItem('wvn_admin_token');
+      if (token) fetch('/api/portal-log-activity', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+        body: JSON.stringify({ action: 'Xuất Excel', details: `${name} - ${(opts.rows || []).length} dòng` }) }).catch(() => {});
+    } catch (e) {}
     return name;
   }
 

@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
@@ -89,6 +90,7 @@ module.exports = async function (context, req) {
       ctas: [{ label: "Đăng Nhập Ngay", href: "https://wvn.vn/dang-nhap.html", style: "primary" }]
     });
 
+    await logAdminActivity(req, "Tạo tài khoản thành viên", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = {
       success: true,

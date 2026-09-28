@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadGiftImage, deleteBlob, getAttachmentSasUrl } = require("../_shared/blobStorage");
@@ -89,6 +90,7 @@ module.exports = async function (context, req) {
 
     const imageUrl = imageBlobName ? await getAttachmentSasUrl(imageBlobName, 60) : null;
 
+    await logAdminActivity(req, "Lưu danh mục quà", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = {
       success: true,

@@ -1,3 +1,4 @@
+const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { buildGreeting, normalizeGender, getMemberGender } = require("../_shared/memberName");
@@ -68,6 +69,7 @@ module.exports = async function (context, req) {
         <p style="font-size:13px; color:#64748b; margin:0;">Nếu bạn thấy thông tin này không chính xác, vui lòng liên hệ với chúng tôi.</p>`
     });
 
+    await logAdminActivity(req, "Sửa hồ sơ thành viên", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, warning: emailResult.success ? null : "Đã cập nhật hồ sơ, nhưng gửi email báo thất bại." };
   } catch (err) {
