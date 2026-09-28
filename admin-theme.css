@@ -120,6 +120,14 @@ body.wvn-admin .el-stat b { font-family: var(--t-display); font-weight: 600; }
   .t-hero::after { width: 200px; height: 200px; right: -40px; bottom: -60px; }
 }
 
+/* Đầu trang của từng mục quản trị (chèn bằng JS) */
+.t-page { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--t-hair); border-radius: 22px; padding: 1.5rem 1.7rem; margin-bottom: 1.3rem; box-shadow: var(--t-lift); }
+.t-page::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--t-cyan), #60a5fa 50%, var(--t-lime)); }
+.t-page::after { content: ""; position: absolute; right: -80px; top: -120px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.12), transparent 65%); pointer-events: none; }
+.t-page h1 { position: relative; font-family: var(--t-display) !important; font-weight: 600; font-size: 2.1rem; line-height: 1.1; letter-spacing: -0.3px; color: var(--t-ink); }
+.t-page p { position: relative; color: var(--t-muted); font-size: 0.9rem; margin-top: 0.4rem; max-width: 64ch; }
+@media (max-width: 880px) { .t-page { padding: 1.1rem; border-radius: 18px; } .t-page h1 { font-size: 1.6rem; } .t-page p { font-size: 0.85rem; } }
+
 /* ================================ CRM ================================ */
 body.wvn-crm { font-family: var(--t-sans); background: var(--t-canvas); color: var(--t-ink); letter-spacing: -0.005em; }
 body.wvn-crm .topbar { background: radial-gradient(40% 180% at 0% 0%, rgba(56,189,248,0.18), transparent 70%), radial-gradient(30% 160% at 100% 100%, rgba(190,242,100,0.06), transparent 70%), linear-gradient(100deg, #0a1230 0%, #0f1c4a 60%, #15296a 100%); box-shadow: 0 10px 30px -20px rgba(10,18,48,0.8); }
