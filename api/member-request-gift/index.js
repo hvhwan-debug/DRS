@@ -6,6 +6,7 @@ const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const SESSION_TABLE = "AuthSessions";
 const REDEMPTIONS_TABLE = "GiftRedemptions";
+const esc = v => String(v == null ? "" : v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 function getMemberToken(req) {
   const header = req.headers && (req.headers["x-member-token"] || req.headers["X-Member-Token"]);
@@ -25,7 +26,28 @@ module.exports = async function (context, req) {
     return;
   }
 
-  const giftId = String((req.body && req.body.giftId) || "").trim();
+  const body = req.body || {};
+  const giftId = String(body.giftId || "").trim();
+  // Thông tin nhận quà: số lượng + hình thức nhận (tại trung tâm / giao tận nơi) + người nhận
+  const clip = (v, n) => String(v == null ? "" : v).replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n);
+  const quantity = Math.floor(Number(body.quantity || 1));
+  const deliveryMethod = body.deliveryMethod === "ship" ? "ship" : "pickup";
+  const recipientName = clip(body.recipientName, 100);
+  const recipientPhone = clip(body.recipientPhone, 20);
+  const shippingAddress = clip(body.shippingAddress, 300);
+  const note = clip(body.note, 500);
+  if (!(quantity >= 1 && quantity <= 50)) {
+    context.res.status = 400;
+    context.res.body = { success: false, message: "Số lượng phải từ 1 đến 50." };
+    return;
+  }
+  if (deliveryMethod === "ship") {
+    if (!recipientName || !shippingAddress || !/^[0-9+().\s-]{8,20}$/.test(recipientPhone)) {
+      context.res.status = 400;
+      context.res.body = { success: false, message: "Giao tận nơi cần đủ họ tên người nhận, số điện thoại hợp lệ và địa chỉ." };
+      return;
+    }
+  }
 
   try {
     const gift = await findGift(giftId);
@@ -60,11 +82,12 @@ module.exports = async function (context, req) {
       return;
     }
 
+    const totalCost = gift.cost * quantity;
     // Kiểm tra nhanh trước (để báo lỗi rõ ràng khi chắc chắn không đủ điểm)
     const before = await getPointsBalance(email);
-    if (before.available < gift.cost) {
+    if (before.available < totalCost) {
       context.res.status = 403;
-      context.res.body = { success: false, message: `Bạn cần ${gift.cost.toLocaleString("vi-VN")} điểm để đổi quà này (hiện có ${before.available.toLocaleString("vi-VN")} điểm).` };
+      context.res.body = { success: false, message: `Bạn cần ${totalCost.toLocaleString("vi-VN")} điểm cho ${quantity} phần quà này (hiện có ${before.available.toLocaleString("vi-VN")} điểm).` };
       return;
     }
 
@@ -78,7 +101,14 @@ module.exports = async function (context, req) {
       rowKey,
       giftId,
       giftName: gift.name,
-      giftCost: gift.cost, // số ĐIỂM của lần đổi này; điểm đã dùng = tổng giftCost các yêu cầu chưa huỷ
+      giftCost: totalCost, // tổng ĐIỂM của lần đổi này (đơn giá × số lượng); điểm đã dùng = tổng giftCost các yêu cầu chưa huỷ
+      unitCost: gift.cost,
+      quantity,
+      deliveryMethod, // pickup (nhận tại trung tâm) | ship (giao tận nơi)
+      recipientName,
+      recipientPhone,
+      shippingAddress: deliveryMethod === "ship" ? shippingAddress : "",
+      note,
       pointsBased: true, // đánh dấu yêu cầu theo cơ chế điểm (phân biệt với yêu cầu cũ theo mốc học phí VNĐ)
       status: "pending", // pending (Chờ duyệt) -> shipping (Đang vận chuyển) -> fulfilled (Đã trao quà) | cancelled (Huỷ)
       requestedAt: new Date().toISOString()
@@ -121,7 +151,13 @@ module.exports = async function (context, req) {
       eyebrow: "Đổi Quà Tặng",
       title: "Đã ghi nhận yêu cầu",
       bodyHtml: `<p style="margin:0 0 16px;">${greeting}</p>
-        <p style="margin:0 0 16px;">Chúng tôi đã ghi nhận yêu cầu đổi quà <strong>${gift.name}</strong> của bạn (đã trừ <strong>${gift.cost.toLocaleString("vi-VN")} điểm</strong>, còn lại <strong>${after.remaining.toLocaleString("vi-VN")} điểm</strong>) — trạng thái hiện tại: <strong>Chờ duyệt</strong>. Đội ngũ sẽ xét duyệt và cập nhật trạng thái sớm nhất.</p>`
+        <p style="margin:0 0 16px;">Chúng tôi đã ghi nhận yêu cầu đổi quà <strong>${esc(gift.name)}${quantity > 1 ? ` × ${quantity}` : ""}</strong> của bạn (đã trừ <strong>${totalCost.toLocaleString("vi-VN")} điểm</strong>, còn lại <strong>${after.remaining.toLocaleString("vi-VN")} điểm</strong>) — trạng thái hiện tại: <strong>Chờ duyệt</strong>. Đội ngũ sẽ xét duyệt và cập nhật trạng thái sớm nhất.</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-collapse:collapse;margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:13px;">
+          ${[["Số lượng", String(quantity)], ["Hình thức nhận", deliveryMethod === "ship" ? "Giao tận nơi" : "Nhận tại trung tâm"],
+             ...(deliveryMethod === "ship" ? [["Người nhận", recipientName], ["Số điện thoại", recipientPhone], ["Địa chỉ", shippingAddress]] : (recipientName ? [["Người nhận", recipientName + (recipientPhone ? " · " + recipientPhone : "")]] : [])),
+             ...(note ? [["Ghi chú", note]] : [])]
+            .map(([k, v]) => `<tr><td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;color:#64748b;width:120px;font-family:Arial,Helvetica,sans-serif;">${k}</td><td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;color:#0f172a;font-weight:bold;font-family:Arial,Helvetica,sans-serif;">${esc(v)}</td></tr>`).join("")}
+        </table>`
     });
 
     context.res.status = 200;

@@ -295,6 +295,13 @@ module.exports = async function (context, req) {
           // Yêu cầu cũ theo mốc học phí (VNĐ) không tiêu điểm -> báo 0 điểm để lịch sử điểm không hiện "-15.000.000 điểm"
           giftCost: isLegacyTuitionRedemption(entity) ? 0 : (Number(entity.giftCost) || 0),
           legacyTuitionGift: isLegacyTuitionRedemption(entity),
+          unitCost: Number(entity.unitCost) || null,
+          quantity: Number(entity.quantity) || 1,
+          deliveryMethod: entity.deliveryMethod || "",
+          recipientName: entity.recipientName || "",
+          recipientPhone: entity.recipientPhone || "",
+          shippingAddress: entity.shippingAddress || "",
+          note: entity.note || "",
           status: entity.status || "pending",
           requestedAt: entity.requestedAt,
           shippedAt: entity.shippedAt || null,

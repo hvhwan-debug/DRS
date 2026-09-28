@@ -22,10 +22,12 @@ const ALLOWED_TRANSITIONS = {
   cancelled: []
 };
 
-function buildStatusBodyHtml(status, giftName, greeting, reason) {
+function buildStatusBodyHtml(status, giftName, greeting, reason, deliveryMethod) {
   const meta = STATUS_META[status];
   const bodyByStatus = {
-    shipping: `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đang được <strong>chuẩn bị và vận chuyển</strong>. Chúng tôi sẽ liên hệ khi quà sẵn sàng trao tận nơi.</p>`,
+    shipping: deliveryMethod === "pickup"
+      ? `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đã được <strong>duyệt và đang chuẩn bị</strong>. Chúng tôi sẽ liên hệ khi quà sẵn sàng để bạn nhận tại trung tâm.</p>`
+      : `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đang được <strong>chuẩn bị và vận chuyển</strong>. Chúng tôi sẽ liên hệ khi quà sẵn sàng trao tận nơi.</p>`,
     fulfilled: `<p style="margin:0;">Quà tặng <strong>${giftName}</strong> của bạn đã được <strong>trao thành công</strong>. Cảm ơn sự đồng hành của bạn cùng Mạng Lưới Tri Thức Việt Nam!</p>`,
     cancelled: `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đã bị <strong>huỷ</strong>.${reason ? ` Lý do: ${reason}` : ""}</p><p style="margin:10px 0 0;">Số điểm đã dùng cho yêu cầu này đã được hoàn lại vào tài khoản của bạn. Nếu có thắc mắc, vui lòng liên hệ đội ngũ hỗ trợ.</p>`
   };
@@ -108,7 +110,7 @@ module.exports = async function (context, req) {
       type: "gift",
       eyebrow: "Đổi Quà Tặng",
       title: "Cập nhật đổi quà",
-      bodyHtml: buildStatusBodyHtml(status, entity.giftName, greeting, reason)
+      bodyHtml: buildStatusBodyHtml(status, entity.giftName + (Number(entity.quantity) > 1 ? ` × ${Number(entity.quantity)}` : ""), greeting, reason, entity.deliveryMethod)
     });
 
     context.res.status = 200;

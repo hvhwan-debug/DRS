@@ -785,7 +785,7 @@
         <div class="loading-state" id="giftLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="giftTableWrap">
           <table>
-            <thead><tr><th>Email</th><th>Quà tặng</th><th>Điểm đã dùng</th><th>Ngày yêu cầu</th><th>Trạng thái</th></tr></thead>
+            <thead><tr><th>Email</th><th>Quà tặng</th><th>Nhận quà</th><th>Điểm đã dùng</th><th>Ngày yêu cầu</th><th>Trạng thái</th></tr></thead>
             <tbody id="giftTableBody"></tbody>
           </table>
         </div>
@@ -2483,7 +2483,9 @@
       const query = ((document.getElementById('giftSearchInput') || {}).value || '').trim().toLowerCase();
       const redemptions = !query ? allGiftRedemptionsData : allGiftRedemptionsData.filter(r =>
         (r.email || '').toLowerCase().includes(query) ||
-        (r.giftName || '').toLowerCase().includes(query));
+        (r.giftName || '').toLowerCase().includes(query) ||
+        (r.recipientName || '').toLowerCase().includes(query) ||
+        (r.recipientPhone || '').includes(query));
 
       if (allGiftRedemptionsData.length === 0) {
         document.getElementById('giftEmpty').style.display = 'block';
@@ -2496,14 +2498,20 @@
           return `
           <tr>
             <td>${escapeHtml(r.email)}</td>
-            <td style="font-weight:700;">${escapeHtml(r.giftName)}</td>
+            <td style="font-weight:700;">${escapeHtml(r.giftName)}${r.quantity > 1 ? ` <span style="color:#0284c7;">× ${r.quantity}</span>` : ''}</td>
+            <td style="font-size:0.8rem; line-height:1.45; min-width:180px;">${r.deliveryMethod
+              ? `<div style="font-weight:700; color:${r.deliveryMethod === 'ship' ? '#b45309' : '#0369a1'};"><i class="fa-solid ${r.deliveryMethod === 'ship' ? 'fa-truck-fast' : 'fa-building'}"></i> ${r.deliveryMethod === 'ship' ? 'Giao tận nơi' : 'Nhận tại trung tâm'}</div>
+                 ${r.recipientName ? `<div>${escapeHtml(r.recipientName)}${r.recipientPhone ? ` · <a href="tel:${escapeHtml(r.recipientPhone.replace(/[^0-9+]/g, ''))}" style="color:#0284c7;">${escapeHtml(r.recipientPhone)}</a>` : ''}</div>` : ''}
+                 ${r.shippingAddress ? `<div style="color:var(--text-muted);">${escapeHtml(r.shippingAddress)}</div>` : ''}
+                 ${r.note ? `<div style="color:var(--text-muted); font-style:italic;">“${escapeHtml(r.note)}”</div>` : ''}`
+              : '<span style="color:var(--text-muted);">—</span>'}</td>
             <td>${r.legacyTuitionGift ? `<span title="Yêu cầu từ trước khi đổi sang cơ chế điểm — mở khoá theo mốc học phí, không trừ điểm">Mốc ${Number(r.giftCost).toLocaleString('vi-VN')}đ<br><small style="color:var(--text-muted);">(cơ chế cũ, không trừ điểm)</small></span>` : `${Number(r.giftCost).toLocaleString('vi-VN')} điểm`}</td>
             <td>${formatDate(r.requestedAt)}</td>
             <td>${giftStatusControlHtml(r)}${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">${escapeHtml(r.cancelReason)}</div>` : ''}</td>
           </tr>`;
         }).join('');
       if (redemptions.length === 0) {
-        document.getElementById('giftTableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
+        document.getElementById('giftTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
       }
     }
 
