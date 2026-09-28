@@ -103,6 +103,11 @@ body.wvn-admin .el-stat b { font-family: var(--t-display); font-weight: 600; }
 .t-hero h1 { font-family: var(--t-display); font-weight: 600; font-size: 2.6rem; line-height: 1.08; letter-spacing: -0.4px; color: #fff; margin: 0.3rem 0 0.6rem; }
 .t-hero h1 em { font-style: italic; font-weight: 500; }
 .t-hero .t-quote { color: #c9d3ef; max-width: 58ch; font-size: 0.96rem; line-height: 1.55; padding-left: 0.9rem; border-left: 2px solid; border-image: linear-gradient(180deg, var(--t-cyan), var(--t-lime)) 1; }
+.t-hero .t-quote p { margin: 0; }
+.t-hero .t-quote-en { margin-top: 0.3rem !important; font-family: var(--t-display); font-style: italic; font-size: 0.9rem; color: #9fb0da; letter-spacing: 0.1px; }
+.t-hero .t-quote { animation: tQuoteIn .7s ease-out both; }
+@keyframes tQuoteIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .t-hero .t-quote { animation: none; } }
 .t-hero .t-acts { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .t-hero .t-acts a { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; font-size: 0.86rem; font-weight: 500; padding: 0.55rem 0.95rem; border-radius: 12px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); transition: background .15s; }
 .t-hero .t-acts a:hover { background: rgba(255,255,255,0.15); }

@@ -350,7 +350,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/admin-theme.css?v=20260928d">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260928e">
 
 </head>
 <body class="wvn-admin">
@@ -4512,22 +4512,40 @@
       var greet = h < 11 ? 'Chào buổi sáng' : h < 14 ? 'Chào buổi trưa' : h < 18 ? 'Chào buổi chiều' : 'Chào buổi tối';
       var name = (localStorage.getItem('wvn_admin_display_name') || '').trim().split(/\s+/).pop();
       if (name && name.indexOf('@') > -1) name = '';
+      // Mỗi lần vào trang: một câu triết lý song ngữ, không lặp lại câu vừa xem
       var lines = [
-        'Mỗi đơn đăng ký được xử lý hôm nay là một em nhỏ được đến lớp sớm hơn một ngày.',
-        'Sổ sách rõ ràng là cách chúng ta giữ lời hứa với từng nhà hảo tâm.',
-        'Một cuộc gọi hỏi thăm phụ huynh đúng lúc có thể giữ một em ở lại lớp học.',
-        'Việc nhỏ làm đều tay mỗi ngày sẽ thành con đường đến trường cho các em vùng cao.',
-        'Hôm nay, hãy làm một việc khó trở nên dễ hơn cho người đến sau.',
-        'Điều các em nhớ không phải con số, mà là cảm giác có người đã tin mình.',
-        'Minh bạch từng đồng, tận tâm từng em. Đó là giá trị vượt thời gian của chúng ta.'
+        ['Điều các em nhớ không phải con số, mà là cảm giác có người đã tin mình.', 'Children do not remember the numbers. They remember that someone believed in them.'],
+        ['Mỗi đơn đăng ký được xử lý hôm nay là một em nhỏ được đến lớp sớm hơn một ngày.', 'Every form handled today brings a child to class one day sooner.'],
+        ['Sổ sách rõ ràng là cách chúng ta giữ lời hứa với từng nhà hảo tâm.', 'Clear books are how we keep our promise to every donor.'],
+        ['Một cuộc gọi hỏi thăm đúng lúc có thể giữ một em ở lại lớp học.', 'One timely call can keep a child in the classroom.'],
+        ['Việc nhỏ làm đều tay mỗi ngày sẽ thành con đường đến trường.', 'Small things done well, day after day, become a road to school.'],
+        ['Hôm nay, hãy làm một việc khó trở nên dễ hơn cho người đến sau.', 'Today, make one hard thing easier for whoever comes next.'],
+        ['Minh bạch từng đồng, tận tâm từng em.', 'Transparent with every coin, devoted to every child.'],
+        ['Giáo dục không đổ đầy một chiếc bình, mà thắp lên một ngọn lửa.', 'Education is not filling a pail, but lighting a fire.'],
+        ['Gieo một hạt chữ hôm nay, gặt một đời người mai sau.', 'Plant a seed of learning today, harvest a whole life tomorrow.'],
+        ['Chậm mà chắc vẫn hơn nhanh mà sai.', 'Slow and sure beats fast and wrong.'],
+        ['Người ta không nhớ bạn làm nhiều bao nhiêu, mà nhớ bạn làm tử tế thế nào.', 'People forget how much you did, but remember how kindly you did it.'],
+        ['Một đứa trẻ, một người thầy, một cuốn sách có thể thay đổi cả thế giới.', 'One child, one teacher, one book can change the world.'],
+        ['Cho đi đúng cách cũng quan trọng như cho đi.', 'Giving well matters as much as giving.'],
+        ['Kiên nhẫn là món quà lớn nhất ta trao cho một người đang học.', 'Patience is the greatest gift we can give to someone learning.'],
+        ['Điều đúng đắn hiếm khi dễ, nhưng luôn đáng làm.', 'The right thing is rarely easy, but always worth doing.'],
+        ['Sự tin cậy được xây bằng từng lời hứa nhỏ được giữ.', 'Trust is built from small promises kept.'],
+        ['Mỗi em nhỏ là một câu chuyện chưa được kể hết.', 'Every child is a story not yet fully told.'],
+        ['Làm việc tận tâm là cách lặng lẽ nhất để nói lời yêu thương.', 'Working with care is the quietest way to say I love you.'],
+        ['Không ai giỏi một mình; ta giỏi lên vì có nhau.', 'No one grows alone; we grow because we have each other.'],
+        ['Hãy làm việc hôm nay như thể một em nhỏ đang nhìn theo.', 'Work today as if a child were watching.'],
+        ['Kiến tạo giá trị, vượt thời gian.', 'Creating value that outlasts time.']
       ];
-      var day = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+      var last = -1; try { last = parseInt(localStorage.getItem('wvn_last_quote') || '-1', 10); } catch (e) {}
+      var qi = Math.floor(Math.random() * lines.length);
+      if (qi === last) qi = (qi + 1 + Math.floor(Math.random() * (lines.length - 1))) % lines.length;
+      try { localStorage.setItem('wvn_last_quote', String(qi)); } catch (e) {}
       var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
       var el = document.createElement('section');
       el.className = 't-hero';
       el.innerHTML = '<div><div class="t-greet">' + greet + (name ? ', ' + esc(name) : '') + '</div>' +
         '<h1>' + WD[d.getDay()] + ', <em>' + d.getDate() + ' tháng ' + (d.getMonth() + 1) + '</em></h1>' +
-        '<p class="t-quote">' + lines[day % lines.length] + '</p></div>' +
+        '<blockquote class="t-quote"><p>' + esc(lines[qi][0]) + '</p><p class="t-quote-en" lang="en">' + esc(lines[qi][1]) + '</p></blockquote></div>' +
         '<div class="t-acts"><a href="/admin/cong-viec"><i class="fa-solid fa-list-check" aria-hidden="true"></i>Việc của tôi</a>' +
         '<a href="/admin/crm"><i class="fa-solid fa-address-card" aria-hidden="true"></i>CRM Học Sinh</a></div>';
       panel.insertBefore(el, panel.firstChild);
