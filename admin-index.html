@@ -176,6 +176,8 @@
     .sidebar-brand { position: relative; padding-bottom: 1.1rem; }
     .sidebar-brand::after { content: ""; position: absolute; left: 0.4rem; right: 0.4rem; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(0,200,255,0.45), rgba(180,230,40,0.25) 45%, transparent); }
     .sidebar-brand img { filter: drop-shadow(0 4px 12px rgba(0,150,255,0.45)); }
+    .mobile-topbar .sidebar-brand { padding-bottom: 0; }
+    .mobile-topbar .sidebar-brand::after { display: none; }
     .sidebar-brand-text { font-size: 1.05rem; font-weight: 700; }
     .sidebar-brand-text span { font-family: var(--site-font); margin-top: 0.2rem; font-size: 0.6rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.6; background: linear-gradient(90deg, #38d2ff 0%, #7fe0a0 55%, #c8ec3a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .sidebar-nav .tab-btn { font-weight: 500; }
@@ -192,6 +194,48 @@
     @media (max-width: 880px) { .sidebar-nav .tab-btn.active { border-left-color: #38bdf8; } }
     /* Nhãn trạng thái (Đã xác nhận, Đã huỷ, Đã trao quà…): chữ thường, không in đậm cho nhẹ mắt */
     .main-content span[style*="border-radius:999px"] { font-weight: 500 !important; letter-spacing: 0.1px; }
+    /* ---------- Danh sách thành viên: gọn, 1 nút chính + menu ⋯ ---------- */
+    #memberTableBody td { vertical-align: middle; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .mb-row:hover { background: #f8fafc; }
+    .mb-row.is-blocked .mb-name { color: #64748b; }
+    .mb-who { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+    .mb-av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+    .mb-txt { min-width: 0; }
+    .mb-name { font-weight: 700; color: #0f172a; font-size: 0.92rem; display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+    .mb-sub { font-size: 0.8rem; color: #64748b; margin-top: 0.1rem; overflow-wrap: anywhere; }
+    .mb-sub a { color: #0284c7; text-decoration: none; }
+    .mb-sub a:hover { text-decoration: underline; }
+    .mb-dot { color: #cbd5e1; margin: 0 0.15rem; }
+    .mb-tag { font-size: 0.7rem; font-weight: 500; padding: 0.1rem 0.5rem; border-radius: 6px; background: #fee2e2; color: #b91c1c; }
+    .mb-date { color: #64748b; font-size: 0.85rem; white-space: nowrap; }
+    .mb-acts-cell { width: 1%; white-space: nowrap; }
+    .mb-acts { display: flex; align-items: center; justify-content: flex-end; gap: 0.4rem; }
+    .mb-view { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid #bae6fd; background: #f0f9ff; color: #0369a1; font: inherit; font-size: 0.82rem; font-weight: 600; padding: 0.4rem 0.85rem; border-radius: 999px; cursor: pointer; transition: all .15s; }
+    .mb-view:hover { background: #0284c7; border-color: #0284c7; color: #fff; }
+    .mb-more { position: relative; }
+    .mb-more-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all .15s; }
+    .mb-more-btn:hover, .mb-more.open .mb-more-btn { background: #f1f5f9; color: #0f172a; }
+    .mb-menu { display: none; position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 210px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 16px 40px -12px rgba(15,23,42,0.25); padding: 0.35rem; text-align: left; }
+    .mb-more.up .mb-menu { top: auto; bottom: calc(100% + 6px); }
+    .mb-more.open .mb-menu { display: block; }
+    .mb-menu button { display: flex; align-items: center; gap: 0.6rem; width: 100%; border: none; background: none; font: inherit; font-size: 0.85rem; color: #334155; padding: 0.55rem 0.7rem; border-radius: 8px; cursor: pointer; text-align: left; }
+    .mb-menu button i { width: 16px; text-align: center; color: #94a3b8; }
+    .mb-menu button:hover { background: #f1f5f9; color: #0f172a; }
+    .mb-menu button.danger { color: #b91c1c; }
+    .mb-menu button.danger i { color: #ef4444; }
+    .mb-menu button.danger:hover { background: #fef2f2; }
+    .mb-sep { height: 1px; background: #f1f5f9; margin: 0.3rem 0.2rem; }
+    #memberTableWrap { overflow: visible; }
+    #memberTableWrap th:last-child { text-align: right; padding-right: 3.4rem; }
+    @media (max-width: 640px) {
+      #memberTableWrap thead { display: none; }
+      #memberTableBody tr { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; border-bottom: 1px solid var(--border); }
+      #memberTableBody .mb-view span, #memberTableBody .mb-view { font-size: 0.78rem; padding: 0.35rem 0.7rem; }
+      #memberTableBody td { border: none; padding: 0.7rem 0.3rem; }
+      #memberTableBody .mb-date { display: none; }
+      #memberTableBody .mb-acts-cell { width: auto; }
+      #memberTableBody .mb-who { gap: 0.6rem; }
+    }
   </style>
 </head>
 <body>
@@ -3393,19 +3437,57 @@
       }
       document.getElementById('memberEmpty').style.display = 'none';
       document.getElementById('memberTableWrap').style.display = 'block';
-      document.getElementById('memberTableBody').innerHTML = filtered.map(m => `
-        <tr>
-          <td>${m.fullName ? `<strong>${escapeHtml(m.fullName)}</strong>${m.phone ? ` · <a href="tel:${escapeHtml(String(m.phone).replace(/[^0-9+]/g, ''))}" style="color:#0284c7;">${escapeHtml(m.phone)}</a>` : ''}<br><span style="font-size:0.82rem; color:var(--text-muted);">${escapeHtml(m.email)}</span>` : escapeHtml(m.email)} ${m.isBlocked ? '<span style="font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; background:#fee2e2; color:#b91c1c; margin-left:0.4rem;">Đã khoá</span>' : ''}</td>
-          <td>${formatDate(m.updatedAt)}</td>
-          <td style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="openMemberOverview('${encodeURIComponent(m.email)}')">Xem chi tiết</button>
-            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem; ${m.isBlocked ? 'color:#15803d; border-color:#86efac;' : ''}" onclick="toggleBlockMember('${encodeURIComponent(m.email)}', ${!m.isBlocked})">${m.isBlocked ? 'Bỏ chặn' : 'Chặn'}</button>
-            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="resetMemberPassword('${encodeURIComponent(m.email)}')">Reset MK</button>
-            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="unlockMemberAccount('${encodeURIComponent(m.email)}')" title="Mở khoá nếu tài khoản bị khoá do đăng nhập sai nhiều lần">Mở Khoá</button>
-            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.82rem;" onclick="deleteMember('${encodeURIComponent(m.email)}')">Xoá</button>
+      const initials = n => { const p = String(n || '?').trim().split(/\s+/); return ((p.length > 1 ? p[p.length - 2][0] : '') + p[p.length - 1][0]).toUpperCase(); };
+      const AV = [['#e0f2fe', '#0369a1'], ['#dcfce7', '#15803d'], ['#ede9fe', '#6d28d9'], ['#fef3c7', '#b45309'], ['#fce7f3', '#be185d'], ['#e2e8f0', '#334155']];
+      const avStyle = e => { let h = 0; for (const c of String(e)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const t = AV[h % AV.length]; return `background:${t[0]};color:${t[1]}`; };
+      document.getElementById('memberTableBody').innerHTML = filtered.map(m => {
+        const e = encodeURIComponent(m.email);
+        const tel = m.phone ? String(m.phone).replace(/[^0-9+]/g, '') : '';
+        return `
+        <tr class="mb-row${m.isBlocked ? ' is-blocked' : ''}">
+          <td>
+            <div class="mb-who">
+              <span class="mb-av" style="${avStyle(m.email)}">${escapeHtml(initials(m.fullName || m.email))}</span>
+              <div class="mb-txt">
+                <div class="mb-name">${escapeHtml(m.fullName || m.email.split('@')[0])}${m.isBlocked ? '<span class="mb-tag">Đã chặn</span>' : ''}</div>
+                <div class="mb-sub">${escapeHtml(m.email)}${m.phone ? ` <span class="mb-dot">·</span> <a href="tel:${escapeHtml(tel)}">${escapeHtml(m.phone)}</a>` : ''}</div>
+              </div>
+            </div>
           </td>
-        </tr>`).join('');
+          <td class="mb-date">${formatDate(m.updatedAt)}</td>
+          <td class="mb-acts-cell">
+            <div class="mb-acts">
+              <button type="button" class="mb-view" onclick="openMemberOverview('${e}')"><i class="fa-regular fa-id-card"></i> Xem chi tiết</button>
+              <div class="mb-more">
+                <button type="button" class="mb-more-btn" onclick="toggleMemberMenu(this, event)" aria-label="Thao tác khác" aria-haspopup="true"><i class="fa-solid fa-ellipsis"></i></button>
+                <div class="mb-menu" role="menu">
+                  <button type="button" role="menuitem" onclick="closeMemberMenus(); resetMemberPassword('${e}')"><i class="fa-solid fa-key"></i> Đặt lại mật khẩu</button>
+                  <button type="button" role="menuitem" onclick="closeMemberMenus(); unlockMemberAccount('${e}')" title="Dùng khi tài khoản bị khoá do đăng nhập sai nhiều lần"><i class="fa-solid fa-lock-open"></i> Mở khoá đăng nhập</button>
+                  <button type="button" role="menuitem" onclick="closeMemberMenus(); toggleBlockMember('${e}', ${!m.isBlocked})"><i class="fa-solid ${m.isBlocked ? 'fa-user-check' : 'fa-ban'}"></i> ${m.isBlocked ? 'Bỏ chặn tài khoản' : 'Chặn tài khoản'}</button>
+                  <div class="mb-sep"></div>
+                  <button type="button" role="menuitem" class="danger" onclick="closeMemberMenus(); deleteMember('${e}')"><i class="fa-regular fa-trash-can"></i> Xoá thành viên</button>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>`;
+      }).join('') || `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy thành viên phù hợp.</td></tr>`;
     }
+
+    // Menu "⋯" thao tác phụ của từng thành viên
+    function closeMemberMenus() { document.querySelectorAll('.mb-more.open').forEach(x => x.classList.remove('open')); }
+    function toggleMemberMenu(btn, ev) {
+      ev.stopPropagation();
+      const box = btn.parentElement; const wasOpen = box.classList.contains('open');
+      closeMemberMenus();
+      if (!wasOpen) {
+        box.classList.add('open');
+        const menu = box.querySelector('.mb-menu'); const r = btn.getBoundingClientRect();
+        box.classList.toggle('up', window.innerHeight - r.bottom < menu.offsetHeight + 16);
+      }
+    }
+    document.addEventListener('click', e => { if (!e.target.closest('.mb-more')) closeMemberMenus(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMemberMenus(); });
 
     document.getElementById('createAccountForm').addEventListener('submit', async function (e) {
       e.preventDefault();
