@@ -6,6 +6,9 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Công Việc · Tri thức Việt</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=20260927b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>if (!localStorage.getItem('wvn_admin_token')) window.location.replace('admin-dang-nhap.html');</script>
 <style>
@@ -532,6 +535,166 @@ button { cursor: pointer; background: none; border: none; }
 .brand-mini .mark { width: 40px; }
 .brand-mini .word { justify-content: center; }
 .brand-mini .word small.tag { margin: 0; padding: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 2.6px; line-height: 1; }
+
+/* =========================================================
+   Bản 4: sang trọng, tiết chế
+   - Chữ: Be Vietnam Pro (giao diện) + Playfair Display (ngày, tiêu đề trang)
+   - Một điểm nhấn duy nhất: khung chào nền đêm với vòng tiến độ màu logo
+   - Phần còn lại: trắng, đường mảnh, nhiều khoảng thở
+   ========================================================= */
+:root {
+  --sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --midnight: #0a1230; --midnight-2: #101d4a; --midnight-3: #16296b;
+  --canvas: #f5f6fa; --hair: #e6e9f1; --hair-2: #eff1f6;
+  --ink: #0c1330; --ink-2: #3b4462; --muted: #6a7291;
+  --glow-cyan: #38bdf8; --glow-lime: #bef264;
+  --lift: 0 1px 0 rgba(12,19,48,0.03), 0 18px 40px -28px rgba(12,19,48,0.28);
+}
+body { font-family: var(--sans); background: var(--canvas); color: var(--ink); font-size: 14.5px; letter-spacing: -0.005em; }
+.topbar { background: rgba(245,246,250,0.86); }
+
+/* Thanh bên: đêm sâu, ánh sáng logo rất nhẹ ở đỉnh */
+.side {
+  background:
+    radial-gradient(120% 40% at 0% 0%, rgba(56,189,248,0.16), transparent 60%),
+    radial-gradient(90% 30% at 100% 8%, rgba(190,242,100,0.07), transparent 60%),
+    linear-gradient(180deg, #0a1230 0%, #0d1840 55%, #13245f 100%);
+  padding: 1.3rem 0.9rem 1rem;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.05);
+}
+.brand { padding: 0.2rem 0.55rem 1.4rem; }
+.brand::after { bottom: 0.45rem; background: linear-gradient(90deg, rgba(56,189,248,0.4), rgba(190,242,100,0.18) 50%, transparent); }
+.brand-mini .word small.tag { font-family: var(--sans); font-size: 0.78rem; font-weight: 600; letter-spacing: 3px; }
+.add-btn {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #fff;
+  box-shadow: none; border-radius: 12px; padding: 0.7rem 0.85rem; font-weight: 500; margin-bottom: 1.2rem;
+}
+.add-btn:hover { background: rgba(255,255,255,0.11); border-color: rgba(255,255,255,0.2); transform: none; }
+.add-btn i { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 0.7rem; color: var(--midnight); background: linear-gradient(135deg, var(--glow-cyan), var(--glow-lime)); }
+.add-btn kbd { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); font-weight: 500; }
+.nav { gap: 1px; }
+.nav button, .nav a { color: #aeb8d6; font-weight: 450; font-size: 0.9rem; padding: 0.58rem 0.75rem; border-radius: 10px; }
+.nav i { color: #6f7ca3; }
+.nav button:hover, .nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.nav button[aria-current="page"] { background: rgba(255,255,255,0.07); color: #fff; box-shadow: none; position: relative; }
+.nav button[aria-current="page"]::before { content: ""; position: absolute; left: -0.9rem; top: 22%; bottom: 22%; width: 3px; border-radius: 0 3px 3px 0; background: linear-gradient(180deg, var(--glow-cyan), var(--glow-lime)); }
+.nav button[aria-current="page"] i { color: var(--glow-cyan); }
+.nav .n:not(:empty) { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: #aeb8d6; font-weight: 500; font-size: 0.72rem; }
+.nav .n.hot:not(:empty) { background: rgba(56,189,248,0.14); border-color: transparent; color: #bae6fd; }
+.side h4 { font-weight: 500; font-size: 0.74rem; color: #6f7ca3; letter-spacing: 0.2px; margin-top: 1.6rem; }
+.side-foot { border-top: 1px solid rgba(255,255,255,0.07); }
+.me { color: #cbd3ea; }
+
+/* Ô thêm việc */
+.quick input { border-color: var(--hair); border-radius: 14px; box-shadow: var(--lift); padding-top: 0.9rem; padding-bottom: 0.9rem; }
+.quick input::placeholder { color: #9aa1ba; }
+
+/* Khung chào: điểm nhấn duy nhất */
+.hero {
+  background:
+    radial-gradient(70% 120% at 100% 0%, rgba(56,189,248,0.22), transparent 60%),
+    radial-gradient(50% 90% at 0% 100%, rgba(190,242,100,0.10), transparent 60%),
+    linear-gradient(155deg, #0a1230 0%, #111f52 55%, #17307a 100%);
+  color: #e7ecfb; border: none; border-radius: 22px; padding: 2rem 2.3rem 1.9rem;
+  box-shadow: 0 30px 60px -34px rgba(10,18,48,0.7);
+  margin: 0.6rem 0 1.8rem;
+}
+.hero::after { content: ""; right: 150px; top: auto; bottom: -150px; width: 280px; height: 280px; border-radius: 0; background: url("/images/logo-wvn.png?v=20260927b") no-repeat center / contain; opacity: 0.05; filter: grayscale(1) brightness(3); }
+.hero .eyebrow { color: #9fb0da; font-size: 0.86rem; letter-spacing: 0.1px; }
+.hero h1 { font-family: var(--display); font-weight: 600; font-size: 2.85rem; letter-spacing: -0.4px; line-height: 1.08; color: #fff; margin: 0.35rem 0 0.55rem; }
+.hero h1 em { font-family: var(--display); font-style: italic; font-weight: 500; background: none; -webkit-background-clip: initial; background-clip: initial; color: #fff; }
+.hero p { color: #b8c3e3; max-width: 60ch; }
+.stats { display: flex; gap: 0; margin-top: 1.5rem; flex-wrap: wrap; }
+.stat {
+  display: grid; grid-template-columns: auto auto; column-gap: 0.4rem; row-gap: 0.1rem; align-items: center; justify-content: start;
+  background: transparent; border: none; border-left: 1px solid rgba(255,255,255,0.12); border-radius: 0;
+  padding: 0.1rem 1.5rem; color: #9fb0da; font-size: 0.78rem;
+}
+.stat:first-child { border-left: none; padding-left: 0; }
+.stat b { grid-column: 1 / -1; grid-row: 1; font-family: var(--display); font-size: 1.75rem; font-weight: 600; color: #fff; line-height: 1.1; }
+.stat i { grid-row: 2; font-size: 0.72rem; color: #7f90bd; }
+.stat span { grid-row: 2; }
+.stat.red { background: transparent; } .stat.red b { color: #fca5a5; } .stat.red i { color: #fca5a5; }
+.stat.gold i, .stat.blue i { color: var(--glow-cyan); } .stat.violet i { color: #c4b5fd; }
+.ring .lbl b { font-family: var(--display); color: #fff; font-weight: 600; letter-spacing: 0; }
+.ring .lbl span { color: #9fb0da; }
+.ring circle:first-of-type { stroke: rgba(255,255,255,0.1); }
+.ring circle:last-child { stroke: url(#ringGrad); stroke-width: 4; filter: drop-shadow(0 0 6px rgba(56,189,248,0.45)); }
+
+/* Tiêu đề nhóm */
+.section-title { margin: 2rem 0 0.8rem; }
+.section-title h3 { font-size: 1.02rem; font-weight: 600; letter-spacing: -0.2px; }
+.section-title > span:not(:empty):not(.sub), .section-title div > span:not(:empty) { background: transparent; border: 1px solid var(--hair); color: var(--muted); font-weight: 500; }
+.section-title .sub { color: var(--muted); font-size: 0.8rem; }
+.section-title.red h3 { color: #b42318; }
+.section-title.red > span:not(:empty) { border-color: #fecdca; background: #fff5f4; color: #b42318; }
+
+/* Danh sách việc */
+.tasks { border: 1px solid var(--hair); border-radius: 18px; box-shadow: var(--lift); }
+.task { padding: 1rem 1.3rem; gap: 1rem; border-bottom-color: var(--hair-2); }
+.task:hover { background: #fafbfd; }
+.task::before { top: 14px; bottom: 14px; }
+.t-title { font-size: 0.97rem; font-weight: 500; color: var(--ink); }
+.task.done .t-title { color: #9aa1ba; text-decoration-color: #c8cde0; }
+.t-meta { margin-top: 0.45rem; }
+.check { border-width: 1.5px; border-color: #c5cbdc; }
+.task.done .check, .check.on { background: linear-gradient(135deg, #0ea5a4, #16a34a); border-color: transparent; }
+.pill { font-weight: 500; border-radius: 8px; padding: 0.14rem 0.5rem; background: #f4f6fa; border-color: var(--hair-2); }
+.pill.blue { background: #eaf6fe; color: #0369a1; }
+.pill.gold { background: #fdf6e7; color: #9a6412; border-color: #f5e3bc; }
+.pill.red { background: #fff1f0; color: #b42318; }
+.av { box-shadow: none; border-color: #fff; font-weight: 600; }
+
+/* Thẻ hệ thống */
+.ibox { border: 1px solid var(--hair); border-radius: 16px; box-shadow: var(--lift); padding: 1.1rem 1.15rem 1rem 1.3rem; }
+.ibox:hover { transform: none; box-shadow: 0 1px 0 rgba(12,19,48,0.03), 0 22px 44px -26px rgba(12,19,48,0.35); }
+.ibox::before { width: 3px; top: 16px; bottom: 16px; border-radius: 0 3px 3px 0; }
+.ibox b { font-weight: 600; font-size: 0.93rem; }
+.ibox .acts { margin-top: 0.75rem; }
+.ibox .acts a, .ibox .acts button { font-weight: 500; padding: 0.32rem 0.8rem; border-color: var(--hair); }
+.ibox .acts a:first-child { background: var(--midnight); color: #fff; border-color: var(--midnight); }
+.ibox .acts a:first-child:hover { background: var(--midnight-3); border-color: var(--midnight-3); color: #fff; }
+
+/* Công tắc Của tôi / Cả nhóm */
+.scope { border-color: var(--hair); box-shadow: var(--lift); }
+.scope button { font-weight: 500; }
+.scope button[aria-pressed="true"] { background: var(--midnight); }
+
+/* Trạng thái rỗng */
+.empty { border: 1px dashed #d7dbe7; background: #fbfbfd; border-radius: 18px; padding: 1.6rem 1.3rem; }
+
+/* Bảng & lịch: cùng ngôn ngữ đường mảnh */
+.toolbar h2, .page-title { font-family: var(--display); font-weight: 600; font-size: 2rem; letter-spacing: -0.3px; }
+.col { background: #eff1f6; border-color: var(--hair); border-radius: 18px; }
+.col-head b { font-weight: 600; }
+.card { border-color: var(--hair); border-radius: 13px; box-shadow: 0 1px 0 rgba(12,19,48,0.03); }
+.card:hover { transform: none; box-shadow: 0 16px 30px -22px rgba(12,19,48,0.35); }
+.day { border-color: var(--hair); border-radius: 18px; }
+.day-head b { font-family: var(--display); font-weight: 600; }
+.day-head span { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 0.76rem; }
+.day.today { border-color: #93c5fd; background: linear-gradient(180deg, #f2f8ff 0%, #fff 90px); }
+.day.today .day-head b { background: var(--midnight); }
+.d-title, .modal h3 { font-family: var(--display); font-weight: 600; letter-spacing: -0.2px; }
+.btn.primary, .fab { background: var(--midnight); box-shadow: 0 10px 24px -12px rgba(10,18,48,0.7); }
+.btn.primary:hover { background: var(--midnight-3); }
+.mobile-nav { background: var(--midnight); }
+.mobile-nav button[aria-current="page"] { background: rgba(255,255,255,0.08); color: #fff; }
+.mobile-nav .badge { background: var(--glow-cyan); color: var(--midnight); }
+.mobile-head b { font-family: var(--display); font-weight: 600; font-size: 1.25rem; letter-spacing: -0.2px; }
+.toast { background: var(--midnight); }
+
+@media (max-width: 900px) {
+  .hero { padding: 1.3rem 1.2rem 1.2rem; border-radius: 18px; margin-top: 0.3rem; }
+  .hero::after { width: 200px; height: 200px; bottom: -50px; right: -40px; }
+  .hero h1 { font-size: 1.85rem; }
+  .hero p { font-size: 0.88rem; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 0; margin: 1.1rem -76px 0 0; }
+  .stat { padding: 0 0 0 0.9rem; }
+  .stat:nth-child(odd) { border-left: none; padding-left: 0; }
+  .stat b { font-size: 1.4rem; }
+  .task { padding: 0.9rem 1rem; }
+}
 </style>
 </head>
 <body>
@@ -719,7 +882,7 @@ button { cursor: pointer; background: none; border: none; }
           <div class="stats">${stat(overdue.length, 'Quá hạn', overdue.length ? 'red' : '', 'fa-solid fa-triangle-exclamation')}${stat(todays.filter(open).length, 'Hạn hôm nay', 'gold', 'fa-regular fa-calendar')}${stat(doingN, 'Đang làm', 'blue', 'fa-solid fa-person-running')}${stat(inboxN, 'Từ hệ thống', 'violet', 'fa-solid fa-inbox')}</div>
         </div>
         <div class="ring" role="img" aria-label="Đã xong ${doneToday} trên ${totalToday} việc hôm nay">
-          <svg width="116" height="116" viewBox="0 0 116 116"><circle cx="58" cy="58" r="50" fill="none" stroke="var(--line-2)" stroke-width="5"/><circle cx="58" cy="58" r="50" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct / 100)}"/></svg>
+          <svg width="116" height="116" viewBox="0 0 116 116"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.55" stop-color="#38bdf8"/><stop offset="1" stop-color="#bef264"/></linearGradient></defs><circle cx="58" cy="58" r="50" fill="none" stroke="var(--line-2)" stroke-width="5"/><circle cx="58" cy="58" r="50" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct / 100)}"/></svg>
           <div class="lbl"><div><b>${doneToday}/${totalToday || 0}</b><span>đã xong</span></div></div>
         </div>
       </div>
