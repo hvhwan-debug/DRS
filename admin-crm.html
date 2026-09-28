@@ -337,6 +337,9 @@ details.more > summary::-webkit-details-marker { display: none; }
 }
 .brand-mini .mark { width: 40px; }
 .brand-mini .word { justify-content: center; }
+.brand-crm { padding: 5px 12px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.18); }
+.brand-crm .crm-logo { display: block; height: 30px; width: auto; }
+@media (max-width: 600px) { .brand-crm { padding: 4px 9px; } .brand-crm .crm-logo { height: 24px; } }
 .brand-mini .word small.tag { margin: 0; padding: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 2.6px; line-height: 1; }
 </style>
 </head>
@@ -344,7 +347,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 
 <header class="topbar">
   <div class="topbar-inner">
-    <a class="brand brand-mini" href="/admin" aria-label="CRM · Tri thức Việt"><img class="mark" src="/images/logo-wvn.png?v=20260927b" alt="Tri thức Việt" width="469" height="300"><span class="word"><small class="tag">CRM</small></span></a>
+    <a class="brand brand-mini brand-crm" href="/admin" aria-label="CRM · Tri thức Việt"><img class="crm-logo" src="/images/logo-crm.png?v=20260928a" alt="W CRM – Tri thức Việt" width="493" height="120"></a>
     <div class="search">
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <label class="sr-only" for="globalSearch">Tìm học sinh</label>
