@@ -277,13 +277,133 @@ button { cursor: pointer; background: none; border: none; }
   .week { grid-template-columns: 1fr; }
   .day { min-height: 0; }
 }
+
+/* =========================================================
+   Tinh chỉnh giao diện (bản 2): căn giữa, avatar màu, thẻ nổi,
+   cột bảng có màu trạng thái, lịch gọn, mobile cuộn ngang
+   ========================================================= */
+.side { background: linear-gradient(180deg, #111a33 0%, #0e1630 100%); box-shadow: inset -1px 0 0 rgba(255,255,255,0.04); }
+.brand { display: flex; align-items: center; gap: 0.7rem; }
+.brand > div { min-width: 0; }
+.brand span:not(.logo) { font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.brand .logo { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, var(--gold), #d4b27a); display: grid; place-items: center; color: #fff; font-size: 1rem; flex-shrink: 0; box-shadow: 0 6px 16px rgba(176,141,87,0.35); }
+.add-btn { box-shadow: 0 6px 18px rgba(31,79,214,0.35); transition: transform .15s, background .15s; }
+.add-btn:hover { transform: translateY(-1px); }
+.nav button, .nav a { transition: background .15s, color .15s; }
+.nav button[aria-current="page"] { background: linear-gradient(90deg, rgba(31,79,214,0.35), rgba(31,79,214,0.12)); box-shadow: inset 3px 0 0 #6d8dff; }
+.nav .n:not(:empty) { background: rgba(255,255,255,0.07); border-radius: 999px; padding: 0.05rem 0.5rem; min-width: 1.6rem; text-align: center; }
+.nav .n.hot:not(:empty) { background: rgba(243,217,168,0.16); }
+
+/* Căn giữa nội dung + thanh thêm việc thẳng hàng với nội dung */
+.topbar { padding: 1rem 2.5rem 0.9rem; }
+.quick { max-width: 1180px; margin: 0 auto; }
+.quick input { border-radius: 14px; padding: 0.85rem 1.1rem 0.85rem 2.8rem; font-size: 0.97rem; }
+.quick > i { top: 1.1rem; left: 1.1rem; }
+.quick .hint { opacity: 0.85; }
+.content { max-width: 1180px; margin: 0 auto; padding: 1.2rem 2.5rem 5rem; }
+
+/* Avatar: to hơn, có màu riêng từng người, viền tách rõ */
+.av { width: 28px; height: 28px; font-size: 0.64rem; letter-spacing: 0.2px; border: 2px solid var(--surface); box-shadow: 0 0 0 1px rgba(17,26,51,0.06); }
+.avs .av + .av { margin-left: -6px; }
+.avs:hover .av + .av { margin-left: -2px; }
+.avs .av { transition: margin .15s; }
+
+/* Tiêu đề nhóm: số đếm thành huy hiệu */
+.section-title { align-items: center; margin: 1.8rem 0 0.7rem; }
+.section-title > span:not(:empty):not(.sub), .section-title div > span:not(:empty) { background: var(--line-2); color: var(--ink-2); font-weight: 600; font-size: 0.72rem; border-radius: 999px; padding: 0.08rem 0.55rem; }
+.section-title.red > span:not(:empty) { background: var(--red-soft); color: var(--red); }
+.section-title.red h3::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 0.5rem; vertical-align: 1px; box-shadow: 0 0 0 4px var(--red-soft); }
+
+/* Danh sách việc */
+.tasks { border-radius: 16px; box-shadow: 0 1px 2px rgba(17,26,51,0.04); }
+.task { padding: 0.85rem 1.1rem; gap: 0.9rem; position: relative; transition: background .12s; }
+.task::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 0 3px 3px 0; background: transparent; }
+.task.prio-urgent::before { background: var(--red); }
+.task.prio-high::before { background: var(--gold); }
+.task:hover { background: #f8f9fc; }
+.t-title { font-size: 0.95rem; color: var(--ink); }
+.t-meta { margin-top: 0.4rem; gap: 0.45rem 0.6rem; }
+.t-right { align-self: center; }
+.check { width: 22px; height: 22px; }
+
+/* Trạng thái rỗng */
+.empty { background: var(--surface); border: 1.5px dashed var(--line); border-radius: 16px; padding: 1.4rem 1.3rem; text-align: center; }
+.empty b { margin-bottom: 0.2rem; }
+
+/* Hero hôm nay */
+.hero { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 1.6rem 1.8rem; margin: 0.4rem 0 1.4rem; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, var(--gold-soft) 0%, transparent 70%); pointer-events: none; }
+.hero > * { position: relative; z-index: 1; }
+.hero h1 { font-size: 2.4rem; }
+
+/* Thẻ hệ thống */
+.inbox-strip { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.8rem; }
+.ibox { padding: 1rem 1.05rem 0.95rem 1.2rem; transition: box-shadow .15s, transform .15s; }
+.ibox:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.ibox::before { top: 0; bottom: 0; width: 4px; border-radius: 0; }
+.ibox .acts a:first-child { background: var(--night); border-color: var(--night); color: #fff; }
+.ibox .acts a:first-child:hover { background: var(--sapphire); border-color: var(--sapphire); color: #fff; }
+
+/* Bảng công việc */
+.toolbar { margin-bottom: 1.2rem; }
+.toolbar select { border-radius: 10px; padding: 0.5rem 0.7rem; min-width: 150px; }
+.board { gap: 1rem; }
+.col { background: #eef0f5; border: 1px solid #e6e9f0; border-radius: 16px; padding: 0.7rem; }
+.col-head { padding: 0.25rem 0.35rem 0.75rem; }
+.col-head b::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 0.5rem; background: var(--st, #9aa3b5); vertical-align: 1px; }
+.col[data-col="todo"] { --st: #9aa3b5; }
+.col[data-col="doing"] { --st: var(--sapphire); }
+.col[data-col="review"] { --st: var(--violet); }
+.col[data-col="done"] { --st: var(--green); }
+.col-head span { background: var(--surface); border-radius: 999px; padding: 0 0.5rem; }
+.card { border-radius: 12px; padding: 0.8rem 0.85rem; transition: box-shadow .15s, transform .15s, border-color .15s; position: relative; overflow: hidden; }
+.card:hover { box-shadow: 0 6px 18px rgba(17,26,51,0.08); transform: translateY(-1px); border-color: #d6dbe6; }
+.prio-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; height: auto; margin: 0; border-radius: 0; }
+.card .t-title { font-weight: 500; line-height: 1.4; }
+.card .foot { margin-top: 0.7rem; align-items: flex-end; }
+.col[data-col="done"] .card .t-title { color: var(--muted); text-decoration: line-through; text-decoration-color: #c3c9d6; }
+
+/* Lịch tuần */
+.week { gap: 0.6rem; }
+.day { min-height: 300px; border-radius: 16px; padding: 0.6rem; }
+.day-head { padding: 0.15rem 0.25rem 0.5rem; border-bottom: 1px solid var(--line-2); margin-bottom: 0.2rem; }
+.day-head span { font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; font-size: 0.7rem; }
+.day.today { box-shadow: none; border-color: var(--gold); background: linear-gradient(180deg, #fffaf1 0%, var(--surface) 80px); }
+.day.today .day-head b { background: var(--gold); color: #fff; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 1.05rem; }
+.day.weekend { background: #fafbfd; }
+.day .card { border-radius: 10px; }
+.day .add { opacity: 0; transition: opacity .15s; margin-top: auto; }
+.day:hover .add, .day .add:focus-visible { opacity: 1; }
+.btn { border-radius: 10px; min-height: 34px; }
+
+/* Ngăn chi tiết */
+.drawer.open { box-shadow: -24px 0 60px rgba(17,26,51,0.2); }
+.d-head { padding: 1.2rem 1.4rem 1rem; }
+
+@media (max-width: 900px) {
+  .topbar { padding: 0.6rem 1rem; }
+  .content { padding: 1rem 1rem 7rem; }
+  .hero { flex-direction: row; align-items: center; padding: 1.1rem 1.1rem; border-radius: 16px; gap: 0.8rem; }
+  .hero h1 { font-size: 1.65rem; }
+  .hero p { font-size: 0.9rem; }
+  .ring, .ring svg { width: 76px; height: 76px; }
+  .ring .lbl b { font-size: 1.15rem; }
+  .inbox-strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 0.6rem; margin: 0 -1rem; padding: 0.2rem 1rem 0.5rem; scrollbar-width: none; }
+  .inbox-strip::-webkit-scrollbar { display: none; }
+  .ibox { flex: 0 0 78%; scroll-snap-align: start; }
+  .task { padding: 0.8rem 0.9rem; }
+  .day .add { opacity: 1; }
+  .mobile-nav { border-radius: 18px 18px 0 0; box-shadow: 0 -8px 24px rgba(17,26,51,0.18); }
+  .mobile-nav button[aria-current="page"] { background: var(--night-3); }
+  .toolbar h2, .page-title { font-size: 1.45rem; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="side" aria-label="Điều hướng">
-    <div class="brand"><b>Công Việc</b><span>Mạng Lưới Tri Thức Việt Nam</span></div>
+    <div class="brand"><span class="logo"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span><div><b>Công Việc</b><span>Mạng Lưới Tri Thức Việt Nam</span></div></div>
     <button class="add-btn" data-act="focus-quick"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm việc <kbd>N</kbd></button>
     <nav class="nav">
       <button data-view="today" aria-current="page"><i class="fa-regular fa-sun" aria-hidden="true"></i> Hôm nay <span class="n" id="nToday"></span></button>
@@ -428,7 +548,9 @@ button { cursor: pointer; background: none; border: none; }
     if (t.link) bits.push('<span class="m" style="color:var(--gold)"><i class="fa-solid fa-link" aria-hidden="true"></i></span>');
     return bits.join('');
   }
-  const avatars = list => `<span class="avs">${list.slice(0, 3).map(e => `<span class="av" title="${esc(staffBy(e).name)}">${esc(initials(staffBy(e).name))}</span>`).join('')}${list.length > 3 ? `<span class="av">+${list.length - 3}</span>` : ''}</span>`;
+  const AV_TONES = [['#eaf0ff', '#1f4fd6'], ['#e6f4ec', '#1f7a4d'], ['#f6efe3', '#8a6a37'], ['#efebfb', '#6246c9'], ['#fdeceb', '#c2352b'], ['#e3f4f7', '#0e7490'], ['#fdf3e2', '#b7791f']];
+  const avTone = e => { let h = 0; for (const c of String(e || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0; const t = AV_TONES[h % AV_TONES.length]; return `background:${t[0]};color:${t[1]}`; };
+  const avatars = list => `<span class="avs">${list.slice(0, 3).map(e => `<span class="av" style="${avTone(e)}" title="${esc(staffBy(e).name)}">${esc(initials(staffBy(e).name))}</span>`).join('')}${list.length > 3 ? `<span class="av">+${list.length - 3}</span>` : ''}</span>`;
   const taskRow = t => `<div class="task ${t.status === 'done' ? 'done' : ''} prio-${t.priority}" data-open="${esc(t.id)}" tabindex="0">
       <button class="check" data-toggle="${esc(t.id)}" aria-label="${t.status === 'done' ? 'Đánh dấu chưa xong' : 'Hoàn thành'}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
       <div class="t-body"><div class="t-title">${esc(t.title)}</div><div class="t-meta">${metaHtml(t)}${t.status === 'doing' ? '<span class="pill blue">Đang làm</span>' : t.status === 'review' ? '<span class="pill" style="background:var(--violet-soft);color:var(--violet);border-color:transparent">Chờ duyệt</span>' : ''}</div></div>
@@ -463,7 +585,7 @@ button { cursor: pointer; background: none; border: none; }
           <div class="lbl"><div><b>${doneToday}/${totalToday || 0}</b><span>đã xong</span></div></div>
         </div>
       </div>
-      ${D.inbox.length ? `<div class="section-title" style="margin-top:0.4rem"><h3>Việc từ hệ thống</h3><span>tự cập nhật từ dữ liệu vận hành</span></div><div class="inbox-strip">${D.inbox.map(inboxCard).join('')}</div>` : ''}
+      ${D.inbox.length ? `<div class="section-title" style="margin-top:0.4rem"><h3>Việc từ hệ thống</h3><span class="sub">tự cập nhật từ dữ liệu vận hành</span></div><div class="inbox-strip">${D.inbox.map(inboxCard).join('')}</div>` : ''}
       <div class="section-title" style="justify-content:space-between"><div style="display:flex;gap:0.6rem;align-items:baseline"><h3>Công việc</h3></div>
         <div class="scope" role="group" aria-label="Phạm vi"><button data-scope="me" aria-pressed="${state.scope === 'me'}">Của tôi</button><button data-scope="all" aria-pressed="${state.scope === 'all'}">Cả nhóm</button></div></div>
       ${overdue.length ? `<div class="section-title red"><h3>Quá hạn</h3><span>${overdue.length}</span></div>${list(overdue)}` : ''}
@@ -542,7 +664,7 @@ button { cursor: pointer; background: none; border: none; }
       <div class="week">${days.map(d => {
         const items = pool.filter(t => t.dueDate === d).sort((a, b) => (a.status === 'done') - (b.status === 'done') || byDue(a, b));
         const dt = new Date(d + 'T00:00:00');
-        return `<div class="day ${d === today ? 'today' : ''}" data-day="${d}"><div class="day-head"><span>${WDs[dt.getDay()]}</span><b>${dt.getDate()}</b></div>
+        return `<div class="day ${d === today ? 'today' : ''} ${dt.getDay() % 6 === 0 ? 'weekend' : ''}" data-day="${d}"><div class="day-head"><span>${WDs[dt.getDay()]}</span><b>${dt.getDate()}</b></div>
           ${items.map(t => `<div class="card ${t.status === 'done' ? 'done' : ''}" draggable="true" data-open="${esc(t.id)}" data-id="${esc(t.id)}" style="${t.status === 'done' ? 'opacity:0.55' : ''}">${t.priority === 'urgent' || t.priority === 'high' ? `<div class="prio-bar" style="background:${PRIO_COLOR[t.priority]}"></div>` : ''}<div class="t-title" style="${t.status === 'done' ? 'text-decoration:line-through' : ''}">${t.dueTime ? `<b style="font-weight:600;color:var(--sapphire)">${esc(t.dueTime)}</b> ` : ''}${esc(t.title)}</div></div>`).join('')}
           <button class="add" data-add-day="${d}"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm</button></div>`;
       }).join('')}</div>`;
