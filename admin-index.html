@@ -6,9 +6,6 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --text-dark: #0f172a; --text-muted: #64748b; --border: #e7ecf5; --bg-page: #f4f7fc;
@@ -162,6 +159,37 @@
     #globalAlert { display: none; font-size: 0.85rem; padding: 0.7rem 1rem; border-radius: 10px; margin-bottom: 1rem; }
     .table-scroll { overflow-x: auto; }
     .data-preview { font-size: 0.8rem; color: var(--text-muted); max-width: 280px; }
+
+    /* =========================================================
+       Đồng bộ màu chủ đề wvn.vn (giống trang Công việc & CRM)
+       ========================================================= */
+    :root {
+      --text-dark: #0f172a; --text-muted: #64748b; --border: #e2e8f0; --bg-page: #f8fafc;
+      --navy: #0f172a; --navy-2: #1e3a8a;
+      --sky: #0284c7; --sky-soft: #e0f2fe;
+      --blue-grad-btn: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --site-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body { font-family: var(--site-font); background: radial-gradient(1100px 520px at 105% -8%, #e0f2fe 0%, transparent 60%), linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
+    h1, h2, h3, h4, .btn, .sidebar-brand-text, .stat-value { font-family: var(--site-font); letter-spacing: -0.2px; }
+    .sidebar { background: linear-gradient(170deg, #0f172a 0%, #172554 55%, #1e3a8a 100%); }
+    .sidebar-brand { position: relative; padding-bottom: 1.1rem; }
+    .sidebar-brand::after { content: ""; position: absolute; left: 0.4rem; right: 0.4rem; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(0,200,255,0.45), rgba(180,230,40,0.25) 45%, transparent); }
+    .sidebar-brand img { filter: drop-shadow(0 4px 12px rgba(0,150,255,0.45)); }
+    .sidebar-brand-text { font-size: 1.05rem; font-weight: 700; }
+    .sidebar-brand-text span { font-family: var(--site-font); margin-top: 0.2rem; font-size: 0.6rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.6; background: linear-gradient(90deg, #38d2ff 0%, #7fe0a0 55%, #c8ec3a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .sidebar-nav .tab-btn { font-weight: 500; }
+    .sidebar-nav .tab-btn:hover { background: rgba(255,255,255,0.07); }
+    .sidebar-nav .tab-btn.active { background: rgba(125,211,252,0.12); border-left-color: #38bdf8; font-weight: 600; }
+    .sidebar-footer { border-top-color: rgba(255,255,255,0.1); }
+    .mobile-topbar { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%); }
+    .btn { box-shadow: 0 10px 22px -8px rgba(2,132,199,0.45); }
+    .btn:hover { background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%); box-shadow: 0 12px 26px -8px rgba(2,132,199,0.55); }
+    .card { border-color: var(--border); box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.05); }
+    .card h2 { color: #0f172a; font-weight: 800; }
+    .card h2 i { color: var(--sky); }
+    .form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus, .status-select:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(2,132,199,0.14); }
+    @media (max-width: 880px) { .sidebar-nav .tab-btn.active { border-left-color: #38bdf8; } }
   </style>
 </head>
 <body>
@@ -179,7 +207,7 @@
     <aside class="sidebar" id="mainSidebar">
       <div class="sidebar-brand">
         <img src="images/logo-wvn.png?v=20260927b" alt="Logo">
-        <div class="sidebar-brand-text">Tri Thức Việt Nam<span>Quản Trị</span></div>
+        <div class="sidebar-brand-text">Quản Trị<span>Tri Thức Việt Nam</span></div>
       </div>
       <nav class="sidebar-nav">
         <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-simple"></i> Tổng Quan</button>
@@ -201,9 +229,9 @@
         <button class="tab-btn" data-tab="staffaccounts" onclick="switchTab('staffaccounts')"><i class="fa-solid fa-users-gear"></i> Tài Khoản Quản Trị</button>
       </nav>
       <div class="sidebar-footer">
-        <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.6rem; display:flex; align-items:center; gap:0.4rem;">
-          <i class="fa-solid fa-user-pen"></i> Đang đăng nhập: <strong id="currentAdminNameLabel" style="color:var(--text-dark);"></strong>
-          <button type="button" onclick="switchTab('staffaccounts')" style="background:none; border:none; color:#0284c7; cursor:pointer; font-size:0.76rem; text-decoration:underline; padding:0;">Tài khoản</button>
+        <div style="font-size:0.78rem; color:#94a3b8; margin-bottom:0.6rem; display:flex; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+          <i class="fa-solid fa-user-pen"></i> Đang đăng nhập: <strong id="currentAdminNameLabel" style="color:#fff;"></strong>
+          <button type="button" onclick="switchTab('staffaccounts')" style="background:none; border:none; color:#7dd3fc; cursor:pointer; font-size:0.76rem; text-decoration:underline; padding:0;">Tài khoản</button>
         </div>
         <button class="btn btn-outline" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</button>
       </div>
