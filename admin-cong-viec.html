@@ -6,9 +6,6 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Công Việc · Tri thức Việt</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=20260927b">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>if (!localStorage.getItem('wvn_admin_token')) window.location.replace('admin-dang-nhap.html');</script>
 <style>
@@ -21,7 +18,7 @@
   --red: #c2352b; --red-soft: #fdeceb; --amber: #b7791f; --amber-soft: #fdf3e2; --green: #1f7a4d; --green-soft: #e6f4ec;
   --violet: #6246c9; --violet-soft: #efebfb;
   --r-s: 6px; --r-m: 10px; --r-l: 14px;
-  --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --serif: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --shadow: 0 1px 2px rgba(17,26,51,0.05), 0 8px 24px rgba(17,26,51,0.06);
 }
@@ -538,13 +535,13 @@ button { cursor: pointer; background: none; border: none; }
 
 /* =========================================================
    Bản 4: sang trọng, tiết chế
-   - Chữ: Be Vietnam Pro (giao diện) + Playfair Display (ngày, tiêu đề trang)
+   - Chữ: một phông duy nhất Be Vietnam Pro (tiêu đề dùng nét đậm hơn)
    - Một điểm nhấn duy nhất: khung chào nền đêm với vòng tiến độ màu logo
    - Phần còn lại: trắng, đường mảnh, nhiều khoảng thở
    ========================================================= */
 :root {
   --sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --display: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --midnight: #0a1230; --midnight-2: #101d4a; --midnight-3: #16296b;
   --canvas: #f5f6fa; --hair: #e6e9f1; --hair-2: #eff1f6;
   --ink: #0c1330; --ink-2: #3b4462; --muted: #6a7291;
@@ -781,6 +778,19 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   .view .toolbar .scope { margin-right: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .task.just-done, .task.just-done .check { animation: none !important; } }
+/* Một phông duy nhất: tiêu đề lớn dùng nét đậm và khoảng chữ khít */
+.hero h1, .toolbar h2, .page-title, .pt .page-title, .d-title, .modal h3 { font-weight: 700 !important; letter-spacing: -0.025em !important; }
+.hero h1 em { font-style: normal !important; font-weight: 500 !important; }
+.stat b, .pt-num b, .ring .lbl b, .f-top b, .day-head b { font-weight: 700 !important; letter-spacing: -0.02em; }
+.empty b { font-weight: 600 !important; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style id="wvn-font">
+  /* Một phông chữ duy nhất cho toàn bộ website: Be Vietnam Pro (trừ biểu tượng Font Awesome) */
+  :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
 </style>
 </head>
 <body>
