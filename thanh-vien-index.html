@@ -327,6 +327,99 @@
     body.vip-theme .banner-tag {
       background: rgba(201,162,39,0.22); border-color: rgba(232,199,102,0.6); color: #f6ecc9;
     }
+
+    /* ============ HOÁ ĐƠN: dạng vé ============ */
+    .inv-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7rem; margin-bottom: 1.1rem; }
+    .inv-stat { border: 1px solid var(--border); border-radius: 14px; padding: 0.85rem 1rem; background: linear-gradient(160deg, #fff 0%, #f8fbff 100%); min-width: 0; }
+    .inv-stat span { display: block; font-size: 0.74rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+    .inv-stat b { display: block; font-size: 1.25rem; font-weight: 800; color: var(--text-dark); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .inv-stat.ok b { color: #15803d; }
+    .inv-stat.due { border-color: #fcd34d; background: linear-gradient(160deg, #fffbeb 0%, #fff 100%); }
+    .inv-stat.due b { color: #b45309; }
+    .inv-filters { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.2rem; margin-bottom: 0.4rem; scrollbar-width: none; }
+    .inv-filters::-webkit-scrollbar { display: none; }
+    .inv-chip { flex-shrink: 0; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font: inherit; font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: all .15s; }
+    .inv-chip b { font-size: 0.68rem; background: #fee2e2; color: #b91c1c; border-radius: 999px; padding: 0 0.4rem; }
+    .inv-chip:hover { color: var(--text-dark); }
+    .inv-chip.on { background: #0f172a; border-color: #0f172a; color: #fff; }
+    .inv-month { display: flex; align-items: baseline; gap: 0.6rem; margin: 1.1rem 0 0.55rem; font-size: 0.82rem; font-weight: 800; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.6px; }
+    .inv-month span { font-size: 0.74rem; font-weight: 500; color: var(--text-muted); text-transform: none; letter-spacing: 0; }
+    .inv-card { --tone: #16a34a; --tone-soft: #dcfce7; position: relative; border: 1px solid var(--border); border-radius: 16px; margin-bottom: 0.7rem; background: #fff; overflow: hidden; transition: transform .15s, box-shadow .15s, border-color .15s; }
+    .inv-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--tone); }
+    .inv-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -14px rgba(15,23,42,0.28); }
+    .inv-card.inv-unpaid { --tone: #d97706; --tone-soft: #fef3c7; border-color: #fcd34d; }
+    .inv-card.inv-pending_review { --tone: #0284c7; --tone-soft: #e0f2fe; }
+    .inv-main { display: grid; grid-template-columns: auto 1fr auto; gap: 0.95rem; align-items: center; padding: 1rem 1.15rem 0.95rem 1.3rem; }
+    .inv-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--tone-soft); color: var(--tone); font-size: 1.05rem; }
+    .inv-info { min-width: 0; }
+    .inv-no { font-weight: 800; font-size: 0.98rem; color: var(--text-dark); letter-spacing: 0.3px; font-variant-numeric: tabular-nums; }
+    .inv-what { font-size: 0.86rem; color: var(--text-dark); opacity: 0.85; margin-top: 0.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .inv-what span { color: var(--text-muted); font-size: 0.78rem; }
+    .inv-sub { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .inv-sub i { margin-right: 0.3rem; opacity: 0.8; }
+    .inv-amt { text-align: right; }
+    .inv-money { font-size: 1.25rem; font-weight: 800; color: var(--text-dark); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -0.3px; }
+    .inv-pill { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.6rem; border-radius: 999px; background: var(--tone-soft); color: var(--tone); }
+    .inv-card.inv-unpaid .inv-pill { color: #b45309; }
+    /* Đường răng cưa như cuống vé */
+    .inv-foot { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; padding: 0.7rem 1.15rem 0.75rem 1.3rem; border-top: 1.5px dashed var(--border); flex-wrap: wrap; }
+    .inv-foot::before, .inv-foot::after { content: ""; position: absolute; top: -9px; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 1px solid var(--border); }
+    .inv-foot::before { left: -9px; } .inv-foot::after { right: -9px; }
+    .inv-hint { font-size: 0.78rem; color: var(--text-muted); }
+    .inv-acts { display: flex; gap: 0.45rem; margin-left: auto; }
+    .inv-view { font: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; background: transparent; border: 1px solid var(--border); color: var(--text-dark); padding: 0.45rem 0.95rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.4rem; transition: all .15s; white-space: nowrap; }
+    .inv-view:hover { border-color: #0284c7; color: #0284c7; }
+    .inv-pay { padding: 0.45rem 1rem !important; font-size: 0.82rem !important; border-radius: 999px !important; }
+    .inv-reject { margin: 0 1.15rem 0.8rem 1.3rem; padding: 0.6rem 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; font-size: 0.8rem; color: #991b1b; }
+    .inv-payform { padding: 1rem 1.15rem 1.1rem 1.3rem; border-top: 1px dashed var(--border); }
+    .inv-empty, .inv-empty-filter { text-align: center; color: var(--text-muted); padding: 2rem 1rem; border: 1.5px dashed var(--border); border-radius: 16px; }
+    .inv-empty b { display: block; color: var(--text-dark); font-size: 1rem; margin-bottom: 0.25rem; }
+    .inv-empty span { font-size: 0.86rem; }
+    .inv-empty-ico { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; margin: 0 auto 0.8rem; background: #e0f2fe; color: #0284c7; font-size: 1.4rem; }
+    @media (max-width: 640px) {
+      .inv-summary { grid-template-columns: 1fr 1fr; }
+      .inv-summary .inv-stat:first-child { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; }
+      .inv-summary .inv-stat:first-child b { margin: 0; }
+      .inv-stat { padding: 0.7rem 0.8rem; }
+      .inv-stat span { font-size: 0.68rem; letter-spacing: 0.2px; white-space: nowrap; }
+      .inv-stat b { font-size: 1.05rem; }
+      .inv-pay { white-space: nowrap; }
+      .inv-main { grid-template-columns: auto 1fr; gap: 0.75rem; padding: 0.9rem 0.95rem 0.85rem 1.1rem; }
+      .inv-amt { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; text-align: left; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+      .inv-pill { margin: 0; }
+      .inv-ico { width: 38px; height: 38px; }
+      .inv-foot { padding: 0.7rem 0.95rem 0.8rem 1.1rem; }
+      .inv-hint { display: none; }
+      .inv-acts { width: 100%; }
+      .inv-acts > * { flex: 1; justify-content: center; }
+    }
+    /* Giao diện VIP (vàng – đen) */
+    body.vip-theme .inv-stat { background: linear-gradient(160deg, #2a2415 0%, #1f1b11 100%); border-color: rgba(201,162,39,0.25); }
+    body.vip-theme .inv-stat span { color: #a8935a; }
+    body.vip-theme .inv-stat b { color: #f6ecc9; }
+    body.vip-theme .inv-stat.ok b { color: #86efac; }
+    body.vip-theme .inv-stat.due { border-color: rgba(251,191,36,0.55); background: linear-gradient(160deg, #33280f 0%, #221c0f 100%); }
+    body.vip-theme .inv-stat.due b { color: #fcd34d; }
+    body.vip-theme .inv-chip { border-color: rgba(201,162,39,0.3); color: #cbb98a; }
+    body.vip-theme .inv-chip:hover { color: #f6ecc9; }
+    body.vip-theme .inv-chip.on { background: linear-gradient(135deg, #c9a227, #e8c766); border-color: transparent; color: #1a1508; }
+    body.vip-theme .inv-month { color: #e8c766; }
+    body.vip-theme .inv-month span { color: #a8935a; }
+    body.vip-theme .inv-card { --tone: #4ade80; --tone-soft: rgba(74,222,128,0.12); background: linear-gradient(135deg, #262013 0%, #1c1810 100%); border-color: rgba(201,162,39,0.28); }
+    body.vip-theme .inv-card.inv-unpaid { --tone: #fbbf24; --tone-soft: rgba(251,191,36,0.14); border-color: rgba(251,191,36,0.55); }
+    body.vip-theme .inv-card.inv-pending_review { --tone: #7dd3fc; --tone-soft: rgba(125,211,252,0.12); }
+    body.vip-theme .inv-card.inv-unpaid .inv-pill { color: #fcd34d; }
+    body.vip-theme .inv-card:hover { box-shadow: 0 16px 34px -16px rgba(0,0,0,0.7), 0 0 0 1px rgba(232,199,102,0.35); }
+    body.vip-theme .inv-no { color: #f6ecc9; }
+    body.vip-theme .inv-money { background: linear-gradient(90deg, #f6ecc9, #e8c766); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    body.vip-theme .inv-foot, body.vip-theme .inv-payform { border-top-color: rgba(201,162,39,0.28); }
+    body.vip-theme .inv-foot::before, body.vip-theme .inv-foot::after { background: #211d13; border-color: rgba(201,162,39,0.28); }
+    body.vip-theme .inv-hint { color: #a8935a; }
+    body.vip-theme .inv-view { border-color: rgba(232,199,102,0.45); color: #f6ecc9; }
+    body.vip-theme .inv-view:hover { background: rgba(232,199,102,0.12); border-color: #e8c766; color: #fff; }
+    body.vip-theme .inv-amt { border-top-color: rgba(201,162,39,0.2); }
+    body.vip-theme .inv-empty, body.vip-theme .inv-empty-filter { border-color: rgba(201,162,39,0.3); }
+    body.vip-theme .inv-empty-ico { background: rgba(201,162,39,0.15); color: #e8c766; }
     .invoice-doc { background:#fff; border:1px solid var(--border); border-radius:12px; padding:2rem; max-width:720px; margin:0 auto; }
     .invoice-doc-header { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; border-bottom:2px solid #0f172a; padding-bottom:1.2rem; margin-bottom:1.2rem; }
     .invoice-doc-header img { height:44px; }
@@ -914,6 +1007,15 @@
       document.body.style.overflow = 'hidden';
     }
 
+    // Lọc danh sách hoá đơn theo trạng thái (Tất cả / Chưa thanh toán / Chờ duyệt / Đã thanh toán)
+    function filterMemberInvoices(k) {
+      const root = document.getElementById('memberInvoiceListCard'); if (!root) return;
+      root.querySelectorAll('.inv-chip').forEach(b => b.classList.toggle('on', b.dataset.invFilter === k));
+      let shown = 0;
+      root.querySelectorAll('.inv-card').forEach(c => { const ok = k === 'all' || c.dataset.invStatus === k; c.style.display = ok ? '' : 'none'; if (ok) shown++; });
+      root.querySelectorAll('.inv-group').forEach(g => { g.style.display = [...g.querySelectorAll('.inv-card')].some(c => c.style.display !== 'none') ? '' : 'none'; });
+      const e = root.querySelector('.inv-empty-filter'); if (e) e.style.display = shown ? 'none' : '';
+    }
     // Popup hoá đơn mới — mời thanh toán ngay, chỉ hiện 1 lần cho mỗi hoá đơn (dựa vào member-ack-invoice)
     function showInvoicePopup(invoice) {
       document.getElementById('invoicePopupText').innerHTML = `Hoá đơn <strong>${invoice.invoiceNumber}</strong> — <strong style="color:#15803d;">${Number(invoice.totalAmount).toLocaleString('vi-VN')}đ</strong>${invoice.studentName ? ` (học sinh: ${invoice.studentName})` : ''}. Bạn có thể thanh toán và gửi kèm biên lai ngay tại đây.`;
@@ -1502,30 +1604,42 @@
           pending_review: { text: 'Đang chờ duyệt', bg: '#fef3c7', color: '#a16207' },
           paid: { text: 'Đã thanh toán', bg: '#dcfce7', color: '#15803d' }
         };
-        // Danh sách hoá đơn dạng THẺ XẾP CHỒNG (không phải bảng) để tối ưu hiển thị trên di động —
-        // không cần cuộn ngang, mỗi hoá đơn là 1 khối gọn gàng tự xuống dòng theo màn hình.
-        const invoicesHtml = invoices.length > 0
-          ? invoices.map(inv => {
-              const meta = INVOICE_STATUS_META[inv.status] || INVOICE_STATUS_META.unpaid;
-              const canPay = inv.status === 'unpaid';
-              return `
-              <div class="invoice-list-card" style="border:1px solid var(--border); border-radius:14px; padding:1rem 1.1rem; margin-bottom:0.8rem;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.6rem; flex-wrap:wrap;">
-                  <div style="min-width:0;">
-                    <div style="font-weight:800; font-size:0.98rem; color:var(--text-dark);">${inv.invoiceNumber}</div>
-                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem;">${inv.studentName ? inv.studentName + ' • ' : ''}${formatDate(inv.issueDate)}</div>
+        // Danh sách hoá đơn dạng "vé" — tổng quan ở trên, lọc theo trạng thái, nhóm theo tháng.
+        // Thẻ tự xuống dòng theo màn hình, không cần cuộn ngang trên di động.
+        const INV_ICON = { unpaid: 'fa-hourglass-half', pending_review: 'fa-clock-rotate-left', paid: 'fa-circle-check' };
+        const money = n => Number(n || 0).toLocaleString('vi-VN') + 'đ';
+        const invPaidSum = invoices.filter(i => i.status === 'paid').reduce((a, i) => a + Number(i.totalAmount || 0), 0);
+        const invDue = invoices.filter(i => i.status === 'unpaid');
+        const invPending = invoices.filter(i => i.status === 'pending_review');
+        const invCard = inv => {
+          const meta = INVOICE_STATUS_META[inv.status] || INVOICE_STATUS_META.unpaid;
+          const st = INVOICE_STATUS_META[inv.status] ? inv.status : 'unpaid';
+          const canPay = st === 'unpaid';
+          const items = Array.isArray(inv.items) ? inv.items : [];
+          const what = inv.program || (items[0] && (items[0].name || items[0].description)) || '';
+          return `
+              <div class="inv-card inv-${st}" data-inv-status="${st}">
+                <div class="inv-main">
+                  <div class="inv-ico"><i class="fa-solid ${INV_ICON[st]}"></i></div>
+                  <div class="inv-info">
+                    <div class="inv-no">${inv.invoiceNumber}</div>
+                    ${what ? `<div class="inv-what">${what}${items.length > 1 ? ` <span>+${items.length - 1} mục</span>` : ''}</div>` : ''}
+                    <div class="inv-sub">${inv.studentName ? `<span><i class="fa-regular fa-user"></i>${inv.studentName}</span>` : ''}<span><i class="fa-regular fa-calendar"></i>${formatDate(inv.issueDate)}</span></div>
                   </div>
-                  <div style="text-align:right;">
-                    <div style="font-weight:800; color:#15803d; font-size:1.02rem; white-space:nowrap;">${Number(inv.totalAmount).toLocaleString('vi-VN')}đ</div>
-                    <span style="display:inline-block; margin-top:0.3rem; font-size:0.74rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:${meta.bg}; color:${meta.color};">${meta.text}</span>
+                  <div class="inv-amt">
+                    <div class="inv-money">${money(inv.totalAmount)}</div>
+                    <span class="inv-pill"><i class="fa-solid ${INV_ICON[st]}"></i>${meta.text}</span>
                   </div>
                 </div>
-                ${inv.rejectReason ? `<div style="margin-top:0.6rem; padding:0.6rem 0.7rem; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; font-size:0.8rem; color:#991b1b;">Biên lai trước chưa hợp lệ: ${inv.rejectReason}. Vui lòng gửi lại.</div>` : ''}
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem;">
-                  <button type="button" class="btn btn-outline" style="flex:1; min-width:90px; padding:0.5rem 0.8rem; font-size:0.82rem;" onclick="viewMemberInvoice('${inv.id}')">Xem</button>
-                  ${canPay ? `<button type="button" class="btn" style="flex:1; min-width:130px; padding:0.5rem 0.8rem; font-size:0.82rem;" onclick="openInvoicePaymentForm('${inv.id}')"><i class="fa-solid fa-credit-card"></i> Thanh Toán</button>` : ''}
+                ${inv.rejectReason ? `<div class="inv-reject"><i class="fa-solid fa-triangle-exclamation"></i> Biên lai trước chưa hợp lệ: ${inv.rejectReason}. Vui lòng gửi lại.</div>` : ''}
+                <div class="inv-foot">
+                  <span class="inv-hint">${st === 'paid' ? 'Cảm ơn gia đình đã thanh toán' : st === 'pending_review' ? 'Đã nhận biên lai, đang đối soát' : 'Chuyển khoản rồi gửi ảnh biên lai để xác nhận'}</span>
+                  <div class="inv-acts">
+                    <button type="button" class="inv-view" onclick="viewMemberInvoice('${inv.id}')"><i class="fa-regular fa-eye"></i> Xem hoá đơn</button>
+                    ${canPay ? `<button type="button" class="btn inv-pay" onclick="openInvoicePaymentForm('${inv.id}')"><i class="fa-solid fa-credit-card"></i> Thanh toán</button>` : ''}
+                  </div>
                 </div>
-                <div id="invoicePayForm-${inv.id}" style="display:none; margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--border);">
+                <div id="invoicePayForm-${inv.id}" class="inv-payform" style="display:none;">
                   <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:0.4rem;">Ảnh chụp biên lai / xác nhận chuyển khoản *</label>
                   <input type="file" accept="image/*" id="invoiceReceiptFile-${inv.id}" style="margin-bottom:0.6rem; font-size:0.85rem;">
                   <textarea id="invoiceReceiptNote-${inv.id}" placeholder="Ghi chú thêm (không bắt buộc)" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.85rem; margin-bottom:0.6rem;"></textarea>
@@ -1536,8 +1650,26 @@
                   </div>
                 </div>
               </div>`;
-            }).join('')
-          : `<div style="text-align:center; color:var(--text-muted); padding:1.4rem 0.4rem;"><i class="fa-solid fa-file-invoice-dollar"></i> Bạn chưa có hoá đơn nào.</div>`;
+        };
+        // Nhóm theo tháng lập hoá đơn (mới nhất trước); hoá đơn cần thanh toán luôn đứng đầu nhóm
+        const invSorted = [...invoices].sort((a, b) => (a.status === 'unpaid' ? 0 : 1) - (b.status === 'unpaid' ? 0 : 1) || new Date(b.issueDate) - new Date(a.issueDate));
+        const invGroups = [];
+        invSorted.forEach(inv => {
+          const d = new Date(inv.issueDate);
+          const key = isNaN(d) ? 'Khác' : `Tháng ${d.getMonth() + 1}/${d.getFullYear()}`;
+          let g = invGroups.find(x => x.key === key); if (!g) invGroups.push(g = { key, list: [] }); g.list.push(inv);
+        });
+        const invFilterBtn = (k, label, n) => `<button type="button" class="inv-chip${k === 'all' ? ' on' : ''}" data-inv-filter="${k}" onclick="filterMemberInvoices('${k}')">${label}${n ? `<b>${n}</b>` : ''}</button>`;
+        const invoicesHtml = invoices.length > 0
+          ? `<div class="inv-summary">
+                <div class="inv-stat"><span>Tổng hoá đơn</span><b>${invoices.length}</b></div>
+                <div class="inv-stat ok"><span>Đã thanh toán</span><b>${money(invPaidSum)}</b></div>
+                <div class="inv-stat ${invDue.length ? 'due' : ''}"><span>${invDue.length ? 'Cần thanh toán' : 'Chờ xác nhận'}</span><b>${invDue.length ? money(invDue.reduce((a, i) => a + Number(i.totalAmount || 0), 0)) : invPending.length}</b></div>
+              </div>
+              <div class="inv-filters">${invFilterBtn('all', 'Tất cả', 0)}${invFilterBtn('unpaid', 'Chưa thanh toán', invDue.length)}${invFilterBtn('pending_review', 'Chờ duyệt', invPending.length)}${invFilterBtn('paid', 'Đã thanh toán', 0)}</div>
+              ${invGroups.map(g => `<div class="inv-group"><div class="inv-month">${g.key}<span>${g.list.length} hoá đơn</span></div>${g.list.map(invCard).join('')}</div>`).join('')}
+              <div class="inv-empty-filter" style="display:none;">Không có hoá đơn nào ở trạng thái này.</div>`
+          : `<div class="inv-empty"><div class="inv-empty-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div><b>Bạn chưa có hoá đơn nào</b><span>Hoá đơn học phí sẽ xuất hiện ở đây khi trung tâm lập cho gia đình.</span></div>`;
 
         const currentTierIdx = TIER_PERKS.findIndex(t => t.name === tier.name);
         window.__tierUnlocked = TIER_PERKS.map((t, idx) => currentTierIdx >= 0 ? idx <= currentTierIdx : totalTuitionPaid >= t.min);
