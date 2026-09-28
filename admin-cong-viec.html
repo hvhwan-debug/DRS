@@ -695,12 +695,15 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   .stat b { font-size: 1.4rem; }
   .task { padding: 0.9rem 1rem; }
 }
+.brand-work { padding: 0.3rem 0.55rem 1.45rem; }
+.brand-work .work-logo { display: block; height: 48px; width: auto; max-width: 100%; filter: drop-shadow(0 4px 14px rgba(56,189,248,0.25)); }
+.mobile-head b.m-brand img.work-logo-m { width: auto; height: 30px; display: block; }
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="side" aria-label="Điều hướng">
-    <a class="brand brand-mini" href="/admin" aria-label="Work · Tri thức Việt"><img class="mark" src="/images/logo-wvn.png?v=20260927b" alt="Tri thức Việt" width="469" height="300"><span class="word"><small class="tag">Work</small></span></a>
+    <a class="brand brand-work" href="/admin" aria-label="Work Management · Tri thức Việt"><img class="work-logo" src="/images/logo-work-dark.png?v=20260928a" alt="Work Management" width="448" height="120"></a>
     <button class="add-btn" data-act="focus-quick"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm việc <kbd>N</kbd></button>
     <nav class="nav">
       <button data-view="today" aria-current="page"><i class="fa-regular fa-sun" aria-hidden="true"></i> Hôm nay <span class="n" id="nToday"></span></button>
@@ -721,7 +724,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   </aside>
 
   <div class="main">
-    <div class="mobile-head"><b class="m-brand"><img src="/images/logo-wvn.png?v=20260927b" alt="" width="469" height="300">Công Việc</b><a href="/admin">Trang quản trị</a></div>
+    <div class="mobile-head"><b class="m-brand"><img class="work-logo-m" src="/images/logo-work.png?v=20260928a" alt="Work Management" width="448" height="120"></b><a href="/admin">Trang quản trị</a></div>
     <div class="topbar" id="topbar">
       <div class="quick">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
