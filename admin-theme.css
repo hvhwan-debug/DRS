@@ -1,0 +1,193 @@
+/* =====================================================================
+   Tri thức Việt · Bộ nhận diện giao diện nội bộ (Quản trị, CRM, Đăng nhập)
+   Cùng ngôn ngữ với trang Công Việc bản 4:
+   - Chữ: Be Vietnam Pro cho giao diện, Playfair Display cho số lớn & tiêu đề chính
+   - Nền đêm #0a1230 cho thanh điều hướng, một khung điểm nhấn mỗi trang
+   - Nội dung: trắng, đường mảnh, bóng mềm, nhiều khoảng thở
+   File này chỉ đổi phần nhìn, không đổi chức năng. Nạp SAU <style> của trang.
+   ===================================================================== */
+:root {
+  --t-sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --t-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --t-night: #0a1230; --t-night-2: #101d4a; --t-night-3: #16296b;
+  --t-canvas: #f5f6fa; --t-hair: #e6e9f1; --t-hair-2: #eff1f6;
+  --t-ink: #0c1330; --t-ink-2: #3b4462; --t-muted: #6a7291;
+  --t-cyan: #38bdf8; --t-lime: #bef264;
+  --t-lift: 0 1px 0 rgba(12,19,48,0.03), 0 18px 40px -28px rgba(12,19,48,0.28);
+  --t-night-bg:
+    radial-gradient(120% 40% at 0% 0%, rgba(56,189,248,0.16), transparent 60%),
+    radial-gradient(90% 30% at 100% 8%, rgba(190,242,100,0.07), transparent 60%),
+    linear-gradient(180deg, #0a1230 0%, #0d1840 55%, #13245f 100%);
+  --t-hero-bg:
+    radial-gradient(70% 120% at 100% 0%, rgba(56,189,248,0.22), transparent 60%),
+    radial-gradient(50% 90% at 0% 100%, rgba(190,242,100,0.10), transparent 60%),
+    linear-gradient(155deg, #0a1230 0%, #111f52 55%, #17307a 100%);
+}
+
+/* ============================ TRANG QUẢN TRỊ ============================ */
+body.wvn-admin {
+  font-family: var(--t-sans); color: var(--t-ink); letter-spacing: -0.005em;
+  background: radial-gradient(900px 420px at 100% -10%, #e6f2ff 0%, transparent 60%), var(--t-canvas);
+}
+body.wvn-admin h1, body.wvn-admin h2, body.wvn-admin h3, body.wvn-admin h4,
+body.wvn-admin .btn, body.wvn-admin .sidebar-brand-text, body.wvn-admin .stat-value { font-family: var(--t-sans); }
+
+/* Thanh bên */
+body.wvn-admin .sidebar { background: var(--t-night-bg); box-shadow: inset -1px 0 0 rgba(255,255,255,0.05); padding: 1.4rem 0.95rem 1.1rem; }
+body.wvn-admin .sidebar .sidebar-brand { display: block; padding: 0.1rem 0.45rem 1.2rem; margin-bottom: 1.1rem; }
+body.wvn-admin .sidebar .sidebar-brand::after { background: linear-gradient(90deg, rgba(56,189,248,0.4), rgba(190,242,100,0.18) 50%, transparent); }
+body.wvn-admin .brand-lockup { display: block; width: 100%; max-width: 200px; height: auto; filter: drop-shadow(0 4px 14px rgba(56,189,248,0.22)); }
+body.wvn-admin .brand-role { display: block; margin-top: 0.55rem; font-size: 0.74rem; font-weight: 500; color: #8f9cc2; letter-spacing: 0.2px; }
+body.wvn-admin .sidebar-nav { gap: 1px; }
+body.wvn-admin .sidebar-nav .tab-btn {
+  font-family: var(--t-sans); font-weight: 450; font-size: 0.88rem; color: #aeb8d6;
+  padding: 0.56rem 0.8rem; border-radius: 10px; border-left: none !important; position: relative;
+}
+body.wvn-admin .sidebar-nav .tab-btn i { color: #6f7ca3; font-size: 0.86rem; }
+body.wvn-admin .sidebar-nav .tab-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+body.wvn-admin .sidebar-nav .tab-btn.active { background: rgba(255,255,255,0.07); color: #fff; font-weight: 500; }
+body.wvn-admin .sidebar-nav .tab-btn.active i { color: var(--t-cyan); }
+body.wvn-admin .sidebar-nav .tab-btn.active::before { content: ""; position: absolute; left: -0.95rem; top: 22%; bottom: 22%; width: 3px; border-radius: 0 3px 3px 0; background: linear-gradient(180deg, var(--t-cyan), var(--t-lime)); }
+body.wvn-admin .sidebar-footer { border-top-color: rgba(255,255,255,0.07); }
+body.wvn-admin .sidebar-footer .btn-outline { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #cbd3ea; border-radius: 12px; font-weight: 500; }
+body.wvn-admin .sidebar-footer .btn-outline:hover { background: rgba(254,202,202,0.1); border-color: rgba(254,202,202,0.35); color: #fecaca; }
+body.wvn-admin .mobile-topbar { background: var(--t-night); box-shadow: 0 8px 24px -16px rgba(10,18,48,0.8); }
+body.wvn-admin .mobile-topbar .brand-lockup { height: 30px; width: auto; max-width: none; }
+body.wvn-admin .mobile-topbar .brand-role { display: none; }
+body.wvn-admin .hamburger-btn { border-color: rgba(255,255,255,0.14); border-radius: 12px; }
+
+/* Nội dung */
+body.wvn-admin .main-content { padding: 2rem 2.4rem 4rem; }
+body.wvn-admin .main-content .card { border: 1px solid var(--t-hair); border-radius: 20px; box-shadow: var(--t-lift); padding: 1.6rem 1.7rem; }
+body.wvn-admin .main-content .card > h2, body.wvn-admin .main-content .card > h3,
+body.wvn-admin .main-content .card > div > h3:first-child { font-weight: 600 !important; letter-spacing: -0.2px; color: var(--t-ink); }
+body.wvn-admin .main-content .card h3 > i:first-child, body.wvn-admin .main-content .card h2 > i:first-child {
+  background: #eef4ff !important; color: #1d4ed8 !important; border-radius: 11px !important;
+}
+body.wvn-admin .main-content .card > h2:first-child { font-family: var(--t-display); font-size: 1.55rem !important; font-weight: 600 !important; letter-spacing: -0.3px; }
+body.wvn-admin .main-content .card > h2:first-child > i:first-child { font-family: "Font Awesome 6 Free"; font-size: 0.95rem; }
+
+/* Thẻ số liệu ở Tổng quan (được vẽ bằng JS với style nội tuyến) */
+body.wvn-admin #dashboardStatsRow { gap: 0.9rem !important; }
+body.wvn-admin #dashboardStatsRow > .card { padding: 1.15rem 1.25rem 1.1rem !important; margin-bottom: 0; }
+body.wvn-admin #dashboardStatsRow > .card > div:first-child > div:first-child { width: 36px !important; height: 36px !important; border-radius: 11px !important; font-size: 0.95rem !important; }
+body.wvn-admin #dashboardStatsRow > .card > div:first-child > div:last-child { font-weight: 500 !important; color: var(--t-muted) !important; }
+body.wvn-admin #dashboardStatsRow > .card > div:nth-child(2) { font-family: var(--t-display); font-weight: 600 !important; font-size: 1.85rem !important; letter-spacing: -0.4px; line-height: 1.15; margin-top: 0.2rem; }
+body.wvn-admin #dashboardStatsRow > .card > div:nth-child(3) { color: var(--t-muted) !important; }
+/* Khung "Việc cần làm hôm nay" */
+body.wvn-admin #panel-dashboard > .card:first-of-type { background: #fff !important; border: 1px solid var(--t-hair) !important; }
+body.wvn-admin #todoTodayList > div { border-top-color: var(--t-hair-2) !important; border-radius: 10px; padding-left: 0.6rem !important; padding-right: 0.6rem !important; transition: background .12s; }
+body.wvn-admin #todoTodayList > div:hover { background: #f7f9fd; }
+
+/* Nút */
+body.wvn-admin .main-content .btn:not(.btn-outline) { background: var(--t-night); box-shadow: 0 10px 24px -14px rgba(10,18,48,0.8); font-weight: 600; }
+body.wvn-admin .main-content .btn:not(.btn-outline):hover { background: var(--t-night-3); transform: none; }
+body.wvn-admin .btn-outline { font-weight: 500; }
+/* Bảng */
+body.wvn-admin .main-content table th { background: transparent; text-transform: none; letter-spacing: 0; font-size: 0.78rem; font-weight: 600; color: var(--t-muted); border-bottom: 1px solid var(--t-hair); }
+body.wvn-admin .main-content table td { border-bottom-color: var(--t-hair-2); }
+body.wvn-admin .main-content table tbody tr:hover { background: #f8faff; }
+/* Nhãn giai đoạn / ngày trong lịch sử email: bỏ chữ in hoa */
+body.wvn-admin .el-day { text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 0.8rem; }
+body.wvn-admin .el-stat b { font-family: var(--t-display); font-weight: 600; }
+
+/* Khung chào ở Tổng quan (chèn bằng JS) */
+.t-hero {
+  position: relative; overflow: hidden; border-radius: 22px; padding: 1.9rem 2.2rem 1.8rem; margin-bottom: 1.4rem;
+  background: var(--t-hero-bg); color: #e7ecfb; box-shadow: 0 30px 60px -34px rgba(10,18,48,0.7);
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+}
+.t-hero::after { content: ""; position: absolute; right: 120px; bottom: -150px; width: 280px; height: 280px; background: url("/images/logo-wvn.png?v=20260927b") no-repeat center / contain; opacity: 0.05; filter: grayscale(1) brightness(3); pointer-events: none; }
+.t-hero > * { position: relative; z-index: 1; }
+.t-hero .t-greet { color: #9fb0da; font-size: 0.88rem; }
+.t-hero h1 { font-family: var(--t-display); font-weight: 600; font-size: 2.6rem; line-height: 1.08; letter-spacing: -0.4px; color: #fff; margin: 0.3rem 0 0.6rem; }
+.t-hero h1 em { font-style: italic; font-weight: 500; }
+.t-hero .t-quote { color: #c9d3ef; max-width: 58ch; font-size: 0.96rem; line-height: 1.55; padding-left: 0.9rem; border-left: 2px solid; border-image: linear-gradient(180deg, var(--t-cyan), var(--t-lime)) 1; }
+.t-hero .t-acts { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.t-hero .t-acts a { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; font-size: 0.86rem; font-weight: 500; padding: 0.55rem 0.95rem; border-radius: 12px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); transition: background .15s; }
+.t-hero .t-acts a:hover { background: rgba(255,255,255,0.15); }
+.t-hero .t-acts a i { color: var(--t-cyan); font-size: 0.82rem; }
+
+@media (max-width: 880px) {
+  body.wvn-admin .main-content { padding: 1rem 1rem 3rem; }
+  body.wvn-admin .sidebar-nav .tab-btn.active::before { left: -1.1rem; }
+  body.wvn-admin #dashboardStatsRow { grid-template-columns: 1fr 1fr !important; gap: 0.6rem !important; }
+  body.wvn-admin #dashboardStatsRow > .card { padding: 0.95rem 1rem !important; }
+  body.wvn-admin #dashboardStatsRow > .card > div:nth-child(2) { font-size: 1.45rem !important; }
+  .t-hero { padding: 1.3rem 1.2rem; border-radius: 18px; }
+  .t-hero h1 { font-size: 1.9rem; }
+  .t-hero .t-quote { font-size: 0.9rem; }
+  .t-hero::after { width: 200px; height: 200px; right: -40px; bottom: -60px; }
+}
+
+/* ================================ CRM ================================ */
+body.wvn-crm { font-family: var(--t-sans); background: var(--t-canvas); color: var(--t-ink); letter-spacing: -0.005em; }
+body.wvn-crm .topbar { background: radial-gradient(40% 180% at 0% 0%, rgba(56,189,248,0.18), transparent 70%), radial-gradient(30% 160% at 100% 100%, rgba(190,242,100,0.06), transparent 70%), linear-gradient(100deg, #0a1230 0%, #0f1c4a 60%, #15296a 100%); box-shadow: 0 10px 30px -20px rgba(10,18,48,0.8); }
+body.wvn-crm .brand-crm { background: none; box-shadow: none; padding: 0; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 1.1rem; border-radius: 0; }
+body.wvn-crm .brand-crm .crm-logo { height: 34px; filter: drop-shadow(0 4px 14px rgba(56,189,248,0.25)); }
+body.wvn-crm .search input { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.12); border-radius: 12px; }
+body.wvn-crm .search input:focus { outline: none; border-color: rgba(56,189,248,0.6); background: rgba(255,255,255,0.1); }
+body.wvn-crm .top-link { border-radius: 12px; border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #cbd3ea; }
+body.wvn-crm .views { background: rgba(245,246,250,0.9); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom-color: var(--t-hair); }
+body.wvn-crm .view-btn { font-weight: 500; color: var(--t-muted); }
+body.wvn-crm .view-btn[aria-selected="true"] { color: var(--t-ink); font-weight: 600; border-bottom: 2px solid transparent; border-image: linear-gradient(90deg, var(--t-cyan), var(--t-lime)) 1; }
+body.wvn-crm main { padding-top: 1.8rem; }
+body.wvn-crm .overview-head h1, body.wvn-crm .view h1 { font-family: var(--t-display); font-weight: 600; font-size: 2rem; letter-spacing: -0.3px; }
+body.wvn-crm .pulse { background: var(--t-hero-bg); border: none; border-radius: 22px; color: #e7ecfb; box-shadow: 0 30px 60px -34px rgba(10,18,48,0.7); overflow: hidden; }
+body.wvn-crm .pulse > div { border-left-color: rgba(255,255,255,0.12); padding: 1.3rem 1.5rem; }
+body.wvn-crm .pulse b { font-family: var(--t-display); font-weight: 600; font-size: 2.1rem; color: #fff; }
+body.wvn-crm .pulse small { color: #9fb0da; }
+body.wvn-crm .pulse .warn b { color: #fca5a5; }
+body.wvn-crm .journey-step { border-color: var(--t-hair); background: #fff; }
+body.wvn-crm .journey-step b { font-family: var(--t-display); font-weight: 600; font-size: 1.55rem; }
+body.wvn-crm .journey-step:hover { background: #f8faff; }
+body.wvn-crm .panel, body.wvn-crm .card { border-color: var(--t-hair); border-radius: 18px; box-shadow: var(--t-lift); }
+body.wvn-crm .panel-head { border-bottom-color: var(--t-hair-2); }
+body.wvn-crm .panel-head h2 { font-weight: 600; }
+body.wvn-crm .row-item { border-bottom-color: var(--t-hair-2); }
+body.wvn-crm .row-item:hover { background: #f8faff; }
+body.wvn-crm .btn { border-radius: 10px; font-weight: 500; border-color: var(--t-hair); }
+body.wvn-crm .btn-primary { background: var(--t-night); border-color: var(--t-night); box-shadow: 0 10px 24px -14px rgba(10,18,48,0.8); }
+body.wvn-crm .btn-primary:hover { background: var(--t-night-3); border-color: var(--t-night-3); }
+body.wvn-crm table th { text-transform: none !important; letter-spacing: 0 !important; font-weight: 600; }
+@media (max-width: 700px) {
+  body.wvn-crm .brand-crm { padding-right: 0.7rem; }
+  body.wvn-crm .brand-crm .crm-logo { height: 26px; }
+  body.wvn-crm .pulse b { font-size: 1.6rem; }
+}
+
+/* ============================== ĐĂNG NHẬP ============================== */
+body.wvn-login {
+  font-family: var(--t-sans); color: var(--t-ink); background: var(--t-canvas);
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: stretch; justify-items: stretch; min-height: 100vh; padding: 0; margin: 0;
+}
+body.wvn-login .t-side {
+  background: var(--t-hero-bg); color: #e7ecfb; padding: 3rem 3.4rem; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
+}
+body.wvn-login .t-side::after { content: ""; position: absolute; right: -90px; bottom: -120px; width: 460px; height: 460px; background: url("/images/logo-wvn.png?v=20260927b") no-repeat center / contain; opacity: 0.06; filter: grayscale(1) brightness(3); }
+body.wvn-login .t-side > * { position: relative; z-index: 1; }
+body.wvn-login .t-side img { height: 44px; width: auto; align-self: flex-start; }
+body.wvn-login .t-side h2 { font-family: var(--t-display); font-weight: 600; font-size: 2.7rem; line-height: 1.12; letter-spacing: -0.4px; color: #fff; max-width: 15ch; }
+body.wvn-login .t-side h2 em { font-style: italic; font-weight: 500; }
+body.wvn-login .t-side p { color: #b8c3e3; max-width: 44ch; margin-top: 1rem; line-height: 1.6; }
+body.wvn-login .t-side small { color: #8f9cc2; font-size: 0.8rem; }
+body.wvn-login .t-form { display: grid; place-items: center; padding: 2rem; }
+body.wvn-login .card { box-shadow: none; background: transparent; padding: 0; max-width: 380px; border-radius: 0; }
+body.wvn-login .badge { display: none; }
+body.wvn-login h1 { font-family: var(--t-display); font-weight: 600; font-size: 2rem; letter-spacing: -0.3px; margin-bottom: 0.5rem; }
+body.wvn-login p.sub, body.wvn-login .hint { color: var(--t-muted); }
+body.wvn-login .form-field label { font-weight: 500; color: var(--t-ink-2); }
+body.wvn-login .form-field input { border: 1px solid var(--t-hair); border-radius: 12px; background: #fff; padding: 0.8rem 0.95rem; font: inherit; font-size: 0.95rem; box-shadow: var(--t-lift); }
+body.wvn-login .form-field input:focus { border-color: var(--t-cyan); box-shadow: 0 0 0 4px rgba(56,189,248,0.16); }
+body.wvn-login .btn-continue { background: var(--t-night); border-radius: 12px; font-weight: 600; font-family: inherit; box-shadow: 0 14px 30px -16px rgba(10,18,48,0.8); }
+body.wvn-login .btn-continue:hover { background: var(--t-night-3); }
+body.wvn-login .switch-link { color: var(--t-muted); font-family: inherit; }
+@media (max-width: 820px) {
+  body.wvn-login { grid-template-columns: 1fr; }
+  body.wvn-login .t-side { padding: 1.6rem 1.4rem 1.8rem; gap: 1.4rem; }
+  body.wvn-login .t-side img { height: 34px; }
+  body.wvn-login .t-side h2 { font-size: 1.8rem; }
+  body.wvn-login .t-side p, body.wvn-login .t-side small { display: none; }
+  body.wvn-login .t-form { padding: 1.8rem 1.4rem 2.4rem; place-items: start center; }
+}
+@media (prefers-reduced-motion: reduce) { .t-hero *, .t-hero { transition: none !important; } }

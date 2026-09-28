@@ -30,12 +30,26 @@
     .switch-link { display:block; text-align:center; font-size:0.84rem; color:#0284c7; margin-top:1.2rem; cursor:pointer; text-decoration:underline; background:none; border:none; }
     .hint { font-size:0.78rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6; }
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-theme.css?v=20260928a">
 </head>
-<body>
+<body class="wvn-login">
+  <aside class="t-side">
+    <img src="images/logo-tri-thuc-viet-dark.png?v=20260928a" alt="Tri thức Việt" width="489" height="96">
+    <div>
+      <h2>Kiến tạo giá trị <em>vượt thời gian</em></h2>
+      <p>Không gian làm việc của đội ngũ Tri thức Việt: nơi mỗi đơn đăng ký, mỗi khoản quyên góp và mỗi buổi học được chăm chút để đến đúng tay các em.</p>
+    </div>
+    <small>Wisdom Vietnam · DR Solutions</small>
+  </aside>
+  <main class="t-form">
+  <div>
   <div class="card" id="loginCard">
     <div class="badge">WVN ADMIN</div>
-    <h1>Đăng Nhập Quản Trị</h1>
-    <p class="sub">Khu vực nội bộ dành cho đội ngũ điều hành — mỗi người dùng tài khoản riêng.</p>
+    <h1>Chào mừng trở lại</h1>
+    <p class="sub">Khu vực nội bộ dành cho đội ngũ điều hành. Mỗi người dùng tài khoản riêng.</p>
 
     <form id="adminLoginForm">
       <div class="form-field">
@@ -75,6 +89,8 @@
     </form>
     <button type="button" class="switch-link" onclick="showLogin()">Quay lại đăng nhập</button>
   </div>
+  </div>
+  </main>
 
   <script>
     function showAlert(elId, message, isError) {
