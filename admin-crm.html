@@ -345,7 +345,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/admin-theme.css?v=20260928c">
+<link rel="stylesheet" href="/admin-theme.css?v=20260928d">
 </head>
 <body class="wvn-crm">
 
@@ -380,6 +380,7 @@ details.more > summary::-webkit-details-marker { display: none; }
   <section class="view active" id="view-overview" hidden></section>
 
   <section class="view" id="view-list" hidden>
+    <div class="view-head"><div><h1>Danh sách học sinh</h1><p>Tìm, lọc và sắp xếp toàn bộ học sinh. Chạm vào một dòng để mở hồ sơ chăm sóc.</p></div></div>
     <div class="toolbar">
       <label class="sr-only" for="fStage">Giai đoạn</label>
       <select id="fStage"><option value="">Mọi giai đoạn</option></select>
@@ -417,11 +418,12 @@ details.more > summary::-webkit-details-marker { display: none; }
   </section>
 
   <section class="view" id="view-board" hidden>
-    <p class="callout" style="margin-bottom:1rem;">Kéo thẻ học sinh sang cột khác để chuyển giai đoạn. Trên điện thoại, mở hồ sơ và chọn giai đoạn ở thanh hành trình.</p>
+    <div class="view-head"><div><h1>Theo giai đoạn</h1><p>Kéo thẻ học sinh sang cột khác để chuyển giai đoạn. Trên điện thoại, mở hồ sơ và chọn giai đoạn ở thanh hành trình.</p></div></div>
     <div class="board" id="board"></div>
   </section>
 
   <section class="view" id="view-agenda" hidden>
+    <div class="view-head"><div><h1>Lịch chăm sóc</h1><p>Những phụ huynh cần liên hệ, xếp theo ngày hẹn. Việc quá hạn luôn nằm trên cùng.</p></div></div>
     <div class="agenda" id="agenda"></div>
   </section>
 </main>
@@ -748,9 +750,9 @@ details.more > summary::-webkit-details-marker { display: none; }
     const list = students.filter(matches);
     $('board').innerHTML = STAGES.map(st => {
       const items = list.filter(s => stageOf(s) === st.key);
-      return `<div class="column" data-stage="${st.key}" style="--c:${st.c}">
+      return `<div class="column" data-stage="${st.key}" style="--c:${st.c};--cs:${st.cs}">
         <div class="column-head"><strong>${esc(st.label)}</strong><span>${items.length}</span></div>
-        <div class="column-body">${items.map(s => `<button class="card" draggable="true" data-open="${esc(s.id)}" data-id="${esc(s.id)}"><strong>${esc(s.studentName)}</strong><small>${esc(eff(s).guardianName ? 'PH: ' + eff(s).guardianName : (s.programs.join(', ') || s.parentEmail))}</small>${flagChips(s)}</button>`).join('') || '<div class="empty" style="padding:0.8rem 0.4rem;font-size:0.8rem;">Chưa có học sinh.</div>'}</div>
+        <div class="column-body">${items.map(s => `<button class="card" draggable="true" data-open="${esc(s.id)}" data-id="${esc(s.id)}"><span class="card-av" aria-hidden="true">${esc(initials(s.studentName))}</span><strong>${esc(s.studentName)}</strong><small>${esc(eff(s).guardianName ? 'PH: ' + eff(s).guardianName : (s.programs.join(', ') || s.parentEmail))}</small>${flagChips(s)}</button>`).join('') || '<div class="col-empty">Chưa có học sinh.<small>Kéo thẻ vào đây để chuyển giai đoạn</small></div>'}</div>
       </div>`;
     }).join('');
   }

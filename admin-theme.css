@@ -182,6 +182,59 @@ body.wvn-crm .btn { border-radius: 10px; font-weight: 500; border-color: var(--t
 body.wvn-crm .btn-primary { background: var(--t-night); border-color: var(--t-night); box-shadow: 0 10px 24px -14px rgba(10,18,48,0.8); }
 body.wvn-crm .btn-primary:hover { background: var(--t-night-3); border-color: var(--t-night-3); }
 body.wvn-crm table th { text-transform: none !important; letter-spacing: 0 !important; font-weight: 600; }
+/* Thanh tab: nhóm nút mềm, mục đang chọn nổi lên như một viên thẻ */
+body.wvn-crm .views { background: transparent; border-bottom: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding-top: 1rem; }
+body.wvn-crm .views-inner { gap: 0.2rem; }
+body.wvn-crm .views-inner { background: rgba(255,255,255,0.6); border: 1px solid var(--t-hair); border-radius: 14px; padding: 4px; width: max-content; max-width: calc(100% - 2.5rem); margin: 0 auto 0 max(1.25rem, calc((100% - 1400px) / 2 + 1.25rem)); box-shadow: 0 1px 0 rgba(12,19,48,0.03); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+body.wvn-crm .view-btn { border: none !important; border-image: none !important; border-radius: 10px; padding: 0.5rem 1rem; font-size: 0.88rem; transition: background .15s, color .15s; }
+body.wvn-crm .view-btn:hover { color: var(--t-ink); background: rgba(12,19,48,0.04); }
+body.wvn-crm .view-btn[aria-selected="true"] { background: #fff; color: var(--t-ink); font-weight: 600; box-shadow: 0 1px 2px rgba(12,19,48,0.06), 0 6px 16px -10px rgba(12,19,48,0.35); }
+body.wvn-crm .view-btn:focus-visible { outline: 2px solid var(--t-cyan); outline-offset: 1px; }
+body.wvn-crm .view-btn:focus:not(:focus-visible) { outline: none; }
+body.wvn-crm .view-btn .count { display: inline-grid; place-items: center; min-width: 1.35rem; height: 1.2rem; padding: 0 0.35rem; border-radius: 999px; background: rgba(12,19,48,0.06); font-size: 0.7rem; margin-left: 0.4rem; color: var(--t-muted); }
+body.wvn-crm .view-btn[aria-selected="true"] .count { background: #e0f2fe; color: #0369a1; }
+body.wvn-crm .view-btn .count:empty { display: none; }
+
+/* Đầu mỗi màn */
+body.wvn-crm .view-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin: 0.4rem 0 1.3rem; }
+body.wvn-crm .view-head h1 { font-family: var(--t-display); font-weight: 600; font-size: 2rem; letter-spacing: -0.3px; line-height: 1.1; }
+body.wvn-crm .view-head p { color: var(--t-muted); font-size: 0.9rem; margin-top: 0.35rem; max-width: 70ch; }
+
+/* Theo giai đoạn: cột trắng mờ, mỗi giai đoạn một sắc nhẹ */
+body.wvn-crm .board { grid-template-columns: repeat(6, minmax(200px, 1fr)); gap: 0.9rem; padding-bottom: 0.8rem; }
+body.wvn-crm .column { background: linear-gradient(180deg, var(--cs) 0%, rgba(255,255,255,0.55) 140px); border: 1px solid var(--t-hair); border-radius: 18px; min-height: 380px; position: relative; overflow: hidden; }
+body.wvn-crm .column::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--c); opacity: 0.85; }
+body.wvn-crm .column-head { padding: 1rem 1rem 0.8rem; }
+body.wvn-crm .column-head::before { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 0 4px rgba(255,255,255,0.8); }
+body.wvn-crm .column-head strong { font-weight: 600; color: var(--t-ink); }
+body.wvn-crm .column-head span { display: inline-grid; place-items: center; min-width: 1.5rem; height: 1.35rem; padding: 0 0.4rem; border-radius: 999px; background: #fff; color: var(--c); font-weight: 600; font-size: 0.74rem; border: 1px solid rgba(12,19,48,0.06); }
+body.wvn-crm .column-body { padding: 0 0.65rem 0.75rem; gap: 0.55rem; }
+body.wvn-crm .column.drop { border-color: var(--c); box-shadow: 0 0 0 3px var(--cs); }
+body.wvn-crm .column.drop .column-body { background: transparent; }
+body.wvn-crm .board .card { display: grid; grid-template-columns: 34px 1fr; column-gap: 0.65rem; align-items: center; background: #fff; border: 1px solid rgba(12,19,48,0.06); border-radius: 14px; padding: 0.7rem 0.75rem; box-shadow: 0 1px 0 rgba(12,19,48,0.03), 0 10px 22px -20px rgba(12,19,48,0.5); transition: transform .15s, box-shadow .15s; cursor: grab; }
+body.wvn-crm .board .card:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(12,19,48,0.03), 0 16px 28px -20px rgba(12,19,48,0.55); border-color: rgba(12,19,48,0.1); }
+body.wvn-crm .board .card:active { cursor: grabbing; }
+body.wvn-crm .card-av { grid-row: span 2; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 0.72rem; font-weight: 600; background: var(--cs); color: var(--c); }
+body.wvn-crm .board .card strong { font-size: 0.9rem; font-weight: 600; color: var(--t-ink); line-height: 1.3; }
+body.wvn-crm .board .card small { margin: 0.05rem 0 0; }
+body.wvn-crm .board .card .flags { grid-column: 2; margin-top: 0.35rem; }
+body.wvn-crm .board .card .flags:empty { display: none; }
+body.wvn-crm .col-empty { border: 1.5px dashed rgba(12,19,48,0.12); border-radius: 14px; padding: 1.1rem 0.8rem; text-align: center; font-size: 0.82rem; color: var(--t-muted); background: rgba(255,255,255,0.5); }
+body.wvn-crm .col-empty small { display: block; font-size: 0.74rem; color: #a2a9c0; margin-top: 0.2rem; }
+
+/* Danh sách & lịch chăm sóc */
+body.wvn-crm .table-wrap { border-color: var(--t-hair); border-radius: 18px; box-shadow: var(--t-lift); }
+body.wvn-crm th { background: #fbfcfe; font-weight: 600; color: var(--t-muted); }
+body.wvn-crm tbody tr:hover { background: #f8faff; }
+body.wvn-crm .toolbar select { border-color: var(--t-hair); border-radius: 12px; padding: 0.5rem 0.75rem; background: #fff; }
+body.wvn-crm .agenda-group h3 { font-weight: 600; font-size: 1rem; }
+body.wvn-crm .chip { font-weight: 500; border-radius: 8px; }
+@media (max-width: 700px) {
+  body.wvn-crm .views-inner { margin-left: 1rem; max-width: calc(100% - 2rem); overflow-x: auto; }
+  body.wvn-crm .view-head h1 { font-size: 1.55rem; }
+  body.wvn-crm .board { grid-template-columns: repeat(6, 78vw); scroll-snap-type: x mandatory; }
+  body.wvn-crm .column { scroll-snap-align: start; min-height: 260px; }
+}
 @media (max-width: 700px) {
   body.wvn-crm .brand-crm { padding-right: 0.7rem; }
   body.wvn-crm .brand-crm .crm-logo { height: 26px; }
