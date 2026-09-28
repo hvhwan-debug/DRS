@@ -2,7 +2,7 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum, recomputeTuitionPoints, isLegacyTuitionRedemption } = require("../_shared/memberTier");
 const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
 
@@ -185,13 +185,13 @@ module.exports = async function (context, req) {
     }
 
     // Thông tin hồ sơ do chính thành viên tự điền
-    let profile = { fullName: "", phone: "", address: "", dob: "" };
+    let profile = { fullName: "", phone: "", address: "", dob: "", gender: "" };
     let lastSeenTier = null;
     let ackedInvoiceIdsRaw = "[]";
     try {
       const profilesTable = await getTableClient(PROFILES_TABLE);
       const p = await profilesTable.getEntity("profile", email);
-      profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "" };
+      profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "", gender: p.gender || "" };
       lastSeenTier = p.lastSeenTier || null;
       ackedInvoiceIdsRaw = p.ackedInvoiceIds || "[]";
     } catch (e) {
@@ -409,7 +409,7 @@ module.exports = async function (context, req) {
       // Chỉ dùng lời chúc mừng khi LÊN hạng; tụt hạng thì báo trung tính, không "chúc mừng".
       try {
         const displayName = await getMemberDisplayName(email);
-        const greeting = buildGreeting(displayName);
+        const greeting = buildGreeting(displayName, await getMemberGender(email));
         const subject = isUpgrade ? `Chúc mừng bạn lên hạng ${tier.name}!` : `Hạng thành viên của bạn đã được cập nhật`;
         const title = isUpgrade ? `Chúc mừng bạn lên hạng ${tier.name}!` : `Hạng thành viên đã cập nhật`;
         const bodyText = isUpgrade

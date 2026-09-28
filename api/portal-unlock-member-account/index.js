@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const MEMBERS_TABLE = "Members";
@@ -36,7 +36,7 @@ module.exports = async function (context, req) {
 
     // Báo cho thành viên biết tài khoản vừa được mở khoá — giúp phát hiện sớm nếu không phải họ yêu cầu.
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     const emailResult = await sendTrackedEmail(context, {
       to: email,
       subject: "Tài khoản của bạn vừa được mở khoá đăng nhập",

@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
 
@@ -89,7 +89,7 @@ module.exports = async function (context, req) {
 
     const invoiceForEmail = { invoiceNumber, studentName, program, items, totalAmount, issueDate };
     const displayName = await getMemberDisplayName(parentEmail);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(parentEmail));
     const emailResult = await sendTrackedEmail(context, {
       to: parentEmail,
       subject: `Hoá đơn mới: ${invoiceNumber}`,

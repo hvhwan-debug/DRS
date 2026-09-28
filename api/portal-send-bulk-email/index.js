@@ -1,5 +1,5 @@
 const { requireAdmin } = require("../_shared/adminAuth");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting, salutationFor } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const MAX_RECIPIENTS = 500; // giới hạn an toàn cho 1 lần gửi
@@ -56,17 +56,23 @@ module.exports = async function (context, req) {
 
   for (const email of recipients) {
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const gender = await getMemberGender(email);
+    const greeting = buildGreeting(displayName, gender);
+    // Trường chèn trong nội dung/tiêu đề: {{XungHo}} -> anh/chị (chưa rõ: anh/chị), {{XungHoHoa}} -> Anh/Chị, {{HoTen}}
+    const xh = salutationFor(gender) || "anh/chị";
+    const fill = (t, nameText) => t.replace(/\{\{\s*XungHoHoa\s*\}\}/gi, xh.charAt(0).toUpperCase() + xh.slice(1))
+      .replace(/\{\{\s*XungHo\s*\}\}/gi, xh)
+      .replace(/\{\{\s*HoTen\s*\}\}/gi, nameText);
     // Mỗi người nhận tự thấy đúng bản giao diện của hạng mình (thường / premium) — sendTrackedEmail lo việc này.
     const result = await sendTrackedEmail(context, {
       to: email,
-      subject,
+      subject: fill(subject, displayName || ""),
       type: "bulk",
       eyebrow: "Thông Báo Từ Đội Ngũ",
-      title: subject,
+      title: escapeHtml(fill(subject, displayName || "")),
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
-        <div style="line-height:1.7; white-space:pre-wrap;">${messageHtml}</div>`
+        <div style="line-height:1.7; white-space:pre-wrap;">${fill(messageHtml, escapeHtml(displayName || ""))}</div>`
     });
     if (result.success) sentCount++;
     else failed.push(email);

@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { uploadAttachments } = require("../_shared/blobStorage");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const SESSION_TABLE = "AuthSessions";
@@ -108,7 +108,7 @@ module.exports = async function (context, req) {
 
     // Báo lại cho chính thành viên đã ghi nhận
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     await sendTrackedEmail(context, {
       to: email,
       subject: `Đã nhận biên lai thanh toán: ${invoice.invoiceNumber}`,

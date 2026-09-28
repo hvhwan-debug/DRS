@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { hashPassword } = require("../_shared/password");
-const { buildGreeting } = require("../_shared/memberName");
+const { buildGreeting, normalizeGender } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const MEMBERS_TABLE = "Members";
@@ -26,6 +26,7 @@ module.exports = async function (context, req) {
   const phone = String(body.phone || "").trim();
   const address = String(body.address || "").trim();
   const dob = String(body.dob || "").trim();
+  const gender = normalizeGender(body.gender);
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     context.res.status = 400;
@@ -57,7 +58,7 @@ module.exports = async function (context, req) {
       updatedAt: new Date().toISOString()
     });
 
-    if (fullName || phone || address || dob) {
+    if (fullName || phone || address || dob || gender) {
       const profilesTable = await getTableClient(PROFILES_TABLE);
       await profilesTable.upsertEntity({
         partitionKey: "profile",
@@ -66,11 +67,12 @@ module.exports = async function (context, req) {
         phone,
         address,
         dob,
+        gender,
         updatedAt: new Date().toISOString()
       }, "Merge");
     }
 
-    const greeting = buildGreeting(fullName || null);
+    const greeting = buildGreeting(fullName || null, gender);
     const emailResult = await sendTrackedEmail(context, {
       to: email,
       subject: "Tài khoản của bạn tại Mạng Lưới Tri Thức Việt Nam đã được tạo",

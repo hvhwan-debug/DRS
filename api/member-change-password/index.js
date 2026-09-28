@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { hashPassword, verifyPassword } = require("../_shared/password");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const SESSION_TABLE = "AuthSessions";
@@ -86,7 +86,7 @@ module.exports = async function (context, req) {
 
     // Email bảo mật: luôn báo khi mật khẩu vừa bị đổi, để phát hiện sớm nếu không phải chính chủ thực hiện.
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     await sendTrackedEmail(context, {
       to: email,
       subject: "Mật khẩu tài khoản của bạn vừa được thay đổi",

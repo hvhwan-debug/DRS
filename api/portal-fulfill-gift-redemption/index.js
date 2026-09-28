@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const REDEMPTIONS_TABLE = "GiftRedemptions";
@@ -103,7 +103,7 @@ module.exports = async function (context, req) {
     // Huỷ yêu cầu -> điểm TỰ ĐƯỢC HOÀN vì điểm đã dùng chỉ tính các yêu cầu chưa huỷ (xem getSpentPoints).
 
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     const emailResult = await sendTrackedEmail(context, {
       to: email,
       subject: `Đổi quà "${entity.giftName}": ${meta.label}`,

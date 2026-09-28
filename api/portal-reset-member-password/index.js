@@ -3,7 +3,7 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
 const { hashPassword } = require("../_shared/password");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const MEMBERS_TABLE = "Members";
@@ -56,7 +56,7 @@ module.exports = async function (context, req) {
     await logAdminActivity(req, "Đặt lại mật khẩu thành viên", email);
 
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     const emailResult = await sendTrackedEmail(context, {
       to: email,
       subject: "Mật khẩu tài khoản của bạn đã được đặt lại",

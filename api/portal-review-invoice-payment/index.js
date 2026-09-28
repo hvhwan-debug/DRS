@@ -1,7 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
 const { recomputeTuitionPoints } = require("../_shared/memberTier");
@@ -55,7 +55,7 @@ module.exports = async function (context, req) {
     }
 
     const displayName = await getMemberDisplayName(parentEmail);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(parentEmail));
 
     if (action === "approve") {
       // Tạo khoản học phí tương ứng -> tự động cộng vào tổng học phí đã đóng -> tự động lên điểm/hạng

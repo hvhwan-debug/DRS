@@ -706,6 +706,7 @@
           <div class="form-grid">
             <div><label>Email *</label><input type="email" id="newAccountEmail" required placeholder="email@vidu.com"></div>
             <div><label>Họ tên (không bắt buộc)</label><input type="text" id="newAccountFullName"></div>
+            <div><label>Giới tính</label><select id="newAccountGender"><option value="">— Chưa rõ —</option><option value="male">Nam (xưng "anh")</option><option value="female">Nữ (xưng "chị")</option></select></div>
             <div><label>SĐT (không bắt buộc)</label><input type="text" id="newAccountPhone"></div>
             <div><label>Địa chỉ (không bắt buộc)</label><input type="text" id="newAccountAddress"></div>
           </div>
@@ -830,7 +831,7 @@
         <div style="margin-bottom:1rem;">
           <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nội dung email *</label>
           <textarea id="bulkEmailMessage" rows="7" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="Nội dung email gửi tới thành viên..."></textarea>
-          <div style="font-size:0.76rem; color:var(--text-muted); margin-top:0.3rem;">Email sẽ tự động có lời chào bằng tên thật của từng người nếu đã có trong hệ thống.</div>
+          <div style="font-size:0.76rem; color:var(--text-muted); margin-top:0.3rem;">Email tự có lời chào theo tên và giới tính của từng người (vd. "Xin chào chị Hoàng Anh,"). Trong tiêu đề/nội dung có thể viết <code>{{XungHo}}</code> (anh/chị), <code>{{XungHoHoa}}</code> (Anh/Chị), <code>{{HoTen}}</code> — người chưa khai giới tính sẽ hiện "anh/chị".</div>
         </div>
 
         <button type="button" class="btn" id="bulkEmailSendBtn" onclick="sendBulkEmail()">Gửi Email</button>
@@ -3081,7 +3082,8 @@
             fullName: document.getElementById('ovFullName').value.trim(),
             phone: document.getElementById('ovPhone').value.trim(),
             address: document.getElementById('ovAddress').value.trim(),
-            dob: document.getElementById('ovDob').value
+            dob: document.getElementById('ovDob').value,
+            gender: document.getElementById('ovGender').value
           })
         });
         showGlobalAlert('Đã lưu hồ sơ.', false);
@@ -3419,7 +3421,7 @@
         const result = await apiCall('/api/portal-create-member-account', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, fullName, phone, address })
+          body: JSON.stringify({ email, fullName, phone, address, gender: document.getElementById('newAccountGender').value })
         });
         showGlobalAlert(result.warning || 'Đã tạo tài khoản và gửi email cho thành viên.', !!result.warning);
         if (result.tempPassword) {
@@ -3558,6 +3560,7 @@
               <div><strong>Họ tên:</strong> ${escapeHtml(data.profile.fullName) || '—'}</div>
               <div><strong>SĐT:</strong> ${escapeHtml(data.profile.phone) || '—'}</div>
               <div><strong>Ngày sinh:</strong> ${escapeHtml(data.profile.dob) || '—'}</div>
+              <div><strong>Giới tính:</strong> ${data.profile.gender === 'male' ? 'Nam (xưng anh)' : data.profile.gender === 'female' ? 'Nữ (xưng chị)' : '—'}</div>
               <div><strong>Địa chỉ:</strong> ${escapeHtml(data.profile.address) || '—'}</div>
               <div><strong>Có tài khoản đăng nhập:</strong> ${data.hasAccount ? 'Có' : 'Không'}
                 ${data.hasAccount ? `<span style="font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; border-radius:999px; margin-left:0.4rem; ${data.isBlocked ? 'background:#fee2e2; color:#b91c1c;' : 'background:#dcfce7; color:#15803d;'}">${data.isBlocked ? 'Đã khoá' : 'Đang hoạt động'}</span>` : ''}
@@ -3570,6 +3573,7 @@
             <div id="overviewProfileEdit" style="display:none;">
               <div class="form-grid">
                 <div><label>Họ tên</label><input type="text" id="ovFullName" value="${escapeHtml(data.profile.fullName)}"></div>
+                <div><label>Giới tính</label><select id="ovGender"><option value="">— Chưa rõ —</option><option value="male"${data.profile.gender === 'male' ? ' selected' : ''}>Nam (xưng "anh")</option><option value="female"${data.profile.gender === 'female' ? ' selected' : ''}>Nữ (xưng "chị")</option></select></div>
                 <div><label>SĐT</label><input type="text" id="ovPhone" value="${escapeHtml(data.profile.phone)}"></div>
                 <div><label>Ngày sinh</label><input type="date" id="ovDob" value="${escapeHtml(data.profile.dob)}" min="1920-01-01" max="${new Date().toISOString().slice(0,10)}"></div>
                 <div><label>Địa chỉ</label><input type="text" id="ovAddress" value="${escapeHtml(data.profile.address)}"></div>

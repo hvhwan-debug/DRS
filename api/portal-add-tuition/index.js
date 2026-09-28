@@ -1,7 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadAttachments } = require("../_shared/blobStorage");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { createConfirmToken } = require("../_shared/confirmToken");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
@@ -101,7 +101,7 @@ module.exports = async function (context, req) {
     // Email dùng khung giao diện thống nhất toàn hệ thống; tự chuyển bản premium nếu là thành viên VIP.
     const confirmToken = await createConfirmToken("tuition", parentEmail, rowKey);
     const displayName = await getMemberDisplayName(parentEmail);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(parentEmail));
     const confirmUrl = `https://wvn.vn/xac-nhan.html?type=tuition&token=${confirmToken}`;
     const emailResult = await sendTrackedEmail(context, {
       to: parentEmail,

@@ -1,7 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { findGift } = require("../_shared/giftCatalog");
 const { getPointsBalance, redemptionPoints } = require("../_shared/memberTier");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const SESSION_TABLE = "AuthSessions";
@@ -143,7 +143,7 @@ module.exports = async function (context, req) {
 
     // Báo lại cho chính thành viên để xác nhận đã ghi nhận (best-effort, tự chuyển bản premium nếu là VIP)
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     await sendTrackedEmail(context, {
       to: email,
       subject: `Đã ghi nhận yêu cầu đổi quà: ${gift.name}`,

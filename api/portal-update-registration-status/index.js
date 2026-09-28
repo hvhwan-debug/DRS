@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
 
@@ -86,7 +86,7 @@ module.exports = async function (context, req) {
     // Gửi email báo cho người đăng ký (best-effort — không chặn phản hồi thành công nếu gửi lỗi)
     // Email dùng khung giao diện thống nhất; tự chuyển bản premium nếu người đăng ký là thành viên VIP.
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     const emailResult = await sendTrackedEmail(context, {
       to: email,
       subject: `Cập nhật trạng thái đơn đăng ký: ${status}`,

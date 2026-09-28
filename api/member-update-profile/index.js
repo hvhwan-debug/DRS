@@ -1,5 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
-const { buildGreeting } = require("../_shared/memberName");
+const { buildGreeting, normalizeGender, getMemberGender } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const SESSION_TABLE = "AuthSessions";
@@ -44,6 +44,9 @@ module.exports = async function (context, req) {
     const fullName = String(body.fullName || "").trim();
     const phone = String(body.phone || "").trim();
     const address = String(body.address || "").trim();
+    // Giới tính (để xưng hô anh/chị trong email) — chỉ cập nhật khi form có gửi trường này
+    const hasGender = Object.prototype.hasOwnProperty.call(body, "gender");
+    const gender = hasGender ? normalizeGender(body.gender) : await getMemberGender(email);
     let dob = String(body.dob || "").trim();
     if (dob) {
       const dobYear = Number(dob.slice(0, 4));
@@ -61,11 +64,12 @@ module.exports = async function (context, req) {
       phone,
       address,
       dob,
+      ...(hasGender ? { gender } : {}),
       updatedAt: new Date().toISOString()
     }, "Merge");
 
     // Gửi email báo mọi thay đổi thông tin tài khoản (best-effort — không chặn phản hồi thành công nếu gửi lỗi)
-    const greeting = buildGreeting(fullName || null);
+    const greeting = buildGreeting(fullName || null, gender);
     await sendTrackedEmail(context, {
       to: email,
       subject: "Thông tin tài khoản của bạn vừa được cập nhật",
@@ -79,6 +83,7 @@ module.exports = async function (context, req) {
           <tr><td style="padding:6px 0; color:#64748b; width:120px; font-family:Arial,Helvetica,sans-serif;">Họ và tên</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${fullName || "—"}</td></tr>
           <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Số điện thoại</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${phone || "—"}</td></tr>
           <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Ngày sinh</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${dob || "—"}</td></tr>
+          <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Xưng hô</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${gender === "male" ? "Anh (Nam)" : gender === "female" ? "Chị (Nữ)" : "—"}</td></tr>
           <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Địa chỉ</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${address || "—"}</td></tr>
         </table>
         <p style="font-size:13px; color:#64748b; margin:0;">Nếu bạn không thực hiện thay đổi này, vui lòng liên hệ với chúng tôi ngay.</p>`

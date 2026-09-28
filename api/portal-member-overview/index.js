@@ -65,11 +65,11 @@ module.exports = async function (context, req) {
     } catch (e) { /* không có tài khoản -> mặc định false */ }
 
     // Hồ sơ tự điền
-    let profile = { fullName: "", phone: "", address: "", dob: "" };
+    let profile = { fullName: "", phone: "", address: "", dob: "", gender: "" };
     try {
       const profilesTable = await getTableClient(PROFILES_TABLE);
       const p = await profilesTable.getEntity("profile", email);
-      profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "" };
+      profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "", gender: p.gender || "" };
     } catch (e) { /* chưa có hồ sơ */ }
 
     // Đơn đăng ký

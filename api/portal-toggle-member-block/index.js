@@ -1,7 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
-const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
+const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
 const MEMBERS_TABLE = "Members";
@@ -69,7 +69,7 @@ module.exports = async function (context, req) {
 
     // Gửi email báo cho thành viên (best-effort — không chặn phản hồi thành công nếu gửi lỗi)
     const displayName = await getMemberDisplayName(email);
-    const greeting = buildGreeting(displayName);
+    const greeting = buildGreeting(displayName, await getMemberGender(email));
     const emailResult = await sendTrackedEmail(context, {
       to: email,
       subject: blocked ? "Thông báo về tài khoản của bạn" : "Tài khoản của bạn đã được mở lại",
