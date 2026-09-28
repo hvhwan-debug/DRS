@@ -392,7 +392,7 @@ details.more > summary::-webkit-details-marker { display: none; }
       </select>
       <span class="spacer"></span>
       <span class="result" id="listResult"></span>
-      <button class="btn" id="exportBtn"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Xuất Excel</button>
+      <button class="btn" id="exportBtn" hidden><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Xuất Excel</button>
     </div>
     <div class="table-wrap">
       <table>
@@ -449,7 +449,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 </aside>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="/xlsx-export.js?v=20260928"></script>
+<script src="/xlsx-export.js?v=20260928b"></script>
 
 <script>
 (function () {
@@ -1056,6 +1056,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 
   // ---------- Xuất CSV ----------
   async function exportCsv() {
+    if (window.WVN_EXPORT_ALLOWED !== true) { toast('Chỉ Quản trị viên chính được xuất dữ liệu ra Excel.', true); return; }
     const rows = sortedFiltered();
     if (!rows.length) { toast('Không có học sinh nào để xuất.', true); return; }
     const btn = $('exportBtn'); const label = btn.innerHTML;
@@ -1273,6 +1274,8 @@ details.more > summary::-webkit-details-marker { display: none; }
       const [data, who] = await Promise.all([api('/api/portal-crm-data'), api('/api/portal-admin-whoami').catch(() => null)]);
       students = data.students || []; access = data.access || access; suggestions = data.suggestions || suggestions;
       if (who) { me = who; $('whoLabel').textContent = who.displayName || ''; }
+      window.WVN_EXPORT_ALLOWED = !!(who && who.role === 'super');
+      $('exportBtn').hidden = !window.WVN_EXPORT_ALLOWED;
       $('fStage').innerHTML = '<option value="">Mọi giai đoạn</option>' + STAGES.map(s => `<option value="${s.key}">${esc(s.label)}</option>`).join('');
       $('fProgram').innerHTML = '<option value="">Mọi chương trình</option>' + programsAll().map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
       $('loadingBox').remove();

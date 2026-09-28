@@ -370,6 +370,7 @@
   // ---------- Xuất Excel (.xlsx) có định dạng thay cho CSV ----------
   const EXPORT_TITLES = { 'hoc-phi': 'Học phí đã thu', 'hoa-don': 'Danh sách hoá đơn', 'hoc-sinh': 'Danh sách học sinh', 'quyen-gop': 'Quyên góp', 'bang-diem': 'Bảng điểm', 'don-dang-ky': 'Đơn đăng ký', 'thanh-vien': 'Thành viên', 'diem-danh': 'Điểm danh' };
   window.exportToCsv = async function (filename, rows, columns) {
+    if (window.WVN_EXPORT_ALLOWED !== true) { if (typeof showGlobalAlert === 'function') showGlobalAlert('Chỉ Quản trị viên chính được xuất dữ liệu ra Excel.', true); return; }
     if (!rows || !rows.length) { if (typeof showGlobalAlert === 'function') showGlobalAlert('Không có dữ liệu để xuất.', true); return; }
     const base = String(filename || 'du-lieu').replace(/\.(csv|xlsx)$/i, '');
     const getVal = (row, key) => String(key).split('.').reduce((o, k) => (o == null ? '' : o[k]), row);

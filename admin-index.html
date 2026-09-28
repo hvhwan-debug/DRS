@@ -442,7 +442,7 @@
       <div class="card">
         <div style="display:flex; gap:0.6rem; margin-bottom:1rem;">
           <input type="text" id="regSearchInput" placeholder="Tìm theo email, tên, chương trình..." oninput="renderRegistrationsTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
-          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('don-dang-ky.csv', allRegistrationsData, [{key:'formTitle',label:'Chương trình'},{key:'email',label:'Email'},{key:'submittedAt',label:'Ngày gửi'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+          <button type="button" class="btn btn-outline" data-super-only="1" style="white-space:nowrap;" onclick="exportToCsv('don-dang-ky.csv', allRegistrationsData, [{key:'formTitle',label:'Chương trình'},{key:'email',label:'Email'},{key:'submittedAt',label:'Ngày gửi'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="regLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="regTableWrap">
@@ -500,7 +500,7 @@
       <div class="card">
         <div style="display:flex; gap:0.6rem; margin-bottom:0.8rem;">
           <input type="text" id="donationSearchInput" placeholder="Tìm theo tên, email, mã giao dịch..." oninput="renderDonationsTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
-          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('quyen-gop.csv', allDonationsData, [{key:'donorName',label:'Người quyên góp'},{key:'donorEmail',label:'Email'},{key:'amount',label:'Số tiền'},{key:'itemDescription',label:'Hiện vật'},{key:'transactionCode',label:'Mã GD'},{key:'donatedAt',label:'Ngày'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+          <button type="button" class="btn btn-outline" data-super-only="1" style="white-space:nowrap;" onclick="exportToCsv('quyen-gop.csv', allDonationsData, [{key:'donorName',label:'Người quyên góp'},{key:'donorEmail',label:'Email'},{key:'amount',label:'Số tiền'},{key:'itemDescription',label:'Hiện vật'},{key:'transactionCode',label:'Mã GD'},{key:'donatedAt',label:'Ngày'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="donLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="donTableWrap">
@@ -566,7 +566,7 @@
       <div class="card">
         <div style="display:flex; gap:0.6rem; margin-bottom:0.8rem;">
           <input type="text" id="tuitionSearchInput" placeholder="Tìm theo học sinh, email, chương trình..." oninput="renderTuitionTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
-          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('hoc-phi.csv', allTuitionData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'amount',label:'Số tiền'},{key:'period',label:'Kỳ học phí'},{key:'paidAt',label:'Ngày nộp'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+          <button type="button" class="btn btn-outline" data-super-only="1" style="white-space:nowrap;" onclick="exportToCsv('hoc-phi.csv', allTuitionData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'amount',label:'Số tiền'},{key:'period',label:'Kỳ học phí'},{key:'paidAt',label:'Ngày nộp'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="tuitionLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="tuitionTableWrap">
@@ -631,7 +631,7 @@
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.6rem;">
           <h3 style="font-size:1rem; margin:0;"><i class="fa-solid fa-list"></i> Danh Sách Hoá Đơn</h3>
-          <button type="button" class="btn btn-outline" onclick="exportToCsv('hoa-don.csv', allInvoicesData, [{key:'invoiceNumber',label:'Số HĐ'},{key:'parentEmail',label:'Email PH'},{key:'studentName',label:'Học sinh'},{key:'issueDate',label:'Ngày lập'},{key:'totalAmount',label:'Tổng tiền'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+          <button type="button" class="btn btn-outline" data-super-only="1" onclick="exportToCsv('hoa-don.csv', allInvoicesData, [{key:'invoiceNumber',label:'Số HĐ'},{key:'parentEmail',label:'Email PH'},{key:'studentName',label:'Học sinh'},{key:'issueDate',label:'Ngày lập'},{key:'totalAmount',label:'Tổng tiền'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <input type="text" id="invoiceSearchInput" placeholder="Tìm theo số hoá đơn, email, học sinh..." oninput="renderInvoicesTable()" style="width:100%; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; margin-bottom:1rem;">
         <div class="loading-state" id="invoiceLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
@@ -691,7 +691,7 @@
             <input type="text" id="studentSearchInput" placeholder="Tìm theo tên học sinh, tên phụ huynh, SĐT hoặc email..." style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--border); border-radius:10px;" oninput="renderStudentCards()">
           </div>
           <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="mergeDuplicateStudents()"><i class="fa-solid fa-code-merge"></i> Gộp học sinh trùng lặp</button>
-          <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="exportToCsv('hoc-sinh.csv', allStudentsData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'dob',label:'Ngày sinh'},{key:'note',label:'Ghi chú'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+          <button type="button" class="btn btn-outline" data-super-only="1" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="exportToCsv('hoc-sinh.csv', allStudentsData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'dob',label:'Ngày sinh'},{key:'note',label:'Ghi chú'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
           <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem;" onclick="printList('Danh Sách Học Sinh', [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'programsLabel',label:'Chương trình'}], studentGroupsCache.map(g => ({...g, programsLabel:(g.programs||[]).join(', ')})), 'Tổng số: ' + studentGroupsCache.length + ' học sinh')"><i class="fa-solid fa-print"></i> In Danh Sách</button>
         </div>
         <div class="loading-state" id="studentLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
@@ -837,7 +837,7 @@
       <div class="card">
         <div style="display:flex; gap:0.6rem; margin-bottom:0.8rem;">
           <input type="text" id="gradeSearchInput" placeholder="Tìm theo học sinh, email, chương trình..." oninput="renderGradesTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
-          <button type="button" class="btn btn-outline" style="white-space:nowrap;" onclick="exportToCsv('bang-diem.csv', allGradesData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'assessmentType',label:'Loại đánh giá'},{key:'score',label:'Điểm'},{key:'comment',label:'Đánh giá GV'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+          <button type="button" class="btn btn-outline" data-super-only="1" style="white-space:nowrap;" onclick="exportToCsv('bang-diem.csv', allGradesData, [{key:'studentName',label:'Học sinh'},{key:'parentEmail',label:'Email PH'},{key:'program',label:'Chương trình'},{key:'assessmentType',label:'Loại đánh giá'},{key:'score',label:'Điểm'},{key:'comment',label:'Đánh giá GV'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
         <div class="loading-state" id="gradeLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="gradeTableWrap">
@@ -1246,6 +1246,7 @@
     // chuyển thẳng dữ liệu ĐÃ TẢI SẴN trên trang (đúng những gì admin đang thấy) thành file tải về.
     // columns: [{ key, label }] — key có thể là "a.b" để lấy field lồng nhau.
     function exportToCsv(filename, rows, columns) {
+      if (window.WVN_EXPORT_ALLOWED !== true) { showGlobalAlert('Chỉ Quản trị viên chính được xuất dữ liệu ra Excel.', true); return; }
       if (!rows || rows.length === 0) {
         showGlobalAlert('Không có dữ liệu để xuất.', true);
         return;
@@ -4469,6 +4470,7 @@
       document.querySelectorAll('.tab-btn[data-permission]').forEach(btn => {
         if (!hasPermission(btn.dataset.permission)) btn.style.display = 'none';
       });
+      window.WVN_EXPORT_ALLOWED = myRole === 'super';
       document.querySelectorAll('[data-super-only]').forEach(el => {
         if (myRole !== 'super') el.style.display = 'none';
       });
@@ -4495,7 +4497,7 @@
   </script>
 
   <div id="printableArea" style="display:none;"></div>
-  <script src="/xlsx-export.js?v=20260928"></script>
-  <script src="admin-enhance.js?v=20260928b"></script>
+  <script src="/xlsx-export.js?v=20260928b"></script>
+  <script src="admin-enhance.js?v=20260928c"></script>
 </body>
 </html>

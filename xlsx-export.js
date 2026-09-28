@@ -141,7 +141,11 @@
     return wb;
   }
 
+  // Chỉ Quản trị viên chính được xuất file. Trang đặt window.WVN_EXPORT_ALLOWED = true sau khi máy chủ
+  // xác nhận vai trò (portal-admin-whoami). Mặc định là chặn, để nút xuất mới thêm sau này cũng được bảo vệ.
+  const DENY_MSG = 'Chỉ Quản trị viên chính được xuất dữ liệu ra Excel. Nếu cần số liệu, hãy nhờ Quản trị viên chính xuất giúp.';
   async function download(opts) {
+    if (window.WVN_EXPORT_ALLOWED !== true) throw new Error(DENY_MSG);
     const wb = await build(opts);
     const buf = await wb.xlsx.writeBuffer();
     const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
