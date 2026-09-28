@@ -5,7 +5,7 @@
 // QUY TẮC MÀU SẮC: CHỈ 1 BỘ KHUNG DUY NHẤT, dùng chung cho mọi email — bản thường và bản VIP
 // (từ hạng Vàng trở lên) có CẤU TRÚC Y HỆT NHAU (cùng bố cục, cùng thứ tự khối, cùng kiểu dáng),
 // chỉ khác 2 điều: bảng màu (thường dùng xanh thương hiệu, VIP dùng ánh vàng sang trọng) và nhãn
-// rất nhỏ "Khách hàng VIP" phía trên bên phải khung email — khớp với nhãn VIP trong khu vực thành viên.
+// rất nhỏ "Khách hàng VIP" ở góc trên bên phải phần đầu email (trong ô màu vàng) — khớp với nhãn VIP trong khu vực thành viên.
 // Ngoài 2 điều đó không thêm bớt khối nào riêng cho VIP để tránh vênh nhau.
 //
 // QUAN TRỌNG VỀ EMAIL CLIENT: Outlook desktop (dùng engine Word) và một số client khác KHÔNG
@@ -58,14 +58,10 @@ const PALETTES = {
   }
 };
 
-// Nhãn "Khách hàng VIP" cho khách hàng ưu tiên (hạng Vàng trở lên): rất nhỏ, nằm PHÍA TRÊN khung
-// email, căn phải (ngoài khung, trên nền), chữ vàng viền vàng mảnh. Là 1 hàng bảng riêng rộng đúng
-// bằng khung email nên luôn thẳng mép phải khung trên Gmail/Outlook/điện thoại.
-const VIP_BADGE_ROW = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;font-family:${FONT_STACK};">
-          <tr><td align="right" style="text-align:right;padding:0 4px 6px;font-family:${FONT_STACK};">
-            <span style="display:inline-block;border:1px solid #d4af37;border-radius:999px;padding:1px 7px;font-family:${FONT_STACK};font-size:9px;font-weight:600;letter-spacing:0.3px;color:#a97c1f;background-color:#fffaf0;line-height:14px;mso-line-height-rule:exactly;white-space:nowrap;">&#9733; Khách hàng VIP</span>
-          </td></tr>
-        </table>`;
+// Nhãn "Khách hàng VIP" cho khách hàng ưu tiên (hạng Vàng trở lên): rất nhỏ, nằm TRONG phần đầu
+// email màu vàng, ở góc trên bên phải. Là 1 hàng riêng căn phải (không dùng position/float) để hiện
+// đúng góc trên Gmail/Outlook/điện thoại; logo + tên thương hiệu vẫn căn giữa ở hàng dưới.
+const VIP_BADGE_SPAN = `<span style="display:inline-block;border:1px solid #f5d67d;border-radius:999px;padding:1px 7px;font-family:${FONT_STACK};font-size:9px;font-weight:600;letter-spacing:0.3px;color:#fff6d6;background-color:#3d2f06;line-height:14px;mso-line-height-rule:exactly;white-space:nowrap;">&#9733; Khách hàng VIP</span>`;
 
 function escapeAttr(str) {
   return String(str == null ? "" : str).replace(/"/g, "&quot;");
@@ -106,14 +102,18 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
 
   return `<!DOCTYPE html>
 <html lang="vi">
+  <head><meta charset="utf-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
   <body style="margin:0;padding:0;background-color:${p.outerBg};font-family:${FONT_STACK};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${p.outerBg};padding:32px 16px;font-family:${FONT_STACK};">
       <tr><td align="center">
-        ${isVip ? VIP_BADGE_ROW : ""}
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;background-color:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,0.12);font-family:${FONT_STACK};border:${p.cardBorder};">
-          <tr><td bgcolor="${p.headerSolid}" style="background-color:${p.headerSolid};background:${p.headerGradient};padding:30px 32px;text-align:center;">
+          <tr><td bgcolor="${p.headerSolid}" style="background-color:${p.headerSolid};background:${p.headerGradient};padding:${isVip ? "0" : "30px 32px"};text-align:center;">
+            ${isVip ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr><td align="right" style="text-align:right;padding:12px 14px 0;font-family:${FONT_STACK};line-height:14px;">${VIP_BADGE_SPAN}</td></tr>
+              <tr><td align="center" style="text-align:center;padding:4px 32px 30px;">` : ""}
             <img src="${LOGO_URL}" alt="WVN" width="52" style="display:block;height:auto;margin:0 auto 10px;">
             <div style="color:#ffffff;font-size:17px;font-weight:800;letter-spacing:0.2px;font-family:${FONT_STACK};">${BRAND_NAME}</div>
+            ${isVip ? `</td></tr></table>` : ""}
           </td></tr>
           <tr><td style="padding:32px 32px 28px;font-family:${FONT_STACK};">
             ${eyebrowHtml}
