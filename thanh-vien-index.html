@@ -509,7 +509,7 @@
       .no-print { display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260928g">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260928h">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -518,6 +518,7 @@
   :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
   html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
 </style>
+<script src="/wvn-quotes.js?v=20260928a"></script>
 </head>
 <body class="wvn-member">
 
@@ -1983,6 +1984,7 @@
             <span class="banner-tag"><i class="fa-solid fa-star"></i> Khu vực thành viên${isVip ? ' VIP' : ''}</span>
             <h1>Xin chào${profile.fullName ? ', ' + profile.fullName : ''}! 👋</h1>
             <p>Cùng con kiến tạo hành trình học tập — nơi mỗi bước tiến được ghi nhận, mỗi đóng góp tạo nên giá trị.</p>
+            ${window.WVNQuote ? WVNQuote.html('family', 'on-dark') : ''}
           </div>
 
           <div class="member-panel active" id="memberPanel-account">

@@ -342,3 +342,20 @@ body.wvn-member .card h2, body.wvn-admin .main-content .card > h2:first-child { 
 body.wvn-admin #dashboardStatsRow > .card > div:nth-child(2), body.wvn-admin #memberDashboardStats > .card > div:first-child,
 body.wvn-crm .pulse b, body.wvn-crm .journey-step b, body.wvn-admin .el-stat b { font-weight: 700 !important; letter-spacing: -0.02em; }
 .t-hero .t-quote-en { font-style: italic; font-weight: 400; }
+
+/* Câu triết lý song ngữ dùng chung (wvn-quotes.js) */
+.wvn-quote { margin: 0.9rem 0 0; padding-left: 0.9rem; border-left: 2px solid; border-image: linear-gradient(180deg, var(--t-cyan), var(--t-lime)) 1; max-width: 62ch; }
+.wvn-quote p { margin: 0 !important; font-size: 0.92rem; line-height: 1.5; color: var(--t-ink-2); }
+.wvn-quote .wvn-quote-en { margin-top: 0.2rem !important; font-style: italic; font-size: 0.85rem; color: var(--t-muted); }
+.wvn-quote.on-dark p { color: #d6ddf2; }
+.wvn-quote.on-dark .wvn-quote-en { color: #a7b5da; }
+body.wvn-login .t-side .wvn-quote { margin-top: 1.6rem; }
+body.wvn-login .t-side .wvn-quote p { max-width: none; color: #d6ddf2; }
+body.wvn-login .t-side .wvn-quote .wvn-quote-en { color: #a7b5da; }
+body.wvn-member .welcome-banner .wvn-quote { position: relative; z-index: 1; margin-top: 1rem; }
+body.wvn-member .welcome-banner .wvn-quote p { color: #eef2ff; text-shadow: 0 1px 8px rgba(0,0,0,0.35); }
+body.wvn-member .welcome-banner .wvn-quote .wvn-quote-en { color: #c7d2f0; }
+body.wvn-member.vip-theme .welcome-banner .wvn-quote { border-image: linear-gradient(180deg, #f6e3a1, #c9a227) 1; }
+body.wvn-member.vip-theme .welcome-banner .wvn-quote p { color: #f6ecc9; }
+body.wvn-member.vip-theme .welcome-banner .wvn-quote .wvn-quote-en { color: #d8c690; }
+@media (max-width: 820px) { body.wvn-login .t-side .wvn-quote { display: none; } }
