@@ -1,5 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireSuperAdmin, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
+const { requireSuperAdmin, checkSuperAdminLock, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
 
 module.exports = async function (context, req) {
@@ -34,6 +34,10 @@ module.exports = async function (context, req) {
           targetIsCurrentlyActive = active;
           targetRole = entity.role === "super" ? "super" : "staff";
         }
+      }
+      {
+        const blocked = await checkSuperAdminLock(req, email, targetRole, "disable");
+        if (blocked) { context.res.status = blocked.status; context.res.body = { success: false, message: blocked.message, locked: true }; return; }
       }
       if (targetIsCurrentlyActive && activeCount <= 1) {
         context.res.status = 409;

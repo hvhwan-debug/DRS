@@ -1,5 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireSuperAdmin, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
+const { requireSuperAdmin, getAdminIdentity, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
 
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
@@ -25,7 +25,8 @@ module.exports = async function (context, req) {
     accounts.sort((a, b) => (a.displayName || "").localeCompare(b.displayName || ""));
 
     context.res.status = 200;
-    context.res.body = { success: true, accounts };
+    const me = await getAdminIdentity(req);
+    context.res.body = { success: true, accounts, me: me && me.email ? String(me.email).toLowerCase() : "" };
   } catch (err) {
     context.log.error("Lỗi lấy danh sách tài khoản quản trị:", err.message);
     context.res.status = 500;

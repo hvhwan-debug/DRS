@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireSuperAdmin, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
+const { requireSuperAdmin, checkSuperAdminLock, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
 const { hashPassword } = require("../_shared/password");
 const { logAdminActivity } = require("../_shared/activityLog");
 
@@ -23,6 +23,10 @@ module.exports = async function (context, req) {
     return;
   }
 
+  {
+    const blocked = await checkSuperAdminLock(req, email, "staff", "reset");
+    if (blocked) { context.res.status = blocked.status; context.res.body = { success: false, message: blocked.message, locked: true }; return; }
+  }
   try {
     const accountsTable = await getTableClient(ADMIN_ACCOUNTS_TABLE);
     const tempPassword = generateTempPassword();

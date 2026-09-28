@@ -132,7 +132,32 @@ async function getAdminIdentity(req) {
   }
 }
 
+// KHOÁ BẢO VỆ QUẢN TRỊ VIÊN CHÍNH — dùng chung cho các API sửa quyền / vô hiệu hoá / xoá / đặt lại
+// mật khẩu tài khoản quản trị:
+//  1. Không ai được tự hạ quyền, tự vô hiệu hoá, tự xoá hay tự "đặt lại mật khẩu" tài khoản của chính
+//     mình (đổi mật khẩu của mình dùng mục "Đổi Mật Khẩu Của Tôi") — tránh tự khoá mình ra ngoài.
+//  2. Tài khoản Quản Trị Viên Chính được khoá: muốn hạ quyền / vô hiệu hoá / xoá phải do MỘT quản
+//     trị viên chính KHÁC thực hiện và gõ lại đúng email đó để xác nhận (body.confirmEmail).
+// Trả về null nếu được phép, hoặc { status, message } nếu bị chặn.
+async function checkSuperAdminLock(req, targetEmail, targetRole, action) {
+  const me = await getAdminIdentity(req);
+  const myEmail = String((me && me.email) || "").toLowerCase();
+  const target = String(targetEmail || "").toLowerCase();
+  if (myEmail && myEmail === target) {
+    const what = { demote: "tự thay đổi vai trò/quyền của chính mình", disable: "tự vô hiệu hoá tài khoản của chính mình", delete: "tự xoá tài khoản của chính mình", reset: "tự đặt lại mật khẩu cho chính mình (hãy dùng mục Đổi Mật Khẩu Của Tôi)" }[action] || "thao tác trên chính tài khoản của mình";
+    return { status: 403, message: `Không thể ${what} — tài khoản đang đăng nhập được khoá bảo vệ.` };
+  }
+  if (targetRole === "super" && action !== "reset") {
+    const confirm = String((req.body && req.body.confirmEmail) || "").trim().toLowerCase();
+    if (confirm !== target) {
+      return { status: 423, message: "Tài khoản Quản Trị Viên Chính đang được khoá bảo vệ. Cần gõ lại đúng email của tài khoản đó để xác nhận." };
+    }
+  }
+  return null;
+}
+
 module.exports = {
+  checkSuperAdminLock,
   getAdminToken, requireAdmin, requireSuperAdmin, getAdminIdentity,
   loadSessionAndAccount, accountPermissions, isSuperAdmin,
   ADMIN_SESSION_TABLE, ADMIN_ACCOUNTS_TABLE

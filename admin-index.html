@@ -308,6 +308,9 @@
       .main-content .form-grid > div:has(textarea) { grid-column: 1 / -1; }
     }
     @media (max-width: 520px) { .main-content .form-grid { grid-template-columns: 1fr; } }
+    .lock-chip { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: #64748b; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 999px; padding: 0.3rem 0.8rem; white-space: nowrap; cursor: help; }
+    .lock-chip i { color: #94a3b8; }
+    .btn-outline[onclick*="toggleStaffAccount" i][data-danger] { color: #dc2626; border-color: #fecaca; }
   </style>
 </head>
 <body>
@@ -4160,38 +4163,55 @@
 
     async function loadStaffAccounts() {
       try {
-        const { accounts } = await apiCall('/api/portal-admin-list-accounts');
+        const { accounts, me } = await apiCall('/api/portal-admin-list-accounts');
         allStaffAccountsData = accounts;
+        window.__myAdminEmail = me || '';
         document.getElementById('staffLoading').style.display = 'none';
         document.getElementById('staffTableWrap').style.display = 'block';
-        document.getElementById('staffTableBody').innerHTML = accounts.map(a => `
+        const pill = (bg, fg, t) => `<span style="font-size:0.76rem; padding:0.15rem 0.6rem; border-radius:999px; background:${bg}; color:${fg}; white-space:nowrap;">${t}</span>`;
+        const sb = (label, fn, extra) => `<button type="button" class="btn btn-outline" style="padding:0.3rem 0.75rem; font-size:0.78rem;" onclick="${fn}" ${extra || ''}>${label}</button>`;
+        document.getElementById('staffTableBody').innerHTML = accounts.map(a => {
+          const isMe = me && a.email.toLowerCase() === me;
+          const isSuper = a.role === 'super';
+          const e = encodeURIComponent(a.email);
+          const acts = isMe
+            ? `<span class="lock-chip" title="Không thể tự đổi quyền, tự vô hiệu hoá hay tự xoá tài khoản đang đăng nhập — tránh tự khoá mình ra ngoài. Đổi mật khẩu ở mục Đổi Mật Khẩu Của Tôi."><i class="fa-solid fa-lock"></i> Tài khoản của bạn · được khoá bảo vệ</span>`
+            : `${sb(isSuper ? '<i class="fa-solid fa-lock"></i> Sửa Quyền' : 'Sửa Quyền', `openEditPermissions('${e}')`)}
+               ${sb('Đặt Lại MK', `resetStaffPassword('${e}')`)}
+               ${a.isActive
+                 ? `<button type="button" class="btn btn-outline" style="padding:0.3rem 0.75rem; font-size:0.78rem;" onclick="toggleStaffAccount('${e}', false)" data-danger="1">${isSuper ? '<i class="fa-solid fa-lock"></i> ' : ''}Vô Hiệu Hoá</button>`
+                 : `<button type="button" class="btn" style="padding:0.3rem 0.75rem; font-size:0.78rem;" onclick="toggleStaffAccount('${e}', true)">Kích Hoạt</button>`}
+               <button type="button" class="btn btn-outline" style="padding:0.3rem 0.75rem; font-size:0.78rem;" onclick="deleteStaffAccount('${e}')">${isSuper ? '<i class="fa-solid fa-lock"></i> ' : ''}Xoá</button>`;
+          return `
           <tr>
-            <td style="font-weight:700;">${escapeHtml(a.displayName)}</td>
+            <td style="font-weight:700;">${escapeHtml(a.displayName)}${isMe ? ' <span style="font-size:0.7rem; font-weight:600; color:#0284c7; background:#e0f2fe; padding:0.08rem 0.45rem; border-radius:6px; margin-left:0.3rem;">Bạn</span>' : ''}</td>
             <td>${escapeHtml(a.email)}</td>
-            <td>${a.role === 'super'
-              ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#fef3c7; color:#a16207;">Quản trị viên chính</span>'
-              : '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#e0f2fe; color:#0369a1;">Nhân viên</span>'}</td>
-            <td>${a.isActive
-              ? '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Hoạt động</span>'
-              : '<span style="font-size:0.76rem; font-weight:700; padding:0.15rem 0.6rem; border-radius:999px; background:#f1f5f9; color:#64748b;">Đã vô hiệu hoá</span>'}</td>
+            <td>${isSuper ? pill('#fef3c7', '#a16207', '<i class="fa-solid fa-shield-halved"></i> Quản trị viên chính') : pill('#e0f2fe', '#0369a1', 'Nhân viên')}</td>
+            <td>${a.isActive ? pill('#dcfce7', '#15803d', 'Hoạt động') : pill('#f1f5f9', '#64748b', 'Đã vô hiệu hoá')}</td>
             <td style="white-space:nowrap; color:var(--text-muted);">${a.lastLoginAt ? formatDate(a.lastLoginAt) : 'Chưa đăng nhập'}</td>
-            <td style="white-space:nowrap; display:flex; gap:0.4rem; flex-wrap:wrap;">
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="openEditPermissions('${encodeURIComponent(a.email)}')">Sửa Quyền</button>
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="resetStaffPassword('${encodeURIComponent(a.email)}')">Đặt Lại MK</button>
-              <button type="button" class="btn ${a.isActive ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.78rem; ${a.isActive ? 'color:#b91c1c; border-color:#fecaca;' : ''}" onclick="toggleStaffAccount('${encodeURIComponent(a.email)}', ${!a.isActive})">${a.isActive ? 'Vô Hiệu Hoá' : 'Kích Hoạt'}</button>
-              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteStaffAccount('${encodeURIComponent(a.email)}')">Xoá</button>
-            </td>
-          </tr>`).join('');
+            <td><div style="display:flex; gap:0.4rem; flex-wrap:wrap; align-items:center;">${acts}</div></td>
+          </tr>`;
+        }).join('');
       } catch (err) {
         document.getElementById('staffLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
     }
 
+    // Khoá bảo vệ Quản Trị Viên Chính: hạ quyền / vô hiệu hoá / xoá phải gõ lại đúng email để xác nhận
+    function confirmSuperUnlock(email, actionText) {
+      const typed = prompt(`🔒 ${email} là Quản Trị Viên Chính và đang được khoá bảo vệ.\n\nĐể ${actionText}, hãy gõ lại chính xác email của tài khoản này:`);
+      if (typed === null) return null;
+      if (typed.trim().toLowerCase() !== email.toLowerCase()) { showGlobalAlert('Email xác nhận không khớp — đã huỷ thao tác.', true); return null; }
+      return typed.trim().toLowerCase();
+    }
+    const staffAccountBy = email => allStaffAccountsData.find(a => a.email === email) || {};
+
     function openEditPermissions(emailEnc) {
       const email = decodeURIComponent(emailEnc);
       const account = allStaffAccountsData.find(a => a.email === email);
       if (!account) return;
+      if (window.__myAdminEmail && email.toLowerCase() === window.__myAdminEmail) { showGlobalAlert('Không thể tự thay đổi vai trò/quyền của tài khoản đang đăng nhập.', true); return; }
       document.getElementById('editPermissionsEmail').textContent = `${account.displayName} (${account.email})`;
       document.getElementById('editPermissionsCard').dataset.email = email;
       document.getElementById('editRole').value = account.role;
@@ -4206,11 +4226,16 @@
       const email = document.getElementById('editPermissionsCard').dataset.email;
       const role = document.getElementById('editRole').value;
       const permissions = role === 'super' ? [] : Array.from(document.querySelectorAll('.editPermissions-checkbox:checked')).map(el => el.value);
+      let confirmEmail;
+      if (staffAccountBy(email).role === 'super' && role !== 'super') {
+        confirmEmail = confirmSuperUnlock(email, 'hạ tài khoản này xuống Nhân viên');
+        if (!confirmEmail) return;
+      }
       try {
         await apiCall('/api/portal-admin-update-permissions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, role, permissions })
+          body: JSON.stringify({ email, role, permissions, confirmEmail })
         });
         showGlobalAlert('Đã cập nhật vai trò/quyền.', false);
         document.getElementById('editPermissionsCard').style.display = 'none';
@@ -4269,13 +4294,20 @@
     }
 
     async function toggleStaffAccount(emailEnc, nextActive) {
-      const msg = nextActive ? 'Kích hoạt lại tài khoản này?' : 'Vô hiệu hoá tài khoản này? Người này sẽ không thể đăng nhập cho tới khi được kích hoạt lại.';
-      if (!confirm(msg)) return;
+      const email = decodeURIComponent(emailEnc);
+      let confirmEmail;
+      if (!nextActive && staffAccountBy(email).role === 'super') {
+        confirmEmail = confirmSuperUnlock(email, 'vô hiệu hoá tài khoản này');
+        if (!confirmEmail) return;
+      } else {
+        const msg = nextActive ? 'Kích hoạt lại tài khoản này?' : 'Vô hiệu hoá tài khoản này? Người này sẽ không thể đăng nhập cho tới khi được kích hoạt lại.';
+        if (!confirm(msg)) return;
+      }
       try {
         await apiCall('/api/portal-admin-toggle-account', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: decodeURIComponent(emailEnc), isActive: nextActive })
+          body: JSON.stringify({ email, isActive: nextActive, confirmEmail })
         });
         showGlobalAlert(nextActive ? 'Đã kích hoạt tài khoản.' : 'Đã vô hiệu hoá tài khoản.', false);
         loadStaffAccounts();
@@ -4285,12 +4317,17 @@
     }
 
     async function deleteStaffAccount(emailEnc) {
-      if (!confirm('Xoá vĩnh viễn tài khoản quản trị này? Không thể hoàn tác.')) return;
+      const email = decodeURIComponent(emailEnc);
+      let confirmEmail;
+      if (staffAccountBy(email).role === 'super') {
+        confirmEmail = confirmSuperUnlock(email, 'XOÁ VĨNH VIỄN tài khoản này');
+        if (!confirmEmail) return;
+      } else if (!confirm('Xoá vĩnh viễn tài khoản quản trị này? Không thể hoàn tác.')) return;
       try {
         await apiCall('/api/portal-admin-delete-account', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: decodeURIComponent(emailEnc) })
+          body: JSON.stringify({ email, confirmEmail })
         });
         showGlobalAlert('Đã xoá tài khoản.', false);
         loadStaffAccounts();

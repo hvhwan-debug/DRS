@@ -1,5 +1,5 @@
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireSuperAdmin, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
+const { requireSuperAdmin, checkSuperAdminLock, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
 const { sanitizePermissions, PERMISSIONS } = require("../_shared/permissions");
 const { logAdminActivity } = require("../_shared/activityLog");
 
@@ -36,6 +36,11 @@ module.exports = async function (context, req) {
       throw err;
     }
     const wasSuper = target.role === "super";
+    // Khoá bảo vệ: không tự đổi vai trò của mình; hạ quyền 1 Quản Trị Viên Chính khác cần xác nhận email
+    {
+      const me = await checkSuperAdminLock(req, email, wasSuper && role !== "super" ? "super" : "staff", "demote");
+      if (me) { context.res.status = me.status; context.res.body = { success: false, message: me.message, locked: true }; return; }
+    }
     if (wasSuper && role !== "super") {
       let otherActiveSuperCount = 0;
       for await (const entity of accountsTable.listEntities()) {
