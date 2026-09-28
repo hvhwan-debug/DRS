@@ -5,7 +5,7 @@
 // QUY TẮC MÀU SẮC: CHỈ 1 BỘ KHUNG DUY NHẤT, dùng chung cho mọi email — bản thường và bản VIP
 // (từ hạng Vàng trở lên) có CẤU TRÚC Y HỆT NHAU (cùng bố cục, cùng thứ tự khối, cùng kiểu dáng),
 // chỉ khác 2 điều: bảng màu (thường dùng xanh thương hiệu, VIP dùng ánh vàng sang trọng) và nhãn
-// "VIP" viền vàng dưới tên thương hiệu ở đầu email — khớp với nhãn VIP trong khu vực thành viên.
+// nhỏ "Khách hàng VIP" ở góc trên bên phải phần đầu email — khớp với nhãn VIP trong khu vực thành viên.
 // Ngoài 2 điều đó không thêm bớt khối nào riêng cho VIP để tránh vênh nhau.
 //
 // QUAN TRỌNG VỀ EMAIL CLIENT: Outlook desktop (dùng engine Word) và một số client khác KHÔNG
@@ -58,11 +58,16 @@ const PALETTES = {
   }
 };
 
-// Nhãn "VIP" cho khách hàng ưu tiên (hạng Vàng trở lên): chữ vàng, viền vàng, nền tối — cùng kiểu
-// với nhãn VIP trong khu vực thành viên. Dùng bảng lồng + bgcolor để hiện đúng cả trên Outlook
-// (Outlook bỏ qua border-radius nên nhãn sẽ vuông góc ở đó, vẫn đọc rõ).
-const VIP_BADGE_HTML = `<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:12px auto 0;border-collapse:separate;">
-              <tr><td bgcolor="#1a1508" style="background-color:#1a1508;border:1.5px solid #e8c766;border-radius:999px;padding:5px 16px;font-family:${FONT_STACK};font-size:12px;font-weight:800;letter-spacing:1.5px;color:#f5d67d;line-height:1;mso-line-height-rule:exactly;">&#9733;&nbsp;VIP</td></tr>
+// Nhãn "Khách hàng VIP" cho khách hàng ưu tiên (hạng Vàng trở lên): nhỏ, nằm ở GÓC TRÊN BÊN PHẢI
+// phần đầu email — chữ vàng, viền vàng, nền tối, cùng kiểu với nhãn VIP trong khu vực thành viên.
+// Dùng bảng + align="right" (không dùng position/float) để hiện đúng cả trên Outlook; Outlook bỏ qua
+// border-radius nên nhãn sẽ vuông góc ở đó, vẫn đọc rõ.
+const VIP_BADGE_HTML = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 4px;">
+              <tr><td align="right" style="text-align:right;padding:0;">
+                <table role="presentation" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate;">
+                  <tr><td bgcolor="#1a1508" style="background-color:#1a1508;border:1px solid #e8c766;border-radius:999px;padding:3px 9px;font-family:${FONT_STACK};font-size:10px;font-weight:700;letter-spacing:0.4px;color:#f5d67d;line-height:1.2;mso-line-height-rule:exactly;white-space:nowrap;">&#9733;&nbsp;Khách hàng VIP</td></tr>
+                </table>
+              </td></tr>
             </table>`;
 
 function escapeAttr(str) {
@@ -108,10 +113,10 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${p.outerBg};padding:32px 16px;font-family:${FONT_STACK};">
       <tr><td align="center">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;background-color:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,0.12);font-family:${FONT_STACK};border:${p.cardBorder};">
-          <tr><td bgcolor="${p.headerSolid}" style="background-color:${p.headerSolid};background:${p.headerGradient};padding:30px 32px;text-align:center;">
+          <tr><td bgcolor="${p.headerSolid}" style="background-color:${p.headerSolid};background:${p.headerGradient};padding:${isVip ? "14px 16px 30px" : "30px 32px"};text-align:center;">
+            ${isVip ? VIP_BADGE_HTML : ""}
             <img src="${LOGO_URL}" alt="WVN" width="52" style="display:block;height:auto;margin:0 auto 10px;">
             <div style="color:#ffffff;font-size:17px;font-weight:800;letter-spacing:0.2px;font-family:${FONT_STACK};">${BRAND_NAME}</div>
-            ${isVip ? VIP_BADGE_HTML : ""}
           </td></tr>
           <tr><td style="padding:32px 32px 28px;font-family:${FONT_STACK};">
             ${eyebrowHtml}
