@@ -347,7 +347,7 @@
       .el-subj { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260928h">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260928i">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -390,7 +390,6 @@
         <button class="tab-btn" data-tab="members" data-permission="members" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> Thành Viên</button>
         <button class="tab-btn" data-tab="gifts" data-permission="gifts" onclick="switchTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
         <button class="tab-btn" data-tab="bulkemail" data-permission="bulkemail" onclick="switchTab('bulkemail')"><i class="fa-solid fa-paper-plane"></i> Gửi Email</button>
-        <button class="tab-btn" data-tab="emaillogs" data-permission="bulkemail" onclick="switchTab('emaillogs')"><i class="fa-solid fa-clock-rotate-left"></i> Lịch Sử Email</button>
         <button class="tab-btn" data-tab="activitylog" data-super-only="1" onclick="switchTab('activitylog')"><i class="fa-solid fa-user-clock"></i> Lịch Sử Thao Tác</button>
         <button class="tab-btn" data-tab="staffaccounts" onclick="switchTab('staffaccounts')"><i class="fa-solid fa-users-gear"></i> Tài Khoản Quản Trị</button>
       </nav>
@@ -963,6 +962,27 @@
 
     <!-- ===================== TAB: GỬI EMAIL ===================== -->
     <div class="panel" id="panel-bulkemail">
+      <div class="be-tabs" role="tablist" aria-label="Gửi email">
+        <button type="button" role="tab" id="beTabCompose" aria-selected="true" onclick="showBulkEmailPane('compose')"><i class="fa-solid fa-pen-to-square"></i> Soạn email</button>
+        <button type="button" role="tab" id="beTabHistory" aria-selected="false" onclick="showBulkEmailPane('history')"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử gửi <span class="be-count" id="beHistoryCount"></span></button>
+      </div>
+      <div class="be-pane" id="bePaneHistory" hidden>
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-clock-rotate-left" style="color:#0284c7;"></i> Lịch sử gửi email <span id="elTotalNote" style="font-weight:500; font-size:0.8rem; color:var(--text-muted);"></span></h3>
+        <div class="loading-state" id="emailLogsLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div id="emailLogsTableWrap" style="display:none;">
+          <div class="el-stats" id="elStats"></div>
+          <div class="el-toolbar">
+            <input type="search" id="elSearch" placeholder="Tìm theo người nhận hoặc tiêu đề…" oninput="renderEmailLogs()">
+            <select id="elType" onchange="renderEmailLogs()"><option value="">Mọi loại email</option></select>
+          </div>
+          <div id="emailLogsTableBody"></div>
+          <div style="text-align:center; margin-top:0.9rem;"><button type="button" class="btn btn-outline" id="elMore" style="display:none;" onclick="elLimit += 60; renderEmailLogs()">Xem thêm</button></div>
+        </div>
+        <div class="empty-state" id="emailLogsEmpty" style="display:none;">Chưa có email nào được gửi.</div>
+      </div>
+      </div>
+      <div class="be-pane" id="bePaneCompose">
       <div class="card">
         <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-paper-plane"></i> Soạn email gửi thành viên</h3>
 
@@ -1000,23 +1020,6 @@
 
         <button type="button" class="btn" id="bulkEmailSendBtn" onclick="sendBulkEmail()">Gửi Email</button>
       </div>
-    </div>
-
-    <!-- ===================== TAB: LỊCH SỬ EMAIL ===================== -->
-    <div class="panel" id="panel-emaillogs">
-      <div class="card">
-        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-clock-rotate-left" style="color:#0284c7;"></i> Lịch Sử Gửi Email <span id="elTotalNote" style="font-weight:500; font-size:0.8rem; color:var(--text-muted);"></span></h3>
-        <div class="loading-state" id="emailLogsLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
-        <div id="emailLogsTableWrap" style="display:none;">
-          <div class="el-stats" id="elStats"></div>
-          <div class="el-toolbar">
-            <input type="search" id="elSearch" placeholder="Tìm theo người nhận hoặc tiêu đề…" oninput="renderEmailLogs()">
-            <select id="elType" onchange="renderEmailLogs()"><option value="">Mọi loại email</option></select>
-          </div>
-          <div id="emailLogsTableBody"></div>
-          <div style="text-align:center; margin-top:0.9rem;"><button type="button" class="btn btn-outline" id="elMore" style="display:none;" onclick="elLimit += 60; renderEmailLogs()">Xem thêm</button></div>
-        </div>
-        <div class="empty-state" id="emailLogsEmpty" style="display:none;">Chưa có email nào được gửi.</div>
       </div>
     </div>
 
@@ -1402,7 +1405,15 @@
       return result;
     }
 
+    function showBulkEmailPane(pane) {
+      const h = pane === 'history';
+      document.getElementById('bePaneHistory').hidden = !h;
+      document.getElementById('bePaneCompose').hidden = h;
+      document.getElementById('beTabHistory').setAttribute('aria-selected', String(h));
+      document.getElementById('beTabCompose').setAttribute('aria-selected', String(!h));
+    }
     function switchTab(tab) {
+      if (tab === 'emaillogs') { tab = 'bulkemail'; setTimeout(() => showBulkEmailPane('history'), 0); }
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.getElementById('panel-' + tab).classList.add('active');
@@ -4141,6 +4152,7 @@
         let msg = `Đã gửi thành công tới ${result.sentCount}/${recipients.length} người nhận.`;
         if (result.failedCount > 0) msg += ` (${result.failedCount} gửi thất bại: ${result.failed.join(', ')})`;
         showGlobalAlert(msg, result.failedCount > 0);
+        if (typeof loadEmailLogs === 'function') loadEmailLogs();
       } catch (err) {
         showGlobalAlert(err.message, true);
       } finally {
@@ -4177,6 +4189,7 @@
           return;
         }
         allEmailLogs = logs;
+        { const bc = document.getElementById('beHistoryCount'); if (bc) bc.textContent = (total || logs.length) ? Number(total || logs.length).toLocaleString('vi-VN') : ''; }
         document.getElementById('elTotalNote').textContent = total > logs.length ? `· ${logs.length} email gần nhất / ${total}` : `· ${logs.length} email`;
         const types = [...new Set(logs.map(l => l.type || 'other'))];
         document.getElementById('elType').innerHTML = '<option value="">Mọi loại email</option>' + types.map(t => `<option value="${escapeHtml(t)}">${escapeHtml((EMAIL_TYPE_META[t] || [t])[0])}</option>`).join('');
@@ -4584,7 +4597,7 @@
 
   <div id="printableArea" style="display:none;"></div>
   <script src="/xlsx-export.js?v=20260928c"></script>
-  <script src="admin-enhance.js?v=20260928c"></script>
+  <script src="admin-enhance.js?v=20260928d"></script>
     <script>
     // Khung chào ở Tổng quan: lời chào, ngày, một câu nhắc về ý nghĩa công việc (đổi theo ngày)
     (function () {
@@ -4620,8 +4633,7 @@
         grades: 'Điểm số và nhận xét gửi tới phụ huynh.',
         members: 'Tài khoản thành viên, hạng thành viên và trạng thái hoạt động.',
         gifts: 'Danh mục quà tặng và các yêu cầu đổi quà của thành viên.',
-        bulkemail: 'Soạn và gửi email tới nhiều thành viên cùng lúc.',
-        emaillogs: 'Mọi email hệ thống đã gửi, kèm trạng thái gửi thành công hay lỗi.',
+        bulkemail: 'Soạn và gửi email tới nhiều thành viên cùng lúc, xem lại mọi email hệ thống đã gửi kèm trạng thái.',
         activitylog: 'Ai đã làm gì, vào lúc nào trên trang quản trị.',
         staffaccounts: 'Tài khoản của đội ngũ quản trị và quyền truy cập từng mục.'
       };
