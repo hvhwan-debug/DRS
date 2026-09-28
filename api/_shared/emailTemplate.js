@@ -4,8 +4,9 @@
 //
 // QUY TẮC MÀU SẮC: CHỈ 1 BỘ KHUNG DUY NHẤT, dùng chung cho mọi email — bản thường và bản VIP
 // (từ hạng Vàng trở lên) có CẤU TRÚC Y HỆT NHAU (cùng bố cục, cùng thứ tự khối, cùng kiểu dáng),
-// chỉ khác đúng 1 điều: bảng màu — thường dùng xanh thương hiệu, VIP dùng ánh vàng sang trọng.
-// Không thêm bớt khối nào riêng cho VIP (không dải ruy băng, không badge phụ) để tránh vênh nhau.
+// chỉ khác 2 điều: bảng màu (thường dùng xanh thương hiệu, VIP dùng ánh vàng sang trọng) và nhãn
+// "VIP" viền vàng dưới tên thương hiệu ở đầu email — khớp với nhãn VIP trong khu vực thành viên.
+// Ngoài 2 điều đó không thêm bớt khối nào riêng cho VIP để tránh vênh nhau.
 //
 // QUAN TRỌNG VỀ EMAIL CLIENT: Outlook desktop (dùng engine Word) và một số client khác KHÔNG
 // hỗ trợ CSS "background: linear-gradient(...)". Nếu chỉ khai gradient mà không có màu nền đặc
@@ -57,6 +58,13 @@ const PALETTES = {
   }
 };
 
+// Nhãn "VIP" cho khách hàng ưu tiên (hạng Vàng trở lên): chữ vàng, viền vàng, nền tối — cùng kiểu
+// với nhãn VIP trong khu vực thành viên. Dùng bảng lồng + bgcolor để hiện đúng cả trên Outlook
+// (Outlook bỏ qua border-radius nên nhãn sẽ vuông góc ở đó, vẫn đọc rõ).
+const VIP_BADGE_HTML = `<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:12px auto 0;border-collapse:separate;">
+              <tr><td bgcolor="#1a1508" style="background-color:#1a1508;border:1.5px solid #e8c766;border-radius:999px;padding:5px 16px;font-family:${FONT_STACK};font-size:12px;font-weight:800;letter-spacing:1.5px;color:#f5d67d;line-height:1;mso-line-height-rule:exactly;">&#9733;&nbsp;VIP</td></tr>
+            </table>`;
+
 function escapeAttr(str) {
   return String(str == null ? "" : str).replace(/"/g, "&quot;");
 }
@@ -103,6 +111,7 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
           <tr><td bgcolor="${p.headerSolid}" style="background-color:${p.headerSolid};background:${p.headerGradient};padding:30px 32px;text-align:center;">
             <img src="${LOGO_URL}" alt="WVN" width="52" style="display:block;height:auto;margin:0 auto 10px;">
             <div style="color:#ffffff;font-size:17px;font-weight:800;letter-spacing:0.2px;font-family:${FONT_STACK};">${BRAND_NAME}</div>
+            ${isVip ? VIP_BADGE_HTML : ""}
           </td></tr>
           <tr><td style="padding:32px 32px 28px;font-family:${FONT_STACK};">
             ${eyebrowHtml}
