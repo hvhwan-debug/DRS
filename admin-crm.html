@@ -6,9 +6,6 @@
 <meta name="robots" content="noindex, nofollow">
 <title>CRM Học Sinh · Quản trị Mạng Lưới Tri Thức Việt Nam</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=20260927b">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>
   // Chặn sớm: chưa có phiên quản trị thì về trang đăng nhập trước khi vẽ giao diện.
@@ -16,21 +13,21 @@
 </script>
 <style>
 :root {
-  --ink: #0f1e3d;
-  --ink-2: #334766;
+  --ink: #0f172a;
+  --ink-2: #334155;
   --muted: #64748b;
-  --line: #dfe6ef;
-  --paper: #f5f8fc;
+  --line: #e2e8f0;
+  --paper: #f8fafc;
   --surface: #ffffff;
   --brand: #0369a1;
   --brand-2: #0284c7;
-  --brand-soft: #e6f3fb;
+  --brand-soft: #e0f2fe;
   --green: #2f7a4f;  --green-soft: #e7f4ec;
   --amber: #a15c07;  --amber-soft: #fdf1dc;
   --red: #b42318;    --red-soft: #fdecea;
   --violet: #5b4bb7; --violet-soft: #efedfb;
   --radius-s: 6px; --radius-m: 10px; --radius-l: 16px;
-  --font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -41,7 +38,7 @@ button { cursor: pointer; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- Khung ---------- */
-.topbar { position: sticky; top: 0; z-index: 30; background: var(--ink); color: #fff; }
+.topbar { position: sticky; top: 0; z-index: 30; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%); color: #fff; }
 .topbar-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; padding: 0.7rem 1.25rem; }
 /* Logo W + chữ tên phân hệ */
 .brand { display: flex; align-items: center; gap: 0.65rem; text-decoration: none; color: #fff; white-space: nowrap; padding-right: 1rem; margin-right: 0.2rem; border-right: 1px solid rgba(255,255,255,0.1); }
@@ -263,7 +260,15 @@ details.more > summary::-webkit-details-marker { display: none; }
 
 /* Gọi điện / Zalo */
 .contact { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
-.contact a { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.95rem; border-radius: 999px; font-weight: 600; font-size: 0.88rem; text-decoration: none; border: 1px solid transparent; }
+.contact a { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.5rem 0.9rem; border-radius: 999px; font-weight: 600; font-size: 0.86rem; text-decoration: none; border: 1px solid transparent; white-space: nowrap; }
+/* Nút liên hệ trong hồ sơ: một hàng thẳng dưới tên, không bị rơi dòng */
+.d-contact { padding-left: calc(46px + 0.85rem); }
+.d-contact .contact { flex-wrap: nowrap; }
+.d-contact .contact .sms, .d-contact .contact .mail { padding-left: 0.8rem; padding-right: 0.8rem; }
+@media (max-width: 560px) {
+  .d-contact { padding-left: 0; }
+  .d-contact .contact { display: grid; grid-template-columns: 1fr 1fr; }
+}
 .contact .call { background: var(--green); color: #fff; }
 .contact .call:hover { background: #266640; }
 .contact .zalo { background: #0068ff; color: #fff; }
@@ -419,10 +424,10 @@ details.more > summary::-webkit-details-marker { display: none; }
       <div style="min-width:0;">
         <h2 id="dName"></h2>
         <p id="dSub"></p>
-        <div id="dContact"></div>
       </div>
       <button class="drawer-close" id="drawerClose" aria-label="Đóng hồ sơ"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     </div>
+    <div id="dContact" class="d-contact"></div>
     <div class="rail" id="dRail" role="group" aria-label="Giai đoạn chăm sóc"></div>
   </div>
   <div class="drawer-tabs" role="tablist">

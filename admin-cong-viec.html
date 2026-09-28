@@ -6,9 +6,6 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Công Việc · Mạng Lưới Tri Thức Việt Nam</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=20260927b">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>if (!localStorage.getItem('wvn_admin_token')) window.location.replace('admin-dang-nhap.html');</script>
 <style>
@@ -443,6 +440,51 @@ button { cursor: pointer; background: none; border: none; }
   .stat { padding: 0.45rem 0.6rem; font-size: 0.76rem; }
   .list-scope { margin-top: 1.3rem; }
 }
+
+/* =========================================================
+   Đồng bộ màu chủ đề với website wvn.vn
+   (navy #0f172a → xanh đậm #1e3a8a → xanh trời #0284c7, chữ slate, nền #f8fafc)
+   ========================================================= */
+:root {
+  --night: #0f172a; --night-2: #1e293b; --night-3: #1e3a8a; --night-text: #cbd5e1; --night-muted: #94a3b8;
+  --porcelain: #f8fafc; --line: #e2e8f0; --line-2: #f1f5f9;
+  --ink: #0f172a; --ink-2: #334155; --muted: #64748b;
+  --sapphire: #0284c7; --sapphire-2: #0369a1; --sapphire-soft: #e0f2fe;
+  --gold: #d97706; --gold-soft: #fef3c7; --gold-line: #fde68a;
+  --sky-grad: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  --site-grad: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+  --serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --shadow: 0 1px 2px rgba(15,23,42,0.05), 0 8px 24px rgba(15,23,42,0.06);
+}
+.side { background: linear-gradient(170deg, #0f172a 0%, #172554 55%, #1e3a8a 100%); }
+.add-btn, .btn.primary, .fab { background: var(--sky-grad); border-color: transparent; box-shadow: 0 6px 18px rgba(2,132,199,0.35); }
+.add-btn:hover, .btn.primary:hover { background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%); }
+.nav button:hover, .nav a:hover { background: rgba(255,255,255,0.07); }
+.nav button[aria-current="page"] { background: rgba(125,211,252,0.12); box-shadow: inset 3px 0 0 #38bdf8; }
+.nav .n.hot, .toast button { color: #7dd3fc; }
+.nav .n.hot:not(:empty) { background: rgba(125,211,252,0.15); }
+.me .av { background: var(--sky-grad); }
+.mobile-nav { background: var(--night); }
+.mobile-nav .badge { background: #0284c7; }
+.quick input:focus, .desc:focus { box-shadow: 0 0 0 4px rgba(2,132,199,0.14); }
+/* Tiêu đề: chữ đậm không chân, giống trang chủ */
+.hero h1, .toolbar h2, .page-title, .d-title, .modal h3, .day-head b, .ring .lbl b { font-weight: 800; letter-spacing: -0.5px; }
+.hero h1 em { font-style: normal; font-weight: 800; background: linear-gradient(90deg, #0284c7, #2563eb); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero::after { background: radial-gradient(circle, #e0f2fe 0%, transparent 70%); }
+.ring circle:last-child { stroke: #0284c7; }
+.stat.gold i { color: #0284c7; }
+.pill.gold { color: #b45309; }
+/* Bảng & lịch */
+.col { background: #f1f5f9; border-color: #e2e8f0; }
+.col.drop { background: #e0f2fe; }
+.day.today { border-color: #7dd3fc; background: linear-gradient(180deg, #f0f9ff 0%, var(--surface) 80px); }
+.day.today .day-head b { background: var(--sky-grad); }
+.day.weekend { background: #fbfcfe; }
+.link-card { background: #f0f9ff; border-color: #bae6fd; }
+.link-card i { color: #0284c7; }
+.scope button[aria-pressed="true"], .opt[aria-pressed="true"] { background: var(--night); }
+.ibox .acts a:first-child { background: var(--sky-grad); border-color: transparent; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -582,7 +624,7 @@ button { cursor: pointer; background: none; border: none; }
   function metaHtml(t) {
     const today = todayStr(); const bits = [];
     if (t.dueDate) {
-      const cls = t.status !== 'done' && t.dueDate < today ? 'red' : t.dueDate === today ? 'gold' : '';
+      const cls = t.status !== 'done' && t.dueDate < today ? 'red' : t.dueDate === today ? 'blue' : '';
       bits.push(`<span class="pill ${cls}"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(t.dueDate, t.dueTime))}</span>`);
     }
     if (t.priority === 'urgent') bits.push('<span class="pill red"><i class="fa-solid fa-bolt" aria-hidden="true"></i>Khẩn</span>');
@@ -810,7 +852,7 @@ button { cursor: pointer; background: none; border: none; }
     const v = $('quickInput').value; const box = $('parsed');
     if (!v.trim()) { box.innerHTML = ''; return; }
     const p = parseQuick(v); const bits = [];
-    if (p.dueDate) bits.push(`<span class="pill gold"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(p.dueDate, p.dueTime))}</span>`);
+    if (p.dueDate) bits.push(`<span class="pill blue"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(p.dueDate, p.dueTime))}</span>`);
     p.assignees.forEach(e => bits.push(`<span class="pill blue"><i class="fa-regular fa-user" aria-hidden="true"></i>${esc(staffBy(e).name)}</span>`));
     if (p.projectId) { const pr = projectBy(p.projectId); bits.push(`<span class="pill"><span class="dot" style="background:${esc(pr.color)}"></span>${esc(pr.name)}</span>`); }
     if (p.unknownProject) bits.push(`<span class="pill amber">Chưa có dự án "${esc(p.unknownProject)}"</span>`);
