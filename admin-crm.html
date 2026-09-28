@@ -43,9 +43,14 @@ button { cursor: pointer; }
 /* ---------- Khung ---------- */
 .topbar { position: sticky; top: 0; z-index: 30; background: var(--ink); color: #fff; }
 .topbar-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; padding: 0.7rem 1.25rem; }
-.brand { display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none; color: #fff; white-space: nowrap; }
-.brand strong { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.2px; }
-.brand span { font-size: 0.8rem; color: #9fb4d6; }
+/* Logo W + chữ tên phân hệ */
+.brand { display: flex; align-items: center; gap: 0.65rem; text-decoration: none; color: #fff; white-space: nowrap; padding-right: 1rem; margin-right: 0.2rem; border-right: 1px solid rgba(255,255,255,0.1); }
+.brand .mark { width: 38px; height: auto; flex-shrink: 0; filter: drop-shadow(0 3px 10px rgba(0,150,255,0.45)); transition: transform .25s ease, filter .25s ease; }
+.brand:hover .mark { transform: translateY(-1px) scale(1.04); filter: drop-shadow(0 5px 14px rgba(0,170,255,0.6)); }
+.brand .word { display: flex; flex-direction: column; line-height: 1.1; }
+.brand .word b { font-size: 1.08rem; font-weight: 800; letter-spacing: -0.3px; color: #fff; }
+.brand .word b em { font-style: normal; font-weight: 800; background: linear-gradient(90deg, #38d2ff, #8fe46a); -webkit-background-clip: text; background-clip: text; color: transparent; margin-left: 0.25rem; }
+.brand .word small { font-size: 0.58rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.6; padding-top: 1px; color: #8fa6cc; }
 .search { flex: 1; max-width: 460px; margin-left: auto; position: relative; }
 .search input { width: 100%; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); color: #fff; border-radius: 999px; padding: 0.5rem 0.9rem 0.5rem 2.2rem; }
 .search input::placeholder { color: #9fb4d6; }
@@ -304,6 +309,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 }
 @media (max-width: 760px) {
   .topbar-inner { flex-wrap: wrap; }
+  .brand { border-right: none; padding-right: 0; }
   .search { order: 3; flex-basis: 100%; max-width: none; margin-left: 0; }
   .who { display: none; }
   .views { position: static; }
@@ -330,7 +336,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 
 <header class="topbar">
   <div class="topbar-inner">
-    <a class="brand" href="/admin"><strong>CRM Học Sinh</strong><span>Mạng Lưới Tri Thức Việt Nam</span></a>
+    <a class="brand" href="/admin" aria-label="CRM Học Sinh · Tri Thức Việt Nam"><img class="mark" src="images/logo-wvn.png?v=20260927b" alt="" width="469" height="300"><span class="word"><b>CRM<em>Học Sinh</em></b><small>Tri Thức Việt Nam</small></span></a>
     <div class="search">
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <label class="sr-only" for="globalSearch">Tìm học sinh</label>
