@@ -529,12 +529,15 @@ button { cursor: pointer; background: none; border: none; }
   .row > label { padding-top: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.brand-mini .mark { width: 40px; }
+.brand-mini .word { justify-content: center; }
+.brand-mini .word small.tag { margin: 0; padding: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 2.6px; line-height: 1; }
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="side" aria-label="Điều hướng">
-    <a class="brand" href="/admin" aria-label="Công Việc · Tri Thức Việt Nam"><img class="mark" src="/images/logo-wvn.png?v=20260927b" alt="" width="469" height="300"><span class="word"><b>Công Việc</b><small>Tri Thức Việt Nam</small></span></a>
+    <a class="brand brand-mini" href="/admin" aria-label="Work · Tri Thức Việt Nam"><img class="mark" src="/images/logo-wvn.png?v=20260927b" alt="Tri Thức Việt Nam" width="469" height="300"><span class="word"><small class="tag">Work</small></span></a>
     <button class="add-btn" data-act="focus-quick"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm việc <kbd>N</kbd></button>
     <nav class="nav">
       <button data-view="today" aria-current="page"><i class="fa-regular fa-sun" aria-hidden="true"></i> Hôm nay <span class="n" id="nToday"></span></button>

@@ -335,13 +335,16 @@ details.more > summary::-webkit-details-marker { display: none; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+.brand-mini .mark { width: 40px; }
+.brand-mini .word { justify-content: center; }
+.brand-mini .word small.tag { margin: 0; padding: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 2.6px; line-height: 1; }
 </style>
 </head>
 <body>
 
 <header class="topbar">
   <div class="topbar-inner">
-    <a class="brand" href="/admin" aria-label="CRM Học Sinh · Tri Thức Việt Nam"><img class="mark" src="/images/logo-wvn.png?v=20260927b" alt="" width="469" height="300"><span class="word"><b>CRM<em>Học Sinh</em></b><small>Tri Thức Việt Nam</small></span></a>
+    <a class="brand brand-mini" href="/admin" aria-label="CRM · Tri Thức Việt Nam"><img class="mark" src="/images/logo-wvn.png?v=20260927b" alt="Tri Thức Việt Nam" width="469" height="300"><span class="word"><small class="tag">CRM</small></span></a>
     <div class="search">
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <label class="sr-only" for="globalSearch">Tìm học sinh</label>

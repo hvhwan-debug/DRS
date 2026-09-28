@@ -17,6 +17,8 @@
 
 const BRAND_NAME = "Mạng Lưới Tri Thức Việt Nam";
 const LOGO_URL = "https://wvn.vn/images/logo-wvn.png?v=20260927b";
+// Logo đầy đủ (chữ W + Tri Thức Việt Nam + khẩu hiệu) cho phần đầu email nền trắng; ảnh 960px hiển thị 260px để nét trên màn hình retina
+const HEADER_LOGO_URL = "https://wvn.vn/images/email-logo-wvn.png?v=20260928";
 const SITE_URL = "https://wvn.vn/thanh-vien";
 const FONT_STACK = "Arial,Helvetica,sans-serif"; // 1 phông DUY NHẤT cho toàn bộ email
 
@@ -107,14 +109,14 @@ function renderEmailHtml({ isVip, eyebrow, title, bodyHtml, ctas, footerNote }) 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${p.outerBg};padding:32px 16px;font-family:${FONT_STACK};">
       <tr><td align="center">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:500px;background-color:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,0.12);font-family:${FONT_STACK};border:${p.cardBorder};">
-          <tr><td bgcolor="${p.headerSolid}" style="background-color:${p.headerSolid};background:${p.headerGradient};padding:${isVip ? "0" : "30px 32px"};text-align:center;">
+          <tr><td bgcolor="#ffffff" style="background-color:#ffffff;padding:${isVip ? "0" : "26px 32px 20px"};text-align:center;">
             ${isVip ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
               <tr><td align="right" style="text-align:right;padding:12px 14px 0;font-family:${FONT_STACK};line-height:14px;">${VIP_BADGE_SPAN}</td></tr>
-              <tr><td align="center" style="text-align:center;padding:4px 32px 30px;">` : ""}
-            <img src="${LOGO_URL}" alt="WVN" width="52" style="display:block;height:auto;margin:0 auto 10px;">
-            <div style="color:#ffffff;font-size:17px;font-weight:800;letter-spacing:0.2px;font-family:${FONT_STACK};">${BRAND_NAME}</div>
+              <tr><td align="center" style="text-align:center;padding:2px 32px 20px;">` : ""}
+            <img src="${HEADER_LOGO_URL}" alt="${BRAND_NAME} · Kiến tạo giá trị vượt thời gian" width="260" style="display:block;width:260px;max-width:80%;height:auto;margin:0 auto;border:0;outline:none;text-decoration:none;">
             ${isVip ? `</td></tr></table>` : ""}
           </td></tr>
+          <tr><td height="4" bgcolor="${p.headerSolid}" style="height:4px;line-height:4px;font-size:0;background-color:${p.headerSolid};background:${isVip ? "linear-gradient(90deg,#8a6d1a 0%,#d4af37 50%,#f5d67d 100%)" : "linear-gradient(90deg,#00d2ff 0%,#1f5bff 55%,#b8f23a 100%)"};">&nbsp;</td></tr>
           <tr><td style="padding:32px 32px 28px;font-family:${FONT_STACK};">
             ${eyebrowHtml}
             ${titleHtml}
