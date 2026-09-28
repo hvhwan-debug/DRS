@@ -420,6 +420,27 @@
     body.vip-theme .inv-amt { border-top-color: rgba(201,162,39,0.2); }
     body.vip-theme .inv-empty, body.vip-theme .inv-empty-filter { border-color: rgba(201,162,39,0.3); }
     body.vip-theme .inv-empty-ico { background: rgba(201,162,39,0.15); color: #e8c766; }
+
+    /* ===== VIP: sửa chữ bị chìm (chữ sáng trên nền trắng) ===== */
+    /* Hộp thoại nền trắng giữ bộ màu chữ tối như bản thường */
+    body.vip-theme .light-surface { --text-dark: #0f172a; --text-muted: #64748b; --border: #e7ecf5; color: #0f172a; }
+    body.vip-theme .light-surface .btn-outline { background: #fff; color: #dc2626; border-color: #fecaca; }
+    /* Bảng điểm */
+    body.vip-theme .grade-stat { background: rgba(201,162,39,0.10) !important; border: 1px solid rgba(201,162,39,0.3); }
+    body.vip-theme .grade-stat .gs-lbl { color: #a8935a !important; }
+    body.vip-theme .grade-stat .gs-val { color: #f6ecc9 !important; }
+    body.vip-theme .grade-stat.avg { background: linear-gradient(135deg, rgba(201,162,39,0.28), rgba(201,162,39,0.10)) !important; border-color: rgba(232,199,102,0.55); }
+    body.vip-theme .grade-stat.avg .gs-val { color: #f5d67d !important; }
+    body.vip-theme .grade-score { color: #f5d67d !important; }
+    body.vip-theme .grade-av { background: rgba(201,162,39,0.18) !important; color: #e8c766 !important; }
+    body.vip-theme td a[href] .fa-image { color: #e8c766; }
+    body.vip-theme table { color: #f1ede0; }
+    body.vip-theme table thead tr, body.vip-theme table th { color: #a8935a !important; }
+    body.vip-theme table tr { border-color: rgba(201,162,39,0.18) !important; }
+    body.vip-theme .act-detail { background: rgba(201,162,39,0.06) !important; }
+    /* Menu di động */
+    body.vip-theme .mobile-menu-btn { background: #211d13; color: #f6ecc9; border-color: rgba(201,162,39,0.35); }
+    body.vip-theme .mobile-menu-dropdown { background: #211d13; border-color: rgba(201,162,39,0.35); }
     .invoice-doc { background:#fff; border:1px solid var(--border); border-radius:12px; padding:2rem; max-width:720px; margin:0 auto; }
     .invoice-doc-header { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; border-bottom:2px solid #0f172a; padding-bottom:1.2rem; margin-bottom:1.2rem; }
     .invoice-doc-header img { height:44px; }
@@ -495,7 +516,7 @@
   </div>
 
   <div id="mandatoryProfileOverlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:1000; align-items:center; justify-content:center; padding:1.2rem;">
-    <div style="background:#fff; border-radius:16px; max-width:480px; width:100%; padding:2rem; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <div class="light-surface" style="background:#fff; border-radius:16px; max-width:480px; width:100%; padding:2rem; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
       <div style="text-align:center; margin-bottom:1rem;">
         <i class="fa-solid fa-circle-exclamation" style="font-size:2rem; color:#d97706;"></i>
       </div>
@@ -528,7 +549,7 @@
 
   <!-- Mục 4: Popup thông báo đổi hạng (hiện đúng 1 lần khi hạng thay đổi) -->
   <div id="tierChangeOverlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:1100; align-items:center; justify-content:center; padding:1.2rem;">
-    <div style="background:#fff; border-radius:20px; max-width:420px; width:100%; padding:2.2rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,0.35); text-align:center; position:relative; overflow:hidden;">
+    <div class="light-surface" style="background:#fff; border-radius:20px; max-width:420px; width:100%; padding:2.2rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,0.35); text-align:center; position:relative; overflow:hidden;">
       <div id="tierChangeConfetti" style="position:absolute; top:0; left:0; right:0; height:6px;"></div>
       <div id="tierChangeIcon" style="width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0.6rem auto 1.1rem;"></div>
       <h2 id="tierChangeTitle" style="font-size:1.25rem; margin-bottom:0.4rem;">🎉 Chúc mừng bạn lên hạng mới!</h2>
@@ -539,7 +560,7 @@
 
   <!-- Popup hoá đơn mới — mời thanh toán ngay, hiện đúng 1 lần cho mỗi hoá đơn chưa thanh toán -->
   <div id="invoicePopupOverlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:1100; align-items:center; justify-content:center; padding:1.2rem;">
-    <div style="background:#fff; border-radius:20px; max-width:420px; width:100%; padding:2.2rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,0.35); text-align:center;">
+    <div class="light-surface" style="background:#fff; border-radius:20px; max-width:420px; width:100%; padding:2.2rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,0.35); text-align:center;">
       <div style="width:72px; height:72px; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0.6rem auto 1.1rem;"><i class="fa-solid fa-file-invoice-dollar"></i></div>
       <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">🧾 Bạn có hoá đơn mới</h2>
       <p id="invoicePopupText" style="color:var(--text-muted); font-size:0.92rem; margin-bottom:1.4rem; line-height:1.6;"></p>
@@ -742,7 +763,7 @@
         const reasons = ['Sai số tiền', 'Sai ngày', 'Sai tên học sinh', 'Sai chương trình', 'Gia đình chưa nộp khoản này', 'Điểm / nhận xét chưa đúng'];
         const wrap = document.createElement('div');
         wrap.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:10040;display:flex;align-items:flex-end;justify-content:center;padding:1rem;';
-        wrap.innerHTML = `<div role="dialog" aria-modal="true" aria-labelledby="rjTitle" style="background:#fff;border-radius:16px;padding:1.2rem;width:100%;max-width:460px;margin-bottom:auto;margin-top:auto;box-shadow:0 20px 50px rgba(15,23,42,0.3);">
+        wrap.innerHTML = `<div class="light-surface" role="dialog" aria-modal="true" aria-labelledby="rjTitle" style="background:#fff;border-radius:16px;padding:1.2rem;width:100%;max-width:460px;margin-bottom:auto;margin-top:auto;box-shadow:0 20px 50px rgba(15,23,42,0.3);">
           <h3 id="rjTitle" style="font-size:1.05rem;margin:0 0 0.3rem;">Thông tin nào chưa đúng?</h3>
           <p style="font-size:0.85rem;color:#64748b;margin:0 0 0.9rem;">Chạm một hoặc nhiều lý do. Có thể ghi thêm nếu cần.</p>
           <div id="rjChips" style="display:flex;flex-wrap:wrap;gap:0.45rem;margin-bottom:0.8rem;">${reasons.map(r => `<button type="button" data-r="${r}" aria-pressed="false" style="border:1px solid #e2e8f0;background:#fff;border-radius:999px;padding:0.45rem 0.85rem;font:inherit;font-size:0.86rem;cursor:pointer;">${r}</button>`).join('')}</div>
@@ -1364,7 +1385,7 @@
                       <td style="padding:0.75rem 0.7rem; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-chevron-down" id="activityChevron-${i}"></i></td>
                     </tr>
                     <tr id="activityDetail-${i}" style="display:none;">
-                      <td colspan="5" style="padding:0 0.7rem 1.1rem; background:#f8fafc;">
+                      <td colspan="5" class="act-detail" style="padding:0 0.7rem 1.1rem; background:#f8fafc;">
                         ${r.status === 'Từ chối' && r.rejectionReason ? `
                           <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:0.7rem 0.9rem; margin:0.8rem 0 0.6rem;">
                             <div style="font-size:0.76rem; font-weight:700; color:#991b1b; margin-bottom:0.2rem;">Lý do từ chối</div>
@@ -1757,7 +1778,7 @@
                     <td style="padding:0.6rem; color:var(--text-muted);">${i + 1}</td>
                     <td style="padding:0.6rem; color:var(--text-muted); white-space:nowrap;">${formatDate(g.recordedAt)}</td>
                     <td style="padding:0.6rem; white-space:nowrap;"><span style="font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; white-space:nowrap; ${assessmentBadgeStyle(g.assessmentType)}">${g.assessmentType || 'Buổi học'}</span></td>
-                    <td style="padding:0.6rem; font-weight:700; color:#0369a1; white-space:nowrap;">${g.score != null ? g.score + '/10' : '—'}</td>
+                    <td class="grade-score" style="padding:0.6rem; font-weight:700; color:#0369a1; white-space:nowrap;">${g.score != null ? g.score + '/10' : '—'}</td>
                     <td style="padding:0.6rem; color:var(--text-muted);">${g.comment || '—'}</td>
                     <td style="padding:0.6rem;">${(g.attachments && g.attachments.length > 0) ? g.attachments.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:#0284c7;"><i class="fa-solid fa-image"></i></a>`).join(' ') : '—'}</td>
                     <td style="padding:0.6rem; white-space:nowrap;">${confirmationCellHtml('grade', g.id, g.confirmationStatus, g.memberFeedback)}</td>
@@ -1777,15 +1798,15 @@
                 <div class="inner-card grade-course-group" data-course-key="${grp.key.replace(/"/g, '&quot;')}" style="border-radius:16px; padding:1.1rem 1.2rem;">
                   <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.7rem; margin-bottom:0.9rem;">
                     <div style="display:flex; align-items:center; gap:0.7rem; min-width:0;">
-                      <div style="width:38px; height:38px; flex-shrink:0; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-weight:800;"><i class="fa-solid fa-user-graduate"></i></div>
+                      <div class="grade-av" style="width:38px; height:38px; flex-shrink:0; border-radius:50%; background:#e0f2fe; color:#0369a1; display:flex; align-items:center; justify-content:center; font-weight:800;"><i class="fa-solid fa-user-graduate"></i></div>
                       <div style="min-width:0;">
                         <div style="font-weight:800; font-size:1rem; color:var(--text-dark);">${grp.studentName}</div>
                         <div style="font-size:0.8rem; color:var(--text-muted);">${grp.program} · ${grp.entries.length} buổi đã ghi nhận</div>
                       </div>
                     </div>
                     <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                      ${avgScore != null ? `<div style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#eff6ff;"><div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">TB</div><div style="font-weight:800; color:#0369a1;">${avgScore.toFixed(1)}/10</div></div>` : ''}
-                      <div style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#f8fafc;"><div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">Gần nhất</div><div style="font-weight:700; color:var(--text-dark); font-size:0.85rem; white-space:nowrap;">${formatDate(latest.recordedAt)}</div></div>
+                      ${avgScore != null ? `<div class="grade-stat avg" style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#eff6ff;"><div class="gs-lbl" style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">TB</div><div class="gs-val" style="font-weight:800; color:#0369a1;">${avgScore.toFixed(1)}/10</div></div>` : ''}
+                      <div class="grade-stat" style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#f8fafc;"><div class="gs-lbl" style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">Gần nhất</div><div class="gs-val" style="font-weight:700; color:var(--text-dark); font-size:0.85rem; white-space:nowrap;">${formatDate(latest.recordedAt)}</div></div>
                     </div>
                   </div>
                   ${gradeGroupTableHtml(grp.entries)}
