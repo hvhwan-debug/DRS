@@ -482,19 +482,20 @@
     gtag('js', new Date());
     gtag('config', 'AW-18460459117');
   </script>
+  <style id="brand-full-logo-style">
+    .brand-wrap { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; }
+    .brand-full-logo { display: block; height: 50px; width: auto; max-width: 100%; }
+    @media (max-width: 960px) { .brand-full-logo { height: 42px; } }
+    @media (max-width: 480px) { .brand-full-logo { height: 30px; } }
+    @media (max-width: 360px) { .brand-full-logo { height: 25px; } }
+  </style>
 </head>
 <body>
 
   <header>
     <div class="nav-container">
-      <a href="index.html" class="brand-wrap">
-        <div class="brand-logo-icon">
-          <img src="images/logo-wvn.png?v=20260927b" alt="Logo Mạng Lưới Tri Thức Việt Nam">
-        </div>
-        <div class="brand-text-group">
-          <span class="brand-title">Tri Thức Việt Nam</span>
-          <span class="brand-subtitle">Wisdom Vietnam Network | DR Solutions</span>
-        </div>
+      <a href="index.html" class="brand-wrap" aria-label="Tri thức Việt – Trang chủ">
+        <img class="brand-full-logo" src="images/logo-tri-thuc-viet.png?v=20260928a" alt="Tri thức Việt – Wisdom Vietnam | DR Solutions – Kiến tạo giá trị vượt thời gian" width="1011" height="150">
       </a>
 
       <nav class="nav-links" id="navLinks">
