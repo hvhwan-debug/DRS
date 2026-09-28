@@ -698,6 +698,89 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 .brand-work { padding: 0.3rem 0.55rem 1.45rem; }
 .brand-work .work-logo { display: block; height: 48px; width: auto; max-width: 100%; filter: drop-shadow(0 4px 14px rgba(56,189,248,0.25)); }
 .mobile-head b.m-brand img.work-logo-m { width: auto; height: 30px; display: block; }
+
+/* =========================================================
+   Bản 5: mọi màn hình cùng đẳng cấp với "Hôm nay"
+   ========================================================= */
+.main { background: radial-gradient(900px 420px at 100% -10%, rgba(56,189,248,0.10), transparent 60%), var(--canvas); }
+.topbar { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.topbar.scrolled { background: rgba(245,246,250,0.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.quick > i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 0.72rem; color: var(--midnight); background: linear-gradient(135deg, var(--glow-cyan), var(--glow-lime)); top: 0.72rem; left: 0.8rem; }
+.quick input { padding-left: 3rem; }
+
+/* Đầu trang của các màn hình còn lại */
+.view .toolbar { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--hair); border-radius: 22px; padding: 1.5rem 1.7rem; margin: 0.6rem 0 1.5rem; box-shadow: var(--lift); gap: 0.6rem 0.7rem; align-items: center; }
+.view .toolbar::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--glow-cyan), #60a5fa 50%, var(--glow-lime)); }
+.view .toolbar::after { content: ""; position: absolute; right: -80px; top: -120px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.12), transparent 65%); pointer-events: none; }
+.view .toolbar > *:not(.sr-only) { position: relative; z-index: 1; }
+.pt { margin-right: auto; min-width: 0; flex: 1 1 320px; }
+.pt .page-title { margin: 0; font-size: 2.1rem; line-height: 1.1; }
+.pt-sub { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; max-width: 64ch; }
+.pt-num { display: grid; justify-items: start; padding: 0 0 0 1.3rem; border-left: 1px solid var(--hair); min-width: 88px; }
+.pt-num b { font-family: var(--display); font-size: 2rem; font-weight: 600; line-height: 1; color: var(--ink); }
+.pt-num span { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+.view .toolbar select { background-color: #fff; border-color: var(--hair); border-radius: 12px; font: inherit; font-size: 0.86rem; padding: 0.55rem 0.8rem; }
+.view .toolbar .btn { border-radius: 12px; border-color: var(--hair); background: #fff; }
+.view .toolbar .btn:hover { border-color: #c9d0e0; }
+
+/* Bảng công việc */
+.board { gap: 1.1rem; }
+.col { background: rgba(255,255,255,0.55); border: 1px solid var(--hair); border-radius: 20px; padding: 0.75rem; position: relative; }
+.col::before { content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 3px; border-radius: 0 0 3px 3px; background: var(--st, #9aa3b5); opacity: 0.9; }
+.col-head { padding: 0.45rem 0.35rem 0.8rem; }
+.col-head b { font-size: 0.92rem; }
+.col-head b::before { width: 8px; height: 8px; box-shadow: 0 0 0 4px color-mix(in srgb, var(--st, #9aa3b5) 18%, transparent); }
+.col-head span { border: 1px solid var(--hair); background: #fff; font-weight: 500; }
+.col.drop { background: #eaf4ff; border-color: #93c5fd; }
+.cards:empty { min-height: 88px; border: 1.5px dashed #d5dae6; border-radius: 14px; display: grid; place-items: center; }
+.cards:empty::before { content: "Kéo thả việc vào đây"; font-size: 0.8rem; color: #a2a9c0; }
+.card { background: #fff; border-radius: 14px; padding: 0.85rem 0.9rem; box-shadow: 0 1px 0 rgba(12,19,48,0.03), 0 10px 22px -20px rgba(12,19,48,0.45); }
+.card .t-title { font-size: 0.92rem; }
+
+/* Lịch tuần */
+.week { gap: 0.7rem; }
+.day { background: rgba(255,255,255,0.7); border-radius: 20px; padding: 0.7rem; min-height: 320px; }
+.day-head { border-bottom: none; padding: 0.2rem 0.3rem 0.7rem; }
+.day-head b { font-size: 1.55rem; }
+.day.today { background: #fff; border-color: transparent; box-shadow: 0 0 0 1.5px #60a5fa, 0 24px 44px -30px rgba(29,78,216,0.55); }
+.day.today .day-head b { width: 40px; height: 40px; font-size: 1.1rem; background: linear-gradient(135deg, #0a1230, #1e3a8a); box-shadow: 0 6px 16px -6px rgba(10,18,48,0.6); }
+.day.today .day-head span { color: #1d4ed8; font-weight: 600; }
+.day.weekend { background: rgba(240,242,248,0.7); }
+.day .card { box-shadow: 0 1px 0 rgba(12,19,48,0.03), 0 8px 18px -16px rgba(12,19,48,0.45); }
+
+/* Thanh bên: nhịp tiến độ hôm nay */
+.focus { margin: 1.2rem 0.2rem 0.4rem; padding: 0.9rem 0.95rem; border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); }
+.focus:empty { display: none; }
+.f-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.78rem; color: #aeb8d6; }
+.f-top b { font-family: var(--display); font-size: 1.25rem; font-weight: 600; color: #fff; }
+.f-bar { height: 5px; border-radius: 5px; background: rgba(255,255,255,0.1); margin: 0.55rem 0 0.5rem; overflow: hidden; }
+.f-bar i { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--glow-cyan), var(--glow-lime)); box-shadow: 0 0 10px rgba(56,189,248,0.5); transition: width .5s ease; }
+.focus small { font-size: 0.76rem; color: #8f9cc2; }
+
+/* Phản hồi khi hoàn thành một việc */
+@keyframes checkPop { 0% { transform: scale(0.7); } 55% { transform: scale(1.18); } 100% { transform: scale(1); } }
+@keyframes rowGlow { 0% { background: rgba(190,242,100,0.22); } 100% { background: transparent; } }
+.task.just-done .check { animation: checkPop .42s cubic-bezier(.3,1.5,.5,1); }
+.task.just-done { animation: rowGlow 0.9s ease-out, fadeOut 0.5s 0.6s forwards; }
+
+/* Trạng thái rỗng dễ thương hơn */
+.empty { position: relative; padding: 1.8rem 1.4rem; color: var(--muted); }
+.empty b { font-family: var(--display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; }
+
+@media (max-width: 900px) {
+  .view .toolbar { padding: 1.1rem 1.1rem; border-radius: 18px; margin-top: 0.3rem; }
+  .pt { flex-basis: 100%; }
+  .pt .page-title { font-size: 1.6rem; }
+  .pt-sub { font-size: 0.85rem; }
+  .pt-num { padding-left: 0; border-left: none; min-width: 0; margin-right: 1.2rem; }
+  .pt-num b { font-size: 1.5rem; }
+  .day { min-height: 0; }
+  .col::before { left: 14px; right: 14px; }
+  .view .toolbar select { flex: 1 1 40%; min-width: 0; margin: 0; }
+  .view .toolbar .btn { padding: 0.45rem 0.7rem; }
+  .view .toolbar .scope { margin-right: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .task.just-done, .task.just-done .check { animation: none !important; } }
 </style>
 </head>
 <body>
@@ -714,6 +797,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     </nav>
     <h4>Dự án <button data-act="new-project" aria-label="Tạo dự án"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></h4>
     <nav class="nav" id="projectNav"></nav>
+    <div class="focus" id="sideFocus" aria-live="polite"></div>
     <div class="side-foot">
       <nav class="nav">
         <a href="/admin/crm"><i class="fa-solid fa-address-card" aria-hidden="true"></i> CRM Học Sinh</a>
@@ -901,8 +985,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       <div class="acts"><a href="${esc(i.href)}">Mở xử lý</a><button data-assign-inbox="${esc(i.key)}">Giao việc</button></div></div>`;
 
   function renderInbox() {
-    $('view-inbox').innerHTML = `<div class="toolbar"><h2 class="page-title">Việc từ hệ thống</h2></div>
-      <p style="color:var(--muted);margin:-0.5rem 0 1rem;max-width:62ch;">Các đầu việc tự sinh từ dữ liệu vận hành: đơn đăng ký, biên lai, đổi quà, học phí bị báo sai và lịch gọi phụ huynh. Chạm "Giao việc" để tạo một công việc có sẵn đường dẫn xử lý.</p>
+    $('view-inbox').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Việc từ hệ thống</h2><p class="pt-sub">Các đầu việc tự sinh từ dữ liệu vận hành: đơn đăng ký, biên lai, đổi quà, học phí bị báo sai và lịch gọi phụ huynh. Chạm "Giao việc" để tạo một công việc có sẵn đường dẫn xử lý.</p></div>${D.inbox.length ? `<div class="pt-num"><b>${D.inbox.reduce((s, i) => s + i.count, 0)}</b><span>đầu việc chờ</span></div>` : ''}</div>
       ${D.inbox.length ? `<div class="inbox-strip">${D.inbox.map(inboxCard).join('')}</div>` : '<div class="empty"><b>Không có gì tồn đọng.</b>Mọi đơn, biên lai và yêu cầu đều đã được xử lý.</div>'}
       ${(() => { const linked = D.tasks.filter(t => t.link && open(t)).sort(byDue); return linked.length ? `<div class="section-title"><h3>Đã giao từ hệ thống</h3><span>${linked.length}</span></div>${list(linked)}` : ''; })()}`;
   }
@@ -918,7 +1001,8 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       ['Chưa có hạn', mine.filter(t => !t.dueDate)]
     ].filter(g => g[1].length);
     const recentDone = D.tasks.filter(t => isMine(t) && t.status === 'done').sort((a, b) => new Date(b.completedAt || 0) - new Date(a.completedAt || 0)).slice(0, 5);
-    $('view-mine').innerHTML = `<div class="toolbar"><h2 class="page-title">Việc của tôi</h2><span style="color:var(--muted);font-size:0.88rem">${mine.length} việc đang mở</span></div>
+    const overdueN = mine.filter(t => t.dueDate && t.dueDate < today).length;
+    $('view-mine').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Việc của tôi</h2><p class="pt-sub">${mine.length ? `Bạn đang giữ ${mine.length} việc${overdueN ? `, trong đó ${overdueN} việc đã quá hạn. Xử lý việc quá hạn trước nhé.` : '. Mọi thứ đang đúng hạn.'}` : 'Không có việc nào đang mở.'}</p></div><div class="pt-num"><b>${mine.length}</b><span>đang mở</span></div>${recentDone.length ? `<div class="pt-num"><b>${recentDone.length}</b><span>mới xong</span></div>` : ''}</div>
       ${groups.length ? groups.map(([n, items, c]) => `<div class="section-title ${c || ''}"><h3>${n}</h3><span>${items.length}</span></div>${list(items)}`).join('') : '<div class="empty"><b>Bạn không có việc nào đang mở.</b>Tận hưởng khoảnh khắc này, hoặc nhận thêm việc từ Bảng công việc.</div>'}
       ${recentDone.length ? `<div class="section-title"><h3>Mới hoàn thành</h3></div>${list(recentDone)}` : ''}`;
   }
@@ -931,7 +1015,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     const p = projectBy(state.project);
     const pool = boardPool();
     $('view-board').innerHTML = `<div class="toolbar">
-        <h2 class="page-title">${p ? `<span class="dot" style="background:${esc(p.color)};width:14px;height:14px;border-radius:4px;margin-right:0.5rem;vertical-align:middle"></span>${esc(p.name)}` : 'Bảng công việc'}</h2>
+        <div class="pt"><h2 class="page-title">${p ? `<span class="dot" style="background:${esc(p.color)};width:14px;height:14px;border-radius:4px;margin-right:0.5rem;vertical-align:middle"></span>${esc(p.name)}` : 'Bảng công việc'}</h2><p class="pt-sub">${pool.filter(open).length} việc đang chạy, ${pool.filter(t => t.status === 'done').length} việc đã xong. Kéo thẻ sang cột khác để đổi trạng thái.</p></div>
         <label class="sr-only" for="fProj">Dự án</label><select id="fProj"><option value="">Mọi dự án</option>${D.projects.filter(x => !x.archived).map(x => `<option value="${esc(x.id)}" ${x.id === state.project ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select>
         <label class="sr-only" for="fWho">Người làm</label><select id="fWho"><option value="">Mọi người</option><option value="me" ${state.boardWho === 'me' ? 'selected' : ''}>Của tôi</option>${D.staff.map(s => `<option value="${esc(s.email)}" ${state.boardWho === s.email ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select>
         ${p ? `<button class="btn ghost" data-edit-project="${esc(p.id)}"><i class="fa-solid fa-pen" aria-hidden="true"></i> Sửa dự án</button>` : ''}
@@ -958,12 +1042,12 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     const pool = D.tasks.filter(t => (!state.project || t.projectId === state.project) && (state.scope === 'me' ? isMine(t) : true));
     const end = days[6];
     const label = `${days[0].slice(8)}/${days[0].slice(5, 7)} – ${end.slice(8)}/${end.slice(5, 7)}/${end.slice(0, 4)}`;
-    $('view-calendar').innerHTML = `<div class="toolbar"><h2 class="page-title">Lịch tuần</h2>
+    $('view-calendar').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Lịch tuần</h2><p class="pt-sub">${label}. Kéo thẻ sang ngày khác để dời hạn.</p></div>
         <div class="scope" role="group" aria-label="Phạm vi"><button data-scope="me" aria-pressed="${state.scope === 'me'}">Của tôi</button><button data-scope="all" aria-pressed="${state.scope === 'all'}">Cả nhóm</button></div>
         <button class="btn" data-week="-7" aria-label="Tuần trước"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
         <button class="btn" data-week="0">Tuần này</button>
         <button class="btn" data-week="7" aria-label="Tuần sau"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
-        <span style="color:var(--muted);font-size:0.86rem">${label}</span></div>
+        </div>
       <div class="week">${days.map(d => {
         const items = pool.filter(t => t.dueDate === d).sort((a, b) => (a.status === 'done') - (b.status === 'done') || byDue(a, b));
         const dt = new Date(d + 'T00:00:00');
@@ -985,6 +1069,14 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       const n = D.tasks.filter(t => t.projectId === p.id && open(t)).length;
       return `<button data-project="${esc(p.id)}" ${state.view === 'board' && state.project === p.id ? 'aria-current="page"' : ''}><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}<span class="n">${n || ''}</span></button>`;
     }).join('') || '<div style="font-size:0.8rem;color:var(--night-muted);padding:0.3rem 0.7rem">Chưa có dự án. Nhóm việc theo chương trình, chiến dịch…</div>';
+    (() => {
+      const todays = D.tasks.filter(t => isMine(t) && t.dueDate === today);
+      const overdue = mineOpen.filter(t => t.dueDate && t.dueDate < today).length;
+      const doneT = D.tasks.filter(t => isMine(t) && t.status === 'done' && t.completedAt && ymd(new Date(t.completedAt)) === today).length;
+      const total = todays.filter(open).length + overdue + doneT; const pct = total ? Math.round(doneT / total * 100) : 0;
+      const msg = !total ? 'Chưa có việc hạn hôm nay.' : doneT === total ? 'Xong hết việc hôm nay. Tuyệt vời!' : `Còn ${total - doneT} việc để về đích.`;
+      $('sideFocus').innerHTML = `<div class="f-top"><span>Hôm nay</span><b>${doneT}/${total}</b></div><div class="f-bar"><i style="width:${pct}%"></i></div><small>${msg}</small>`;
+    })();
     $('meAv').textContent = initials(D.me.name || D.me.email); $('meName').textContent = D.me.name || D.me.email;
     document.querySelectorAll('[data-view]').forEach(b => {
       const cur = b.dataset.view === state.view && !(state.view === 'board' && state.project);
