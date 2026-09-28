@@ -485,6 +485,49 @@ button { cursor: pointer; background: none; border: none; }
 .link-card i { color: #0284c7; }
 .scope button[aria-pressed="true"], .opt[aria-pressed="true"] { background: var(--night); }
 .ibox .acts a:first-child { background: var(--sky-grad); border-color: transparent; }
+
+/* ---------- Ngăn chi tiết công việc: sáng, thoáng ---------- */
+.scrim { background: rgba(15,23,42,0.16); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+.drawer { background: #f8fafc; }
+.drawer.open { box-shadow: -20px 0 50px rgba(15,23,42,0.14); }
+.d-head { background: #fff; border-bottom: 1px solid var(--line); padding: 1.1rem 1.3rem 1rem; position: relative; }
+.d-head::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, #0284c7, #2563eb 55%, #38bdf8); }
+.d-title { font-size: 1.35rem; }
+.d-body { padding: 1rem 1.2rem 2rem; }
+.props { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 0.3rem 1rem; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
+.props .row { border-bottom: 1px solid var(--line-2); padding: 0.65rem 0; grid-template-columns: 124px 1fr; }
+.props .row:last-child { border-bottom: none; }
+.row > label { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--muted); font-size: 0.8rem; padding-top: 0.4rem; align-self: start; }
+.row > label i { width: 14px; text-align: center; color: #94a3b8; font-size: 0.78rem; }
+.opt { background: #fff; border-color: var(--line); color: var(--ink-2); padding: 0.32rem 0.75rem; transition: all .12s; }
+.opt:hover { border-color: #7dd3fc; background: #f0f9ff; color: var(--ink); }
+/* Mục đang chọn: tô nhạt theo màu, không còn khối đen */
+.opt[aria-pressed="true"], .scope .opt[aria-pressed="true"] { background: #e0f2fe; border-color: #38bdf8; color: #0369a1; font-weight: 600; box-shadow: 0 0 0 1px #38bdf8 inset; }
+.opt.st-todo[aria-pressed="true"] { background: #f1f5f9; border-color: #94a3b8; color: #334155; box-shadow: 0 0 0 1px #94a3b8 inset; }
+.opt.st-doing[aria-pressed="true"] { background: #e0f2fe; border-color: #0284c7; color: #0369a1; box-shadow: 0 0 0 1px #0284c7 inset; }
+.opt.st-review[aria-pressed="true"] { background: #ede9fe; border-color: #8b5cf6; color: #6d28d9; box-shadow: 0 0 0 1px #8b5cf6 inset; }
+.opt.st-done[aria-pressed="true"] { background: #dcfce7; border-color: #22c55e; color: #15803d; box-shadow: 0 0 0 1px #22c55e inset; }
+.opt.p-low[aria-pressed="true"] { background: #f1f5f9; border-color: #94a3b8; color: #475569; box-shadow: 0 0 0 1px #94a3b8 inset; }
+.opt.p-high[aria-pressed="true"] { background: #fef3c7; border-color: #f59e0b; color: #b45309; box-shadow: 0 0 0 1px #f59e0b inset; }
+.opt.p-urgent[aria-pressed="true"] { background: #fee2e2; border-color: #ef4444; color: #b91c1c; box-shadow: 0 0 0 1px #ef4444 inset; }
+.opt[aria-pressed="true"] .av { background: #0284c7 !important; color: #fff !important; }
+.opt input[type=date], .opt-date { background: #fff; }
+.d-section { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 0.9rem 1rem; margin-top: 0.8rem; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
+.d-section h5 { font-size: 0.82rem; color: var(--ink); margin-bottom: 0.6rem; }
+.d-section h5 i { color: #0284c7; font-size: 0.8rem; width: 14px; text-align: center; }
+.desc { background: #f8fafc; border-color: var(--line-2); min-height: 80px; }
+.desc:focus { background: #fff; }
+.cl-add { background: #f8fafc; }
+.c-form textarea { background: #f8fafc; }
+.comment .bubble { background: #f0f9ff; }
+.hist li { padding: 0.25rem 0 0.25rem 0.9rem; position: relative; }
+.hist li::before { content: ""; position: absolute; left: 0; top: 0.72rem; width: 5px; height: 5px; border-radius: 50%; background: #cbd5e1; }
+.d-foot { background: #fff; border-top: 1px solid var(--line); }
+.d-close:hover { background: #f1f5f9; }
+@media (max-width: 900px) {
+  .props .row { grid-template-columns: 1fr; gap: 0.4rem; }
+  .row > label { padding-top: 0; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -952,24 +995,26 @@ button { cursor: pointer; background: none; border: none; }
       </div>
       <div class="d-body">
         ${t.link && t.link.href ? `<a class="link-card" href="${esc(t.link.href)}"><i class="fa-solid fa-link" aria-hidden="true"></i><span>${esc(t.link.label || 'Mở nơi xử lý')}</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" style="margin-left:auto;color:var(--muted)"></i></a>` : ''}
-        <div class="row"><label>Trạng thái</label><div class="opts">${STATUS.map(([k, l]) => `<button class="opt st-${k}" data-set="status" data-v="${k}" aria-pressed="${t.status === k}">${l}</button>`).join('')}</div></div>
-        <div class="row"><label>Người làm</label><div class="opts">${D.staff.map(s => `<button class="opt" data-assignee="${esc(s.email)}" aria-pressed="${t.assignees.includes(s.email)}"><span class="av" style="width:20px;height:20px;font-size:0.56rem;border:none">${esc(initials(s.name))}</span>${esc(s.email === D.me.email ? 'Tôi' : s.name)}</button>`).join('')}</div></div>
-        <div class="row"><label>Hạn chót</label>${dueOptions(t)}</div>
-        <div class="row"><label>Ưu tiên</label><div class="opts">${PRIO.map(([k, l]) => `<button class="opt p-${k}" data-set="priority" data-v="${k}" aria-pressed="${t.priority === k}">${l}</button>`).join('')}</div></div>
-        <div class="row"><label>Dự án</label><div class="opts">${D.projects.filter(p => !p.archived || p.id === t.projectId).map(p => `<button class="opt" data-set="projectId" data-v="${esc(p.id)}" aria-pressed="${t.projectId === p.id}"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</button>`).join('')}<button class="opt" data-set="projectId" data-v="" aria-pressed="${!t.projectId}">Không</button><button class="opt" data-act="new-project" style="border-style:dashed;color:var(--muted)"><i class="fa-solid fa-plus" aria-hidden="true"></i> Dự án mới</button></div></div>
-        <div class="row"><label>Lặp lại</label><div class="opts">${RECUR.map(([k, l]) => `<button class="opt" data-set="recurrence" data-v="${k}" aria-pressed="${t.recurrence === k}">${l}</button>`).join('')}</div></div>
+        <div class="props">
+        <div class="row"><label><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>Trạng thái</label><div class="opts">${STATUS.map(([k, l]) => `<button class="opt st-${k}" data-set="status" data-v="${k}" aria-pressed="${t.status === k}">${l}</button>`).join('')}</div></div>
+        <div class="row"><label><i class="fa-solid fa-user-group" aria-hidden="true"></i>Người làm</label><div class="opts">${D.staff.map(s => `<button class="opt" data-assignee="${esc(s.email)}" aria-pressed="${t.assignees.includes(s.email)}"><span class="av" style="width:20px;height:20px;font-size:0.56rem;border:none">${esc(initials(s.name))}</span>${esc(s.email === D.me.email ? 'Tôi' : s.name)}</button>`).join('')}</div></div>
+        <div class="row"><label><i class="fa-solid fa-calendar-day" aria-hidden="true"></i>Hạn chót</label>${dueOptions(t)}</div>
+        <div class="row"><label><i class="fa-solid fa-flag" aria-hidden="true"></i>Ưu tiên</label><div class="opts">${PRIO.map(([k, l]) => `<button class="opt p-${k}" data-set="priority" data-v="${k}" aria-pressed="${t.priority === k}">${l}</button>`).join('')}</div></div>
+        <div class="row"><label><i class="fa-solid fa-folder" aria-hidden="true"></i>Dự án</label><div class="opts">${D.projects.filter(p => !p.archived || p.id === t.projectId).map(p => `<button class="opt" data-set="projectId" data-v="${esc(p.id)}" aria-pressed="${t.projectId === p.id}"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</button>`).join('')}<button class="opt" data-set="projectId" data-v="" aria-pressed="${!t.projectId}">Không</button><button class="opt" data-act="new-project" style="border-style:dashed;color:var(--muted)"><i class="fa-solid fa-plus" aria-hidden="true"></i> Dự án mới</button></div></div>
+        <div class="row"><label><i class="fa-solid fa-repeat" aria-hidden="true"></i>Lặp lại</label><div class="opts">${RECUR.map(([k, l]) => `<button class="opt" data-set="recurrence" data-v="${k}" aria-pressed="${t.recurrence === k}">${l}</button>`).join('')}</div></div>
+        </div>
 
-        <div class="d-section"><h5>Mô tả</h5><textarea class="desc" id="dDesc" placeholder="Ghi chú, đường dẫn tài liệu, yêu cầu cụ thể…" maxlength="5000">${esc(t.description)}</textarea></div>
+        <div class="d-section"><h5><i class="fa-solid fa-align-left" aria-hidden="true"></i>Mô tả</h5><textarea class="desc" id="dDesc" placeholder="Ghi chú, đường dẫn tài liệu, yêu cầu cụ thể…" maxlength="5000">${esc(t.description)}</textarea></div>
 
-        <div class="d-section"><h5>Các bước <span>${t.checklist.length ? done + '/' + t.checklist.length : ''}</span></h5>
+        <div class="d-section"><h5><i class="fa-solid fa-list-check" aria-hidden="true"></i>Các bước <span>${t.checklist.length ? done + '/' + t.checklist.length : ''}</span></h5>
           ${t.checklist.length ? `<div class="bar"><i style="width:${Math.round(done / t.checklist.length * 100)}%"></i></div>` : ''}
           ${t.checklist.map(i => `<div class="cl-item ${i.done ? 'done' : ''}"><button class="check ${i.done ? 'on' : ''}" data-cl-toggle="${esc(i.id)}" aria-label="${i.done ? 'Bỏ đánh dấu' : 'Xong bước này'}"><i class="fa-solid fa-check" aria-hidden="true"></i></button><span>${esc(i.text)}</span><button class="x" data-cl-del="${esc(i.id)}" aria-label="Xoá bước"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>`).join('')}
           <input class="cl-add" id="clAdd" placeholder="+ Thêm bước, nhấn Enter" maxlength="200"></div>
 
-        <div class="d-section"><h5>Trao đổi</h5><div id="cList"></div>
+        <div class="d-section"><h5><i class="fa-solid fa-comments" aria-hidden="true"></i>Trao đổi</h5><div id="cList"></div>
           <form class="c-form" id="cForm"><label class="sr-only" for="cText">Viết bình luận</label><textarea id="cText" rows="1" placeholder="Viết trao đổi… (Enter để gửi)" maxlength="2000"></textarea><button class="btn primary" type="submit" aria-label="Gửi"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button></form></div>
 
-        <div class="d-section"><h5>Lịch sử</h5><ul class="hist">${t.history.slice().reverse().slice(0, 12).map(h => `<li><b>${esc(h.by)}</b> ${esc(h.text.charAt(0).toLowerCase() + h.text.slice(1))} · ${esc(rel(h.at))}</li>`).join('') || '<li>—</li>'}</ul></div>
+        <div class="d-section"><h5><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Lịch sử</h5><ul class="hist">${t.history.slice().reverse().slice(0, 12).map(h => `<li><b>${esc(h.by)}</b> ${esc(h.text.charAt(0).toLowerCase() + h.text.slice(1))} · ${esc(rel(h.at))}</li>`).join('') || '<li>—</li>'}</ul></div>
       </div>
       <div class="d-foot"><span>Tạo bởi ${esc(t.createdByName || staffBy(t.createdBy).name)} · ${esc(rel(t.createdAt))}</span>${t.createdBy === D.me.email || D.me.role === 'super' ? `<button class="btn ghost danger" data-del="${esc(t.id)}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xoá</button>` : ''}</div>`;
     renderComments(); autosize($('dTitle'));
