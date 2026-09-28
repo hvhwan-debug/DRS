@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { findGift } = require("../_shared/giftCatalog");
-const { getPointsBalance } = require("../_shared/memberTier");
+const { getPointsBalance, redemptionPoints } = require("../_shared/memberTier");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 
@@ -79,6 +79,7 @@ module.exports = async function (context, req) {
       giftId,
       giftName: gift.name,
       giftCost: gift.cost, // số ĐIỂM của lần đổi này; điểm đã dùng = tổng giftCost các yêu cầu chưa huỷ
+      pointsBased: true, // đánh dấu yêu cầu theo cơ chế điểm (phân biệt với yêu cầu cũ theo mốc học phí VNĐ)
       status: "pending", // pending (Chờ duyệt) -> shipping (Đang vận chuyển) -> fulfilled (Đã trao quà) | cancelled (Huỷ)
       requestedAt: new Date().toISOString()
     });
@@ -94,8 +95,9 @@ module.exports = async function (context, req) {
       rows.sort((a, b) => (a.rowKey < b.rowKey ? -1 : a.rowKey > b.rowKey ? 1 : 0));
       let cumulative = 0, spentAll = 0;
       for (const r of rows) {
-        spentAll += Number(r.giftCost) || 0;
-        if (r.rowKey <= rowKey) cumulative += Number(r.giftCost) || 0;
+        const pts = redemptionPoints(r);
+        spentAll += pts;
+        if (r.rowKey <= rowKey) cumulative += pts;
       }
       return { ok: cumulative <= earned, remaining: Math.max(0, earned - spentAll) };
     };

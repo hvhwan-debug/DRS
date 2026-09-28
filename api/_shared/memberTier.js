@@ -73,13 +73,28 @@ function describeEarnRate(tier) {
 // lệch: huỷ 2 lần thì hoàn điểm 2 lần, lỗi giữa chừng thì mất điểm... Tính từ chính các yêu cầu
 // đổi quà thì luôn khớp: huỷ yêu cầu = tự hoàn điểm, không cần bước cộng/trừ riêng.
 const REDEMPTIONS_TABLE = "GiftRedemptions";
+
+// Mốc chuyển đổi quà từ "mốc học phí (VNĐ)" sang "điểm tích lũy" — thời điểm bản 4b73fd7 triển khai
+// xong trên Azure. Yêu cầu đổi quà gửi TRƯỚC mốc này lưu giftCost theo thang VNĐ (vd. 15.000.000đ)
+// và KHÔNG hề trừ điểm lúc đó, nên không được tính là điểm đã dùng — nếu không 1 yêu cầu cũ sẽ bị
+// hiểu thành "đã dùng 15 triệu điểm" và số điểm khả dụng của thành viên luôn về 0.
+const POINTS_REDEMPTION_CUTOVER = Date.parse("2026-09-25T23:49:36Z");
+function isLegacyTuitionRedemption(r) {
+  if (!r || r.pointsBased === true) return false;
+  const at = Date.parse(r.requestedAt || "") || Number(String(r.rowKey || "").split("-")[0]) || 0;
+  return at > 0 && at < POINTS_REDEMPTION_CUTOVER;
+}
+// Số điểm 1 yêu cầu đổi quà thực sự tiêu (0 nếu đã huỷ hoặc là yêu cầu cũ theo mốc học phí)
+function redemptionPoints(r) {
+  if ((r.status || "pending") === "cancelled") return 0;
+  if (isLegacyTuitionRedemption(r)) return 0;
+  return Number(r.giftCost) || 0;
+}
 async function getSpentPoints(email) {
   const table = await getTableClient(REDEMPTIONS_TABLE);
   let spent = 0;
   const it = table.listEntities({ queryOptions: { filter: `PartitionKey eq '${String(email).replace(/'/g, "''")}'` } });
-  for await (const r of it) {
-    if ((r.status || "pending") !== "cancelled") spent += Number(r.giftCost) || 0;
-  }
+  for await (const r of it) spent += redemptionPoints(r);
   return spent;
 }
 
@@ -298,5 +313,4 @@ module.exports = {
   adjustSpentPoints,
   getPointsBalance,
   recomputeTuitionPoints,
-  getEarnedPointsSum
-};
+  getEarnedPointsSum, redemptionPoints, isLegacyTuitionRedemption };

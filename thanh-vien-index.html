@@ -1548,7 +1548,7 @@
           points: Number(p.pointsEarned) || 0,
           sign: '+'
         }));
-        const pointsSpendRows = giftRedemptions.filter(r => r.status !== 'cancelled').map(r => ({
+        const pointsSpendRows = giftRedemptions.filter(r => r.status !== 'cancelled' && !r.legacyTuitionGift).map(r => ({
           date: r.requestedAt,
           label: `Đổi quà: ${r.giftName}`,
           amountLabel: '—',

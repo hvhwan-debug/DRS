@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
-const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum, recomputeTuitionPoints } = require("../_shared/memberTier");
+const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum, recomputeTuitionPoints, isLegacyTuitionRedemption } = require("../_shared/memberTier");
 const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
 const { getMemberDisplayName, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
@@ -292,7 +292,9 @@ module.exports = async function (context, req) {
           id: entity.rowKey,
           giftId: entity.giftId,
           giftName: entity.giftName,
-          giftCost: Number(entity.giftCost) || 0,
+          // Yêu cầu cũ theo mốc học phí (VNĐ) không tiêu điểm -> báo 0 điểm để lịch sử điểm không hiện "-15.000.000 điểm"
+          giftCost: isLegacyTuitionRedemption(entity) ? 0 : (Number(entity.giftCost) || 0),
+          legacyTuitionGift: isLegacyTuitionRedemption(entity),
           status: entity.status || "pending",
           requestedAt: entity.requestedAt,
           shippedAt: entity.shippedAt || null,

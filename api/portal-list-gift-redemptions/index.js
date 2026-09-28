@@ -1,5 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
+const { isLegacyTuitionRedemption } = require("../_shared/memberTier");
 
 const REDEMPTIONS_TABLE = "GiftRedemptions";
 
@@ -18,6 +19,7 @@ module.exports = async function (context, req) {
         giftId: entity.giftId,
         giftName: entity.giftName,
         giftCost: entity.giftCost,
+        legacyTuitionGift: isLegacyTuitionRedemption(entity),
         status: entity.status || "pending",
         requestedAt: entity.requestedAt,
         shippedAt: entity.shippedAt || null,

@@ -2469,7 +2469,7 @@
           <tr>
             <td>${escapeHtml(r.email)}</td>
             <td style="font-weight:700;">${escapeHtml(r.giftName)}</td>
-            <td>${Number(r.giftCost).toLocaleString('vi-VN')} điểm</td>
+            <td>${r.legacyTuitionGift ? `<span title="Yêu cầu từ trước khi đổi sang cơ chế điểm — mở khoá theo mốc học phí, không trừ điểm">Mốc ${Number(r.giftCost).toLocaleString('vi-VN')}đ<br><small style="color:var(--text-muted);">(cơ chế cũ, không trừ điểm)</small></span>` : `${Number(r.giftCost).toLocaleString('vi-VN')} điểm`}</td>
             <td>${formatDate(r.requestedAt)}</td>
             <td>${giftStatusControlHtml(r)}${r.status === 'cancelled' && r.cancelReason ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">${escapeHtml(r.cancelReason)}</div>` : ''}</td>
           </tr>`;
