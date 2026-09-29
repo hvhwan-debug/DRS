@@ -202,6 +202,106 @@
       .form-panel { padding: 2rem 1.1rem 2.6rem; }
       .form-title { font-size: 1.55rem; }
     }
+    /* ===== Đăng nhập thành viên · bản 3 =====
+       Màu theo bộ nhận diện (chân trang wvn.vn): #0f172a → #1e3a8a → #0284c7, nhấn #38bdf8 / #7dd3fc */
+    .login-wrap { min-height: calc(100vh - 72px); display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); flex-wrap: nowrap; }
+
+    /* Khung trái: ảnh phủ kín, chỉ tối dần ở vùng có chữ */
+    .brand-panel { position: relative; isolation: isolate; overflow: hidden; padding: 0; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 0; background: #0f172a; }
+    .brand-panel-photo { position: absolute; inset: 0; z-index: -2; background: url("images/uploads/co-giao-va-hoc-sinh-cung-hoc-ban-tron.webp") 58% 35% / cover no-repeat;
+      animation: lgZoom 18s ease-out both; }
+    @supports not (background-image: url("x.webp")) { .brand-panel-photo { background-image: url("images/uploads/co-giao-va-hoc-sinh-cung-hoc-ban-tron.jpg"); } }
+    @keyframes lgZoom { from { transform: scale(1.06); } to { transform: scale(1); } }
+    .brand-panel::before { content: ""; position: absolute; inset: 0; z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(15,23,42,0) 30%, rgba(15,23,42,0.55) 55%, rgba(15,23,42,0.93) 82%, #0f172a 100%),
+        linear-gradient(115deg, rgba(30,58,138,0.35) 0%, rgba(2,132,199,0.08) 60%, transparent 100%); }
+    .brand-panel::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, #38bdf8, #7dd3fc 50%, #60a5fa); }
+    .brand-panel-body { position: relative; padding: 2.6rem clamp(1.6rem, 4vw, 3.4rem) 2.8rem; max-width: 680px; }
+    .brand-panel-badge { display: inline-flex; align-items: center; gap: 0.45rem; margin-bottom: 1rem; padding: 0.38rem 0.95rem;
+      background: rgba(15,23,42,0.5); border: 1px solid rgba(125,211,252,0.5); color: #e0f2fe; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1px;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .brand-panel-badge i { color: #7dd3fc; font-size: 0.7rem; }
+    .brand-panel-title { font-size: clamp(1.9rem, 2.6vw, 2.6rem); font-weight: 800; line-height: 1.14; letter-spacing: -0.035em; max-width: 20ch; margin-bottom: 0.8rem; color: #fff; text-wrap: balance; text-shadow: 0 2px 30px rgba(15,23,42,0.55); }
+    .brand-panel-desc { color: #cfe3f7; font-size: 0.98rem; line-height: 1.65; max-width: 46ch; }
+    .brand-perks { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+    .brand-perks li { display: flex; align-items: center; gap: 0.7rem; padding: 0.75rem 0.85rem; border-radius: 14px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .brand-perks i { width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px; display: grid; place-items: center; font-size: 0.82rem; color: #fff;
+      background: linear-gradient(135deg, #1e3a8a, #0284c7); box-shadow: 0 6px 16px -8px rgba(2,132,199,0.9); }
+    .brand-perks b { display: block; font-size: 0.88rem; font-weight: 600; color: #fff; line-height: 1.3; }
+    .brand-perks span { display: block; font-size: 0.76rem; line-height: 1.35; color: #b6cbe6; }
+
+    /* Khung phải: thẻ đăng nhập nổi trên nền có ánh xanh thương hiệu */
+    .form-panel { position: relative; min-width: 0; padding: 2.4rem clamp(1.2rem, 4vw, 3rem); display: flex; align-items: center; justify-content: center;
+      background:
+        radial-gradient(60% 50% at 100% 0%, rgba(56,189,248,0.16), transparent 70%),
+        radial-gradient(55% 45% at 0% 100%, rgba(30,58,138,0.10), transparent 70%),
+        #f4f7fb; }
+    .form-inner { width: 100%; max-width: 440px; margin: 0; background: #fff; border-radius: 24px; padding: 2.4rem 2.4rem 2rem;
+      border: 1px solid #e2e8f0; box-shadow: 0 1px 0 rgba(15,23,42,0.03), 0 30px 60px -34px rgba(30,58,138,0.45); position: relative; overflow: hidden; }
+    .form-inner::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: linear-gradient(90deg, #1e3a8a, #0284c7 55%, #38bdf8); }
+    .form-eyebrow { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; font-weight: 600; color: #0369a1; letter-spacing: 0; margin-bottom: 0.9rem;
+      background: #e0f2fe; border-radius: 999px; padding: 0.3rem 0.75rem; }
+    .form-title { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em; color: #0f172a; margin-bottom: 0.35rem; }
+    .form-sub { font-size: 0.92rem; color: #64748b; margin-bottom: 1.6rem; line-height: 1.55; }
+    .form-field label { font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; }
+    .form-field input { border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc no-repeat 0.95rem center / 16px; padding: 0.8rem 0.95rem 0.8rem 2.7rem;
+      min-height: 50px; margin-bottom: 1rem; font-size: 0.97rem; transition: border-color .15s, box-shadow .15s, background-color .15s; }
+    .form-field input:hover { border-color: #cbd5e1; }
+    .form-field input:focus { outline: none; background-color: #fff; border-color: #0284c7; box-shadow: 0 0 0 4px rgba(2,132,199,0.14); border-bottom-color: #0284c7; }
+    #email { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m3 7 9 6 9-6'/%3E%3C/svg%3E"); }
+    #password, #newPassword, #newPassword2 { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E"); padding-right: 3rem; }
+    #otp { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z'/%3E%3C/svg%3E"); letter-spacing: 0.35em; font-weight: 600; }
+    .lg-pw { position: relative; display: block; }
+    .lg-eye { position: absolute; right: 0.45rem; top: 5px; width: 40px; height: 40px; border: none; background: none; border-radius: 10px; color: #94a3b8; cursor: pointer; display: grid; place-items: center; }
+    .lg-eye:hover { color: #0369a1; background: #f1f5f9; }
+    .lg-eye:focus-visible { outline: 2px solid #0284c7; outline-offset: 1px; }
+    .signup-link { margin: -0.3rem 0 1.2rem !important; font-size: 0.86rem; text-align: right; }
+    .signup-link a { color: #0369a1; font-weight: 600; }
+    .btn-continue { min-height: 52px; border-radius: 12px; font-weight: 700; letter-spacing: 0.1px; background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
+      box-shadow: 0 14px 28px -14px rgba(30,58,138,0.8); transition: transform .15s, box-shadow .15s, filter .15s; }
+    .btn-continue:hover { background: linear-gradient(135deg, #1e40af 0%, #0369a1 100%); transform: translateY(-1px); box-shadow: 0 18px 30px -14px rgba(30,58,138,0.85); }
+    .btn-continue:active { transform: none; }
+    .lg-divider { display: flex; align-items: center; gap: 0.8rem; margin: 1.5rem 0 1rem; color: #94a3b8; font-size: 0.78rem; }
+    .lg-divider::before, .lg-divider::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
+    .lg-signup { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; min-height: 46px; border-radius: 12px; border: 1px solid #e2e8f0;
+      color: #0f172a; font-weight: 600; font-size: 0.92rem; text-decoration: none; background: #fff; transition: border-color .15s, background .15s; }
+    .lg-signup:hover { border-color: #7dd3fc; background: #f0f9ff; }
+    .lg-signup i { color: #0284c7; }
+    .no-access { margin-top: 1.1rem; font-size: 0.84rem; }
+    .no-access a { color: #64748b; }
+    .no-access a i { color: #0284c7; margin-right: 0.3rem; }
+    .form-footer-links { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid #eef2f7; gap: 1.2rem; font-size: 0.78rem; }
+    @media (prefers-reduced-motion: reduce) { .brand-panel-photo { animation: none; } }
+
+    @media (min-width: 961px) and (max-height: 780px) {
+      .brand-panel-desc { display: none; }
+      .brand-panel-title { font-size: 1.8rem; max-width: 22ch; }
+      .brand-perks { margin-top: 1.1rem; }
+      .brand-perks span { font-size: 0; line-height: 0; }
+      .brand-perks span b { font-size: 0.86rem; line-height: 1.3; }
+      .brand-panel-body { padding-bottom: 2rem; }
+      .brand-perks li { padding: 0.6rem 0.75rem; }
+      .form-inner { padding: 1.8rem 2rem 1.5rem; }
+      .form-sub { margin-bottom: 1.1rem; }
+      .lg-divider { margin: 1.1rem 0 0.8rem; }
+      .form-footer-links { margin-top: 1rem; padding-top: 0.8rem; }
+    }
+    @media (max-width: 960px) {
+      .login-wrap { grid-template-columns: 1fr; min-height: 0; }
+      .brand-panel { min-height: 380px; }
+      .brand-panel-body { padding: 7rem 1.4rem 1.8rem; }
+      .form-panel { padding: 1.6rem 1rem 2.6rem; margin-top: -1.2rem; background: #f4f7fb; }
+      .form-inner { max-width: 520px; padding: 1.8rem 1.4rem 1.5rem; }
+    }
+    @media (max-width: 560px) {
+      .brand-panel { min-height: 0; }
+      .brand-panel-body { padding: 8.5rem 1.2rem 1.6rem; }
+      .brand-panel-title { font-size: 1.5rem; }
+      .brand-panel-desc, .brand-perks { display: none; }
+      .form-inner { border-radius: 20px; }
+    }
   </style>
   <style id="brand-full-logo-style">
     .brand-wrap { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; }
@@ -265,18 +365,27 @@
   <div class="login-wrap">
 
     <div class="brand-panel">
-      <div>
-        <div class="brand-panel-badge">KHU VỰC THÀNH VIÊN</div>
-        <h1 class="brand-panel-title">Đồng hành cùng chúng tôi vì giáo dục công bằng</h1>
-        <p class="brand-panel-desc">Đăng nhập để theo dõi hoạt động đã tham gia, lịch sử đóng góp và nhận thông tin mới nhất từ Mạng Lưới Tri Thức Việt Nam.</p>
+      <div class="brand-panel-photo" aria-hidden="true"></div>
+      <div class="brand-panel-body">
+        <div class="brand-panel-badge"><i class="fa-solid fa-star" aria-hidden="true"></i> Khu vực thành viên</div>
+        <h1 class="brand-panel-title">Cùng con lớn lên, từng bước một</h1>
+        <p class="brand-panel-desc">Tạo tài khoản miễn phí trong 1 phút để đồng hành cùng Tri thức Việt: theo dõi việc học của con, học phí minh bạch và tích điểm đổi quà.</p>
+        <ul class="brand-perks">
+          <li><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span><b>Lịch học của con</b>Giờ học, địa điểm, giáo viên</span></li>
+          <li><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i><span><b>Bảng điểm &amp; nhận xét</b>Tiến bộ của con qua từng buổi</span></li>
+          <li><i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i><span><b>Học phí &amp; hoá đơn</b>Minh bạch từng khoản đã đóng</span></li>
+          <li><i class="fa-solid fa-gift" aria-hidden="true"></i><span><b>Điểm tích luỹ &amp; quà</b>Hạng thành viên, đổi quà tặng</span></li>
+        </ul>
       </div>
     </div>
 
     <div class="form-panel">
       <div class="form-inner">
-        <div class="form-eyebrow">WVN MEMBERS</div>
-        <h2 class="form-title">Đăng Ký Tài Khoản</h2>
-        <p class="form-sub">Tạo tài khoản để theo dõi đăng ký, quyên góp và điểm/nhận xét của con em bạn</p>
+        <div class="form-eyebrow"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> Thành viên Tri thức Việt</div>
+        <h2 class="form-title">Tạo tài khoản</h2>
+        <p class="form-sub">Nhập email bạn dùng khi đăng ký học cho con, để mọi thông tin tự khớp vào tài khoản.</p>
+        <div class="rg-ref" id="refNote" hidden><i class="fa-solid fa-heart" aria-hidden="true"></i><span>Bạn được một gia đình thành viên giới thiệu. Chào mừng bạn đến với Tri thức Việt!</span></div>
+        <ol class="rg-steps" aria-label="Các bước tạo tài khoản"><li class="on" data-rg="1"><b>1</b>Email</li><li data-rg="2"><b>2</b>Mã xác nhận</li><li data-rg="3"><b>3</b>Mật khẩu</li><li data-rg="4"><b>4</b>Thông tin</li></ol>
 
         <form id="loginForm">
           <div class="form-field" id="emailStep">
@@ -317,12 +426,11 @@
           <button type="submit" class="btn-continue" id="loginSubmitBtn">Đăng Ký</button>
         </form>
 
-        <p style="text-align:center; font-size:0.88rem; color:var(--text-muted); margin-top:1rem;">
-          Đã có tài khoản? <a href="dang-nhap.html" style="color:#0284c7; font-weight:600; text-decoration:underline;">Đăng nhập</a>
-        </p>
+        <div class="lg-divider">Đã có tài khoản?</div>
+        <a class="lg-signup" href="dang-nhap.html"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Đăng nhập</a>
 
         <span class="no-access" id="helpLinks">
-          <a href="lien-he.html">Cần hỗ trợ? Liên hệ chúng tôi</a>
+          <a href="lien-he.html"><i class="fa-regular fa-circle-question" aria-hidden="true"></i>Cần hỗ trợ? Liên hệ chúng tôi</a>
         </span>
 
         <div class="form-footer-links">
@@ -591,5 +699,45 @@
     }
   </script>
 
+  <style>
+    .rg-ref { display: flex; gap: 0.6rem; align-items: flex-start; background: #fdf2f8; border: 1px solid #fbcfe8; color: #9d174d; border-radius: 12px; padding: 0.7rem 0.85rem; font-size: 0.86rem; margin: -0.4rem 0 1.1rem; }
+    .rg-ref[hidden] { display: none; }
+    .rg-ref i { margin-top: 0.15rem; }
+    .rg-steps { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; margin: 0 0 1.4rem; padding: 0; counter-reset: s; }
+    .rg-steps li { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: #94a3b8; font-weight: 500; position: relative; text-align: center; }
+    .rg-steps li::after { content: ""; position: absolute; top: 13px; left: calc(50% + 16px); right: calc(-50% + 16px); height: 2px; background: #e2e8f0; border-radius: 2px; }
+    .rg-steps li:last-child::after { display: none; }
+    .rg-steps b { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 0.75rem; background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; }
+    .rg-steps li.on { color: #0f172a; } .rg-steps li.on b { background: #0f172a; color: #fff; border-color: #0f172a; box-shadow: 0 0 0 4px rgba(15,23,42,0.08); }
+    .rg-steps li.done b { background: #0284c7; color: #fff; border-color: #0284c7; } .rg-steps li.done::after { background: #0284c7; }
+  </style>
+  <script>
+    (function () {
+      ['newPassword', 'newPassword2'].forEach(function (id) {
+        var inp = document.getElementById(id); if (!inp) return;
+        var wrap = document.createElement('span'); wrap.className = 'lg-pw';
+        inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'lg-eye';
+        b.setAttribute('aria-label', 'Hiện mật khẩu'); b.innerHTML = '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
+        b.addEventListener('click', function () {
+          var show = inp.type === 'password'; inp.type = show ? 'text' : 'password';
+          b.setAttribute('aria-label', show ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+          b.innerHTML = '<i class="fa-regular ' + (show ? 'fa-eye-slash' : 'fa-eye') + '" aria-hidden="true"></i>';
+        });
+        wrap.appendChild(b);
+      });
+      try { if (new URLSearchParams(location.search).get('ref')) document.getElementById('refNote').hidden = false; } catch (e) {}
+      // Thanh bước: tự sáng theo ô đang hiện (không đụng vào logic đăng ký)
+      var steps = [['emailStep', 1], ['otpStep', 2], ['setPasswordStep', 3], ['profileStep', 4]];
+      function sync() {
+        var cur = 1;
+        steps.forEach(function (s) { var el = document.getElementById(s[0]); if (el && el.style.display !== 'none' && s[1] > 1) cur = s[1]; });
+        document.querySelectorAll('.rg-steps li').forEach(function (li) { var n = Number(li.dataset.rg); li.classList.toggle('on', n === cur); li.classList.toggle('done', n < cur); });
+      }
+      var mo = new MutationObserver(sync);
+      steps.forEach(function (s) { var el = document.getElementById(s[0]); if (el) mo.observe(el, { attributes: true, attributeFilter: ['style'] }); });
+      sync();
+    })();
+  </script>
 </body>
 </html>
