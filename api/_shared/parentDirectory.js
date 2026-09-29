@@ -63,6 +63,9 @@ async function buildParentDirectory() {
             school: pick(data, ["truong_lop"]),
             address: pick(data, ["dia_chi", "phuong_xa"]),
             formType: r.formType || "",
+            program: pick(data, ["chuong_trinh", "program", "khoa_hoc"]) || r.formType || "",
+            status: r.status || "pending",
+            email,
             submittedAt: r.submittedAt || null
           };
         }

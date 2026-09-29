@@ -30,6 +30,12 @@ module.exports = async function (context, req) {
     const students = await getTableClient("Students");
     let student = null;
     for await (const e of students.listEntities({ queryOptions: { filter: `RowKey eq '${studentId}'` } })) { student = e; break; }
+    if (!student && /^lead-/.test(studentId)) {
+      const { buildParentDirectory } = require("../_shared/parentDirectory");
+      const { leadIdFor } = require("../_shared/crm");
+      const dir = await buildParentDirectory();
+      for (const [ck, c] of Object.entries(dir.children || {})) if (leadIdFor(ck) === studentId) { student = { partitionKey: c.email, studentName: c.childName, rowKey: studentId }; break; }
+    }
     if (!student) { context.res.status = 404; context.res.body = { success: false, message: "Không tìm thấy học sinh." }; return; }
     const to = String(student.partitionKey || "").toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) { context.res.status = 400; context.res.body = { success: false, message: "Học sinh này chưa có email phụ huynh hợp lệ." }; return; }

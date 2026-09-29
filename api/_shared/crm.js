@@ -30,6 +30,13 @@ function cleanTags(input) {
 
 // Id học sinh do hệ thống cũ sinh ra dạng "<timestamp>-<chuỗi ngẫu nhiên>". Chặn ký tự lạ để
 // không thể dùng làm khoá bảng bất thường (Azure Table cấm / \ # ? trong khoá).
+// Khách tiềm năng (đơn đăng ký chưa thành học sinh) có id "lead-<16 hex>" sinh ổn định từ email + tên trẻ,
+// để hồ sơ chăm sóc & lịch sử gắn với họ không mất khi họ trở thành học sinh chính thức.
+function leadIdFor(childKeyStr) {
+  return "lead-" + require("crypto").createHash("sha1").update(String(childKeyStr)).digest("hex").slice(0, 16);
+}
+const LEAVE_STAGES = ["tam-nghi", "da-nghi"];
+
 function isValidStudentId(id) {
   return /^[A-Za-z0-9_-]{1,80}$/.test(id);
 }
@@ -37,5 +44,5 @@ function isValidStudentId(id) {
 module.exports = {
   CRM_TABLE, INTERACTIONS_TABLE, CRM_PARTITION,
   STAGES, DEFAULT_STAGE, PRIORITIES, INTERACTION_TYPES,
-  clean, cleanDate, cleanTags, isValidStudentId
+  clean, cleanDate, cleanTags, isValidStudentId, leadIdFor, LEAVE_STAGES
 };

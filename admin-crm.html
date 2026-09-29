@@ -342,7 +342,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 @media (max-width: 600px) { .brand-crm { padding: 4px 9px; } .brand-crm .crm-logo { height: 24px; } }
 .brand-mini .word small.tag { margin: 0; padding: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 2.6px; line-height: 1; }
 </style>
-<link rel="stylesheet" href="/admin-theme.css?v=20260929b">
+<link rel="stylesheet" href="/admin-theme.css?v=20260930a">
 <link rel="stylesheet" href="/wvn-luxe.css?v=20260929e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -401,7 +401,10 @@ details.more > summary::-webkit-details-marker { display: none; }
         <option value="nocontact">Chưa liên hệ hơn 30 ngày</option>
         <option value="absent">Vắng nhiều (30 ngày qua)</option>
         <option value="tuition">Học phí chờ xác nhận</option>
+        <option value="gradedrop">Điểm đi xuống</option>
+        <option value="lead">Đơn đăng ký chưa xử lý</option>
       </select>
+      <button type="button" class="btn mine-toggle" id="mineToggle" aria-pressed="false"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Tôi phụ trách</button>
       <span class="spacer"></span>
       <span class="result" id="listResult"></span>
       <button class="btn" id="exportBtn" hidden><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Xuất Excel</button>
@@ -410,6 +413,7 @@ details.more > summary::-webkit-details-marker { display: none; }
       <table>
         <thead>
           <tr>
+            <th class="cb-col"><input type="checkbox" id="selAll" aria-label="Chọn tất cả học sinh đang lọc"></th>
             <th><button data-sort="name">Học sinh <i class="fa-solid fa-sort" aria-hidden="true"></i></button></th>
             <th>Chương trình</th>
             <th><button data-sort="stage">Giai đoạn <i class="fa-solid fa-sort" aria-hidden="true"></i></button></th>
@@ -498,7 +502,8 @@ details.more > summary::-webkit-details-marker { display: none; }
   let access = { grades: false, tuition: false, attendance: false };
   let me = { displayName: '' };
   let suggestions = { caretakers: [], schools: [], tags: [] };
-  let state = { view: 'overview', q: '', stage: '', program: '', flag: '', sort: 'name', dir: 1, openId: null, pane: 'care' };
+  let state = { view: 'overview', q: '', stage: '', program: '', flag: '', mine: false, sort: 'name', dir: 1, openId: null, pane: 'care' };
+  const selected = new Set(); // chọn nhiều ở Danh sách
 
   // ---------- Tiện ích ----------
   const $ = id => document.getElementById(id);
@@ -649,6 +654,9 @@ details.more > summary::-webkit-details-marker { display: none; }
     if (s.attendance && s.attendance.absent30 >= 3) f.push({ key: 'absent', label: `Vắng ${s.attendance.absent30} buổi`, cls: 'red' });
     if (s.tuition && s.tuition.pending > 0) f.push({ key: 'tuition', label: 'Học phí chờ xác nhận', cls: 'amber' });
     if (p.priority === 'khan') f.push({ key: 'priority', label: 'Ưu tiên khẩn', cls: 'red' });
+    if (s.isLead && stage === 'tiem-nang') f.push({ key: 'lead', label: 'Đơn đăng ký mới', cls: 'blue' });
+    const g = s.grades;
+    if (g && g.lastScore != null && g.prevScore != null && g.prevScore > 0 && g.lastScore <= g.prevScore * 0.85 && active) f.push({ key: 'gradedrop', label: `Điểm giảm ${g.prevScore} → ${g.lastScore}`, cls: 'red' });
     return f;
   }
   function programsAll() { return Array.from(new Set(students.flatMap(s => s.programs))).sort((a, b) => a.localeCompare(b, 'vi')); }
@@ -658,6 +666,7 @@ details.more > summary::-webkit-details-marker { display: none; }
       const e = eff(s); const hay = norm([s.studentName, s.parentEmail, e.guardianName, e.guardianPhone, e.guardianPhone.replace(/\D/g, ''), e.school, (profileOf(s).tags || []).join(' ')].join(' '));
       if (!norm(state.q).split(/\s+/).every(w => hay.includes(w))) return false;
     }
+    if (state.mine && norm(profileOf(s).caretaker || '') !== norm(me.displayName || '')) return false;
     if (state.stage && stageOf(s) !== state.stage) return false;
     if (state.program && !s.programs.includes(state.program)) return false;
     if (state.flag) {
@@ -737,10 +746,13 @@ details.more > summary::-webkit-details-marker { display: none; }
     const list = sortedFiltered();
     const today = todayStr();
     $('listResult').textContent = `${list.length} / ${students.length} học sinh`;
+    [...selected].forEach(id => { if (!findStudent(id)) selected.delete(id); });
+    renderBulkBar(list);
     $('listBody').innerHTML = list.length ? list.map(s => {
       const p = profileOf(s); const last = lastContact(s); const next = p.nextFollowUp;
       const nextCls = next && next < today ? 'overdue' : next && next <= addDays(today, 3) ? 'soon' : '';
-      return `<tr data-open="${esc(s.id)}" tabindex="0">
+      return `<tr data-open="${esc(s.id)}" tabindex="0"${selected.has(s.id) ? ' class="is-selected"' : ''}>
+        <td class="cb-col"><input type="checkbox" class="row-cb" data-sel="${esc(s.id)}" ${selected.has(s.id) ? 'checked' : ''} aria-label="Chọn ${esc(s.studentName)}"></td>
         <td><div class="name-cell"><span class="avatar">${esc(initials(s.studentName))}</span><div><strong>${esc(s.studentName)}</strong><small>${esc([p.gradeLevel, s.dob ? 'SN ' + fmtDate(s.dob) : ''].filter(Boolean).join(' · ') || s.parentEmail)}</small></div></div></td>
         <td>${esc(s.programs.join(', ')) || '<span class="locked">Chưa gán</span>'}</td>
         <td>${stageChip(stageOf(s))}</td>
@@ -749,7 +761,7 @@ details.more > summary::-webkit-details-marker { display: none; }
         <td>${next ? `<span class="${nextCls}">${esc(fmtDate(next))}</span><br><small class="locked">${esc(relDays(next))}</small>` : '<span class="locked">—</span>'}</td>
         <td>${flagChips(s)}</td>
       </tr>`;
-    }).join('') : `<tr><td colspan="7"><div class="empty"><strong>Không có học sinh nào khớp bộ lọc.</strong>Thử bỏ bớt điều kiện lọc hoặc xoá ô tìm kiếm.</div></td></tr>`;
+    }).join('') : `<tr><td colspan="8"><div class="empty"><strong>Không có học sinh nào khớp bộ lọc.</strong>Thử bỏ bớt điều kiện lọc hoặc xoá ô tìm kiếm.</div></td></tr>`;
   }
 
   // ---------- Theo giai đoạn ----------
@@ -790,9 +802,114 @@ details.more > summary::-webkit-details-marker { display: none; }
 
   function renderAll() {
     $('countList').textContent = students.length;
-    renderOverview(); renderList(); renderBoard(); renderAgenda();
+    renderOverview(); renderBirthdays(); renderList(); renderBoard(); renderAgenda();
     if (state.openId) renderDrawer();
   }
+
+  // ---------- Sinh nhật 7 ngày tới (ở Tổng quan) ----------
+  function renderBirthdays() {
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const soon = students.filter(x => x.dob && !['da-nghi', 'hoan-thanh'].includes(stageOf(x))).map(x => {
+      const d = new Date(x.dob); if (isNaN(d)) return null;
+      let next = new Date(now.getFullYear(), d.getMonth(), d.getDate()); if (next < now) next.setFullYear(now.getFullYear() + 1);
+      const days = Math.round((next - now) / DAY);
+      return days <= 7 ? { x, days, age: next.getFullYear() - d.getFullYear() } : null;
+    }).filter(Boolean).sort((a, b) => a.days - b.days);
+    if (!soon.length) return;
+    $('view-overview').insertAdjacentHTML('beforeend', `<section class="panel bday-panel"><div class="panel-head"><h2><i class="fa-solid fa-cake-candles" aria-hidden="true"></i> Sinh nhật 7 ngày tới</h2><span class="locked">${soon.length} học sinh</span></div>
+      <div class="panel-body">${soon.map(({ x, days, age }) => `<button class="row-item" data-open="${esc(x.id)}"><span class="avatar">${esc(initials(x.studentName))}</span><span class="row-main"><strong>${esc(x.studentName)}</strong><small>${days === 0 ? 'Hôm nay' : days === 1 ? 'Ngày mai' : `Còn ${days} ngày`} · tròn ${age} tuổi</small></span><span class="chip ${days === 0 ? 'green' : ''}">${esc(fmtDate(x.dob).slice(0, 5))}</span></button>`).join('')}</div></section>`);
+  }
+
+  // ---------- Hành trình giai đoạn & anh chị em (thêm vào cuối tab Chăm sóc) ----------
+  function siblingsOf(s) { const em = String(s.parentEmail || '').toLowerCase(); return students.filter(x => x.id !== s.id && String(x.parentEmail || '').toLowerCase() === em); }
+  function renderJourney(s) {
+    const p = profileOf(s); const hist = (p.stageHistory || []).slice().reverse();
+    const sibs = siblingsOf(s);
+    const since = p.stageChangedAt ? relDays(p.stageChangedAt.slice(0, 10)) : '';
+    const html = `
+      ${s.isLead ? `<div class="lead-note"><i class="fa-solid fa-inbox" aria-hidden="true"></i><div><strong>Khách tiềm năng từ đơn đăng ký</strong><small>Gửi ${esc(s.registration && s.registration.submittedAt ? fmtDate(s.registration.submittedAt) : '')}${s.registration && s.registration.program ? ' · ' + esc(s.registration.program) : ''}. Khi thêm em vào mục Học Sinh, hồ sơ chăm sóc này được giữ nguyên.</small></div></div>` : ''}
+      ${sibs.length ? `<section class="j-block"><h4>Anh chị em cùng gia đình (${sibs.length})</h4><div class="sib-list">${sibs.map(x => `<button type="button" class="sib" data-open="${esc(x.id)}"><span class="avatar">${esc(initials(x.studentName))}</span><span><strong>${esc(x.studentName)}</strong><small>${esc(STAGE[stageOf(x)].label)}${x.programs.length ? ' · ' + esc(x.programs.join(', ')) : ''}</small></span></button>`).join('')}</div></section>` : ''}
+      <section class="j-block"><h4>Hành trình giai đoạn</h4>
+        <p class="j-now">Đang ở <strong>${esc(STAGE[stageOf(s)].label)}</strong>${since ? ` từ ${esc(since)}` : ''}${p.stageReason ? `. Lý do: ${esc(p.stageReason)}` : ''}</p>
+        ${hist.length ? `<ol class="j-list">${hist.map(h => `<li><span class="j-dot" style="--c:${STAGE[h.to] ? STAGE[h.to].c : '#94a3b8'}"></span><div><strong>${h.from && STAGE[h.from] ? esc(STAGE[h.from].label) + ' → ' : ''}${esc(STAGE[h.to] ? STAGE[h.to].label : h.to)}</strong><small>${esc(fmtDate(h.at))}${h.by ? ' · ' + esc(h.by) : ''}${h.reason ? ' · ' + esc(h.reason) : ''}</small></div></li>`).join('')}</ol>` : '<p class="locked">Chưa có lần chuyển giai đoạn nào được ghi lại.</p>'}
+      </section>`;
+    $('pane-care').insertAdjacentHTML('beforeend', html);
+  }
+
+  // ---------- Chọn nhiều ở Danh sách ----------
+  function renderBulkBar(list) {
+    let bar = $('bulkBar');
+    if (!bar) { bar = document.createElement('div'); bar.id = 'bulkBar'; bar.className = 'bulk-bar'; document.body.appendChild(bar); }
+    const all = $('selAll'); if (all) { all.checked = list.length > 0 && list.every(x => selected.has(x.id)); all.indeterminate = !all.checked && list.some(x => selected.has(x.id)); }
+    if (!selected.size || state.view !== 'list' || state.openId) { bar.hidden = true; return; }
+    bar.hidden = false;
+    bar.innerHTML = `<strong>Đã chọn ${selected.size} học sinh</strong>
+      <label class="sr-only" for="bulkStage">Chuyển giai đoạn</label>
+      <select id="bulkStage"><option value="">Chuyển giai đoạn…</option>${STAGES.map(st => `<option value="${st.key}">${esc(st.label)}</option>`).join('')}</select>
+      <button type="button" class="btn" data-bulk="mine"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Giao cho tôi</button>
+      <button type="button" class="btn btn-primary" data-bulk="email"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Gửi email</button>
+      <button type="button" class="btn" data-bulk="clear" aria-label="Bỏ chọn">Bỏ chọn</button>`;
+  }
+  async function bulkRun(label, fn) {
+    const ids = [...selected]; let ok = 0, fail = 0;
+    for (let i = 0; i < ids.length; i++) {
+      toast(`${label}: ${i + 1}/${ids.length}…`);
+      const s = findStudent(ids[i]); if (!s) continue;
+      try { await fn(s); ok++; } catch (e) { fail++; }
+    }
+    if (!fail) selected.clear();
+    renderAll(); toast(`${label}: xong ${ok}${fail ? `, lỗi ${fail}` : ''}.`, fail > 0);
+  }
+  async function bulkStage(stage) {
+    const names = `${selected.size} học sinh`; const extra = { stage };
+    if (['tam-nghi', 'da-nghi'].includes(stage)) {
+      const r = await askLeaveReason(names, stage); if (!r) return renderAll();
+      extra.stageReason = r.reason; if (r.back) { extra.nextFollowUp = addDays(todayStr(), r.back); extra.followUpNote = 'Mời quay lại học'; }
+    }
+    await bulkRun('Chuyển giai đoạn', async s => {
+      if (stageOf(s) === stage) return;
+      const payload = profilePayload(s, extra);
+      const r = await api('/api/portal-crm-save-profile', { method: 'POST', body: JSON.stringify(payload) });
+      s.profile = { ...profileOf(s), ...payload, updatedAt: r.updatedAt, updatedBy: r.updatedBy, stageHistory: r.stageHistory || [], stageChangedAt: r.stageChangedAt, stageReason: r.stageReason };
+    });
+  }
+  function bulkEmailDialog() {
+    const el = document.createElement('div'); el.className = 'rs-overlay';
+    el.innerHTML = `<div class="rs-dialog" role="dialog" aria-modal="true" aria-labelledby="beTitle">
+      <h3 id="beTitle">Gửi email cho ${selected.size} phụ huynh</h3>
+      <p>Mỗi phụ huynh nhận một email riêng. Dùng <code>{ten_hoc_sinh}</code> để tự điền tên con.</p>
+      <label for="beSubject">Tiêu đề</label><input id="beSubject" type="text" maxlength="150" placeholder="VD: Lịch học tuần tới của {ten_hoc_sinh}">
+      <label for="beBody">Nội dung</label><textarea id="beBody" rows="7" placeholder="Kính gửi phụ huynh bé {ten_hoc_sinh}, …"></textarea>
+      <div class="rs-acts"><button type="button" class="btn" data-be-cancel>Huỷ</button><button type="button" class="btn btn-primary" data-be-ok>Gửi ${selected.size} email</button></div>
+    </div>`;
+    document.body.appendChild(el);
+    el.addEventListener('click', async e => {
+      if (e.target.closest('[data-be-cancel]') || e.target === el) return el.remove();
+      if (!e.target.closest('[data-be-ok]')) return;
+      const sub = el.querySelector('#beSubject').value.trim(), body = el.querySelector('#beBody').value.trim();
+      if (!sub || !body) { toast('Nhập tiêu đề và nội dung email.', true); return; }
+      el.remove();
+      const fill = (t, s) => t.split('{ten_hoc_sinh}').join(s.studentName);
+      await bulkRun('Gửi email', async s => {
+        const r = await api('/api/portal-crm-send-email', { method: 'POST', body: JSON.stringify({ studentId: s.id, subject: fill(sub, s), message: fill(body, s), nextFollowUp: '' }) });
+        if (r.interaction) s.interactions = [r.interaction].concat(s.interactions || []);
+      });
+    });
+    setTimeout(() => el.querySelector('#beSubject').focus(), 30);
+  }
+  document.addEventListener('change', e => {
+    if (e.target.matches('.row-cb')) { const id = e.target.dataset.sel; e.target.checked ? selected.add(id) : selected.delete(id); e.target.closest('tr').classList.toggle('is-selected', e.target.checked); renderBulkBar(sortedFiltered()); }
+    else if (e.target.id === 'selAll') { const list = sortedFiltered(); list.forEach(x => e.target.checked ? selected.add(x.id) : selected.delete(x.id)); renderList(); }
+    else if (e.target.id === 'bulkStage' && e.target.value) bulkStage(e.target.value);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('.cb-col')) { e.stopPropagation(); return; }
+    const b = e.target.closest('[data-bulk]'); if (!b) return;
+    const k = b.dataset.bulk;
+    if (k === 'clear') { selected.clear(); renderList(); }
+    else if (k === 'email') bulkEmailDialog();
+    else if (k === 'mine') bulkRun('Giao cho tôi', async s => { const payload = profilePayload(s, { caretaker: me.displayName || '' }); const r = await api('/api/portal-crm-save-profile', { method: 'POST', body: JSON.stringify(payload) }); s.profile = { ...profileOf(s), ...payload, updatedAt: r.updatedAt }; });
+  }, true);
 
   // ---------- Ngăn hồ sơ ----------
   const findStudent = id => students.find(s => s.id === id);
@@ -802,6 +919,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     lastFocus = document.activeElement;
     if (state.compose && state.compose.id !== id) state.compose = null;
     state.openId = id; state.pane = 'care';
+    { const bb = $('bulkBar'); if (bb) bb.hidden = true; }
     renderDrawer();
     $('drawer').classList.add('open'); $('drawer').setAttribute('aria-hidden', 'false'); $('scrim').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -811,6 +929,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     state.openId = null;
     $('drawer').classList.remove('open'); $('drawer').setAttribute('aria-hidden', 'true'); $('scrim').classList.remove('open');
     document.body.style.overflow = '';
+    renderBulkBar(sortedFiltered());
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
 
@@ -827,7 +946,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     }).join('');
     document.querySelectorAll('.drawer-tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.pane === state.pane));
     document.querySelectorAll('.drawer-pane').forEach(el => el.classList.toggle('active', el.id === 'pane-' + state.pane));
-    renderCare(s); renderProfile(s); renderStudy(s);
+    renderCare(s); renderProfile(s); renderStudy(s); renderJourney(s);
   }
 
   // ----- Bộ lựa chọn 1 chạm dùng chung -----
@@ -974,7 +1093,7 @@ details.more > summary::-webkit-details-marker { display: none; }
       gradeLevel: p.gradeLevel || e.gradeHint || '', school: e.school, address: e.address,
       guardianName: e.guardianName, guardianPhone: e.guardianPhone, guardianRelation: p.guardianRelation || '',
       source: p.source || '', tags: p.tags || [], nextFollowUp: p.nextFollowUp || '', followUpNote: p.followUpNote || '',
-      caretaker: p.caretaker || '', ...overrides
+      caretaker: p.caretaker || '', stageReason: p.stageReason || '', ...overrides
     };
   }
   function setSaveState(text, cls) { const el = $('saveState'); if (el) { el.className = 'save-state ' + (cls || ''); el.innerHTML = text; } }
@@ -988,6 +1107,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     try {
       const r = await api('/api/portal-crm-save-profile', { method: 'POST', body: JSON.stringify(payload) });
       s.profile.updatedAt = r.updatedAt; s.profile.updatedBy = r.updatedBy;
+      if (r.stageHistory) { s.profile.stageHistory = r.stageHistory; s.profile.stageChangedAt = r.stageChangedAt; s.profile.stageReason = r.stageReason; }
       renderAll(); if (successMsg) toast(successMsg);
     } catch (e) { s.profile = before; renderAll(); toast(e.message, true); }
   }
@@ -1020,9 +1140,45 @@ details.more > summary::-webkit-details-marker { display: none; }
     s.profile = p;
     autoSave(s);
   }
-  function setStage(id, stage) {
+  const LEAVE_REASONS = ['Chuyển nhà / chuyển trường', 'Khó khăn học phí', 'Lịch học không phù hợp', 'Con không còn hứng thú', 'Sức khoẻ', 'Đã đạt mục tiêu', 'Chuyển sang lớp khác', 'Không liên lạc được'];
+  function askLeaveReason(names, stage) {
+    return new Promise(resolve => {
+      const back = stage === 'tam-nghi' ? 30 : 60;
+      const el = document.createElement('div'); el.className = 'rs-overlay';
+      el.innerHTML = `<div class="rs-dialog" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+        <h3 id="rsTitle">Vì sao ${esc(names)} ${stage === 'tam-nghi' ? 'tạm nghỉ' : 'nghỉ học'}?</h3>
+        <p>Lý do giúp trung tâm hiểu vì sao học sinh rời đi và mời các em quay lại đúng lúc.</p>
+        <div class="rs-opts">${LEAVE_REASONS.map(r => `<button type="button" class="opt" data-rs="${esc(r)}">${esc(r)}</button>`).join('')}</div>
+        <label for="rsNote">Ghi chú thêm (không bắt buộc)</label>
+        <input id="rsNote" type="text" maxlength="120" placeholder="VD: gia đình chuyển vào TP.HCM">
+        <label class="rs-check"><input type="checkbox" id="rsBack" checked> Nhắc liên hệ mời quay lại sau ${back} ngày</label>
+        <div class="rs-acts"><button type="button" class="btn" data-rs-cancel>Huỷ</button><button type="button" class="btn btn-primary" data-rs-ok disabled>Xác nhận</button></div>
+      </div>`;
+      document.body.appendChild(el);
+      let pick = '';
+      const done = v => { el.remove(); resolve(v); };
+      el.addEventListener('click', e => {
+        const o = e.target.closest('[data-rs]');
+        if (o) { pick = o.dataset.rs; el.querySelectorAll('[data-rs]').forEach(b => b.setAttribute('aria-pressed', String(b === o))); el.querySelector('[data-rs-ok]').disabled = false; return; }
+        if (e.target.closest('[data-rs-cancel]') || e.target === el) return done(null);
+        if (e.target.closest('[data-rs-ok]')) {
+          const note = el.querySelector('#rsNote').value.trim();
+          done({ reason: pick + (note ? ': ' + note : ''), back: el.querySelector('#rsBack').checked ? back : 0 });
+        }
+      });
+      el.addEventListener('keydown', e => { if (e.key === 'Escape') done(null); });
+      setTimeout(() => el.querySelector('[data-rs]').focus(), 30);
+    });
+  }
+  async function setStage(id, stage) {
     const s = findStudent(id); if (!s || stageOf(s) === stage) return;
-    saveProfile(s, { stage }, `Đã chuyển ${s.studentName} sang "${STAGE[stage].label}".`);
+    const extra = { stage };
+    if (['tam-nghi', 'da-nghi'].includes(stage)) {
+      const r = await askLeaveReason(s.studentName, stage); if (!r) { renderAll(); return; }
+      extra.stageReason = r.reason;
+      if (r.back) { extra.nextFollowUp = addDays(todayStr(), r.back); extra.followUpNote = 'Mời quay lại học'; }
+    }
+    saveProfile(s, extra, `Đã chuyển ${s.studentName} sang "${STAGE[stage].label}".`);
   }
 
   // ----- Soạn email / SMS -----
@@ -1252,6 +1408,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     clearTimeout(qTimer);
     qTimer = setTimeout(() => { state.q = e.target.value.trim(); if (state.q && state.view === 'overview') setView('list'); else renderAll(); }, 150);
   });
+  $('mineToggle').addEventListener('click', () => { state.mine = !state.mine; $('mineToggle').setAttribute('aria-pressed', String(state.mine)); renderAll(); });
   ['fStage', 'fProgram', 'fFlag'].forEach(id => $(id).addEventListener('change', e => {
     state[{ fStage: 'stage', fProgram: 'program', fFlag: 'flag' }[id]] = e.target.value; renderAll();
   }));

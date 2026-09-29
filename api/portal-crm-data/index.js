@@ -1,6 +1,6 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin, loadSessionAndAccount, accountPermissions, isSuperAdmin } = require("../_shared/adminAuth");
-const { CRM_TABLE, INTERACTIONS_TABLE, CRM_PARTITION, DEFAULT_STAGE } = require("../_shared/crm");
+const { CRM_TABLE, INTERACTIONS_TABLE, CRM_PARTITION, DEFAULT_STAGE, leadIdFor } = require("../_shared/crm");
 const { buildParentDirectory, childKey } = require("../_shared/parentDirectory");
 
 // Trả toàn bộ dữ liệu cho màn hình CRM trong 1 lần gọi: học sinh + hồ sơ chăm sóc + lịch sử
@@ -53,6 +53,9 @@ module.exports = async function (context, req) {
         nextFollowUp: p.nextFollowUp || "",
         followUpNote: p.followUpNote || "",
         caretaker: p.caretaker || "",
+        stageHistory: (() => { try { return JSON.parse(p.stageHistoryJson || "[]"); } catch (e) { return []; } })(),
+        stageChangedAt: p.stageChangedAt || "",
+        stageReason: p.stageReason || "",
         updatedAt: p.updatedAt || null,
         updatedBy: p.updatedBy || ""
       };
@@ -77,10 +80,10 @@ module.exports = async function (context, req) {
     if (can("grades")) {
       for (const g of await listAll("Grades")) {
         const k = keyOf(g.partitionKey, g.studentName);
-        const s = gradeSummary[k] || (gradeSummary[k] = { count: 0, scored: 0, total: 0, last: null });
+        const s = gradeSummary[k] || (gradeSummary[k] = { count: 0, scored: 0, total: 0, last: null, series: [] });
         s.count++;
         const score = Number(g.score);
-        if (g.score !== undefined && g.score !== null && g.score !== "" && !isNaN(score)) { s.scored++; s.total += score; }
+        if (g.score !== undefined && g.score !== null && g.score !== "" && !isNaN(score)) { s.scored++; s.total += score; s.series.push({ at: g.recordedAt, score }); }
         if (!s.last || new Date(g.recordedAt) > new Date(s.last.recordedAt)) {
           s.last = { term: g.term || "", score: g.score != null ? g.score : null, comment: g.comment || "", recordedAt: g.recordedAt };
         }
@@ -113,11 +116,23 @@ module.exports = async function (context, req) {
       }
     }
 
+    // Điểm lần gần nhất & lần trước đó để cảnh báo điểm đi xuống
+    Object.values(gradeSummary).forEach(s => {
+      s.series.sort((a, b) => new Date(a.at) - new Date(b.at));
+      const n = s.series.length;
+      s.lastScore = n ? s.series[n - 1].score : null;
+      s.prevScore = n > 1 ? s.series[n - 2].score : null;
+      delete s.series;
+    });
+
+    const studentKeys = new Set();
     const students = studentRows.map(e => {
       let programs = [];
       try { programs = JSON.parse(e.programsJson || "[]"); } catch (err) { programs = []; }
       if (!Array.isArray(programs) || !programs.length) programs = e.program ? [e.program] : [];
       const k = keyOf(e.partitionKey, e.studentName);
+      const ck = childKey(e.partitionKey, e.studentName); studentKeys.add(ck);
+      const leadId = leadIdFor(ck);
       return {
         id: e.rowKey,
         parentEmail: e.partitionKey,
@@ -128,13 +143,34 @@ module.exports = async function (context, req) {
         enrolledAt: e.enrolledAt || null,
         parent: directory.parents[String(e.partitionKey).toLowerCase()] || null,
         registration: directory.children[childKey(e.partitionKey, e.studentName)] || null,
-        profile: profiles[e.rowKey] || null,
-        interactions: interactions[e.rowKey] || [],
+        // Nếu trước đây là khách tiềm năng: nối tiếp hồ sơ & lịch sử chăm sóc cũ, không mất dữ liệu
+        profile: profiles[e.rowKey] || profiles[leadId] || null,
+        interactions: (interactions[e.rowKey] || []).concat(interactions[leadId] || []).sort((a, b) => new Date(b.happenedAt) - new Date(a.happenedAt)),
         grades: can("grades") ? (gradeSummary[k] || null) : undefined,
         tuition: can("tuition") ? (tuitionSummary[k] || null) : undefined,
         attendance: can("attendance") ? (attendanceSummary[e.rowKey] || null) : undefined
       };
-    }).sort((a, b) => a.studentName.localeCompare(b.studentName, "vi"));
+    });
+
+    // Khách tiềm năng: đơn đăng ký chưa được thêm thành học sinh (bỏ đơn đã từ chối)
+    for (const [ck, c] of Object.entries(directory.children || {})) {
+      if (studentKeys.has(ck) || !c.email || /reject|tu-choi|từ chối/i.test(String(c.status || ""))) continue;
+      const id = leadIdFor(ck);
+      const prof = profiles[id] || null;
+      students.push({
+        id, isLead: true,
+        parentEmail: c.email,
+        studentName: c.childName || "",
+        dob: c.dob || "",
+        programs: c.program ? [c.program] : [],
+        note: "", enrolledAt: null,
+        parent: directory.parents[c.email] || null,
+        registration: c,
+        profile: prof || { stage: "tiem-nang", priority: "thuong", tags: [], source: "Website", stageHistory: [] },
+        interactions: interactions[id] || []
+      });
+    }
+    students.sort((a, b) => a.studentName.localeCompare(b.studentName, "vi"));
 
     context.res.status = 200;
     context.res.body = {
