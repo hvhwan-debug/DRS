@@ -95,7 +95,7 @@ html body.wvn-admin .sidebar-footer .btn-outline:hover, html body.wvn-member:not
   html body.wvn-admin.lx-rail .sidebar { width: 76px; padding-left: 0.7rem; padding-right: 0.7rem; overflow-x: hidden; }
   html body.wvn-admin.lx-rail .main-content { margin-left: 76px; }
   html body.wvn-admin.lx-rail .sidebar .sidebar-brand { padding: 0 0 1rem; display: flex; justify-content: center; }
-  html body.wvn-admin.lx-rail .sidebar .brand-lockup { width: 34px; height: 26px; object-fit: cover; object-position: left center; }
+  html body.wvn-admin.lx-rail .sidebar .brand-lockup { width: 38px; height: 34px; object-fit: cover; object-position: left center; }
   html body.wvn-admin.lx-rail .brand-role, html body.wvn-admin.lx-rail .lx-nav-label { display: none; }
   html body.wvn-admin.lx-rail .lx-rail-toggle i { transform: rotate(180deg); }
   html body.wvn-admin.lx-rail .lx-foot-row { flex-direction: column; }
@@ -397,3 +397,10 @@ html body.wvn-admin .main-content .btn-outline:is([onclick*="delete" i], [onclic
 }
 @media (hover: none) { .lx-kbd-hint .lx-kbd { display: none; } }
 @media (min-width: 701px) { html body.wvn-crm .search input { padding-right: 4.2rem; } }
+
+/* Logo cùng một cỡ trên Quản trị · CRM · Công Việc: phần chữ "W" cao 32px (máy tính) / 26px (điện thoại).
+   Mỗi file ảnh có tỉ lệ chữ W khác nhau chút ít nên chiều cao ảnh được bù tương ứng. */
+html body.wvn-admin .sidebar .brand-lockup { height: 34px; width: auto; max-width: 100%; }
+html body.wvn-crm .brand-crm .crm-logo { height: 36px; width: auto; }
+@media (max-width: 880px) { html body.wvn-admin .mobile-topbar .brand-lockup { height: 28px; } }
+@media (max-width: 700px) { html body.wvn-crm .brand-crm .crm-logo { height: 29px; } }
