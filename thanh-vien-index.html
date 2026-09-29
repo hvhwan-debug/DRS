@@ -242,10 +242,20 @@
 
     .actions-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
 
-    .not-logged-in { text-align: center; padding: 4rem 1.5rem; }
-    .not-logged-in i { font-size: 2.5rem; color: #0284c7; margin-bottom: 1rem; display: block; }
-    .not-logged-in h2 { font-size: 1.3rem; margin-bottom: 0.6rem; }
-    .not-logged-in p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .not-logged-in { min-height: 70vh; display: grid; place-items: center; padding: 3rem 1.2rem; text-align: center; }
+    .nli-card { width: 100%; max-width: 440px; background: #fff; border: 1px solid #e6e9f1; border-radius: 24px; padding: 2.4rem 2rem 2rem; box-shadow: 0 30px 60px -40px rgba(15,23,42,0.4); position: relative; overflow: hidden; }
+    .nli-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, #0f172a, #1e3a8a, #0284c7); }
+    .nli-icon { width: 64px; height: 64px; margin: 0 auto 1.1rem; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #e0f2fe, #eef2ff); color: #0284c7; font-size: 1.4rem; }
+    .not-logged-in h2 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; color: #0f172a; }
+    .not-logged-in p { color: var(--text-muted); margin-bottom: 1.4rem; }
+    .not-logged-in .btn { display: inline-flex; justify-content: center; min-width: 180px; text-decoration: none; }
+    .nli-auto { display: block; margin-top: 0.9rem; font-size: 0.8rem; color: #94a3b8; }
+    .nli-card .wvn-quote { text-align: left; margin: 1.6rem 0 0; padding: 0 0 0 0.9rem; }
+    .nli-card .wvn-quote p { margin: 0; font-size: 0.88rem; color: #334155; }
+    .nli-card .wvn-quote .wvn-quote-en { font-size: 0.8rem; color: #64748b; font-style: italic; margin-top: 0.15rem; }
+    /* Khi chưa đăng nhập: ẩn thanh bên trống, dùng toàn màn hình */
+    body.member-signed-out .sidebar, body.member-signed-out .mobile-topbar, body.member-signed-out .sidebar-overlay { display: none !important; }
+    body.member-signed-out .main-content { margin-left: 0 !important; width: 100% !important; max-width: none !important; }
 
     .member-tab-btn {
       display: flex; align-items: center; gap: 0.75rem; padding: 0.68rem 0.9rem; border-radius: 12px;
@@ -1110,15 +1120,22 @@
       </div>`;
     }
 
-    function renderNotLoggedIn(container) {
+    // Chưa đăng nhập / phiên hết hạn: không để người dùng kẹt ở trang trống — tự chuyển sang trang đăng nhập.
+    function renderNotLoggedIn(container, expired) {
       document.body.classList.remove('vip-theme');
+      document.body.classList.add('member-signed-out');
       container.innerHTML = `
         <div class="not-logged-in">
-          <i class="fa-solid fa-lock"></i>
-          <h2>Bạn chưa đăng nhập</h2>
-          <p>Vui lòng đăng nhập để truy cập khu vực thành viên.</p>
-          <button class="btn" onclick="window.location.href='dang-nhap.html'">Đăng Nhập</button>
+          <div class="nli-card">
+            <div class="nli-icon"><i class="fa-solid fa-${expired ? 'clock-rotate-left' : 'lock'}" aria-hidden="true"></i></div>
+            <h2>${expired ? 'Phiên đăng nhập đã hết hạn' : 'Bạn chưa đăng nhập'}</h2>
+            <p>${expired ? 'Để bảo vệ thông tin của gia đình, vui lòng đăng nhập lại.' : 'Vui lòng đăng nhập để vào khu vực thành viên.'}</p>
+            <a class="btn" href="dang-nhap.html">Đăng nhập</a>
+            <small class="nli-auto" aria-live="polite">Đang tự chuyển tới trang đăng nhập…</small>
+            ${window.WVNQuote ? WVNQuote.html('family') : ''}
+          </div>
         </div>`;
+      setTimeout(() => { window.location.replace('dang-nhap.html'); }, 1500);
     }
 
     async function logout() {
@@ -1400,7 +1417,7 @@
           // Phiên hết hạn hoặc không hợp lệ -> xoá và yêu cầu đăng nhập lại
           localStorage.removeItem('wvn_member_token');
           localStorage.removeItem('wvn_member_email');
-          renderNotLoggedIn(container);
+          renderNotLoggedIn(container, true);
           return;
         }
 
