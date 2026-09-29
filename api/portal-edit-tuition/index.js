@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
@@ -86,6 +87,26 @@ module.exports = async function (context, req) {
       const note = `Khoản này đến từ hoá đơn đã thanh toán; số tiền mới (${amount.toLocaleString("vi-VN")}đ) khác tổng hoá đơn (${(Number(entity.amount) || 0).toLocaleString("vi-VN")}đ). Kiểm tra lại hoá đơn nếu cần.`;
       warning = warning ? warning + " " + note : note;
     }
+
+    // Liên kết: khoản đã sửa quay về "chờ xác nhận" -> phụ huynh phải được báo để xác nhận lại
+    try {
+      const { createConfirmToken } = require("../_shared/confirmToken");
+      const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+      const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
+      const confirmToken = await createConfirmToken("tuition", parentEmail, id);
+      const confirmUrl = `https://wvn.vn/xac-nhan.html?type=tuition&token=${confirmToken}`;
+      const greeting = buildGreeting(await getMemberDisplayName(parentEmail), await getMemberGender(parentEmail));
+      const r = await sendTrackedEmail(context, {
+        to: parentEmail, subject: `Cập nhật học phí của ${studentName} — vui lòng xác nhận lại`, type: "tuition",
+        eyebrow: "Xác Nhận Học Phí", title: "Khoản học phí đã được cập nhật",
+        bodyHtml: `<p style="margin:0 0 16px;">${greeting}</p><p style="margin:0 0 12px;">Trung tâm vừa cập nhật khoản học phí của <strong>${studentName}</strong>${program ? " (" + program + ")" : ""}:</p>
+          <p style="margin:0 0 12px;font-size:18px;font-weight:800;">${amount.toLocaleString("vi-VN")}đ${period ? ` <span style="font-weight:500;color:#64748b;font-size:14px;">· ${period}</span>` : ""}</p>
+          <p style="margin:0;">Điểm tích luỹ sẽ được tính theo số tiền mới sau khi anh/chị xác nhận.</p>`,
+        ctas: [{ label: "✓ Xác nhận đúng", href: `${confirmUrl}&action=confirm`, style: "primary" }, { label: "✗ Báo sai / Cần sửa", href: confirmUrl, style: "danger" }]
+      });
+      if (!r.success) warning = (warning ? warning + " " : "") + "Gửi email xác nhận lại thất bại.";
+    } catch (e) { context.log.warn("Email sửa học phí:", e.message); }
+    await logFamilyEvent(context, parentEmail, `Học phí được sửa thành ${amount.toLocaleString("vi-VN")}đ${period ? " (" + period + ")" : ""}, chờ phụ huynh xác nhận lại.`, { studentName });
 
     await logAdminActivity(req, "Sửa học phí", summarizeBody(req.body));
     context.res.status = 200;

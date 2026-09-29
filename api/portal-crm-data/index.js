@@ -70,6 +70,7 @@ module.exports = async function (context, req) {
         outcome: it.outcome || "",
         happenedAt: it.happenedAt || it.createdAt,
         createdBy: it.createdBy || "",
+        auto: it.auto === true,
         createdAt: it.createdAt
       });
     }

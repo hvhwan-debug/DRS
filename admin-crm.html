@@ -643,7 +643,8 @@ details.more > summary::-webkit-details-marker { display: none; }
       </div></div>`;
   }
   function stageOf(s) { return STAGE[profileOf(s).stage] ? profileOf(s).stage : DEFAULT_STAGE; }
-  function lastContact(s) { return s.interactions && s.interactions.length ? s.interactions[0].happenedAt : null; }
+  // Lần LIÊN HỆ gần nhất do nhân viên thực hiện — bỏ qua các sự kiện hệ thống tự ghi (học phí, hoá đơn, đổi quà, xin nghỉ…)
+  function lastContact(s) { const it = (s.interactions || []).find(i => !i.auto); return it ? it.happenedAt : null; }
   function flagsOf(s) {
     const f = [];
     const p = profileOf(s); const today = todayStr(); const stage = stageOf(s);

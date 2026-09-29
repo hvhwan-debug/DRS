@@ -1553,7 +1553,10 @@
           body: JSON.stringify({ email: decodeURIComponent(emailEnc), id: decodeURIComponent(idEnc), status, reason: reason.trim() })
         });
         selectEl.dataset.prev = status;
-        showGlobalAlert(result.warning || 'Đã cập nhật trạng thái và gửi email báo cho người đăng ký.', !!result.warning);
+        const en = result.enrolled;
+        const enMsg = en ? (en.created ? ` Đã tự thêm ${en.childName} vào danh sách học sinh lớp ${en.program} và chuyển CRM sang "Đang học".` : ` ${en.childName} đã có trong danh sách học sinh, CRM chuyển sang "Đang học".`) : '';
+        showGlobalAlert((result.warning || 'Đã cập nhật trạng thái và gửi email báo cho người đăng ký.') + enMsg, !!result.warning);
+        if (en && en.created && typeof loadStudents === 'function') loadStudents();
         loadRegistrations();
       } catch (err) {
         selectEl.value = prevValue;

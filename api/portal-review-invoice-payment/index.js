@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
@@ -96,6 +97,7 @@ module.exports = async function (context, req) {
       }, "Merge");
       await logAdminActivity(req, "Duyệt thanh toán hoá đơn", `${parentEmail} - ${invoice.invoiceNumber} - ${Number(invoice.totalAmount).toLocaleString("vi-VN")}đ`);
 
+      await logFamilyEvent(context, parentEmail, `Hoá đơn ${invoice.invoiceNumber} đã được xác nhận thanh toán ${Number(invoice.totalAmount || 0).toLocaleString("vi-VN")}đ, điểm tích luỹ đã cộng.`, { studentName: invoice.studentName });
       const emailResult = await sendTrackedEmail(context, {
         to: parentEmail,
         subject: `Đã xác nhận thanh toán hoá đơn ${invoice.invoiceNumber}`,
@@ -119,6 +121,7 @@ module.exports = async function (context, req) {
       }, "Merge");
       await logAdminActivity(req, "Từ chối biên lai thanh toán", `${parentEmail} - ${invoice.invoiceNumber}${reason ? " - Lý do: " + reason : ""}`);
 
+      await logFamilyEvent(context, parentEmail, `Biên lai hoá đơn ${invoice.invoiceNumber} bị từ chối${body.reason ? ": " + String(body.reason).slice(0, 150) : ""}. Phụ huynh cần gửi lại biên lai.`, { studentName: invoice.studentName });
       const emailResult = await sendTrackedEmail(context, {
         to: parentEmail,
         subject: `Cần bổ sung lại biên lai cho hoá đơn ${invoice.invoiceNumber}`,

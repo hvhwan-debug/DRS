@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
@@ -43,6 +44,7 @@ module.exports = async function (context, req) {
 
     const bal = await getPointsBalance(parentEmail);
     const deficit = bal.spent - bal.earned;
+    await logFamilyEvent(context, parentEmail, `Một khoản học phí đã bị xoá khỏi hệ thống, điểm tích luỹ được tính lại${deficit > 0 ? `. Thành viên đang thiếu ${deficit.toLocaleString("vi-VN")} điểm so với số điểm đã đổi quà.` : "."}`);
     const warnings = [];
     if (invoiceReverted) warnings.push("Hoá đơn liên quan đã được chuyển về trạng thái Chưa thanh toán.");
     if (deficit > 0) warnings.push(`Lưu ý: thành viên đã dùng nhiều hơn số điểm còn lại ${deficit.toLocaleString("vi-VN")} điểm (điểm khả dụng hiển thị 0). Cân nhắc huỷ bớt yêu cầu đổi quà nếu khoản tiền bị xoá là nhập nhầm.`);

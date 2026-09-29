@@ -29,7 +29,7 @@ module.exports = async function (context, req) {
     await leaves.upsertEntity(entity, "Replace");
     try {
       const it = await getTableClient(INTERACTIONS_TABLE);
-      await it.createEntity({ partitionKey: studentId, rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, type: "khac", content: `Phụ huynh xin nghỉ học ngày ${date.split("-").reverse().join("/")}: ${reason}`, outcome: "", happenedAt: now, createdBy: "Phụ huynh (trang thành viên)", createdAt: now });
+      await it.createEntity({ partitionKey: studentId, rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, type: "khac", content: `Phụ huynh xin nghỉ học ngày ${date.split("-").reverse().join("/")}: ${reason}`, outcome: "", happenedAt: now, createdBy: "Phụ huynh (trang thành viên)", createdAt: now, auto: true });
     } catch (e) { context.log.warn("Không ghi được vào CRM:", e.message); }
     context.res.status = 200;
     context.res.body = { success: true, leave: { studentId, studentName: entity.studentName, date, reason, status: "submitted", createdAt: now } };

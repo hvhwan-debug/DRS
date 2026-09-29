@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { getTableClient } = require("../_shared/tableStorage");
 const { findGift } = require("../_shared/giftCatalog");
 const { getPointsBalance, redemptionPoints } = require("../_shared/memberTier");
@@ -160,6 +161,7 @@ module.exports = async function (context, req) {
         </table>`
     });
 
+    await logFamilyEvent(context, email, `Phụ huynh đổi quà "${gift.name}"${quantity > 1 ? " × " + quantity : ""} bằng ${Number(totalCost).toLocaleString("vi-VN")} điểm, chờ duyệt.`, { by: "Phụ huynh (trang thành viên)" });
     context.res.status = 200;
     context.res.body = { success: true, available: after.remaining };
   } catch (err) {

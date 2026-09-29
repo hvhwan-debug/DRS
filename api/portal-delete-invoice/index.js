@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
@@ -34,7 +35,11 @@ module.exports = async function (context, req) {
         } catch (e) { if (e.statusCode !== 404) throw e; }
       }
       await invoicesTable.deleteEntity(parentEmail, id);
-      if (linkedRemoved) await recomputeTuitionPoints(parentEmail);
+      if (linkedRemoved) {
+        await recomputeTuitionPoints(parentEmail);
+        const d = await pointsDeficit(parentEmail);
+        await logFamilyEvent(context, parentEmail, `Hoá đơn đã thanh toán bị xoá, khoản học phí đi kèm cũng được gỡ và điểm được tính lại${d > 0 ? `. Thành viên đang thiếu ${d.toLocaleString("vi-VN")} điểm.` : "."}`);
+      }
       await logAdminActivity(req, "Xoá hoá đơn", `${parentEmail} - id: ${id}${linkedRemoved ? " (kèm khoản học phí đã thanh toán)" : ""}`);
     } catch (err) {
       if (err.statusCode === 404) {

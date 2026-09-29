@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { getTableClient } = require("../_shared/tableStorage");
 const { recomputeTuitionPoints } = require("../_shared/memberTier");
 
@@ -56,7 +57,11 @@ module.exports = async function (context, req) {
       memberFeedback: action === "reject" ? feedback : "",
       confirmedAt: new Date().toISOString()
     }, "Merge");
-    if (type === "tuition") await recomputeTuitionPoints(recordPartitionKey);
+    if (type === "tuition") {
+      await recomputeTuitionPoints(recordPartitionKey);
+      let rec = {}; try { rec = await table.getEntity(recordPartitionKey, recordId); } catch (e) {}
+      await logFamilyEvent(context, recordPartitionKey, action === "confirm" ? `Phụ huynh xác nhận đúng khoản học phí ${Number(rec.amount || 0).toLocaleString("vi-VN")}đ (qua email).` : `Phụ huynh BÁO SAI khoản học phí ${Number(rec.amount || 0).toLocaleString("vi-VN")}đ qua email: ${feedback}. Khoản này tạm không tính điểm cho tới khi sửa.`, { studentName: rec.studentName, by: "Phụ huynh (email)" });
+    }
 
     context.res.status = 200;
     context.res.body = { success: true, confirmationStatus };

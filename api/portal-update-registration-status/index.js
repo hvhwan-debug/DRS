@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
@@ -99,9 +100,20 @@ module.exports = async function (context, req) {
     });
     const emailWarning = emailResult.success ? null : "Đã cập nhật trạng thái, nhưng gửi email thông báo thất bại.";
 
+    // Liên kết: đơn chương trình học được duyệt -> tạo học sinh + CRM "Đang học"; mọi trạng thái -> ghi lịch sử chăm sóc
+    let enrolled = null;
+    try {
+      const reg = await regTable.getEntity(email, id);
+      const { getAdminIdentity } = require("../_shared/adminAuth");
+      const who = (await getAdminIdentity(req)) || {};
+      let data = {}; try { data = JSON.parse(reg.dataJson || "{}"); } catch (e) {}
+      if (status === "Đã duyệt") enrolled = await enrollFromRegistration(context, reg, who.displayName);
+      await logFamilyEvent(context, email, `${formTitle}: ${status}${status === "Từ chối" && reason ? " (lý do: " + reason + ")" : ""}${enrolled && enrolled.created ? ". Đã tự thêm học sinh vào danh sách lớp " + enrolled.program : ""}`, { studentName: data.ten_tre || "" });
+    } catch (e) { context.log.warn("Liên kết đơn đăng ký:", e.message); }
+
     await logAdminActivity(req, "Đổi trạng thái đơn đăng ký", summarizeBody(req.body));
     context.res.status = 200;
-    context.res.body = { success: true, warning: emailWarning };
+    context.res.body = { success: true, warning: emailWarning, enrolled };
   } catch (err) {
     context.log.error("Lỗi cập nhật trạng thái đăng ký:", err.message);
     context.res.status = 500;

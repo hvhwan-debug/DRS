@@ -84,9 +84,18 @@ module.exports = async function (context, req) {
         const md = today.slice(5);
         const rows = (await listAll("Students")).filter(s => s.dob && String(s.dob).slice(5, 10) === md);
         if (rows.length) inbox.push({ key: "birthday", count: rows.length, title: `${rows.length} học sinh sinh nhật hôm nay`, hint: rows.slice(0, 4).map(s => s.studentName).join(", "), href: "/admin/crm", tone: "gold" });
+      }),
+      can("gifts") && safe(async () => {
+        // Thành viên đang THIẾU điểm (đã đổi quà nhiều hơn điểm tích luỹ — thường do học phí bị xoá/sửa giảm)
+        const { redemptionPoints } = require("../_shared/memberTier");
+        const earned = {}, spent = {};
+        for (const t of await listAll("TuitionPayments")) earned[t.partitionKey] = (earned[t.partitionKey] || 0) + (Number(t.pointsEarned) || 0);
+        for (const r of await listAll("GiftRedemptions")) spent[r.partitionKey] = (spent[r.partitionKey] || 0) + redemptionPoints(r);
+        const short = Object.keys(spent).filter(e => spent[e] > (earned[e] || 0));
+        if (short.length) inbox.push({ key: "points", count: short.length, title: `${short.length} thành viên đang thiếu điểm`, hint: "Đã đổi quà nhiều hơn điểm tích luỹ, kiểm tra học phí hoặc huỷ bớt yêu cầu đổi quà", href: "/admin#gifts", tone: "red" });
       })
     ].filter(Boolean));
-    const order = ["crm", "leave", "invoices", "tuition", "registrations", "birthday", "gifts"];
+    const order = ["points", "crm", "leave", "invoices", "tuition", "registrations", "birthday", "gifts"];
     inbox.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
 
     context.res.status = 200;

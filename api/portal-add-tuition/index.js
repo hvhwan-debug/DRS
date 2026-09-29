@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
@@ -121,6 +122,7 @@ module.exports = async function (context, req) {
       warning = warning ? warning + " Đồng thời gửi email báo cũng thất bại." : "Đã lưu học phí, nhưng gửi email báo thất bại.";
     }
 
+    await logFamilyEvent(context, parentEmail, `Ghi nhận học phí ${Number(amount).toLocaleString("vi-VN")}đ${period ? " (" + period + ")" : ""}, đã gửi email để phụ huynh xác nhận.`, { studentName, type: "email" });
     await logAdminActivity(req, "Ghi nhận học phí", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, warning };

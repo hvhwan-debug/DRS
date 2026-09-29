@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { getTableClient } = require("../_shared/tableStorage");
 const { uploadAttachments } = require("../_shared/blobStorage");
 const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
@@ -120,6 +121,7 @@ module.exports = async function (context, req) {
         <p style="margin:0;">Chúng tôi đã nhận được biên lai thanh toán cho hoá đơn <strong>${invoice.invoiceNumber}</strong>. Đội ngũ sẽ kiểm tra và xác nhận trong thời gian sớm nhất.</p>`
     });
 
+    await logFamilyEvent(context, email, `Phụ huynh gửi biên lai thanh toán hoá đơn ${invoice.invoiceNumber} (${Number(invoice.totalAmount || 0).toLocaleString("vi-VN")}đ), chờ trung tâm xác nhận.`, { studentName: invoice.studentName, by: "Phụ huynh (trang thành viên)" });
     context.res.status = 200;
     context.res.body = { success: true };
   } catch (err) {

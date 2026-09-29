@@ -1,3 +1,4 @@
+const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
 const { sendEmail } = require("../_shared/mailer");
 
 // ===== Tên hiển thị cho từng loại biểu mẫu =====
@@ -385,6 +386,9 @@ module.exports = async function (context, req) {
         status: "Đã ghi nhận - Chờ xử lý",
         submittedAt: new Date().toISOString()
       });
+      if (data && (data.ten_tre || data.hoc_sinh)) {
+        await logFamilyEvent(context, senderEmail.toLowerCase(), `Gửi đơn "${FORM_TITLES[formType] || formType}" từ website.`, { studentName: data.ten_tre || data.hoc_sinh, by: "Phụ huynh (website)" });
+      }
     } catch (err) {
       context.log.error("Lưu Registrations vào Table Storage thất bại:", err.message);
     }
