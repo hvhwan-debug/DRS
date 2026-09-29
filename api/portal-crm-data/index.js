@@ -166,7 +166,7 @@ module.exports = async function (context, req) {
         note: "", enrolledAt: null,
         parent: directory.parents[c.email] || null,
         registration: c,
-        profile: prof || { stage: "tiem-nang", priority: "thuong", tags: [], source: "Website", stageHistory: [] },
+        profile: prof || { stage: "tiem-nang", priority: "thuong", tags: [], source: (directory.parents[c.email] && directory.parents[c.email].referredBy) ? "Người quen giới thiệu" : "Website", stageHistory: [] },
         interactions: interactions[id] || []
       });
     }

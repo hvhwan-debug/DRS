@@ -4,6 +4,7 @@
   <!-- Google tag (gtag.js) - Google Ads: AW-18460459117 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18460459117"></script>
   <script>
+    try { const r = new URLSearchParams(location.search).get('ref'); if (r && /^[0-9a-f]{8}$/i.test(r)) localStorage.setItem('wvn_ref', r.toLowerCase()); } catch (e) {}
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
@@ -560,7 +561,7 @@
         const res = await fetch('/api/member-update-profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Member-Token': pendingMemberToken },
-          body: JSON.stringify({ fullName, phone, dob, address })
+          body: JSON.stringify({ referralCode: (localStorage.getItem('wvn_ref') || ''), fullName, phone, dob, address })
         });
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Không thể lưu hồ sơ.');

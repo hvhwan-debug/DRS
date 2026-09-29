@@ -55,6 +55,17 @@ module.exports = async function (context, req) {
   let sentCount = 0;
   const failed = [];
 
+  // Tôn trọng tuỳ chọn của thành viên: ai tắt "Tin tức & sự kiện" thì không nhận email hàng loạt
+  const optedOut = new Set();
+  try {
+    const { getTableClient: gtc } = require("../_shared/tableStorage");
+    const pt = await gtc("MemberProfiles");
+    for await (const p of pt.listEntities({ queryOptions: { select: ["rowKey", "prefsJson"] } })) {
+      try { if (JSON.parse(p.prefsJson || "{}").news === false) optedOut.add(String(p.rowKey).toLowerCase()); } catch (e) {}
+    }
+  } catch (e) {}
+  const skipped = recipients.filter(e => optedOut.has(String(e).toLowerCase()));
+  recipients = recipients.filter(e => !optedOut.has(String(e).toLowerCase()));
   for (const email of recipients) {
     const displayName = await getMemberDisplayName(email);
     const gender = await getMemberGender(email);
@@ -84,6 +95,7 @@ module.exports = async function (context, req) {
   context.res.body = {
     success: true,
     sentCount,
+    optedOutCount: skipped.length,
     failedCount: failed.length,
     failed
   };

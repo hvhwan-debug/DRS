@@ -519,7 +519,7 @@
       .no-print { display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260930a">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260930b">
 <link rel="stylesheet" href="/wvn-luxe.css?v=20260929e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -530,6 +530,7 @@
   html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
 </style>
 <script src="/wvn-quotes.js?v=20260928a"></script>
+<script src="/member-extras.js?v=20260930a"></script>
 </head>
 <body class="wvn-member">
 
@@ -647,7 +648,7 @@
     // (không dùng Microsoft/Azure AD B2C)
     // ==============================================================
 
-    const MEMBER_TAB_NAMES = ['account', 'perks', 'schedule', 'activity', 'donations', 'tuition', 'invoices', 'grades', 'gifts'];
+    const MEMBER_TAB_NAMES = ['account', 'perks', 'schedule', 'attendance', 'activity', 'donations', 'tuition', 'invoices', 'grades', 'gifts', 'inbox'];
     const savedMemberTab = localStorage.getItem('wvn_member_last_tab');
     let currentActiveMemberTab = MEMBER_TAB_NAMES.includes(savedMemberTab) ? savedMemberTab : 'account';
     let currentRegistrations = [];
@@ -2184,6 +2185,7 @@
           </div>
         `;
 
+        if (window.WVNMemberExtras) { try { WVNMemberExtras.mount(payload); } catch (e) { console.error('member-extras', e); } }
         switchMemberTab(currentActiveMemberTab);
 
         document.getElementById('profileForm').addEventListener('submit', async function (e) {

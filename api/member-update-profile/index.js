@@ -41,6 +41,20 @@ module.exports = async function (context, req) {
 
     const email = session.email;
     const body = req.body || {};
+    // Mã giới thiệu (?ref=...) từ trang đăng ký: chỉ ghi 1 lần, không tự giới thiệu chính mình
+    const refCode = String(body.referralCode || "").trim().toLowerCase();
+    if (/^[0-9a-f]{8}$/.test(refCode)) {
+      try {
+        const pt = await getTableClient(PROFILES_TABLE);
+        let mine = null; try { mine = await pt.getEntity("profile", email); } catch (e) {}
+        if (!mine || !mine.referredBy) {
+          for await (const r of pt.listEntities({ queryOptions: { filter: `referralCode eq '${refCode}'`, select: ["rowKey"] } })) {
+            if (String(r.rowKey).toLowerCase() !== String(email).toLowerCase()) await pt.upsertEntity({ partitionKey: "profile", rowKey: email, referredBy: String(r.rowKey).toLowerCase(), referredAt: new Date().toISOString() }, "Merge");
+            break;
+          }
+        }
+      } catch (e) { context.log.warn("Không ghi được người giới thiệu:", e.message); }
+    }
     const fullName = String(body.fullName || "").trim();
     const phone = String(body.phone || "").trim();
     const address = String(body.address || "").trim();

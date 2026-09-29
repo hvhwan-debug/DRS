@@ -1,3 +1,4 @@
+const { referralCodeFor, bankConfig } = require("../_shared/memberSession");
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
 const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum, recomputeTuitionPoints, isLegacyTuitionRedemption } = require("../_shared/memberTier");
@@ -192,6 +193,8 @@ module.exports = async function (context, req) {
       const profilesTable = await getTableClient(PROFILES_TABLE);
       const p = await profilesTable.getEntity("profile", email);
       profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "", gender: p.gender || "" };
+      try { profile.prefs = JSON.parse(p.prefsJson || "{}"); } catch (e) { profile.prefs = {}; }
+      if (!p.referralCode) { try { await profilesTable.upsertEntity({ partitionKey: "profile", rowKey: email, referralCode: referralCodeFor(email) }, "Merge"); } catch (e) {} }
       lastSeenTier = p.lastSeenTier || null;
       ackedInvoiceIdsRaw = p.ackedInvoiceIds || "[]";
     } catch (e) {
@@ -429,9 +432,45 @@ module.exports = async function (context, req) {
       }
     }
 
+    // ---- Điểm danh của các con (120 buổi gần nhất) ----
+    const attendance = [];
+    try {
+      const at = await getTableClient("Attendance");
+      for await (const a of at.listEntities({ queryOptions: { filter: `parentEmail eq '${email.replace(/'/g, "''")}'` } })) {
+        attendance.push({ studentId: a.studentId || "", studentName: a.studentName || "", program: a.partitionKey || "", date: a.date || "", status: a.status || "present", note: a.note || "" });
+      }
+      attendance.sort((x, y) => String(y.date).localeCompare(String(x.date)));
+      attendance.splice(120);
+    } catch (e) {}
+    // ---- Đơn xin nghỉ đã gửi ----
+    const leaveRequests = [];
+    try {
+      const lt = await getTableClient("LeaveRequests");
+      for await (const l of lt.listEntities({ queryOptions: { filter: `PartitionKey eq '${email.replace(/'/g, "''")}'` } })) {
+        leaveRequests.push({ studentId: l.studentId, studentName: l.studentName || "", date: l.date, reason: l.reason || "", status: l.status || "submitted", createdAt: l.createdAt });
+      }
+      leaveRequests.sort((x, y) => String(y.date).localeCompare(String(x.date)));
+    } catch (e) {}
+    // ---- Hộp thư: email hệ thống đã gửi cho gia đình (50 gần nhất) ----
+    const emailInbox = [];
+    try {
+      const el = await getTableClient("EmailLogs");
+      for await (const m of el.listEntities({ queryOptions: { filter: `to eq '${email.replace(/'/g, "''")}'` } })) {
+        emailInbox.push({ subject: m.subject || "", type: m.type || "other", success: m.success !== false, sentAt: m.sentAt });
+      }
+      emailInbox.sort((x, y) => String(y.sentAt).localeCompare(String(x.sentAt)));
+      emailInbox.splice(50);
+    } catch (e) {}
+    // ---- Giới thiệu bạn bè ----
+    const referral = { code: referralCodeFor(email), count: 0 };
+    try {
+      const pt = await getTableClient(PROFILES_TABLE);
+      for await (const r of pt.listEntities({ queryOptions: { filter: `referredBy eq '${email.replace(/'/g, "''")}'`, select: ["rowKey"] } })) referral.count++;
+    } catch (e) {}
+
     context.res.status = 200;
     context.res.body = {
-      success: true, email, profile, registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions, giftCatalog, invoices,
+      success: true, email, profile, attendance, leaveRequests, emailInbox, referral, bank: bankConfig(), registrations, donations, grades, tuitionPayments, schedules, students, giftRedemptions, giftCatalog, invoices,
       pendingInvoicePopup,
       totalTuitionPaid,
       totalTuitionPaidRolling12mo: totalPaid12mo,

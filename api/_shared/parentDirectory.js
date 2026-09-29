@@ -37,6 +37,7 @@ async function buildParentDirectory() {
       setIfEmpty(email, "name", pick(e, ["fullName"]));
       setIfEmpty(email, "phone", pick(e, ["phone"]));
       setIfEmpty(email, "address", pick(e, ["address"]));
+      if (e.referredBy) { const p = parents[email] || (parents[email] = { name: "", phone: "", address: "" }); p.referredBy = String(e.referredBy); }
     }
   } catch (err) { /* chưa có bảng -> bỏ qua */ }
 
