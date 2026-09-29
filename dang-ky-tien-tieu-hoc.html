@@ -905,6 +905,15 @@
     .support-success i { font-size: 2.6rem; color: #16a34a; margin-bottom: 1rem; }
     .support-success h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark); }
     .support-success p { color: var(--text-muted); font-size: 0.95rem; }
+      /* Hình thức học + Đối tượng đăng ký: ô xổ xuống cùng kiểu chevron với các ô chọn khác */
+    #lcStudyMode, #lcObjectType {
+      appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 2.4rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.95rem center; background-size: 12px;
+    }
+    /* Điện thoại: 2 trường xếp dọc không bị khoảng cách gấp đôi */
+    @media (max-width: 600px) { .form-row { row-gap: 0; } }
+
   </style>
   <section class="page-banner">
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true" onerror="this.style.display='none'">
@@ -970,30 +979,20 @@
             <div class="support-geo-status" id="lcParentGeoStatus"></div>
             <div class="field-error" id="lcWardError">Vui lòng chọn Xã/Phường nơi trẻ đang sinh sống.</div>
           </div>
-          <div class="form-group">
-            <label>Hình thức học <span class="required">*</span></label>
-            <div class="lc-object-toggle" role="radiogroup" aria-label="Hình thức học">
-              <label class="lc-object-option">
-                <input type="radio" name="hinh_thuc_hoc" value="Học tại trung tâm" checked>
-                <i class="fa-solid fa-school"></i> Học tại trung tâm
-              </label>
-              <label class="lc-object-option">
-                <input type="radio" name="hinh_thuc_hoc" value="Dạy tại nhà">
-                <i class="fa-solid fa-house-chimney"></i> Dạy tại nhà
-              </label>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lcStudyMode">Hình thức học <span class="required">*</span></label>
+              <select id="lcStudyMode" name="hinh_thuc_hoc" required>
+                <option value="Học tại trung tâm" selected>Học tại trung tâm</option>
+                <option value="Dạy tại nhà">Dạy tại nhà</option>
+              </select>
             </div>
-          </div>
-          <div class="form-group">
-            <label>Đối tượng đăng ký <span class="required">*</span></label>
-            <div class="lc-object-toggle">
-              <label class="lc-object-option" data-obj="binh-thuong">
-                <input type="radio" name="doi_tuong_dang_ky" value="Bình thường" checked onchange="updateLcObjectType()">
-                <i class="fa-solid fa-user"></i> Bình thường
-              </label>
-              <label class="lc-object-option" data-obj="kho-khan">
-                <input type="radio" name="doi_tuong_dang_ky" value="Hoàn cảnh khó khăn" onchange="updateLcObjectType()">
-                <i class="fa-solid fa-hand-holding-heart"></i> Hoàn cảnh khó khăn
-              </label>
+            <div class="form-group">
+              <label for="lcObjectType">Đối tượng đăng ký <span class="required">*</span></label>
+              <select id="lcObjectType" name="doi_tuong_dang_ky" required onchange="updateLcObjectType()">
+                <option value="Bình thường" selected>Bình thường</option>
+                <option value="Hoàn cảnh khó khăn">Hoàn cảnh khó khăn</option>
+              </select>
             </div>
           </div>
           <div class="form-group">
@@ -1254,7 +1253,7 @@
     }
 
     function updateLcObjectType() {
-      const isKhoKhan = document.querySelector('input[name="doi_tuong_dang_ky"]:checked').value === 'Hoàn cảnh khó khăn';
+      const isKhoKhan = document.getElementById('lcObjectType').value === 'Hoàn cảnh khó khăn';
       const group = document.getElementById('lcDocsGroup');
       const requiredMark = document.getElementById('lcDocsRequiredMark');
       const errorEl = document.getElementById('lcDocsError');
@@ -1437,7 +1436,7 @@
     function handleParentSubmit(e) {
       e.preventDefault();
 
-      const isKhoKhan = document.querySelector('input[name="doi_tuong_dang_ky"]:checked').value === 'Hoàn cảnh khó khăn';
+      const isKhoKhan = document.getElementById('lcObjectType').value === 'Hoàn cảnh khó khăn';
       const requiredIds = isKhoKhan ? [...PARENT_BASE_REQUIRED_IDS, 'lcReason'] : PARENT_BASE_REQUIRED_IDS;
       const { allValid, firstInvalid } = validateLcRequiredFields(requiredIds);
       const docsError = document.getElementById('lcDocsError');
