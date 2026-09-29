@@ -691,7 +691,7 @@
     .dropdown-select-option:has(input:checked) { background: #eff6ff; }
     .dropdown-select-option input[type="checkbox"] {
       appearance: none; -webkit-appearance: none; width: 20px; height: 20px; flex-shrink: 0;
-      border: 2px solid #cbd5e1; border-radius: 3px; margin: 0; cursor: pointer; position: relative;
+      border: 2px solid #cbd5e1; border-radius: 6px; margin: 0; padding: 0; min-width: 20px; max-width: 20px; min-height: 20px; cursor: pointer; position: relative; display: inline-block; vertical-align: middle;
       background: #fff; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
     }
     .dropdown-select-option input[type="checkbox"]:hover { border-color: #0284c7; }
@@ -971,6 +971,19 @@
             <div class="field-error" id="lcWardError">Vui lòng chọn Xã/Phường nơi trẻ đang sinh sống.</div>
           </div>
           <div class="form-group">
+            <label>Hình thức học <span class="required">*</span></label>
+            <div class="lc-object-toggle" role="radiogroup" aria-label="Hình thức học">
+              <label class="lc-object-option">
+                <input type="radio" name="hinh_thuc_hoc" value="Học tại trung tâm" checked>
+                <i class="fa-solid fa-school"></i> Học tại trung tâm
+              </label>
+              <label class="lc-object-option">
+                <input type="radio" name="hinh_thuc_hoc" value="Dạy tại nhà">
+                <i class="fa-solid fa-house-chimney"></i> Dạy tại nhà
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
             <label>Đối tượng đăng ký <span class="required">*</span></label>
             <div class="lc-object-toggle">
               <label class="lc-object-option" data-obj="binh-thuong">
@@ -1016,6 +1029,33 @@
   </section>
 
   <div class="support-wrap">
+    <div class="support-process">
+      <h2>Quy trình đăng ký &amp; xét duyệt</h2>
+      <div class="reg-timeline" id="regTimeline">
+        <div class="reg-fill" id="regFill"></div>
+        <div class="reg-item">
+          <span class="reg-dot">1</span>
+          <h3>Gửi thông tin đăng ký</h3>
+          <p>Phụ huynh điền thông tin của trẻ vào form bên trên.</p>
+        </div>
+        <div class="reg-item">
+          <span class="reg-dot">2</span>
+          <h3>Ban tổ chức rà soát hồ sơ</h3>
+          <p>Kiểm tra thông tin, đánh giá hoàn cảnh và mức độ phù hợp với chương trình.</p>
+        </div>
+        <div class="reg-item">
+          <span class="reg-dot">3</span>
+          <h3>Liên hệ xác nhận</h3>
+          <p>Chương trình có thể liên hệ để xác minh thêm thông tin nếu cần thiết.</p>
+        </div>
+        <div class="reg-item">
+          <span class="reg-dot">4</span>
+          <h3>Thông báo kết quả</h3>
+          <p>Kết quả được thông báo trực tiếp, kèm hướng dẫn về lịch học, địa điểm và nội quy.</p>
+        </div>
+      </div>
+    </div>
+
     <div class="support-intro">
       <h2>Vì sao chương trình ra đời?</h2>
       <p>Trước thềm năm học mới, nỗi lo "chuẩn bị hành trang vào lớp 1" luôn đè nặng lên vai nhiều gia đình, đặc biệt là các bậc phụ huynh có hoàn cảnh khó khăn hoặc lao động thu nhập thấp tại Hà Nội. Chương trình Tiền Tiểu Học Miễn Phí 100% ra đời nhằm mang lại cơ hội bình đẳng cho mọi trẻ em trước cánh cửa trường tiểu học, không phân biệt hoàn cảnh kinh tế.</p>
@@ -1071,7 +1111,7 @@
         <div class="stat-card">
           <i class="fa-solid fa-gift"></i>
           <h4>Học phí</h4>
-          <p>Miễn phí 100% — bao gồm cả tài liệu và đồ dùng học tập tại lớp.</p>
+          <p>Miễn phí 100% cho các em có hoàn cảnh khó khăn.</p>
         </div>
         <div class="stat-card">
           <i class="fa-solid fa-location-dot"></i>
@@ -1081,7 +1121,7 @@
         <div class="stat-card">
           <i class="fa-solid fa-calendar-week"></i>
           <h4>Thời lượng</h4>
-          <p>Linh hoạt cuối tuần (Thứ Bảy / Chủ Nhật) để phụ huynh tiện đưa đón.</p>
+          <p>Linh hoạt.</p>
         </div>
         <div class="stat-card">
           <i class="fa-solid fa-chalkboard-user"></i>
@@ -1104,33 +1144,6 @@
         <li><i class="fa-solid fa-circle-check"></i> Môi trường học tập tôn trọng sự khác biệt của từng đứa trẻ, không tạo áp lực điểm số hay so sánh năng lực.</li>
         <li><i class="fa-solid fa-circle-check"></i> Định kỳ phản hồi tiến trình phát triển và tư vấn chuyên môn cho cha mẹ cách đồng hành cùng con tích cực tại nhà.</li>
       </ul>
-    </div>
-
-    <div class="support-process">
-      <h2>Quy trình đăng ký &amp; xét duyệt</h2>
-      <div class="reg-timeline" id="regTimeline">
-        <div class="reg-fill" id="regFill"></div>
-        <div class="reg-item">
-          <span class="reg-dot">1</span>
-          <h3>Gửi thông tin đăng ký</h3>
-          <p>Phụ huynh điền thông tin của trẻ vào form bên trên.</p>
-        </div>
-        <div class="reg-item">
-          <span class="reg-dot">2</span>
-          <h3>Ban tổ chức rà soát hồ sơ</h3>
-          <p>Kiểm tra thông tin, đánh giá hoàn cảnh và mức độ phù hợp với chương trình.</p>
-        </div>
-        <div class="reg-item">
-          <span class="reg-dot">3</span>
-          <h3>Liên hệ xác nhận</h3>
-          <p>Chương trình có thể liên hệ để xác minh thêm thông tin nếu cần thiết.</p>
-        </div>
-        <div class="reg-item">
-          <span class="reg-dot">4</span>
-          <h3>Thông báo kết quả</h3>
-          <p>Kết quả được thông báo trực tiếp, kèm hướng dẫn về lịch học, địa điểm và nội quy.</p>
-        </div>
-      </div>
     </div>
 
     <p style="text-align:center; margin-top:1.6rem; color: var(--text-muted); font-size:0.92rem;">

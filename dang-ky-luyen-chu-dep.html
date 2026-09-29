@@ -707,7 +707,7 @@
     .dropdown-select-option:has(input:checked) { background: #eff6ff; }
     .dropdown-select-option input[type="checkbox"] {
       appearance: none; -webkit-appearance: none; width: 20px; height: 20px; flex-shrink: 0;
-      border: 2px solid #cbd5e1; border-radius: 6px; margin: 0; cursor: pointer; position: relative;
+      border: 2px solid #cbd5e1; border-radius: 6px; margin: 0; padding: 0; min-width: 20px; max-width: 20px; min-height: 20px; cursor: pointer; position: relative; display: inline-block; vertical-align: middle;
       background: #fff; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
     }
     .dropdown-select-option input[type="checkbox"]:hover { border-color: #0284c7; }
@@ -1055,6 +1055,19 @@
                 <label class="dropdown-select-option"><input type="checkbox" name="nhu_cau[]" value="Tốc độ viết" onchange="updateDropdownSelectText('nhuCauDropdown')"> Tốc độ viết</label>
                 <label class="dropdown-select-option"><input type="checkbox" name="nhu_cau[]" value="Trình bày bài viết" onchange="updateDropdownSelectText('nhuCauDropdown')"> Trình bày bài viết</label>
               </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Hình thức học <span class="required">*</span></label>
+            <div class="lc-object-toggle" role="radiogroup" aria-label="Hình thức học">
+              <label class="lc-object-option">
+                <input type="radio" name="hinh_thuc_hoc" value="Học tại trung tâm" checked>
+                <i class="fa-solid fa-school"></i> Học tại trung tâm
+              </label>
+              <label class="lc-object-option">
+                <input type="radio" name="hinh_thuc_hoc" value="Dạy tại nhà">
+                <i class="fa-solid fa-house-chimney"></i> Dạy tại nhà
+              </label>
             </div>
           </div>
           <div class="form-group">

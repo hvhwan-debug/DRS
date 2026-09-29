@@ -509,7 +509,8 @@
       .no-print { display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260928i">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260929b">
+<link rel="stylesheet" href="/wvn-luxe.css?v=20260929b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -645,7 +646,7 @@
       ten_tre: 'Tên trẻ', ten_phu_huynh: 'Phụ huynh', fullname: 'Họ tên', fullName: 'Họ tên', name: 'Họ tên',
       ngay_sinh_tre: 'Ngày sinh trẻ', ngay_sinh: 'Ngày sinh', dob: 'Ngày sinh',
       phone: 'SĐT', sdt_phu_huynh: 'SĐT', dia_chi: 'Địa chỉ', phuong_xa: 'Khu vực',
-      truong_lop: 'Trường/lớp', doi_tuong_dang_ky: 'Đối tượng đăng ký', hoan_canh_ly_do: 'Ghi chú/Hoàn cảnh'
+      truong_lop: 'Trường/lớp', hinh_thuc_hoc: 'Hình thức học', doi_tuong_dang_ky: 'Đối tượng đăng ký', hoan_canh_ly_do: 'Ghi chú/Hoàn cảnh'
     };
     const NON_EDITABLE_KEYS = ['_honey', '_captcha', 'email', 'email_phu_huynh'];
 
@@ -975,7 +976,7 @@
         ['phone', 'SĐT'], ['sdt_phu_huynh', 'SĐT'],
         ['email', 'Email'], ['email_phu_huynh', 'Email'],
         ['dia_chi', 'Địa chỉ'], ['phuong_xa', 'Khu vực'],
-        ['truong_lop', 'Trường/lớp'], ['doi_tuong_dang_ky', 'Đối tượng đăng ký'],
+        ['truong_lop', 'Trường/lớp'], ['hinh_thuc_hoc', 'Hình thức học'], ['doi_tuong_dang_ky', 'Đối tượng đăng ký'],
         ['hoan_canh_ly_do', 'Ghi chú/Hoàn cảnh']
       ];
       const out = [];
@@ -2318,5 +2319,6 @@
 
     loadMemberInfo();
   </script>
+<script src="/wvn-luxe.js?v=20260929b"></script>
 </body>
 </html>

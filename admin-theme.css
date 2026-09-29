@@ -370,3 +370,13 @@ body.wvn-admin .be-tabs button[aria-selected="true"] i { color: #0284c7; }
 body.wvn-admin .be-count { display: inline-grid; place-items: center; min-width: 1.4rem; height: 1.2rem; padding: 0 0.4rem; border-radius: 999px; background: rgba(12,19,48,0.06); font-size: 0.7rem; color: var(--t-muted); }
 body.wvn-admin .be-count:empty { display: none; }
 body.wvn-admin .be-tabs button[aria-selected="true"] .be-count { background: #e0f2fe; color: #0369a1; }
+
+/* Thẻ số liệu: số tiền dài (vd 2.800.001đ) không bao giờ tràn khỏi thẻ.
+   Cỡ chữ tự co theo bề rộng CHÍNH thẻ đó (container query), giữ nguyên 1 dòng. */
+body.wvn-admin #dashboardStatsRow > .card, body.wvn-admin #memberDashboardStats > .card { min-width: 0; container-type: inline-size; }
+body.wvn-admin #dashboardStatsRow > .card > div:nth-child(2), body.wvn-admin #memberDashboardStats > .card > div:first-child {
+  font-size: clamp(1.15rem, 1.5vw, 1.85rem) !important;
+  font-size: clamp(1.15rem, 12.5cqi, 1.85rem) !important;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; letter-spacing: -0.03em !important;
+}
+body.wvn-admin #dashboardStatsRow > .card > div:first-child > div:last-child { min-width: 0; line-height: 1.3; }

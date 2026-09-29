@@ -66,6 +66,7 @@ const FIELD_LABELS = {
   hoan_canh_ly_do: "Hoàn cảnh gia đình / Lý do đăng ký",
   nhu_cau: "Nhu cầu cần hỗ trợ của trẻ",
   doi_tuong_dang_ky: "Đối tượng đăng ký",
+  hinh_thuc_hoc: "Hình thức học",
   ten_tnv: "Họ tên tình nguyện viên",
   sdt_tnv: "SĐT tình nguyện viên",
   email_tnv: "Email tình nguyện viên",
