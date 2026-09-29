@@ -69,14 +69,65 @@
 
   // ---------- Hộp thư & tuỳ chọn ----------
   var TYPE = { crm: 'Chăm sóc học tập', invoice: 'Hoá đơn', tuition: 'Học phí', bulk: 'Tin tức & sự kiện', registration: 'Đăng ký', otp: 'Mã xác nhận', tier: 'Hạng thành viên', gift: 'Đổi quà', other: 'Thông báo' };
+  // Nhóm loại email thành vài mục dễ lọc
+  var GROUPS = [
+    { key: 'money', label: 'Học phí & hoá đơn', icon: 'fa-file-invoice-dollar', types: ['invoice', 'tuition'] },
+    { key: 'gift', label: 'Đổi quà & hạng', icon: 'fa-gift', types: ['gift', 'tier'] },
+    { key: 'study', label: 'Học tập', icon: 'fa-graduation-cap', types: ['crm', 'registration', 'grade', 'schedule'] },
+    { key: 'news', label: 'Tin tức', icon: 'fa-bullhorn', types: ['bulk', 'news'] }
+  ];
+  function groupOf(m) {
+    for (var i = 0; i < GROUPS.length; i++) if (GROUPS[i].types.indexOf(m.type) > -1) return GROUPS[i];
+    if (/hạng|kim cương|vàng|bạc/i.test(m.subject)) return GROUPS[1];
+    return { key: 'other', label: 'Khác', icon: 'fa-envelope' };
+  }
+  // Gộp các email cùng một việc thành 1 chuỗi: cùng quà ("1 buổi học miễn phí") hoặc cùng số hoá đơn
+  function threadKey(m) {
+    var s = String(m.subject || '');
+    var inv = s.match(/HD\d{4,}-[A-Z0-9]+/i); if (inv) return 'inv:' + inv[0].toUpperCase();
+    var q = s.match(/[“"]([^"”]+)[”"]/); if (q && /quà/i.test(s)) return 'gift:' + q[1].toLowerCase();
+    var g = s.match(/yêu cầu đổi quà:\s*(.+)$/i); if (g) return 'gift:' + g[1].trim().toLowerCase();
+    return 'one:' + (m.sentAt || '') + s;
+  }
+  var inboxState = { group: '', open: {}, limit: 8 };
+  function dayLabel(iso) {
+    var d = new Date(iso); if (isNaN(d)) return '';
+    var t = new Date(); t.setHours(0, 0, 0, 0); var x = new Date(d); x.setHours(0, 0, 0, 0);
+    var diff = Math.round((t - x) / 864e5);
+    return diff === 0 ? 'Hôm nay' : diff === 1 ? 'Hôm qua' : diff > 1 && diff < 7 ? diff + ' ngày trước' : fmtDate(iso);
+  }
+  var hhmm = function (iso) { var d = new Date(iso); return isNaN(d) ? '' : String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
   function renderInbox() {
     var el = $('memberPanel-inbox'); if (!el) return;
-    var mails = D.emailInbox || [];
+    var all = (D.emailInbox || []).slice().sort(function (a, b) { return String(b.sentAt).localeCompare(String(a.sentAt)); });
     var prefs = (D.profile && D.profile.prefs) || {};
-    el.innerHTML = '<div class="card"><h2><i class="fa-solid fa-inbox"></i> Hộp Thư</h2><p class="mx-note" style="margin-top:-0.4rem">Các email trung tâm đã gửi tới ' + esc(D.email) + '. Nếu không thấy trong hộp thư, hãy kiểm tra mục Thư rác / Quảng cáo.</p>' +
-      (mails.length ? '<div class="mx-list">' + mails.map(function (m) {
-        return '<div class="mx-row"><div><strong>' + esc(m.subject) + '</strong><small>' + esc(TYPE[m.type] || TYPE.other) + ' · ' + esc(fmtDate(m.sentAt)) + ' ' + esc(String(m.sentAt || '').slice(11, 16)) + '</small></div>' + (m.success ? '<span class="mx-pill ok">Đã gửi</span>' : '<span class="mx-pill bad">Gửi lỗi</span>') + '</div>';
-      }).join('') + '</div>' : '<p class="mx-empty">Chưa có email nào.</p>') + '</div>' +
+    // chuỗi email
+    var threads = [], byKey = {};
+    all.forEach(function (m) {
+      var k = threadKey(m), th = byKey[k];
+      if (!th) { th = byKey[k] = { key: k, items: [], group: groupOf(m) }; threads.push(th); }
+      th.items.push(m);
+    });
+    var counts = {}; threads.forEach(function (t) { counts[t.group.key] = (counts[t.group.key] || 0) + 1; });
+    var shown = threads.filter(function (t) { return !inboxState.group || t.group.key === inboxState.group; });
+    var failed = all.filter(function (m) { return !m.success; }).length;
+    var chips = '<div class="mx-kids mx-ibx-filter" role="group" aria-label="Lọc email"><button type="button" data-ibx-group="" aria-pressed="' + (!inboxState.group) + '">Tất cả <span>' + threads.length + '</span></button>' +
+      GROUPS.filter(function (g) { return counts[g.key]; }).map(function (g) { return '<button type="button" data-ibx-group="' + g.key + '" aria-pressed="' + (inboxState.group === g.key) + '"><i class="fa-solid ' + g.icon + '"></i> ' + g.label + ' <span>' + counts[g.key] + '</span></button>'; }).join('') + '</div>';
+    var lastDay = '', html = '';
+    shown.slice(0, inboxState.limit).forEach(function (th) {
+      var m = th.items[0], day = dayLabel(m.sentAt);
+      if (day !== lastDay) { html += '<div class="mx-ibx-day">' + esc(day) + '</div>'; lastDay = day; }
+      var more = th.items.length - 1, isOpen = inboxState.open[th.key];
+      html += '<div class="mx-ibx' + (isOpen ? ' open' : '') + '"><div class="mx-ibx-row"' + (more ? ' data-ibx-toggle="' + esc(th.key) + '" role="button" tabindex="0" aria-expanded="' + !!isOpen + '"' : '') + '>' +
+        '<span class="mx-ibx-ic g-' + th.group.key + '"><i class="fa-solid ' + th.group.icon + '"></i></span>' +
+        '<div class="mx-ibx-main"><strong>' + esc(m.subject) + '</strong><small>' + esc(th.group.label) + (more ? ' · ' + (more + 1) + ' email' : '') + '</small></div>' +
+        '<span class="mx-ibx-time">' + esc(hhmm(m.sentAt)) + '</span>' + (m.success ? '' : '<span class="mx-pill bad">Gửi lỗi</span>') +
+        (more ? '<i class="fa-solid fa-chevron-down mx-ibx-chev" aria-hidden="true"></i>' : '') + '</div>' +
+        (more && isOpen ? '<ol class="mx-ibx-thread">' + th.items.slice(1).map(function (x) { return '<li><span>' + esc(x.subject) + '</span><small>' + esc(fmtDate(x.sentAt)) + ' ' + esc(hhmm(x.sentAt)) + (x.success ? '' : ' · gửi lỗi') + '</small></li>'; }).join('') + '</ol>' : '') + '</div>';
+    });
+    var rest = shown.length - Math.min(shown.length, inboxState.limit);
+    el.innerHTML = '<div class="card"><h2><i class="fa-solid fa-inbox"></i> Hộp Thư</h2><p class="mx-note" style="margin-top:-0.4rem">' + all.length + ' email đã gửi tới ' + esc(D.email) + (failed ? ', <b style="color:#b91c1c">' + failed + ' email gửi lỗi</b>' : '') + '. Không thấy trong hộp thư? Hãy xem mục Thư rác / Quảng cáo.</p>' +
+      (all.length ? chips + '<div class="mx-ibx-list">' + html + '</div>' + (rest > 0 ? '<button type="button" class="btn btn-outline mx-ibx-more" data-ibx-more>Xem thêm ' + rest + ' mục</button>' : '') : '<p class="mx-empty">Chưa có email nào.</p>') + '</div>' +
       '<div class="card"><h2><i class="fa-solid fa-bell"></i> Tuỳ Chọn Nhận Email</h2>' +
       '<label class="mx-switch"><input type="checkbox" data-pref="reminders"' + (prefs.reminders !== false ? ' checked' : '') + '><span><strong>Nhắc lịch học & tình hình học tập</strong><small>Nhắc buổi học, báo tiến bộ và kết quả của con.</small></span></label>' +
       '<label class="mx-switch"><input type="checkbox" data-pref="news"' + (prefs.news !== false ? ' checked' : '') + '><span><strong>Tin tức, sự kiện & chương trình mới</strong><small>Email gửi chung tới thành viên.</small></span></label>' +
@@ -162,6 +213,9 @@
     if (window.__mxBound) return; window.__mxBound = true;
     document.addEventListener('click', function (e) {
       var k = e.target.closest('[data-kid]'); if (k) { childFilter = k.dataset.kid; renderAttendance(); return; }
+      var ig = e.target.closest('[data-ibx-group]'); if (ig) { inboxState.group = ig.dataset.ibxGroup; inboxState.limit = 8; renderInbox(); return; }
+      var it = e.target.closest('[data-ibx-toggle]'); if (it) { inboxState.open[it.dataset.ibxToggle] = !inboxState.open[it.dataset.ibxToggle]; renderInbox(); return; }
+      if (e.target.closest('[data-ibx-more]')) { inboxState.limit += 12; renderInbox(); return; }
       var r = e.target.closest('[data-leave-reason]'); if (r) { $('mxLeaveReason').value = r.dataset.leaveReason; document.querySelectorAll('[data-leave-reason]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === r)); }); return; }
       if (e.target.closest('#mxIcsBtn')) {
         var ics = icsFor(D.schedules || []);
@@ -172,6 +226,7 @@
       if (e.target.closest('#mxRefCopy')) { var inp = $('mxRefLink'); inp.select(); (navigator.clipboard ? navigator.clipboard.writeText(inp.value) : Promise.resolve(document.execCommand('copy'))).then(function () { e.target.closest('#mxRefCopy').innerHTML = '<i class="fa-solid fa-check"></i> Đã sao chép'; }); return; }
       if (e.target.closest('#mxRefShare')) { navigator.share({ title: 'Tri thức Việt', text: 'Mời bạn tham gia cùng gia đình mình tại Tri thức Việt', url: $('mxRefLink').value }).catch(function () {}); }
     });
+    document.addEventListener('keydown', function (e) { var it = e.target.closest && e.target.closest('[data-ibx-toggle]'); if (it && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); it.click(); } });
     document.addEventListener('submit', function (e) {
       if (e.target.id !== 'mxLeaveForm') return;
       e.preventDefault();
