@@ -201,6 +201,58 @@
       .form-panel { padding: 2rem 1.1rem 2.6rem; }
       .form-title { font-size: 1.55rem; }
     }
+    /* ===== Khung trái: ảnh phụ huynh & con + dải màu thương hiệu (#0f172a → #1e3a8a → #0284c7) ===== */
+    .brand-panel { justify-content: flex-end; gap: 0; padding: 0; background: #0f172a; isolation: isolate; }
+    .brand-panel-photo { position: absolute; inset: 0 0 auto 0; height: max(46%, 300px); z-index: -2;
+      background: url("images/uploads/me-con-hoc-cung-nhau-tai-nha.jpg") center 22% / cover no-repeat;
+      -webkit-mask-image: linear-gradient(180deg, #000 45%, rgba(0,0,0,0.55) 72%, transparent 100%); mask-image: linear-gradient(180deg, #000 45%, rgba(0,0,0,0.55) 72%, transparent 100%); }
+    .brand-panel::before { content: ""; position: absolute; inset: 0; z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.25) 30%, rgba(15,23,42,0.7) 55%, rgba(15,23,42,0.9) 100%),
+        linear-gradient(135deg, rgba(15,23,42,0.55) 0%, rgba(30,58,138,0.45) 55%, rgba(2,132,199,0.35) 100%); }
+    .brand-panel::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+      background: linear-gradient(90deg, #38bdf8, #7dd3fc 50%, #60a5fa); opacity: 0.85; }
+    .brand-panel-body { padding: 3rem 3.2rem 3.2rem; max-width: 640px; }
+    .brand-panel-badge { display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(15,23,42,0.45);
+      border-color: rgba(125,211,252,0.45); color: #bae6fd; letter-spacing: 0.2px; font-weight: 600;
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    .brand-panel-badge i { color: #7dd3fc; font-size: 0.72rem; }
+    .brand-panel-title { font-size: 2.3rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.18; max-width: 18ch; text-shadow: 0 2px 24px rgba(15,23,42,0.5); }
+    .brand-panel-desc { color: #cfe3f7; }
+    .brand-perks { list-style: none; margin: 1.8rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .brand-perks li { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.8rem 0.9rem; border-radius: 14px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(125,211,252,0.18);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .brand-perks i { width: 32px; height: 32px; flex-shrink: 0; border-radius: 9px; display: grid; place-items: center; font-size: 0.8rem;
+      color: #7dd3fc; background: rgba(2,132,199,0.22); box-shadow: inset 0 0 0 1px rgba(125,211,252,0.25); }
+    .brand-perks b { display: block; font-size: 0.88rem; font-weight: 600; color: #fff; margin-bottom: 0.1rem; }
+    .brand-perks span { font-size: 0.78rem; line-height: 1.4; color: #a9c4e4; }
+    .form-panel { background: #f8fafc; }
+    .brand-panel-body { padding-top: max(34%, 230px); }
+    @media (min-width: 961px) and (max-height: 760px) {
+      .brand-panel { justify-content: flex-start; }
+      .brand-panel-photo { height: 280px; }
+      .brand-panel-body { padding-top: 190px; padding-bottom: 1.6rem; }
+      .brand-panel-title { font-size: 1.75rem; margin-bottom: 0; }
+      .brand-panel-desc { display: none; }
+      .brand-perks { margin-top: 1.1rem; gap: 0.5rem; }
+      .brand-perks li { padding: 0.6rem 0.75rem; align-items: center; }
+      .brand-perks span { font-size: 0; } .brand-perks b { margin: 0; font-size: 0.86rem; }
+      .brand-perks i { width: 28px; height: 28px; }
+    }    .form-eyebrow { color: #0369a1; letter-spacing: 0.4px; }
+    .form-field input:focus { border-bottom-color: #0284c7; box-shadow: 0 1px 0 #0284c7; }
+    @media (max-width: 960px) {
+      .brand-panel { min-height: 420px; padding: 0; }
+      .brand-panel-body { padding: 8rem 1.6rem 2rem; }
+      .brand-panel-title { font-size: 1.6rem; }
+    }
+    @media (max-width: 480px) {
+      .brand-panel { min-height: 0; }
+      .brand-panel-body { padding: 6.5rem 1.2rem 1.5rem; }
+      .brand-panel-title { font-size: 1.35rem; }
+      .brand-perks { display: none; } /* điện thoại: để form hiện ngay */
+    }
+
   </style>
   <style id="brand-full-logo-style">
     .brand-wrap { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; }
@@ -264,10 +316,17 @@
   <div class="login-wrap">
 
     <div class="brand-panel">
-      <div>
-        <div class="brand-panel-badge">KHU VỰC THÀNH VIÊN</div>
+      <div class="brand-panel-photo" aria-hidden="true"></div>
+      <div class="brand-panel-body">
+        <div class="brand-panel-badge"><i class="fa-solid fa-star" aria-hidden="true"></i> Khu vực thành viên</div>
         <h1 class="brand-panel-title">Đồng hành cùng chúng tôi vì giáo dục công bằng</h1>
         <p class="brand-panel-desc">Đăng nhập để theo dõi hoạt động đã tham gia, lịch sử đóng góp và nhận thông tin mới nhất từ Mạng Lưới Tri Thức Việt Nam.</p>
+        <ul class="brand-perks">
+          <li><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span><b>Lịch học của con</b>Giờ học, địa điểm, giáo viên</span></li>
+          <li><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i><span><b>Bảng điểm &amp; nhận xét</b>Tiến bộ của con qua từng buổi</span></li>
+          <li><i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i><span><b>Học phí &amp; hoá đơn</b>Minh bạch từng khoản đã đóng</span></li>
+          <li><i class="fa-solid fa-gift" aria-hidden="true"></i><span><b>Điểm tích luỹ &amp; quà</b>Hạng thành viên, đổi quà tặng</span></li>
+        </ul>
       </div>
     </div>
 
