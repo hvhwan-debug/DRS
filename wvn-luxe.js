@@ -331,8 +331,7 @@
     var views = Array.prototype.slice.call(document.querySelectorAll('.view-btn'));
     views.forEach(function (b, i) {
       if (i > 8) return;
-      var s = document.createElement('span'); s.className = 'lx-k'; s.textContent = i + 1; s.setAttribute('aria-hidden', 'true');
-      b.appendChild(s); b.setAttribute('aria-keyshortcuts', String(i + 1)); b.title = 'Phím tắt: ' + (i + 1);
+      b.setAttribute('aria-keyshortcuts', String(i + 1)); b.title = 'Phím tắt: ' + (i + 1);
     });
     document.addEventListener('keydown', function (e) {
       if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || isTyping(e.target)) return;

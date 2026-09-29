@@ -404,3 +404,9 @@ html body.wvn-admin .sidebar .brand-lockup { height: 34px; width: auto; max-widt
 html body.wvn-crm .brand-crm .crm-logo { height: 36px; width: auto; }
 @media (max-width: 880px) { html body.wvn-admin .mobile-topbar .brand-lockup { height: 28px; } }
 @media (max-width: 700px) { html body.wvn-crm .brand-crm .crm-logo { height: 29px; } }
+
+/* CRM · khung số liệu: vạch chia cột dừng bên trong viền vàng, bỏ dải sáng dưới đáy; trích dẫn cùng tông xà cừ */
+html body.wvn-crm .pulse::after { display: none; }
+html body.wvn-crm .pulse > div { border-left: none !important; position: relative; }
+html body.wvn-crm .pulse > div + div::before { content: ""; position: absolute; left: 0; top: 22px; bottom: 22px; width: 1px; background: rgba(227,203,152,0.16); }
+html body.wvn-crm .wvn-quote { border-image: var(--lx-nacre) 1; }
