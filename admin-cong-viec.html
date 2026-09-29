@@ -422,7 +422,7 @@ button { cursor: pointer; background: none; border: none; }
 .stat.red { background: var(--red-soft); border-color: transparent; } .stat.red i, .stat.red b { color: var(--red); }
 .stat.gold i { color: var(--gold); } .stat.blue i { color: var(--sapphire); } .stat.violet i { color: var(--violet); }
 /* Nút Của tôi / Cả nhóm nằm cùng hàng với tiêu đề nhóm đầu tiên */
-.list-scope { float: right; margin-top: 1.2rem; }
+.list-scope { margin-left: auto; flex-shrink: 0; }
 .quick .parsed:empty { margin-top: 0; }
 .content { padding-top: 0.9rem; }
 .section-title { margin-top: 1.6rem; }
@@ -788,6 +788,18 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 .hero .wvn-quote p { margin: 0; color: #c9d3ef; font-size: 0.92rem; line-height: 1.5; }
 .hero .wvn-quote .wvn-quote-en { margin-top: 0.2rem; font-style: italic; font-size: 0.85rem; color: #9fb0da; }
 @media (max-width: 900px) { .hero .wvn-quote { margin-right: -76px; } .hero .wvn-quote p { font-size: 0.85rem; } }
+
+/* ===== Màu theo bộ nhận diện trang công khai (chân trang wvn.vn): #0f172a → #1e3a8a → #0284c7, nhấn xanh da trời ===== */
+:root { --midnight: #0f172a; --midnight-2: #172554; --midnight-3: #1e3a8a; --glow-cyan: #38bdf8; --glow-lime: #7dd3fc;
+  --canvas: #f4f7fb; --hair: #e2e8f0; --hair-2: #eef2f7; --ink: #0f172a; --ink-2: #334155; --muted: #64748b; }
+.side { background: linear-gradient(180deg, #0f172a 0%, #172554 55%, #1e3a8a 100%); }
+.brand::after { background: linear-gradient(90deg, rgba(125,211,252,0.45), rgba(125,211,252,0.08) 70%, transparent); }
+.nav button[aria-current="page"] { background: rgba(125,211,252,0.12); box-shadow: inset 0 0 0 1px rgba(125,211,252,0.16); }
+.nav button[aria-current="page"]::before { background: linear-gradient(180deg, #7dd3fc, #38bdf8 55%, #60a5fa); }
+.nav button[aria-current="page"] i { color: #7dd3fc; }
+.hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 58%, #0284c7 135%); box-shadow: 0 30px 60px -38px rgba(15,23,42,0.85); }
+.hero .wvn-quote { border-image: linear-gradient(180deg, #7dd3fc, #38bdf8 55%, #60a5fa) 1; }
+.scope button[aria-pressed="true"], .opt[aria-pressed="true"] { background: #1e3a8a; border-color: #1e3a8a; }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -986,14 +998,13 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
           <div class="stats">${stat(overdue.length, 'Quá hạn', overdue.length ? 'red' : '', 'fa-solid fa-triangle-exclamation')}${stat(todays.filter(open).length, 'Hạn hôm nay', 'gold', 'fa-regular fa-calendar')}${stat(doingN, 'Đang làm', 'blue', 'fa-solid fa-person-running')}${stat(inboxN, 'Từ hệ thống', 'violet', 'fa-solid fa-inbox')}</div>
         </div>
         <div class="ring" role="img" aria-label="Đã xong ${doneToday} trên ${totalToday} việc hôm nay">
-          <svg width="116" height="116" viewBox="0 0 116 116"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.55" stop-color="#38bdf8"/><stop offset="1" stop-color="#bef264"/></linearGradient></defs><circle cx="58" cy="58" r="50" fill="none" stroke="var(--line-2)" stroke-width="5"/><circle cx="58" cy="58" r="50" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct / 100)}"/></svg>
+          <svg width="116" height="116" viewBox="0 0 116 116"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.55" stop-color="#38bdf8"/><stop offset="1" stop-color="#60a5fa"/></linearGradient></defs><circle cx="58" cy="58" r="50" fill="none" stroke="var(--line-2)" stroke-width="5"/><circle cx="58" cy="58" r="50" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct / 100)}"/></svg>
           <div class="lbl"><div><b>${doneToday}/${totalToday || 0}</b><span>đã xong</span></div></div>
         </div>
       </div>
       ${D.inbox.length ? `<div class="section-title" style="margin-top:0.4rem"><h3>Việc từ hệ thống</h3><span class="sub">tự cập nhật từ dữ liệu vận hành</span></div><div class="inbox-strip">${D.inbox.map(inboxCard).join('')}</div>` : ''}
-      <div class="scope list-scope" role="group" aria-label="Phạm vi"><button data-scope="me" aria-pressed="${state.scope === 'me'}">Của tôi</button><button data-scope="all" aria-pressed="${state.scope === 'all'}">Cả nhóm</button></div>
-      ${overdue.length ? `<div class="section-title red"><h3>Quá hạn</h3><span>${overdue.length}</span></div>${list(overdue)}` : ''}
-      <div class="section-title"><h3>Hôm nay</h3><span>${todays.length || ''}</span></div>
+      ${overdue.length ? `<div class="section-title red"><h3>Quá hạn</h3><span>${overdue.length}</span><div class="scope list-scope" role="group" aria-label="Phạm vi"><button data-scope="me" aria-pressed="${state.scope === 'me'}">Của tôi</button><button data-scope="all" aria-pressed="${state.scope === 'all'}">Cả nhóm</button></div></div>${list(overdue)}` : ''}
+      <div class="section-title"><h3>Hôm nay</h3><span>${todays.length || ''}</span>${overdue.length ? '' : `<div class="scope list-scope" role="group" aria-label="Phạm vi"><button data-scope="me" aria-pressed="${state.scope === 'me'}">Của tôi</button><button data-scope="all" aria-pressed="${state.scope === 'all'}">Cả nhóm</button></div>`}</div>
       ${list(todays, '<b>Không có việc hạn hôm nay.</b>Gõ vào ô phía trên, ví dụ "Chuẩn bị tài liệu lớp chiều nay".')}
       ${noDate.length ? `<div class="section-title"><h3>Đang làm</h3><span>${noDate.length}</span></div>${list(noDate)}` : ''}
       ${upcoming.length ? `<div class="section-title"><h3>7 ngày tới</h3><span>${upcoming.length}</span></div>${list(upcoming)}` : ''}`;
