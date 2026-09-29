@@ -94,6 +94,27 @@ module.exports = async function (context, req) {
     }
 
     const saved = W.toTask(await table.getEntity("task", id));
+
+    // Email báo người MỚI được giao việc (không gửi cho chính người giao, không chặn việc lưu nếu gửi lỗi)
+    try {
+      const before = new Set(((current && current.assignees) || []).map(x => String(x).toLowerCase()));
+      const me = String(who.email || "").toLowerCase();
+      const added = (saved.assignees || []).map(x => String(x).toLowerCase()).filter(x => x && !before.has(x) && x !== me && /@/.test(x));
+      if (added.length && saved.status !== "done") {
+        const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+        const esc = s => String(s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+        const due = saved.dueDate ? saved.dueDate.split("-").reverse().join("/") + (saved.dueTime ? " lúc " + saved.dueTime : "") : "Chưa đặt hạn";
+        const PRI = { urgent: "Khẩn", high: "Cao", normal: "Bình thường", low: "Thấp" };
+        const bodyHtml = `<p style="margin:0 0 14px;">${esc(who.displayName || who.email)} vừa giao cho bạn một công việc:</p>
+          <p style="margin:0 0 6px;font-size:17px;font-weight:700;">${esc(saved.title)}</p>
+          <p style="margin:0 0 14px;color:#475569;">Hạn: <b>${esc(due)}</b> · Mức ưu tiên: <b>${esc(PRI[saved.priority] || "Bình thường")}</b></p>
+          ${saved.description ? `<p style="margin:0 0 14px;color:#334155;">${esc(saved.description).slice(0, 600).replace(/\n/g, "<br>")}</p>` : ""}`;
+        for (const to of added.slice(0, 10)) {
+          await sendTrackedEmail(context, { to, subject: `Bạn được giao việc: ${saved.title}`.slice(0, 150), type: "work", eyebrow: "Công Việc", title: "Bạn có việc mới", bodyHtml,
+            ctas: [{ label: "Mở công việc", href: `https://admin.wvn.vn/admin/cong-viec#today&task=${id}`, style: "primary" }] });
+        }
+      }
+    } catch (e) { context.log.warn("Không gửi được email giao việc:", e.message); }
     await logAdminActivity(req, "Công việc: lưu việc", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, task: saved, spawned };

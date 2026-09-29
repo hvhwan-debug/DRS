@@ -800,6 +800,35 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 .hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 58%, #0284c7 135%); box-shadow: 0 30px 60px -38px rgba(15,23,42,0.85); }
 .hero .wvn-quote { border-image: linear-gradient(180deg, #7dd3fc, #38bdf8 55%, #60a5fa) 1; }
 .scope button[aria-pressed="true"], .opt[aria-pressed="true"] { background: #1e3a8a; border-color: #1e3a8a; }
+/* ===== Tìm việc, nhãn, đội nhóm ===== */
+.nav-search { margin-top: 0.4rem; border: 1px dashed rgba(255,255,255,0.14) !important; }
+.nav-search kbd { margin-left: auto; font: inherit; font-size: 0.7rem; padding: 0.05rem 0.4rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); }
+.lbl { display: inline-flex; align-items: center; font-size: 0.72rem; font-weight: 500; padding: 0.1rem 0.5rem; border-radius: 999px; background: hsl(var(--h) 80% 94%); color: hsl(var(--h) 55% 32%); }
+.lbl-opt { background: hsl(var(--h) 80% 94%) !important; color: hsl(var(--h) 55% 30%) !important; border-color: transparent !important; }
+.lbl-opt i { font-size: 0.65rem; margin-left: 0.25rem; opacity: 0.7; }
+.lbl-input { font: inherit; font-size: 0.82rem; border: 1px dashed #cbd5e1; border-radius: 999px; padding: 0.3rem 0.7rem; width: 130px; background: transparent; }
+.lbl-input:focus { outline: none; border-style: solid; border-color: #0284c7; }
+.sp-overlay { position: fixed; inset: 0; z-index: 90; background: rgba(15,23,42,0.45); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); display: flex; justify-content: center; align-items: flex-start; padding: 10vh 1rem 1rem; }
+.sp-box { width: 100%; max-width: 640px; background: #fff; border-radius: 18px; box-shadow: 0 40px 80px -30px rgba(15,23,42,0.6); overflow: hidden; }
+.sp-in { display: flex; align-items: center; gap: 0.7rem; padding: 0.9rem 1.1rem; border-bottom: 1px solid #eef1f6; }
+.sp-in i { color: #94a3b8; } .sp-in input { flex: 1; border: none; outline: none; font: inherit; font-size: 1rem; background: transparent; }
+.sp-in kbd { font: inherit; font-size: 0.7rem; color: #94a3b8; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.05rem 0.4rem; }
+.sp-res { max-height: 60vh; overflow: auto; padding: 0.4rem; }
+.sp-item { display: block; width: 100%; text-align: left; font: inherit; background: none; border: none; border-radius: 12px; padding: 0.65rem 0.8rem; cursor: pointer; }
+.sp-item strong { display: block; font-size: 0.92rem; font-weight: 600; margin-bottom: 0.3rem; } .sp-item.done strong { color: #94a3b8; text-decoration: line-through; }
+.sp-item.on, .sp-item:hover { background: #f0f7ff; }
+.team-note { font-size: 0.86rem; color: #a16207; background: #fef9ec; border: 1px solid #fde68a; border-radius: 12px; padding: 0.6rem 0.9rem; margin: -0.4rem 0 1rem; }
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.9rem; }
+.team-card { font: inherit; text-align: left; cursor: pointer; background: #fff; border: 1px solid var(--hair, #e6e9f1); border-radius: 18px; padding: 1rem 1.1rem; box-shadow: var(--lift); transition: transform .15s, box-shadow .15s; }
+.team-card:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(12,19,48,0.03), 0 22px 40px -26px rgba(12,19,48,0.45); }
+.team-card.warn { border-color: #fecaca; }
+.tc-head { display: flex; align-items: center; gap: 0.7rem; } .tc-head .av { width: 38px; height: 38px; font-size: 0.8rem; }
+.tc-head strong { display: block; font-size: 0.95rem; font-weight: 600; } .tc-head small { color: var(--muted, #6a7291); font-size: 0.8rem; }
+.tc-bar { height: 6px; border-radius: 6px; background: #eef1f6; margin: 0.85rem 0; overflow: hidden; } .tc-bar i { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #1e3a8a, #0284c7); }
+.team-card.warn .tc-bar i { background: linear-gradient(90deg, #f97316, #dc2626); }
+.tc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; font-size: 0.72rem; color: var(--muted, #6a7291); }
+.tc-stats b { display: block; font-size: 1.1rem; font-weight: 700; color: var(--ink, #0c1330); } .tc-stats .red b { color: #dc2626; } .tc-stats .ok b { color: #15803d; }
+@media (max-width: 900px) { .team-grid { grid-template-columns: 1fr; } }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -822,6 +851,8 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       <button data-view="mine"><i class="fa-regular fa-user" aria-hidden="true"></i> Việc của tôi <span class="n" id="nMine"></span></button>
       <button data-view="board"><i class="fa-solid fa-table-columns" aria-hidden="true"></i> Bảng công việc</button>
       <button data-view="calendar"><i class="fa-regular fa-calendar" aria-hidden="true"></i> Lịch tuần</button>
+      <button data-view="team"><i class="fa-solid fa-people-group" aria-hidden="true"></i> Đội nhóm</button>
+      <button type="button" class="nav-search" id="openSearch"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Tìm việc <kbd>/</kbd></button>
     </nav>
     <h4>Dự án <button data-act="new-project" aria-label="Tạo dự án"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></h4>
     <nav class="nav" id="projectNav"></nav>
@@ -853,6 +884,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       <section class="view" id="view-mine"></section>
       <section class="view" id="view-board"></section>
       <section class="view" id="view-calendar"></section>
+      <section class="view" id="view-team"></section>
     </div>
   </div>
 </div>
@@ -945,6 +977,8 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   const prioRank = t => ({ urgent: 3, high: 2, normal: 1, low: 0 })[t.priority] || 1;
 
   // ---------- Dòng việc ----------
+  const labelHue = l => { let h = 0; for (const c of String(l)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+  const allLabels = () => Array.from(new Set(D.tasks.flatMap(t => t.labels || []))).sort((a, b) => a.localeCompare(b, 'vi'));
   function metaHtml(t) {
     const today = todayStr(); const bits = [];
     if (t.dueDate) {
@@ -956,6 +990,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     const p = projectBy(t.projectId); if (p) bits.push(`<span class="m"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</span>`);
     if (t.checklist.length) { const d = t.checklist.filter(i => i.done).length; bits.push(`<span class="m"><i class="fa-regular fa-square-check" aria-hidden="true"></i>${d}/${t.checklist.length}</span>`); }
     if (t.commentCount) bits.push(`<span class="m"><i class="fa-regular fa-comment" aria-hidden="true"></i>${t.commentCount}</span>`);
+    (t.labels || []).slice(0, 3).forEach(l => bits.push(`<span class="lbl" style="--h:${labelHue(l)}">${esc(l)}</span>`));
     if (t.recurrence) bits.push('<span class="m"><i class="fa-solid fa-repeat" aria-hidden="true"></i></span>');
     if (t.link) bits.push('<span class="m" style="color:var(--gold)"><i class="fa-solid fa-link" aria-hidden="true"></i></span>');
     return bits.join('');
@@ -1028,9 +1063,10 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       ['Sau đó', mine.filter(t => t.dueDate > addDays(today, 7))],
       ['Chưa có hạn', mine.filter(t => !t.dueDate)]
     ].filter(g => g[1].length);
+    const weekStart = mondayOf(new Date()); const doneWeek = D.tasks.filter(t => isMine(t) && t.status === 'done' && t.completedAt && new Date(t.completedAt) >= weekStart).length;
     const recentDone = D.tasks.filter(t => isMine(t) && t.status === 'done').sort((a, b) => new Date(b.completedAt || 0) - new Date(a.completedAt || 0)).slice(0, 5);
     const overdueN = mine.filter(t => t.dueDate && t.dueDate < today).length;
-    $('view-mine').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Việc của tôi</h2><p class="pt-sub">${mine.length ? `Bạn đang giữ ${mine.length} việc${overdueN ? `, trong đó ${overdueN} việc đã quá hạn. Xử lý việc quá hạn trước nhé.` : '. Mọi thứ đang đúng hạn.'}` : 'Không có việc nào đang mở.'}</p></div><div class="pt-num"><b>${mine.length}</b><span>đang mở</span></div>${recentDone.length ? `<div class="pt-num"><b>${recentDone.length}</b><span>mới xong</span></div>` : ''}</div>
+    $('view-mine').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Việc của tôi</h2><p class="pt-sub">${mine.length ? `Bạn đang giữ ${mine.length} việc${overdueN ? `, trong đó ${overdueN} việc đã quá hạn. Xử lý việc quá hạn trước nhé.` : '. Mọi thứ đang đúng hạn.'}` : 'Không có việc nào đang mở.'}</p></div><div class="pt-num"><b>${mine.length}</b><span>đang mở</span></div><div class="pt-num"><b>${doneWeek}</b><span>xong tuần này</span></div></div>
       ${groups.length ? groups.map(([n, items, c]) => `<div class="section-title ${c || ''}"><h3>${n}</h3><span>${items.length}</span></div>${list(items)}`).join('') : '<div class="empty"><b>Bạn không có việc nào đang mở.</b>Tận hưởng khoảnh khắc này, hoặc nhận thêm việc từ Bảng công việc.</div>'}
       ${recentDone.length ? `<div class="section-title"><h3>Mới hoàn thành</h3></div>${list(recentDone)}` : ''}`;
   }
@@ -1114,9 +1150,59 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 
   function renderAll() {
     renderSide();
-    ({ today: renderToday, inbox: renderInbox, mine: renderMine, board: renderBoard, calendar: renderCalendar })[state.view]();
+    ({ today: renderToday, inbox: renderInbox, mine: renderMine, board: renderBoard, calendar: renderCalendar, team: renderTeam })[state.view]();
     if (state.openId) renderDrawer();
   }
+  // ---------- Đội nhóm: khối lượng việc của từng người ----------
+  function renderTeam() {
+    const today = todayStr(); const weekStart = mondayOf(new Date());
+    const people = D.staff.map(p => {
+      const mine = D.tasks.filter(t => (t.assignees || []).map(x => String(x).toLowerCase()).includes(String(p.email).toLowerCase()));
+      const openT = mine.filter(open);
+      return { p, open: openT.length, overdue: openT.filter(t => t.dueDate && t.dueDate < today).length, todayN: openT.filter(t => t.dueDate === today).length,
+        urgent: openT.filter(t => t.priority === 'urgent' || t.priority === 'high').length, doneWeek: mine.filter(t => t.status === 'done' && t.completedAt && new Date(t.completedAt) >= weekStart).length };
+    }).sort((a, b) => b.overdue - a.overdue || b.open - a.open);
+    const unassigned = D.tasks.filter(t => open(t) && !(t.assignees || []).length).length;
+    const max = Math.max(1, ...people.map(x => x.open));
+    $('view-team').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Đội nhóm</h2><p class="pt-sub">Ai đang giữ bao nhiêu việc, ai đang quá tải. Chạm một người để xem bảng việc của họ.</p></div>
+        <div class="pt-num"><b>${D.tasks.filter(open).length}</b><span>việc đang mở</span></div><div class="pt-num"><b>${D.tasks.filter(t => open(t) && t.dueDate && t.dueDate < today).length}</b><span>quá hạn</span></div></div>
+      ${unassigned ? `<p class="team-note"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Có ${unassigned} việc chưa giao cho ai.</p>` : ''}
+      <div class="team-grid">${people.map(x => `<button type="button" class="team-card${x.overdue ? ' warn' : ''}" data-team-who="${esc(x.p.email)}">
+          <div class="tc-head"><span class="av">${esc(initials(x.p.name))}</span><div><strong>${esc(x.p.name)}</strong><small>${x.open ? `${x.open} việc đang mở` : 'Không có việc đang mở'}</small></div></div>
+          <div class="tc-bar" aria-hidden="true"><i style="width:${Math.round(x.open / max * 100)}%"></i></div>
+          <div class="tc-stats"><span class="${x.overdue ? 'red' : ''}"><b>${x.overdue}</b>quá hạn</span><span><b>${x.todayN}</b>hôm nay</span><span><b>${x.urgent}</b>ưu tiên cao</span><span class="ok"><b>${x.doneWeek}</b>xong tuần này</span></div>
+        </button>`).join('') || '<div class="empty">Chưa có thành viên nào trong đội.</div>'}</div>`;
+  }
+
+  // ---------- Tìm việc (phím / hoặc Ctrl/⌘ + K) ----------
+  const normVN = x => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+  function openSearch() {
+    if ($('searchOverlay')) return $('searchInput').focus();
+    const el = document.createElement('div'); el.id = 'searchOverlay'; el.className = 'sp-overlay';
+    el.innerHTML = `<div class="sp-box" role="dialog" aria-modal="true" aria-label="Tìm công việc"><div class="sp-in"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="searchInput" type="search" placeholder="Tìm theo tên việc, mô tả, nhãn, dự án, người làm…" autocomplete="off"><kbd>Esc</kbd></div><div class="sp-res" id="searchRes" role="listbox"></div></div>`;
+    document.body.appendChild(el);
+    let sel = 0;
+    const run = () => {
+      const q = normVN($('searchInput').value.trim()).split(/\s+/).filter(Boolean);
+      const staffName = e => { const p = D.staff.find(x => String(x.email).toLowerCase() === String(e).toLowerCase()); return p ? p.name : e; };
+      const hay = t => normVN([t.title, t.description, (t.labels || []).join(' '), (projectBy(t.projectId) || {}).name, (t.assignees || []).map(staffName).join(' '), (t.checklist || []).map(i => i.text).join(' ')].join(' '));
+      const list = (q.length ? D.tasks.filter(t => q.every(w => hay(t).includes(w))) : D.tasks.filter(open).sort(byDue)).sort((a, b) => (a.status === 'done') - (b.status === 'done')).slice(0, 30);
+      sel = Math.min(sel, Math.max(0, list.length - 1));
+      $('searchRes').innerHTML = list.length ? list.map((t, i) => `<button type="button" class="sp-item${i === sel ? ' on' : ''}${t.status === 'done' ? ' done' : ''}" data-sp="${esc(t.id)}" role="option" aria-selected="${i === sel}"><strong>${esc(t.title)}</strong><span class="t-meta">${metaHtml(t)}${t.status === 'done' ? '<span class="pill">Đã xong</span>' : ''}</span></button>`).join('')
+        : '<div class="empty" style="margin:0.6rem">Không tìm thấy việc nào khớp.</div>';
+    };
+    const close = () => el.remove();
+    el.addEventListener('click', e => { const it = e.target.closest('[data-sp]'); if (it) { close(); return openDrawer(it.dataset.sp); } if (e.target === el) close(); });
+    el.addEventListener('keydown', e => {
+      const items = el.querySelectorAll('[data-sp]');
+      if (e.key === 'Escape') { e.stopPropagation(); return close(); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % Math.max(1, items.length); run(); const on = el.querySelector('.sp-item.on'); if (on) on.scrollIntoView({ block: 'nearest' }); }
+      if (e.key === 'Enter' && items[sel]) { e.preventDefault(); const id = items[sel].dataset.sp; close(); openDrawer(id); }
+    });
+    $('searchInput').addEventListener('input', () => { sel = 0; run(); });
+    run(); setTimeout(() => $('searchInput').focus(), 20);
+  }
+
   function setView(v, extra) {
     state.view = v; Object.assign(state, extra || {});
     if (v !== 'board' && !(extra && 'project' in extra)) state.project = v === 'calendar' ? state.project : '';
@@ -1290,6 +1376,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
         <div class="row"><label><i class="fa-solid fa-calendar-day" aria-hidden="true"></i>Hạn chót</label>${dueOptions(t)}</div>
         <div class="row"><label><i class="fa-solid fa-flag" aria-hidden="true"></i>Ưu tiên</label><div class="opts">${PRIO.map(([k, l]) => `<button class="opt p-${k}" data-set="priority" data-v="${k}" aria-pressed="${t.priority === k}">${l}</button>`).join('')}</div></div>
         <div class="row"><label><i class="fa-solid fa-folder" aria-hidden="true"></i>Dự án</label><div class="opts">${D.projects.filter(p => !p.archived || p.id === t.projectId).map(p => `<button class="opt" data-set="projectId" data-v="${esc(p.id)}" aria-pressed="${t.projectId === p.id}"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</button>`).join('')}<button class="opt" data-set="projectId" data-v="" aria-pressed="${!t.projectId}">Không</button><button class="opt" data-act="new-project" style="border-style:dashed;color:var(--muted)"><i class="fa-solid fa-plus" aria-hidden="true"></i> Dự án mới</button></div></div>
+        <div class="row"><label><i class="fa-solid fa-tag" aria-hidden="true"></i>Nhãn</label><div class="opts">${(t.labels || []).map(l => `<button class="opt lbl-opt" data-label-rm="${esc(l)}" style="--h:${labelHue(l)}" aria-label="Bỏ nhãn ${esc(l)}">${esc(l)} <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>`).join('')}${allLabels().filter(l => !(t.labels || []).includes(l)).slice(0, 6).map(l => `<button class="opt" data-label-add="${esc(l)}">+ ${esc(l)}</button>`).join('')}<input class="lbl-input" id="lblAdd" type="text" maxlength="30" placeholder="Nhãn mới…" aria-label="Thêm nhãn mới"></div></div>
         <div class="row"><label><i class="fa-solid fa-repeat" aria-hidden="true"></i>Lặp lại</label><div class="opts">${RECUR.map(([k, l]) => `<button class="opt" data-set="recurrence" data-v="${k}" aria-pressed="${t.recurrence === k}">${l}</button>`).join('')}</div></div>
         </div>
 
@@ -1349,6 +1436,10 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       if (a === 'new-project') return openProjectModal();
       if (a === 'close-modal') return $('projectModal').classList.remove('open');
     }
+    const la = t.closest('[data-label-add]'); if (la && state.openId) { const tk = findTask(state.openId); return update(tk.id, { labels: Array.from(new Set((tk.labels || []).concat(la.dataset.labelAdd))).slice(0, 10) }); }
+    const lr = t.closest('[data-label-rm]'); if (lr && state.openId) { const tk = findTask(state.openId); return update(tk.id, { labels: (tk.labels || []).filter(x => x !== lr.dataset.labelRm) }); }
+    if (t.closest('#openSearch')) return openSearch();
+    const tw = t.closest('[data-team-who]'); if (tw) return setView('board', { boardWho: tw.dataset.teamWho, project: '' });
     const set = t.closest('[data-set]'); if (set && state.openId) { const k = set.dataset.set; const v = set.dataset.v; return update(state.openId, { [k]: v }); }
     const asg = t.closest('[data-assignee]');
     if (asg && state.openId) { const tk = findTask(state.openId); const em = asg.dataset.assignee; const next = tk.assignees.includes(em) ? tk.assignees.filter(x => x !== em) : tk.assignees.concat(em); return update(state.openId, { assignees: next }); }
@@ -1399,9 +1490,12 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       update(tk.id, { checklist: tk.checklist.concat({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), text: v, done: false }) });
       setTimeout(() => { const n = $('clAdd'); if (n) n.focus(); }, 60); return;
     }
+    if (e.target.id === 'lblAdd' && e.key === 'Enter') { e.preventDefault(); const v = e.target.value.trim().slice(0, 30); if (!v) return; const tk = findTask(state.openId); update(tk.id, { labels: Array.from(new Set((tk.labels || []).concat(v))).slice(0, 10) }); setTimeout(() => { const n = $('lblAdd'); if (n) n.focus(); }, 60); return; }
     if (e.target.id === 'cText' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('cForm').requestSubmit(); return; }
     if (e.key === 'Escape') { if ($('projectModal').classList.contains('open')) return $('projectModal').classList.remove('open'); if (state.openId) return closeDrawer(); }
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); return openSearch(); }
     if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === '/') { e.preventDefault(); return openSearch(); }
     if (e.key === 'n' || e.key === 'N') { e.preventDefault(); focusQuick(); }
     const views = { '1': 'today', '2': 'inbox', '3': 'mine', '4': 'board', '5': 'calendar' }; if (views[e.key]) setView(views[e.key], { project: '' });
     if (e.key === 'Enter' && e.target.matches('.task[data-open]')) openDrawer(e.target.dataset.open);
@@ -1436,7 +1530,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       $('loading').remove();
       const h = location.hash.slice(1); const [viewPart, taskPart] = h.split('&task=');
       const [v, pid] = (viewPart || 'today').split('=');
-      setView(['today', 'inbox', 'mine', 'board', 'calendar'].includes(v) ? v : 'today', { project: pid || '' });
+      setView(['today', 'inbox', 'mine', 'board', 'calendar', 'team'].includes(v) ? v : 'today', { project: pid || '' });
       if (taskPart) openDrawer(taskPart);
     } catch (e) {
       $('loading').innerHTML = `<div style="color:var(--red)">${esc(e.message)}</div><button class="btn" style="margin-top:1rem" onclick="location.reload()">Tải lại</button>`;
