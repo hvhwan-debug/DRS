@@ -31,6 +31,7 @@ function toTask(e) {
     link: parseJson(e.linkJson, null),
     history: parseJson(e.historyJson, []),
     commentCount: Number(e.commentCount) || 0,
+    attachments: parseJson(e.attachmentsJson, []).map(a => ({ name: a.name, type: a.type || "", size: a.size || 0, blob: a.blob, at: a.at, by: a.by || "" })),
     order: Number(e.order) || 0,
     createdBy: e.createdBy || "",
     createdByName: e.createdByName || "",

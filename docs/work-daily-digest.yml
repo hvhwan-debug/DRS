@@ -1,0 +1,18 @@
+# Gửi email tổng hợp việc mỗi sáng lúc 7:00 giờ Việt Nam (00:00 UTC) cho đội ngũ Tri thức Việt.
+# Tuỳ chọn bảo mật: tạo secret CRON_SECRET trong GitHub (Settings → Secrets → Actions) và đặt CÙNG giá trị
+# vào biến CRON_SECRET trên Azure Static Web Apps (Configuration). Chưa đặt thì API chỉ chạy trong 6:00–9:00 sáng.
+name: Email tổng hợp Công Việc mỗi sáng
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gọi API gửi email tổng hợp
+        run: |
+          curl -sS -X POST "https://wvn.vn/api/work-daily-digest" \
+            -H "Content-Type: application/json" \
+            -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}" \
+            --retry 3 --retry-delay 20 -w "\nHTTP %{http_code}\n"

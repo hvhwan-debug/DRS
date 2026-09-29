@@ -25,8 +25,34 @@ module.exports = async function (context, req) {
     const tasks = await getTableClient(W.TASKS_TABLE);
     let n = 0; for await (const _ of comments.listEntities({ queryOptions: { filter: `PartitionKey eq '${taskId}'` } })) n++;
     await tasks.updateEntity({ partitionKey: "task", rowKey: taskId, commentCount: n, updatedAt: c.createdAt }, "Merge").catch(() => {});
+    // Nhắc tên: @Tên trong bình luận -> gửi email cho đúng người đó (không gửi cho chính người viết)
+    let mentioned = [];
+    try {
+      const { ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
+      const acc = await getTableClient(ADMIN_ACCOUNTS_TABLE || "AdminAccounts");
+      const staff = [];
+      for await (const a of acc.listEntities({ queryOptions: { filter: "PartitionKey eq 'admin'" } })) if (a.isActive !== false) staff.push({ email: String(a.rowKey).toLowerCase(), name: a.displayName || a.rowKey });
+      const asked = new Set(((req.body && req.body.mentions) || []).map(x => String(x).toLowerCase()));
+      const low = text.toLowerCase();
+      staff.forEach(s => { if (low.includes("@" + String(s.name).toLowerCase())) asked.add(s.email); });
+      mentioned = staff.filter(s => asked.has(s.email) && s.email !== String(who.email || "").toLowerCase());
+      if (mentioned.length) {
+        let task = null; try { task = W.toTask(await tasks.getEntity("task", taskId)); } catch (e) {}
+        const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+        const esc = s => String(s || "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+        for (const m of mentioned.slice(0, 10)) {
+          await sendTrackedEmail(context, {
+            to: m.email, subject: `${who.displayName || who.email} nhắc bạn trong: ${task ? task.title : "một công việc"}`.slice(0, 150), type: "work",
+            eyebrow: "Công Việc", title: "Bạn được nhắc tên",
+            bodyHtml: `<p style="margin:0 0 12px;"><b>${esc(who.displayName || who.email)}</b> vừa nhắc bạn trong công việc <b>${esc(task ? task.title : "")}</b>:</p>
+              <blockquote style="margin:0 0 14px;padding:10px 14px;border-left:3px solid #0284c7;background:#f0f9ff;border-radius:8px;color:#0f172a;">${esc(text).replace(/\n/g, "<br>")}</blockquote>`,
+            ctas: [{ label: "Mở công việc", href: `https://admin.wvn.vn/admin/cong-viec#today&task=${taskId}`, style: "primary" }]
+          });
+        }
+      }
+    } catch (e) { context.log.warn("Không gửi được email nhắc tên:", e.message); }
     await logAdminActivity(req, "Công việc: bình luận", `việc ${String((req.body && req.body.taskId) || "")}: ${String(text).slice(0, 80)}`);
-    context.res.status = 200; context.res.body = { success: true, comment: { id: c.rowKey, text, by: c.byName || c.by, at: c.createdAt }, commentCount: n };
+    context.res.status = 200; context.res.body = { success: true, comment: { id: c.rowKey, text, by: c.byName || c.by, at: c.createdAt }, commentCount: n, mentioned: mentioned.map(m => m.name) };
   } catch (err) {
     context.log.error("Lỗi bình luận:", err.message);
     context.res.status = 500; context.res.body = { success: false, message: "Đã có lỗi xảy ra, vui lòng thử lại sau." };

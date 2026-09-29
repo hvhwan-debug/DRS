@@ -829,6 +829,25 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 .tc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; font-size: 0.72rem; color: var(--muted, #6a7291); }
 .tc-stats b { display: block; font-size: 1.1rem; font-weight: 700; color: var(--ink, #0c1330); } .tc-stats .red b { color: #dc2626; } .tc-stats .ok b { color: #15803d; }
 @media (max-width: 900px) { .team-grid { grid-template-columns: 1fr; } }
+/* ===== Tệp đính kèm & nhắc tên ===== */
+.att-grid { display: grid; gap: 0.45rem; margin-bottom: 0.6rem; }
+.att { display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--hair, #e6e9f1); border-radius: 12px; padding: 0.4rem 0.45rem 0.4rem 0.5rem; background: #fff; }
+.att-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.6rem; color: inherit; text-decoration: none; }
+.att-main img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; background: #f1f5f9; flex-shrink: 0; }
+.att-main i { width: 44px; height: 44px; border-radius: 8px; display: grid; place-items: center; background: #f1f5f9; color: #475569; font-size: 1.1rem; flex-shrink: 0; }
+.att-main .fa-file-pdf { color: #dc2626; background: #fef2f2; } .att-main .fa-file-excel { color: #15803d; background: #f0fdf4; } .att-main .fa-file-word { color: #1d4ed8; background: #eff6ff; }
+.att-main b { display: block; font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .att-main small { font-size: 0.74rem; color: var(--muted, #6a7291); }
+.att-main span { min-width: 0; } a.att-main:hover b { color: #0284c7; text-decoration: underline; }
+.att-rm { border: none; background: none; color: #94a3b8; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; } .att-rm:hover { background: #fef2f2; color: #dc2626; }
+.att-drop { display: flex; align-items: center; justify-content: center; gap: 0.5rem; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 0.75rem; font-size: 0.82rem; color: var(--muted, #6a7291); cursor: pointer; text-align: center; transition: all .15s; }
+.att-drop:hover, .att-drop.over { border-color: #0284c7; background: #f0f9ff; color: #0369a1; } .att-drop.busy { opacity: 0.6; pointer-events: none; }
+.att-drop i { font-size: 1rem; }
+.mention { color: #0369a1; background: #e0f2fe; border-radius: 6px; padding: 0 0.25rem; font-weight: 500; }
+.c-form { position: relative; }
+.mention-menu { position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 20; background: #fff; border: 1px solid var(--hair, #e6e9f1); border-radius: 12px; box-shadow: 0 20px 40px -20px rgba(15,23,42,0.45); padding: 0.3rem; min-width: 220px; }
+.mention-menu button { display: flex; align-items: center; gap: 0.5rem; width: 100%; font: inherit; font-size: 0.86rem; text-align: left; background: none; border: none; border-radius: 8px; padding: 0.4rem 0.5rem; cursor: pointer; }
+.mention-menu button.on, .mention-menu button:hover { background: #f0f7ff; } .mention-menu .av { width: 24px; height: 24px; font-size: 0.62rem; }
+.team-note.info { color: #0369a1; background: #f0f9ff; border-color: #bae6fd; }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -989,6 +1008,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     else if (t.priority === 'high') bits.push('<span class="pill gold"><i class="fa-solid fa-star" aria-hidden="true"></i>Cao</span>');
     const p = projectBy(t.projectId); if (p) bits.push(`<span class="m"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</span>`);
     if (t.checklist.length) { const d = t.checklist.filter(i => i.done).length; bits.push(`<span class="m"><i class="fa-regular fa-square-check" aria-hidden="true"></i>${d}/${t.checklist.length}</span>`); }
+    if ((t.attachments || []).length) bits.push(`<span class="m"><i class="fa-solid fa-paperclip" aria-hidden="true"></i>${t.attachments.length}</span>`);
     if (t.commentCount) bits.push(`<span class="m"><i class="fa-regular fa-comment" aria-hidden="true"></i>${t.commentCount}</span>`);
     (t.labels || []).slice(0, 3).forEach(l => bits.push(`<span class="lbl" style="--h:${labelHue(l)}">${esc(l)}</span>`));
     if (t.recurrence) bits.push('<span class="m"><i class="fa-solid fa-repeat" aria-hidden="true"></i></span>');
@@ -1165,7 +1185,8 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     const unassigned = D.tasks.filter(t => open(t) && !(t.assignees || []).length).length;
     const max = Math.max(1, ...people.map(x => x.open));
     $('view-team').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Đội nhóm</h2><p class="pt-sub">Ai đang giữ bao nhiêu việc, ai đang quá tải. Chạm một người để xem bảng việc của họ.</p></div>
-        <div class="pt-num"><b>${D.tasks.filter(open).length}</b><span>việc đang mở</span></div><div class="pt-num"><b>${D.tasks.filter(t => open(t) && t.dueDate && t.dueDate < today).length}</b><span>quá hạn</span></div></div>
+        <div class="pt-num"><b>${D.tasks.filter(open).length}</b><span>việc đang mở</span></div><div class="pt-num"><b>${D.tasks.filter(t => open(t) && t.dueDate && t.dueDate < today).length}</b><span>quá hạn</span></div>${D.me.role === 'super' ? '<button type="button" class="btn" id="digestTest" title="Email tự gửi lúc 7:00 mỗi sáng"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Gửi email tổng hợp ngay</button>' : ''}</div>
+      <p class="team-note info"><i class="fa-regular fa-sun" aria-hidden="true"></i> Mỗi sáng 7:00, ai có việc quá hạn hoặc đến hạn sẽ nhận email tổng hợp danh sách việc của mình.</p>
       ${unassigned ? `<p class="team-note"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Có ${unassigned} việc chưa giao cho ai.</p>` : ''}
       <div class="team-grid">${people.map(x => `<button type="button" class="team-card${x.overdue ? ' warn' : ''}" data-team-who="${esc(x.p.email)}">
           <div class="tc-head"><span class="av">${esc(initials(x.p.name))}</span><div><strong>${esc(x.p.name)}</strong><small>${x.open ? `${x.open} việc đang mở` : 'Không có việc đang mở'}</small></div></div>
@@ -1333,7 +1354,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   function openDrawer(id) {
     if (!findTask(id) || String(id).startsWith('tmp-')) return;
     lastFocus = document.activeElement; state.openId = id;
-    renderDrawer(); loadComments(id);
+    renderDrawer(); loadComments(id); loadAttachments(id);
     $('drawer').classList.add('open'); $('drawer').setAttribute('aria-hidden', 'false'); $('scrim').classList.add('open');
     history.replaceState(null, '', location.hash.split('&')[0] + '&task=' + id);
   }
@@ -1342,13 +1363,80 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     history.replaceState(null, '', location.hash.split('&')[0]);
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
+  // ---------- Tệp đính kèm ----------
+  const attCache = {};
+  const fmtSize = n => n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+  async function loadAttachments(id) {
+    try { const r = await api('/api/portal-work-attachments?taskId=' + encodeURIComponent(id)); attCache[id] = r.attachments; if (state.openId === id) renderAttachments(); } catch (e) {}
+  }
+  function renderAttachments() {
+    const box = $('attList'); if (!box) return;
+    const t = findTask(state.openId); const list = attCache[state.openId] || (t && t.attachments) || [];
+    box.innerHTML = list.length ? `<div class="att-grid">${list.map(a => {
+      const img = /^image\//.test(a.type) && a.url;
+      const ic = /pdf/.test(a.type) ? 'fa-file-pdf' : /sheet|excel|csv/.test(a.type) ? 'fa-file-excel' : /word|document/.test(a.type) ? 'fa-file-word' : /^image\//.test(a.type) ? 'fa-file-image' : 'fa-file';
+      return `<div class="att">${a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener" class="att-main">` : '<span class="att-main">'}${img ? `<img src="${esc(a.url)}" alt="" loading="lazy">` : `<i class="fa-solid ${ic}" aria-hidden="true"></i>`}<span><b>${esc(a.name)}</b><small>${esc(fmtSize(a.size || 0))}${a.by ? ' · ' + esc(a.by) : ''}</small></span>${a.url ? '</a>' : '</span>'}<button type="button" class="att-rm" data-att-rm="${esc(a.blob)}" aria-label="Xoá tệp ${esc(a.name)}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>`;
+    }).join('')}</div>` : '';
+  }
+  const toB64 = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(f); });
+  async function uploadFiles(files) {
+    const id = state.openId; if (!id || !files.length) return;
+    const drop = $('attDrop'); if (drop) drop.classList.add('busy');
+    let done = 0;
+    for (const f of files) {
+      if (f.size > 8 * 1024 * 1024) { toast(`"${f.name}" lớn hơn 8MB`, { error: true }); continue; }
+      try {
+        toast(`Đang tải lên ${f.name}…`);
+        const r = await post('/api/portal-work-attachments', { taskId: id, files: [{ filename: f.name, type: f.type, content: await toB64(f) }] });
+        attCache[id] = r.attachments; const t = findTask(id); if (t) { t.attachments = r.attachments; if (r.history) t.history = r.history; } done++;
+        if (state.openId === id) renderAttachments();
+      } catch (e) { toast(e.message, { error: true }); }
+    }
+    if (drop) drop.classList.remove('busy');
+    if (done) { toast(`Đã đính kèm ${done} tệp`); renderAll(); }
+  }
+  async function removeAttachment(blob) {
+    const id = state.openId; const a = (attCache[id] || []).find(x => x.blob === blob); if (!a || !confirm(`Xoá tệp "${a.name}"?`)) return;
+    try { const r = await post('/api/portal-work-attachments', { taskId: id, remove: blob }); attCache[id] = r.attachments; const t = findTask(id); if (t) t.attachments = r.attachments; renderAll(); toast('Đã xoá tệp'); }
+    catch (e) { toast(e.message, { error: true }); }
+  }
+  document.addEventListener('change', e => { if (e.target.id === 'attInput') { uploadFiles([...e.target.files]); e.target.value = ''; } });
+  document.addEventListener('dragover', e => { const d = e.target.closest && e.target.closest('#attDrop'); if (d) { e.preventDefault(); d.classList.add('over'); } });
+  document.addEventListener('dragleave', e => { const d = e.target.closest && e.target.closest('#attDrop'); if (d) d.classList.remove('over'); });
+  document.addEventListener('drop', e => { const d = e.target.closest && e.target.closest('#attDrop'); if (d) { e.preventDefault(); d.classList.remove('over'); uploadFiles([...e.dataTransfer.files]); } });
+  document.addEventListener('paste', e => { if (!state.openId || !$('attDrop')) return; const fs = [...(e.clipboardData && e.clipboardData.files || [])]; if (fs.length) { e.preventDefault(); uploadFiles(fs.map((f, i) => new File([f], f.name && f.name !== 'image.png' ? f.name : `anh-dan-${Date.now()}-${i}.png`, { type: f.type }))); } });
+
+  // ---------- Nhắc tên @ trong bình luận ----------
+  function mentionHtml(text) {
+    let h = esc(text);
+    D.staff.slice().sort((a, b) => b.name.length - a.name.length).forEach(p => { const n = esc('@' + p.name); h = h.split(n).join(`<span class="mention">${n}</span>`); });
+    return h;
+  }
+  const mentionPicked = new Set();
+  function mentionMenu() {
+    const ta = $('cText'); if (!ta) return;
+    const before = ta.value.slice(0, ta.selectionStart); const m = before.match(/(^|\s)@([^\s@]{0,20})$/);
+    let menu = $('mentionMenu');
+    if (!m) { if (menu) menu.remove(); return; }
+    const qn = normVN(m[2]); const hits = D.staff.filter(p => normVN(p.name).split(/\s+/).some(w => w.startsWith(qn)) || normVN(p.name).startsWith(qn)).slice(0, 6);
+    if (!hits.length) { if (menu) menu.remove(); return; }
+    if (!menu) { menu = document.createElement('div'); menu.id = 'mentionMenu'; menu.className = 'mention-menu'; menu.setAttribute('role', 'listbox'); ta.closest('.c-form').appendChild(menu); }
+    menu.innerHTML = hits.map((p, i) => `<button type="button" class="${i === 0 ? 'on' : ''}" data-mention="${esc(p.email)}" data-name="${esc(p.name)}" role="option"><span class="av">${esc(initials(p.name))}</span>${esc(p.name)}</button>`).join('');
+  }
+  function pickMention(btn) {
+    const ta = $('cText'); const pos = ta.selectionStart; const before = ta.value.slice(0, pos).replace(/@([^\s@]{0,20})$/, '@' + btn.dataset.name + ' ');
+    ta.value = before + ta.value.slice(pos); ta.focus(); ta.selectionStart = ta.selectionEnd = before.length;
+    mentionPicked.add(btn.dataset.mention); const menu = $('mentionMenu'); if (menu) menu.remove();
+  }
+  document.addEventListener('input', e => { if (e.target.id === 'cText') mentionMenu(); });
+
   async function loadComments(id) {
     try { const r = await api('/api/portal-work-comment?taskId=' + encodeURIComponent(id)); comments[id] = r.comments; if (state.openId === id) renderComments(); } catch (e) {}
   }
   function renderComments() {
     const box = document.getElementById('cList'); if (!box) return;
     const list = comments[state.openId];
-    box.innerHTML = !list ? '<div class="empty" style="padding:0.3rem 0">Đang tải…</div>' : list.length ? list.map(c => `<div class="comment"><span class="av">${esc(initials(c.by))}</span><div class="bubble"><div class="who"><b>${esc(c.by)}</b>${esc(rel(c.at))}</div><p>${esc(c.text)}</p></div></div>`).join('') : '<div class="empty" style="padding:0.3rem 0">Chưa có trao đổi nào.</div>';
+    box.innerHTML = !list ? '<div class="empty" style="padding:0.3rem 0">Đang tải…</div>' : list.length ? list.map(c => `<div class="comment"><span class="av">${esc(initials(c.by))}</span><div class="bubble"><div class="who"><b>${esc(c.by)}</b>${esc(rel(c.at))}</div><p>${mentionHtml(c.text)}</p></div></div>`).join('') : '<div class="empty" style="padding:0.3rem 0">Chưa có trao đổi nào.</div>';
   }
   function dueOptions(t) {
     const today = todayStr();
@@ -1387,13 +1475,17 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
           ${t.checklist.map(i => `<div class="cl-item ${i.done ? 'done' : ''}"><button class="check ${i.done ? 'on' : ''}" data-cl-toggle="${esc(i.id)}" aria-label="${i.done ? 'Bỏ đánh dấu' : 'Xong bước này'}"><i class="fa-solid fa-check" aria-hidden="true"></i></button><span>${esc(i.text)}</span><button class="x" data-cl-del="${esc(i.id)}" aria-label="Xoá bước"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>`).join('')}
           <input class="cl-add" id="clAdd" placeholder="+ Thêm bước, nhấn Enter" maxlength="200"></div>
 
+        <div class="d-section" id="attSection"><h5><i class="fa-solid fa-paperclip" aria-hidden="true"></i>Tệp đính kèm <span>${(t.attachments || []).length || ''}</span></h5>
+          <div id="attList"></div>
+          <label class="att-drop" id="attDrop"><input type="file" id="attInput" multiple hidden><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i><span>Kéo thả hoặc <u>chọn tệp</u> (ảnh, PDF, Word, Excel · tối đa 8MB/tệp)</span></label></div>
+
         <div class="d-section"><h5><i class="fa-solid fa-comments" aria-hidden="true"></i>Trao đổi</h5><div id="cList"></div>
-          <form class="c-form" id="cForm"><label class="sr-only" for="cText">Viết bình luận</label><textarea id="cText" rows="1" placeholder="Viết trao đổi… (Enter để gửi)" maxlength="2000"></textarea><button class="btn primary" type="submit" aria-label="Gửi"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button></form></div>
+          <form class="c-form" id="cForm"><label class="sr-only" for="cText">Viết bình luận</label><textarea id="cText" rows="1" placeholder="Viết trao đổi… gõ @ để nhắc tên (Enter để gửi)" maxlength="2000"></textarea><button class="btn primary" type="submit" aria-label="Gửi"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button></form></div>
 
         <div class="d-section"><h5><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Lịch sử</h5><ul class="hist">${t.history.slice().reverse().slice(0, 12).map(h => `<li><b>${esc(h.by)}</b> ${esc(h.text.charAt(0).toLowerCase() + h.text.slice(1))} · ${esc(rel(h.at))}</li>`).join('') || '<li>—</li>'}</ul></div>
       </div>
       <div class="d-foot"><span>Tạo bởi ${esc(t.createdByName || staffBy(t.createdBy).name)} · ${esc(rel(t.createdAt))}</span>${t.createdBy === D.me.email || D.me.role === 'super' ? `<button class="btn ghost danger" data-del="${esc(t.id)}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xoá</button>` : ''}</div>`;
-    renderComments(); autosize($('dTitle'));
+    renderComments(); renderAttachments(); autosize($('dTitle'));
   }
   function autosize(el) { if (!el) return; el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 
@@ -1439,6 +1531,9 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     const la = t.closest('[data-label-add]'); if (la && state.openId) { const tk = findTask(state.openId); return update(tk.id, { labels: Array.from(new Set((tk.labels || []).concat(la.dataset.labelAdd))).slice(0, 10) }); }
     const lr = t.closest('[data-label-rm]'); if (lr && state.openId) { const tk = findTask(state.openId); return update(tk.id, { labels: (tk.labels || []).filter(x => x !== lr.dataset.labelRm) }); }
     if (t.closest('#openSearch')) return openSearch();
+    const arm = t.closest('[data-att-rm]'); if (arm) return removeAttachment(arm.dataset.attRm);
+    const mn = t.closest('[data-mention]'); if (mn) return pickMention(mn);
+    if (t.closest('#digestTest')) return (async () => { try { const r = await post('/api/work-daily-digest', {}); toast(`Đã gửi ${r.sent} email tổng hợp (bỏ qua ${r.skipped} người không có việc hoặc đã nhận hôm nay)`); } catch (e) { toast(e.message, { error: true }); } })();
     const tw = t.closest('[data-team-who]'); if (tw) return setView('board', { boardWho: tw.dataset.teamWho, project: '' });
     const set = t.closest('[data-set]'); if (set && state.openId) { const k = set.dataset.set; const v = set.dataset.v; return update(state.openId, { [k]: v }); }
     const asg = t.closest('[data-assignee]');
@@ -1491,6 +1586,12 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       setTimeout(() => { const n = $('clAdd'); if (n) n.focus(); }, 60); return;
     }
     if (e.target.id === 'lblAdd' && e.key === 'Enter') { e.preventDefault(); const v = e.target.value.trim().slice(0, 30); if (!v) return; const tk = findTask(state.openId); update(tk.id, { labels: Array.from(new Set((tk.labels || []).concat(v))).slice(0, 10) }); setTimeout(() => { const n = $('lblAdd'); if (n) n.focus(); }, 60); return; }
+    if (e.target.id === 'cText' && $('mentionMenu') && ['ArrowDown', 'ArrowUp', 'Enter', 'Tab', 'Escape'].includes(e.key)) {
+      const items = [...$('mentionMenu').querySelectorAll('button')]; let i = items.findIndex(b => b.classList.contains('on'));
+      if (e.key === 'Escape') { $('mentionMenu').remove(); e.preventDefault(); return; }
+      if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); return pickMention(items[Math.max(0, i)]); }
+      e.preventDefault(); i = (i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length; items.forEach((b, k) => b.classList.toggle('on', k === i)); return;
+    }
     if (e.target.id === 'cText' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('cForm').requestSubmit(); return; }
     if (e.key === 'Escape') { if ($('projectModal').classList.contains('open')) return $('projectModal').classList.remove('open'); if (state.openId) return closeDrawer(); }
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); return openSearch(); }
@@ -1505,7 +1606,8 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     const ta = $('cText'); const text = ta.value.trim(); const id = state.openId; if (!text || !id) return;
     ta.value = ''; const temp = { id: 'tmp', text, by: D.me.name || D.me.email, at: new Date().toISOString() };
     comments[id] = (comments[id] || []).concat(temp); renderComments();
-    try { const r = await post('/api/portal-work-comment', { taskId: id, text }); comments[id] = comments[id].map(c => c === temp ? r.comment : c); const t = findTask(id); if (t) t.commentCount = r.commentCount; renderComments(); renderSide(); }
+    const mentions = [...mentionPicked].filter(em => { const p = D.staff.find(x => x.email === em); return p && text.includes('@' + p.name); }); mentionPicked.clear();
+    try { const r = await post('/api/portal-work-comment', { taskId: id, text, mentions }); comments[id] = comments[id].map(c => c === temp ? r.comment : c); const t = findTask(id); if (t) t.commentCount = r.commentCount; renderComments(); renderSide(); if (r.mentioned && r.mentioned.length) toast('Đã báo email cho ' + r.mentioned.join(', ')); }
     catch (err) { comments[id] = comments[id].filter(c => c !== temp); renderComments(); ta.value = text; toast(err.message, { error: true }); }
   });
   window.addEventListener('scroll', () => $('topbar').classList.toggle('scrolled', window.scrollY > 4), { passive: true });
