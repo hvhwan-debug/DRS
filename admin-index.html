@@ -1353,10 +1353,13 @@
       window.print();
     }
 
+    // Trạng thái phụ huynh xác nhận — dạng biểu tượng gọn, không rơi dòng trong bảng hẹp.
+    // Rê chuột (hoặc trình đọc màn hình) vẫn đọc được đầy đủ ý nghĩa.
     function confirmationStatusHtml(status, feedback) {
-      if (status === 'confirmed') return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã xác nhận</span>`;
-      if (status === 'rejected') return `<span style="font-size:0.76rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:999px; background:#fee2e2; color:#b91c1c;" title="${escapeHtml(feedback)}">Từ chối: ${escapeHtml(feedback)}</span>`;
-      return `<span style="font-size:0.76rem; color:var(--text-muted);">Chưa xác nhận</span>`;
+      const ic = (cls, color, bg, label) => `<span role="img" aria-label="${label}" title="${label}" style="display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%; background:${bg}; color:${color}; font-size:0.8rem; vertical-align:middle;"><i class="fa-solid ${cls}" aria-hidden="true"></i></span>`;
+      if (status === 'confirmed') return ic('fa-check', '#15803d', '#dcfce7', 'Phụ huynh đã xác nhận');
+      if (status === 'rejected') return `<span style="display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; max-width:180px;">${ic('fa-xmark', '#b91c1c', '#fee2e2', 'Phụ huynh báo sai: ' + escapeHtml(feedback || ''))}${feedback ? `<span style="font-size:0.76rem; color:#b91c1c; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(feedback)}">${escapeHtml(feedback)}</span>` : ''}</span>`;
+      return ic('fa-clock', '#94a3b8', '#f1f5f9', 'Phụ huynh chưa xác nhận');
     }
 
     function formatDate(iso) {
