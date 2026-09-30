@@ -2015,6 +2015,7 @@
             <div class="card">
               <h2><i class="fa-solid fa-id-card"></i> Thông Tin Tài Khoản</h2>
               <div class="info-row"><span>Email</span><span>${email}</span></div>
+              <div class="info-row"><span>Đăng nhập lần cuối</span><span>${profile.lastLogin ? new Date(profile.lastLogin).toLocaleString('vi-VN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Đây là lần đầu bạn đăng nhập'}</span></div>
 
               <div id="profileViewMode" style="${profile.fullName ? '' : 'display:none;'} margin-top:0.4rem;">
                 <div class="info-row"><span>Họ và tên</span><span id="viewFullName">${profile.fullName || '—'}</span></div>

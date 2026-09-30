@@ -204,7 +204,10 @@
   }
   function calState() { try { return JSON.parse(localStorage.getItem(CAL_KEY) || '{}'); } catch (e) { return {}; } }
   function saveCalState(v) { try { localStorage.setItem(CAL_KEY, JSON.stringify(v)); } catch (e) {} }
-  function markAdded(where) { saveCalState({ status: 'added', where: where, at: Date.now() }); refreshIcsBox(); }
+  function scheduleSig() {
+    return (D.schedules || []).map(function (s) { return [s.program, s.days, s.startTime].join('|'); }).sort().join(';;');
+  }
+  function markAdded(where) { saveCalState({ status: 'added', where: where, at: Date.now(), sig: scheduleSig() }); refreshIcsBox(); }
   function refreshIcsBox() {
     var st = calState(), box = document.querySelector('.mx-ics'); if (!box) return;
     var old = box.querySelector('.mx-ics-done'); if (old) old.remove();
@@ -213,8 +216,13 @@
   function maybeOfferCalendar() {
     var links = calLinks(); if (!links || !(D.schedules || []).length || document.getElementById('mxCalOffer')) return;
     var st = calState();
-    if (st.status === 'added' || st.status === 'never') return;
-    if (st.status === 'later' && Date.now() - (st.at || 0) < 7 * 864e5) return;
+    var sig = scheduleSig();
+    // Chỉ hỏi khi: chưa từng hỏi trên thiết bị này (thiết bị mới), hoặc chương trình học
+    // đã thay đổi so với lần hỏi/trả lời gần nhất (chương trình mới). Không hỏi lặp lại
+    // định kỳ chỉ vì thời gian trôi qua.
+    if (st.status === 'never' && st.sig === sig) return;
+    if (st.status === 'added' && st.sig === sig) return;
+    if (st.status === 'later' && st.sig === sig) return;
     var kind = deviceKind();
     var apple = kind === 'ios' || kind === 'mac';
     var devName = { ios: 'iPhone', android: 'điện thoại Android', mac: 'máy Mac', desktop: 'máy tính' }[kind];
@@ -232,12 +240,12 @@
       '<small>' + (apple ? 'Máy sẽ hỏi thêm 1 lần “Đăng ký lịch này?”, chọn <b>Đăng ký</b> là xong.' : 'Google sẽ hỏi “Thêm lịch này?”, chọn <b>Thêm</b> là xong. Lịch hiện trong ứng dụng Google Calendar trên điện thoại.') + '</small></div>';
     document.body.appendChild(el);
     var close = function () { el.remove(); document.removeEventListener('keydown', onKey); };
-    var onKey = function (e) { if (e.key === 'Escape') { saveCalState({ status: 'later', at: Date.now() }); close(); } };
+    var onKey = function (e) { if (e.key === 'Escape') { saveCalState({ status: 'later', at: Date.now(), sig: sig }); close(); } };
     document.addEventListener('keydown', onKey);
     el.addEventListener('click', function (e) {
       var go = e.target.closest('[data-cal-go]'); if (go) { markAdded(go.dataset.calGo); setTimeout(close, 50); return; }
-      if (e.target.closest('[data-cal-later]') || e.target === el) { saveCalState({ status: 'later', at: Date.now() }); close(); return; }
-      if (e.target.closest('[data-cal-never]')) { saveCalState({ status: 'never', at: Date.now() }); close(); }
+      if (e.target.closest('[data-cal-later]') || e.target === el) { saveCalState({ status: 'later', at: Date.now(), sig: sig }); close(); return; }
+      if (e.target.closest('[data-cal-never]')) { saveCalState({ status: 'never', at: Date.now(), sig: sig }); close(); }
     });
     setTimeout(function () { var f = el.querySelector('[data-cal-go]'); if (f) f.focus(); }, 60);
   }

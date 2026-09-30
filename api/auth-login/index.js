@@ -67,8 +67,17 @@ module.exports = async function (context, req) {
       return;
     }
 
-    // Đăng nhập đúng -> reset số lần sai, tạo phiên đăng nhập mới
-    await membersTable.updateEntity({ partitionKey: "member", rowKey: email, failedAttempts: 0 }, "Merge").catch(() => {});
+    // Đăng nhập đúng -> reset số lần sai, ghi nhận thời điểm đăng nhập, tạo phiên đăng nhập mới
+    // (previousLoginAt = lần đăng nhập TRƯỚC lần này, dùng để hiển thị "Đăng nhập lần cuối" cho thành viên)
+    const previousLoginAt = member.lastLoginAt || null;
+    const now = new Date().toISOString();
+    await membersTable.updateEntity({
+      partitionKey: "member",
+      rowKey: email,
+      failedAttempts: 0,
+      previousLoginAt,
+      lastLoginAt: now
+    }, "Merge").catch(() => {});
 
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000).toISOString();

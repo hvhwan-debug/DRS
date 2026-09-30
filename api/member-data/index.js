@@ -186,14 +186,25 @@ module.exports = async function (context, req) {
       // Bảng Grades có thể chưa có dữ liệu — bỏ qua, không chặn phần còn lại
     }
 
+    // Thời điểm đăng nhập lần trước (để hiển thị "Đăng nhập lần cuối" cho thành viên)
+    let lastLogin = null;
+    try {
+      const membersTable = await getTableClient("Members");
+      const memberEntity = await membersTable.getEntity("member", email);
+      lastLogin = memberEntity.previousLoginAt || null;
+    } catch (e) {
+      // Không đọc được — bỏ qua, không chặn phần còn lại
+    }
+
     // Thông tin hồ sơ do chính thành viên tự điền
-    let profile = { fullName: "", phone: "", address: "", dob: "", gender: "" };
+    let profile = { fullName: "", phone: "", address: "", dob: "", gender: "", lastLogin };
     let lastSeenTier = null;
     let ackedInvoiceIdsRaw = "[]";
     try {
       const profilesTable = await getTableClient(PROFILES_TABLE);
       const p = await profilesTable.getEntity("profile", email);
       profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "", gender: p.gender || "" };
+      profile.lastLogin = lastLogin;
       try { profile.prefs = JSON.parse(p.prefsJson || "{}"); } catch (e) { profile.prefs = {}; }
       try { if (await require("../_shared/marketingConsent").isMarketingOptedOut(email)) profile.prefs.news = false; } catch (e) {}
       profile.calendarKey = p.calendarKey || "";
