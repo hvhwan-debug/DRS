@@ -901,6 +901,8 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 .tpl-row label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
 .tpl-row select, .tpl-row input { border: 1px solid var(--line); border-radius: 10px; padding: 0.55rem 0.7rem; font-size: 0.92rem; }
 .side h4 span { display: flex; gap: 2px; }
+#pushToggle.on-state { color: #bef264; }
+#pushToggle.on-state i { color: #bef264; }
 </style>
 <script src="/wvn-quotes.js?v=20260928a"></script>
 </head>
@@ -926,6 +928,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
         <a href="/admin/cham-cong"><i class="fa-solid fa-user-clock" aria-hidden="true"></i> Chấm công</a>
         <a href="/admin/crm"><i class="fa-solid fa-address-card" aria-hidden="true"></i> CRM Học Sinh</a>
         <a href="/admin"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Trang quản trị</a>
+        <button type="button" id="pushToggle"><i class="fa-regular fa-bell" aria-hidden="true"></i> <span id="pushToggleLabel">Bật thông báo đẩy</span></button>
       </nav>
       <div class="me"><span class="av" id="meAv"></span><span id="meName"></span></div>
     </div>
@@ -1832,10 +1835,54 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       const [v, pid] = (viewPart || 'today').split('=');
       setView(['today', 'inbox', 'mine', 'board', 'calendar', 'team'].includes(v) ? v : 'today', { project: pid || '' });
       if (taskPart) openDrawer(taskPart);
+      initPushButton();
     } catch (e) {
       $('loading').innerHTML = `<div style="color:var(--red)">${esc(e.message)}</div><button class="btn" style="margin-top:1rem" onclick="location.reload()">Tải lại</button>`;
     }
   }
+
+  // ---------- Thông báo đẩy (có việc mới / được nhắc tên / tổng hợp buổi sáng) ----------
+  const VAPID_PUBLIC_KEY = 'BN-1lWWP1VszSrDNC_ZyDNYFo0-73EgR3jIWisK8yGg2yJNN-GJkDYtFzN-7_8VTR1bCa2PDrJ9KZbDRX9NEl3k';
+  function urlBase64ToUint8Array(base64) {
+    const pad = '='.repeat((4 - base64.length % 4) % 4);
+    const raw = atob((base64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+    return Uint8Array.from(Array.from(raw).map(c => c.charCodeAt(0)));
+  }
+  function pushSupported() { return 'serviceWorker' in navigator && 'PushManager' in window; }
+  async function initPushButton() {
+    const btn = $('pushToggle'); if (!pushSupported()) { btn.hidden = true; return; }
+    try {
+      const reg = await navigator.serviceWorker.getRegistration('/push-sw.js') || await navigator.serviceWorker.register('/push-sw.js');
+      const sub = await reg.pushManager.getSubscription();
+      setPushButton(!!sub);
+    } catch (e) { setPushButton(false); }
+  }
+  function setPushButton(on) {
+    $('pushToggleLabel').textContent = on ? 'Đã bật thông báo đẩy' : 'Bật thông báo đẩy';
+    $('pushToggle').classList.toggle('on-state', on);
+    $('pushToggle').dataset.on = on ? '1' : '0';
+  }
+  async function togglePush() {
+    if (!pushSupported()) { toast('Trình duyệt này không hỗ trợ thông báo đẩy.', { error: true }); return; }
+    const isOn = $('pushToggle').dataset.on === '1';
+    try {
+      const reg = await navigator.serviceWorker.register('/push-sw.js');
+      if (isOn) {
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) { await post('/api/portal-push-subscribe', { subscription: sub.toJSON(), action: 'unsubscribe' }); await sub.unsubscribe(); }
+        setPushButton(false); toast('Đã tắt thông báo đẩy trên thiết bị này.');
+        return;
+      }
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') { toast('Bạn chưa cho phép nhận thông báo trên trình duyệt.', { error: true }); return; }
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) });
+      await post('/api/portal-push-subscribe', { subscription: sub.toJSON(), action: 'subscribe' });
+      setPushButton(true); toast('Đã bật thông báo đẩy — bạn sẽ nhận thông báo khi có việc mới, được nhắc tên, hoặc tổng hợp mỗi sáng.');
+    } catch (e) { toast('Không bật được thông báo: ' + e.message, { error: true }); }
+  }
+  $('pushToggle').addEventListener('click', togglePush);
+
   // Tự làm mới khi quay lại tab (để thấy việc đồng nghiệp vừa giao, và hộp việc hệ thống mới nhất)
   document.addEventListener('visibilitychange', async () => {
     if (document.visibilityState !== 'visible' || !D.me.email) return;
