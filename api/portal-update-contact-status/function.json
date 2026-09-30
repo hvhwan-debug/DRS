@@ -1,0 +1,6 @@
+{
+  "bindings": [
+    { "authLevel": "anonymous", "type": "httpTrigger", "direction": "in", "name": "req", "methods": ["post"], "route": "portal-update-contact-status" },
+    { "type": "http", "direction": "out", "name": "res" }
+  ]
+}
