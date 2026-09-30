@@ -14,7 +14,7 @@ async function listAll(name, filter) {
 }
 const todayVN = () => new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
 
-const LEVELS = { points: "urgent", tuition: "urgent", members: "action", registrations: "action", invoices: "action", gifts: "action", leave: "action", crm: "action", birthday: "info" };
+const LEVELS = { "timesheet-open": "urgent", timesheet: "action", points: "urgent", tuition: "urgent", members: "action", registrations: "action", invoices: "action", gifts: "action", leave: "action", crm: "action", birthday: "info" };
 
 async function buildInbox(context, can) {
   const inbox = [];
@@ -28,6 +28,20 @@ async function buildInbox(context, can) {
     can("members") && safe(async () => {
       const rows = (await listAll("Members")).filter(r => r.approvalStatus === "pending");
       if (rows.length) inbox.push({ key: "members", count: rows.length, title: `${rows.length} tài khoản thành viên chờ duyệt`, hint: "Duyệt để họ đăng nhập được", href: "/admin#members", tone: "blue" });
+    }),
+    can("payroll") && safe(async () => {
+      // Chấm công: yêu cầu bổ sung/sửa công + đơn xin nghỉ chờ quản lý duyệt
+      const [pend, leave] = await Promise.all([
+        listAll("StaffTimeEntries", "status eq 'pending'"),
+        listAll("StaffLeave", "status eq 'pending'")
+      ]);
+      const n = pend.length + leave.length;
+      if (n) inbox.push({ key: "timesheet", count: n, title: `${n} yêu cầu chấm công / xin nghỉ chờ duyệt`, hint: [pend.length ? `${pend.length} bổ sung/sửa công` : "", leave.length ? `${leave.length} đơn xin nghỉ` : ""].filter(Boolean).join(", "), href: "/admin/cham-cong#duyet", tone: "violet" });
+    }),
+    can("payroll") && safe(async () => {
+      // Ca chưa kết thúc từ hôm trước -> nhân viên quên bấm "Kết thúc ca"
+      const rows = (await listAll("StaffTimeEntries", "status eq 'open'")).filter(r => r.date && r.date < today);
+      if (rows.length) inbox.push({ key: "timesheet-open", count: rows.length, title: `${rows.length} ca làm quên chấm ra`, hint: "Nhắc nhân viên nhập giờ ra, hoặc kết thúc ca hộ", href: "/admin/cham-cong#hom-nay", tone: "red" });
     }),
     can("invoices") && safe(async () => {
       const rows = (await listAll("Invoices")).filter(r => r.status === "pending_review");
@@ -75,7 +89,7 @@ async function buildInbox(context, can) {
       if (short.length) inbox.push({ key: "points", count: short.length, title: `${short.length} thành viên đang thiếu điểm`, hint: "Đã đổi quà nhiều hơn điểm tích luỹ, kiểm tra học phí hoặc huỷ bớt yêu cầu đổi quà", href: "/admin#gifts", tone: "red" });
     })
   ].filter(Boolean));
-  const order = ["points", "members", "crm", "leave", "invoices", "tuition", "registrations", "birthday", "gifts"];
+  const order = ["points", "timesheet-open", "members", "timesheet", "crm", "leave", "invoices", "tuition", "registrations", "birthday", "gifts"];
   inbox.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
 
   inbox.forEach(i => { i.level = LEVELS[i.key] || "action"; });

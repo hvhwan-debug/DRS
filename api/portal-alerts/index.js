@@ -46,6 +46,27 @@ module.exports = async function (context, req) {
       } catch (e) { context.log.warn("alerts: không đọc được việc của tôi:", e.message); }
     }
 
+    // Chấm công của chính người này
+    if (myEmail) {
+      try {
+        const q = myEmail.replace(/'/g, "''");
+        const [mineE, mineL, mineS] = await Promise.all([
+          listAll("StaffTimeEntries", `PartitionKey eq '${q}'`),
+          listAll("StaffLeave", `PartitionKey eq '${q}'`),
+          listAll("Payslips", `RowKey eq '${q}'`)
+        ]);
+        const recent = iso => iso && Date.now() - new Date(iso).getTime() < 3 * 864e5;
+        const forgot = mineE.find(e => e.status === "open" && e.date && e.date < today);
+        if (forgot) items.unshift({ key: "my-clock-forgot", count: 1, title: `Bạn chưa kết thúc ca ngày ${forgot.date.split("-").reverse().slice(0, 2).join("/")}`, hint: "Nhập giờ ra để ca được tính lương", href: "/admin/cham-cong", tone: "red", level: "urgent" });
+        const rejected = mineE.filter(e => e.status === "rejected" && recent(e.reviewedAt));
+        if (rejected.length) items.push({ key: "my-clock-rejected", count: rejected.length, title: `${rejected.length} yêu cầu chấm công bị từ chối`, hint: rejected[0].reviewNote || "Xem lý do trong Bảng công", href: "/admin/cham-cong#bang-cong", tone: "red", level: "action" });
+        const decided = mineL.filter(l => ["approved", "rejected"].includes(l.status) && recent(l.reviewedAt));
+        if (decided.length) items.push({ key: "my-leave", count: decided.length, title: `${decided.length} đơn xin nghỉ đã có kết quả`, hint: decided.map(l => `${String(l.dateFrom).split("-").reverse().slice(0, 2).join("/")}: ${l.status === "approved" ? "đã duyệt" : "không duyệt"}`).join(", "), href: "/admin/cham-cong#nghi-phep", tone: "blue", level: "action" });
+        const slip = mineS.filter(s => s.finalizedAt && Date.now() - new Date(s.finalizedAt).getTime() < 7 * 864e5).sort((a, b) => String(b.partitionKey).localeCompare(String(a.partitionKey)))[0];
+        if (slip) items.push({ key: "my-payslip", count: 1, title: `Phiếu lương tháng ${Number(slip.partitionKey.slice(5, 7))}/${slip.partitionKey.slice(0, 4)} đã có`, hint: slip.status === "paid" ? "Lương đã được chuyển" : "Kiểm tra và phản hồi nếu có sai sót", href: "/admin/cham-cong#phieu-luong", tone: "green", level: "action" });
+      } catch (e) { context.log.warn("alerts: không đọc được chấm công:", e.message); }
+    }
+
     const rank = { urgent: 0, action: 1, info: 2 };
     items.sort((a, b) => (rank[a.level] ?? 1) - (rank[b.level] ?? 1));
     const total = items.filter(i => i.level !== "info").reduce((s, i) => s + i.count, 0);

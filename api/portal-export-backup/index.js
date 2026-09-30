@@ -9,7 +9,11 @@ const { requireSuperAdmin } = require("../_shared/adminAuth");
 const TABLES = [
   "Members", "MemberProfiles", "Registrations", "Donations", "Grades", "TuitionPayments",
   "ClassSchedules", "Students", "GiftRedemptions", "GiftCatalog", "Invoices", "Attendance",
-  "Transactions", "EmailLogs"
+  "Transactions", "EmailLogs",
+  // Chấm công & tính lương
+  "StaffPayProfiles", "StaffTimeEntries", "StaffLeave", "PayAdjustments", "Payslips", "PayPeriods",
+  // CRM, công việc, đơn xin nghỉ học
+  "StudentCrm", "StudentInteractions", "WorkTasks", "WorkProjects", "LeaveRequests"
 ];
 
 module.exports = async function (context, req) {

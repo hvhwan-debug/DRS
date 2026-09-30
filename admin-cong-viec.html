@@ -878,6 +878,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     <div class="focus" id="sideFocus" aria-live="polite"></div>
     <div class="side-foot">
       <nav class="nav">
+        <a href="/admin/cham-cong"><i class="fa-solid fa-user-clock" aria-hidden="true"></i> Chấm công</a>
         <a href="/admin/crm"><i class="fa-solid fa-address-card" aria-hidden="true"></i> CRM Học Sinh</a>
         <a href="/admin"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Trang quản trị</a>
       </nav>
@@ -1068,7 +1069,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       <div class="acts"><a href="${esc(i.href)}">Mở xử lý</a><button data-assign-inbox="${esc(i.key)}">Giao việc</button></div></div>`;
 
   function renderInbox() {
-    $('view-inbox').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Việc từ hệ thống</h2><p class="pt-sub">Các đầu việc tự sinh từ dữ liệu vận hành: tài khoản chờ duyệt, đơn đăng ký, biên lai, đổi quà, học phí bị báo sai và lịch gọi phụ huynh. Chạm "Giao việc" để tạo một công việc có sẵn đường dẫn xử lý.</p></div>${D.inbox.length ? `<div class="pt-num"><b>${D.inbox.reduce((s, i) => s + i.count, 0)}</b><span>đầu việc chờ</span></div>` : ''}</div>
+    $('view-inbox').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Việc từ hệ thống</h2><p class="pt-sub">Các đầu việc tự sinh từ dữ liệu vận hành: chấm công chờ duyệt, tài khoản chờ duyệt, đơn đăng ký, biên lai, đổi quà, học phí bị báo sai và lịch gọi phụ huynh. Chạm "Giao việc" để tạo một công việc có sẵn đường dẫn xử lý.</p></div>${D.inbox.length ? `<div class="pt-num"><b>${D.inbox.reduce((s, i) => s + i.count, 0)}</b><span>đầu việc chờ</span></div>` : ''}</div>
       ${D.inbox.length ? `<div class="inbox-strip">${D.inbox.map(inboxCard).join('')}</div>` : '<div class="empty"><b>Không có gì tồn đọng.</b>Mọi đơn, biên lai và yêu cầu đều đã được xử lý.</div>'}
       ${(() => { const linked = D.tasks.filter(t => t.link && open(t)).sort(byDue); return linked.length ? `<div class="section-title"><h3>Đã giao từ hệ thống</h3><span>${linked.length}</span></div>${list(linked)}` : ''; })()}`;
   }
@@ -1646,6 +1647,6 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   load();
 })();
 </script>
-<script src="/admin-alerts.js?v=20260930a" defer data-mobile-bottom="calc(4.6rem + 66px)"></script>
+<script src="/admin-alerts.js?v=20260930b" defer data-mobile-bottom="calc(4.6rem + 66px)"></script>
 </body>
 </html>

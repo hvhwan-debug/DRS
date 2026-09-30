@@ -15,7 +15,8 @@ const PERMISSIONS = [
   { key: "grades", label: "Bảng Điểm" },
   { key: "members", label: "Thành Viên" },
   { key: "gifts", label: "Danh Mục & Yêu Cầu Đổi Quà" },
-  { key: "bulkemail", label: "Gửi Email Hàng Loạt" }
+  { key: "bulkemail", label: "Gửi Email Hàng Loạt" },
+  { key: "payroll", label: "Chấm Công & Tính Lương (quản lý)" }
 ];
 
 const PERMISSION_KEYS = PERMISSIONS.map(p => p.key);

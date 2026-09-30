@@ -24,7 +24,7 @@
   var ICONS = {
     members: 'fa-user-clock', registrations: 'fa-file-signature', invoices: 'fa-receipt', gifts: 'fa-gift',
     tuition: 'fa-triangle-exclamation', crm: 'fa-phone', leave: 'fa-calendar-xmark', birthday: 'fa-cake-candles',
-    points: 'fa-scale-unbalanced', 'task-overdue': 'fa-clock', 'task-new': 'fa-inbox', 'task-today': 'fa-list-check'
+    points: 'fa-scale-unbalanced', timesheet: 'fa-user-clock', 'timesheet-open': 'fa-clock-rotate-left', 'my-clock-forgot': 'fa-clock-rotate-left', 'my-clock-rejected': 'fa-circle-xmark', 'my-leave': 'fa-umbrella-beach', 'my-payslip': 'fa-money-check-dollar', 'task-overdue': 'fa-clock', 'task-new': 'fa-inbox', 'task-today': 'fa-list-check'
   };
 
   var state = { items: [], total: 0, timer: null, loading: false, lastAt: null, baseTitle: document.title, flashTimer: null, audio: null };

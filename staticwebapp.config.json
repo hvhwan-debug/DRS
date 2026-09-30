@@ -22,6 +22,13 @@
       }
     },
     {
+      "route": "/admin/cham-cong",
+      "rewrite": "/admin-cham-cong.html",
+      "headers": {
+        "Cache-Control": "no-store"
+      }
+    },
+    {
       "route": "/thanh-vien",
       "rewrite": "/thanh-vien-index.html"
     }
