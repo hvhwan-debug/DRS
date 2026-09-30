@@ -898,18 +898,6 @@
         desc: "Chương trình Tiền tiểu học miễn phí, dành cho trẻ 5–6 tuổi chuẩn bị vào lớp 1 tại Hà Nội, giúp các em sẵn sàng tâm thế, kỹ năng tự lập và làm quen chữ số trước năm học mới."
       },
       {
-        date: "2026-11-01",
-        anchor: "su-kien-ao-am-vung-cao",
-        articleSlug: "chien-dich-ao-am-vung-cao-keu-goi",
-        icon: "fa-mitten",
-        image: "images/ao-am-vung-cao.jpg",
-        topBg: "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)",
-        tag: "Sắp diễn ra",
-        tagBg: "#e0f2fe", tagColor: "#0369a1",
-        title: "Chiến dịch Áo Ấm Vùng Cao (Tháng 11/2026)",
-        desc: "Kêu gọi quyên góp áo ấm, chăn bông và dụng cụ học tập để bảo vệ sức khỏe cho học sinh trong mùa đông giá rét tại Hà Giang."
-      },
-      {
         date: "2026-12-01",
         anchor: "su-kien-luyen-chu-dep",
         articleSlug: "chuong-trinh-luyen-chu-dep-tre-em-kho-khan-ha-noi",
@@ -984,7 +972,7 @@
 
     function loadUpcomingHomeEvents() {
       const grid = document.getElementById("upcomingHomeGrid");
-      const events = [...HOME_UPCOMING_EVENTS].sort((a, b) => { const t = x => { const v = new Date(x.date).getTime(); return isNaN(v) ? 0 : v; }; return t(a) - t(b); });
+      const events = [...HOME_UPCOMING_EVENTS].sort((a, b) => { const t = x => { const v = new Date(x.date).getTime(); return isNaN(v) ? 0 : v; }; return t(a) - t(b); }).slice(0, 3);
       grid.innerHTML = events.map(renderUpcomingHomeCard).join("");
       updateHomeCountdowns();
       setInterval(updateHomeCountdowns, 1000);
