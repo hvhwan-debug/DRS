@@ -49,6 +49,12 @@ module.exports = async function (context, req) {
             ctas: [{ label: "Mở công việc", href: `https://admin.wvn.vn/admin/cong-viec#today&task=${taskId}`, style: "primary" }]
           });
         }
+        try {
+          const { sendPush } = require("../_shared/push");
+          for (const m of mentioned.slice(0, 10)) {
+            await sendPush(context, m.email, { title: `${who.displayName || who.email} nhắc bạn`, body: text.slice(0, 120), url: `/admin/cong-viec#today&task=${taskId}` });
+          }
+        } catch (e) { /* best-effort */ }
       }
     } catch (e) { context.log.warn("Không gửi được email nhắc tên:", e.message); }
     await logAdminActivity(req, "Công việc: bình luận", `việc ${String((req.body && req.body.taskId) || "")}: ${String(text).slice(0, 80)}`);
