@@ -75,7 +75,7 @@ async function buildInbox(context, can) {
       for (const s of await listAll("Students")) students[s.rowKey] = s.studentName;
       const names = due.slice(0, 4).map(p => students[p.rowKey]).filter(Boolean);
       const overdueDays = due.reduce((max, p) => { const d = Math.floor((Date.now() - new Date(p.nextFollowUp + "T00:00:00").getTime()) / 864e5); return d > max ? d : max; }, 0);
-      inbox.push({ key: "crm", count: due.length, title: `${due.length} phụ huynh cần liên hệ hôm nay`, hint: names.join(", ") + (due.length > names.length ? "…" : ""), href: "/admin/crm", tone: "violet", agingDays: overdueDays });
+      inbox.push({ key: "crm", count: due.length, title: `${due.length} phụ huynh cần liên hệ hôm nay`, hint: names.join(", ") + (due.length > names.length ? "…" : ""), href: "/admin/crm#agenda", tone: "violet", agingDays: overdueDays });
     }),
     can("students") && safe(async () => {
       // Phụ huynh xin nghỉ cho con (từ trang thành viên) — hôm nay và các ngày tới
@@ -83,7 +83,7 @@ async function buildInbox(context, can) {
       if (!rows.length) return;
       rows.sort((a, b) => String(a.date).localeCompare(String(b.date)));
       const names = rows.slice(0, 3).map(r => `${r.studentName} (${String(r.date).slice(8, 10)}/${String(r.date).slice(5, 7)})`);
-      inbox.push({ key: "leave", count: rows.length, title: `${rows.length} đơn xin nghỉ học của phụ huynh`, hint: names.join(", ") + (rows.length > 3 ? "…" : ""), href: "/admin#attendance", tone: "blue" });
+      inbox.push({ key: "leave", count: rows.length, title: `${rows.length} đơn xin nghỉ học của phụ huynh`, hint: names.join(", ") + (rows.length > 3 ? "…" : ""), href: "/admin#attendance-leave", tone: "blue" });
     }),
     can("students") && safe(async () => {
       // Sinh nhật học sinh hôm nay — một lời chúc nhỏ rất có ý nghĩa với gia đình
@@ -98,7 +98,7 @@ async function buildInbox(context, can) {
       for (const t of await listAll("TuitionPayments")) earned[t.partitionKey] = (earned[t.partitionKey] || 0) + (Number(t.pointsEarned) || 0);
       for (const r of await listAll("GiftRedemptions")) spent[r.partitionKey] = (spent[r.partitionKey] || 0) + redemptionPoints(r);
       const short = Object.keys(spent).filter(e => spent[e] > (earned[e] || 0));
-      if (short.length) inbox.push({ key: "points", count: short.length, title: `${short.length} thành viên đang thiếu điểm`, hint: "Đã đổi quà nhiều hơn điểm tích luỹ, kiểm tra học phí hoặc huỷ bớt yêu cầu đổi quà", href: "/admin#gifts", tone: "red" });
+      if (short.length) inbox.push({ key: "points", count: short.length, title: `${short.length} thành viên đang thiếu điểm`, hint: "Đã đổi quà nhiều hơn điểm tích luỹ, kiểm tra học phí hoặc huỷ bớt yêu cầu đổi quà", href: "/admin#gifts-deficit", tone: "red" });
     })
   ].filter(Boolean));
   const order = ["points", "timesheet-open", "members", "timesheet", "crm", "leave", "invoices", "tuition", "registrations", "birthday", "gifts"];

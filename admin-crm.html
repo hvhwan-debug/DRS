@@ -342,7 +342,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 @media (max-width: 600px) { .brand-crm { padding: 4px 9px; } .brand-crm .crm-logo { height: 24px; } }
 .brand-mini .word small.tag { margin: 0; padding: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 2.6px; line-height: 1; }
 </style>
-<link rel="stylesheet" href="/admin-theme.css?v=20260930h">
+<link rel="stylesheet" href="/admin-theme.css?v=20260930i">
 <link rel="stylesheet" href="/wvn-luxe.css?v=20260929e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1454,6 +1454,7 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
     try {
       const [data, who] = await Promise.all([api('/api/portal-crm-data'), api('/api/portal-admin-whoami').catch(() => null)]);
       students = data.students || []; access = data.access || access; suggestions = data.suggestions || suggestions;
+      { const hv = (location.hash || '').slice(1); if (['overview', 'list', 'board', 'agenda'].includes(hv)) setTimeout(() => setView(hv), 0); }
       if (who) { me = who; $('whoLabel').textContent = who.displayName || ''; }
       window.WVN_EXPORT_ALLOWED = !!(who && who.role === 'super');
       $('exportBtn').hidden = !window.WVN_EXPORT_ALLOWED;

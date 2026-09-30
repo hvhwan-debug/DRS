@@ -355,7 +355,7 @@
       .el-subj { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260930h">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260930i">
 <link rel="stylesheet" href="/wvn-luxe.css?v=20260929e">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -796,6 +796,11 @@
 
     <!-- ===================== TAB: ĐIỂM DANH ===================== -->
     <div class="panel" id="panel-attendance">
+      <div class="card sec-card" id="sec-attendance-leave" hidden>
+        <h3 style="margin-bottom:0.4rem; font-size:1rem;"><i class="fa-solid fa-envelope-open-text" style="color:#0284c7;"></i> Đơn xin nghỉ học của phụ huynh</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.9rem;">Phụ huynh gửi từ trang thành viên. Bấm "Đã ghi nhận" khi giáo viên đã nắm, khi điểm danh hãy chọn "Có phép" cho buổi đó.</p>
+        <div id="leaveList"></div>
+      </div>
       <div class="card">
         <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-clipboard-check" style="color:#0284c7;"></i> Điểm Danh Theo Buổi</h3>
         <div class="form-grid" style="margin-bottom:1rem;">
@@ -948,6 +953,11 @@
 
     <!-- ===================== TAB: ĐỔI QUÀ ===================== -->
     <div class="panel" id="panel-gifts">
+      <div class="card sec-card sec-warn" id="sec-gifts-deficit" hidden>
+        <h3 style="margin-bottom:0.4rem; font-size:1rem;"><i class="fa-solid fa-triangle-exclamation" style="color:#dc2626;"></i> Thành viên đang thiếu điểm</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.9rem;">Điểm đã đổi quà lớn hơn điểm tích luỹ, thường do một khoản học phí bị xoá hoặc sửa giảm. Hệ thống đang chặn duyệt/trao quà cho những người này. Hãy kiểm tra lại học phí, hoặc huỷ bớt yêu cầu đổi quà chưa trao.</p>
+        <div id="deficitList"></div>
+      </div>
       <div class="card">
         <h3 style="margin-bottom:1rem; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-boxes-packing" style="color:#0284c7;"></i> Quản Lý Danh Mục Quà Tặng</h3>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.1rem;">Thêm/sửa các mục quà tặng thành viên có thể đổi, kèm ảnh minh hoạ. Đổi quà dùng ĐIỂM TÍCH LŨY — số điểm dưới đây là chi phí mỗi lần đổi (có thể đổi lại nhiều lần nếu còn đủ điểm).</p>
@@ -4842,18 +4852,55 @@
       if (hasPermission('members')) loadMembers();
       if (hasPermission('gifts')) { loadGiftCatalog(); loadGifts(); }
       if (hasPermission('bulkemail')) loadEmailLogs();
-      if (hasPermission('attendance')) { populateAttendanceProgramSelect(); loadAttendanceHistory(); }
+      if (hasPermission('attendance')) { populateAttendanceProgramSelect(); loadAttendanceHistory(); loadLeaveRequests(); }
+      if (hasPermission('gifts')) loadPointsDeficits();
       if (myRole === 'super') { loadActivityLog(); loadStaffAccounts(); }
       openTabFromHash();
     }
 
     // Mở đúng tab theo đường dẫn /admin#ten-tab (link từ email báo, trang Công Việc, CRM...)
     function openTabFromHash() {
-      const tab = decodeURIComponent((location.hash || '').slice(1));
-      if (!tab || !document.getElementById('panel-' + tab)) return;
+      const full = decodeURIComponent((location.hash || '').slice(1)); if (!full) return;
+      let tab = full;
+      if (!document.getElementById('panel-' + tab)) tab = full.split('-')[0];
+      if (!document.getElementById('panel-' + tab)) return;
       const btn = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
-      if (btn && btn.style.display === 'none') return; // không có quyền
+      if (btn && btn.style.display === 'none') { showGlobalAlert('Tài khoản của bạn chưa được cấp quyền mở mục này. Hãy nhờ Quản trị viên chính cấp quyền.', true); return; }
       switchTab(tab);
+      const sec = document.getElementById('sec-' + full);
+      if (sec) { const go = () => { sec.hidden = false; sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); sec.classList.add('sec-flash'); setTimeout(() => sec.classList.remove('sec-flash'), 1600); }; setTimeout(go, 250); }
+    }
+    // ---- Đơn xin nghỉ học & thành viên thiếu điểm (đích đến từ hộp Việc hệ thống) ----
+    async function loadLeaveRequests() {
+      try {
+        const { leaves } = await apiCall('/api/portal-leave-requests');
+        const card = document.getElementById('sec-attendance-leave'), box = document.getElementById('leaveList');
+        const open = leaves.filter(l => l.status === 'submitted');
+        card.hidden = !leaves.length;
+        box.innerHTML = leaves.length ? leaves.slice(0, 30).map(l => `<div class="lv-row${l.status === 'submitted' ? ' is-open' : ''}">
+            <div class="lv-date"><b>${escapeHtml(String(l.date).slice(8, 10))}/${escapeHtml(String(l.date).slice(5, 7))}</b><span>${['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'][new Date(l.date).getDay()]}</span></div>
+            <div class="lv-main"><strong>${escapeHtml(l.studentName)}</strong>${l.program ? ` <small>· ${escapeHtml(l.program)}</small>` : ''}<p>${escapeHtml(l.reason)}</p><small>${escapeHtml(l.email)}</small></div>
+            ${l.status === 'submitted' ? `<button type="button" class="btn" onclick="ackLeave('${encodeURIComponent(l.email)}','${encodeURIComponent(l.key)}')">Đã ghi nhận</button>` : `<span class="lv-ok"><i class="fa-solid fa-check"></i> Đã ghi nhận${l.ackBy ? ' · ' + escapeHtml(l.ackBy) : ''}</span>`}
+          </div>`).join('') : '';
+        const b = document.querySelector('.tab-btn[data-tab="attendance"]'); if (b) b.dataset.badge = open.length || '';
+      } catch (e) {}
+    }
+    async function ackLeave(e, k) {
+      try { await apiCall('/api/portal-leave-requests', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: decodeURIComponent(e), key: decodeURIComponent(k), action: 'ack' }) }); showGlobalAlert('Đã ghi nhận đơn xin nghỉ.', false); loadLeaveRequests(); }
+      catch (err) { showGlobalAlert(err.message, true); }
+    }
+    async function loadPointsDeficits() {
+      try {
+        const { deficits } = await apiCall('/api/portal-points-deficits');
+        const card = document.getElementById('sec-gifts-deficit');
+        card.hidden = !deficits.length;
+        document.getElementById('deficitList').innerHTML = deficits.map(d => `<div class="df-row">
+            <div class="df-main"><strong>${escapeHtml(d.name || d.email)}</strong><small>${escapeHtml(d.email)}</small></div>
+            <div class="df-nums"><span>Tích luỹ <b>${d.earned.toLocaleString('vi-VN')}</b></span><span>Đã đổi <b>${d.spent.toLocaleString('vi-VN')}</b></span><span class="bad">Thiếu <b>${d.deficit.toLocaleString('vi-VN')}</b></span></div>
+            <div class="df-open">${d.openRedemptions.length ? d.openRedemptions.map(r => `<span>${escapeHtml(r.giftName)} · ${r.points.toLocaleString('vi-VN')} điểm · ${r.status === 'pending' ? 'chờ duyệt' : 'đang giao'}</span>`).join('') : '<span class="muted">Không có yêu cầu nào chưa trao</span>'}</div>
+            <div class="df-acts"><button type="button" class="btn btn-outline" onclick="switchTab('tuition'); setTimeout(() => { const i = document.getElementById('tuitionSearchInput'); if (i) { i.value = '${escapeHtml(d.email)}'; i.dispatchEvent(new Event('input')); } }, 200)">Xem học phí</button></div>
+          </div>`).join('');
+      } catch (e) {}
     }
     window.addEventListener('hashchange', openTabFromHash);
 
@@ -4862,7 +4909,7 @@
 
   <div id="printableArea" style="display:none;"></div>
   <script src="/xlsx-export.js?v=20260928c"></script>
-  <script src="admin-enhance.js?v=20260928d"></script>
+  <script src="admin-enhance.js?v=20260930a"></script>
     <script>
     // Khung chào ở Tổng quan: lời chào, ngày, một câu nhắc về ý nghĩa công việc (đổi theo ngày)
     (function () {

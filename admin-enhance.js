@@ -391,7 +391,7 @@
   // ---------- Mở đúng mục khi đến từ đường dẫn /admin#ten-muc (vd. từ trang Công Việc) ----------
   function openTabFromHash() {
     const tab = (location.hash || '').slice(1);
-    if (tab && (document.getElementById('panel-' + tab) || tab === 'emaillogs') && typeof switchTab === 'function') switchTab(tab);
+    if (tab && (document.getElementById('panel-' + tab) || tab === 'emaillogs') && typeof switchTab === 'function') switchTab(tab); // mục con (#tab-muc) do trang chính xử lý
   }
   window.addEventListener('hashchange', openTabFromHash);
   setTimeout(openTabFromHash, 300);

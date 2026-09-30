@@ -602,3 +602,19 @@ body.wvn-member.vip-theme .mx-always { background: rgba(34,197,94,0.08); border-
 @media (prefers-reduced-motion: reduce) { .mx-offer, .mx-offer-box { animation: none; } }
 body.wvn-member .mx-ics-done { margin: 0.6rem 0 0; font-size: 0.82rem; color: #15803d; background: #f0fdf4; border-radius: 10px; padding: 0.45rem 0.7rem; }
 body.wvn-member .mx-ics-help summary:focus { outline: none; } body.wvn-member .mx-ics-help summary:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; border-radius: 6px; }
+
+/* Đích đến từ Việc hệ thống: đơn xin nghỉ, thành viên thiếu điểm */
+body.wvn-admin .sec-card[hidden] { display: none; }
+body.wvn-admin .sec-warn { border-color: #fecaca !important; background: linear-gradient(180deg, #fff5f5, #fff 120px) !important; }
+@keyframes secFlash { 0% { box-shadow: 0 0 0 0 rgba(56,189,248,0.55); } 100% { box-shadow: 0 0 0 14px rgba(56,189,248,0); } }
+body.wvn-admin .sec-flash { animation: secFlash 1.2s ease-out 2; }
+body.wvn-admin .lv-row, body.wvn-admin .df-row { display: flex; align-items: center; gap: 0.9rem; padding: 0.75rem 0.2rem; border-top: 1px solid var(--t-hair-2); flex-wrap: wrap; }
+body.wvn-admin .lv-row:first-child, body.wvn-admin .df-row:first-child { border-top: none; }
+body.wvn-admin .lv-date { width: 52px; text-align: center; border-radius: 12px; background: #f1f5f9; padding: 0.35rem 0; flex-shrink: 0; }
+body.wvn-admin .lv-row.is-open .lv-date { background: #e0f2fe; color: #0369a1; }
+body.wvn-admin .lv-date b { display: block; font-size: 1rem; } body.wvn-admin .lv-date span { font-size: 0.72rem; color: var(--t-muted); }
+body.wvn-admin .lv-main { flex: 1; min-width: 200px; } body.wvn-admin .lv-main p { margin: 0.15rem 0; font-size: 0.86rem; color: var(--t-ink-2); } body.wvn-admin .lv-main small { color: var(--t-muted); font-size: 0.76rem; }
+body.wvn-admin .lv-ok { font-size: 0.8rem; color: #15803d; }
+body.wvn-admin .df-main { min-width: 180px; flex: 1; } body.wvn-admin .df-main strong { display: block; } body.wvn-admin .df-main small { color: var(--t-muted); font-size: 0.78rem; }
+body.wvn-admin .df-nums { display: flex; gap: 0.9rem; font-size: 0.8rem; color: var(--t-muted); } body.wvn-admin .df-nums b { color: var(--t-ink); margin-left: 0.2rem; } body.wvn-admin .df-nums .bad b { color: #dc2626; }
+body.wvn-admin .df-open { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 0.35rem; } body.wvn-admin .df-open span { font-size: 0.76rem; background: #fef3c7; color: #92400e; border-radius: 8px; padding: 0.15rem 0.5rem; } body.wvn-admin .df-open .muted { background: #f1f5f9; color: var(--t-muted); }
