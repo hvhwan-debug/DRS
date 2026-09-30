@@ -1490,7 +1490,7 @@
               <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="fa-solid fa-coins"></i></div>
               <div>
                 <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.available.toLocaleString('vi-VN')} điểm khả dụng</div>
-                <div style="font-size:0.78rem; color:#92651b;">Đã tích lũy ${loyaltyPoints.earned.toLocaleString('vi-VN')} điểm, đã dùng ${loyaltyPoints.spent.toLocaleString('vi-VN')} điểm — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
+                <div style="font-size:0.78rem; color:#92651b;">Đã tích lũy ${loyaltyPoints.earned.toLocaleString('vi-VN')} điểm, đã dùng ${loyaltyPoints.spent.toLocaleString('vi-VN')} điểm${loyaltyPoints.adjustment ? ` (đã được trung tâm ${loyaltyPoints.adjustment > 0 ? 'cộng thêm' : 'điều chỉnh trừ'} ${Math.abs(loyaltyPoints.adjustment).toLocaleString('vi-VN')} điểm)` : ''} — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
               </div>
             </div>` : ''}
           ${nextTier ? `
@@ -2160,7 +2160,7 @@
                 <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#a16207; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;"><i class="fa-solid fa-coins"></i></div>
                 <div style="flex:1; min-width:180px;">
                   <div style="font-size:1.1rem; font-weight:800; color:#a16207;">${loyaltyPoints.available.toLocaleString('vi-VN')} điểm khả dụng</div>
-                  <div style="font-size:0.78rem; color:#92651b;">Đã tích lũy ${loyaltyPoints.earned.toLocaleString('vi-VN')} điểm, đã dùng ${loyaltyPoints.spent.toLocaleString('vi-VN')} điểm — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
+                  <div style="font-size:0.78rem; color:#92651b;">Đã tích lũy ${loyaltyPoints.earned.toLocaleString('vi-VN')} điểm, đã dùng ${loyaltyPoints.spent.toLocaleString('vi-VN')} điểm${loyaltyPoints.adjustment ? ` (đã được trung tâm ${loyaltyPoints.adjustment > 0 ? 'cộng thêm' : 'điều chỉnh trừ'} ${Math.abs(loyaltyPoints.adjustment).toLocaleString('vi-VN')} điểm)` : ''} — tốc độ tích điểm hạng ${tier.name}: <strong>${loyaltyPoints.rateLabel}</strong></div>
                 </div>
               </div>` : ''}
 

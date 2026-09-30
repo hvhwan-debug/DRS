@@ -4036,6 +4036,27 @@
       }
     }
 
+    async function adjustMemberPoints(emailEnc) {
+      const email = decodeURIComponent(emailEnc);
+      const raw = prompt(`Cộng/trừ điểm thưởng cho ${email}\n\nNhập số điểm: số dương để CỘNG (vd. 200), số âm để TRỪ (vd. -200).`);
+      if (raw === null) return;
+      const delta = Math.round(Number(String(raw).trim().replace(/\./g, '').replace(/,/g, '.')));
+      if (!delta || !Number.isFinite(delta)) { showGlobalAlert('Số điểm không hợp lệ (phải khác 0).', true); return; }
+      const reason = prompt(`Lý do ${delta > 0 ? 'cộng' : 'trừ'} ${Math.abs(delta).toLocaleString('vi-VN')} điểm (bắt buộc, để tiện tra soát sau này):`);
+      if (!reason || !reason.trim()) { showGlobalAlert('Cần nhập lý do trước khi cộng/trừ điểm.', true); return; }
+      try {
+        const result = await apiCall('/api/portal-adjust-points', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, delta, reason: reason.trim() })
+        });
+        showGlobalAlert(result.message, false);
+        openMemberOverview(encodeURIComponent(email));
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
     async function openMemberOverview(emailEnc) {
       const email = decodeURIComponent(emailEnc);
       const card = document.getElementById('memberOverviewCard');
@@ -4303,12 +4324,27 @@
           </div>`;
 
         const pts = data.points;
+        const adjRows = data.pointAdjustments || [];
         const pointsHtml = pts ? `
-          <div style="margin-top:1.4rem; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0.6rem;">
+          <div style="margin-top:1.4rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Điểm thưởng</div>
+            <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="adjustMemberPoints('${encodeURIComponent(email)}')"><i class="fa-solid fa-coins"></i> Cộng/Trừ Điểm</button>
+          </div>
+          <div style="margin-top:0.6rem; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.6rem;">
             <div style="border:1px solid var(--border); border-radius:12px; padding:0.7rem 0.9rem;"><div style="font-size:0.75rem; color:var(--text-muted);">Điểm đã tích lũy</div><div style="font-size:1.2rem; font-weight:800;">${pts.earned.toLocaleString('vi-VN')}</div></div>
+            <div style="border:1px solid var(--border); border-radius:12px; padding:0.7rem 0.9rem;"><div style="font-size:0.75rem; color:var(--text-muted);">Admin cộng/trừ</div><div style="font-size:1.2rem; font-weight:800; color:${pts.adjustment > 0 ? '#15803d' : (pts.adjustment < 0 ? '#b91c1c' : 'inherit')};">${pts.adjustment > 0 ? '+' : ''}${(pts.adjustment || 0).toLocaleString('vi-VN')}</div></div>
             <div style="border:1px solid var(--border); border-radius:12px; padding:0.7rem 0.9rem;"><div style="font-size:0.75rem; color:var(--text-muted);">Đã dùng đổi quà</div><div style="font-size:1.2rem; font-weight:800;">${pts.spent.toLocaleString('vi-VN')}</div></div>
             <div style="border:1px solid ${pts.deficit ? '#fecaca' : '#bbf7d0'}; background:${pts.deficit ? '#fef2f2' : '#f0fdf4'}; border-radius:12px; padding:0.7rem 0.9rem;"><div style="font-size:0.75rem; color:var(--text-muted);">Còn lại</div><div style="font-size:1.2rem; font-weight:800; color:${pts.deficit ? '#b91c1c' : '#15803d'};">${pts.deficit ? '−' + pts.deficit.toLocaleString('vi-VN') : pts.available.toLocaleString('vi-VN')}</div></div>
-          </div>${pts.deficit ? '<div style="font-size:0.8rem; color:#b91c1c; margin-top:0.4rem;">Thành viên đã dùng nhiều điểm hơn số đang có (thường do học phí bị sửa/xoá sau khi đổi quà).</div>' : ''}` : '';
+          </div>${pts.deficit ? '<div style="font-size:0.8rem; color:#b91c1c; margin-top:0.4rem;">Thành viên đã dùng nhiều điểm hơn số đang có (thường do học phí bị sửa/xoá sau khi đổi quà).</div>' : ''}
+          ${adjRows.length > 0 ? `
+          <div style="margin-top:0.7rem; font-size:0.82rem;">
+            <div style="color:var(--text-muted); margin-bottom:0.3rem;">Lịch sử cộng/trừ điểm:</div>
+            ${adjRows.map(a => `
+              <div style="display:flex; justify-content:space-between; gap:0.5rem; padding:0.35rem 0; border-top:1px solid var(--border);">
+                <div><strong style="color:${a.delta > 0 ? '#15803d' : '#b91c1c'};">${a.delta > 0 ? '+' : ''}${a.delta.toLocaleString('vi-VN')}</strong> — ${escapeHtml(a.reason)}</div>
+                <div style="color:var(--text-muted); white-space:nowrap;">${escapeHtml(a.adminName) || '—'} · ${formatDate(a.at)}</div>
+              </div>`).join('')}
+          </div>` : ''}` : '';
         const giftHtml = pointsHtml + `
           <div style="margin-top:1.4rem;">
             <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Đổi Quà (${data.giftRedemptions.length})</h4>

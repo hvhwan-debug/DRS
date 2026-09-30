@@ -43,7 +43,7 @@ module.exports = async function (context, req) {
     }
 
     const bal = await getPointsBalance(parentEmail);
-    const deficit = bal.spent - bal.earned;
+    const deficit = bal.spent - (bal.earned + (bal.adjustment || 0));
     await logFamilyEvent(context, parentEmail, `Một khoản học phí đã bị xoá khỏi hệ thống, điểm tích luỹ được tính lại${deficit > 0 ? `. Thành viên đang thiếu ${deficit.toLocaleString("vi-VN")} điểm so với số điểm đã đổi quà.` : "."}`);
     const warnings = [];
     if (invoiceReverted) warnings.push("Hoá đơn liên quan đã được chuyển về trạng thái Chưa thanh toán.");

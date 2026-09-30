@@ -1,7 +1,7 @@
 const { referralCodeFor, bankConfig } = require("../_shared/memberSession");
 const { getTableClient } = require("../_shared/tableStorage");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
-const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum, recomputeTuitionPoints, isLegacyTuitionRedemption } = require("../_shared/memberTier");
+const { getEffectiveTierForMember, tierRank, describeEarnRate, getSpentPoints, getEarnedPointsSum, getAdjustmentSum, recomputeTuitionPoints, isLegacyTuitionRedemption } = require("../_shared/memberTier");
 const { listActiveGiftCatalog } = require("../_shared/giftCatalog");
 const { getMemberDisplayName, getMemberGender, buildGreeting } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
@@ -396,10 +396,12 @@ module.exports = async function (context, req) {
     }
     const earnedPoints = await getEarnedPointsSum(email);
     const spentPoints = await getSpentPoints(email);
+    const adjustmentPoints = await getAdjustmentSum(email);
     const loyaltyPoints = {
       earned: earnedPoints,
       spent: spentPoints,
-      available: Math.max(0, earnedPoints - spentPoints),
+      adjustment: adjustmentPoints,
+      available: Math.max(0, earnedPoints + adjustmentPoints - spentPoints),
       rateLabel: describeEarnRate(tier),
       tierName: tier.name
     };

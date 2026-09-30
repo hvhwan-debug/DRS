@@ -93,7 +93,7 @@ async function pointsDeficit(email) {
   try {
     const { getPointsBalance } = require("./memberTier");
     const b = await getPointsBalance(email);
-    return Math.max(0, b.spent - b.earned);
+    return Math.max(0, b.spent - (b.earned + (b.adjustment || 0)));
   } catch (e) { return 0; }
 }
 

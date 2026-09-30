@@ -98,6 +98,34 @@ async function getSpentPoints(email) {
   return spent;
 }
 
+// Điểm CỘNG/TRỪ THỦ CÔNG bởi admin (vd. bù điểm do lỗi hệ thống, thưởng thêm, hoặc trừ vì lý do
+// nào đó) — một khoản HOÀN TOÀN RIÊNG với điểm tích từ học phí (earned) và điểm đã dùng (spent).
+// Mỗi lần admin cộng/trừ tạo 1 dòng trong bảng này (số dương = cộng, số âm = trừ), kèm lý do —
+// không bao giờ sửa đè lên dòng cũ, nên luôn có lịch sử đầy đủ để tra soát.
+const ADJUSTMENTS_TABLE = "PointAdjustments";
+async function getAdjustmentSum(email) {
+  const table = await getTableClient(ADJUSTMENTS_TABLE);
+  let sum = 0;
+  const it = table.listEntities({ queryOptions: { filter: `PartitionKey eq '${String(email).replace(/'/g, "''")}'` } });
+  for await (const r of it) sum += Number(r.delta) || 0;
+  return sum;
+}
+async function listAdjustments(email) {
+  const table = await getTableClient(ADJUSTMENTS_TABLE);
+  const rows = [];
+  const it = table.listEntities({ queryOptions: { filter: `PartitionKey eq '${String(email).replace(/'/g, "''")}'` } });
+  for await (const r of it) rows.push({ delta: Number(r.delta) || 0, reason: r.reason || "", adminName: r.adminName || "", at: r.at || "" });
+  rows.sort((a, b) => new Date(b.at) - new Date(a.at));
+  return rows;
+}
+async function addAdjustment(email, delta, reason, adminName) {
+  const table = await getTableClient(ADJUSTMENTS_TABLE);
+  const at = new Date().toISOString();
+  const rowKey = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  await table.createEntity({ partitionKey: email, rowKey, delta, reason: reason || "", adminName: adminName || "", at });
+  return { rowKey, at };
+}
+
 // GIỮ LẠI để tương thích — không còn được dùng trong luồng đổi quà (điểm đã dùng giờ tính trực tiếp
 // từ GiftRedemptions, xem getSpentPoints). Chỉ cập nhật con số tham khảo trong hồ sơ.
 async function adjustSpentPoints(email, delta) {
@@ -196,8 +224,9 @@ async function getPointsBalance(email) {
   const tier = getTierByTotal(totalPaid);
   const earned = await getEarnedPointsSum(email);
   const spent = await getSpentPoints(email);
-  const available = Math.max(0, earned - spent);
-  return { earned, spent, available, tier, totalPaid };
+  const adjustment = await getAdjustmentSum(email);
+  const available = Math.max(0, earned + adjustment - spent);
+  return { earned, spent, adjustment, available, tier, totalPaid };
 }
 
 // Tổng học phí đã đóng TRỌN ĐỜI của 1 email — chỉ dùng cho báo cáo tài chính (Tổng Quan, Công Nợ...),
@@ -311,6 +340,9 @@ module.exports = {
   resetTierLock,
   getSpentPoints,
   adjustSpentPoints,
+  getAdjustmentSum,
+  listAdjustments,
+  addAdjustment,
   getPointsBalance,
   recomputeTuitionPoints,
   getEarnedPointsSum, redemptionPoints, isLegacyTuitionRedemption };

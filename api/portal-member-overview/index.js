@@ -1,7 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { getAttachmentSasUrl } = require("../_shared/blobStorage");
-const { getPointsBalance } = require("../_shared/memberTier");
+const { getPointsBalance, listAdjustments } = require("../_shared/memberTier");
 
 const MEMBERS_TABLE = "Members";
 const PROFILES_TABLE = "MemberProfiles";
@@ -254,10 +254,15 @@ module.exports = async function (context, req) {
 
     context.res.status = 200;
     let points = null;
-    try { const b = await getPointsBalance(email); points = { earned: b.earned, spent: b.spent, available: Math.max(0, b.earned - b.spent), deficit: Math.max(0, b.spent - b.earned) }; } catch (e) {}
+    let pointAdjustments = [];
+    try {
+      const b = await getPointsBalance(email);
+      points = { earned: b.earned, spent: b.spent, adjustment: b.adjustment || 0, available: b.available, deficit: Math.max(0, b.spent - (b.earned + (b.adjustment || 0))) };
+      pointAdjustments = await listAdjustments(email);
+    } catch (e) {}
     context.res.body = {
       success: true, email, hasAccount, isBlocked, profile, registrations, donations, grades,
-      tuitionPayments, students, schedules, giftRedemptions, invoices, points
+      tuitionPayments, students, schedules, giftRedemptions, invoices, points, pointAdjustments
     };
   } catch (err) {
     context.log.error("Lỗi lấy tổng quan thành viên:", err.message);
