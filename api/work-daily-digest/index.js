@@ -58,6 +58,13 @@ module.exports = async function (context, req) {
         footerNote: "Email gửi lúc 7:00 mỗi sáng khi bạn có việc quá hạn hoặc đến hạn. Không có việc thì không gửi."
       });
       if (r && r.success) { sent++; await log.upsertEntity({ partitionKey: today, rowKey: s.email, sentAt: new Date().toISOString() }, "Replace").catch(() => {}); }
+      try {
+        const { sendPush } = require("../_shared/push");
+        const parts = [];
+        if (overdue.length) parts.push(`${overdue.length} quá hạn`);
+        if (todays.length) parts.push(`${todays.length} hạn hôm nay`);
+        await sendPush(context, s.email, { title: "☀️ Việc hôm nay của bạn", body: parts.join(", ") || "Xem danh sách việc cần làm hôm nay", url: "/admin/cong-viec#today" });
+      } catch (e) { /* best-effort */ }
     }
     context.res.status = 200; context.res.body = { success: true, sent, skipped, date: today };
   } catch (err) {
