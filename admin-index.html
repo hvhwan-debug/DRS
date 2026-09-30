@@ -2908,7 +2908,7 @@
       ];
       return `
         <div style="display:flex; align-items:center; justify-content:space-between; gap:0.6rem; flex-wrap:wrap; padding:0.6rem 0; border-top:1px solid var(--border);">
-          <div style="font-weight:600; min-width:160px;">${escapeHtml(student.studentName)}</div>
+          <div style="font-weight:600; min-width:160px;">${escapeHtml(student.studentName)}${state.onLeave ? ' <span style="font-size:0.72rem; font-weight:600; padding:0.1rem 0.5rem; border-radius:999px; background:#ede9fe; color:#6d28d9;" title="' + escapeHtml(state.note || '') + '">Đã xin nghỉ</span>' : ''}</div>
           <div style="display:flex; gap:0.4rem;">
             ${STATUS_BTNS.map(b => `
               <button type="button" onclick="setAttendanceStatus('${student.id}','${b.key}')"
@@ -2976,10 +2976,16 @@
       students.forEach(s => { attendanceState[s.id] = { status: 'present', note: '', studentName: s.studentName, parentEmail: s.parentEmail }; });
 
       try {
-        const { records } = await apiCall('/api/portal-list-attendance', {
+        const { records, leaves } = await apiCall('/api/portal-list-attendance', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ program, date })
+        });
+        // Phụ huynh đã xin nghỉ buổi này (trang thành viên) -> tự đánh "Vắng" kèm lý do, nếu chưa điểm danh
+        const recorded = new Set(records.map(r => r.studentId));
+        (leaves || []).forEach(l => {
+          const st = attendanceState[l.studentId];
+          if (st && !recorded.has(l.studentId)) { st.status = 'absent'; st.note = 'Phụ huynh xin nghỉ' + (l.reason ? ': ' + l.reason : ''); st.onLeave = true; }
         });
         records.forEach(r => {
           if (attendanceState[r.studentId]) attendanceState[r.studentId].status = r.status;
@@ -4716,6 +4722,6 @@
     })();
   </script>
 <script src="/wvn-luxe.js?v=20260929d"></script>
-<script src="/admin-alerts.js?v=20260930b" defer></script>
+<script src="/admin-alerts.js?v=20260930c" defer></script>
 </body>
 </html>

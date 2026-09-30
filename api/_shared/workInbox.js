@@ -96,4 +96,32 @@ async function buildInbox(context, can) {
   return inbox;
 }
 
-module.exports = { buildInbox, listAll, todayVN };
+// Việc được tạo bằng nút "Giao việc" từ một nhóm trong Hộp việc hệ thống (link.type = link.id = key
+// của nhóm). Khi nhóm đó KHÔNG CÒN đầu việc nào (đã duyệt hết đơn, đã điểm danh, đã xác nhận biên
+// lai…) thì việc được giao cũng tự chuyển sang "Xong" — không bắt nhân viên đóng tay lần nữa.
+// Chỉ đóng khi người đang xem CÓ quyền khu vực đó (nếu không, nhóm vắng mặt chỉ vì bị ẩn chứ chưa xong).
+// Không tự đóng: việc lặp lại, và nhóm "sinh nhật" (tự mất khi qua ngày chứ không phải đã làm).
+const KEY_PERM = { registrations: "registrations", members: "members", invoices: "invoices", gifts: "gifts", points: "gifts", tuition: "tuition", crm: "students", leave: "students", timesheet: "payroll", "timesheet-open": "payroll" };
+
+async function autoCloseLinkedTasks(context, inbox, can) {
+  const alive = new Set(inbox.map(i => i.key));
+  const closed = {};
+  try {
+    const t = await getTableClient("WorkTasks");
+    const now = new Date().toISOString();
+    for (const e of await listAll("WorkTasks", "PartitionKey eq 'task'")) {
+      if (e.status === "done" || e.recurrence) continue;
+      let link = null; try { link = JSON.parse(e.linkJson || "null"); } catch (err) { link = null; }
+      if (!link || !KEY_PERM[link.type] || link.id !== link.type) continue;
+      if (!can(KEY_PERM[link.type]) || alive.has(link.type)) continue;
+      if (e.createdAt && Date.now() - new Date(e.createdAt).getTime() < 60e3) continue; // vừa tạo, tránh đóng nhầm do dữ liệu chưa kịp cập nhật
+      let history = []; try { history = JSON.parse(e.historyJson || "[]"); } catch (err) { history = []; }
+      history.push({ at: now, by: "Hệ thống", text: "Tự hoàn thành: các đầu việc liên quan đã được xử lý xong" });
+      await t.updateEntity({ partitionKey: "task", rowKey: e.rowKey, status: "done", completedAt: now, updatedAt: now, historyJson: JSON.stringify(history) }, "Merge");
+      closed[e.rowKey] = { status: "done", completedAt: now, history };
+    }
+  } catch (err) { if (context && context.log) context.log.warn("Không tự đóng được việc liên kết:", err.message); }
+  return closed;
+}
+
+module.exports = { buildInbox, autoCloseLinkedTasks, listAll, todayVN };

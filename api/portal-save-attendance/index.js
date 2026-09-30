@@ -1,6 +1,6 @@
 const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireAdmin } = require("../_shared/adminAuth");
+const { requireAdmin, getAdminIdentity } = require("../_shared/adminAuth");
 
 const ATTENDANCE_TABLE = "Attendance";
 const ALLOWED_STATUS = ["present", "absent", "late"];
@@ -43,6 +43,24 @@ module.exports = async function (context, req) {
       }, "Replace");
       saved++;
     }
+
+    // Đã điểm danh buổi đó -> đơn xin nghỉ của phụ huynh cho buổi này coi như đã được xử lý
+    // (không còn hiện ở chuông thông báo / "Việc từ hệ thống")
+    try {
+      const lt = await getTableClient("LeaveRequests");
+      const who = await getAdminIdentity(req);
+      for (const r of records) {
+        const email = String((r && r.parentEmail) || "").trim().toLowerCase();
+        const sid = String((r && r.studentId) || "").trim();
+        if (!email || !sid) continue;
+        try {
+          const l = await lt.getEntity(email, `${date}_${sid}`);
+          if ((l.status || "submitted") === "submitted") {
+            await lt.updateEntity({ partitionKey: email, rowKey: l.rowKey, status: "noted", notedAt: new Date().toISOString(), notedBy: (who && who.displayName) || "" }, "Merge");
+          }
+        } catch (e) { if (e.statusCode !== 404) throw e; }
+      }
+    } catch (e) { context.log.warn("Không cập nhật được đơn xin nghỉ:", e.message); }
 
     await logAdminActivity(req, "Lưu điểm danh", summarizeBody(req.body));
     context.res.status = 200;

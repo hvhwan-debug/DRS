@@ -1,7 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin, loadSessionAndAccount, accountPermissions, isSuperAdmin, ADMIN_ACCOUNTS_TABLE } = require("../_shared/adminAuth");
 const { TASKS_TABLE, PROJECTS_TABLE, toTask } = require("../_shared/work");
-const { buildInbox } = require("../_shared/workInbox");
+const { buildInbox, autoCloseLinkedTasks } = require("../_shared/workInbox");
 
 // Mọi thứ màn Công Việc cần trong 1 lần gọi: việc, dự án, danh sách đồng nghiệp để giao việc,
 // và "Hộp việc hệ thống" — các đầu việc tự sinh từ dữ liệu vận hành (đơn chờ duyệt, hoá đơn chờ
@@ -44,6 +44,8 @@ module.exports = async function (context, req) {
     // ---------- Hộp việc hệ thống (dùng chung với chuông thông báo — _shared/workInbox.js) ----------
     const today = todayVN();
     const inbox = await buildInbox(context, can);
+    const closed = await autoCloseLinkedTasks(context, inbox, can);
+    for (const t of tasks) if (closed[t.id]) Object.assign(t, closed[t.id]);
 
     context.res.status = 200;
     context.res.body = { success: true, me, tasks, projects, staff, inbox, today };

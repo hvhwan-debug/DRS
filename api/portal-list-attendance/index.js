@@ -36,8 +36,19 @@ module.exports = async function (context, req) {
     }
     records.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    // Đơn phụ huynh xin nghỉ cho đúng ngày đang điểm danh -> để màn điểm danh tự đánh "Vắng"
+    const leaves = [];
+    if (date) {
+      try {
+        const lt = await getTableClient("LeaveRequests");
+        for await (const l of lt.listEntities({ queryOptions: { filter: `date eq '${date.replace(/'/g, "''")}'` } })) {
+          leaves.push({ studentId: l.studentId, studentName: l.studentName || "", reason: l.reason || "", status: l.status || "submitted" });
+        }
+      } catch (e) { /* không chặn điểm danh */ }
+    }
+
     context.res.status = 200;
-    context.res.body = { success: true, records };
+    context.res.body = { success: true, records, leaves };
   } catch (err) {
     context.log.error("Lỗi lấy điểm danh:", err.message);
     context.res.status = 500;

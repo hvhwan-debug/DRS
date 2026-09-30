@@ -141,8 +141,9 @@
 
   function renderPanel() {
     var seen = readSeen();
-    list.innerHTML = state.items.length
-      ? state.items.map(function (i) { return itemHtml(i, isNew(i, seen)); }).join('')
+    var shown = state.items.filter(function (i) { return i.countable !== false || isNew(i, seen); });
+    list.innerHTML = shown.length
+      ? shown.map(function (i) { return itemHtml(i, isNew(i, seen)); }).join('')
       : '<div class="wa-empty"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Không còn việc nào cần xử lý. Làm tốt lắm!</div>';
     sub.textContent = state.lastAt ? 'Cập nhật lúc ' + state.lastAt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' · tự làm mới mỗi phút' : 'Đang tải…';
     var foot = panel.querySelector('.wa-foot');
@@ -178,7 +179,14 @@
   }
 
   // ---------- Thẻ thông báo nổi ----------
-  function clearToasts() { toasts.innerHTML = ''; }
+  function clearToasts() { toasts.innerHTML = ''; state.toastKeys = null; }
+  // Việc trên thẻ nổi đã được xử lý xong (ở màn hình này hoặc bởi người khác) -> thẻ tự biến mất
+  function pruneToast() {
+    if (!state.toastKeys || !toasts.firstChild) return;
+    var alive = {}; state.items.forEach(function (i) { alive[i.key] = i.count; });
+    var still = state.toastKeys.filter(function (k) { return alive[k]; });
+    if (!still.length) { clearToasts(); state.lastSig = null; }
+  }
   function showToast(fresh) {
     clearToasts();
     var top = fresh[0];
@@ -197,6 +205,7 @@
     if (open) open.addEventListener('click', function (e) { e.preventDefault(); togglePanel(true); });
     else el.querySelector('.wa-acts a').addEventListener('click', function () { markSeen(fresh); });
     toasts.appendChild(el);
+    state.toastKeys = fresh.map(function (i) { return i.key; });
   }
 
   // ---------- Âm báo / nháy tab / thông báo máy tính ----------
@@ -237,7 +246,8 @@
   // ---------- Tải dữ liệu ----------
   function refresh(fresh) {
     var tk = token();
-    if (!tk || state.loading) return;
+    if (!tk) return;
+    if (state.loading) { state.again = state.again || !!fresh || 'normal'; return; } // đang tải -> làm lại ngay sau khi xong
     state.loading = true;
     fetch('/api/portal-alerts' + (fresh ? '?fresh=1' : ''), { headers: { 'X-Admin-Token': tk }, cache: 'no-store' })
       .then(function (r) { if (r.status === 401 || r.status === 403) return null; return r.json().catch(function () { return null; }); })
@@ -252,6 +262,7 @@
         var changed = false; Object.keys(seen).forEach(function (k) { if (!alive[k]) { delete seen[k]; changed = true; } });
         if (changed) writeSeen(seen);
         updateBell();
+        pruneToast();
         if (panel.classList.contains('open')) renderPanel();
         if (fresh.length && !panel.classList.contains('open')) {
           var sig = fresh.map(function (i) { return i.key + ':' + i.count; }).join('|');
@@ -264,18 +275,29 @@
         }
       })
       .catch(function () { /* mạng chập chờn: thử lại ở lần hỏi sau */ })
-      .then(function () { state.loading = false; });
+      .then(function () {
+        state.loading = false;
+        if (state.again) { var f = state.again === true; state.again = false; refresh(f); }
+      });
   }
 
   // Lưu thành công ở bất kỳ màn hình nào (duyệt, xác nhận, cập nhật…) -> tự làm mới chuông sau 1,5 giây
   var origFetch = window.fetch, debounce = null;
+  // Các tab khác đang mở (Quản trị, CRM, Công việc…) cũng làm mới ngay khi 1 tab vừa xử lý xong việc
+  var chan = null;
+  try { chan = new BroadcastChannel('wvn-alerts'); chan.onmessage = function (ev) { if (ev.data === 'refresh') refresh(true); }; } catch (e) {}
   window.fetch = function (input, init) {
     var p = origFetch.apply(this, arguments);
     try {
       var url = typeof input === 'string' ? input : (input && input.url) || '';
       var method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
-      if (method !== 'GET' && /\/api\/portal-(?!alerts)/.test(url)) {
-        p.then(function (r) { if (r && r.ok) { clearTimeout(debounce); debounce = setTimeout(function () { refresh(true); }, 1500); } }).catch(function () {});
+      if (method !== 'GET' && /\/api\/(portal-(?!alerts)|staff-me|public-member-approval)/.test(url)) {
+        p.then(function (r) {
+          if (r && r.ok) {
+            clearTimeout(debounce);
+            debounce = setTimeout(function () { refresh(true); try { if (chan) chan.postMessage('refresh'); } catch (e) {} }, 800);
+          }
+        }).catch(function () {});
       }
     } catch (e) {}
     return p;

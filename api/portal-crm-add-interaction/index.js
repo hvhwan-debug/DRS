@@ -43,6 +43,18 @@ module.exports = async function (context, req) {
 
     // Nếu người dùng hẹn lịch liên hệ tiếp theo ngay khi ghi chăm sóc, cập nhật luôn vào hồ sơ.
     // "Merge" để không xoá các trường khác; nếu học sinh chưa có hồ sơ CRM thì tạo mới tối thiểu.
+    // Đã liên hệ mà không hẹn lịch mới -> lịch hẹn đã tới hạn / quá hạn coi như XONG, để
+    // "phụ huynh cần liên hệ hôm nay" tự mất khỏi chuông thông báo.
+    if (body.nextFollowUp === undefined) {
+      try {
+        const crm = await getTableClient(CRM_TABLE);
+        const prof = await crm.getEntity(CRM_PARTITION, studentId);
+        const todayVN = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+        if (prof.nextFollowUp && prof.nextFollowUp <= todayVN) {
+          await crm.updateEntity({ partitionKey: CRM_PARTITION, rowKey: studentId, nextFollowUp: "", followUpNote: "", updatedAt: now.toISOString(), updatedBy: item.createdBy }, "Merge");
+        }
+      } catch (e) { if (e.statusCode !== 404) context.log.warn("Không cập nhật lịch hẹn:", e.message); }
+    }
     if (body.nextFollowUp !== undefined) {
       const crm = await getTableClient(CRM_TABLE);
       await crm.upsertEntity({
