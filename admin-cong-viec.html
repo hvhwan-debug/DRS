@@ -856,13 +856,26 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   /* Một phông chữ duy nhất cho toàn bộ website: Be Vietnam Pro (trừ biểu tượng Font Awesome) */
   :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
   html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
+/* ===== Khối logo thanh bên (đồng bộ Quản trị / Chấm công): căn giữa, tên khu vực dạng viên ===== */
+.brand.brand-center { display: block; text-align: center; padding: 0.35rem 0.5rem 1.25rem; margin-bottom: 1rem; }
+.brand.brand-center::after { bottom: 0; left: 0.5rem; right: 0.5rem; background: linear-gradient(90deg, transparent, rgba(56,189,248,0.45) 30%, rgba(190,242,100,0.3) 70%, transparent); }
+.brand-center .brand-lockup-img { display: block; width: 176px; max-width: 100%; height: auto; margin: 0 auto; filter: drop-shadow(0 4px 14px rgba(56,189,248,0.22)); }
+.brand-center .brand-pill { display:inline-flex;align-items:center;gap:0.45rem;padding:0.28rem 0.8rem 0.3rem;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.09);color:#dbe4ff;font-size:0.72rem;font-weight:600;letter-spacing:0.15px;line-height:1.3;white-space:nowrap; margin-top: 0.8rem; }
+.brand-center .brand-pill::before { content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#38bdf8,#bef264);box-shadow:0 0 8px rgba(56,189,248,0.8); }
+
+/* Đầu trang trên điện thoại: logo + tên khu vực (đồng bộ các màn hình nội bộ) */
+.mobile-head .m-brand { display: inline-flex; align-items: center; gap: 0.55rem; min-width: 0; }
+.mobile-head .m-brand img { height: 24px; width: auto; display: block; flex-shrink: 0; }
+.mobile-head .m-pill { display:inline-flex;align-items:center;gap:0.4rem;padding:0.2rem 0.65rem;border-radius:999px;background:#eef3ff;border:1px solid #dde6fb;color:#1e3a8a;font-size:0.7rem;font-weight:600;line-height:1.3;white-space:nowrap; }
+.mobile-head .m-pill::before { content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#38bdf8,#bef264);box-shadow:0 0 8px rgba(56,189,248,0.8); box-shadow: none; }
+@media (max-width: 360px) { .mobile-head .m-pill { display: none; } }
 </style>
 <script src="/wvn-quotes.js?v=20260928a"></script>
 </head>
 <body>
 <div class="app">
   <aside class="side" aria-label="Điều hướng">
-    <a class="brand brand-work" href="/admin" aria-label="Work Management · Tri thức Việt"><img class="work-logo" src="/images/logo-work-dark.png?v=20260928a" alt="Work Management" width="448" height="120"></a>
+    <a class="brand brand-work brand-center" href="/admin" aria-label="Quản lý công việc · Tri thức Việt"><img class="brand-lockup-img" src="/images/logo-tri-thuc-viet-dark.png?v=20260928a" alt="Tri thức Việt" width="489" height="96"><span class="brand-pill">Quản lý công việc</span></a>
     <button class="add-btn" data-act="focus-quick"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm việc <kbd>N</kbd></button>
     <nav class="nav">
       <button data-view="today" aria-current="page"><i class="fa-regular fa-sun" aria-hidden="true"></i> Hôm nay <span class="n" id="nToday"></span></button>
@@ -887,7 +900,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   </aside>
 
   <div class="main">
-    <div class="mobile-head"><b class="m-brand"><img class="work-logo-m" src="/images/logo-work.png?v=20260928a" alt="Work Management" width="448" height="120"></b><a href="/admin">Trang quản trị</a></div>
+    <div class="mobile-head"><b class="m-brand"><img src="/images/logo-tri-thuc-viet.png?v=20260928a" alt="Tri thức Việt" width="489" height="96"><span class="m-pill">Công việc</span></b><a href="/admin">Trang quản trị</a></div>
     <div class="topbar" id="topbar">
       <div class="quick">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>

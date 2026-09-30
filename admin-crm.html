@@ -351,6 +351,12 @@ details.more > summary::-webkit-details-marker { display: none; }
   /* Một phông chữ duy nhất cho toàn bộ website: Be Vietnam Pro (trừ biểu tượng Font Awesome) */
   :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
   html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
+/* ===== Khối logo (đồng bộ Quản trị / Chấm công / Công việc): logo + tên khu vực dạng viên ===== */
+body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem; }
+.brand-row .brand-lockup-img { display: block; height: 30px; width: auto; filter: drop-shadow(0 4px 14px rgba(56,189,248,0.22)); }
+.brand-row .brand-pill { display:inline-flex;align-items:center;gap:0.45rem;padding:0.28rem 0.8rem 0.3rem;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.09);color:#dbe4ff;font-size:0.72rem;font-weight:600;letter-spacing:0.15px;line-height:1.3;white-space:nowrap; }
+.brand-row .brand-pill::before { content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#38bdf8,#bef264);box-shadow:0 0 8px rgba(56,189,248,0.8); }
+@media (max-width: 760px) { .brand-row .brand-pill { display: none; } .brand-row .brand-lockup-img { height: 26px; } }
 </style>
 <script src="/wvn-quotes.js?v=20260928a"></script>
 </head>
@@ -358,7 +364,7 @@ details.more > summary::-webkit-details-marker { display: none; }
 
 <header class="topbar">
   <div class="topbar-inner">
-    <a class="brand brand-mini brand-crm" href="/admin" aria-label="CRM · Tri thức Việt"><img class="crm-logo" src="/images/logo-crm-dark.png?v=20260928a" alt="W CRM – Tri thức Việt" width="493" height="120"></a>
+    <a class="brand brand-crm brand-row" href="/admin" aria-label="CRM học sinh · Tri thức Việt"><img class="brand-lockup-img" src="/images/logo-tri-thuc-viet-dark.png?v=20260928a" alt="Tri thức Việt" width="489" height="96"><span class="brand-pill">CRM học sinh</span></a>
     <div class="search">
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <label class="sr-only" for="globalSearch">Tìm học sinh</label>
