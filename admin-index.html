@@ -1543,7 +1543,7 @@
       ten_phu_huynh: 'Phụ huynh', sdt_phu_huynh: 'SĐT', email_phu_huynh: 'Email', ten_tre: 'Tên con', ngay_sinh_tre: 'Ngày sinh con',
       truong_lop: 'Trường / lớp', truong_dang_hoc: 'Trường đang học', hinh_thuc_hoc: 'Hình thức học', doi_tuong_dang_ky: 'Đối tượng', phuong_xa: 'Phường / xã',
       dia_chi: 'Địa chỉ', address: 'Địa chỉ', ghi_chu: 'Ghi chú', hoan_canh_ly_do: 'Hoàn cảnh / lý do', fullname: 'Họ tên', name: 'Họ tên', phone: 'SĐT', email: 'Email',
-      nhu_cau: 'Nhu cầu', ngay_sinh: 'Ngày sinh', lop: 'Lớp', truong: 'Trường',
+      nhu_cau: 'Nhu cầu', lop: 'Lớp', mon_can_ho_tro: 'Cần hỗ trợ', buoi_toi_co_the_hoc: 'Buổi tối có thể học', ngay_sinh: 'Ngày sinh', lop: 'Lớp', truong: 'Trường',
       ten_tnv: 'Tình nguyện viên', sdt_tnv: 'SĐT', email_tnv: 'Email', loai_tnv: 'Vai trò', thoi_gian_tnv: 'Thời gian rảnh', nghe_nghiep: 'Nghề nghiệp', nganh_hoc: 'Ngành học',
       truong_giang_day: 'Trường giảng dạy', mon_cap_day: 'Môn / cấp dạy', kinh_nghiem: 'Kinh nghiệm', ghi_chu_tnv: 'Ghi chú',
       ten_tai_tro: 'Nhà tài trợ', sdt_tai_tro: 'SĐT', email_tai_tro: 'Email', muc_tai_tro: 'Mức tài trợ', chi_tiet_tai_tro: 'Chi tiết tài trợ', hinh_thuc: 'Hình thức',
@@ -1552,7 +1552,7 @@
     };
     const REG_HIDDEN = /^(_|vi_tri_gps)/;
     const REG_GROUPS = [
-      { key: 'study', label: 'Đăng ký học', test: t => /luyen_chu_phu_huynh|tien_tieu_hoc/.test(t) },
+      { key: 'study', label: 'Đăng ký học', test: t => /luyen_chu_phu_huynh|tien_tieu_hoc|day_kem_tieu_hoc/.test(t) },
       { key: 'help', label: 'Tình nguyện & tài trợ', test: t => /volunteer|donor|item|tinh_nguyen|tai_tro/.test(t) },
       { key: 'support', label: 'Cần hỗ trợ', test: t => t === 'support' }
     ];

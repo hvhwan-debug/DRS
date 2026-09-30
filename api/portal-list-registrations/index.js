@@ -13,7 +13,8 @@ const FORM_TITLES = {
   luyen_chu_phu_huynh: "Đăng ký Luyện Chữ Đẹp — Phụ huynh",
   luyen_chu_tinh_nguyen: "Đăng ký Luyện Chữ Đẹp — Tình nguyện viên",
   luyen_chu_tai_tro: "Đăng ký Luyện Chữ Đẹp — Nhà tài trợ",
-  tien_tieu_hoc: "Đăng ký Chương Trình Tiền Tiểu Học"
+  tien_tieu_hoc: "Đăng ký Chương Trình Tiền Tiểu Học",
+  day_kem_tieu_hoc: "Đăng ký Dạy Kèm Học Sinh Lớp 1–5 (Đống Đa)",
 };
 
 module.exports = async function (context, req) {

@@ -9,7 +9,7 @@ const { norm, childKey } = require("./parentDirectory");
 const { CRM_TABLE, CRM_PARTITION, INTERACTIONS_TABLE, leadIdFor } = require("./crm");
 
 const q = s => String(s || "").replace(/'/g, "''");
-const PROGRAM_BY_FORM = { luyen_chu_phu_huynh: "Luyện Chữ Đẹp", tien_tieu_hoc: "Tiền Tiểu Học" };
+const PROGRAM_BY_FORM = { luyen_chu_phu_huynh: "Luyện Chữ Đẹp", tien_tieu_hoc: "Tiền Tiểu Học", day_kem_tieu_hoc: "Dạy Kèm Lớp 1–5" };
 
 async function studentsOf(email) {
   const out = [];

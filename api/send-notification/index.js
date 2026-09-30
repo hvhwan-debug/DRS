@@ -12,7 +12,8 @@ const FORM_TITLES = {
   luyen_chu_phu_huynh: "Đăng ký Luyện Chữ Đẹp — Phụ huynh mới",
   luyen_chu_tinh_nguyen: "Đăng ký Luyện Chữ Đẹp — Tình nguyện viên mới",
   luyen_chu_tai_tro: "Đăng ký Luyện Chữ Đẹp — Nhà tài trợ mới",
-  tien_tieu_hoc: "Đăng ký Chương Trình Tiền Tiểu Học mới"
+  tien_tieu_hoc: "Đăng ký Chương Trình Tiền Tiểu Học mới",
+  day_kem_tieu_hoc: "Đăng ký Dạy Kèm Học Sinh Lớp 1–5 (Đống Đa) mới"
 };
 
 // ===== Nội dung email cảm ơn/xác nhận gửi lại cho chính người gửi form =====
@@ -26,7 +27,8 @@ const AUTOREPLY_INTRO = {
   luyen_chu_phu_huynh: "Cảm ơn bạn đã đăng ký Chương trình Luyện chữ đẹp cho con em. Ban phụ trách sẽ xem xét hồ sơ và thông báo kết quả xét duyệt trong thời gian sớm nhất.",
   luyen_chu_tinh_nguyen: "Cảm ơn bạn đã đăng ký làm tình nguyện viên cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ với bạn trong thời gian sớm nhất.",
   luyen_chu_tai_tro: "Cảm ơn bạn đã quan tâm tài trợ cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ để trao đổi cụ thể trong thời gian sớm nhất.",
-  tien_tieu_hoc: "Cảm ơn bạn đã đăng ký Chương trình Tiền Tiểu Học Miễn Phí 100% cho con em. Ban tổ chức sẽ xem xét hồ sơ và liên hệ thông báo kết quả trong thời gian sớm nhất."
+  tien_tieu_hoc: "Cảm ơn bạn đã đăng ký Chương trình Tiền Tiểu Học Miễn Phí 100% cho con em. Ban tổ chức sẽ xem xét hồ sơ và liên hệ thông báo kết quả trong thời gian sớm nhất.",
+  day_kem_tieu_hoc: "Cảm ơn bạn đã đăng ký chương trình Dạy kèm học sinh lớp 1–5 tại Đống Đa, Hà Nội. Ban tổ chức sẽ liên hệ để trao đổi nhu cầu học tập của con và sắp xếp lịch học buổi tối phù hợp."
 };
 
 // ===== Nhãn tiếng Việt cho từng trường dữ liệu (áp dụng cho mọi form) =====

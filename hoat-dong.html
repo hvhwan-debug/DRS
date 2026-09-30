@@ -627,6 +627,22 @@
     // ============================================================
     const ACTIVITY_EVENTS = [
       {
+        date: "",
+        anchor: "su-kien-day-kem-lop-1-5",
+        registerUrl: "dang-ky-day-kem-lop-1-5.html",
+        articleSlug: "day-kem-hoc-sinh-lop-1-5-dong-da-ha-noi",
+        projectCode: "DA-005",
+        icon: "fa-book-open-reader",
+        topBg: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+        tag: "Đang nhận đăng ký",
+        tagBg: "#e0f2fe", tagColor: "#0369a1",
+        title: "Chương trình Dạy kèm học sinh lớp 1–5 tại Đống Đa, Hà Nội",
+        image: "images/uploads/day-kem-lop-1-5-dong-da.jpg",
+        desc: "Nhằm tạo thêm cơ hội học tập và hỗ trợ các em học sinh tiểu học trong quá trình học tập, chương trình Dạy kèm học sinh lớp 1–5 dự kiến được triển khai tại quận Đống Đa, Hà Nội.",
+        qrContent: "DA-005 Day Kem Lop 1-5",
+        qrImage: "https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=DA-005%20Day%20Kem%20Lop%201-5&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS"
+      },
+      {
         date: "2026-10-20",
         anchor: "su-kien-hoi-thao-hoc-tap-so",
         projectCode: "DA-002",
@@ -747,7 +763,7 @@
 
     function loadActivityEvents() {
       const grid = document.getElementById("activityEventsGrid");
-      const events = [...ACTIVITY_EVENTS].sort((a, b) => new Date(a.date) - new Date(b.date));
+      const events = [...ACTIVITY_EVENTS].sort((a, b) => { const t = x => { const v = new Date(x.date).getTime(); return isNaN(v) ? 0 : v; }; return t(a) - t(b); });
       grid.innerHTML = events.map(renderActivityEventCard).join("");
       updateActivityCountdowns();
       setInterval(updateActivityCountdowns, 1000);

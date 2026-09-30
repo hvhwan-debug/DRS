@@ -872,6 +872,19 @@
 
     const HOME_UPCOMING_EVENTS = [
       {
+        date: "",
+        anchor: "su-kien-day-kem-lop-1-5",
+        articleSlug: "day-kem-hoc-sinh-lop-1-5-dong-da-ha-noi",
+        registerUrl: "dang-ky-day-kem-lop-1-5.html",
+        icon: "fa-book-open-reader",
+        image: "images/uploads/day-kem-lop-1-5-dong-da.jpg",
+        topBg: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+        tag: "Đang nhận đăng ký",
+        tagBg: "#e0f2fe", tagColor: "#0369a1",
+        title: "Chương trình Dạy kèm học sinh lớp 1–5 tại Đống Đa, Hà Nội",
+        desc: "Nhằm tạo thêm cơ hội học tập và hỗ trợ các em học sinh tiểu học trong quá trình học tập, chương trình Dạy kèm học sinh lớp 1–5 dự kiến được triển khai tại quận Đống Đa, Hà Nội."
+      },
+      {
         date: "2026-10-03",
         anchor: "su-kien-tien-tieu-hoc",
         articleSlug: "chuong-trinh-tien-tieu-hoc-mien-phi-tre-em-ha-noi",
@@ -971,7 +984,7 @@
 
     function loadUpcomingHomeEvents() {
       const grid = document.getElementById("upcomingHomeGrid");
-      const events = [...HOME_UPCOMING_EVENTS].sort((a, b) => new Date(a.date) - new Date(b.date));
+      const events = [...HOME_UPCOMING_EVENTS].sort((a, b) => { const t = x => { const v = new Date(x.date).getTime(); return isNaN(v) ? 0 : v; }; return t(a) - t(b); });
       grid.innerHTML = events.map(renderUpcomingHomeCard).join("");
       updateHomeCountdowns();
       setInterval(updateHomeCountdowns, 1000);

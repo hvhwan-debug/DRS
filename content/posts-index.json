@@ -1,13 +1,5 @@
 [
   {
-    "slug": "tu-day-gia-su-trung-tam",
-    "title": "Tự Dạy Trẻ Tại Nhà, Thuê Gia Sư Hay Học Ở Trung Tâm: Đâu Là Lựa Chọn Phù Hợp?",
-    "date": "23/09/2026",
-    "image": "images/uploads/tu-day-gia-su-trung-tam-3-lua-chon.jpg",
-    "loai": "tin-tuc",
-    "excerpt": "Khi con bước vào giai đoạn chuẩn bị đi học, nhiều phụ huynh băn khoăn nên tự dạy con tại nhà, thuê gia sư hay cho con học ở trung tâm. Mỗi hình thức đều có ưu điểm và hạn chế riêng."
-  },
-  {
     "slug": "7-ky-nang-tre-em-can-co-truoc-khi-buoc-vao-tuong-lai",
     "title": "7 kỹ năng trẻ em cần có trước khi bước vào tương lai",
     "date": "07/07/2026",
@@ -158,6 +150,14 @@
     "image": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80",
     "loai": "",
     "excerpt": "Ghi dấu ngày 22/04/2026 tại Điện Biên với các hoạt động giảng dạy tình nguyện, sinh hoạt kỹ năng và trao gửi yêu thương cho các em học sinh vùng cao."
+  },
+  {
+    "slug": "day-kem-hoc-sinh-lop-1-5-dong-da-ha-noi",
+    "title": "📚 KHỞI ĐỘNG CHƯƠNG TRÌNH DẠY KÈM HỌC SINH LỚP 1–5 TẠI ĐỐNG ĐA, HÀ NỘI",
+    "date": "30/09/2026",
+    "image": "images/uploads/day-kem-lop-1-5-dong-da.jpg",
+    "loai": "tin-tuc",
+    "excerpt": "Nhằm tạo thêm cơ hội học tập và hỗ trợ các em học sinh tiểu học trong quá trình học tập, chương trình Dạy kèm học sinh lớp 1–5 dự kiến được triển khai tại quận Đống Đa, Hà Nội."
   },
   {
     "slug": "day-tre-cach-quan-ly-thoi-gian-ky-nang-nho-gia-tri-lon",
