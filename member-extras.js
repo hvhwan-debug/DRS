@@ -185,6 +185,63 @@
     if (h2) h2.insertAdjacentElement('afterend', box); else card.prepend(box);
   }
 
+  // ---------- Tự nhận diện thiết bị & hỏi thêm lịch học (popup Đồng ý / Để sau) ----------
+  // Trình duyệt KHÔNG cho trang web tự thêm lịch vào điện thoại khi chưa được phép, nên ta hỏi 1 lần:
+  // bấm Đồng ý -> mở đúng cách thêm theo thiết bị (iPhone/Mac: Lịch; Android/khác: Google Calendar),
+  // điện thoại sẽ hiện thêm 1 bước xác nhận của chính hệ điều hành. Lựa chọn được nhớ trên từng thiết bị.
+  var CAL_KEY = 'wvn_cal_offer';
+  function deviceKind() {
+    var ua = navigator.userAgent || '';
+    if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document)) return 'ios';
+    if (/Android/.test(ua)) return 'android';
+    if (/Macintosh/.test(ua)) return 'mac';
+    return 'desktop';
+  }
+  function calLinks() {
+    var key = D.profile && D.profile.calendarKey; if (!key) return null;
+    var feed = location.host + '/api/member-calendar?k=' + key;
+    return { apple: 'webcal://' + feed, google: 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent('webcal://' + feed) };
+  }
+  function calState() { try { return JSON.parse(localStorage.getItem(CAL_KEY) || '{}'); } catch (e) { return {}; } }
+  function saveCalState(v) { try { localStorage.setItem(CAL_KEY, JSON.stringify(v)); } catch (e) {} }
+  function markAdded(where) { saveCalState({ status: 'added', where: where, at: Date.now() }); refreshIcsBox(); }
+  function refreshIcsBox() {
+    var st = calState(), box = document.querySelector('.mx-ics'); if (!box) return;
+    var old = box.querySelector('.mx-ics-done'); if (old) old.remove();
+    if (st.status === 'added') box.querySelector('.mx-ics-head').insertAdjacentHTML('afterend', '<p class="mx-ics-done"><i class="fa-solid fa-circle-check"></i> Đã thêm vào ' + (st.where === 'google' ? 'Google Calendar' : 'Lịch trên máy') + ' trên thiết bị này. Nếu chưa thấy lịch, bấm lại nút bên dưới.</p>');
+  }
+  function maybeOfferCalendar() {
+    var links = calLinks(); if (!links || !(D.schedules || []).length || document.getElementById('mxCalOffer')) return;
+    var st = calState();
+    if (st.status === 'added' || st.status === 'never') return;
+    if (st.status === 'later' && Date.now() - (st.at || 0) < 7 * 864e5) return;
+    var kind = deviceKind();
+    var apple = kind === 'ios' || kind === 'mac';
+    var devName = { ios: 'iPhone', android: 'điện thoại Android', mac: 'máy Mac', desktop: 'máy tính' }[kind];
+    var n = (D.schedules || []).length;
+    var el = document.createElement('div'); el.id = 'mxCalOffer'; el.className = 'mx-offer'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'mxCalTitle');
+    el.innerHTML = '<div class="mx-offer-box"><div class="mx-offer-ic"><i class="fa-regular fa-calendar-check"></i></div>' +
+      '<h3 id="mxCalTitle">Thêm lịch học của con vào ' + devName + '?</h3>' +
+      '<p>' + n + ' lớp học sẽ tự hiện trong lịch, <b>nhắc trước giờ học 1 tiếng</b> và tự cập nhật khi trung tâm đổi lịch.</p>' +
+      '<div class="mx-offer-acts">' +
+      (apple ? '<a class="btn" data-cal-go="apple" href="' + esc(links.apple) + '"><i class="fa-brands fa-apple"></i> Đồng ý, thêm vào Lịch</a>'
+             : '<a class="btn" data-cal-go="google" target="_blank" rel="noopener" href="' + esc(links.google) + '"><i class="fa-brands fa-google"></i> Đồng ý, thêm vào Google Calendar</a>') +
+      (kind === 'desktop' || kind === 'mac' ? '<a class="btn btn-outline" data-cal-go="' + (apple ? 'google' : 'apple') + '"' + (apple ? ' target="_blank" rel="noopener"' : '') + ' href="' + esc(apple ? links.google : links.apple) + '">' + (apple ? '<i class="fa-brands fa-google"></i> Dùng Google Calendar' : '<i class="fa-brands fa-apple"></i> Dùng Lịch Apple / Outlook') + '</a>' : '') +
+      '<button type="button" class="btn btn-outline" data-cal-later>Để sau</button></div>' +
+      '<button type="button" class="mx-offer-never" data-cal-never>Không, cảm ơn — đừng hỏi lại</button>' +
+      '<small>' + (apple ? 'Máy sẽ hỏi thêm 1 lần “Đăng ký lịch này?”, chọn <b>Đăng ký</b> là xong.' : 'Google sẽ hỏi “Thêm lịch này?”, chọn <b>Thêm</b> là xong. Lịch hiện trong ứng dụng Google Calendar trên điện thoại.') + '</small></div>';
+    document.body.appendChild(el);
+    var close = function () { el.remove(); document.removeEventListener('keydown', onKey); };
+    var onKey = function (e) { if (e.key === 'Escape') { saveCalState({ status: 'later', at: Date.now() }); close(); } };
+    document.addEventListener('keydown', onKey);
+    el.addEventListener('click', function (e) {
+      var go = e.target.closest('[data-cal-go]'); if (go) { markAdded(go.dataset.calGo); setTimeout(close, 50); return; }
+      if (e.target.closest('[data-cal-later]') || e.target === el) { saveCalState({ status: 'later', at: Date.now() }); close(); return; }
+      if (e.target.closest('[data-cal-never]')) { saveCalState({ status: 'never', at: Date.now() }); close(); }
+    });
+    setTimeout(function () { var f = el.querySelector('[data-cal-go]'); if (f) f.focus(); }, 60);
+  }
+
   // ---------- Hoá đơn: VietQR ----------
   function qrBlock(inv) {
     var b = D.bank; var amount = Math.round(Number(inv.totalAmount || 0));
@@ -228,6 +285,7 @@
       var it = e.target.closest('[data-ibx-toggle]'); if (it) { inboxState.open[it.dataset.ibxToggle] = !inboxState.open[it.dataset.ibxToggle]; renderInbox(); return; }
       if (e.target.closest('[data-ibx-more]')) { inboxState.limit += 12; renderInbox(); return; }
       var r = e.target.closest('[data-leave-reason]'); if (r) { $('mxLeaveReason').value = r.dataset.leaveReason; document.querySelectorAll('[data-leave-reason]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === r)); }); return; }
+      var cg = e.target.closest('.mx-ics-acts a[href^="webcal"], .mx-ics-acts a[href*="calendar.google"]'); if (cg) { markAdded(/google/.test(cg.href) ? 'google' : 'apple'); }
       if (e.target.closest('#mxIcsBtn')) {
         var ics = icsFor(D.schedules || []);
         if (!ics) { alert('Chưa đọc được ngày học trong lịch. Vui lòng liên hệ trung tâm.'); return; }
@@ -260,7 +318,8 @@
       D = payload || {};
       addTab('attendance', 'fa-user-check', 'Chuyên Cần', 'schedule');
       addTab('inbox', 'fa-inbox', 'Hộp Thư', 'gifts');
-      renderAttendance(); renderInbox(); mountIcs(); mountReferral(); hookInvoiceView(); bind();
+      renderAttendance(); renderInbox(); mountIcs(); refreshIcsBox(); mountReferral(); hookInvoiceView(); bind();
+      setTimeout(maybeOfferCalendar, 1800);
     },
     _icsFor: icsFor, _byDays: byDays
   };
