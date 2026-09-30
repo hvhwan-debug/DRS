@@ -169,8 +169,19 @@
     var panel = $('memberPanel-schedule'); if (!panel || !(D.schedules || []).length || panel.querySelector('.mx-ics')) return;
     var card = panel.querySelector('.card'); if (!card) return;
     var h2 = card.querySelector('h2');
+    var key = D.profile && D.profile.calendarKey;
+    var feed = key ? location.host + '/api/member-calendar?k=' + key : '';
+    var isApple = /iPhone|iPad|Macintosh/.test(navigator.userAgent);
     var box = document.createElement('div'); box.className = 'mx-ics';
-    box.innerHTML = '<button type="button" class="btn btn-outline" id="mxIcsBtn"><i class="fa-regular fa-calendar-plus"></i> Thêm vào lịch điện thoại</button><small>Mở tệp tải về để thêm vào Google Calendar hoặc Lịch iPhone. Có nhắc trước giờ học 1 tiếng.</small>';
+    box.innerHTML = '<div class="mx-ics-head"><i class="fa-regular fa-calendar-plus"></i><div><strong>Đưa lịch học vào điện thoại</strong><small>Mỗi buổi học tự hiện trong lịch, nhắc trước 1 tiếng.' + (feed ? ' Khi trung tâm đổi lịch, lịch trên máy bạn tự cập nhật.' : '') + '</small></div></div>' +
+      '<div class="mx-ics-acts">' +
+      (feed ? '<a class="btn' + (isApple ? '' : ' btn-outline') + '" href="webcal://' + esc(feed) + '"><i class="fa-brands fa-apple"></i> Lịch iPhone / Mac</a>' +
+              '<a class="btn' + (isApple ? ' btn-outline' : '') + '" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/r?cid=' + encodeURIComponent('webcal://' + feed) + '"><i class="fa-brands fa-google"></i> Google Calendar</a>' : '') +
+      '<button type="button" class="btn btn-outline" id="mxIcsBtn"><i class="fa-solid fa-download"></i> Tải tệp lịch</button></div>' +
+      '<details class="mx-ics-help"><summary>Hướng dẫn từng bước</summary><ol>' +
+      (feed ? '<li><b>iPhone:</b> bấm “Lịch iPhone / Mac”, chọn <i>Đăng ký</i> rồi <i>Thêm</i>. Lịch học hiện trong ứng dụng Lịch.</li>' +
+              '<li><b>Android / Google:</b> bấm “Google Calendar”, đăng nhập Gmail, chọn <i>Thêm</i>. Mở ứng dụng Google Calendar trên điện thoại là thấy (nếu chưa hiện, vào Cài đặt của ứng dụng, bật đồng bộ lịch “Lịch học Tri thức Việt”).</li>' : '') +
+      '<li><b>Máy khác / Outlook:</b> bấm “Tải tệp lịch” rồi mở tệp vừa tải để nhập vào lịch.' + (feed ? ' Cách này không tự cập nhật khi lịch đổi.' : '') + '</li></ol></details>';
     if (h2) h2.insertAdjacentElement('afterend', box); else card.prepend(box);
   }
 

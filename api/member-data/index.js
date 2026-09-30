@@ -194,6 +194,8 @@ module.exports = async function (context, req) {
       const p = await profilesTable.getEntity("profile", email);
       profile = { fullName: p.fullName || "", phone: p.phone || "", address: p.address || "", dob: p.dob || "", gender: p.gender || "" };
       try { profile.prefs = JSON.parse(p.prefsJson || "{}"); } catch (e) { profile.prefs = {}; }
+      profile.calendarKey = p.calendarKey || "";
+      if (!p.calendarKey) { const ck = require("crypto").randomBytes(12).toString("hex"); try { await profilesTable.upsertEntity({ partitionKey: "profile", rowKey: email, calendarKey: ck }, "Merge"); profile.calendarKey = ck; } catch (e) {} }
       if (!p.referralCode) { try { await profilesTable.upsertEntity({ partitionKey: "profile", rowKey: email, referralCode: referralCodeFor(email) }, "Merge"); } catch (e) {} }
       lastSeenTier = p.lastSeenTier || null;
       ackedInvoiceIdsRaw = p.ackedInvoiceIds || "[]";
