@@ -15,6 +15,17 @@ async function listAll(name, filter) {
 const todayVN = () => new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
 
 const LEVELS = { "timesheet-open": "urgent", timesheet: "action", points: "urgent", tuition: "urgent", members: "action", registrations: "action", invoices: "action", gifts: "action", leave: "action", crm: "action", birthday: "info" };
+// Số ngày chờ tối đa trước khi một nhóm bị coi là "để lâu" và tự nâng thành khẩn (đỏ)
+const AGE_ESCALATE = { registrations: 2, members: 1, invoices: 2, gifts: 3, tuition: 1, timesheet: 1, "timesheet-open": 1, crm: 1 };
+// Ước lượng "chờ bao lâu" từ mốc sửa đổi gần nhất của các dòng dữ liệu (Timestamp do Azure Table tự ghi)
+function agingDays(rows) {
+  if (!rows || !rows.length) return 0;
+  const oldest = rows.reduce((min, r) => {
+    const t = r.timestamp ? new Date(r.timestamp).getTime() : Date.now();
+    return Number.isFinite(t) && t < min ? t : min;
+  }, Date.now());
+  return Math.max(0, Math.floor((Date.now() - oldest) / 864e5));
+}
 
 async function buildInbox(context, can) {
   const inbox = [];
@@ -23,11 +34,11 @@ async function buildInbox(context, can) {
   await Promise.all([
     can("registrations") && safe(async () => {
       const rows = (await listAll("Registrations")).filter(r => /Chờ/.test(r.status || "Chờ"));
-      if (rows.length) inbox.push({ key: "registrations", count: rows.length, title: `${rows.length} đơn đăng ký chờ xử lý`, hint: "Duyệt hoặc từ chối đơn", href: "/admin#registrations", tone: "blue" });
+      if (rows.length) inbox.push({ key: "registrations", count: rows.length, title: `${rows.length} đơn đăng ký chờ xử lý`, hint: "Duyệt hoặc từ chối đơn", href: "/admin#registrations", tone: "blue", agingDays: agingDays(rows) });
     }),
     can("members") && safe(async () => {
       const rows = (await listAll("Members")).filter(r => r.approvalStatus === "pending");
-      if (rows.length) inbox.push({ key: "members", count: rows.length, title: `${rows.length} tài khoản thành viên chờ duyệt`, hint: "Duyệt để họ đăng nhập được", href: "/admin#members", tone: "blue" });
+      if (rows.length) inbox.push({ key: "members", count: rows.length, title: `${rows.length} tài khoản thành viên chờ duyệt`, hint: "Duyệt để họ đăng nhập được", href: "/admin#members", tone: "blue", agingDays: agingDays(rows) });
     }),
     can("payroll") && safe(async () => {
       // Chấm công: yêu cầu bổ sung/sửa công + đơn xin nghỉ chờ quản lý duyệt
@@ -36,25 +47,25 @@ async function buildInbox(context, can) {
         listAll("StaffLeave", "status eq 'pending'")
       ]);
       const n = pend.length + leave.length;
-      if (n) inbox.push({ key: "timesheet", count: n, title: `${n} yêu cầu chấm công / xin nghỉ chờ duyệt`, hint: [pend.length ? `${pend.length} bổ sung/sửa công` : "", leave.length ? `${leave.length} đơn xin nghỉ` : ""].filter(Boolean).join(", "), href: "/admin/cham-cong#duyet", tone: "violet" });
+      if (n) inbox.push({ key: "timesheet", count: n, title: `${n} yêu cầu chấm công / xin nghỉ chờ duyệt`, hint: [pend.length ? `${pend.length} bổ sung/sửa công` : "", leave.length ? `${leave.length} đơn xin nghỉ` : ""].filter(Boolean).join(", "), href: "/admin/cham-cong#duyet", tone: "violet", agingDays: agingDays(pend.concat(leave)) });
     }),
     can("payroll") && safe(async () => {
       // Ca chưa kết thúc từ hôm trước -> nhân viên quên bấm "Kết thúc ca"
       const rows = (await listAll("StaffTimeEntries", "status eq 'open'")).filter(r => r.date && r.date < today);
-      if (rows.length) inbox.push({ key: "timesheet-open", count: rows.length, title: `${rows.length} ca làm quên chấm ra`, hint: "Nhắc nhân viên nhập giờ ra, hoặc kết thúc ca hộ", href: "/admin/cham-cong#hom-nay", tone: "red" });
+      if (rows.length) inbox.push({ key: "timesheet-open", count: rows.length, title: `${rows.length} ca làm quên chấm ra`, hint: "Nhắc nhân viên nhập giờ ra, hoặc kết thúc ca hộ", href: "/admin/cham-cong#hom-nay", tone: "red", agingDays: agingDays(rows) });
     }),
     can("invoices") && safe(async () => {
       const rows = (await listAll("Invoices")).filter(r => r.status === "pending_review");
-      if (rows.length) inbox.push({ key: "invoices", count: rows.length, title: `${rows.length} biên lai hoá đơn chờ xác nhận`, hint: "Duyệt để cộng tiền và điểm cho phụ huynh", href: "/admin#invoices", tone: "green" });
+      if (rows.length) inbox.push({ key: "invoices", count: rows.length, title: `${rows.length} biên lai hoá đơn chờ xác nhận`, hint: "Duyệt để cộng tiền và điểm cho phụ huynh", href: "/admin#invoices", tone: "green", agingDays: agingDays(rows) });
     }),
     can("gifts") && safe(async () => {
       const rows = (await listAll("GiftRedemptions")).filter(r => ["pending", "shipping"].includes(r.status || "pending"));
       const pending = rows.filter(r => (r.status || "pending") === "pending").length;
-      if (rows.length) inbox.push({ key: "gifts", count: rows.length, title: `${rows.length} yêu cầu đổi quà đang xử lý`, hint: pending ? `${pending} chờ duyệt, ${rows.length - pending} đang vận chuyển` : "Đang vận chuyển, nhớ đánh dấu khi đã trao", href: "/admin#gifts", tone: "gold" });
+      if (rows.length) inbox.push({ key: "gifts", count: rows.length, title: `${rows.length} yêu cầu đổi quà đang xử lý`, hint: pending ? `${pending} chờ duyệt, ${rows.length - pending} đang vận chuyển` : "Đang vận chuyển, nhớ đánh dấu khi đã trao", href: "/admin#gifts", tone: "gold", agingDays: agingDays(rows) });
     }),
     can("tuition") && safe(async () => {
       const rows = (await listAll("TuitionPayments")).filter(r => r.confirmationStatus === "rejected");
-      if (rows.length) inbox.push({ key: "tuition", count: rows.length, title: `${rows.length} khoản học phí phụ huynh báo sai`, hint: "Kiểm tra và sửa lại để tính điểm", href: "/admin#tuition", tone: "red" });
+      if (rows.length) inbox.push({ key: "tuition", count: rows.length, title: `${rows.length} khoản học phí phụ huynh báo sai`, hint: "Kiểm tra và sửa lại để tính điểm", href: "/admin#tuition", tone: "red", agingDays: agingDays(rows) });
     }),
     can("students") && safe(async () => {
       const crm = await listAll("StudentCrm", "PartitionKey eq 'crm'");
@@ -63,7 +74,8 @@ async function buildInbox(context, can) {
       const students = {};
       for (const s of await listAll("Students")) students[s.rowKey] = s.studentName;
       const names = due.slice(0, 4).map(p => students[p.rowKey]).filter(Boolean);
-      inbox.push({ key: "crm", count: due.length, title: `${due.length} phụ huynh cần liên hệ hôm nay`, hint: names.join(", ") + (due.length > names.length ? "…" : ""), href: "/admin/crm", tone: "violet" });
+      const overdueDays = due.reduce((max, p) => { const d = Math.floor((Date.now() - new Date(p.nextFollowUp + "T00:00:00").getTime()) / 864e5); return d > max ? d : max; }, 0);
+      inbox.push({ key: "crm", count: due.length, title: `${due.length} phụ huynh cần liên hệ hôm nay`, hint: names.join(", ") + (due.length > names.length ? "…" : ""), href: "/admin/crm", tone: "violet", agingDays: overdueDays });
     }),
     can("students") && safe(async () => {
       // Phụ huynh xin nghỉ cho con (từ trang thành viên) — hôm nay và các ngày tới
@@ -92,7 +104,15 @@ async function buildInbox(context, can) {
   const order = ["points", "timesheet-open", "members", "timesheet", "crm", "leave", "invoices", "tuition", "registrations", "birthday", "gifts"];
   inbox.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
 
-  inbox.forEach(i => { i.level = LEVELS[i.key] || "action"; });
+  inbox.forEach(i => {
+    i.level = LEVELS[i.key] || "action";
+    // Để lâu quá ngưỡng của nhóm này -> tự nâng thành khẩn (đỏ), kèm số ngày chờ lâu nhất vào gợi ý
+    const threshold = AGE_ESCALATE[i.key];
+    if (threshold != null && i.agingDays >= threshold && i.level !== "urgent") {
+      i.level = "urgent"; i.tone = "red";
+      i.hint = `${i.hint ? i.hint + " · " : ""}đã chờ ${i.agingDays} ngày`;
+    }
+  });
   return inbox;
 }
 
