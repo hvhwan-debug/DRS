@@ -34,4 +34,4 @@ Thời gian: Buổi tối, linh hoạt theo nhu cầu
 
 ---
 
-**Phụ huynh quan tâm** có thể [đăng ký cho con tham gia chương trình tại đây](daythem).
+**Phụ huynh quan tâm** có thể [đăng ký cho con tham gia chương trình tại đây](hocthem).
