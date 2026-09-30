@@ -179,17 +179,6 @@
       100% { background-position: -50% 0; }
     }
     .hero-desc { font-size: 1.15rem; color: #e0f2fe; line-height: 1.7; margin-bottom: 2.2rem; max-width: 600px; }
-    .hero-mission-pills { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 2.2rem; }
-    .hero-mission-pill {
-      display: inline-flex; align-items: center; gap: 9px; background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      color: #f0f9ff; padding: 0.6rem 1.2rem; border-radius: 999px; font-size: 0.88rem; font-weight: 700;
-      letter-spacing: 0.1px; text-decoration: none; cursor: pointer; white-space: nowrap;
-      transition: background 0.2s, transform 0.2s, border-color 0.2s;
-    }
-    .hero-mission-pill:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.35); transform: translateY(-2px); }
-    .hero-mission-pill i { color: #7dd3fc; font-size: 0.95rem; }
-    @media (max-width: 480px) { .hero-mission-pill { font-size: 0.82rem; padding: 0.55rem 1rem; } }
     .hero-dove {
       position: absolute; top: 8%; right: 5%; width: 110px; height: auto;
       opacity: 0.5; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
@@ -224,7 +213,6 @@
       font-size: 0.95rem; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.15); transition: all 0.2s;
     }
     .btn-light:hover { background: #f0f9ff; color: #075985; transform: translateY(-1px); }
-    .hero-link { color: #ffffff; font-weight: 600; font-size: 0.95rem; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; opacity: 0.9; }
 
     .hero-media-wrapper { position: relative; }
     .hero-media-card {
@@ -473,31 +461,27 @@
     .hero-title { font-size: 3.4rem; line-height: 1.1; letter-spacing: -1.5px; max-width: 17ch; }
     .hero-badge { text-transform: none; letter-spacing: 0.2px; }
     .btn-light { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-    .btn-ghost-light { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.4rem; border-radius: 10px; font-weight: 700; font-size: 0.98rem; color: #fff; text-decoration: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.35); backdrop-filter: blur(6px); transition: background .15s; }
-    .btn-ghost-light:hover { background: rgba(255,255,255,0.18); }
     .hero-actions { gap: 0.8rem 1rem; }
-    .paths-wrap { max-width: 1200px; margin: 0 auto; padding: 4.5rem 1.5rem 1rem; }
-    .paths-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; }
-    .path-card { position: relative; background: #fff; border: 1px solid #e6e9f1; border-radius: 20px; padding: 1.4rem 1.3rem 1.2rem; display: flex; flex-direction: column; box-shadow: 0 1px 0 rgba(15,23,42,0.03), 0 18px 40px -30px rgba(15,23,42,0.35); transition: transform .2s, box-shadow .2s; overflow: hidden; }
-    .path-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--pc, #0284c7); }
-    .path-card:hover { transform: translateY(-3px); box-shadow: 0 1px 0 rgba(15,23,42,0.03), 0 26px 50px -30px rgba(15,23,42,0.45); }
-    .p-parent { --pc: #0284c7; --ps: #e0f2fe; } .p-donor { --pc: #db2777; --ps: #fce7f3; } .p-volunteer { --pc: #15803d; --ps: #dcfce7; } .p-member { --pc: #1e3a8a; --ps: #e0e7ff; }
-    .path-ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--ps); color: var(--pc); font-size: 1.15rem; margin-bottom: 0.9rem; }
-    .path-card h3 { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
-    .path-card p { font-size: 0.9rem; color: #64748b; line-height: 1.55; margin-bottom: 1rem; flex: 1; }
-    .path-links { display: grid; gap: 0.4rem; }
-    .path-links a { display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0.8rem; border-radius: 10px; background: #f8fafc; border: 1px solid #eef1f6; color: #0f172a; font-weight: 600; font-size: 0.88rem; text-decoration: none; transition: all .15s; }
-    .path-links a i { font-size: 0.75rem; color: var(--pc); transition: transform .15s; }
-    .path-links a:hover { background: var(--ps); border-color: transparent; color: var(--pc); } .path-links a:hover i { transform: translateX(3px); }
-    .paths-help { text-align: center; margin-top: 1.4rem; font-size: 0.9rem; color: #64748b; }
-    .paths-help a { color: #0284c7; font-weight: 600; }
     .legal-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
     .legal-actions a { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.86rem; font-weight: 600; padding: 0.5rem 0.9rem; border-radius: 999px; background: #fff; border: 1px solid #bbf7d0; color: #166534; text-decoration: none; }
     .legal-actions a:hover { background: #dcfce7; }
-    @media (max-width: 1000px) { .paths-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 768px) { .hero-title { font-size: 2.3rem; letter-spacing: -1px; } .paths-wrap { padding-top: 3rem; } .paths-wrap .section-header h2 { font-size: 1.7rem; line-height: 1.25; } }
-    @media (max-width: 560px) { .metrics-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 1.2rem 0.6rem !important; } .metric-item { border: none !important; padding: 0 !important; } .metric-number { font-size: 1.9rem !important; }
-      .paths-grid { grid-template-columns: 1fr; } .hero-actions a { flex: 1 1 100%; justify-content: center; } }
+    @media (max-width: 768px) { .hero-title { font-size: 2.3rem; letter-spacing: -1px; } }
+    @media (max-width: 560px) { .metrics-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 1.2rem 0.6rem !important; } .metric-item { border: none !important; padding: 0 !important; } .metric-number { font-size: 1.9rem !important; } }
+    /* ===== Hero CTA gọn gàng ===== */
+    .hero-desc { margin-bottom: 2.4rem; max-width: 520px; color: rgba(224,242,254,0.9); }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 1.6rem; }
+    .hero-cta { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; height: 52px; padding: 0 1.6rem; border-radius: 999px; font-size: 1rem; font-weight: 700; text-decoration: none; letter-spacing: -0.01em; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease; }
+    .hero-cta i { font-size: 0.85rem; transition: transform .2s ease; }
+    .hero-cta-primary { background: #fff; color: #0369a1; box-shadow: 0 10px 30px -10px rgba(2,6,23,0.45); }
+    .hero-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -12px rgba(2,6,23,0.55); }
+    .hero-cta-primary:hover i { transform: translateX(4px); }
+    .hero-cta-ghost { color: #fff; background: transparent; border: 1.5px solid rgba(255,255,255,0.4); }
+    .hero-cta-ghost i { color: #f9a8d4; }
+    .hero-cta-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+    .hero-trust { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; font-size: 0.9rem; color: rgba(224,242,254,0.8); }
+    .hero-trust li { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .hero-trust i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: rgba(125,211,252,0.2); color: #7dd3fc; font-size: 0.6rem; }
+    @media (max-width: 560px) { .hero-cta { flex: 1 1 100%; } }
   </style>
 
   <!-- ============================================================
@@ -591,18 +575,16 @@
         <div class="hero-badge">Doanh nghiệp xã hội · 100% phi lợi nhuận</div>
         <h1 class="hero-title">Để mọi trẻ em<br>đều có cơ hội<br>học tập xứng đáng.</h1>
         <p class="hero-desc">
-          Chúng tôi vận hành các chương trình phi lợi nhuận, kết nối nguồn lực xã hội để hỗ trợ học tập, trao tặng học liệu và kiến tạo nền tảng tự tin vững bước cho thế hệ tương lai.
+          Kết nối nguồn lực xã hội để hỗ trợ học tập, trao tặng học liệu và giúp các em tự tin vững bước.
         </p>
-        <div class="hero-mission-pills">
-          <a class="hero-mission-pill" href="su-menh.html"><i class="fa-solid fa-scale-balanced"></i> Công Bằng</a>
-          <a class="hero-mission-pill" href="sao-ke.html"><i class="fa-solid fa-magnifying-glass"></i> Minh Bạch</a>
-          <a class="hero-mission-pill" href="#phap-ly"><i class="fa-solid fa-heart"></i> Phi Lợi Nhuận</a>
-        </div>
         <div class="hero-actions">
-          <a class="btn-light" href="#chon-cach-dong-hanh"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Đăng ký học cho con</a>
-          <a class="btn-ghost-light" href="quyen-gop.html"><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i> Chung tay ủng hộ</a>
-          <a href="su-menh.html" class="hero-link">Tìm hiểu sứ mệnh</a>
+          <a class="hero-cta hero-cta-primary" href="dang-ky-luyen-chu-dep.html">Đăng ký học cho con <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          <a class="hero-cta hero-cta-ghost" href="quyen-gop.html"><i class="fa-solid fa-heart" aria-hidden="true"></i> Chung tay ủng hộ</a>
         </div>
+        <ul class="hero-trust">
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Học miễn phí cho trẻ em</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Sao kê công khai 24/7</li>
+        </ul>
       </div>
 
       <div class="hero-media-wrapper">
@@ -640,40 +622,6 @@
         <div class="metric-label">Công khai sao kê minh bạch</div>
       </div>
     </div>
-  </section>
-
-  <section class="paths-wrap" id="chon-cach-dong-hanh" aria-labelledby="pathsTitle">
-    <div class="section-header">
-      <h2 id="pathsTitle">Bạn muốn đồng hành theo cách nào?</h2>
-      <p>Chọn đúng vai trò của bạn, chúng tôi dẫn bạn tới bước tiếp theo nhanh nhất.</p>
-    </div>
-    <div class="paths-grid">
-      <article class="path-card p-parent">
-        <span class="path-ic"><i class="fa-solid fa-children" aria-hidden="true"></i></span>
-        <h3>Phụ huynh</h3>
-        <p>Đăng ký cho con học miễn phí các lớp của Tri thức Việt tại Hà Nội.</p>
-        <div class="path-links"><a href="dang-ky-luyen-chu-dep.html">Luyện Chữ Đẹp <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="dang-ky-tien-tieu-hoc.html">Tiền Tiểu Học <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
-      </article>
-      <article class="path-card p-donor">
-        <span class="path-ic"><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i></span>
-        <h3>Nhà hảo tâm</h3>
-        <p>Quyên góp tiền hoặc hiện vật. Mọi khoản đều được sao kê công khai.</p>
-        <div class="path-links"><a href="quyen-gop.html">Quyên góp <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="gay-quy-hien-vat.html">Góp hiện vật <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
-      </article>
-      <article class="path-card p-volunteer">
-        <span class="path-ic"><i class="fa-solid fa-people-carry-box" aria-hidden="true"></i></span>
-        <h3>Tình nguyện viên & đối tác</h3>
-        <p>Góp sức dạy học, tổ chức sự kiện hoặc tài trợ dài hạn cho chương trình.</p>
-        <div class="path-links"><a href="tinh-nguyen-vien.html">Tình nguyện <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="tro-thanh-nha-tai-tro.html">Nhà tài trợ <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
-      </article>
-      <article class="path-card p-member">
-        <span class="path-ic"><i class="fa-solid fa-id-card" aria-hidden="true"></i></span>
-        <h3>Thành viên</h3>
-        <p>Xem lịch học, điểm danh, bảng điểm, học phí và đổi quà bằng điểm tích luỹ.</p>
-        <div class="path-links"><a href="dang-nhap.html" data-member-link>Đăng nhập <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="dang-ky.html">Tạo tài khoản <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
-      </article>
-    </div>
-    <p class="paths-help"><i class="fa-regular fa-circle-question" aria-hidden="true"></i> Gia đình đang gặp khó khăn? <a href="ket-noi-ho-tro.html">Gửi yêu cầu hỗ trợ</a>, chúng tôi sẽ liên hệ lại.</p>
   </section>
 
   <main class="section-wrap" id="hoat-dong-sap-toi">
