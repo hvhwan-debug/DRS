@@ -532,3 +532,38 @@ body.wvn-admin .reg-crm { display: block; }
 body.wvn-admin select.status-select.is-pending { border-color: #fcd34d !important; background-color: #fffbeb !important; }
 body.wvn-admin select.status-select.is-ok { border-color: #bbf7d0 !important; background-color: #f0fdf4 !important; }
 body.wvn-admin select.status-select.is-no { border-color: #fecaca !important; background-color: #fef2f2 !important; }
+
+/* Đơn Đăng Ký dạng thẻ (thay bảng) */
+body.wvn-admin .reg-list { display: grid; gap: 0.8rem; }
+body.wvn-admin .rc { background: #fff; border: 1px solid var(--t-hair); border-radius: 16px; overflow: hidden; transition: box-shadow .15s; }
+body.wvn-admin .rc:hover { box-shadow: 0 16px 34px -26px rgba(12,19,48,0.45); }
+body.wvn-admin .rc.is-pending { border-color: #fde68a; box-shadow: inset 3px 0 0 #f59e0b; }
+body.wvn-admin .rc-top { display: flex; align-items: center; gap: 0.7rem; padding: 0.65rem 1rem; border-bottom: 1px solid var(--t-hair-2); background: #fbfcfe; }
+body.wvn-admin .rc-type { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 600; padding: 0.22rem 0.65rem; border-radius: 999px; background: #eef2ff; color: #3730a3; }
+body.wvn-admin .rc-type.g-study { background: #e0f2fe; color: #0369a1; } body.wvn-admin .rc-type.g-help { background: #fce7f3; color: #be185d; } body.wvn-admin .rc-type.g-support { background: #fef3c7; color: #a16207; }
+body.wvn-admin .rc-date { font-size: 0.78rem; color: var(--t-muted); margin-right: auto; }
+body.wvn-admin .rc-del { border: none; background: none; color: #a2a9c0; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; }
+body.wvn-admin .rc-del:hover { background: #fef2f2; color: #dc2626; }
+body.wvn-admin .rc-body { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.6fr) 190px; gap: 1.2rem; padding: 1rem 1.1rem 1.05rem; align-items: start; }
+body.wvn-admin .rc-who h4 { font-size: 1.05rem; font-weight: 700; color: var(--t-ink); letter-spacing: -0.01em; margin: 0; }
+body.wvn-admin .rc-sub { font-size: 0.8rem; color: var(--t-muted); margin: 0.15rem 0 0.55rem; }
+body.wvn-admin .rc-contact { display: grid; gap: 0.25rem; margin-top: 0.4rem; }
+body.wvn-admin .rc-contact span, body.wvn-admin .rc-contact a { font-size: 0.82rem; color: var(--t-ink-2); text-decoration: none; display: flex; align-items: center; gap: 0.45rem; }
+body.wvn-admin .rc-contact i { width: 14px; color: #94a3b8; font-size: 0.78rem; } body.wvn-admin .rc-contact a:hover { color: #0284c7; }
+body.wvn-admin .rc-facts dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.55rem 1rem; margin: 0; }
+body.wvn-admin .rc-facts dt { font-size: 0.72rem; color: var(--t-muted); font-weight: 500; margin-bottom: 0.1rem; }
+body.wvn-admin .rc-facts dd { margin: 0; font-size: 0.86rem; color: var(--t-ink); font-weight: 500; }
+body.wvn-admin .rc-long { margin: 0.6rem 0 0; font-size: 0.84rem; color: var(--t-ink-2); background: #f8fafc; border-radius: 10px; padding: 0.55rem 0.7rem; }
+body.wvn-admin .rc-long b { display: block; font-size: 0.72rem; color: var(--t-muted); font-weight: 500; margin-bottom: 0.15rem; }
+body.wvn-admin .rc-side { display: grid; gap: 0.4rem; justify-items: stretch; }
+body.wvn-admin .rc-acts { display: grid; gap: 0.4rem; }
+body.wvn-admin .rc-acts button { font: inherit; font-size: 0.86rem; font-weight: 600; padding: 0.55rem 0.8rem; border-radius: 10px; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem; }
+body.wvn-admin .rc-ok { background: var(--t-night); color: #fff; border: 1px solid var(--t-night); } body.wvn-admin .rc-ok:hover { background: #15803d; border-color: #15803d; }
+body.wvn-admin .rc-no { background: #fff; color: #b91c1c; border: 1px solid #fecaca; } body.wvn-admin .rc-no:hover { background: #fef2f2; }
+body.wvn-admin .rc-state { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; font-size: 0.86rem; font-weight: 600; padding: 0.5rem 0.7rem; border-radius: 10px; }
+body.wvn-admin .rc-state.ok { background: #f0fdf4; color: #15803d; } body.wvn-admin .rc-state.no { background: #fef2f2; color: #b91c1c; }
+body.wvn-admin .rc-undo { margin-left: auto; font: inherit; font-size: 0.74rem; font-weight: 500; color: var(--t-muted); background: none; border: none; cursor: pointer; text-decoration: underline; }
+body.wvn-admin .reg-empty { display: grid; place-items: center; gap: 0.3rem; text-align: center; padding: 2.4rem 1rem; border: 1.5px dashed #d7dbe7; border-radius: 16px; color: var(--t-muted); }
+body.wvn-admin .reg-empty i { font-size: 1.8rem; color: #16a34a; } body.wvn-admin .reg-empty b { color: var(--t-ink); font-size: 1rem; }
+@media (max-width: 1100px) { body.wvn-admin .rc-body { grid-template-columns: 1fr 1fr; } body.wvn-admin .rc-side { grid-column: 1 / -1; } body.wvn-admin .rc-acts { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { body.wvn-admin .rc-body { grid-template-columns: 1fr; } }

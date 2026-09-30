@@ -355,7 +355,7 @@
       .el-subj { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260930d">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260930e">
 <link rel="stylesheet" href="/wvn-luxe.css?v=20260929e">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -467,14 +467,7 @@
         </div>
         <div class="reg-filter" id="regFilterBar"></div>
         <div class="loading-state" id="regLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
-        <div class="table-scroll" style="display:none;" id="regTableWrap">
-          <table>
-            <thead>
-              <tr><th>Đơn</th><th>Người đăng ký</th><th>Thông tin thêm</th><th>Trạng thái</th><th></th></tr>
-            </thead>
-            <tbody id="regTableBody"></tbody>
-          </table>
-        </div>
+        <div style="display:none;" id="regTableWrap"><div class="reg-list" id="regTableBody"></div></div>
         <div class="empty-state" id="regEmpty" style="display:none;">Chưa có đơn đăng ký nào.</div>
       </div>
     </div>
@@ -1536,6 +1529,7 @@
       ten_phu_huynh: 'Phụ huynh', sdt_phu_huynh: 'SĐT', email_phu_huynh: 'Email', ten_tre: 'Tên con', ngay_sinh_tre: 'Ngày sinh con',
       truong_lop: 'Trường / lớp', truong_dang_hoc: 'Trường đang học', hinh_thuc_hoc: 'Hình thức học', doi_tuong_dang_ky: 'Đối tượng', phuong_xa: 'Phường / xã',
       dia_chi: 'Địa chỉ', address: 'Địa chỉ', ghi_chu: 'Ghi chú', hoan_canh_ly_do: 'Hoàn cảnh / lý do', fullname: 'Họ tên', name: 'Họ tên', phone: 'SĐT', email: 'Email',
+      nhu_cau: 'Nhu cầu', ngay_sinh: 'Ngày sinh', lop: 'Lớp', truong: 'Trường',
       ten_tnv: 'Tình nguyện viên', sdt_tnv: 'SĐT', email_tnv: 'Email', loai_tnv: 'Vai trò', thoi_gian_tnv: 'Thời gian rảnh', nghe_nghiep: 'Nghề nghiệp', nganh_hoc: 'Ngành học',
       truong_giang_day: 'Trường giảng dạy', mon_cap_day: 'Môn / cấp dạy', kinh_nghiem: 'Kinh nghiệm', ghi_chu_tnv: 'Ghi chú',
       ten_tai_tro: 'Nhà tài trợ', sdt_tai_tro: 'SĐT', email_tai_tro: 'Email', muc_tai_tro: 'Mức tài trợ', chi_tiet_tai_tro: 'Chi tiết tài trợ', hinh_thuc: 'Hình thức',
@@ -1570,32 +1564,62 @@
          <div class="reg-chips">${chip('group', '', 'Mọi loại đơn', null)}${REG_GROUPS.map(g => chip('group', g.key, g.label, cnt(r => regGroupOf(r) === g.key && inStatus(r)))).join('')}</div>`;
       const filtered = base.filter(r => inGroup(r) && inStatus(r)).sort((a, b) => (isPending(b) - isPending(a)) || String(b.submittedAt).localeCompare(String(a.submittedAt)));
       if (filtered.length === 0) {
-        document.getElementById('regTableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.4rem;">${regState.status === 'pending' && !query ? 'Không còn đơn nào chờ xử lý. 🎉' : 'Không tìm thấy đơn phù hợp.'}</td></tr>`;
+        document.getElementById('regTableBody').innerHTML = `<div class="reg-empty">${regState.status === 'pending' && !query ? '<i class="fa-regular fa-circle-check" aria-hidden="true"></i><b>Không còn đơn nào chờ xử lý</b><span>Bạn đã xử lý hết đơn. Tuyệt vời!</span>' : '<b>Không tìm thấy đơn phù hợp</b>'}</div>`;
         return;
       }
+      const vnDate = v => { const m = String(v || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]}` : String(v || ''); };
+      const ageOf = v => { const d = new Date(v); if (isNaN(d)) return ''; const n = new Date(); let a = n.getFullYear() - d.getFullYear(); if (n < new Date(n.getFullYear(), d.getMonth(), d.getDate())) a--; return a >= 0 && a < 30 ? `${a} tuổi` : ''; };
+      const ICON = { study: 'fa-graduation-cap', help: 'fa-hand-holding-heart', support: 'fa-life-ring', other: 'fa-file-lines' };
       document.getElementById('regTableBody').innerHTML = filtered.map(r => {
         const d = r.data || {};
         const person = pick(d, ['ten_phu_huynh', 'fullname', 'ten_tnv', 'ten_tai_tro', 'name']) || [d.firstname, d.lastname].filter(Boolean).join(' ');
         const phone = pick(d, ['sdt_phu_huynh', 'phone', 'sdt_tnv', 'sdt_tai_tro']);
         const child = pick(d, ['ten_tre', 'hoc_sinh']);
         const shown = new Set(['ten_phu_huynh', 'fullname', 'ten_tnv', 'ten_tai_tro', 'name', 'firstname', 'lastname', 'sdt_phu_huynh', 'phone', 'sdt_tnv', 'sdt_tai_tro', 'email', 'email_phu_huynh', 'email_tnv', 'email_tai_tro', 'ten_tre', 'hoc_sinh', 'ngay_sinh_tre']);
-        const details = Object.entries(d).filter(([k, v]) => v && !REG_HIDDEN.test(k) && !shown.has(k));
-        const detailHtml = details.map(([k, v]) => `<div><span>${escapeHtml(REG_FIELD_LABELS[k] || k.replace(/_/g, ' '))}</span>${escapeHtml(String(v).slice(0, 160))}</div>`).join('');
-        const title = String(r.formTitle || '').replace(/\s+mới$/, '');
-        const options = statuses.map(s => `<option value="${escapeHtml(s)}" ${r.status === s ? 'selected' : ''}>${escapeHtml(s === 'Đã ghi nhận - Chờ xử lý' ? 'Chờ xử lý' : s)}</option>`).join('');
-        const pending = isPending(r);
-        return `<tr class="${pending ? 'reg-pending' : ''}">
-          <td><div class="reg-type">${escapeHtml(title)}</div>${child ? `<div class="reg-child"><i class="fa-solid fa-child" aria-hidden="true"></i> ${escapeHtml(child)}${d.ngay_sinh_tre ? ` <small>· SN ${escapeHtml(d.ngay_sinh_tre)}</small>` : ''}</div>` : ''}<div class="reg-date">${formatDate(r.submittedAt)}</div></td>
-          <td><div class="reg-person">${escapeHtml(person || '—')}</div><a class="reg-contact" href="mailto:${escapeHtml(r.email)}">${escapeHtml(r.email)}</a>${phone ? `<a class="reg-contact" href="tel:${escapeHtml(phone.replace(/\s+/g, ''))}"><i class="fa-solid fa-phone" aria-hidden="true"></i> ${escapeHtml(phone)}</a>` : ''}</td>
-          <td class="reg-details">${detailHtml || '<span class="muted">Không có thông tin thêm</span>'}</td>
-          <td>
-            <select class="status-select ${pending ? 'is-pending' : r.status === 'Đã duyệt' ? 'is-ok' : 'is-no'}" data-prev="${escapeHtml(r.status)}" aria-label="Trạng thái đơn" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this)">${options}</select>
-            ${r.status === 'Từ chối' && r.rejectionReason ? `<div class="reg-reason">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : ''}
-            ${r.status === 'Đã duyệt' && regGroupOf(r) === 'study' ? `<a class="reg-crm" href="/admin/crm">Xem trong CRM →</a>` : ''}
-          </td>
-          <td><button type="button" class="btn btn-outline reg-del" onclick="deleteRegistration('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}')" aria-label="Xoá đơn"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></td>
-        </tr>`;
+        // bỏ giá trị trùng lặp (vd. "Xã An Khánh" đã nằm trong địa chỉ)
+        let details = Object.entries(d).filter(([k, v]) => v && !REG_HIDDEN.test(k) && !shown.has(k)).map(([k, v]) => [k, String(v).trim()]);
+        details = details.filter(([k, v], i) => !details.some(([k2, v2], j) => j !== i && v2.length > v.length && v2.toLowerCase().includes(v.toLowerCase())));
+        const long = details.filter(([, v]) => v.length > 38), short = details.filter(([, v]) => v.length <= 38);
+        const label = k => escapeHtml(REG_FIELD_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1)).replace(/_/g, ' '));
+        const title = String(r.formTitle || '').replace(/\s+mới$/, '').replace(/^Đăng ký\s+/, '');
+        const pending = isPending(r), g = regGroupOf(r);
+        const e = encodeURIComponent(r.email), id = encodeURIComponent(r.id), prev = escapeHtml(r.status || '');
+        const stateHtml = pending
+          ? `<div class="rc-acts"><button type="button" class="rc-ok" onclick="regAct('${e}','${id}','Đã duyệt','${prev}')"><i class="fa-solid fa-check" aria-hidden="true"></i> Duyệt</button><button type="button" class="rc-no" onclick="regAct('${e}','${id}','Từ chối','${prev}')"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Từ chối</button></div>`
+          : `<div class="rc-state ${r.status === 'Đã duyệt' ? 'ok' : 'no'}"><i class="fa-solid ${r.status === 'Đã duyệt' ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> ${escapeHtml(r.status)}<button type="button" class="rc-undo" onclick="regAct('${e}','${id}','Đã ghi nhận - Chờ xử lý','${prev}')" title="Đưa về Chờ xử lý">Hoàn tác</button></div>`
+            + (r.status === 'Từ chối' && r.rejectionReason ? `<div class="reg-reason">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : '')
+            + (r.status === 'Đã duyệt' && g === 'study' ? `<a class="reg-crm" href="/admin/crm">Xem trong CRM →</a>` : '');
+        return `<article class="rc${pending ? ' is-pending' : ''}">
+          <div class="rc-top">
+            <span class="rc-type g-${g}"><i class="fa-solid ${ICON[g]}" aria-hidden="true"></i> ${escapeHtml(title)}</span>
+            <span class="rc-date">${formatDate(r.submittedAt)}</span>
+            <button type="button" class="rc-del" onclick="deleteRegistration('${e}','${id}')" aria-label="Xoá đơn" title="Xoá đơn"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button>
+          </div>
+          <div class="rc-body">
+            <div class="rc-who">
+              ${child ? `<h4>${escapeHtml(child)}</h4><p class="rc-sub">${d.ngay_sinh_tre ? `Sinh ${escapeHtml(vnDate(d.ngay_sinh_tre))}${ageOf(d.ngay_sinh_tre) ? ' · ' + ageOf(d.ngay_sinh_tre) : ''}` : 'Học sinh'}</p>` : `<h4>${escapeHtml(person || r.email)}</h4>`}
+              <div class="rc-contact">
+                ${child && person ? `<span><i class="fa-regular fa-user" aria-hidden="true"></i> PH: ${escapeHtml(person)}</span>` : ''}
+                ${phone ? `<a href="tel:${escapeHtml(phone.replace(/\s+/g, ''))}"><i class="fa-solid fa-phone" aria-hidden="true"></i> ${escapeHtml(phone)}</a>` : ''}
+                <a href="mailto:${escapeHtml(r.email)}"><i class="fa-regular fa-envelope" aria-hidden="true"></i> ${escapeHtml(r.email)}</a>
+              </div>
+            </div>
+            <div class="rc-facts">
+              ${short.length ? `<dl>${short.map(([k, v]) => `<div><dt>${label(k)}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
+              ${long.map(([k, v]) => `<p class="rc-long"><b>${label(k)}</b>${escapeHtml(v.slice(0, 300))}</p>`).join('')}
+            </div>
+            <div class="rc-side">${stateHtml}</div>
+          </div>
+        </article>`;
       }).join('');
+    }
+    // Nút Duyệt / Từ chối / Hoàn tác dùng lại đúng luồng updateStatus (email báo phụ huynh, tạo học sinh, CRM…)
+    async function regAct(e, id, status, prev) {
+      const fake = { value: status, dataset: { prev } };
+      await updateStatus(e, id, fake);
+      const r = allRegistrationsData.find(x => x.email === decodeURIComponent(e) && x.id === decodeURIComponent(id));
+      if (r && fake.dataset.prev === status) r.status = status;
+      renderRegistrationsTable();
     }
 
     async function deleteRegistration(emailEnc, idEnc) {
