@@ -389,6 +389,8 @@
         <a class="tab-btn" href="/admin/cong-viec" style="text-decoration:none;"><i class="fa-solid fa-list-check"></i> Công Việc</a>
         <a class="tab-btn" href="/admin/cham-cong" style="text-decoration:none;"><i class="fa-solid fa-user-clock"></i> Chấm Công</a>
         <button class="tab-btn" data-tab="registrations" data-permission="registrations" onclick="switchTab('registrations')"><i class="fa-solid fa-file-lines"></i> Đơn Đăng Ký</button>
+        <button class="tab-btn" data-tab="contactmsgs" data-permission="registrations" onclick="switchTab('contactmsgs')"><i class="fa-solid fa-envelope-open-text"></i> Liên Hệ</button>
+        <button class="tab-btn" data-tab="newsletter" data-permission="registrations" onclick="switchTab('newsletter')"><i class="fa-solid fa-bullhorn"></i> Bản Tin</button>
         <button class="tab-btn" data-tab="donations" data-permission="donations" onclick="switchTab('donations')"><i class="fa-solid fa-hand-holding-dollar"></i> Quyên Góp</button>
         <button class="tab-btn" data-tab="tuition" data-permission="tuition" onclick="switchTab('tuition')"><i class="fa-solid fa-coins"></i> Học Phí</button>
         <button class="tab-btn" data-tab="invoices" data-permission="invoices" onclick="switchTab('invoices')"><i class="fa-solid fa-file-invoice-dollar"></i> Hoá Đơn</button>
@@ -473,6 +475,43 @@
           </table>
         </div>
         <div class="empty-state" id="regEmpty" style="display:none;">Chưa có đơn đăng ký nào.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: LIÊN HỆ ===================== -->
+    <div class="panel" id="panel-contactmsgs">
+      <div class="card">
+        <p style="color:var(--text-muted); font-size:0.85rem; margin:0 0 1rem;">Tin nhắn từ form Liên Hệ — chỉ cần đánh dấu đã trả lời, không cần duyệt/từ chối như đơn đăng ký.</p>
+        <div style="display:flex; gap:0.6rem; margin-bottom:1rem;">
+          <input type="text" id="cmSearchInput" placeholder="Tìm theo tên, email, nội dung..." oninput="renderContactTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
+        </div>
+        <div class="loading-state" id="cmLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="cmTableWrap">
+          <table>
+            <thead><tr><th>Người gửi</th><th>Email / SĐT</th><th>Nội dung</th><th>Ngày gửi</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody id="cmTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="cmEmpty" style="display:none;">Chưa có tin nhắn liên hệ nào.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: BẢN TIN ===================== -->
+    <div class="panel" id="panel-newsletter">
+      <div class="card">
+        <p style="color:var(--text-muted); font-size:0.85rem; margin:0 0 1rem;">Người đăng ký nhận bản tin/khuyến mãi từ website — tự bật khi đăng ký, có link huỷ trong email nên không cần duyệt.</p>
+        <div style="display:flex; gap:0.6rem; margin-bottom:1rem; align-items:center;">
+          <input type="text" id="nlSearchInput" placeholder="Tìm theo email, tên..." oninput="renderNewsletterTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
+          <span id="nlSummary" style="font-size:0.85rem; color:var(--text-muted); white-space:nowrap;"></span>
+        </div>
+        <div class="loading-state" id="nlLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="table-scroll" style="display:none;" id="nlTableWrap">
+          <table>
+            <thead><tr><th>Email</th><th>Tên</th><th>Ngày đăng ký</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody id="nlTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="nlEmpty" style="display:none;">Chưa có ai đăng ký nhận bản tin.</div>
       </div>
     </div>
 
@@ -1575,6 +1614,97 @@
         selectEl.value = prevValue;
         showGlobalAlert(err.message, true);
       }
+    }
+
+    // ============== LIÊN HỆ (form Liên Hệ — chỉ cần trả lời, không duyệt/từ chối) ==============
+    let allContactMessagesData = [];
+    async function loadContactMessages() {
+      try {
+        const { messages } = await apiCall('/api/portal-list-contact-messages');
+        allContactMessagesData = messages;
+        document.getElementById('cmLoading').style.display = 'none';
+        if (messages.length === 0) { document.getElementById('cmEmpty').style.display = 'block'; return; }
+        document.getElementById('cmTableWrap').style.display = 'block';
+        renderContactTable();
+      } catch (err) {
+        document.getElementById('cmLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+    function renderContactTable() {
+      const query = (document.getElementById('cmSearchInput').value || '').trim().toLowerCase();
+      const filtered = !query ? allContactMessagesData : allContactMessagesData.filter(m =>
+        [m.name, m.email, m.phone, m.subject, m.message].join(' ').toLowerCase().includes(query));
+      if (filtered.length === 0) {
+        document.getElementById('cmTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy tin nhắn phù hợp.</td></tr>`;
+        return;
+      }
+      document.getElementById('cmTableBody').innerHTML = filtered.map(m => `<tr>
+          <td><strong>${escapeHtml(m.name || '—')}</strong>${m.subject ? `<div style="font-size:0.78rem;color:var(--text-muted)">${escapeHtml(m.subject)}</div>` : ''}</td>
+          <td>${escapeHtml(m.email || '—')}${m.phone ? `<div style="font-size:0.78rem;color:var(--text-muted)">${escapeHtml(m.phone)}</div>` : ''}</td>
+          <td style="max-width:320px; white-space:pre-wrap;">${escapeHtml(m.message || '')}</td>
+          <td>${formatDate(m.submittedAt)}</td>
+          <td><select class="status-select" onchange="updateContactStatus('${encodeURIComponent(m.id)}', this)">
+            ${['Mới', 'Đã trả lời'].map(s => `<option value="${s}" ${m.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+          </select></td>
+          <td><button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteContactMessage('${encodeURIComponent(m.id)}')">Xoá</button></td>
+        </tr>`).join('');
+    }
+    async function updateContactStatus(idEnc, selectEl) {
+      try {
+        await apiCall('/api/portal-update-contact-status', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: decodeURIComponent(idEnc), status: selectEl.value }) });
+        showGlobalAlert('Đã cập nhật trạng thái.', false);
+        const m = allContactMessagesData.find(x => x.id === decodeURIComponent(idEnc)); if (m) m.status = selectEl.value;
+      } catch (err) { showGlobalAlert(err.message, true); }
+    }
+    async function deleteContactMessage(idEnc) {
+      if (!confirm('Xoá vĩnh viễn tin nhắn này? Không thể hoàn tác.')) return;
+      try {
+        await apiCall('/api/portal-delete-contact-message', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: decodeURIComponent(idEnc) }) });
+        showGlobalAlert('Đã xoá tin nhắn.', false);
+        loadContactMessages();
+      } catch (err) { showGlobalAlert(err.message, true); }
+    }
+
+    // ============== BẢN TIN (đăng ký nhận tin — tự bật, huỷ qua link email hoặc thủ công) ==============
+    let allNewsletterData = [];
+    async function loadNewsletterSubscribers() {
+      try {
+        const { subscribers, active, total } = await apiCall('/api/portal-list-newsletter-subscribers');
+        allNewsletterData = subscribers;
+        document.getElementById('nlSummary').textContent = `${active} đang nhận / ${total} tổng cộng`;
+        document.getElementById('nlLoading').style.display = 'none';
+        if (subscribers.length === 0) { document.getElementById('nlEmpty').style.display = 'block'; return; }
+        document.getElementById('nlTableWrap').style.display = 'block';
+        renderNewsletterTable();
+      } catch (err) {
+        document.getElementById('nlLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+    function renderNewsletterTable() {
+      const query = (document.getElementById('nlSearchInput').value || '').trim().toLowerCase();
+      const filtered = !query ? allNewsletterData : allNewsletterData.filter(s => [s.email, s.name].join(' ').toLowerCase().includes(query));
+      if (filtered.length === 0) {
+        document.getElementById('nlTableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy người đăng ký phù hợp.</td></tr>`;
+        return;
+      }
+      document.getElementById('nlTableBody').innerHTML = filtered.map(s => `<tr>
+          <td>${escapeHtml(s.email)}</td>
+          <td>${escapeHtml(s.name || '—')}</td>
+          <td>${formatDate(s.subscribedAt)}</td>
+          <td>${s.status === 'subscribed' ? '<span style="color:#15803d;font-weight:600;">Đang nhận</span>' : '<span style="color:var(--text-muted);">Đã huỷ</span>'}</td>
+          <td><button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="toggleNewsletterSubscription('${encodeURIComponent(s.email)}', ${s.status !== 'subscribed'})">${s.status === 'subscribed' ? 'Huỷ đăng ký' : 'Đăng ký lại'}</button></td>
+        </tr>`).join('');
+    }
+    async function toggleNewsletterSubscription(emailEnc, subscribe) {
+      try {
+        await apiCall('/api/portal-unsubscribe-newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: decodeURIComponent(emailEnc), subscribe }) });
+        showGlobalAlert(subscribe ? 'Đã đăng ký lại.' : 'Đã huỷ đăng ký.', false);
+        loadNewsletterSubscribers();
+      } catch (err) { showGlobalAlert(err.message, true); }
     }
 
     // ============== QUYÊN GÓP ==============
@@ -4641,7 +4771,7 @@
         if (section) section.style.display = 'none';
       }
 
-      if (hasPermission('registrations')) loadRegistrations();
+      if (hasPermission('registrations')) { loadRegistrations(); loadContactMessages(); loadNewsletterSubscribers(); }
       if (hasPermission('donations')) loadDonations();
       if (hasPermission('tuition')) loadTuition();
       if (hasPermission('invoices')) loadInvoices();
