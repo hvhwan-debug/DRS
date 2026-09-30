@@ -122,6 +122,7 @@
     $('meName').textContent = d.me.name; $('meAv').textContent = initials(d.me.name);
     $('meRole').textContent = d.me.canManage ? 'Quản lý chấm công' : 'Nhân viên';
     $('mgrNav').hidden = !d.me.canManage; $('mMgr').hidden = !d.me.canManage;
+    window.WVN_EXPORT_ALLOWED = !!d.me.canManage;
     return d;
   }
   async function loadMgr(period) {
@@ -529,6 +530,7 @@
         <div class="toolbar"><input type="month" id="mgMonth" value="${m.period}" max="${m.today.slice(0, 7)}" aria-label="Chọn tháng">
           <select id="mgStaff" aria-label="Lọc nhân viên"><option value="">Tất cả nhân viên</option>${m.staff.map(s => `<option value="${esc(s.email)}" ${sheetFilter.email === s.email ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select>
           <select id="mgStatus" aria-label="Lọc trạng thái"><option value="">Mọi trạng thái</option>${['ok', 'pending', 'open', 'rejected'].map(k => `<option value="${k}" ${sheetFilter.status === k ? 'selected' : ''}>${STATUS[k][1]}</option>`).join('')}</select>
+          <button class="btn" id="mgExport"><i class="fa-solid fa-file-excel"></i> Xuất Excel</button>
           <button class="btn primary" id="mgAdd" ${locked ? 'disabled title="Kỳ đã chốt"' : ''}><i class="fa-solid fa-plus"></i> Thêm ca</button></div></div>
       ${locked ? `<div class="warn amber"><i class="fa-solid fa-lock"></i><div><b>Kỳ lương ${periodLabel(m.period)} đã chốt.</b>Mở lại kỳ ở mục Bảng lương nếu cần sửa công.</div></div>` : ''}
       <div class="card"><div class="table-wrap"><table>
@@ -541,6 +543,28 @@
     $('mgStaff').onchange = e => { sheetFilter.email = e.target.value; rStaffSheet(); };
     $('mgStatus').onchange = e => { sheetFilter.status = e.target.value; rStaffSheet(); };
     $('mgAdd').onclick = () => mgrEntryModal(null);
+    $('mgExport').onclick = async () => {
+      try {
+        const label = { ok: 'Hợp lệ', pending: 'Chờ duyệt', rejected: 'Từ chối', open: 'Đang trong ca' };
+        const name = await window.WVNExcel.download({
+          filename: `bang-cong-${m.period}`, sheetName: 'Bảng công', title: `Bảng công nhân viên ${periodLabel(m.period)}`,
+          subtitle: sheetFilter.email ? nameOf(sheetFilter.email) : 'Tất cả nhân viên',
+          columns: [
+            { label: 'Ngày', get: r => r.date, type: 'date' },
+            { label: 'Nhân viên', get: r => nameOf(r.email), type: 'text' },
+            { label: 'Email', get: r => r.email, type: 'text' },
+            { label: 'Giờ vào', get: r => timeOf(r.clockIn), type: 'text' },
+            { label: 'Giờ ra', get: r => r.status === 'open' ? '' : timeOf(r.clockOut), type: 'text' },
+            { label: 'Nghỉ (phút)', get: r => r.breakMinutes || 0, type: 'number' },
+            { label: 'Giờ công', get: r => r.status === 'open' ? '' : (r.minutes / 60).toFixed(2), type: 'number' },
+            { label: 'Trạng thái', get: r => label[r.status] || r.status, type: 'text' },
+            { label: 'Ghi chú', get: r => [FLAG[r.flag] || '', r.note].filter(Boolean).join(' · '), type: 'text', wrap: true }
+          ],
+          rows: rows.slice().sort((a, b) => a.date.localeCompare(b.date) || nameOf(a.email).localeCompare(nameOf(b.email), 'vi'))
+        });
+        toast(`Đã tải ${name}.`);
+      } catch (e) { toast(e.message, true); }
+    };
     const v = $('view-cong-nhan-vien');
     v.querySelectorAll('[data-me]').forEach(b => b.onclick = () => { const [em, id] = b.dataset.me.split('|'); mgrEntryModal(m.entries.find(x => x.id === id && x.email === em)); });
     v.querySelectorAll('[data-md]').forEach(b => b.onclick = async () => {
