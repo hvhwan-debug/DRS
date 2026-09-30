@@ -7,6 +7,7 @@
 <title>Công Việc · Tri thức Việt</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=20260927b">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <script>if (!localStorage.getItem('wvn_admin_token')) window.location.replace('admin-dang-nhap.html');</script>
 <style>
 :root {
@@ -869,6 +870,37 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 .mobile-head .m-pill { display:inline-flex;align-items:center;gap:0.4rem;padding:0.2rem 0.65rem;border-radius:999px;background:#eef3ff;border:1px solid #dde6fb;color:#1e3a8a;font-size:0.7rem;font-weight:600;line-height:1.3;white-space:nowrap; }
 .mobile-head .m-pill::before { content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#38bdf8,#bef264);box-shadow:0 0 8px rgba(56,189,248,0.8); box-shadow: none; }
 @media (max-width: 360px) { .mobile-head .m-pill { display: none; } }
+
+/* ---------- Chọn nhiều việc (thao tác hàng loạt) ---------- */
+.sel-box { flex-shrink: 0; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--line, #d7dbe5); background: #fff; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.sel-box:hover { border-color: var(--sapphire); }
+.sel-box.on { background: var(--sapphire); border-color: var(--sapphire); color: #fff; }
+.sel-box i { font-size: 0.62rem; opacity: 0; }
+.sel-box.on i { opacity: 1; }
+.bulk-bar { position: fixed; left: 50%; bottom: 1.4rem; transform: translateX(-50%) translateY(120%); opacity: 0; pointer-events: none; z-index: 60;
+  display: flex; align-items: center; gap: 0.6rem; background: var(--night, #111a33); color: #fff; padding: 0.6rem 0.7rem 0.6rem 1rem; border-radius: 14px;
+  box-shadow: 0 20px 45px rgba(17,26,51,0.35); transition: all .18s; max-width: calc(100% - 2rem); flex-wrap: wrap; }
+.bulk-bar.open { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+.bulk-bar b { font-weight: 600; font-size: 0.86rem; white-space: nowrap; }
+.bulk-bar select, .bulk-bar button { font-size: 0.82rem; border-radius: 9px; padding: 0.4rem 0.6rem; }
+.bulk-bar select { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+.bulk-bar select option { color: #111; }
+.bulk-bar button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); color: #fff; }
+.bulk-bar button:hover { background: rgba(255,255,255,0.2); }
+.bulk-bar button.danger { background: var(--red); border-color: var(--red); }
+.bulk-bar button.danger:hover { background: #a72a21; }
+
+/* ---------- Việc chờ (phụ thuộc) ---------- */
+.pill.blocked { background: var(--gold-soft, #f6efe3); color: var(--gold, #8a6a37); }
+.gcal-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--sapphire); text-decoration: none; margin-top: 0.3rem; }
+.gcal-link:hover { text-decoration: underline; }
+
+/* ---------- Xuất Excel / mẫu dự án ---------- */
+.tool-btn { display: inline-flex; align-items: center; gap: 0.4rem; }
+.tpl-row { display: flex; flex-direction: column; gap: 0.5rem; margin: 0.7rem 0; }
+.tpl-row label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+.tpl-row select, .tpl-row input { border: 1px solid var(--line); border-radius: 10px; padding: 0.55rem 0.7rem; font-size: 0.92rem; }
+.side h4 span { display: flex; gap: 2px; }
 </style>
 <script src="/wvn-quotes.js?v=20260928a"></script>
 </head>
@@ -886,7 +918,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       <button data-view="team"><i class="fa-solid fa-people-group" aria-hidden="true"></i> Đội nhóm</button>
       <button type="button" class="nav-search" id="openSearch"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Tìm việc <kbd>/</kbd></button>
     </nav>
-    <h4>Dự án <button data-act="new-project" aria-label="Tạo dự án"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></h4>
+    <h4>Dự án <span><button data-act="use-template" aria-label="Dùng mẫu dự án" title="Dùng mẫu dự án"><i class="fa-regular fa-copy" aria-hidden="true"></i></button> <button data-act="new-project" aria-label="Tạo dự án"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></span></h4>
     <nav class="nav" id="projectNav"></nav>
     <div class="focus" id="sideFocus" aria-live="polite"></div>
     <div class="side-foot">
@@ -939,11 +971,31 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     <label class="sr-only" for="pmName">Tên dự án</label>
     <input id="pmName" maxlength="80" placeholder="Ví dụ: Tủ sách lưu động 2027">
     <div class="swatches" id="pmColors"></div>
-    <div class="acts"><button class="btn ghost" id="pmArchive" hidden>Lưu trữ dự án</button><span style="flex:1"></span><button class="btn" data-act="close-modal">Huỷ</button><button class="btn primary" id="pmSave">Tạo dự án</button></div>
+    <div class="acts"><button class="btn ghost" id="pmTemplate" hidden>Lưu làm mẫu</button><button class="btn ghost" id="pmArchive" hidden>Lưu trữ dự án</button><span style="flex:1"></span><button class="btn" data-act="close-modal">Huỷ</button><button class="btn primary" id="pmSave">Tạo dự án</button></div>
   </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastUndo" hidden>Hoàn tác</button></div>
+
+<div class="bulk-bar" id="bulkBar">
+  <b id="bulkCount"></b>
+  <select id="bulkAssign" aria-label="Gán người phụ trách"><option value="">Gán người…</option></select>
+  <select id="bulkProject" aria-label="Chuyển dự án"><option value="">Chuyển dự án…</option><option value="__none">Không dự án</option></select>
+  <select id="bulkPriority" aria-label="Đổi ưu tiên"><option value="">Đổi ưu tiên…</option></select>
+  <button type="button" id="bulkDone"><i class="fa-solid fa-check" aria-hidden="true"></i> Đánh dấu xong</button>
+  <button type="button" class="danger" id="bulkDelete"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xoá</button>
+  <button type="button" id="bulkClear"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+</div>
+
+<div class="modal-wrap" id="templateModal" role="dialog" aria-modal="true" aria-labelledby="tmTitle">
+  <div class="modal">
+    <h3 id="tmTitle">Dùng mẫu dự án</h3>
+    <div class="tpl-row"><label for="tmSelect">Mẫu đã lưu</label><select id="tmSelect"></select></div>
+    <div class="tpl-row"><label for="tmName">Tên dự án mới</label><input id="tmName" maxlength="80" placeholder="Ví dụ: Khai giảng lớp Tháng 11"></div>
+    <div class="tpl-row"><label for="tmStart">Ngày bắt đầu (để dời hạn các việc theo mẫu)</label><input type="date" id="tmStart"></div>
+    <div class="acts"><span style="flex:1"></span><button class="btn" data-act="close-modal">Huỷ</button><button class="btn primary" id="tmApply">Tạo dự án từ mẫu</button></div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -966,6 +1018,14 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     return t ? `${s} ${t}` : s;
   };
   const initials = n => { const p = String(n || '?').trim().split(/\s+/); return ((p.length > 1 ? p[p.length - 2][0] : '') + p[p.length - 1][0]).toUpperCase(); };
+  function gcalUrl(t) {
+    const d = t.dueDate.replace(/-/g, '');
+    const start = t.dueTime ? `${d}T${t.dueTime.replace(':', '')}00` : d;
+    const end = t.dueTime ? (() => { const [h, m] = t.dueTime.split(':').map(Number); const e = new Date(); e.setHours(h + 1, m, 0, 0); return `${d}T${pad(e.getHours())}${pad(e.getMinutes())}00`; })() : addDays(t.dueDate, 1).replace(/-/g, '');
+    const dates = t.dueTime ? `${start}/${end}` : `${start}/${end}`;
+    const params = new URLSearchParams({ action: 'TEMPLATE', text: t.title, dates, details: t.description || '' });
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  }
   const rel = iso => { if (!iso) return ''; const m = Math.round((Date.now() - new Date(iso)) / 60000); if (m < 1) return 'vừa xong'; if (m < 60) return m + ' phút trước'; const h = Math.round(m / 60); if (h < 24) return h + ' giờ trước'; const d = Math.round(h / 24); return d < 30 ? d + ' ngày trước' : new Date(iso).toLocaleDateString('vi-VN'); };
 
   const STATUS = [['todo', 'Cần làm'], ['doing', 'Đang làm'], ['review', 'Chờ duyệt'], ['done', 'Hoàn thành']];
@@ -977,7 +1037,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   const TONE = { blue: 'var(--sapphire)', green: 'var(--green)', gold: 'var(--gold)', red: 'var(--red)', violet: 'var(--violet)' };
 
   let D = { me: {}, tasks: [], projects: [], staff: [], inbox: [] };
-  let state = { view: 'today', project: '', scope: 'me', boardWho: '', weekStart: null, openId: null };
+  let state = { view: 'today', project: '', scope: 'me', boardWho: '', weekStart: null, openId: null, selected: new Set() };
 
   // ---------- API ----------
   async function api(path, opts = {}, attempt = 0) {
@@ -1027,12 +1087,15 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     (t.labels || []).slice(0, 3).forEach(l => bits.push(`<span class="lbl" style="--h:${labelHue(l)}">${esc(l)}</span>`));
     if (t.recurrence) bits.push('<span class="m"><i class="fa-solid fa-repeat" aria-hidden="true"></i></span>');
     if (t.link) bits.push('<span class="m" style="color:var(--gold)"><i class="fa-solid fa-link" aria-hidden="true"></i></span>');
+    const blocker = t.blockedBy && findTask(t.blockedBy);
+    if (blocker && blocker.status !== 'done') bits.push(`<span class="pill blocked"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ: ${esc(blocker.title.slice(0, 30))}</span>`);
     return bits.join('');
   }
   const AV_TONES = [['#eaf0ff', '#1f4fd6'], ['#e6f4ec', '#1f7a4d'], ['#f6efe3', '#8a6a37'], ['#efebfb', '#6246c9'], ['#fdeceb', '#c2352b'], ['#e3f4f7', '#0e7490'], ['#fdf3e2', '#b7791f']];
   const avTone = e => { let h = 0; for (const c of String(e || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0; const t = AV_TONES[h % AV_TONES.length]; return `background:${t[0]};color:${t[1]}`; };
   const avatars = list => `<span class="avs">${list.slice(0, 3).map(e => `<span class="av" style="${avTone(e)}" title="${esc(staffBy(e).name)}">${esc(initials(staffBy(e).name))}</span>`).join('')}${list.length > 3 ? `<span class="av">+${list.length - 3}</span>` : ''}</span>`;
   const taskRow = t => `<div class="task ${t.status === 'done' ? 'done' : ''} prio-${t.priority}" data-open="${esc(t.id)}" tabindex="0">
+      <button class="sel-box ${state.selected.has(t.id) ? 'on' : ''}" data-select="${esc(t.id)}" aria-label="Chọn việc này"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
       <button class="check" data-toggle="${esc(t.id)}" aria-label="${t.status === 'done' ? 'Đánh dấu chưa xong' : 'Hoàn thành'}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
       <div class="t-body"><div class="t-title">${esc(t.title)}</div><div class="t-meta">${metaHtml(t)}${t.status === 'doing' ? '<span class="pill blue">Đang làm</span>' : t.status === 'review' ? '<span class="pill" style="background:var(--violet-soft);color:var(--violet);border-color:transparent">Chờ duyệt</span>' : ''}</div></div>
       <div class="t-right">${avatars(t.assignees)}</div></div>`;
@@ -1186,6 +1249,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     renderSide();
     ({ today: renderToday, inbox: renderInbox, mine: renderMine, board: renderBoard, calendar: renderCalendar, team: renderTeam })[state.view]();
     if (state.openId) renderDrawer();
+    renderBulkBar();
   }
   // ---------- Đội nhóm: khối lượng việc của từng người ----------
   function renderTeam() {
@@ -1198,10 +1262,26 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     }).sort((a, b) => b.overdue - a.overdue || b.open - a.open);
     const unassigned = D.tasks.filter(t => open(t) && !(t.assignees || []).length).length;
     const max = Math.max(1, ...people.map(x => x.open));
+    // Xu hướng hoàn thành 6 tuần gần nhất (chỉ tính được trong phạm vi dữ liệu tải về, tối đa 45 ngày)
+    const weeks = Array.from({ length: 6 }, (_, i) => mondayOf(addDays(today, -7 * (5 - i))));
+    const doneCounts = weeks.map((ws, i) => {
+      const we = i < 5 ? weeks[i + 1] : addDays(ws, 7);
+      return D.tasks.filter(t => t.status === 'done' && t.completedAt && t.completedAt.slice(0, 10) >= ws && t.completedAt.slice(0, 10) < we).length;
+    });
+    const maxDone = Math.max(1, ...doneCounts);
     $('view-team').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Đội nhóm</h2><p class="pt-sub">Ai đang giữ bao nhiêu việc, ai đang quá tải. Chạm một người để xem bảng việc của họ.</p></div>
-        <div class="pt-num"><b>${D.tasks.filter(open).length}</b><span>việc đang mở</span></div><div class="pt-num"><b>${D.tasks.filter(t => open(t) && t.dueDate && t.dueDate < today).length}</b><span>quá hạn</span></div>${D.me.role === 'super' ? '<button type="button" class="btn" id="digestTest" title="Email tự gửi lúc 7:00 mỗi sáng"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Gửi email tổng hợp ngay</button>' : ''}</div>
+        <div class="pt-num"><b>${D.tasks.filter(open).length}</b><span>việc đang mở</span></div><div class="pt-num"><b>${D.tasks.filter(t => open(t) && t.dueDate && t.dueDate < today).length}</b><span>quá hạn</span></div>
+        <button type="button" class="btn tool-btn" id="exportExcelBtn"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Xuất Excel</button>
+        ${D.me.role === 'super' ? '<button type="button" class="btn" id="digestTest" title="Email tự gửi lúc 7:00 mỗi sáng"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Gửi email tổng hợp ngay</button>' : ''}</div>
       <p class="team-note info"><i class="fa-regular fa-sun" aria-hidden="true"></i> Mỗi sáng 7:00, ai có việc quá hạn hoặc đến hạn sẽ nhận email tổng hợp danh sách việc của mình.</p>
       ${unassigned ? `<p class="team-note"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Có ${unassigned} việc chưa giao cho ai.</p>` : ''}
+      <div class="section-title"><h3>Xu hướng hoàn thành (6 tuần gần nhất)</h3></div>
+      <div style="display:flex;align-items:flex-end;gap:0.6rem;height:90px;padding:0.6rem 1.1rem 0.2rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:1.2rem;">
+        ${doneCounts.map((n, i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;">
+          <span style="font-size:0.72rem;color:var(--muted);font-weight:600">${n || ''}</span>
+          <div style="width:100%;max-width:34px;height:${Math.max(4, Math.round(n / maxDone * 56))}px;background:var(--sapphire);border-radius:4px 4px 0 0;"></div>
+          <span style="font-size:0.68rem;color:var(--muted)">${i === 5 ? 'Tuần này' : fmtDue(weeks[i]).slice(0, 6)}</span></div>`).join('')}
+      </div>
       <div class="team-grid">${people.map(x => `<button type="button" class="team-card${x.overdue ? ' warn' : ''}" data-team-who="${esc(x.p.email)}">
           <div class="tc-head"><span class="av">${esc(initials(x.p.name))}</span><div><strong>${esc(x.p.name)}</strong><small>${x.open ? `${x.open} việc đang mở` : 'Không có việc đang mở'}</small></div></div>
           <div class="tc-bar" aria-hidden="true"><i style="width:${Math.round(x.open / max * 100)}%"></i></div>
@@ -1352,8 +1432,10 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   }
   function toggleDone(id) {
     const t = findTask(id); if (!t) return;
-    if (t.status === 'done') update(id, { status: 'todo' }, { msg: 'Đã mở lại công việc' });
-    else { const prev = t.status; update(id, { status: 'done' }, { msg: `Đã hoàn thành "${t.title}"`, undo: { status: prev } }); }
+    if (t.status === 'done') return update(id, { status: 'todo' }, { msg: 'Đã mở lại công việc' });
+    const blocker = t.blockedBy && findTask(t.blockedBy);
+    if (blocker && blocker.status !== 'done' && !confirm(`Việc này đang chờ "${blocker.title}" chưa xong. Vẫn đánh dấu xong?`)) return;
+    const prev = t.status; update(id, { status: 'done' }, { msg: `Đã hoàn thành "${t.title}"`, undo: { status: prev } });
   }
   async function deleteTask(id, silent) {
     const t = findTask(id); if (!t) return;
@@ -1475,10 +1557,14 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
         <div class="props">
         <div class="row"><label><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>Trạng thái</label><div class="opts">${STATUS.map(([k, l]) => `<button class="opt st-${k}" data-set="status" data-v="${k}" aria-pressed="${t.status === k}">${l}</button>`).join('')}</div></div>
         <div class="row"><label><i class="fa-solid fa-user-group" aria-hidden="true"></i>Người làm</label><div class="opts">${D.staff.map(s => `<button class="opt" data-assignee="${esc(s.email)}" aria-pressed="${t.assignees.includes(s.email)}"><span class="av" style="width:20px;height:20px;font-size:0.56rem;border:none">${esc(initials(s.name))}</span>${esc(s.email === D.me.email ? 'Tôi' : s.name)}</button>`).join('')}</div></div>
-        <div class="row"><label><i class="fa-solid fa-calendar-day" aria-hidden="true"></i>Hạn chót</label>${dueOptions(t)}</div>
+        <div class="row"><label><i class="fa-solid fa-calendar-day" aria-hidden="true"></i>Hạn chót</label>${dueOptions(t)}${t.dueDate ? `<a class="gcal-link" target="_blank" rel="noopener" href="${gcalUrl(t)}"><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i> Thêm vào Google Calendar</a>` : ''}</div>
         <div class="row"><label><i class="fa-solid fa-flag" aria-hidden="true"></i>Ưu tiên</label><div class="opts">${PRIO.map(([k, l]) => `<button class="opt p-${k}" data-set="priority" data-v="${k}" aria-pressed="${t.priority === k}">${l}</button>`).join('')}</div></div>
         <div class="row"><label><i class="fa-solid fa-folder" aria-hidden="true"></i>Dự án</label><div class="opts">${D.projects.filter(p => !p.archived || p.id === t.projectId).map(p => `<button class="opt" data-set="projectId" data-v="${esc(p.id)}" aria-pressed="${t.projectId === p.id}"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</button>`).join('')}<button class="opt" data-set="projectId" data-v="" aria-pressed="${!t.projectId}">Không</button><button class="opt" data-act="new-project" style="border-style:dashed;color:var(--muted)"><i class="fa-solid fa-plus" aria-hidden="true"></i> Dự án mới</button></div></div>
         <div class="row"><label><i class="fa-solid fa-tag" aria-hidden="true"></i>Nhãn</label><div class="opts">${(t.labels || []).map(l => `<button class="opt lbl-opt" data-label-rm="${esc(l)}" style="--h:${labelHue(l)}" aria-label="Bỏ nhãn ${esc(l)}">${esc(l)} <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>`).join('')}${allLabels().filter(l => !(t.labels || []).includes(l)).slice(0, 6).map(l => `<button class="opt" data-label-add="${esc(l)}">+ ${esc(l)}</button>`).join('')}<input class="lbl-input" id="lblAdd" type="text" maxlength="30" placeholder="Nhãn mới…" aria-label="Thêm nhãn mới"></div></div>
+        <div class="row"><label><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ xong việc khác</label><div class="opts">
+          <button class="opt" data-set="blockedBy" data-v="" aria-pressed="${!t.blockedBy}">Không chờ việc nào</button>
+          ${D.tasks.filter(o => o.id !== t.id && o.status !== 'done').slice(0, 200).map(o => `<button class="opt" data-set="blockedBy" data-v="${esc(o.id)}" aria-pressed="${t.blockedBy === o.id}">${esc(o.title.slice(0, 40))}</button>`).join('')}
+        </div></div>
         <div class="row"><label><i class="fa-solid fa-repeat" aria-hidden="true"></i>Lặp lại</label><div class="opts">${RECUR.map(([k, l]) => `<button class="opt" data-set="recurrence" data-v="${k}" aria-pressed="${t.recurrence === k}">${l}</button>`).join('')}</div></div>
         </div>
 
@@ -1512,6 +1598,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     $('pmName').value = editingProject ? editingProject.name : '';
     $('pmSave').textContent = editingProject ? 'Lưu' : 'Tạo dự án';
     $('pmArchive').hidden = !editingProject;
+    $('pmTemplate').hidden = !editingProject;
     $('pmColors').innerHTML = COLORS.map(c => `<button style="background:${c}" data-color="${c}" aria-pressed="${c === pickedColor}" aria-label="Màu ${c}"></button>`).join('');
     $('projectModal').classList.add('open'); setTimeout(() => $('pmName').focus(), 30);
   }
@@ -1528,19 +1615,104 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
       else renderAll();
     } catch (e) { toast(e.message, { error: true }); }
   }
+  async function saveAsTemplate() {
+    if (!editingProject) return;
+    const name = prompt('Tên mẫu (ví dụ: Khai giảng lớp mới):', editingProject.name);
+    if (!name || !name.trim()) return;
+    try {
+      await post('/api/portal-work-templates', { projectId: editingProject.id, name: name.trim() });
+      toast(`Đã lưu mẫu "${name.trim()}"`);
+    } catch (e) { toast(e.message, { error: true }); }
+  }
+
+  // ---------- Mẫu dự án ----------
+  let templatesCache = null;
+  async function openTemplateModal() {
+    $('templateModal').classList.add('open');
+    $('tmName').value = ''; $('tmStart').value = '';
+    $('tmSelect').innerHTML = '<option>Đang tải…</option>';
+    try {
+      if (!templatesCache) { const r = await api('/api/portal-work-templates'); templatesCache = r.templates || []; }
+      $('tmSelect').innerHTML = templatesCache.length
+        ? templatesCache.map(t => `<option value="${esc(t.id)}">${esc(t.name)} (${t.taskCount} việc)</option>`).join('')
+        : '<option value="">Chưa có mẫu nào — mở một dự án và bấm "Lưu làm mẫu"</option>';
+    } catch (e) { $('tmSelect').innerHTML = '<option value="">Không tải được danh sách mẫu</option>'; }
+  }
+  async function applyTemplate() {
+    const templateId = $('tmSelect').value; const projectName = $('tmName').value.trim(); const startDate = $('tmStart').value;
+    if (!templateId) return toast('Chọn một mẫu trước đã.', { error: true });
+    if (!projectName) { $('tmName').focus(); return; }
+    try {
+      const r = await post('/api/portal-work-apply-template', { templateId, projectName, startDate });
+      $('templateModal').classList.remove('open');
+      toast(`Đã tạo dự án "${r.projectName}" với ${r.taskCount} việc từ mẫu`);
+      await load(); setView('board', { project: r.projectId });
+    } catch (e) { toast(e.message, { error: true }); }
+  }
+
+  // ---------- Xuất Excel ---------- 
+  function currentViewTasks() {
+    if (state.view === 'mine') return D.tasks.filter(isMine);
+    if (state.view === 'board') return boardPool();
+    return D.tasks;
+  }
+  function exportExcel() {
+    if (typeof XLSX === 'undefined') { toast('Đang tải công cụ xuất Excel, thử lại sau vài giây.', { error: true }); return; }
+    const rows = currentViewTasks().map(t => ({
+      'Tên việc': t.title, 'Trạng thái': STATUS_L[t.status] || t.status,
+      'Người phụ trách': t.assignees.map(e => staffBy(e).name).join(', '),
+      'Dự án': (projectBy(t.projectId) || {}).name || '', 'Ưu tiên': PRIO.find(p => p[0] === t.priority)?.[1] || '',
+      'Hạn': t.dueDate ? t.dueDate.split('-').reverse().join('/') + (t.dueTime ? ' ' + t.dueTime : '') : '',
+      'Hoàn thành lúc': t.completedAt ? new Date(t.completedAt).toLocaleString('vi-VN') : ''
+    }));
+    if (!rows.length) return toast('Không có việc nào để xuất.', { error: true });
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Công việc');
+    XLSX.writeFile(wb, `cong-viec-${todayStr()}.xlsx`);
+  }
+
+  // ---------- Chọn nhiều việc ---------- 
+  function renderBulkBar() {
+    const n = state.selected.size;
+    $('bulkBar').classList.toggle('open', n > 0);
+    if (!n) return;
+    $('bulkCount').textContent = `Đã chọn ${n} việc`;
+    $('bulkAssign').innerHTML = '<option value="">Gán người…</option>' + D.staff.map(s => `<option value="${esc(s.email)}">${esc(s.name)}</option>`).join('');
+    $('bulkProject').innerHTML = '<option value="">Chuyển dự án…</option><option value="__none">Không dự án</option>' + D.projects.filter(p => !p.archived).map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+    $('bulkPriority').innerHTML = '<option value="">Đổi ưu tiên…</option>' + PRIO.map(([k, l]) => `<option value="${k}">${l}</option>`).join('');
+  }
+  function toggleSelect(id) {
+    if (state.selected.has(id)) state.selected.delete(id); else state.selected.add(id);
+    renderAll();
+  }
+  async function bulkApply(patch) {
+    const ids = Array.from(state.selected);
+    for (const id of ids) await update(id, patch, { silentRender: true });
+    state.selected.clear(); renderAll();
+    toast(`Đã cập nhật ${ids.length} việc`);
+  }
+  async function bulkDelete() {
+    const ids = Array.from(state.selected);
+    if (!confirm(`Xoá ${ids.length} việc đã chọn? Không thể hoàn tác.`)) return;
+    for (const id of ids) await deleteTask(id, true);
+    state.selected.clear(); renderAll();
+  }
 
   // ---------- Sự kiện ----------
   document.addEventListener('click', e => {
     const t = e.target;
     const tg = t.closest('[data-toggle]'); if (tg) { e.stopPropagation(); return toggleDone(tg.dataset.toggle); }
     const del = t.closest('[data-del]'); if (del) return deleteTask(del.dataset.del);
+    const sel = t.closest('[data-select]'); if (sel) return toggleSelect(sel.dataset.select);
     const act = t.closest('[data-act]');
     if (act) {
       const a = act.dataset.act;
       if (a === 'focus-quick') return focusQuick();
       if (a === 'close') return closeDrawer();
       if (a === 'new-project') return openProjectModal();
-      if (a === 'close-modal') return $('projectModal').classList.remove('open');
+      if (a === 'close-modal') { $('projectModal').classList.remove('open'); $('templateModal').classList.remove('open'); return; }
+      if (a === 'use-template') return openTemplateModal();
     }
     const la = t.closest('[data-label-add]'); if (la && state.openId) { const tk = findTask(state.openId); return update(tk.id, { labels: Array.from(new Set((tk.labels || []).concat(la.dataset.labelAdd))).slice(0, 10) }); }
     const lr = t.closest('[data-label-rm]'); if (lr && state.openId) { const tk = findTask(state.openId); return update(tk.id, { labels: (tk.labels || []).filter(x => x !== lr.dataset.labelRm) }); }
@@ -1548,8 +1720,11 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
     const arm = t.closest('[data-att-rm]'); if (arm) return removeAttachment(arm.dataset.attRm);
     const mn = t.closest('[data-mention]'); if (mn) return pickMention(mn);
     if (t.closest('#digestTest')) return (async () => { try { const r = await post('/api/work-daily-digest', {}); toast(`Đã gửi ${r.sent} email tổng hợp (bỏ qua ${r.skipped} người không có việc hoặc đã nhận hôm nay)`); } catch (e) { toast(e.message, { error: true }); } })();
+    if (t.closest('#exportExcelBtn')) return exportExcel();
     const tw = t.closest('[data-team-who]'); if (tw) return setView('board', { boardWho: tw.dataset.teamWho, project: '' });
-    const set = t.closest('[data-set]'); if (set && state.openId) { const k = set.dataset.set; const v = set.dataset.v; return update(state.openId, { [k]: v }); }
+    const set = t.closest('[data-set]'); if (set && state.openId) { const k = set.dataset.set; const v = set.dataset.v;
+      if (k === 'status' && v === 'done') return toggleDone(state.openId);
+      return update(state.openId, { [k]: v }); }
     const asg = t.closest('[data-assignee]');
     if (asg && state.openId) { const tk = findTask(state.openId); const em = asg.dataset.assignee; const next = tk.assignees.includes(em) ? tk.assignees.filter(x => x !== em) : tk.assignees.concat(em); return update(state.openId, { assignees: next }); }
     const clt = t.closest('[data-cl-toggle]'); if (clt) { const tk = findTask(state.openId); return update(tk.id, { checklist: tk.checklist.map(i => i.id === clt.dataset.clToggle ? { ...i, done: !i.done } : i) }); }
@@ -1574,6 +1749,15 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
   $('pmArchive').addEventListener('click', () => { if (confirm('Lưu trữ dự án này? Các công việc vẫn được giữ nguyên.')) saveProject(true); });
   $('projectModal').addEventListener('click', e => { if (e.target.id === 'projectModal') $('projectModal').classList.remove('open'); });
   $('pmName').addEventListener('keydown', e => { if (e.key === 'Enter') saveProject(false); });
+  $('pmTemplate').addEventListener('click', saveAsTemplate);
+  $('tmApply').addEventListener('click', applyTemplate);
+  $('templateModal').addEventListener('click', e => { if (e.target.id === 'templateModal') $('templateModal').classList.remove('open'); });
+  $('bulkClear').addEventListener('click', () => { state.selected.clear(); renderAll(); });
+  $('bulkDone').addEventListener('click', () => bulkApply({ status: 'done' }));
+  $('bulkDelete').addEventListener('click', bulkDelete);
+  $('bulkAssign').addEventListener('change', e => { const v = e.target.value; if (!v) return; const ids = Array.from(state.selected).map(findTask).filter(Boolean); Promise.all(ids.map(tk => update(tk.id, { assignees: Array.from(new Set(tk.assignees.concat(v))) }, { silentRender: true }))).then(() => { e.target.value = ''; renderAll(); }); });
+  $('bulkProject').addEventListener('change', e => { const v = e.target.value; if (!v) return; bulkApply({ projectId: v === '__none' ? '' : v }); });
+  $('bulkPriority').addEventListener('change', e => { const v = e.target.value; if (!v) return; bulkApply({ priority: v }); });
 
   $('quickInput').addEventListener('input', renderParsed);
   $('quickInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); quickAdd(); } if (e.key === 'Escape') { e.target.value = ''; quickPreset = {}; renderParsed(); e.target.blur(); } });
