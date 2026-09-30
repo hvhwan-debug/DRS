@@ -453,6 +453,28 @@ function gtag_report_conversion(url) {
   return false;
 }
 </script>
+
+  <!-- Event snippet for Lượt xem trang (2) conversion page
+In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+  <!-- Trang wvn.vn/hocthem: chỉ tính LƯỢT XEM TRANG (không phải tối ưu hoá), nên tự động tính khi trang tải xong,
+       không gắn vào link/nút nào. Đổi tên hàm để không đè lên gtag_report_conversion ở trên (dùng cho form đăng ký). -->
+<script>
+function gtag_report_conversion_pageview(url) {
+  var callback = function () {
+    if (typeof(url) != 'undefined') {
+      window.location = url;
+    }
+  };
+  gtag('event', 'conversion', {
+      'send_to': 'AW-18460459117/2lFPCPjB9YsdEO2A0eJE',
+      'value': 1.0,
+      'currency': 'USD',
+      'event_callback': callback
+  });
+  return false;
+}
+window.addEventListener('load', function () { gtag_report_conversion_pageview(); });
+</script>
   <style id="brand-full-logo-style">
     .brand-wrap { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; }
     .brand-full-logo { display: block; height: 50px; width: auto; max-width: 100%; }
