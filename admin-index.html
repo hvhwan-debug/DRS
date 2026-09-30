@@ -206,6 +206,14 @@
     .mb-sub a { color: #0284c7; text-decoration: none; }
     .mb-sub a:hover { text-decoration: underline; }
     .mb-dot { color: #cbd5e1; margin: 0 0.15rem; }
+    .mb-tag-pending { background: #fef3c7 !important; color: #b45309 !important; margin-left: 0.35rem; }
+    .mb-tag-rejected { background: #f1f5f9 !important; color: #64748b !important; margin-left: 0.35rem; }
+    .mb-approve, .mb-reject { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: inherit; }
+    .mb-approve { background: #16a34a; color: #fff; border: 1px solid #16a34a; }
+    .mb-approve:hover { background: #15803d; }
+    .mb-reject { background: #fff; color: #b91c1c; border: 1px solid #fecaca; }
+    .mb-reject:hover { background: #fef2f2; }
+    .mb-pending-note { align-items: center; gap: 0.55rem; padding: 0.7rem 0.9rem; margin-bottom: 0.9rem; border-radius: 10px; background: #fffbeb; border: 1px solid #fde68a; color: #92400e; font-size: 0.86rem; }
     .mb-tag { font-size: 0.7rem; font-weight: 500; padding: 0.1rem 0.5rem; border-radius: 6px; background: #fee2e2; color: #b91c1c; }
     .mb-date { color: #64748b; font-size: 0.85rem; white-space: nowrap; }
     .mb-acts-cell { width: 1%; white-space: nowrap; }
@@ -884,6 +892,7 @@
           <input type="text" id="memberSearchInput" placeholder="Tìm theo tên, số điện thoại hoặc email..." style="flex:1; min-width:220px; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;" oninput="renderMembersList()">
           <button type="button" class="btn btn-outline" style="font-size:0.82rem; padding:0.45rem 0.8rem; white-space:nowrap;" title="Chốt lại điểm tích lũy cho TOÀN BỘ thành viên theo đúng lịch sử học phí — cần chạy 1 lần sau khi đổi cách tính điểm/hạng." onclick="recalcAllTiers()"><i class="fa-solid fa-arrows-rotate"></i> Chốt Lại Điểm Cho Tất Cả (1 lần)</button>
         </div>
+        <div class="mb-pending-note" id="memberPendingNote" style="display:none;"></div>
         <div class="loading-state" id="memberLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="memberTableWrap">
           <table>
@@ -3598,6 +3607,10 @@
       }
       document.getElementById('memberEmpty').style.display = 'none';
       document.getElementById('memberTableWrap').style.display = 'block';
+      const pendingCount = allMembers.filter(m => m.approvalStatus === 'pending').length;
+      const pn = document.getElementById('memberPendingNote');
+      pn.style.display = pendingCount ? 'flex' : 'none';
+      pn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Có <b>${pendingCount}</b> tài khoản mới đang chờ duyệt — họ chưa đăng nhập được cho tới khi bạn bấm <b>Duyệt</b>.`;
       const initials = n => { const p = String(n || '?').trim().split(/\s+/); return ((p.length > 1 ? p[p.length - 2][0] : '') + p[p.length - 1][0]).toUpperCase(); };
       const AV = [['#e0f2fe', '#0369a1'], ['#dcfce7', '#15803d'], ['#ede9fe', '#6d28d9'], ['#fef3c7', '#b45309'], ['#fce7f3', '#be185d'], ['#e2e8f0', '#334155']];
       const avStyle = e => { let h = 0; for (const c of String(e)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const t = AV[h % AV.length]; return `background:${t[0]};color:${t[1]}`; };
@@ -3610,7 +3623,7 @@
             <div class="mb-who">
               <span class="mb-av" style="${avStyle(m.email)}">${escapeHtml(initials(m.fullName || m.email))}</span>
               <div class="mb-txt">
-                <div class="mb-name">${escapeHtml(m.fullName || m.email.split('@')[0])}${m.isBlocked ? '<span class="mb-tag">Đã chặn</span>' : ''}</div>
+                <div class="mb-name">${escapeHtml(m.fullName || m.email.split('@')[0])}${m.isBlocked ? '<span class="mb-tag">Đã chặn</span>' : ''}${m.approvalStatus === 'pending' ? '<span class="mb-tag mb-tag-pending">Chờ duyệt</span>' : ''}${m.approvalStatus === 'rejected' ? '<span class="mb-tag mb-tag-rejected" title="' + escapeHtml(m.approvalReason || '') + '">Đã từ chối</span>' : ''}</div>
                 <div class="mb-sub">${escapeHtml(m.email)}${m.phone ? ` <span class="mb-dot">·</span> <a href="tel:${escapeHtml(tel)}">${escapeHtml(m.phone)}</a>` : ''}</div>
               </div>
             </div>
@@ -3618,10 +3631,14 @@
           <td class="mb-date">${formatDate(m.updatedAt)}</td>
           <td class="mb-acts-cell">
             <div class="mb-acts">
-              <button type="button" class="mb-view" onclick="openMemberOverview('${e}')"><i class="fa-regular fa-id-card"></i> Xem chi tiết</button>
+              ${m.approvalStatus === 'pending'
+                ? `<button type="button" class="mb-approve" onclick="reviewMember('${e}', 'approve')"><i class="fa-solid fa-check"></i> Duyệt</button><button type="button" class="mb-reject" onclick="reviewMember('${e}', 'reject')"><i class="fa-solid fa-xmark"></i> Từ chối</button>`
+                : `<button type="button" class="mb-view" onclick="openMemberOverview('${e}')"><i class="fa-regular fa-id-card"></i> Xem chi tiết</button>`}
               <div class="mb-more">
                 <button type="button" class="mb-more-btn" onclick="toggleMemberMenu(this, event)" aria-label="Thao tác khác" aria-haspopup="true"><i class="fa-solid fa-ellipsis"></i></button>
                 <div class="mb-menu" role="menu">
+                  ${m.approvalStatus !== 'approved' ? `<button type="button" role="menuitem" onclick="closeMemberMenus(); reviewMember('${e}', 'approve')"><i class="fa-solid fa-user-check"></i> Duyệt tài khoản</button>` : ''}
+                  ${m.approvalStatus === 'pending' ? `<button type="button" role="menuitem" onclick="closeMemberMenus(); openMemberOverview('${e}')"><i class="fa-regular fa-id-card"></i> Xem chi tiết</button>` : ''}
                   <button type="button" role="menuitem" onclick="closeMemberMenus(); resetMemberPassword('${e}')"><i class="fa-solid fa-key"></i> Đặt lại mật khẩu</button>
                   <button type="button" role="menuitem" onclick="closeMemberMenus(); unlockMemberAccount('${e}')" title="Dùng khi tài khoản bị khoá do đăng nhập sai nhiều lần"><i class="fa-solid fa-lock-open"></i> Mở khoá đăng nhập</button>
                   <button type="button" role="menuitem" onclick="closeMemberMenus(); toggleBlockMember('${e}', ${!m.isBlocked})"><i class="fa-solid ${m.isBlocked ? 'fa-user-check' : 'fa-ban'}"></i> ${m.isBlocked ? 'Bỏ chặn tài khoản' : 'Chặn tài khoản'}</button>
@@ -3728,6 +3745,28 @@
         showGlobalAlert(result.warning || (block ? 'Đã chặn tài khoản và gửi email báo.' : 'Đã bỏ chặn tài khoản và gửi email báo.'), !!result.warning);
         loadMembers();
         if (currentOverviewEmail === email) openMemberOverview(emailEnc);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function reviewMember(emailEnc, action) {
+      const email = decodeURIComponent(emailEnc);
+      let reason = '';
+      if (action === 'approve') {
+        if (!confirm(`Duyệt tài khoản ${email}? Họ sẽ đăng nhập được ngay và nhận email thông báo.`)) return;
+      } else {
+        reason = prompt(`Từ chối tài khoản ${email}?\n\nLý do (không bắt buộc, sẽ gửi kèm email cho họ):`, '');
+        if (reason === null) return;
+      }
+      try {
+        const result = await apiCall('/api/portal-review-member', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, action, reason })
+        });
+        showGlobalAlert(result.warning || (action === 'approve' ? 'Đã duyệt tài khoản và gửi email báo.' : 'Đã từ chối tài khoản và gửi email báo.'), !!result.warning);
+        loadMembers();
       } catch (err) {
         showGlobalAlert(err.message, true);
       }

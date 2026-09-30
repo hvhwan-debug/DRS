@@ -55,6 +55,7 @@ module.exports = async function (context, req) {
       passwordHash: hash,
       failedAttempts: 0,
       isBlocked: false,
+      approvalStatus: "approved", // tài khoản do đội ngũ tạo -> không cần duyệt
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     });

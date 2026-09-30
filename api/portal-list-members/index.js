@@ -1,6 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
 const { buildParentDirectory } = require("../_shared/parentDirectory");
+const { getApprovalStatus } = require("../_shared/memberApproval");
 
 const MEMBERS_TABLE = "Members";
 
@@ -19,11 +20,14 @@ module.exports = async function (context, req) {
         fullName: (parents[String(entity.rowKey).toLowerCase()] || {}).name || "",
         phone: (parents[String(entity.rowKey).toLowerCase()] || {}).phone || "",
         isBlocked: !!entity.isBlocked,
+        approvalStatus: getApprovalStatus(entity),
+        approvalReason: entity.approvalReason || "",
         createdAt: entity.createdAt || entity.updatedAt || null,
         updatedAt: entity.updatedAt || null
       });
     }
-    members.sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+    // Tài khoản chờ duyệt luôn đứng đầu danh sách
+    members.sort((a, b) => (a.approvalStatus === "pending" ? 0 : 1) - (b.approvalStatus === "pending" ? 0 : 1) || new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
 
     context.res.status = 200;
     context.res.body = { success: true, members };

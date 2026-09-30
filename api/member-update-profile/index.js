@@ -1,6 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { buildGreeting, normalizeGender, getMemberGender } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+const { getApprovalStatus } = require("../_shared/memberApproval");
 
 const SESSION_TABLE = "AuthSessions";
 const PROFILES_TABLE = "MemberProfiles";
@@ -23,15 +24,20 @@ module.exports = async function (context, req) {
   try {
     const sessionTable = await getTableClient(SESSION_TABLE);
     let session;
+    let isSetup = false;
     try {
       session = await sessionTable.getEntity("session", token);
     } catch (err) {
+      // Không phải phiên thường -> thử "vé hoàn tất hồ sơ" của tài khoản mới đăng ký, đang chờ duyệt
       if (err.statusCode === 404) {
+        try { session = await sessionTable.getEntity("setup", token); isSetup = true; } catch (e) { if (e.statusCode !== 404) throw e; }
+      }
+      if (!session) {
+        if (err.statusCode !== 404) throw err;
         context.res.status = 401;
         context.res.body = { success: false, message: "Phiên đăng nhập không hợp lệ." };
         return;
       }
-      throw err;
     }
     if (new Date(session.expiresAt).getTime() < Date.now()) {
       context.res.status = 401;
@@ -81,6 +87,45 @@ module.exports = async function (context, req) {
       ...(hasGender ? { gender } : {}),
       updatedAt: new Date().toISOString()
     }, "Merge");
+
+    // Bước cuối của đăng ký mới (tài khoản chờ duyệt): báo đội ngũ duyệt + báo thành viên đang chờ,
+    // huỷ vé hoàn tất hồ sơ. Không gửi email "thông tin tài khoản vừa thay đổi" trong trường hợp này.
+    if (isSetup) {
+      await sessionTable.deleteEntity("setup", token).catch(() => {});
+      const membersTable = await getTableClient("Members");
+      let member = null;
+      try { member = await membersTable.getEntity("member", email); } catch (e) { /* bỏ qua */ }
+      if (member && getApprovalStatus(member) === "pending" && !member.approvalNotifiedAt) {
+        await membersTable.updateEntity({ partitionKey: "member", rowKey: email, approvalNotifiedAt: new Date().toISOString() }, "Merge").catch(() => {});
+        const esc = v => String(v || "—").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+        await sendTrackedEmail(context, {
+          to: process.env.NOTIFY_TO_EMAIL || "hotro@wvn.vn",
+          subject: `Tài khoản mới chờ duyệt: ${fullName || email}`,
+          type: "other",
+          eyebrow: "Cần Phê Duyệt",
+          title: "Có tài khoản thành viên mới đăng ký",
+          bodyHtml: `
+            <p style="margin:0 0 12px;">Một tài khoản thành viên mới vừa đăng ký và đang chờ phê duyệt:</p>
+            <p style="margin:0 0 12px;"><strong>${esc(fullName)}</strong> — ${esc(email)} — ${esc(phone)}</p>
+            <p style="margin:0;">Vào trang quản trị, mục "Thành Viên" để duyệt hoặc từ chối.</p>`,
+          ctas: [{ label: "Mở Trang Quản Trị", href: "https://wvn.vn/admin#members", style: "primary" }]
+        });
+        await sendTrackedEmail(context, {
+          to: email,
+          subject: "Đã nhận đăng ký tài khoản của bạn",
+          type: "registration",
+          eyebrow: "Đăng Ký Thành Viên",
+          title: "Tài khoản đang chờ phê duyệt",
+          bodyHtml: `
+            <p style="margin:0 0 16px;">${buildGreeting(fullName || null, gender)}</p>
+            <p style="margin:0 0 12px;">Cảm ơn bạn đã đăng ký tài khoản tại Mạng Lưới Tri Thức Việt Nam. Đội ngũ sẽ xem xét và phê duyệt trong thời gian sớm nhất.</p>
+            <p style="margin:0;">Chúng tôi sẽ gửi email cho bạn ngay khi tài khoản được kích hoạt để bạn đăng nhập.</p>`
+        });
+      }
+      context.res.status = 200;
+      context.res.body = { success: true, pending: true };
+      return;
+    }
 
     // Gửi email báo mọi thay đổi thông tin tài khoản (best-effort — không chặn phản hồi thành công nếu gửi lỗi)
     const greeting = buildGreeting(fullName || null, gender);

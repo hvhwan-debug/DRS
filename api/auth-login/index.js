@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const { getTableClient } = require("../_shared/tableStorage");
 const { verifyPassword } = require("../_shared/password");
+const { getApprovalStatus, PENDING_MESSAGE, REJECTED_MESSAGE } = require("../_shared/memberApproval");
 
 const MEMBERS_TABLE = "Members";
 const SESSION_TABLE = "AuthSessions";
@@ -54,6 +55,15 @@ module.exports = async function (context, req) {
       }, "Merge");
       context.res.status = 401;
       context.res.body = { success: false, message: "Mật khẩu không đúng." };
+      return;
+    }
+
+    // Mật khẩu đúng nhưng tài khoản chưa được duyệt / bị từ chối -> không tạo phiên
+    const approvalStatus = getApprovalStatus(member);
+    if (approvalStatus !== "approved") {
+      await membersTable.updateEntity({ partitionKey: "member", rowKey: email, failedAttempts: 0 }, "Merge").catch(() => {});
+      context.res.status = 403;
+      context.res.body = { success: false, code: approvalStatus, message: approvalStatus === "pending" ? PENDING_MESSAGE : REJECTED_MESSAGE };
       return;
     }
 

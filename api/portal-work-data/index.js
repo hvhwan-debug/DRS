@@ -49,6 +49,10 @@ module.exports = async function (context, req) {
         const rows = (await listAll("Registrations")).filter(r => /Chờ/.test(r.status || "Chờ"));
         if (rows.length) inbox.push({ key: "registrations", count: rows.length, title: `${rows.length} đơn đăng ký chờ xử lý`, hint: "Duyệt hoặc từ chối đơn", href: "/admin#registrations", tone: "blue" });
       }),
+      can("members") && safe(async () => {
+        const rows = (await listAll("Members")).filter(r => r.approvalStatus === "pending");
+        if (rows.length) inbox.push({ key: "members", count: rows.length, title: `${rows.length} tài khoản thành viên chờ duyệt`, hint: "Duyệt để họ đăng nhập được", href: "/admin#members", tone: "blue" });
+      }),
       can("invoices") && safe(async () => {
         const rows = (await listAll("Invoices")).filter(r => r.status === "pending_review");
         if (rows.length) inbox.push({ key: "invoices", count: rows.length, title: `${rows.length} biên lai hoá đơn chờ xác nhận`, hint: "Duyệt để cộng tiền và điểm cho phụ huynh", href: "/admin#invoices", tone: "green" });

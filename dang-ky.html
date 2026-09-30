@@ -302,6 +302,11 @@
       .brand-panel-desc, .brand-perks { display: none; }
       .form-inner { border-radius: 20px; }
     }
+    .rg-pending { text-align: center; padding: 1.2rem 0 0.4rem; }
+    .rg-pending-ic { width: 64px; height: 64px; margin: 0 auto 1rem; border-radius: 50%; display: grid; place-items: center; background: #fef3c7; color: #b45309; font-size: 1.6rem; }
+    .rg-pending h3 { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
+    .rg-pending p { font-size: 0.93rem; color: #475569; line-height: 1.6; margin-bottom: 1.4rem; }
+    .rg-pending strong { color: #0f172a; word-break: break-all; }
   </style>
   <style id="brand-full-logo-style">
     .brand-wrap { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; }
@@ -426,6 +431,13 @@
           <button type="submit" class="btn-continue" id="loginSubmitBtn">Đăng Ký</button>
         </form>
 
+        <div class="rg-pending" id="pendingPanel" hidden>
+          <div class="rg-pending-ic"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></div>
+          <h3>Đăng ký thành công!</h3>
+          <p>Tài khoản <strong id="pendingEmail"></strong> đang chờ đội ngũ phê duyệt. Chúng tôi sẽ gửi email ngay khi tài khoản được kích hoạt để bạn đăng nhập.</p>
+          <a class="btn-continue" href="index.html" style="display:inline-flex; justify-content:center; text-decoration:none;">Về trang chủ</a>
+        </div>
+
         <div class="lg-divider">Đã có tài khoản?</div>
         <a class="lg-signup" href="dang-nhap.html"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Đăng nhập</a>
 
@@ -499,6 +511,15 @@
       document.getElementById('email').disabled = false;
       document.getElementById('loginSubmitBtn').textContent = 'Đăng Ký';
       clearAlert();
+    }
+
+    let pendingApproval = false;
+    function showPendingPanel(email) {
+      document.getElementById('loginForm').hidden = true;
+      document.querySelectorAll('.rg-steps, .form-sub, .rg-ref, .lg-divider, .lg-signup').forEach(el => { el.hidden = true; el.style.display = 'none'; });
+      document.querySelector('.form-title').textContent = 'Chờ phê duyệt';
+      document.getElementById('pendingEmail').textContent = email || '';
+      document.getElementById('pendingPanel').hidden = false;
     }
 
     async function checkAccountAndProceed() {
@@ -631,8 +652,10 @@
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Không thể đặt mật khẩu.');
 
-        pendingMemberToken = result.token;
+        // Tài khoản mới cần được duyệt -> server trả "vé hoàn tất hồ sơ" (setupToken) thay cho phiên đăng nhập
+        pendingMemberToken = result.pending ? result.setupToken : result.token;
         pendingMemberEmail = result.email;
+        pendingApproval = !!result.pending;
 
         currentStep = 'profile';
         hideAllSteps();
@@ -673,6 +696,11 @@
         });
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Không thể lưu hồ sơ.');
+
+        if (result.pending || pendingApproval) {
+          showPendingPanel(pendingMemberEmail);
+          return;
+        }
 
         showAlert('Đăng ký hoàn tất! Đang chuyển hướng...', false);
         localStorage.setItem('wvn_member_token', pendingMemberToken);

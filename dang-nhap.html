@@ -521,6 +521,8 @@
         if (!res.ok || !result.success) {
           if (res.status === 404) {
             showAlert('Email này chưa có tài khoản. <a href="dang-ky.html" style="color:#0284c7; font-weight:700;">Đăng ký ngay</a>?', true);
+          } else if (result.code === 'pending') {
+            showAlert('<b>Tài khoản đang chờ phê duyệt.</b> ' + (result.message || '').replace(/^Tài khoản của bạn đang chờ đội ngũ phê duyệt\.\s*/, ''), false);
           } else {
             showAlert(result.message || 'Đăng nhập thất bại.', true);
           }
@@ -636,6 +638,14 @@
         });
         const result = await res.json().catch(() => ({}));
         if (!res.ok || !result.success) throw new Error(result.message || 'Không thể đặt mật khẩu.');
+
+        // Tài khoản chưa được duyệt: đã lưu mật khẩu nhưng chưa cho vào khu vực thành viên
+        if (result.pending) {
+          showAlert(result.message || 'Tài khoản của bạn đang chờ đội ngũ phê duyệt.', false);
+          btn.disabled = true;
+          btn.innerHTML = 'Đang chờ phê duyệt';
+          return;
+        }
 
         localStorage.setItem('wvn_member_token', result.token);
         localStorage.setItem('wvn_member_email', result.email);
