@@ -114,6 +114,12 @@ module.exports = async function (context, req) {
           await sendTrackedEmail(context, { to, subject: `Bạn được giao việc: ${saved.title}`.slice(0, 150), type: "work", eyebrow: "Công Việc", title: "Bạn có việc mới", bodyHtml,
             ctas: [{ label: "Mở công việc", href: `https://admin.wvn.vn/admin/cong-viec#today&task=${id}`, style: "primary" }] });
         }
+        try {
+          const { sendPush } = require("../_shared/push");
+          for (const to of added.slice(0, 10)) {
+            await sendPush(context, to, { title: "Bạn có việc mới", body: saved.title, url: `/admin/cong-viec#today&task=${id}` });
+          }
+        } catch (e) { /* best-effort */ }
       }
     } catch (e) { context.log.warn("Không gửi được email giao việc:", e.message); }
     await logAdminActivity(req, "Công việc: lưu việc", summarizeBody(req.body));
