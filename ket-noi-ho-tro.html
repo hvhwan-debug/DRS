@@ -21,8 +21,8 @@
 </script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cần Được Giúp Đỡ | Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Kênh kết nối dành cho những gia đình, học sinh có hoàn cảnh khó khăn cần được hỗ trợ. Mạng Lưới Tri Thức Việt Nam sẽ liên hệ và đồng hành cùng bạn.">
+  <title>Cần Được Giúp Đỡ | Tri thức Việt</title>
+  <meta name="description" content="Kênh kết nối dành cho những gia đình, học sinh có hoàn cảnh khó khăn cần được hỗ trợ. Tri thức Việt sẽ liên hệ và đồng hành cùng bạn.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png?v=20260927b">
   <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png?v=20260927b">
@@ -447,6 +447,18 @@
   :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
   html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
 </style>
+<style id="nav-member-style">
+  .nav-member { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; color: #0f172a; text-decoration: none; padding: 0.45rem 0.75rem; border-radius: 10px; border: 1px solid #e2e8f0; background: #fff; white-space: nowrap; transition: all .15s; }
+  .nav-member:hover { border-color: #0284c7; color: #0284c7; }
+  .nav-member i { font-size: 0.95rem; color: #0284c7; }
+  @media (max-width: 480px) { .nav-member span { display: none; } .nav-member { padding: 0.42rem 0.55rem; } }
+</style>
+<script>
+  // Đã đăng nhập khu thành viên -> nút "Thành viên" dẫn thẳng vào trang của tôi
+  document.addEventListener('DOMContentLoaded', function () {
+    try { if (localStorage.getItem('wvn_member_token')) document.querySelectorAll('[data-member-link]').forEach(function (a) { a.href = 'thanh-vien'; var s = a.querySelector('span'); if (s) s.textContent = 'Trang của tôi'; else a.innerHTML = 'Vào trang thành viên <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>'; }); } catch (e) {}
+  });
+</script>
 </head>
 <body>
 
@@ -482,6 +494,7 @@
         <a href="tin-tuc.html">Tin Tức</a>
         <a href="lien-he.html">Liên Hệ</a>      </nav>
       <div style="display: flex; align-items: center; gap: 10px;">
+        <a class="nav-member" href="dang-nhap.html" data-member-link><i class="fa-regular fa-circle-user" aria-hidden="true"></i><span>Thành viên</span></a>
         <a class="btn btn-donate-glow" id="authBtn" href="ket-noi-ho-tro.html">Kết<span class="authbtn-line2"> Nối</span></a>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
@@ -739,7 +752,7 @@
     <img src="bo-cau-trang.png" alt="" class="hero-dove" aria-hidden="true" onerror="this.style.display='none'">
     <div class="hero-badge">KẾT NỐI HỖ TRỢ</div>
     <h1>Cần Được Giúp Đỡ?</h1>
-    <p>Nếu bạn hoặc gia đình đang gặp khó khăn về học tập, sinh hoạt hay các nhu cầu thiết yếu khác, hãy để lại thông tin. Đội ngũ Mạng Lưới Tri Thức Việt Nam sẽ liên hệ để tìm hiểu và đồng hành cùng bạn.</p>
+    <p>Nếu bạn hoặc gia đình đang gặp khó khăn về học tập, sinh hoạt hay các nhu cầu thiết yếu khác, hãy để lại thông tin. Đội ngũ Tri thức Việt sẽ liên hệ để tìm hiểu và đồng hành cùng bạn.</p>
   </section>
 
   <section class="support-photo-hero">
@@ -863,7 +876,7 @@
         <div class="support-success" id="supportSuccess">
           <i class="fa-solid fa-circle-check"></i>
           <h3>Đã gửi thành công!</h3>
-          <p>Cảm ơn bạn đã tin tưởng chia sẻ. Đội ngũ Mạng Lưới Tri Thức Việt Nam sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+          <p>Cảm ơn bạn đã tin tưởng chia sẻ. Đội ngũ Tri thức Việt sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
         </div>
       </div>
     </div>
@@ -1402,7 +1415,7 @@
     </div>
 
     <div class="footer-transparency-strip">
-      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+      <p>Tri thức Việt vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
         <span class="transparency-sep">•</span>
@@ -1415,7 +1428,7 @@
         <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
         <a class="social-link footer-bottom-social" href="https://www.linkedin.com/company/wvnvn/" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
       </div>
-      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
+      <span class="footer-bottom-text">&copy; 2026 Tri thức Việt. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
 

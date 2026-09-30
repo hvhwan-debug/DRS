@@ -21,8 +21,8 @@
 </script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quyên Góp - Mạng Lưới Tri Thức Việt Nam</title>
-  <meta name="description" content="Quyên góp cho Mạng Lưới Tri Thức Việt Nam qua chuyển khoản ngân hàng an toàn, minh bạch — chọn đúng dự án bạn muốn đồng hành: Áo Ấm Vùng Cao, Hội Thảo Học Tập Số, Luyện Chữ Đẹp.">
+  <title>Quyên Góp - Tri thức Việt</title>
+  <meta name="description" content="Quyên góp cho Tri thức Việt qua chuyển khoản ngân hàng an toàn, minh bạch — chọn đúng dự án bạn muốn đồng hành: Áo Ấm Vùng Cao, Hội Thảo Học Tập Số, Luyện Chữ Đẹp.">
   <!-- Favicon chuẩn trực tuyến -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png?v=20260927b">
   <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png?v=20260927b">
@@ -499,6 +499,18 @@
   :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
   html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
 </style>
+<style id="nav-member-style">
+  .nav-member { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; color: #0f172a; text-decoration: none; padding: 0.45rem 0.75rem; border-radius: 10px; border: 1px solid #e2e8f0; background: #fff; white-space: nowrap; transition: all .15s; }
+  .nav-member:hover { border-color: #0284c7; color: #0284c7; }
+  .nav-member i { font-size: 0.95rem; color: #0284c7; }
+  @media (max-width: 480px) { .nav-member span { display: none; } .nav-member { padding: 0.42rem 0.55rem; } }
+</style>
+<script>
+  // Đã đăng nhập khu thành viên -> nút "Thành viên" dẫn thẳng vào trang của tôi
+  document.addEventListener('DOMContentLoaded', function () {
+    try { if (localStorage.getItem('wvn_member_token')) document.querySelectorAll('[data-member-link]').forEach(function (a) { a.href = 'thanh-vien'; var s = a.querySelector('span'); if (s) s.textContent = 'Trang của tôi'; else a.innerHTML = 'Vào trang thành viên <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>'; }); } catch (e) {}
+  });
+</script>
 </head>
 <body>
 
@@ -536,6 +548,7 @@
       </nav>
 
       <div style="display: flex; align-items: center; gap: 10px;">
+        <a class="nav-member" href="dang-nhap.html" data-member-link><i class="fa-regular fa-circle-user" aria-hidden="true"></i><span>Thành viên</span></a>
         <a class="btn btn-donate-glow" id="authBtn" href="ket-noi-ho-tro.html">Kết<span class="authbtn-line2"> Nối</span></a>
         <button class="mobile-menu-btn" id="menuBtn" onclick="toggleMobileMenu()" aria-label="Mở menu điều hướng">
           <i class="fa-solid fa-bars"></i>
@@ -647,7 +660,7 @@
       <div class="donate-card">
         <h2><i class="fa-solid fa-qrcode"></i> Chuyển Khoản Qua VietQR</h2>
         <div class="qr-box">
-          <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20Chung%20DRSV&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Quyên góp Mạng Lưới Tri Thức Việt Nam">
+          <img src="https://img.vietqr.io/image/TCB-30000-compact2.png?addInfo=Ung%20ho%20Quy%20Chung%20DRSV&accountName=CONG%20TY%20TNHH%20DR%20SOLUTIONS" alt="Mã VietQR Quyên góp Tri thức Việt">
         </div>
         <div class="bank-info-row">
           <span>Ngân hàng</span>
@@ -723,7 +736,7 @@
 
     <!-- Ghi chú pháp lý -->
     <div class="legal-note">
-      <p><strong>Cam kết pháp lý:</strong> Mạng Lưới Tri Thức Việt Nam sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; tuyệt đối không phân chia lợi tức hoặc cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mã số doanh nghiệp (MST): <strong>0111291749</strong>.</p>
+      <p><strong>Cam kết pháp lý:</strong> Tri thức Việt sử dụng 100% tổng lợi nhuận sau thuế hằng năm để tái đầu tư cho các mục tiêu xã hội, giáo dục đã đăng ký; tuyệt đối không phân chia lợi tức hoặc cổ tức cho bất kỳ cá nhân hay tổ chức nào. Mã số doanh nghiệp (MST): <strong>0111291749</strong>.</p>
     </div>
 
   </main>
@@ -750,7 +763,7 @@
     </div>
 
     <div class="footer-transparency-strip">
-      <p>Mạng Lưới Tri Thức Việt Nam vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
+      <p>Tri thức Việt vận hành bởi DR Solutions theo mô hình doanh nghiệp xã hội phi lợi nhuận, mã số doanh nghiệp 0111291749.</p>
       <p>
         <a href="mo-hinh-100.html" class="transparency-claim">100% lợi nhuận sau thuế được tái đầu tư trực tiếp cho các chương trình giáo dục</a>
         <span class="transparency-sep">•</span>
@@ -764,7 +777,7 @@
         <a class="social-link footer-bottom-social" href="https://www.youtube.com/channel/UC-SWv19AaomgvbEoaEQdn8w" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
         <a class="social-link footer-bottom-social" href="https://www.linkedin.com/company/wvnvn/" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
       </div>
-      <span class="footer-bottom-text">&copy; 2026 Mạng Lưới Tri Thức Việt Nam. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
+      <span class="footer-bottom-text">&copy; 2026 Tri thức Việt. Mọi quyền được bảo lưu. &nbsp;|&nbsp; <a href="chinh-sach-bao-mat.html" style="color:#94a3b8; text-decoration:none;">Chính Sách Bảo Mật &amp; Điều Khoản Sử Dụng</a></span>
     </div>
   </footer>
 
