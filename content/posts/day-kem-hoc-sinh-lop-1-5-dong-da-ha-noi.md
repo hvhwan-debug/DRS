@@ -34,4 +34,4 @@ Thời gian: Buổi tối, linh hoạt theo nhu cầu
 
 ---
 
-**Phụ huynh quan tâm** có thể [đăng ký cho con tham gia chương trình tại đây](dang-ky-day-kem-lop-1-5.html).
+**Phụ huynh quan tâm** có thể [đăng ký cho con tham gia chương trình tại đây](daythem).

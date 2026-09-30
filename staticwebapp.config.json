@@ -1,6 +1,15 @@
 {
   "routes": [
     {
+      "route": "/dang-ky-day-kem-lop-1-5.html",
+      "redirect": "/daythem",
+      "statusCode": 301
+    },
+    {
+      "route": "/daythem",
+      "rewrite": "/daythem.html"
+    },
+    {
       "route": "/admin",
       "rewrite": "/admin-index.html",
       "headers": {
