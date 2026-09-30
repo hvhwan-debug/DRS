@@ -95,6 +95,12 @@ const LOCATION_FIELDS = new Set(["location", "beneficiaryLocation", "vi_tri_gps_
 // Các trường ẩn / kỹ thuật không hiển thị trong email
 const SKIP_FIELDS = new Set(["_subject", "_captcha", "_honey", "_template", "formType"]);
 
+// Liên hệ và Bản tin KHÔNG phải là "đơn đăng ký chương trình" cần xét duyệt — chúng có luồng và
+// nơi lưu trữ riêng (ContactMessages / NewsletterSubscribers), không đổ chung vào Registrations
+// (bảng đó chỉ dành cho các đơn thực sự cần đội ngũ duyệt/từ chối: chương trình học, TNV, tài trợ...).
+const NEWSLETTER_TYPE = "newsletter";
+const CONTACT_TYPE = "contact";
+
 // ===== Tích hợp Monday.com CRM (board "Marketing Contacts") =====
 const MONDAY_BOARD_ID = 5031435768;
 
@@ -359,9 +365,47 @@ module.exports = async function (context, req) {
     context.log.error("Tạo item Monday.com thất bại:", err.message);
   }
 
-  // Lưu vào Azure Table Storage để chủ tài khoản có thể tra cứu lại trong khu vực thành viên
-  // (best-effort — không chặn phản hồi thành công nếu lỗi; chỉ lưu khi có email)
-  if (senderEmail) {
+  // ===== Bản tin (khuyến mãi): đăng ký nhận tin — KHÔNG phải đơn cần duyệt, tự bật ngay =====
+  // Lưu vào bảng NewsletterSubscribers riêng (không phải Registrations). Đăng ký lại sau khi đã
+  // huỷ thì tự bật lại (upsert). Email cảm ơn có kèm link huỷ đăng ký thật, dùng token 1 lần.
+  let unsubscribeUrl = "";
+  if (formType === NEWSLETTER_TYPE && senderEmail) {
+    try {
+      const { getTableClient } = require("../_shared/tableStorage");
+      const { createConfirmToken } = require("../_shared/confirmToken");
+      const table = await getTableClient("NewsletterSubscribers");
+      const emailLc = senderEmail.toLowerCase();
+      await table.upsertEntity({
+        partitionKey: "sub", rowKey: emailLc, name: senderName || "", status: "subscribed",
+        subscribedAt: new Date().toISOString(), unsubscribedAt: ""
+      }, "Merge");
+      const token = await createConfirmToken("newsletter-unsub", "sub", emailLc);
+      unsubscribeUrl = `https://wvn.vn/api/public-newsletter-unsubscribe?token=${token}`;
+    } catch (err) {
+      context.log.error("Lưu đăng ký bản tin thất bại:", err.message);
+    }
+  }
+
+  // ===== Liên hệ: chỉ là tin nhắn cần phản hồi — KHÔNG phải đơn cần duyệt/từ chối =====
+  // Lưu vào bảng ContactMessages riêng, trạng thái đơn giản "Mới" / "Đã trả lời".
+  else if (formType === CONTACT_TYPE) {
+    try {
+      const { getTableClient } = require("../_shared/tableStorage");
+      const table = await getTableClient("ContactMessages");
+      await table.createEntity({
+        partitionKey: "message", rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        name: senderName || "", email: senderEmail || "", phone: pickField(data, ["phone"]),
+        subject: pickField(data, ["subject"]), message: pickField(data, ["message"]),
+        status: "Mới", submittedAt: new Date().toISOString()
+      });
+    } catch (err) {
+      context.log.error("Lưu tin nhắn liên hệ thất bại:", err.message);
+    }
+  }
+
+  // ===== Còn lại: đăng ký chương trình thực sự (chương trình học, TNV, tài trợ, hỗ trợ...) =====
+  // Giữ nguyên luồng cũ — lưu Registrations để đội ngũ xét duyệt/từ chối.
+  else if (senderEmail) {
     try {
       const { getTableClient } = require("../_shared/tableStorage");
       const { uploadAttachments } = require("../_shared/blobStorage");
@@ -394,21 +438,34 @@ module.exports = async function (context, req) {
     }
   }
 
-  // Email cảm ơn/xác nhận gửi lại cho chính người gửi (best-effort — không chặn phản hồi thành công nếu lỗi)
-  // Dùng khung giao diện thống nhất toàn hệ thống — tự chuyển bản premium nếu người gửi là thành viên VIP.
+  // Email cảm ơn gửi lại cho chính người gửi (best-effort — không chặn phản hồi thành công nếu lỗi).
+  // Bản tin: đổi hẳn nội dung + kèm link huỷ đăng ký thật. Các loại khác: giữ nguyên như cũ.
   if (senderEmail) {
     const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
-    const introMessage = AUTOREPLY_INTRO[formType] || "Chúng tôi đã nhận được thông tin bạn gửi và đang xử lý. Đội ngũ sẽ phản hồi sớm nhất có thể.";
     const greeting = senderName ? `Xin chào <strong>${escapeHtml(senderName)}</strong>,` : "Xin chào,";
-    await sendTrackedEmail(context, {
-      to: senderEmail,
-      subject: "Đã nhận được thông tin của bạn - Mạng Lưới Tri Thức Việt Nam",
-      type: "other",
-      eyebrow: "Đã Nhận Được Thông Tin",
-      title: "Cảm ơn bạn đã liên hệ",
-      bodyHtml: `<p style="margin:0 0 12px;">${greeting}</p><p style="margin:0;">${escapeHtml(introMessage)}</p>`,
-      ctas: [{ label: "Xem thêm về WVN →", href: "https://wvn.vn", style: "primary" }]
-    });
+    if (formType === NEWSLETTER_TYPE) {
+      await sendTrackedEmail(context, {
+        to: senderEmail,
+        subject: "Đã đăng ký nhận bản tin - Mạng Lưới Tri Thức Việt Nam",
+        type: "other",
+        eyebrow: "Đăng Ký Bản Tin",
+        title: "Bạn đã đăng ký thành công",
+        bodyHtml: `<p style="margin:0 0 12px;">${greeting}</p><p style="margin:0;">${escapeHtml(AUTOREPLY_INTRO[NEWSLETTER_TYPE])}</p>`,
+        ctas: [{ label: "Xem thêm về WVN →", href: "https://wvn.vn", style: "primary" }],
+        footerNote: unsubscribeUrl ? `Không muốn nhận bản tin nữa? <a href="${unsubscribeUrl}" style="color:#64748b;text-decoration:underline;">Huỷ đăng ký tại đây</a>.` : undefined
+      });
+    } else {
+      const introMessage = AUTOREPLY_INTRO[formType] || "Chúng tôi đã nhận được thông tin bạn gửi và đang xử lý. Đội ngũ sẽ phản hồi sớm nhất có thể.";
+      await sendTrackedEmail(context, {
+        to: senderEmail,
+        subject: "Đã nhận được thông tin của bạn - Mạng Lưới Tri Thức Việt Nam",
+        type: "other",
+        eyebrow: "Đã Nhận Được Thông Tin",
+        title: "Cảm ơn bạn đã liên hệ",
+        bodyHtml: `<p style="margin:0 0 12px;">${greeting}</p><p style="margin:0;">${escapeHtml(introMessage)}</p>`,
+        ctas: [{ label: "Xem thêm về WVN →", href: "https://wvn.vn", style: "primary" }]
+      });
+    }
     // Không throw nếu lỗi — người dùng vẫn nên thấy "gửi thành công" vì admin đã nhận được.
   }
 
