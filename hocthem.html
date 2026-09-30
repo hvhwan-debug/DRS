@@ -433,16 +433,25 @@
     gtag('config', 'AW-18460459117');
   </script>
 
-  <!-- Event snippet for Lượt gửi biểu mẫu khách hàng tiềm năng (2) conversion page -->
-  <script>
-    function fireTienTieuHocConversion() {
-      gtag('event', 'conversion', {
-          'send_to': 'AW-18460459117/y9iqCLfv_f8cEO2A0eJE',
-          'value': 1.0,
-          'currency': 'USD'
-      });
+  <!-- Event snippet for Lượt gửi biểu mẫu khách hàng tiềm năng (3) conversion page
+In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+  <!-- Trang wvn.vn/hocthem: gọi gtag_report_conversion() khi form đăng ký dạy kèm GỬI THÀNH CÔNG (không tính lần bấm lỗi). -->
+<script>
+function gtag_report_conversion(url) {
+  var callback = function () {
+    if (typeof(url) != 'undefined') {
+      window.location = url;
     }
-  </script>
+  };
+  gtag('event', 'conversion', {
+      'send_to': 'AW-18460459117/-_M6CM203IsdEO2A0eJE',
+      'value': 1.0,
+      'currency': 'USD',
+      'event_callback': callback
+  });
+  return false;
+}
+</script>
   <style id="brand-full-logo-style">
     .brand-wrap { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; }
     .brand-full-logo { display: block; height: 50px; width: auto; max-width: 100%; }
@@ -1476,7 +1485,7 @@
         .then(() => {
           parentForm.style.display = 'none';
           document.getElementById('parentSuccess').style.display = 'block';
-          fireTienTieuHocConversion();
+          gtag_report_conversion();
         })
         .catch(() => {
           parentFormAlert.style.display = 'block';
