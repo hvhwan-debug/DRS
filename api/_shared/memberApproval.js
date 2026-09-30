@@ -141,10 +141,10 @@ async function reviewMemberAccount(context, { email, approve, reason, by }) {
     title: approve ? "Tài khoản đã được phê duyệt" : "Tài khoản chưa được phê duyệt",
     bodyHtml: approve
       ? `<p style="margin:0 0 16px;">${greeting}</p>
-         <p style="margin:0 0 12px;">Tài khoản thành viên của bạn tại Mạng Lưới Tri Thức Việt Nam đã được phê duyệt.</p>
+         <p style="margin:0 0 12px;">Tài khoản thành viên của bạn tại Tri thức Việt đã được phê duyệt.</p>
          <p style="margin:0;">Bạn có thể đăng nhập ngay bằng email và mật khẩu đã đặt khi đăng ký.</p>`
       : `<p style="margin:0 0 16px;">${greeting}</p>
-         <p style="margin:0 0 12px;">Cảm ơn bạn đã quan tâm tới Mạng Lưới Tri Thức Việt Nam. Rất tiếc, đăng ký tài khoản của bạn hiện chưa được phê duyệt.</p>
+         <p style="margin:0 0 12px;">Cảm ơn bạn đã quan tâm tới Tri thức Việt. Rất tiếc, đăng ký tài khoản của bạn hiện chưa được phê duyệt.</p>
          ${reason ? `<p style="margin:0 0 12px;"><strong>Lý do:</strong> ${esc(reason)}</p>` : ""}
          <p style="margin:0;">Nếu cần hỗ trợ, vui lòng trả lời email này hoặc liên hệ hotro@wvn.vn.</p>`,
     ctas: approve ? [{ label: "Đăng Nhập Ngay", href: `${SITE}/dang-nhap.html`, style: "primary" }] : []

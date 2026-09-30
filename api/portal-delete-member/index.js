@@ -49,7 +49,7 @@ module.exports = async function (context, req) {
       title: "Tài khoản đã bị xoá",
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
-        <p style="margin:0;">Tài khoản đăng nhập khu vực thành viên của bạn tại Mạng Lưới Tri Thức Việt Nam đã bị xoá khỏi hệ thống. Bạn sẽ không thể đăng nhập bằng tài khoản này nữa.</p>
+        <p style="margin:0;">Tài khoản đăng nhập khu vực thành viên của bạn tại Tri thức Việt đã bị xoá khỏi hệ thống. Bạn sẽ không thể đăng nhập bằng tài khoản này nữa.</p>
         <p style="font-size:13px; color:#64748b; margin-top:14px;">Nếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ với chúng tôi ngay.</p>`
     });
 

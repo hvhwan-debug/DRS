@@ -30,7 +30,7 @@ function buildStatusBodyHtml(status, giftName, greeting, reason, deliveryMethod)
     shipping: deliveryMethod === "pickup"
       ? `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đã được <strong>duyệt và đang chuẩn bị</strong>. Chúng tôi sẽ liên hệ khi quà sẵn sàng để bạn nhận tại trung tâm.</p>`
       : `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đang được <strong>chuẩn bị và vận chuyển</strong>. Chúng tôi sẽ liên hệ khi quà sẵn sàng trao tận nơi.</p>`,
-    fulfilled: `<p style="margin:0;">Quà tặng <strong>${giftName}</strong> của bạn đã được <strong>trao thành công</strong>. Cảm ơn sự đồng hành của bạn cùng Mạng Lưới Tri Thức Việt Nam!</p>`,
+    fulfilled: `<p style="margin:0;">Quà tặng <strong>${giftName}</strong> của bạn đã được <strong>trao thành công</strong>. Cảm ơn sự đồng hành của bạn cùng Tri thức Việt!</p>`,
     cancelled: `<p style="margin:0;">Yêu cầu đổi quà <strong>${giftName}</strong> của bạn đã bị <strong>huỷ</strong>.${reason ? ` Lý do: ${reason}` : ""}</p><p style="margin:10px 0 0;">Số điểm đã dùng cho yêu cầu này đã được hoàn lại vào tài khoản của bạn. Nếu có thắc mắc, vui lòng liên hệ đội ngũ hỗ trợ.</p>`
   };
   return `<p style="margin:0 0 16px;">${greeting}</p>

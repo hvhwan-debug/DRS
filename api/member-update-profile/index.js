@@ -108,7 +108,7 @@ module.exports = async function (context, req) {
           title: "Tài khoản đang chờ phê duyệt",
           bodyHtml: `
             <p style="margin:0 0 16px;">${buildGreeting(fullName || null, gender)}</p>
-            <p style="margin:0 0 12px;">Cảm ơn bạn đã đăng ký tài khoản tại Mạng Lưới Tri Thức Việt Nam. Đội ngũ sẽ xem xét và phê duyệt trong thời gian sớm nhất.</p>
+            <p style="margin:0 0 12px;">Cảm ơn bạn đã đăng ký tài khoản tại Tri thức Việt. Đội ngũ sẽ xem xét và phê duyệt trong thời gian sớm nhất.</p>
             <p style="margin:0;">Chúng tôi sẽ gửi email cho bạn ngay khi tài khoản được kích hoạt để bạn đăng nhập.</p>`
         });
       }
@@ -127,7 +127,7 @@ module.exports = async function (context, req) {
       title: "Thông tin tài khoản đã thay đổi",
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
-        <p style="margin:0 0 14px;">Thông tin tài khoản của bạn tại Mạng Lưới Tri Thức Việt Nam vừa được cập nhật:</p>
+        <p style="margin:0 0 14px;">Thông tin tài khoản của bạn tại Tri thức Việt vừa được cập nhật:</p>
         <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:14px; font-family:Arial,Helvetica,sans-serif;">
           <tr><td style="padding:6px 0; color:#64748b; width:120px; font-family:Arial,Helvetica,sans-serif;">Họ và tên</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${fullName || "—"}</td></tr>
           <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Số điện thoại</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${phone || "—"}</td></tr>

@@ -77,13 +77,13 @@ module.exports = async function (context, req) {
     const greeting = buildGreeting(fullName || null, gender);
     const emailResult = await sendTrackedEmail(context, {
       to: email,
-      subject: "Tài khoản của bạn tại Mạng Lưới Tri Thức Việt Nam đã được tạo",
+      subject: "Tài khoản của bạn tại Tri thức Việt đã được tạo",
       type: "create_account",
       eyebrow: "Chào Mừng Thành Viên Mới",
       title: "Tài khoản đã được tạo",
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
-        <p style="margin:0 0 18px;">Đội ngũ đã tạo cho bạn 1 tài khoản trong khu vực thành viên của Mạng Lưới Tri Thức Việt Nam. Mật khẩu tạm thời của bạn là:</p>
+        <p style="margin:0 0 18px;">Đội ngũ đã tạo cho bạn 1 tài khoản trong khu vực thành viên của Tri thức Việt. Mật khẩu tạm thời của bạn là:</p>
         <div style="text-align:center;margin:20px 0;">
           <span style="display:inline-block;font-size:22px;font-weight:800;letter-spacing:2px;color:#0369a1;background:#f0f9ff;border:1px dashed #7dd3fc;border-radius:10px;padding:12px 26px;">${tempPassword}</span>
         </div>

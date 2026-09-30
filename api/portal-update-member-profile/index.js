@@ -58,7 +58,7 @@ module.exports = async function (context, req) {
       title: "Thông tin tài khoản đã thay đổi",
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
-        <p style="margin:0 0 14px;">Đội ngũ Mạng Lưới Tri Thức Việt Nam vừa cập nhật thông tin tài khoản của bạn:</p>
+        <p style="margin:0 0 14px;">Đội ngũ Tri thức Việt vừa cập nhật thông tin tài khoản của bạn:</p>
         <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:14px; font-family:Arial,Helvetica,sans-serif;">
           <tr><td style="padding:6px 0; color:#64748b; width:120px; font-family:Arial,Helvetica,sans-serif;">Họ và tên</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${fullName || "—"}</td></tr>
           <tr><td style="padding:6px 0; color:#64748b; font-family:Arial,Helvetica,sans-serif;">Số điện thoại</td><td style="padding:6px 0; font-weight:700; font-family:Arial,Helvetica,sans-serif;">${phone || "—"}</td></tr>

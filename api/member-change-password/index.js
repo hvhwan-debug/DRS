@@ -95,7 +95,7 @@ module.exports = async function (context, req) {
       title: "Mật khẩu đã được thay đổi",
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
-        <p style="margin:0;">Mật khẩu tài khoản của bạn tại Mạng Lưới Tri Thức Việt Nam vừa được thay đổi thành công vào lúc ${new Date().toLocaleString("vi-VN")}.</p>
+        <p style="margin:0;">Mật khẩu tài khoản của bạn tại Tri thức Việt vừa được thay đổi thành công vào lúc ${new Date().toLocaleString("vi-VN")}.</p>
         <p style="font-size:13px; color:#64748b; margin:14px 0 0;">Nếu bạn không thực hiện thay đổi này, vui lòng liên hệ với chúng tôi ngay để được hỗ trợ bảo vệ tài khoản.</p>`
     });
 

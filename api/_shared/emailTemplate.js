@@ -15,7 +15,7 @@
 // Ngoài ra Outlook không đáng tin cậy khi kế thừa font-family vào <table>/<td> — nên MỌI thẻ
 // (kể cả lồng trong bảng) đều tự khai lại font-family, không dựa vào kế thừa từ thẻ cha.
 
-const BRAND_NAME = "Mạng Lưới Tri Thức Việt Nam";
+const BRAND_NAME = "Tri thức Việt";
 const LOGO_URL = "https://wvn.vn/images/logo-wvn.png?v=20260927b";
 // Logo đầy đủ bản CHỮ TRẮNG, nền trong suốt (chữ W + Tri Thức Việt Nam + khẩu hiệu) cho phần đầu email nền tối; ảnh 900px hiển thị 250px để nét trên màn hình retina
 const HEADER_LOGO_URL = "https://wvn.vn/images/email-logo-wvn-dark.png?v=20260928d";

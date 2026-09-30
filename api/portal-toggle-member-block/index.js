@@ -11,8 +11,8 @@ function blockStatusBodyHtml(blocked, greeting) {
   const title = blocked ? "Tài khoản của bạn đã tạm bị khoá" : "Tài khoản của bạn đã được mở lại";
   const color = blocked ? "#b91c1c" : "#15803d";
   const bodyText = blocked
-    ? "Chúng tôi xin thông báo tài khoản của bạn tại Mạng Lưới Tri Thức Việt Nam hiện đang tạm khoá nên chưa thể đăng nhập được. Nếu bạn cho rằng đây là một sự nhầm lẫn, xin vui lòng liên hệ với chúng tôi để được hỗ trợ kiểm tra lại sớm nhất."
-    : "Chúng tôi xin thông báo tài khoản của bạn tại Mạng Lưới Tri Thức Việt Nam đã được mở lại. Bạn có thể đăng nhập và sử dụng bình thường trở lại. Cảm ơn bạn đã kiên nhẫn chờ đợi.";
+    ? "Chúng tôi xin thông báo tài khoản của bạn tại Tri thức Việt hiện đang tạm khoá nên chưa thể đăng nhập được. Nếu bạn cho rằng đây là một sự nhầm lẫn, xin vui lòng liên hệ với chúng tôi để được hỗ trợ kiểm tra lại sớm nhất."
+    : "Chúng tôi xin thông báo tài khoản của bạn tại Tri thức Việt đã được mở lại. Bạn có thể đăng nhập và sử dụng bình thường trở lại. Cảm ơn bạn đã kiên nhẫn chờ đợi.";
 
   return `
     <p style="margin:0 0 16px;">${greeting}</p>

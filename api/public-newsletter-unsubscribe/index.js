@@ -5,7 +5,7 @@ const SUBS_TABLE = "NewsletterSubscribers";
 
 function page(title, message, ok) {
   return `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} · Mạng Lưới Tri Thức Việt Nam</title>
+  <title>${title} · Tri thức Việt</title>
   <style>body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
   .card{max-width:440px;background:#fff;border-radius:16px;box-shadow:0 8px 28px rgba(15,23,42,0.1);padding:36px 32px;text-align:center}
   .icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px;color:#fff;background:${ok ? "#16a34a" : "#b91c1c"}}
@@ -36,7 +36,7 @@ module.exports = async function (context, req) {
     await tokensTable.deleteEntity("token", token).catch(() => {});
 
     context.res.status = 200;
-    context.res.body = page("Đã huỷ đăng ký", `Email <strong>${email}</strong> sẽ không nhận bản tin từ Mạng Lưới Tri Thức Việt Nam nữa. Bạn có thể đăng ký lại bất cứ lúc nào trên website.`, true);
+    context.res.body = page("Đã huỷ đăng ký", `Email <strong>${email}</strong> sẽ không nhận bản tin từ Tri thức Việt nữa. Bạn có thể đăng ký lại bất cứ lúc nào trên website.`, true);
   } catch (err) {
     context.log.error("Lỗi huỷ đăng ký bản tin:", err.message);
     context.res.status = 500;

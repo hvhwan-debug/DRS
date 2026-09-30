@@ -17,12 +17,12 @@ const FORM_TITLES = {
 
 // ===== Nội dung email cảm ơn/xác nhận gửi lại cho chính người gửi form =====
 const AUTOREPLY_INTRO = {
-  contact: "Cảm ơn bạn đã liên hệ với Mạng Lưới Tri Thức Việt Nam. Chúng tôi đã nhận được tin nhắn của bạn và đội ngũ sẽ phản hồi trong vòng 1-2 ngày làm việc.",
+  contact: "Cảm ơn bạn đã liên hệ với Tri thức Việt. Chúng tôi đã nhận được tin nhắn của bạn và đội ngũ sẽ phản hồi trong vòng 1-2 ngày làm việc.",
   volunteer: "Cảm ơn bạn đã đăng ký trở thành tình nguyện viên. Chúng tôi đã nhận được thông tin đăng ký và đội ngũ điều phối sẽ liên hệ với bạn trong 3-5 ngày tới.",
   item: "Cảm ơn bạn đã đăng ký gây quỹ bằng hiện vật. Chúng tôi đã nhận được thông tin và sẽ liên hệ để xác nhận, hướng dẫn cách gửi hiện vật sớm nhất.",
   donor: "Cảm ơn bạn đã quan tâm trở thành nhà tài trợ. Chúng tôi đã nhận được thông tin đăng ký và đội ngũ sẽ liên hệ trong vòng 48 giờ để hướng dẫn hoàn tất tài trợ.",
   support: "Cảm ơn bạn đã tin tưởng chia sẻ. Chúng tôi đã nhận được thông tin và đội ngũ chương trình sẽ liên hệ để tìm hiểu, hỗ trợ trong thời gian sớm nhất.",
-  newsletter: "Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi đã ghi nhận email của bạn và sẽ gửi những tin tức, hoạt động mới nhất từ Mạng Lưới Tri Thức Việt Nam.",
+  newsletter: "Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi đã ghi nhận email của bạn và sẽ gửi những tin tức, hoạt động mới nhất từ Tri thức Việt.",
   luyen_chu_phu_huynh: "Cảm ơn bạn đã đăng ký Chương trình Luyện chữ đẹp cho con em. Ban phụ trách sẽ xem xét hồ sơ và thông báo kết quả xét duyệt trong thời gian sớm nhất.",
   luyen_chu_tinh_nguyen: "Cảm ơn bạn đã đăng ký làm tình nguyện viên cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ với bạn trong thời gian sớm nhất.",
   luyen_chu_tai_tro: "Cảm ơn bạn đã quan tâm tài trợ cho Chương trình Luyện chữ đẹp. Đội ngũ điều phối sẽ liên hệ để trao đổi cụ thể trong thời gian sớm nhất.",
@@ -241,7 +241,7 @@ function buildEmailHtml(title, rowsHtml) {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td align="center" style="text-align:center;">
                   <img src="https://wvn.vn/images/logo-wvn.png?v=20260927b" alt="WVN" width="56" style="display:block;height:auto;margin:0 auto 10px;">
-                  <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;font-family:Arial,Helvetica,sans-serif;">Mạng Lưới Tri Thức Việt Nam</div>
+                  <div style="color:#ffffff;font-size:17px;font-weight:800;line-height:1.3;font-family:Arial,Helvetica,sans-serif;">Tri thức Việt</div>
                 </td>
               </tr></table>
             </td>
@@ -272,7 +272,7 @@ function buildEmailHtml(title, rowsHtml) {
           <tr>
             <td style="background:#f8fafc;padding:18px 32px;border-top:1px solid #e2e8f0;">
               <div style="font-size:11px;color:#94a3b8;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
-                Đây là email tự động từ hệ thống website Mạng Lưới Tri Thức Việt Nam — vui lòng không trả lời trực tiếp email này.<br>
+                Đây là email tự động từ hệ thống website Tri thức Việt — vui lòng không trả lời trực tiếp email này.<br>
                 Doanh nghiệp xã hội phi lợi nhuận đồng hành vì cơ hội học tập công bằng cho trẻ em vùng cao.
               </div>
             </td>
@@ -345,7 +345,7 @@ module.exports = async function (context, req) {
     // Email báo cho admin — bắt buộc phải thành công, nếu lỗi thì báo lỗi cho người dùng
     await sendEmail({
       to: toEmail,
-      fromName: "Website Mạng Lưới Tri Thức Việt Nam",
+      fromName: "Website Tri thức Việt",
       replyTo: senderEmail || undefined,
       subject: `[WVN Website] ${title}`,
       html: adminHtml,
@@ -446,7 +446,7 @@ module.exports = async function (context, req) {
     if (formType === NEWSLETTER_TYPE) {
       await sendTrackedEmail(context, {
         to: senderEmail,
-        subject: "Đã đăng ký nhận bản tin - Mạng Lưới Tri Thức Việt Nam",
+        subject: "Đã đăng ký nhận bản tin - Tri thức Việt",
         type: "other",
         eyebrow: "Đăng Ký Bản Tin",
         title: "Bạn đã đăng ký thành công",
@@ -458,7 +458,7 @@ module.exports = async function (context, req) {
       const introMessage = AUTOREPLY_INTRO[formType] || "Chúng tôi đã nhận được thông tin bạn gửi và đang xử lý. Đội ngũ sẽ phản hồi sớm nhất có thể.";
       await sendTrackedEmail(context, {
         to: senderEmail,
-        subject: "Đã nhận được thông tin của bạn - Mạng Lưới Tri Thức Việt Nam",
+        subject: "Đã nhận được thông tin của bạn - Tri thức Việt",
         type: "other",
         eyebrow: "Đã Nhận Được Thông Tin",
         title: "Cảm ơn bạn đã liên hệ",

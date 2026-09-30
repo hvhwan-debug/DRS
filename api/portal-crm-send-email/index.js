@@ -42,7 +42,7 @@ module.exports = async function (context, req) {
 
     const who = (await getAdminIdentity(req)) || {};
     const bodyHtml = escapeHtml(message).split(/\n{2,}/).map(p => `<p style="margin:0 0 14px;">${p.replace(/\n/g, "<br>")}</p>`).join("")
-      + (who.displayName ? `<p style="margin:18px 0 0;color:#64748b;font-size:13px;">${escapeHtml(who.displayName)}<br>Mạng Lưới Tri Thức Việt Nam</p>` : "");
+      + (who.displayName ? `<p style="margin:18px 0 0;color:#64748b;font-size:13px;">${escapeHtml(who.displayName)}<br>Tri thức Việt</p>` : "");
 
     const result = await sendTrackedEmail(context, {
       to, subject, type: "crm",

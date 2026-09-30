@@ -465,11 +465,12 @@
           <input type="text" id="regSearchInput" placeholder="Tìm theo email, tên, chương trình..." oninput="renderRegistrationsTable()" style="flex:1; padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-size:0.9rem;">
           <button type="button" class="btn btn-outline" data-super-only="1" style="white-space:nowrap;" onclick="exportToCsv('don-dang-ky.csv', allRegistrationsData, [{key:'formTitle',label:'Chương trình'},{key:'email',label:'Email'},{key:'submittedAt',label:'Ngày gửi'},{key:'status',label:'Trạng thái'}])"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
         </div>
+        <div class="reg-filter" id="regFilterBar"></div>
         <div class="loading-state" id="regLoading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
         <div class="table-scroll" style="display:none;" id="regTableWrap">
           <table>
             <thead>
-              <tr><th>Chương trình</th><th>Email</th><th>Ngày gửi</th><th>Chi tiết</th><th>Trạng thái</th><th>Thao tác</th></tr>
+              <tr><th>Đơn</th><th>Người đăng ký</th><th>Thông tin thêm</th><th>Trạng thái</th><th></th></tr>
             </thead>
             <tbody id="regTableBody"></tbody>
           </table>
@@ -1530,37 +1531,69 @@
       }
     }
 
+    // ---- Đơn Đăng Ký: hiển thị dễ đọc (nhãn tiếng Việt thay tên trường kỹ thuật), lọc theo loại & trạng thái ----
+    const REG_FIELD_LABELS = {
+      ten_phu_huynh: 'Phụ huynh', sdt_phu_huynh: 'SĐT', email_phu_huynh: 'Email', ten_tre: 'Tên con', ngay_sinh_tre: 'Ngày sinh con',
+      truong_lop: 'Trường / lớp', truong_dang_hoc: 'Trường đang học', hinh_thuc_hoc: 'Hình thức học', doi_tuong_dang_ky: 'Đối tượng', phuong_xa: 'Phường / xã',
+      dia_chi: 'Địa chỉ', address: 'Địa chỉ', ghi_chu: 'Ghi chú', hoan_canh_ly_do: 'Hoàn cảnh / lý do', fullname: 'Họ tên', name: 'Họ tên', phone: 'SĐT', email: 'Email',
+      ten_tnv: 'Tình nguyện viên', sdt_tnv: 'SĐT', email_tnv: 'Email', loai_tnv: 'Vai trò', thoi_gian_tnv: 'Thời gian rảnh', nghe_nghiep: 'Nghề nghiệp', nganh_hoc: 'Ngành học',
+      truong_giang_day: 'Trường giảng dạy', mon_cap_day: 'Môn / cấp dạy', kinh_nghiem: 'Kinh nghiệm', ghi_chu_tnv: 'Ghi chú',
+      ten_tai_tro: 'Nhà tài trợ', sdt_tai_tro: 'SĐT', email_tai_tro: 'Email', muc_tai_tro: 'Mức tài trợ', chi_tiet_tai_tro: 'Chi tiết tài trợ', hinh_thuc: 'Hình thức',
+      loai_hien_vat: 'Loại hiện vật', so_luong: 'Số lượng', hinh_thuc_gui: 'Cách gửi', ngay_mang_den: 'Ngày mang đến', gio_mang_den: 'Giờ mang đến',
+      dia_chi_thu_gom: 'Địa chỉ thu gom', dia_diem_cu_the: 'Địa điểm', relation: 'Quan hệ', detail: 'Chi tiết', message: 'Nội dung', subject: 'Chủ đề', thoi_gian: 'Thời gian', location: 'Vị trí'
+    };
+    const REG_HIDDEN = /^(_|vi_tri_gps)/;
+    const REG_GROUPS = [
+      { key: 'study', label: 'Đăng ký học', test: t => /luyen_chu_phu_huynh|tien_tieu_hoc/.test(t) },
+      { key: 'help', label: 'Tình nguyện & tài trợ', test: t => /volunteer|donor|item|tinh_nguyen|tai_tro/.test(t) },
+      { key: 'support', label: 'Cần hỗ trợ', test: t => t === 'support' }
+    ];
+    const regGroupOf = r => (REG_GROUPS.find(g => g.test(r.formType || '')) || { key: 'other' }).key;
+    const regState = { group: '', status: 'pending' };
+    const pick = (d, keys) => { for (const k of keys) if (d[k]) return String(d[k]).trim(); return ''; };
+    function setRegFilter(kind, val) { regState[kind] = val; renderRegistrationsTable(); }
+
     function renderRegistrationsTable() {
       const query = (document.getElementById('regSearchInput').value || '').trim().toLowerCase();
-      const filtered = !query ? allRegistrationsData : allRegistrationsData.filter(r => {
-        const haystack = [r.email, r.formTitle, ...Object.values(r.data || {})].join(' ').toLowerCase();
-        return haystack.includes(query);
-      });
-
       const statuses = ['Đã ghi nhận - Chờ xử lý', 'Đã duyệt', 'Từ chối'];
+      const isPending = r => !r.status || /chờ|ghi nhận/i.test(r.status) && r.status !== 'Đã duyệt';
+      const inGroup = r => !regState.group || regGroupOf(r) === regState.group;
+      const inStatus = r => regState.status === 'all' || (regState.status === 'pending' ? isPending(r) : r.status === regState.status);
+      const bySearch = r => !query || [r.email, r.formTitle, ...Object.values(r.data || {})].join(' ').toLowerCase().includes(query);
+      const base = allRegistrationsData.filter(bySearch);
+      // thanh lọc
+      const cnt = f => base.filter(f).length;
+      const chip = (kind, val, label, n) => `<button type="button" class="reg-chip" aria-pressed="${regState[kind] === val}" onclick="setRegFilter('${kind}','${val}')">${escapeHtml(label)}${n != null ? ` <span>${n}</span>` : ''}</button>`;
+      const bar = document.getElementById('regFilterBar');
+      if (bar) bar.innerHTML =
+        `<div class="reg-chips">${chip('status', 'pending', 'Chờ xử lý', cnt(r => inGroup(r) && isPending(r)))}${chip('status', 'Đã duyệt', 'Đã duyệt', cnt(r => inGroup(r) && r.status === 'Đã duyệt'))}${chip('status', 'Từ chối', 'Từ chối', cnt(r => inGroup(r) && r.status === 'Từ chối'))}${chip('status', 'all', 'Tất cả', cnt(inGroup))}</div>
+         <div class="reg-chips">${chip('group', '', 'Mọi loại đơn', null)}${REG_GROUPS.map(g => chip('group', g.key, g.label, cnt(r => regGroupOf(r) === g.key && inStatus(r)))).join('')}</div>`;
+      const filtered = base.filter(r => inGroup(r) && inStatus(r)).sort((a, b) => (isPending(b) - isPending(a)) || String(b.submittedAt).localeCompare(String(a.submittedAt)));
       if (filtered.length === 0) {
-        document.getElementById('regTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy đơn phù hợp.</td></tr>`;
+        document.getElementById('regTableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:1.4rem;">${regState.status === 'pending' && !query ? 'Không còn đơn nào chờ xử lý. 🎉' : 'Không tìm thấy đơn phù hợp.'}</td></tr>`;
         return;
       }
       document.getElementById('regTableBody').innerHTML = filtered.map(r => {
-        const preview = Object.entries(r.data || {})
-          .filter(([k, v]) => v && !['_honey', '_captcha'].includes(k))
-          .slice(0, 4)
-          .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`)
-          .join('<br>');
-        const options = statuses.map(s => `<option value="${escapeHtml(s)}" ${r.status === s ? 'selected' : ''}>${escapeHtml(s)}</option>`).join('');
-        return `<tr>
-          <td><strong>${escapeHtml(r.formTitle)}</strong></td>
-          <td>${escapeHtml(r.email)}</td>
-          <td>${formatDate(r.submittedAt)}</td>
-          <td class="data-preview">${preview}</td>
+        const d = r.data || {};
+        const person = pick(d, ['ten_phu_huynh', 'fullname', 'ten_tnv', 'ten_tai_tro', 'name']) || [d.firstname, d.lastname].filter(Boolean).join(' ');
+        const phone = pick(d, ['sdt_phu_huynh', 'phone', 'sdt_tnv', 'sdt_tai_tro']);
+        const child = pick(d, ['ten_tre', 'hoc_sinh']);
+        const shown = new Set(['ten_phu_huynh', 'fullname', 'ten_tnv', 'ten_tai_tro', 'name', 'firstname', 'lastname', 'sdt_phu_huynh', 'phone', 'sdt_tnv', 'sdt_tai_tro', 'email', 'email_phu_huynh', 'email_tnv', 'email_tai_tro', 'ten_tre', 'hoc_sinh', 'ngay_sinh_tre']);
+        const details = Object.entries(d).filter(([k, v]) => v && !REG_HIDDEN.test(k) && !shown.has(k));
+        const detailHtml = details.map(([k, v]) => `<div><span>${escapeHtml(REG_FIELD_LABELS[k] || k.replace(/_/g, ' '))}</span>${escapeHtml(String(v).slice(0, 160))}</div>`).join('');
+        const title = String(r.formTitle || '').replace(/\s+mới$/, '');
+        const options = statuses.map(s => `<option value="${escapeHtml(s)}" ${r.status === s ? 'selected' : ''}>${escapeHtml(s === 'Đã ghi nhận - Chờ xử lý' ? 'Chờ xử lý' : s)}</option>`).join('');
+        const pending = isPending(r);
+        return `<tr class="${pending ? 'reg-pending' : ''}">
+          <td><div class="reg-type">${escapeHtml(title)}</div>${child ? `<div class="reg-child"><i class="fa-solid fa-child" aria-hidden="true"></i> ${escapeHtml(child)}${d.ngay_sinh_tre ? ` <small>· SN ${escapeHtml(d.ngay_sinh_tre)}</small>` : ''}</div>` : ''}<div class="reg-date">${formatDate(r.submittedAt)}</div></td>
+          <td><div class="reg-person">${escapeHtml(person || '—')}</div><a class="reg-contact" href="mailto:${escapeHtml(r.email)}">${escapeHtml(r.email)}</a>${phone ? `<a class="reg-contact" href="tel:${escapeHtml(phone.replace(/\s+/g, ''))}"><i class="fa-solid fa-phone" aria-hidden="true"></i> ${escapeHtml(phone)}</a>` : ''}</td>
+          <td class="reg-details">${detailHtml || '<span class="muted">Không có thông tin thêm</span>'}</td>
           <td>
-            <select class="status-select" data-prev="${escapeHtml(r.status)}" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this)">
-              ${options}
-            </select>
-            ${r.status === 'Từ chối' && r.rejectionReason ? `<div style="font-size:0.76rem; color:#b91c1c; margin-top:0.3rem;">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : ''}
+            <select class="status-select ${pending ? 'is-pending' : r.status === 'Đã duyệt' ? 'is-ok' : 'is-no'}" data-prev="${escapeHtml(r.status)}" aria-label="Trạng thái đơn" onchange="updateStatus('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}', this)">${options}</select>
+            ${r.status === 'Từ chối' && r.rejectionReason ? `<div class="reg-reason">Lý do: ${escapeHtml(r.rejectionReason)}</div>` : ''}
+            ${r.status === 'Đã duyệt' && regGroupOf(r) === 'study' ? `<a class="reg-crm" href="/admin/crm">Xem trong CRM →</a>` : ''}
           </td>
-          <td><button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteRegistration('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}')">Xoá</button></td>
+          <td><button type="button" class="btn btn-outline reg-del" onclick="deleteRegistration('${encodeURIComponent(r.email)}','${encodeURIComponent(r.id)}')" aria-label="Xoá đơn"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></td>
         </tr>`;
       }).join('');
     }

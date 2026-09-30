@@ -416,7 +416,7 @@ module.exports = async function (context, req) {
         const subject = isUpgrade ? `Chúc mừng bạn lên hạng ${tier.name}!` : `Hạng thành viên của bạn đã được cập nhật`;
         const title = isUpgrade ? `Chúc mừng bạn lên hạng ${tier.name}!` : `Hạng thành viên đã cập nhật`;
         const bodyText = isUpgrade
-          ? `Bạn vừa thăng hạng từ <strong>${lastSeenTier}</strong> lên <strong>${tier.name}</strong> tại Mạng Lưới Tri Thức Việt Nam. Đăng nhập vào khu vực thành viên, mục "Đặc Quyền" để xem các quyền lợi mới của bạn.`
+          ? `Bạn vừa thăng hạng từ <strong>${lastSeenTier}</strong> lên <strong>${tier.name}</strong> tại Tri thức Việt. Đăng nhập vào khu vực thành viên, mục "Đặc Quyền" để xem các quyền lợi mới của bạn.`
           : `Hạng thành viên của bạn đã được cập nhật từ <strong>${lastSeenTier}</strong> thành <strong>${tier.name}</strong>. Đăng nhập vào khu vực thành viên để xem chi tiết.`;
         await sendTrackedEmail(context, {
           to: email,
