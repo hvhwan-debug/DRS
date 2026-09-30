@@ -233,6 +233,30 @@ tfoot td { font-weight: 700; background: #fafbfd; border-bottom: none; }
   #slipPrint { position: absolute; inset: 0; padding: 1.5rem; }
   .modal-wrap { background: none; position: static; display: block; }
 }
+/* ---------- Quy định nơi chấm công ---------- */
+.place-line { margin-top: 0.8rem; font-size: 0.8rem; color: var(--night-text); display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+.place-line i { color: #93c5fd; }
+.place-line.ok i { color: #4ade80; }
+.clock .place-line { justify-content: flex-start; }
+.rule-row { display: grid; grid-template-columns: 1.1fr 1fr auto; gap: 0.5rem; align-items: center; padding: 0.55rem 0; border-top: 1px solid var(--line-2); }
+.rule-row.loc { grid-template-columns: 1fr 1fr 92px auto; }
+.rule-row.loc > input[data-f="name"] { grid-column: 1 / -1; font-weight: 600; }
+.rule-row:first-child { border-top: none; }
+.rule-row input, .rule-row select { border: 1px solid var(--line); border-radius: 8px; padding: 0.42rem 0.55rem; font-size: 0.85rem; min-width: 0; width: 100%; background: #fff; }
+.rule-head { display: grid; grid-template-columns: 1.1fr 1fr auto; gap: 0.5rem; font-size: 0.72rem; color: var(--muted); font-weight: 600; padding-bottom: 0.3rem; }
+.rule-head.loc { display: none; }
+.switch { display: inline-flex; align-items: center; gap: 0.7rem; cursor: pointer; font-weight: 600; }
+.switch input { appearance: none; width: 44px; height: 26px; border-radius: 999px; background: #cfd5e3; position: relative; transition: background .15s; cursor: pointer; flex-shrink: 0; }
+.switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: left .15s; }
+.switch input:checked { background: var(--green); }
+.switch input:checked::after { left: 21px; }
+.test-box { font-size: 0.84rem; border-radius: 10px; padding: 0.7rem 0.9rem; background: var(--line-2); margin-top: 0.8rem; }
+@media (max-width: 900px) {
+  .clock .place-line { justify-content: center; }
+  .rule-row { grid-template-columns: 1fr 1fr; }
+  .rule-row.loc { grid-template-columns: 1fr 1fr; }
+  .rule-head, .rule-head.loc { display: none; }
+}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -261,6 +285,7 @@ tfoot td { font-weight: 700; background: #fafbfd; border-bottom: none; }
         <button data-view="cong-nhan-vien"><i class="fa-solid fa-table-list" aria-hidden="true"></i> Bảng công nhân viên</button>
         <button data-view="bang-luong"><i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i> Bảng lương</button>
         <button data-view="nhan-su"><i class="fa-solid fa-user-gear" aria-hidden="true"></i> Hồ sơ lương</button>
+        <button data-view="quy-dinh"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Quy định chấm công</button>
       </nav>
     </div>
     <h4>Đi tới</h4>
@@ -290,6 +315,7 @@ tfoot td { font-weight: 700; background: #fafbfd; border-bottom: none; }
       <section class="view" id="view-cong-nhan-vien"></section>
       <section class="view" id="view-bang-luong"></section>
       <section class="view" id="view-nhan-su"></section>
+      <section class="view" id="view-quy-dinh"></section>
     </div>
   </main>
 </div>
@@ -311,7 +337,7 @@ tfoot td { font-weight: 700; background: #fafbfd; border-bottom: none; }
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/admin-cham-cong.js?v=20260930a"></script>
+<script src="/admin-cham-cong.js?v=20260930b"></script>
 <script src="/admin-alerts.js?v=20260930c" defer data-mobile-bottom="calc(4.4rem + 8px)"></script>
 </body>
 </html>

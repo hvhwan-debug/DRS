@@ -3,6 +3,7 @@ const { requireAdmin, getAdminIdentity } = require("../_shared/adminAuth");
 const { logAdminActivity } = require("../_shared/activityLog");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const P = require("../_shared/payroll");
+const C = require("../_shared/clockPolicy");
 
 // QUẢN LÝ chấm công & tính lương (quyền "payroll" hoặc Quản trị viên chính).
 // GET  ?period=YYYY-MM -> nhân viên + hồ sơ lương, bảng công, đơn nghỉ, thưởng/phạt, bảng lương, ai đang trong ca
@@ -72,8 +73,9 @@ module.exports = async function (context, req) {
       const period = P.isPeriod(req.query && req.query.period) ? req.query.period : P.currentPeriod();
       const data = await loadPeriod(period);
       delete data.nameOf;
+      const clockSettings = await C.getClockSettings();
       context.res.status = 200;
-      context.res.body = { success: true, period, today: P.todayVN(), now, ...data };
+      context.res.body = { success: true, period, today: P.todayVN(), now, ...data, clockSettings, myIp: C.clientIp(req) };
       return;
     }
 
@@ -102,13 +104,23 @@ module.exports = async function (context, req) {
         partitionKey: "profile", rowKey: email, payType,
         hourlyRate: n(b.hourlyRate, 10000000), monthlySalary: n(b.monthlySalary, 1000000000),
         standardDays: Math.max(1, Math.min(31, Number(b.standardDays) || 26)), allowance: n(b.allowance, 1000000000),
-        withholdTax: b.withholdTax === true, position: clean(b.position, 80), inPayroll: b.inPayroll !== false,
+        withholdTax: b.withholdTax === true, position: clean(b.position, 80), inPayroll: b.inPayroll !== false, remoteAllowed: b.remoteAllowed === true,
         managedAt: now, updatedAt: now, updatedBy: me.displayName
       };
       if (b.bankName !== undefined) Object.assign(row, { bankName: clean(b.bankName, 80), bankAccount: clean(b.bankAccount, 40).replace(/\s+/g, ""), bankHolder: clean(b.bankHolder, 80).toUpperCase(), phone: clean(b.phone, 20) });
       await t.upsertEntity(row, "Merge");
       await log("Cập nhật hồ sơ lương", `${email} - ${payType === "hourly" ? fmtMoney(row.hourlyRate) + "/giờ" : fmtMoney(row.monthlySalary) + "/tháng"}`);
       context.res.status = 200; context.res.body = { success: true };
+      return;
+    }
+
+    // ---------- Quy định nơi chấm công ----------
+    if (action === "saveClockSettings") {
+      let saved;
+      try { saved = await C.saveClockSettings(b.settings || {}, me.displayName); }
+      catch (e) { if (e.status) return bad(context, e.status, e.message); throw e; }
+      await log("Cập nhật quy định nơi chấm công", `${saved.enabled ? "BẬT" : "TẮT"} - ${saved.networks.length} mạng, ${saved.locations.length} địa điểm${saved.applyToClockOut ? ", áp dụng cả khi kết thúc ca" : ""}`);
+      context.res.status = 200; context.res.body = { success: true, clockSettings: saved };
       return;
     }
 

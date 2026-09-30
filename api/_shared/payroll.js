@@ -103,6 +103,7 @@ function toProfile(e, email) {
     bankAccount: e.bankAccount || "",
     bankHolder: e.bankHolder || "",
     inPayroll: e.inPayroll !== false,
+    remoteAllowed: e.remoteAllowed === true, // được chấm công ở bất kỳ đâu (bỏ qua quy định nơi chấm công)
     configured: !!e.managedAt, // quản lý đã thiết lập mức lương
     updatedAt: e.updatedAt || null,
     updatedBy: e.updatedBy || ""
@@ -129,6 +130,8 @@ function toEntry(e) {
     status: e.status || "ok",
     replacesId: e.replacesId || "",
     flag: e.flag || "",
+    placeIn: e.placeIn || "",
+    placeOut: e.placeOut || "",
     reviewNote: e.reviewNote || "",
     reviewedBy: e.reviewedBy || "",
     reviewedAt: e.reviewedAt || null,

@@ -80,8 +80,8 @@
 
   // ---------- Điều hướng ----------
   const EMP_VIEWS = ['cham-cong', 'bang-cong', 'nghi-phep', 'phieu-luong', 'ho-so'];
-  const MGR_VIEWS = ['hom-nay', 'duyet', 'cong-nhan-vien', 'bang-luong', 'nhan-su'];
-  const MGR_TITLES = { 'hom-nay': 'Hôm nay', duyet: 'Chờ duyệt', 'cong-nhan-vien': 'Bảng công nhân viên', 'bang-luong': 'Bảng lương', 'nhan-su': 'Hồ sơ lương' };
+  const MGR_VIEWS = ['hom-nay', 'duyet', 'cong-nhan-vien', 'bang-luong', 'nhan-su', 'quy-dinh'];
+  const MGR_TITLES = { 'hom-nay': 'Hôm nay', duyet: 'Chờ duyệt', 'cong-nhan-vien': 'Bảng công nhân viên', 'bang-luong': 'Bảng lương', 'nhan-su': 'Hồ sơ lương', 'quy-dinh': 'Quy định chấm công' };
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-view]'); if (!b) return;
     if (b.dataset.view === 'mgr') return openMgrMenu();
@@ -106,7 +106,7 @@
     const v = S.view;
     if (MGR_VIEWS.includes(v)) {
       if (!S.m) { $('view-' + v).innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu nhân sự…</div>'; try { await loadMgr(S.mPeriod); } catch (e) { $('view-' + v).innerHTML = `<div class="empty"><i class="fa-solid fa-triangle-exclamation"></i>${esc(e.message)}</div>`; return; } if (S.view !== v) return; }
-      ({ 'hom-nay': rToday, duyet: rApprovals, 'cong-nhan-vien': rStaffSheet, 'bang-luong': rPayroll, 'nhan-su': rProfiles })[v]();
+      ({ 'hom-nay': rToday, duyet: rApprovals, 'cong-nhan-vien': rStaffSheet, 'bang-luong': rPayroll, 'nhan-su': rProfiles, 'quy-dinh': rPolicy })[v]();
     } else {
       ({ 'cham-cong': rClock, 'bang-cong': rMySheet, 'nghi-phep': rLeave, 'phieu-luong': rSlips, 'ho-so': rProfile })[v]();
     }
@@ -170,6 +170,7 @@
                 <div>Hôm nay đã làm<b class="num" id="clkToday">${hm(d.todayMinutes + (open && !forgot ? (now - new Date(open.clockIn)) / 60000 : 0))}</b></div>
                 <div>Tháng này<b class="num">${hoursDec(est.minutes)} giờ</b></div>
               </div>
+              ${placeLine(d.clockPolicy)}
             </div>
             <button class="punch" id="punch" ${forgot ? 'disabled title="Nhập giờ ra cho ca cũ trước"' : ''}><span><i class="fa-solid ${open ? 'fa-stop' : 'fa-play'}"></i>${open ? 'Kết thúc ca' : 'Vào ca'}</span></button>
           </div>
@@ -202,6 +203,16 @@
     startTick();
   }
 
+  function placeLine(cp) {
+    if (!cp) return '';
+    if (cp.remoteAllowed) return '<div class="place-line ok"><i class="fa-solid fa-house-laptop"></i> Bạn được chấm công ở bất kỳ đâu</div>';
+    if (!cp.enabled) return '';
+    if (S.d.open && !cp.applyToClockOut) return ''; // đang trong ca, kết thúc ca không bị giới hạn
+    if (cp.onNetwork) return `<div class="place-line ok"><i class="fa-solid fa-wifi"></i> Đang dùng mạng ${esc(cp.onNetwork)}</div>`;
+    const where = [cp.networkNames.length ? 'mạng ' + cp.networkNames.join(', ') : '', cp.locationNames.length ? 'trong khu vực ' + cp.locationNames.join(', ') : ''].filter(Boolean).join(' hoặc ');
+    return `<div class="place-line"><i class="fa-solid fa-location-dot"></i> Chấm công được khi dùng ${esc(where)}${cp.usesLocation ? ' · cần bật định vị' : ''}</div>`;
+  }
+
   function startTick() {
     clearInterval(S.tick);
     S.tick = setInterval(() => {
@@ -215,12 +226,43 @@
     }, 15000);
   }
 
+  // Lấy định vị khi quy định nơi chấm công cần (không dùng mạng trung tâm, có khai báo địa điểm)
+  function needGeo(action) {
+    const cp = S.d.clockPolicy || {};
+    return cp.enabled && cp.usesLocation && !cp.onNetwork && (action === 'in' || cp.applyToClockOut);
+  }
+  function getGeo() {
+    return new Promise((resolve, reject) => {
+      if (!('geolocation' in navigator)) return reject(new Error('Thiết bị này không hỗ trợ định vị. Hãy kết nối Wi-Fi của trung tâm để chấm công.'));
+      navigator.geolocation.getCurrentPosition(
+        p => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, accuracy: Math.round(p.coords.accuracy) }),
+        err => reject(new Error(err.code === 1
+          ? 'Bạn chưa cho phép truy cập vị trí. Mở cài đặt trình duyệt → Quyền của trang web → Vị trí → Cho phép, rồi thử lại (hoặc kết nối Wi-Fi của trung tâm).'
+          : 'Không xác định được vị trí. Hãy bật định vị (GPS) của điện thoại và thử lại.')),
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 });
+    });
+  }
+  // Gửi chấm công; nếu máy chủ báo cần định vị (vd. vừa rời Wi-Fi trung tâm) thì lấy vị trí và thử lại 1 lần
+  async function clockPost(body, action, btn) {
+    let geo = null;
+    if (needGeo(action)) { if (btn) btn.innerHTML = '<i class="fa-solid fa-location-crosshairs fa-beat-fade"></i> Đang xác định vị trí…'; geo = await getGeo(); }
+    try { return await post('/api/staff-me', { ...body, geo }); }
+    catch (e) {
+      if (e.data && e.data.code === 'place' && e.data.needGeo && !geo) { geo = await getGeo(); return await post('/api/staff-me', { ...body, geo }); }
+      throw e;
+    }
+  }
+  function placeBlocked(e, action) {
+    modal(action === 'in' ? 'Chưa chấm công được' : 'Chưa kết thúc ca được', `<div class="warn amber" style="margin:0"><i class="fa-solid fa-location-dot"></i><div>${esc(e.message)}</div></div>`,
+      action === 'in' ? [{ label: 'Đóng' }, { label: '<i class="fa-solid fa-plus"></i> Gửi bổ sung công', cls: 'primary', run: async () => { setTimeout(() => requestEntryModal(), 50); } }] : [{ label: 'Đã hiểu', cls: 'primary' }], { noFocus: true });
+  }
+
   async function punch() {
     const open = S.d.open, btn = $('punch');
     if (!open) {
       busy(btn, true, 'Đang vào ca…');
-      try { const r = await post('/api/staff-me', { action: 'clockIn' }); toast('Đã vào ca lúc ' + timeOf(r.clockIn) + '. Chúc bạn làm việc hiệu quả!'); await refreshMe(); }
-      catch (e) { toast(e.message, true); busy(btn, false); }
+      try { const r = await clockPost({ action: 'clockIn' }, 'in', btn); toast('Đã vào ca lúc ' + timeOf(r.clockIn) + '. Chúc bạn làm việc hiệu quả!'); await refreshMe(); }
+      catch (e) { busy(btn, false); if (e.data && e.data.code === 'place') placeBlocked(e, 'in'); else toast(e.message, true); }
       return;
     }
     const mins = (nowServer() - new Date(open.clockIn)) / 60000;
@@ -230,7 +272,9 @@
       <div class="field"><label for="coNote">Ghi chú (không bắt buộc)</label><input id="coNote" maxlength="200" placeholder="VD: Dạy bù lớp Luyện chữ"></div>`,
       [{ label: 'Huỷ' }, { label: '<i class="fa-solid fa-stop"></i> Kết thúc ca', cls: 'primary', run: async () => {
         const b = Number(($('brk').querySelector('[aria-pressed="true"]') || {}).dataset?.b || 0);
-        const r = await post('/api/staff-me', { action: 'clockOut', breakMinutes: b, note: val('coNote') });
+        let r;
+        try { r = await clockPost({ action: 'clockOut', breakMinutes: b, note: val('coNote') }, 'out'); }
+        catch (e) { if (e.data && e.data.code === 'place') { setTimeout(() => placeBlocked(e, 'out'), 50); return; } throw e; }
         toast(r.pending ? r.message : 'Đã kết thúc ca: ' + hm(r.minutes) + '. Cảm ơn bạn!'); await refreshMe();
       } }], { noFocus: true });
     $('brk').addEventListener('click', e => { const b = e.target.closest('[data-b]'); if (!b) return; $('brk').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
@@ -489,7 +533,7 @@
       ${locked ? `<div class="warn amber"><i class="fa-solid fa-lock"></i><div><b>Kỳ lương ${periodLabel(m.period)} đã chốt.</b>Mở lại kỳ ở mục Bảng lương nếu cần sửa công.</div></div>` : ''}
       <div class="card"><div class="table-wrap"><table>
         <thead><tr><th>Ngày</th><th>Nhân viên</th><th>Vào</th><th>Ra</th><th class="r">Nghỉ</th><th class="r">Giờ</th><th>Trạng thái</th><th class="hide-m">Ghi chú</th><th></th></tr></thead>
-        <tbody>${rows.map(e => `<tr><td class="num">${WD[dow(e.date)]} ${dm(e.date)}</td><td>${esc(nameOf(e.email))}</td><td class="num">${timeOf(e.clockIn)}</td><td class="num">${e.status === 'open' ? '—' : timeOf(e.clockOut)}</td><td class="r num">${e.breakMinutes ? e.breakMinutes + 'p' : ''}</td><td class="r num"><b>${e.status === 'open' ? '…' : hm(e.minutes)}</b></td><td>${chip(e.status)}</td><td class="hide-m muted" style="max-width:260px">${esc([FLAG[e.flag] || '', e.note].filter(Boolean).join(' · '))}</td>
+        <tbody>${rows.map(e => `<tr><td class="num">${WD[dow(e.date)]} ${dm(e.date)}</td><td>${esc(nameOf(e.email))}</td><td class="num">${timeOf(e.clockIn)}</td><td class="num">${e.status === 'open' ? '—' : timeOf(e.clockOut)}</td><td class="r num">${e.breakMinutes ? e.breakMinutes + 'p' : ''}</td><td class="r num"><b>${e.status === 'open' ? '…' : hm(e.minutes)}</b></td><td>${chip(e.status)}</td><td class="hide-m muted" style="max-width:280px">${esc([FLAG[e.flag] || '', e.note].filter(Boolean).join(' · '))}${e.placeIn || e.placeOut ? `<div style="font-size:.74rem"><i class="fa-solid fa-location-dot"></i> ${esc([e.placeIn, e.placeOut && e.placeOut !== e.placeIn ? 'ra: ' + e.placeOut : ''].filter(Boolean).join(' · '))}</div>` : ''}</td>
           <td style="white-space:nowrap">${!locked && e.status !== 'open' ? `<button class="btn sm" data-me="${esc(e.email)}|${esc(e.id)}" aria-label="Sửa"><i class="fa-regular fa-pen-to-square"></i></button> <button class="btn sm danger" data-md="${esc(e.email)}|${esc(e.id)}" aria-label="Xoá"><i class="fa-regular fa-trash-can"></i></button>` : ''}${e.status === 'open' ? `<button class="btn sm" data-close-open="${esc(e.email)}|${esc(e.id)}">Kết thúc</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="9" class="empty">Không có ca nào.</td></tr>`}</tbody>
         ${rows.length ? `<tfoot><tr><td colspan="5">Tổng giờ hợp lệ</td><td class="r num">${hoursDec(total)} giờ</td><td colspan="3"></td></tr></tfoot>` : ''}
       </table></div></div>`;
@@ -631,7 +675,7 @@
         <thead><tr><th>Nhân viên</th><th>Vị trí</th><th>Hình thức</th><th class="r">Mức lương</th><th class="r">Phụ cấp</th><th>Thuế 10%</th><th>Ngân hàng</th><th></th></tr></thead>
         <tbody>${m.staff.map(s => { const p = s.profile; return `<tr class="click" data-pf="${esc(s.email)}"><td>${whoHtml(s.email, esc(s.email) + (s.inactive ? ' · <span style="color:var(--red)">đã nghỉ</span>' : ''))}</td>
           <td>${esc(p.position || '—')}</td>
-          <td>${p.configured ? (p.payType === 'monthly' ? 'Lương tháng' : 'Theo giờ') : '<span class="chip pending">Chưa thiết lập</span>'}${p.configured && !p.inPayroll ? ' <span class="chip muted">Không tính lương</span>' : ''}</td>
+          <td>${p.configured ? (p.payType === 'monthly' ? 'Lương tháng' : 'Theo giờ') : '<span class="chip pending">Chưa thiết lập</span>'}${p.configured && !p.inPayroll ? ' <span class="chip muted">Không tính lương</span>' : ''}${p.remoteAllowed ? ' <span class="chip violet">Chấm từ xa</span>' : ''}</td>
           <td class="r">${p.configured ? (p.payType === 'monthly' ? mv(p.monthlySalary) : mv(p.hourlyRate) + '<small class="muted">/giờ</small>') : '—'}</td>
           <td class="r">${p.allowance ? mv(p.allowance) : '—'}</td><td>${p.withholdTax ? 'Có' : '—'}</td>
           <td>${p.bankAccount ? '<i class="fa-solid fa-circle-check" style="color:var(--green)"></i> ' + esc(p.bankName || '') : '<span class="muted">Chưa có</span>'}</td>
@@ -650,13 +694,14 @@
       <div class="row2"><div class="field"><label for="pfAllow">Phụ cấp cố định / tháng (đ)</label><input id="pfAllow" type="number" min="0" step="10000" value="${p.allowance || ''}"></div><div class="field"><label for="pfPos">Vị trí</label><input id="pfPos" maxlength="80" value="${esc(p.position)}" placeholder="VD: Giáo viên Luyện chữ"></div></div>
       <label style="display:flex;gap:.55rem;align-items:flex-start;font-size:.86rem;margin-bottom:.6rem"><input type="checkbox" id="pfTax" ${p.withholdTax ? 'checked' : ''} style="margin-top:.2rem"><span>Khấu trừ thuế TNCN 10% khi tổng thu nhập trong kỳ từ 2.000.000đ <small class="muted" style="display:block">Thường áp dụng cho cộng tác viên, lao động thời vụ hoặc hợp đồng dưới 3 tháng. Vui lòng đối chiếu quy định hiện hành hoặc hỏi kế toán.</small></span></label>
       <label style="display:flex;gap:.55rem;align-items:center;font-size:.86rem;margin-bottom:1rem"><input type="checkbox" id="pfIn" ${p.inPayroll !== false ? 'checked' : ''}> Có tính lương (bỏ chọn với tình nguyện viên / người không hưởng lương)</label>
+      <label style="display:flex;gap:.55rem;align-items:flex-start;font-size:.86rem;margin-bottom:1rem"><input type="checkbox" id="pfRemote" ${p.remoteAllowed ? 'checked' : ''} style="margin-top:.2rem"><span>Được chấm công ở bất kỳ đâu <small class="muted" style="display:block">Bỏ qua Quy định chấm công (Wi-Fi / vị trí) — dùng cho giáo viên dạy online, người đi công tác.</small></span></label>
       <h4 style="font-size:.88rem;margin-bottom:.6rem">Tài khoản nhận lương <small class="muted" style="font-weight:400">· nhân viên cũng tự cập nhật được</small></h4>
       <div class="row2"><div class="field"><label for="pfBank">Ngân hàng</label><input id="pfBank" value="${esc(p.bankName)}"></div><div class="field"><label for="pfAcc">Số tài khoản</label><input id="pfAcc" value="${esc(p.bankAccount)}"></div></div>
       <div class="row2"><div class="field"><label for="pfHolder">Chủ tài khoản</label><input id="pfHolder" value="${esc(p.bankHolder)}" style="text-transform:uppercase"></div><div class="field"><label for="pfPhone">Điện thoại</label><input id="pfPhone" value="${esc(p.phone)}"></div></div>
       ${p.updatedBy ? `<p class="muted" style="font-size:.75rem">Cập nhật lần cuối bởi ${esc(p.updatedBy)}${p.updatedAt ? ' · ' + new Date(p.updatedAt).toLocaleString('vi-VN', { timeZone: TZ }) : ''}</p>` : ''}`,
       [{ label: 'Huỷ' }, { label: 'Lưu hồ sơ', cls: 'primary', run: async () => {
         const type = $('pfType').querySelector('[aria-pressed="true"]').dataset.t;
-        await post('/api/portal-payroll', { action: 'saveProfile', email, payType: type, hourlyRate: Number(val('pfRate')) || 0, monthlySalary: Number(val('pfSalary')) || 0, standardDays: Number(val('pfDays')) || 26, allowance: Number(val('pfAllow')) || 0, position: val('pfPos'), withholdTax: $('pfTax').checked, inPayroll: $('pfIn').checked, bankName: val('pfBank'), bankAccount: val('pfAcc'), bankHolder: val('pfHolder'), phone: val('pfPhone') });
+        await post('/api/portal-payroll', { action: 'saveProfile', email, payType: type, hourlyRate: Number(val('pfRate')) || 0, monthlySalary: Number(val('pfSalary')) || 0, standardDays: Number(val('pfDays')) || 26, allowance: Number(val('pfAllow')) || 0, position: val('pfPos'), withholdTax: $('pfTax').checked, inPayroll: $('pfIn').checked, remoteAllowed: $('pfRemote').checked, bankName: val('pfBank'), bankAccount: val('pfAcc'), bankHolder: val('pfHolder'), phone: val('pfPhone') });
         toast('Đã lưu hồ sơ lương.'); await refreshMgr();
       } }], { noFocus: true });
     $('pfType').addEventListener('click', e => {
@@ -664,6 +709,114 @@
       $('pfType').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
       $('pfHourly').hidden = b.dataset.t !== 'hourly'; $('pfMonthly').hidden = b.dataset.t !== 'monthly';
     });
+  }
+
+  // =================== Quy định nơi chấm công (quản lý) ===================
+  let draft = null;
+  function parseCoords(text) {
+    const t = String(text || '');
+    const m = t.match(/@(-?\d+\.\d+),\s*(-?\d+\.\d+)/) || t.match(/[?&]q=(-?\d+\.\d+),\s*(-?\d+\.\d+)/) || t.match(/(-?\d{1,2}\.\d{3,})\s*[,;\s]\s*(-?\d{1,3}\.\d{3,})/);
+    return m ? { lat: Number(m[1]), lng: Number(m[2]) } : null;
+  }
+  function distM(a, b) { const R = 6371000, r = x => x * Math.PI / 180; const h = Math.sin(r(b.lat - a.lat) / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(r(b.lng - a.lng) / 2) ** 2; return Math.round(2 * R * Math.asin(Math.sqrt(h))); }
+
+  function rPolicy() {
+    const m = S.m;
+    if (!draft) draft = JSON.parse(JSON.stringify(m.clockSettings || { enabled: false, applyToClockOut: false, networks: [], locations: [] }));
+    const remote = m.staff.filter(x => x.profile.remoteAllowed);
+    const ipKnown = draft.networks.some(n => n.ip === m.myIp);
+    $('view-quy-dinh').innerHTML = `
+      <div class="page-head"><div><h1>Quy định chấm công</h1><p>Giới hạn nơi nhân viên được bấm Vào ca: dùng Wi-Fi của trung tâm <b>hoặc</b> đang ở gần địa điểm làm việc.</p></div></div>
+      <div class="card"><div class="card-b" style="display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center;justify-content:space-between">
+        <label class="switch"><input type="checkbox" id="pcOn" ${draft.enabled ? 'checked' : ''}> ${draft.enabled ? 'Đang giới hạn nơi chấm công' : 'Đang cho chấm công ở bất kỳ đâu'}</label>
+        <label style="display:flex;gap:.5rem;align-items:center;font-size:.86rem"><input type="checkbox" id="pcOut" ${draft.applyToClockOut ? 'checked' : ''}> Áp dụng cả khi bấm Kết thúc ca</label>
+      </div>${m.clockSettings && m.clockSettings.updatedBy ? `<div class="card-b muted" style="border-top:1px solid var(--line-2);font-size:.78rem">Cập nhật lần cuối bởi ${esc(m.clockSettings.updatedBy)}${m.clockSettings.updatedAt ? ' · ' + new Date(m.clockSettings.updatedAt).toLocaleString('vi-VN', { timeZone: TZ }) : ''}</div>` : ''}</div>
+
+      <div class="grid g2">
+        <div class="card"><div class="card-h"><h3><i class="fa-solid fa-wifi" style="color:var(--sapphire)"></i> Mạng Wi-Fi của trung tâm</h3></div><div class="card-b">
+          <p class="muted" style="font-size:.82rem;margin-bottom:.8rem">Trình duyệt không đọc được tên Wi-Fi, nên hệ thống nhận ra mạng trung tâm qua <b>địa chỉ IP internet</b> của nó. Cách dễ nhất: <b>đứng ở trung tâm, kết nối Wi-Fi, bấm nút bên dưới</b>. Mỗi cơ sở / mỗi nhà mạng thêm 1 dòng.</p>
+          ${draft.networks.length ? `<div class="rule-head"><span>Tên gợi nhớ</span><span>Địa chỉ IP</span><span></span></div>` : ''}
+          <div id="pcNets">${draft.networks.map((n, i) => `<div class="rule-row"><input data-n="${i}" data-f="name" value="${esc(n.name)}" aria-label="Tên mạng"><input data-n="${i}" data-f="ip" value="${esc(n.ip)}" aria-label="Địa chỉ IP" class="num"><button class="btn sm danger" data-ndel="${i}" aria-label="Xoá"><i class="fa-regular fa-trash-can"></i></button></div>`).join('') || '<p class="muted" style="font-size:.85rem">Chưa khai báo mạng nào.</p>'}</div>
+          <div class="toolbar" style="margin-top:.8rem">
+            <button class="btn primary" id="pcNetMine" ${!m.myIp || ipKnown ? 'disabled' : ''}><i class="fa-solid fa-plus"></i> ${ipKnown ? 'Mạng bạn đang dùng đã có trong danh sách' : 'Thêm mạng tôi đang dùng'}</button>
+            <button class="btn" id="pcNetAdd"><i class="fa-solid fa-keyboard"></i> Nhập tay</button>
+          </div>
+          <p class="muted" style="font-size:.75rem;margin-top:.6rem">IP hiện tại của bạn: <b class="num">${esc(m.myIp || 'không xác định')}</b>. Nếu trung tâm dùng mạng có IP thay đổi, hãy nhờ kỹ thuật đăng ký IP tĩnh, hoặc dùng thêm cách định vị bên cạnh. Nhập được dải (VD <span class="num">113.160.5.0/24</span>).</p>
+        </div></div>
+
+        <div class="card"><div class="card-h"><h3><i class="fa-solid fa-location-dot" style="color:var(--red)"></i> Địa điểm làm việc</h3></div><div class="card-b">
+          <p class="muted" style="font-size:.82rem;margin-bottom:.8rem">Nhân viên không dùng Wi-Fi trung tâm sẽ được hỏi quyền định vị khi bấm chấm công, và chỉ chấm được khi ở trong bán kính.</p>
+          ${draft.locations.length ? `<div class="rule-head loc"><span>Tên địa điểm</span><span>Vĩ độ</span><span>Kinh độ</span><span>Bán kính</span><span></span></div>` : ''}
+          <div id="pcLocs">${draft.locations.map((l, i) => `<div class="rule-row loc"><input data-l="${i}" data-f="name" value="${esc(l.name)}" aria-label="Tên địa điểm"><input data-l="${i}" data-f="lat" value="${l.lat}" class="num" aria-label="Vĩ độ" title="Vĩ độ"><input data-l="${i}" data-f="lng" value="${l.lng}" class="num" aria-label="Kinh độ" title="Kinh độ">
+            <select data-l="${i}" data-f="radius" aria-label="Bán kính">${[100, 150, 200, 300, 500, 1000].map(r => `<option value="${r}" ${Number(l.radius) === r ? 'selected' : ''}>${r} m</option>`).join('')}${[100, 150, 200, 300, 500, 1000].includes(Number(l.radius)) ? '' : `<option value="${l.radius}" selected>${l.radius} m</option>`}</select>
+            <span style="display:flex;gap:.3rem"><a class="btn sm" href="https://www.google.com/maps?q=${l.lat},${l.lng}" target="_blank" rel="noopener" aria-label="Xem trên bản đồ"><i class="fa-solid fa-map-location-dot"></i></a><button class="btn sm danger" data-ldel="${i}" aria-label="Xoá"><i class="fa-regular fa-trash-can"></i></button></span></div>`).join('') || '<p class="muted" style="font-size:.85rem">Chưa khai báo địa điểm nào.</p>'}</div>
+          <div class="toolbar" style="margin-top:.8rem">
+            <button class="btn primary" id="pcLocMine"><i class="fa-solid fa-location-crosshairs"></i> Thêm vị trí tôi đang đứng</button>
+            <button class="btn" id="pcLocPaste"><i class="fa-regular fa-clipboard"></i> Dán link Google Maps / toạ độ</button>
+          </div>
+          <p class="muted" style="font-size:.75rem;margin-top:.6rem">Nên để bán kính từ 150–300 m: định vị trong nhà thường lệch 30–100 m.</p>
+        </div></div>
+      </div>
+
+      <div class="card"><div class="card-h"><h3>Ngoại lệ</h3><button class="btn sm" data-view="nhan-su">Mở Hồ sơ lương</button></div><div class="card-b" style="font-size:.86rem">
+        ${remote.length ? `Được chấm công ở bất kỳ đâu: ${remote.map(x => `<span class="chip violet" style="font-size:.78rem">${esc(x.name)}</span>`).join(' ')}` : '<span class="muted">Chưa có ai được miễn. Bật "Được chấm công ở bất kỳ đâu" trong Hồ sơ lương cho giáo viên dạy online hoặc người đi công tác.</span>'}
+        <p class="muted" style="font-size:.78rem;margin-top:.6rem">Nhân viên bị chặn vẫn gửi được "Bổ sung công" để bạn duyệt. Nơi chấm công của từng ca hiện ở cột Ghi chú trong Bảng công nhân viên.</p>
+      </div></div>
+
+      <div class="card"><div class="card-b" style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;align-items:center">
+        <button class="btn" id="pcTest"><i class="fa-solid fa-vial"></i> Thử kiểm tra trên máy này</button>
+        <div class="toolbar"><button class="btn" id="pcReset">Huỷ thay đổi</button><button class="btn primary" id="pcSave"><i class="fa-solid fa-floppy-disk"></i> Lưu quy định</button></div>
+      </div><div id="pcTestOut"></div></div>`;
+
+    const v = $('view-quy-dinh');
+    const rerender = () => rPolicy();
+    $('pcOn').onchange = e => { draft.enabled = e.target.checked; rerender(); };
+    $('pcOut').onchange = e => { draft.applyToClockOut = e.target.checked; };
+    v.querySelectorAll('[data-n]').forEach(inp => inp.oninput = () => { draft.networks[inp.dataset.n][inp.dataset.f] = inp.value.trim(); });
+    v.querySelectorAll('[data-l]').forEach(inp => inp.oninput = inp.onchange = () => { const f = inp.dataset.f; draft.locations[inp.dataset.l][f] = f === 'name' ? inp.value : Number(inp.value); });
+    v.querySelectorAll('[data-ndel]').forEach(b => b.onclick = () => { draft.networks.splice(Number(b.dataset.ndel), 1); rerender(); });
+    v.querySelectorAll('[data-ldel]').forEach(b => b.onclick = () => { draft.locations.splice(Number(b.dataset.ldel), 1); rerender(); });
+    $('pcNetMine').onclick = () => { draft.networks.push({ name: 'Wi-Fi trung tâm ' + (draft.networks.length + 1), ip: m.myIp }); rerender(); };
+    $('pcNetAdd').onclick = () => { draft.networks.push({ name: 'Mạng trung tâm ' + (draft.networks.length + 1), ip: '' }); rerender(); const last = v.querySelectorAll('[data-f="ip"]'); if (last.length) last[last.length - 1].focus(); };
+    $('pcLocMine').onclick = async e => {
+      const btn = e.currentTarget; busy(btn, true, 'Đang lấy vị trí…');
+      try { const g = await getGeo(); draft.locations.push({ name: 'Địa điểm ' + (draft.locations.length + 1), lat: Number(g.lat.toFixed(6)), lng: Number(g.lng.toFixed(6)), radius: g.accuracy > 150 ? 300 : 200 }); rerender(); toast(`Đã thêm vị trí (sai số khoảng ${g.accuracy} m). Nhớ đặt tên và bấm Lưu.`); }
+      catch (err) { toast(err.message, true); busy(btn, false); }
+    };
+    $('pcLocPaste').onclick = () => modal('Thêm địa điểm', `
+      <div class="field"><label for="plName">Tên địa điểm</label><input id="plName" placeholder="VD: Cơ sở Cầu Giấy"></div>
+      <div class="field"><label for="plTxt">Link Google Maps hoặc toạ độ</label><textarea id="plTxt" rows="3" placeholder="https://maps.google.com/...@21.0333,105.7990,17z  hoặc  21.0333, 105.7990"></textarea><small>Trên Google Maps: bấm giữ vào đúng vị trí → sao chép toạ độ hiện ra.</small></div>
+      <div class="field"><label for="plR">Bán kính</label><select id="plR">${[100, 150, 200, 300, 500, 1000].map(r => `<option value="${r}" ${r === 200 ? 'selected' : ''}>${r} m</option>`).join('')}</select></div>`,
+      [{ label: 'Huỷ' }, { label: 'Thêm', cls: 'primary', run: async () => {
+        const c = parseCoords(val('plTxt'));
+        if (!c) throw new Error('Không đọc được toạ độ. Dán dạng "21.0333, 105.7990" hoặc link Google Maps có chứa @vĩ-độ,kinh-độ.');
+        draft.locations.push({ name: val('plName') || 'Địa điểm ' + (draft.locations.length + 1), lat: c.lat, lng: c.lng, radius: Number(val('plR')) || 200 }); rerender();
+      } }]);
+    $('pcReset').onclick = () => { draft = null; rerender(); };
+    $('pcSave').onclick = async e => {
+      const btn = e.currentTarget; busy(btn, true);
+      try {
+        const r = await post('/api/portal-payroll', { action: 'saveClockSettings', settings: draft });
+        S.m.clockSettings = r.clockSettings; draft = null; toast(r.clockSettings.enabled ? 'Đã lưu. Quy định có hiệu lực ngay với lần chấm công tiếp theo.' : 'Đã lưu. Nhân viên chấm công ở bất kỳ đâu.'); rerender();
+        loadMe(S.period).catch(() => {});
+      } catch (err) { toast(err.message, true); busy(btn, false); }
+    };
+    $('pcTest').onclick = async e => {
+      const btn = e.currentTarget, out = $('pcTestOut'); busy(btn, true, 'Đang kiểm tra…');
+      const lines = [];
+      const net = draft.networks.find(n => n.ip && n.ip === m.myIp);
+      lines.push(net ? `<i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Máy này đang dùng mạng <b>${esc(net.name)}</b> → chấm công được.` : `<i class="fa-solid fa-circle-minus muted"></i> Máy này không dùng mạng trung tâm đã khai báo (IP ${esc(m.myIp || '?')}).`);
+      if (draft.locations.length) {
+        try {
+          const g = await getGeo();
+          const best = draft.locations.map(l => ({ l, d: distM(g, l) })).sort((a, b) => (a.d - a.l.radius) - (b.d - b.l.radius))[0];
+          const ok = best.d <= best.l.radius + Math.min(g.accuracy, 150);
+          lines.push(`<i class="fa-solid ${ok ? 'fa-circle-check' : 'fa-circle-xmark'}" style="color:${ok ? 'var(--green)' : 'var(--red)'}"></i> Cách <b>${esc(best.l.name)}</b> khoảng ${best.d} m (bán kính ${best.l.radius} m, sai số định vị ${g.accuracy} m) → ${ok ? 'trong khu vực' : 'ngoài khu vực'}.`);
+        } catch (err) { lines.push(`<i class="fa-solid fa-triangle-exclamation" style="color:var(--amber)"></i> ${esc(err.message)}`); }
+      }
+      out.innerHTML = `<div class="card-b" style="border-top:1px solid var(--line-2)"><div class="test-box">${lines.join('<br>')}<br><span class="muted" style="font-size:.76rem">Kiểm tra theo bản đang soạn (kể cả khi chưa lưu).</span></div></div>`;
+      busy(btn, false);
+    };
   }
 
   // ---------- Khởi động ----------

@@ -1,6 +1,7 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin, loadSessionAndAccount, accountPermissions, isSuperAdmin } = require("../_shared/adminAuth");
 const P = require("../_shared/payroll");
+const C = require("../_shared/clockPolicy");
 
 // Màn hình CHẤM CÔNG của chính nhân viên đang đăng nhập (mọi tài khoản quản trị đang hoạt động).
 // GET  ?period=YYYY-MM  -> ca đang mở, bảng công trong kỳ, lương tạm tính, nghỉ phép, phiếu lương, lịch dạy
@@ -33,6 +34,7 @@ module.exports = async function (context, req) {
         P.getPeriodStatus(period),
         P.listAll("ClassSchedules").catch(() => [])
       ]);
+      const clockPolicy = C.publicPolicy(await C.getClockSettings(), profile, C.clientIp(req));
       const all = mineRaw.map(P.toEntry);
       const open = all.find(e => e.status === "open") || null;
       const inPeriod = all.filter(e => P.periodOfDate(e.date) === period || e.status === "open").sort((a, b) => String(b.clockIn).localeCompare(String(a.clockIn)));
@@ -59,7 +61,8 @@ module.exports = async function (context, req) {
         open, entries: inPeriod, todayMinutes,
         leaves: leaves.slice(0, 40), estimate,
         slips: slips.filter(s => s.status === "finalized" || s.status === "paid").slice(0, 24),
-        schedules: mySchedules
+        schedules: mySchedules,
+        clockPolicy
       };
       return;
     }
@@ -69,7 +72,7 @@ module.exports = async function (context, req) {
     const action = String(b.action || "");
     const now = new Date().toISOString();
     const today = P.todayVN();
-    const ip = String((req.headers && (req.headers["x-forwarded-for"] || req.headers["x-client-ip"])) || "").split(",")[0].trim().slice(0, 60);
+    const ip = C.clientIp(req).slice(0, 60);
     const ua = String((req.headers && req.headers["user-agent"]) || "").slice(0, 200);
     const note = String(b.note || "").trim().slice(0, 300);
     const breakMinutes = Math.max(0, Math.min(600, Math.round(Number(b.breakMinutes) || 0)));
@@ -79,8 +82,10 @@ module.exports = async function (context, req) {
     if (action === "clockIn") {
       if (open) return bad(context, 409, open.date < today ? "Bạn chưa kết thúc ca ngày " + open.date.split("-").reverse().join("/") + ". Hãy nhập giờ ra của ca đó trước." : "Bạn đang trong ca rồi.");
       if (await P.isPeriodLocked(P.periodOfDate(today))) return bad(context, 423, "Kỳ lương tháng này đã chốt, không chấm công thêm được. Vui lòng báo quản lý.");
+      const place = C.checkPlace(await C.getClockSettings(), await P.getProfile(email), ip, b.geo, "in");
+      if (!place.ok) { context.res.status = 403; context.res.body = { success: false, code: "place", needGeo: !!place.needGeo, message: place.message }; return; }
       const id = P.newId();
-      await entries.createEntity({ partitionKey: email, rowKey: id, date: today, clockIn: now, clockOut: "", breakMinutes: 0, note, source: "clock", status: "open", createdAt: now, createdBy: email, ipIn: ip, uaIn: ua });
+      await entries.createEntity({ partitionKey: email, rowKey: id, date: today, clockIn: now, clockOut: "", breakMinutes: 0, note, source: "clock", status: "open", createdAt: now, createdBy: email, ipIn: ip, uaIn: ua, placeIn: place.record.label || "", geoInJson: place.record.geo ? JSON.stringify(place.record.geo) : "" });
       context.res.status = 200; context.res.body = { success: true, id, clockIn: now };
       return;
     }
@@ -88,9 +93,11 @@ module.exports = async function (context, req) {
     if (action === "clockOut") {
       if (!open) return bad(context, 409, "Bạn chưa vào ca.");
       if (await P.isPeriodLocked(P.periodOfDate(open.date))) return bad(context, 423, "Kỳ lương của ca này đã chốt. Vui lòng báo quản lý.");
+      const place = C.checkPlace(await C.getClockSettings(), await P.getProfile(email), ip, b.geo, "out");
+      if (!place.ok) { context.res.status = 403; context.res.body = { success: false, code: "place", needGeo: !!place.needGeo, message: place.message.replace("Hãy chấm công khi tới nơi", "Hãy kết thúc ca khi còn ở nơi làm việc").replace('hoặc gửi "Bổ sung công" để quản lý duyệt', "hoặc báo quản lý kết thúc ca hộ") }; return; }
       const mins = P.entryMinutes({ clockIn: open.clockIn, clockOut: now, breakMinutes });
       const long = mins > P.LONG_SHIFT_MINUTES;
-      await entries.updateEntity({ partitionKey: email, rowKey: open.id, clockOut: now, breakMinutes, note: [open.note, note].filter(Boolean).join(" · "), status: long ? "pending" : "ok", flag: long ? "long" : "", ipOut: ip, uaOut: ua, updatedAt: now }, "Merge");
+      await entries.updateEntity({ partitionKey: email, rowKey: open.id, clockOut: now, breakMinutes, note: [open.note, note].filter(Boolean).join(" · "), status: long ? "pending" : "ok", flag: long ? "long" : "", ipOut: ip, uaOut: ua, placeOut: place.record.label || "", geoOutJson: place.record.geo ? JSON.stringify(place.record.geo) : "", updatedAt: now }, "Merge");
       context.res.status = 200; context.res.body = { success: true, minutes: mins, pending: long, message: long ? "Ca dài hơn 14 tiếng nên cần quản lý xác nhận trước khi tính lương." : null };
       return;
     }

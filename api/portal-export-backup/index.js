@@ -11,7 +11,7 @@ const TABLES = [
   "ClassSchedules", "Students", "GiftRedemptions", "GiftCatalog", "Invoices", "Attendance",
   "Transactions", "EmailLogs",
   // Chấm công & tính lương
-  "StaffPayProfiles", "StaffTimeEntries", "StaffLeave", "PayAdjustments", "Payslips", "PayPeriods",
+  "StaffPayProfiles", "StaffTimeEntries", "StaffLeave", "PayAdjustments", "Payslips", "PayPeriods", "PayrollSettings",
   // CRM, công việc, đơn xin nghỉ học
   "StudentCrm", "StudentInteractions", "WorkTasks", "WorkProjects", "LeaveRequests"
 ];
