@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duyệt Tài Khoản Thành Viên - Tri thức Việt</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --text-dark: #0f172a; --text-muted: #64748b; --border: #e7ecf5;
+      --gold: #c9a227;
+      --blue-grad-primary: linear-gradient(135deg, #0b1120 0%, #16233f 50%, #0284c7 100%);
+      --blue-grad-btn: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif; color: var(--text-dark); line-height: 1.6;
+      background:
+        radial-gradient(1100px 550px at 105% -8%, #e7f0ff 0%, transparent 60%),
+        radial-gradient(900px 480px at -10% 105%, #fbf3de 0%, transparent 55%),
+        linear-gradient(180deg, #f8fafd 0%, #eef2f9 100%);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    h1, h2, h3 { font-family: 'Sora', 'Inter', sans-serif; }
+    .card {
+      background: #fff; border-radius: 22px; border: 1px solid var(--border); max-width: 480px; width: 100%;
+      box-shadow: 0 20px 50px -16px rgba(15,23,42,0.22); overflow: hidden;
+    }
+    .card-header {
+      background: var(--blue-grad-primary); padding: 1.8rem 2rem; text-align: center; color: #fff;
+    }
+    .card-header img { height: 44px; margin-bottom: 0.6rem; }
+    .card-header div { font-weight: 700; font-size: 1rem; }
+    .card-body { padding: 2rem; }
+    .loading { text-align: center; padding: 2rem 0; color: var(--text-muted); }
+    .loading i { font-size: 1.6rem; color: #0284c7; margin-bottom: 0.6rem; display: block; }
+    .info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--text-muted); }
+    .info-row span:last-child { font-weight: 600; text-align: right; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700;
+      padding: 0.4rem 0.9rem; border-radius: 999px; margin-bottom: 1.2rem;
+    }
+    .btn {
+      background: var(--blue-grad-btn); color: #fff; padding: 0.7rem 1.4rem; border-radius: 999px;
+      font-weight: 700; cursor: pointer; border: none; font-size: 0.92rem; font-family: 'Sora', 'Inter', sans-serif;
+      box-shadow: 0 10px 22px -8px rgba(37,99,235,0.5); width: 100%;
+    }
+    .btn-confirm { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 10px 22px -8px rgba(21,128,61,0.5); }
+    .btn-reject { background: #fff; color: #b91c1c; border: 1.5px solid #fecaca; box-shadow: none; }
+    textarea {
+      width: 100%; padding: 0.7rem 0.8rem; border: 1px solid var(--border); border-radius: 10px;
+      font-family: inherit; font-size: 0.92rem; margin-bottom: 0.9rem; resize: vertical;
+    }
+    .result-icon { text-align: center; font-size: 2.6rem; margin-bottom: 1rem; }
+    .result-title { text-align: center; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .result-sub { text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+    .error-box { text-align: center; padding: 1rem 0; }
+    .error-box i { font-size: 2rem; color: #dc2626; margin-bottom: 0.8rem; display: block; }
+  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style id="wvn-font">
+  /* Một phông chữ duy nhất cho toàn bộ website: Be Vietnam Pro (trừ biểu tượng Font Awesome) */
+  :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
+  .card-quote .wvn-quote { margin: 0; padding: 0.9rem 1.4rem; border-bottom: 1px solid #eef1f6; background: linear-gradient(90deg, #f3f9ff, #fbfdf5); }
+  .card-quote .wvn-quote p { margin: 0; font-size: 0.88rem; color: #334155; line-height: 1.5; }
+  .card-quote .wvn-quote .wvn-quote-en { margin-top: 0.15rem; font-style: italic; font-size: 0.8rem; color: #64748b; }
+</style>
+<style>
+  .dm-eyebrow { text-align: center; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #b45309; margin-bottom: 0.35rem; }
+  .dm-title { text-align: center; font-size: 1.2rem; font-weight: 800; margin-bottom: 1.2rem; }
+  .dm-status { display: flex; justify-content: center; }
+  .dm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 1.4rem; }
+  .dm-actions .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; }
+  .dm-actions.single { grid-template-columns: 1fr; }
+  .dm-note { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 1rem; }
+  .dm-note a, .result-sub a { color: #0284c7; font-weight: 600; }
+  .btn[disabled] { opacity: 0.6; cursor: wait; }
+  .dm-focus { outline: 3px solid rgba(2,132,199,0.35); outline-offset: 2px; }
+  label.dm-label { display: block; font-size: 0.85rem; font-weight: 600; margin: 1.2rem 0 0.4rem; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <img src="images/logo-wvn.png?v=20260927b" alt="Logo">
+      <div>Tri thức Việt · Duyệt thành viên</div>
+    </div>
+    <div class="card-body" id="cardBody">
+      <div class="loading">
+        <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+        Đang tải thông tin...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token') || '';
+    const wanted = params.get('action'); // approve | reject (từ nút bấm trong email)
+    const body = document.getElementById('cardBody');
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const fmt = d => { if (!d) return '—'; const x = new Date(d); return isNaN(x) ? esc(d) : x.toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }); };
+    const fmtDob = d => { if (!d) return '—'; const p = String(d).split('-'); return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : esc(d); };
+    const STATUS = {
+      pending: ['#fef3c7', '#b45309', 'fa-hourglass-half', 'Đang chờ duyệt'],
+      approved: ['#dcfce7', '#15803d', 'fa-circle-check', 'Đã duyệt'],
+      rejected: ['#fee2e2', '#b91c1c', 'fa-circle-xmark', 'Đã từ chối']
+    };
+    const badge = st => { const s = STATUS[st] || STATUS.pending; return `<div class="dm-status"><span class="status-badge" style="background:${s[0]};color:${s[1]};"><i class="fa-solid ${s[2]}"></i> ${s[3]}</span></div>`; };
+    const infoRows = m => [
+      ['Họ và tên', m.fullName || '—'], ['Email', m.email], ['Số điện thoại', m.phone || '—'],
+      ['Ngày sinh', fmtDob(m.dob)], ['Địa chỉ', m.address || '—'], ['Đăng ký lúc', fmt(m.registeredAt)]
+    ].map(([k, v]) => `<div class="info-row"><span>${k}</span><span>${k === 'Ngày sinh' || k === 'Đăng ký lúc' ? v : esc(v)}</span></div>`).join('');
+    const adminLink = '<a href="/admin#members">Trang Quản Trị → Thành Viên</a>';
+
+    function showError(msg) {
+      body.innerHTML = `<div class="error-box"><i class="fa-solid fa-link-slash"></i><div class="result-title">Không mở được link duyệt</div><p class="result-sub">${esc(msg)}</p><p class="dm-note">Bạn vẫn có thể xử lý trong ${adminLink}.</p></div>`;
+    }
+
+    function showResult(m, warning) {
+      const approved = m.status === 'approved';
+      body.innerHTML = `
+        <div class="result-icon" style="color:${approved ? '#16a34a' : '#b91c1c'};"><i class="fa-solid ${approved ? 'fa-circle-check' : 'fa-circle-xmark'}"></i></div>
+        <div class="result-title">${approved ? 'Đã duyệt tài khoản' : 'Đã từ chối tài khoản'}</div>
+        <p class="result-sub">${esc(m.fullName || m.email)} ${approved ? 'đã có thể đăng nhập và vừa nhận email thông báo.' : 'đã được báo qua email.'}</p>
+        ${warning ? `<p class="result-sub" style="color:#b45309;margin-top:0.6rem;">${esc(warning)}</p>` : ''}
+        <p class="dm-note">Xem danh sách thành viên tại ${adminLink}.</p>`;
+    }
+
+    function render(m) {
+      if (m.status !== 'pending') {
+        body.innerHTML = `<div class="dm-eyebrow">Tài khoản thành viên</div><div class="dm-title">Tài khoản này đã được xử lý</div>${badge(m.status)}
+          ${infoRows(m)}
+          <p class="dm-note">${m.reviewedBy ? `Xử lý bởi <b>${esc(m.reviewedBy)}</b>` : 'Đã xử lý'}${m.reviewedAt ? ' lúc ' + fmt(m.reviewedAt) : ''}. Muốn thay đổi, vào ${adminLink}.</p>`;
+        return;
+      }
+      body.innerHTML = `
+        <div class="dm-eyebrow">Cần phê duyệt</div>
+        <div class="dm-title">Tài khoản thành viên mới</div>
+        ${badge('pending')}
+        ${infoRows(m)}
+        <div id="rejectBox" hidden>
+          <label class="dm-label" for="reason">Lý do từ chối (không bắt buộc, sẽ gửi kèm email)</label>
+          <textarea id="reason" rows="3" placeholder="VD: Thông tin chưa đầy đủ, vui lòng liên hệ hotro@wvn.vn"></textarea>
+        </div>
+        <div class="dm-actions" id="acts">
+          <button type="button" class="btn btn-confirm" id="bApprove"><i class="fa-solid fa-check"></i> Duyệt</button>
+          <button type="button" class="btn btn-reject" id="bReject"><i class="fa-solid fa-xmark"></i> Từ chối</button>
+        </div>
+        <p class="dm-note">Người này chưa đăng nhập được cho tới khi được duyệt.</p>`;
+      const bA = document.getElementById('bApprove'), bR = document.getElementById('bReject');
+      let rejecting = false;
+      bA.onclick = () => submit('approve');
+      bR.onclick = () => {
+        if (!rejecting) {
+          rejecting = true;
+          document.getElementById('rejectBox').hidden = false;
+          bR.innerHTML = '<i class="fa-solid fa-xmark"></i> Xác nhận từ chối';
+          document.getElementById('reason').focus();
+          return;
+        }
+        submit('reject');
+      };
+      if (wanted === 'approve') { bA.classList.add('dm-focus'); bA.focus(); }
+      if (wanted === 'reject') bR.click();
+    }
+
+    async function submit(action) {
+      const btns = body.querySelectorAll('.dm-actions .btn');
+      btns.forEach(b => b.disabled = true);
+      const target = document.getElementById(action === 'approve' ? 'bApprove' : 'bReject');
+      const old = target.innerHTML;
+      target.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      try {
+        const reasonEl = document.getElementById('reason');
+        const res = await fetch('/api/public-member-approval', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, action, reason: reasonEl ? reasonEl.value.trim() : '' })
+        });
+        const r = await res.json().catch(() => ({}));
+        if (r.alreadyReviewed && r.member) { render(r.member); return; }
+        if (!res.ok || !r.success) throw new Error(r.message || 'Không lưu được, vui lòng thử lại.');
+        showResult(r.member, r.warning);
+      } catch (e) {
+        alert(e.message);
+        btns.forEach(b => b.disabled = false);
+        target.innerHTML = old;
+      }
+    }
+
+    (async function init() {
+      if (!/^[0-9a-f]{64}$/.test(token)) return showError('Link thiếu hoặc sai mã duyệt.');
+      try {
+        const res = await fetch('/api/public-member-approval?token=' + encodeURIComponent(token), { cache: 'no-store' });
+        const r = await res.json().catch(() => ({}));
+        if (!res.ok || !r.success) return showError(r.message || 'Link duyệt không hợp lệ hoặc đã hết hạn.');
+        render(r.member);
+      } catch (e) { showError('Không kết nối được máy chủ, vui lòng thử lại.'); }
+    })();
+  </script>
+</body>
+</html>

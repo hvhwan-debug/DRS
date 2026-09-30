@@ -2,6 +2,7 @@ const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin, loadSessionAndAccount, accountPermissions, isSuperAdmin } = require("../_shared/adminAuth");
 const { CRM_TABLE, INTERACTIONS_TABLE, CRM_PARTITION, DEFAULT_STAGE, leadIdFor } = require("../_shared/crm");
 const { buildParentDirectory, childKey } = require("../_shared/parentDirectory");
+const { getApprovalStatus } = require("../_shared/memberApproval");
 
 // Trả toàn bộ dữ liệu cho màn hình CRM trong 1 lần gọi: học sinh + hồ sơ chăm sóc + lịch sử
 // chăm sóc, kèm TÓM TẮT điểm / học phí / điểm danh. Phần tóm tắt chỉ trả khi tài khoản có đúng
@@ -29,10 +30,14 @@ module.exports = async function (context, req) {
     const perms = accountPermissions(account);
     const can = key => superAdmin || perms.includes(key);
 
-    const [studentRows, crmRows, interactionRows, directory, scheduleRows] = await Promise.all([
+    const [studentRows, crmRows, interactionRows, directory, scheduleRows, memberRows] = await Promise.all([
       listAll("Students"), listAll(CRM_TABLE), listAll(INTERACTIONS_TABLE),
-      buildParentDirectory(), listAll("ClassSchedules").catch(() => [])
+      buildParentDirectory(), listAll("ClassSchedules").catch(() => []), listAll("Members").catch(() => [])
     ]);
+    // Trạng thái tài khoản thành viên theo email phụ huynh: none | pending | approved | rejected (+ blocked)
+    const accounts = {};
+    for (const m of memberRows) accounts[String(m.rowKey).toLowerCase()] = { status: getApprovalStatus(m), blocked: !!m.isBlocked };
+    const accountOf = email => accounts[String(email || "").toLowerCase()] || { status: "none", blocked: false };
 
     const profiles = {};
     for (const p of crmRows) {
@@ -143,6 +148,7 @@ module.exports = async function (context, req) {
         note: e.note || "",
         enrolledAt: e.enrolledAt || null,
         parent: directory.parents[String(e.partitionKey).toLowerCase()] || null,
+        account: accountOf(e.partitionKey),
         registration: directory.children[childKey(e.partitionKey, e.studentName)] || null,
         // Nếu trước đây là khách tiềm năng: nối tiếp hồ sơ & lịch sử chăm sóc cũ, không mất dữ liệu
         profile: profiles[e.rowKey] || profiles[leadId] || null,
@@ -166,6 +172,7 @@ module.exports = async function (context, req) {
         programs: c.program ? [c.program] : [],
         note: "", enrolledAt: null,
         parent: directory.parents[c.email] || null,
+        account: accountOf(c.email),
         registration: c,
         profile: prof || { stage: "tiem-nang", priority: "thuong", tags: [], source: (directory.parents[c.email] && directory.parents[c.email].referredBy) ? "Người quen giới thiệu" : "Website", stageHistory: [] },
         interactions: interactions[id] || []

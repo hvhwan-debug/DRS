@@ -1,7 +1,8 @@
 const { getTableClient } = require("../_shared/tableStorage");
 const { buildGreeting, normalizeGender, getMemberGender } = require("../_shared/memberName");
 const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
-const { getApprovalStatus } = require("../_shared/memberApproval");
+const { getApprovalStatus, notifyAdminNewMember } = require("../_shared/memberApproval");
+const { logFamilyEvent } = require("../_shared/linkage");
 
 const SESSION_TABLE = "AuthSessions";
 const PROFILES_TABLE = "MemberProfiles";
@@ -97,19 +98,8 @@ module.exports = async function (context, req) {
       try { member = await membersTable.getEntity("member", email); } catch (e) { /* bỏ qua */ }
       if (member && getApprovalStatus(member) === "pending" && !member.approvalNotifiedAt) {
         await membersTable.updateEntity({ partitionKey: "member", rowKey: email, approvalNotifiedAt: new Date().toISOString() }, "Merge").catch(() => {});
-        const esc = v => String(v || "—").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-        await sendTrackedEmail(context, {
-          to: process.env.NOTIFY_TO_EMAIL || "hotro@wvn.vn",
-          subject: `Tài khoản mới chờ duyệt: ${fullName || email}`,
-          type: "other",
-          eyebrow: "Cần Phê Duyệt",
-          title: "Có tài khoản thành viên mới đăng ký",
-          bodyHtml: `
-            <p style="margin:0 0 12px;">Một tài khoản thành viên mới vừa đăng ký và đang chờ phê duyệt:</p>
-            <p style="margin:0 0 12px;"><strong>${esc(fullName)}</strong> — ${esc(email)} — ${esc(phone)}</p>
-            <p style="margin:0;">Vào trang quản trị, mục "Thành Viên" để duyệt hoặc từ chối.</p>`,
-          ctas: [{ label: "Mở Trang Quản Trị", href: "https://wvn.vn/admin#members", style: "primary" }]
-        });
+        await notifyAdminNewMember(context, { email, fullName, phone, address, dob });
+        await logFamilyEvent(context, email, "Đăng ký tài khoản thành viên trên website, đang chờ duyệt.", { by: "Thành viên (website)" });
         await sendTrackedEmail(context, {
           to: email,
           subject: "Đã nhận đăng ký tài khoản của bạn",

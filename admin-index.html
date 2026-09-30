@@ -3345,6 +3345,11 @@
         });
       }
 
+      const pendingAccounts = (allMembers || []).filter(m => m.approvalStatus === 'pending');
+      if (pendingAccounts.length > 0) {
+        items.push({ icon: 'fa-user-clock', color: '#b45309', text: `${pendingAccounts.length} tài khoản thành viên mới đang chờ duyệt`, tab: 'members' });
+      }
+
       const pendingInvoices = (allInvoicesData || []).filter(i => i.status === 'pending_review');
       if (pendingInvoices.length > 0) {
         items.push({ icon: 'fa-file-invoice-dollar', color: '#a16207', text: `${pendingInvoices.length} hoá đơn đang chờ duyệt biên lai thanh toán`, tab: 'invoices' });
@@ -3585,6 +3590,7 @@
         renderMembersList();
         renderMemberDashboardStats();
         renderMainDashboard();
+        renderTodoToday();
       } catch (err) {
         document.getElementById('memberLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
@@ -4634,7 +4640,18 @@
       if (hasPermission('bulkemail')) loadEmailLogs();
       if (hasPermission('attendance')) { populateAttendanceProgramSelect(); loadAttendanceHistory(); }
       if (myRole === 'super') { loadActivityLog(); loadStaffAccounts(); }
+      openTabFromHash();
     }
+
+    // Mở đúng tab theo đường dẫn /admin#ten-tab (link từ email báo, trang Công Việc, CRM...)
+    function openTabFromHash() {
+      const tab = decodeURIComponent((location.hash || '').slice(1));
+      if (!tab || !document.getElementById('panel-' + tab)) return;
+      const btn = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
+      if (btn && btn.style.display === 'none') return; // không có quyền
+      switchTab(tab);
+    }
+    window.addEventListener('hashchange', openTabFromHash);
 
     initPermissionGatingAndLoadAll();
   </script>

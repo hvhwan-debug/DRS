@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /dang-bai.html
+Disallow: /duyet-thanh-vien.html
 
 Sitemap: https://wvn.vn/sitemap.xml

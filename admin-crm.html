@@ -402,6 +402,7 @@ details.more > summary::-webkit-details-marker { display: none; }
         <option value="absent">Vắng nhiều (30 ngày qua)</option>
         <option value="tuition">Học phí chờ xác nhận</option>
         <option value="gradedrop">Điểm đi xuống</option>
+        <option value="account">Tài khoản chờ duyệt</option>
         <option value="lead">Đơn đăng ký chưa xử lý</option>
       </select>
       <button type="button" class="btn mine-toggle" id="mineToggle" aria-pressed="false"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Tôi phụ trách</button>
@@ -656,6 +657,7 @@ details.more > summary::-webkit-details-marker { display: none; }
     if (s.tuition && s.tuition.pending > 0) f.push({ key: 'tuition', label: 'Học phí chờ xác nhận', cls: 'amber' });
     if (p.priority === 'khan') f.push({ key: 'priority', label: 'Ưu tiên khẩn', cls: 'red' });
     if (s.isLead && stage === 'tiem-nang') f.push({ key: 'lead', label: 'Đơn đăng ký mới', cls: 'blue' });
+    if (s.account && s.account.status === 'pending') f.push({ key: 'account', label: 'Tài khoản chờ duyệt', cls: 'amber' });
     const g = s.grades;
     if (g && g.lastScore != null && g.prevScore != null && g.prevScore > 0 && g.lastScore <= g.prevScore * 0.85 && active) f.push({ key: 'gradedrop', label: `Điểm giảm ${g.prevScore} → ${g.lastScore}`, cls: 'red' });
     return f;
@@ -977,6 +979,7 @@ details.more > summary::-webkit-details-marker { display: none; }
         <div><dt>Người giám hộ</dt><dd>${esc(e.guardianName || '—')}${p.guardianRelation ? ` (${esc(p.guardianRelation)})` : ''}</dd></div>
         <div><dt>Điện thoại</dt><dd>${phone ? `${esc(e.guardianPhone)}${contactButtons(s, 'mini')}` : '<span class="locked">Chưa có, thêm ở tab Hồ sơ</span>'}</dd></div>
         <div><dt>Email phụ huynh</dt><dd><a href="mailto:${esc(s.parentEmail)}">${esc(s.parentEmail)}</a></dd></div>
+        <div><dt>Tài khoản web</dt><dd>${(() => { const a = s.account || { status: 'none' }; const m = { none: ['Chưa có tài khoản', '#64748b'], pending: ['Chờ duyệt', '#b45309'], approved: ['Đã duyệt', '#15803d'], rejected: ['Đã từ chối', '#b91c1c'] }[a.status] || ['—', '#64748b']; return `<span style="color:${m[1]};font-weight:600;">${m[0]}${a.blocked ? ' · đang bị chặn' : ''}</span>${a.status === 'pending' ? ' <a href="/admin#members" style="margin-left:0.4rem;">Duyệt ngay →</a>' : ''}`; })()}</dd></div>
         <div><dt>Hẹn liên hệ</dt><dd class="${p.nextFollowUp && p.nextFollowUp < today ? 'overdue' : ''}">${p.nextFollowUp ? `${esc(fmtDate(p.nextFollowUp))} (${esc(relDays(p.nextFollowUp))})${p.followUpNote ? ' · ' + esc(p.followUpNote) : ''}` : '—'}</dd></div>
       </dl>
       ${flagsOf(s).length ? `<div style="margin:-0.4rem 0 1rem;">${flagChips(s)}</div>` : ''}
