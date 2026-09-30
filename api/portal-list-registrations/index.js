@@ -26,6 +26,9 @@ module.exports = async function (context, req) {
     const registrations = [];
 
     for await (const entity of regTable.listEntities()) {
+      // Liên hệ và Bản tin không còn được lưu vào bảng này (xem send-notification), nhưng lọc thêm
+      // ở đây để các bản ghi CŨ (trước khi tách luồng) không còn lẫn vào tab Đơn Đăng Ký nữa.
+      if (entity.formType === "contact" || entity.formType === "newsletter") continue;
       let data = {};
       try { data = JSON.parse(entity.dataJson || "{}"); } catch (e) { /* bỏ qua nếu lỗi parse */ }
       registrations.push({
