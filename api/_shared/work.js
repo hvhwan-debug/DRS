@@ -28,6 +28,7 @@ function toTask(e) {
     labels: parseJson(e.labelsJson, []),
     checklist: parseJson(e.checklistJson, []),
     recurrence: e.recurrence || "",
+    blockedBy: e.blockedBy || "",
     link: parseJson(e.linkJson, null),
     history: parseJson(e.historyJson, []),
     commentCount: Number(e.commentCount) || 0,
