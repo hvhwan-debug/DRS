@@ -355,7 +355,7 @@
       .el-subj { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     }
   </style>
-  <link rel="stylesheet" href="/admin-theme.css?v=20260930f">
+  <link rel="stylesheet" href="/admin-theme.css?v=20260930g">
 <link rel="stylesheet" href="/wvn-luxe.css?v=20260929e">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1052,6 +1052,10 @@
           <textarea id="bulkEmailManualList" rows="4" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="ví dụ: nguyenvana@gmail.com, tranthib@gmail.com"></textarea>
         </div>
 
+        <div class="be-kind" role="radiogroup" aria-label="Loại email">
+          <label><input type="radio" name="bulkKind" value="marketing" checked><span><b>Bản tin / khuyến mãi</b><small>Tự bỏ qua người đã huỷ nhận, có link huỷ ở cuối email</small></span></label>
+          <label><input type="radio" name="bulkKind" value="notice"><span><b>Thông báo quan trọng</b><small>Nghỉ học, đổi lịch, việc cần làm ngay — gửi cho tất cả người nhận</small></span></label>
+        </div>
         <div style="margin-bottom:1rem;">
           <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Tiêu đề email *</label>
           <input type="text" id="bulkEmailSubject" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px;" placeholder="VD: Thông báo lịch nghỉ lễ">
@@ -4393,11 +4397,11 @@
         const result = await apiCall('/api/portal-send-bulk-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ recipients, subject, message })
+          body: JSON.stringify({ recipients, subject, message, category: (document.querySelector('input[name="bulkKind"]:checked') || {}).value || 'marketing' })
         });
         let msg = `Đã gửi thành công tới ${result.sentCount}/${recipients.length} người nhận.`;
         if (result.failedCount > 0) msg += ` (${result.failedCount} gửi thất bại: ${result.failed.join(', ')})`;
-        if (result.optedOutCount > 0) msg += ` Bỏ qua ${result.optedOutCount} người đã tắt nhận email tin tức.`;
+        if (result.optedOutCount > 0) msg += ` Bỏ qua ${result.optedOutCount} người đã huỷ nhận email quảng cáo.`;
         showGlobalAlert(msg, result.failedCount > 0);
         if (typeof loadEmailLogs === 'function') loadEmailLogs();
       } catch (err) {

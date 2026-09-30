@@ -12,6 +12,7 @@ module.exports = async function (context, req) {
   try {
     const t = await getTableClient("MemberProfiles");
     await t.upsertEntity({ partitionKey: "profile", rowKey: email, prefsJson: JSON.stringify(prefs), prefsUpdatedAt: new Date().toISOString() }, "Merge");
+    await require("../_shared/marketingConsent").setMarketingConsent(email, prefs.news !== false, "member-page");
     context.res.status = 200; context.res.body = { success: true, prefs };
   } catch (err) {
     context.log.error("Lỗi lưu tuỳ chọn:", err.message);

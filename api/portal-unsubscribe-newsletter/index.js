@@ -22,6 +22,7 @@ module.exports = async function (context, req) {
       unsubscribedAt: subscribe ? "" : now
     }, "Merge");
     await logAdminActivity(req, subscribe ? "Bản tin: đăng ký lại" : "Bản tin: huỷ đăng ký (thủ công)", email);
+    await require("../_shared/marketingConsent").setMarketingConsent(email, !!subscribe, "admin");
     context.res.status = 200;
     context.res.body = { success: true };
   } catch (err) {

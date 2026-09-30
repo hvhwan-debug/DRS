@@ -379,6 +379,7 @@ module.exports = async function (context, req) {
         partitionKey: "sub", rowKey: emailLc, name: senderName || "", status: "subscribed",
         subscribedAt: new Date().toISOString(), unsubscribedAt: ""
       }, "Merge");
+      await require("../_shared/marketingConsent").setMarketingConsent(emailLc, true, "website-signup");
       const token = await createConfirmToken("newsletter-unsub", "sub", emailLc);
       unsubscribeUrl = `https://wvn.vn/api/public-newsletter-unsubscribe?token=${token}`;
     } catch (err) {

@@ -55,17 +55,10 @@ module.exports = async function (context, req) {
   let sentCount = 0;
   const failed = [];
 
-  // Tôn trọng tuỳ chọn của thành viên: ai tắt "Tin tức & sự kiện" thì không nhận email hàng loạt
-  const optedOut = new Set();
-  try {
-    const { getTableClient: gtc } = require("../_shared/tableStorage");
-    const pt = await gtc("MemberProfiles");
-    for await (const p of pt.listEntities({ queryOptions: { select: ["rowKey", "prefsJson"] } })) {
-      try { if (JSON.parse(p.prefsJson || "{}").news === false) optedOut.add(String(p.rowKey).toLowerCase()); } catch (e) {}
-    }
-  } catch (e) {}
-  const skipped = recipients.filter(e => optedOut.has(String(e).toLowerCase()));
-  recipients = recipients.filter(e => !optedOut.has(String(e).toLowerCase()));
+  // Loại email: "marketing" (bản tin/khuyến mãi — tự bỏ qua người đã huỷ nhận) hoặc "notice" (thông báo quan trọng
+  // như nghỉ học, đổi lịch — gửi cho tất cả). Mặc định là quảng cáo để không làm phiền người đã huỷ.
+  const category = body.category === "notice" ? "notice" : "marketing";
+  const skipped = [];
   for (const email of recipients) {
     const displayName = await getMemberDisplayName(email);
     const gender = await getMemberGender(email);
@@ -79,14 +72,15 @@ module.exports = async function (context, req) {
     const result = await sendTrackedEmail(context, {
       to: email,
       subject: fill(subject, displayName || ""),
-      type: "bulk",
-      eyebrow: "Thông Báo Từ Đội Ngũ",
+      type: category === "notice" ? "notice" : "bulk",
+      eyebrow: category === "notice" ? "Thông Báo Quan Trọng" : "Tin Tức Từ Tri thức Việt",
       title: escapeHtml(fill(subject, displayName || "")),
       bodyHtml: `
         <p style="margin:0 0 16px;">${greeting}</p>
         <div style="line-height:1.7; white-space:pre-wrap;">${fill(messageHtml, escapeHtml(displayName || ""))}</div>`
     });
     if (result.success) sentCount++;
+    else if (result.skipped) skipped.push(email);
     else failed.push(email);
   }
 

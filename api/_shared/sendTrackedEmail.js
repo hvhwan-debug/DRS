@@ -18,6 +18,25 @@ async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, tit
   let success = false;
   let errorMessage = "";
 
+  // Email QUẢNG CÁO: bỏ qua người đã huỷ nhận; người còn nhận luôn thấy link huỷ ở cuối email.
+  // Email THÔNG BÁO (mọi type khác) không bị ảnh hưởng.
+  const { isMarketing, isMarketingOptedOut, unsubscribeUrlFor } = require("./marketingConsent");
+  if (isMarketing(type)) {
+    if (await isMarketingOptedOut(to)) {
+      try {
+        const lt = await getTableClient(EMAIL_LOGS_TABLE);
+        await lt.createEntity({ partitionKey: "log", rowKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, to, subject, type: type || "other", success: false, skipped: true, errorMessage: "Bỏ qua: người nhận đã huỷ nhận email quảng cáo", sentAt: new Date().toISOString() });
+      } catch (err) {}
+      return { success: false, skipped: true, errorMessage: "Người nhận đã huỷ nhận email quảng cáo." };
+    }
+    try {
+      const url = await unsubscribeUrlFor(to);
+      const note = `Bạn nhận email này vì đã đăng ký nhận tin từ Tri thức Việt. <a href="${url}" style="color:#64748b;text-decoration:underline;">Huỷ nhận email quảng cáo</a>. Các thông báo về học tập, học phí và tài khoản vẫn được gửi bình thường.`;
+      footerNote = footerNote ? footerNote + "<br>" + note : note;
+      if (html && !/public-newsletter-unsubscribe/.test(html)) html = html.replace(/<\/body>/i, `<p style="font-size:12px;color:#94a3b8;text-align:center;margin:16px 0;">${note}</p></body>`);
+    } catch (err) {}
+  }
+
   let finalHtml = html;
   if (!finalHtml) {
     let isVip = false;

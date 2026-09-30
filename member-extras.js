@@ -129,9 +129,9 @@
     el.innerHTML = '<div class="card"><h2><i class="fa-solid fa-inbox"></i> Hộp Thư</h2><p class="mx-note" style="margin-top:-0.4rem">' + all.length + ' email đã gửi tới ' + esc(D.email) + (failed ? ', <b style="color:#b91c1c">' + failed + ' email gửi lỗi</b>' : '') + '. Không thấy trong hộp thư? Hãy xem mục Thư rác / Quảng cáo.</p>' +
       (all.length ? chips + '<div class="mx-ibx-list">' + html + '</div>' + (rest > 0 ? '<button type="button" class="btn btn-outline mx-ibx-more" data-ibx-more>Xem thêm ' + rest + ' mục</button>' : '') : '<p class="mx-empty">Chưa có email nào.</p>') + '</div>' +
       '<div class="card"><h2><i class="fa-solid fa-bell"></i> Tuỳ Chọn Nhận Email</h2>' +
-      '<label class="mx-switch"><input type="checkbox" data-pref="reminders"' + (prefs.reminders !== false ? ' checked' : '') + '><span><strong>Nhắc lịch học & tình hình học tập</strong><small>Nhắc buổi học, báo tiến bộ và kết quả của con.</small></span></label>' +
-      '<label class="mx-switch"><input type="checkbox" data-pref="news"' + (prefs.news !== false ? ' checked' : '') + '><span><strong>Tin tức, sự kiện & chương trình mới</strong><small>Email gửi chung tới thành viên.</small></span></label>' +
-      '<p class="mx-note">Email về hoá đơn, học phí và bảo mật tài khoản luôn được gửi để gia đình không bỏ lỡ thông tin quan trọng.</p><div id="mxPrefAlert" class="mx-alert" hidden></div></div>';
+      '<label class="mx-switch"><input type="checkbox" data-pref="news"' + (prefs.news !== false ? ' checked' : '') + '><span><strong>Bản tin, khuyến mãi & chương trình mới</strong><small>Tin tức, ưu đãi và sự kiện gửi chung tới thành viên. Tắt đi thì trung tâm không gửi các email này nữa.</small></span></label>' +
+      '<div class="mx-always"><i class="fa-solid fa-shield-heart"></i><div><strong>Luôn được gửi</strong><small>Học phí & hoá đơn, xác nhận đổi quà, lịch học & điểm danh, tình hình học tập của con, bảo mật tài khoản và thông báo quan trọng (vd. nghỉ học). Những email này không phải quảng cáo nên vẫn gửi để gia đình không bỏ lỡ.</small></div></div>' +
+      '<div id="mxPrefAlert" class="mx-alert" hidden></div></div>';
   }
 
   // ---------- Lịch học: tải .ics ----------
@@ -248,9 +248,9 @@
     });
     document.addEventListener('change', function (e) {
       if (!e.target.matches('[data-pref]')) return;
-      var prefs = {}; document.querySelectorAll('[data-pref]').forEach(function (c) { prefs[c.dataset.pref] = c.checked; });
+      var prefs = { reminders: true }; document.querySelectorAll('[data-pref]').forEach(function (c) { prefs[c.dataset.pref] = c.checked; });
       var al = $('mxPrefAlert');
-      post('/api/member-update-prefs', { prefs: prefs }).then(function (r) { D.profile = D.profile || {}; D.profile.prefs = r.prefs; al.hidden = false; al.className = 'mx-alert ok'; al.textContent = 'Đã lưu tuỳ chọn.'; })
+      post('/api/member-update-prefs', { prefs: prefs }).then(function (r) { D.profile = D.profile || {}; D.profile.prefs = r.prefs; al.hidden = false; al.className = 'mx-alert ok'; al.textContent = r.prefs.news ? 'Đã bật nhận bản tin & khuyến mãi.' : 'Đã tắt. Bạn sẽ không nhận email quảng cáo nữa, các thông báo quan trọng vẫn được gửi.'; })
         .catch(function (err) { al.hidden = false; al.className = 'mx-alert bad'; al.textContent = err.message; e.target.checked = !e.target.checked; });
     });
   }

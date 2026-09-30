@@ -34,6 +34,7 @@ module.exports = async function (context, req) {
     const subsTable = await getTableClient(SUBS_TABLE);
     await subsTable.upsertEntity({ partitionKey: "sub", rowKey: email, status: "unsubscribed", unsubscribedAt: new Date().toISOString() }, "Merge");
     await tokensTable.deleteEntity("token", token).catch(() => {});
+    await require("../_shared/marketingConsent").setMarketingConsent(email, false, "email-link");
 
     context.res.status = 200;
     context.res.body = page("Đã huỷ đăng ký", `Email <strong>${email}</strong> sẽ không nhận bản tin từ Tri thức Việt nữa. Bạn có thể đăng ký lại bất cứ lúc nào trên website.`, true);
