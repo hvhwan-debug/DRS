@@ -38,6 +38,7 @@ module.exports = async function (context, req) {
     if (has("dueTime")) patch.dueTime = W.cleanTime(b.dueTime);
     if (has("projectId")) patch.projectId = W.isId(b.projectId) ? b.projectId : "";
     if (has("recurrence") && W.RECURRENCES.includes(b.recurrence)) patch.recurrence = b.recurrence;
+    if (has("blockedBy")) patch.blockedBy = (b.blockedBy && W.isId(b.blockedBy) && b.blockedBy !== b.id) ? b.blockedBy : "";
     if (has("order")) patch.order = Number(b.order) || 0;
     if (has("assignees") && Array.isArray(b.assignees)) patch.assigneesJson = JSON.stringify(Array.from(new Set(b.assignees.map(x => W.clean(x, 120).toLowerCase()).filter(Boolean))).slice(0, 10));
     if (has("labels") && Array.isArray(b.labels)) patch.labelsJson = JSON.stringify(Array.from(new Set(b.labels.map(x => W.clean(x, 30)).filter(Boolean))).slice(0, 10));
@@ -130,7 +131,7 @@ function fromTask(t) {
   return {
     title: t.title, description: t.description, status: t.status, priority: t.priority, dueDate: t.dueDate, dueTime: t.dueTime,
     assigneesJson: JSON.stringify(t.assignees), projectId: t.projectId, labelsJson: JSON.stringify(t.labels),
-    checklistJson: JSON.stringify(t.checklist), recurrence: t.recurrence, linkJson: t.link ? JSON.stringify(t.link) : "",
+    checklistJson: JSON.stringify(t.checklist), recurrence: t.recurrence, blockedBy: t.blockedBy || "", linkJson: t.link ? JSON.stringify(t.link) : "",
     createdBy: t.createdBy, createdByName: t.createdByName
   };
 }
