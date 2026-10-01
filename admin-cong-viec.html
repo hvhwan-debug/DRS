@@ -122,16 +122,16 @@ a { color: inherit; }
 .topbar.scrolled { border-bottom-color: var(--hair); background: rgba(245,246,250,0.86); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
 .topbar-in { display: flex; align-items: flex-start; gap: 0.7rem; max-width: 1560px; margin: 0 auto; }
 .quick { position: relative; flex: 1; min-width: 0; }
-.quick input { width: 100%; background: var(--surface); border: 1px solid var(--hair); border-radius: 15px; padding: 0.82rem 4.6rem 0.82rem 3.1rem; font-size: 0.95rem; box-shadow: var(--lift); transition: border-color .15s, box-shadow .15s; }
+.quick input { width: 100%; background: var(--surface); border: 1px solid var(--hair); border-radius: 15px; padding: 0.82rem 3.2rem 0.82rem 3.1rem; font-size: 0.95rem; box-shadow: var(--lift); transition: border-color .15s, box-shadow .15s; }
 .quick input::placeholder { color: var(--faint); }
 .quick input:focus { outline: none; border-color: #7dd3fc; box-shadow: var(--ring), var(--lift); }
 .quick > i { position: absolute; left: 0.75rem; top: 0.6rem; color: var(--cyan); width: 28px; height: 28px; border-radius: 10px; display: grid; place-items: center; font-size: 0.74rem; background: var(--night); box-shadow: 0 6px 14px -8px rgba(10,18,48,0.8); }
-.quick .enter-hint { position: absolute; right: 0.8rem; top: 0.82rem; font-size: 0.7rem; color: var(--faint); border: 1px solid var(--hair); border-radius: 6px; padding: 0 0.4rem; line-height: 1.55; pointer-events: none; opacity: 0; transition: opacity .15s; }
-.quick:focus-within .enter-hint { opacity: 1; }
 .quick .parsed { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.5rem; padding-left: 0.2rem; }
 .quick .parsed:empty { display: none; }
 .quick .hint { font-size: 0.78rem; color: var(--muted); margin: 0.5rem 0 0 0.2rem; display: none; line-height: 1.55; }
-.quick:focus-within .hint { display: block; }
+.quick.help-open .hint { display: block; }
+.q-help { position: absolute; right: 0.55rem; top: 0.55rem; width: 34px; height: 34px; border-radius: 10px; color: var(--faint); display: grid; place-items: center; font-size: 0.95rem; transition: color .15s, background .15s; }
+.q-help:hover, .quick.help-open .q-help { color: var(--sapphire); background: #eef6ff; }
 .quick .hint code { font-family: var(--sans); background: var(--surface); border: 1px solid var(--hair); border-radius: 6px; padding: 0 0.32rem; color: var(--ink-2); font-size: 0.75rem; }
 .tb-btn { display: inline-flex; align-items: center; gap: 0.5rem; height: 48px; padding: 0 0.95rem; border-radius: 15px; background: var(--surface); border: 1px solid var(--hair); box-shadow: var(--lift); color: var(--ink-2); font-weight: 500; font-size: 0.86rem; transition: border-color .15s, transform .15s; flex-shrink: 0; }
 .tb-btn:hover { border-color: #b6dff5; transform: translateY(-1px); }
@@ -734,7 +734,6 @@ a.att-main:hover b { color: var(--sapphire); }
   .tb-btn { display: none; }
   .quick input { padding: 0.75rem 0.9rem 0.75rem 3rem; font-size: 0.92rem; border-radius: 14px; }
   .quick > i { top: 0.5rem; }
-  .quick .enter-hint { display: none; }
   .content, .content.wide { padding: 0.4rem 1rem calc(8rem + env(safe-area-inset-bottom, 0px)); }
   .ph { padding: 1.1rem 1.1rem; margin: 0.6rem 0 1rem; border-radius: 18px; }
   .page-title { font-size: 1.4rem; }
@@ -898,8 +897,8 @@ a.att-main:hover b { color: var(--sapphire); }
         <div class="quick">
           <i class="fa-solid fa-plus" aria-hidden="true"></i>
           <label class="sr-only" for="quickInput">Thêm việc nhanh</label>
-          <input id="quickInput" autocomplete="off" placeholder="Thêm việc… ví dụ: Gọi phụ huynh bé An mai 9h @Hà #Luyện chữ !cao">
-          <span class="enter-hint">Enter</span>
+          <input id="quickInput" autocomplete="off" placeholder="Thêm việc">
+          <button type="button" class="q-help" id="quickHelp" aria-label="Cách nhập nhanh" aria-expanded="false" title="Cách nhập nhanh"><i class="fa-regular fa-circle-question" aria-hidden="true"></i></button>
           <div class="parsed" id="parsed"></div>
           <div class="hint">Nhấn Enter để lưu. Gõ <code>mai</code>, <code>thứ 6</code>, <code>15/10</code>, <code>9h30</code> để đặt hạn · <code>@tên</code> giao việc · <code>#dự án</code> · <code>!cao</code> <code>!khẩn</code> · <code>mỗi tuần</code> để lặp lại</div>
         </div>
@@ -2045,6 +2044,7 @@ a.att-main:hover b { color: var(--sapphire); }
       const item = D.inbox.find(i => i.key === ai.dataset.assignInbox); if (!item) return;
       return focusQuick({ link: { type: item.key, id: item.key, label: item.title, href: item.href }, dueDate: todayStr() }, item.title.replace(/^\d+\s/, 'Xử lý ') + ' ');
     }
+    if (t.closest('#quickHelp')) { const q = t.closest('.quick'); const on = q.classList.toggle('help-open'); $('quickHelp').setAttribute('aria-expanded', on); return; }
     const dd = t.closest('[data-done-days]'); if (dd) { state.doneDays = +dd.dataset.doneDays; return renderAll(); }
     const dp = t.closest('[data-dup]'); if (dp) return duplicateTask(dp.dataset.dup);
     const sa = t.closest('[data-select-ids]'); if (sa) { const ids = sa.dataset.selectIds.split(','); const all = ids.every(id => state.selected.has(id)); ids.forEach(id => all ? state.selected.delete(id) : state.selected.add(id)); return renderAll(); }
