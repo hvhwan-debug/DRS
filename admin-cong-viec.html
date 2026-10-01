@@ -778,23 +778,20 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
     if (blocker && blocker.status !== 'done') bits.push(`<span class="pill blocked"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ: ${esc(blocker.title.slice(0, 30))}</span>`);
     return bits.join('');
   }
-  // Cột "Hạn chót" riêng — luôn hiện, kể cả khi chưa đặt hạn (hiện "—") để các dòng thẳng hàng nhau.
+  // Cột "Hạn chót" riêng, thẳng hàng giữa các dòng — nhưng khi KHÔNG có hạn thì để trống thật sự
+  // (không ghi chữ "—"), đúng kiểu Monday: ô trống là trống, không nhồi chữ không mang thông tin.
   function dueColHtml(t) {
     const today = todayStr();
-    if (!t.dueDate) return `<span class="col-due muted">—</span>`;
+    if (!t.dueDate) return `<span class="col-due"></span>`;
     const cls = t.status !== 'done' && t.dueDate < today ? 'red' : t.dueDate === today ? 'blue' : '';
     return `<span class="col-due pill ${cls}"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(t.dueDate, t.dueTime))}</span>`;
   }
-  // Cột "Ưu tiên" riêng — luôn hiện cả 4 mức (kể cả Bình thường/Thấp) để bảng đều cột như Monday.
-  const PRIO_COL = {
-    urgent: { label: 'Khẩn', cls: 'red', icon: 'fa-bolt' },
-    high: { label: 'Cao', cls: 'gold', icon: 'fa-star' },
-    normal: { label: 'Bình thường', cls: '', icon: 'fa-minus' },
-    low: { label: 'Thấp', cls: '', icon: 'fa-arrow-down' }
-  };
+  // Cột "Ưu tiên" riêng — chỉ hiện khi Khẩn/Cao (đáng chú ý thật sự); Bình thường/Thấp để trống,
+  // không ghi chữ mặc định ra mọi dòng.
   function prioColHtml(t) {
-    const c = PRIO_COL[t.priority] || PRIO_COL.normal;
-    return `<span class="col-prio pill ${c.cls}"><i class="fa-solid ${c.icon}" aria-hidden="true"></i>${c.label}</span>`;
+    if (t.priority === 'urgent') return '<span class="col-prio pill red"><i class="fa-solid fa-bolt" aria-hidden="true"></i>Khẩn</span>';
+    if (t.priority === 'high') return '<span class="col-prio pill gold"><i class="fa-solid fa-star" aria-hidden="true"></i>Cao</span>';
+    return '<span class="col-prio"></span>';
   }
   const AV_TONES = [['#eaf0ff', '#1f4fd6'], ['#e6f4ec', '#1f7a4d'], ['#f6efe3', '#8a6a37'], ['#efebfb', '#6246c9'], ['#fdeceb', '#c2352b'], ['#e3f4f7', '#0e7490'], ['#fdf3e2', '#b7791f']];
   const avTone = e => { let h = 0; for (const c of String(e || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0; const t = AV_TONES[h % AV_TONES.length]; return `background:${t[0]};color:${t[1]}`; };
