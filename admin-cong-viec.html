@@ -793,6 +793,31 @@ a.att-main:hover b { color: var(--sapphire); }
 .pane h4 .lnk:hover { text-decoration: underline; }
 .sec button.link { background: none; }
 
+/* Bảng quy mô lớn */
+.col { display: flex; flex-direction: column; }
+.cards { max-height: max(380px, calc(100vh - 340px)); overflow-y: auto; overscroll-behavior: contain; padding: 0.1rem 0.15rem 0.2rem 0.05rem; scrollbar-width: thin; scrollbar-color: #c5cde0 transparent; }
+.cards::-webkit-scrollbar { width: 6px; } .cards::-webkit-scrollbar-thumb { background: #c5cde0; border-radius: 4px; }
+.col-head button.sa { color: var(--muted); }
+.col-head button.sa.on { background: var(--night); color: #fff; }
+.col-hint { margin: -0.25rem 0.5rem 0.55rem; font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+.col-hint button { color: var(--sapphire); font-weight: 600; } .col-hint button:hover { text-decoration: underline; }
+.c-top:empty { display: none; }
+.card .card-sel { position: absolute; top: 8px; right: 8px; z-index: 2; width: 19px; height: 19px; border-radius: 6px; border: 1.5px solid #c1c9dd; background: #fff; display: none; place-items: center; }
+.card .card-sel i { font-size: 0.55rem; color: #fff; opacity: 0; }
+.card:hover .card-sel, .card .card-sel.on, body.has-sel .card .card-sel { display: grid; }
+.card .card-sel.on { background: var(--night); border-color: var(--night); } .card .card-sel.on i { opacity: 1; }
+.card:hover .c-top .pr, body.has-sel .card .c-top .pr { margin-right: 24px; }
+.card.sel { border-color: var(--night); box-shadow: 0 0 0 2px var(--night), 0 14px 26px -18px rgba(10,18,48,0.6); }
+.card.cmp { padding: 0.55rem 0.75rem 0.55rem 0.9rem; }
+.card.cmp .t-title { font-size: 0.82rem; -webkit-line-clamp: 2; }
+.card.cmp .foot { margin-top: 0.4rem; }
+.drag-badge { position: fixed; top: -200px; left: -200px; padding: 0.4rem 0.9rem; border-radius: 12px; background: var(--night); color: #fff; font-weight: 650; font-size: 0.85rem; }
+.fsearch { position: relative; display: inline-flex; align-items: center; }
+.fsearch > i { position: absolute; left: 0.8rem; color: var(--sapphire); font-size: 0.78rem; pointer-events: none; }
+.fsearch input { width: 220px; min-height: 38px; padding: 0.5rem 0.9rem 0.5rem 2.1rem; border: 1px solid var(--hair); border-radius: 12px; background: var(--surface); font-size: 0.84rem; }
+.fsearch input:focus { outline: none; border-color: #7dd3fc; box-shadow: var(--ring); }
+@media (max-width: 900px) { .cards { max-height: max(340px, calc(100vh - 300px)); } .fsearch input { width: 180px; } }
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -899,6 +924,7 @@ a.att-main:hover b { color: var(--sapphire); }
   <select id="bulkAssign" aria-label="Gán người phụ trách"><option value="">Gán người…</option></select>
   <select id="bulkProject" aria-label="Chuyển dự án"><option value="">Chuyển dự án…</option><option value="__none">Không dự án</option></select>
   <select id="bulkPriority" aria-label="Đổi ưu tiên"><option value="">Đổi ưu tiên…</option></select>
+  <select id="bulkStatus" aria-label="Chuyển trạng thái"><option value="">Chuyển sang…</option><option value="todo">Cần làm</option><option value="doing">Đang làm</option><option value="review">Chờ duyệt</option><option value="done">Hoàn thành</option></select>
   <select id="bulkDue" aria-label="Dời hạn"><option value="">Dời hạn…</option><option value="today">Sang hôm nay</option><option value="tomorrow">Sang ngày mai</option><option value="monday">Sang Thứ Hai tới</option><option value="week">Lùi 1 tuần</option><option value="none">Bỏ hạn</option></select>
   <button type="button" id="bulkDone"><i class="fa-solid fa-check" aria-hidden="true"></i> Đánh dấu xong</button>
   <button type="button" class="danger" id="bulkDelete"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xoá</button>
@@ -954,7 +980,7 @@ a.att-main:hover b { color: var(--sapphire); }
   const TONE = { blue: 'var(--sapphire)', green: 'var(--green)', gold: 'var(--gold)', red: 'var(--red)', violet: 'var(--violet)' };
 
   let D = { me: {}, tasks: [], projects: [], staff: [], inbox: [] };
-  let state = { view: 'today', project: '', scope: 'me', boardWho: '', boardFlag: '', boardMode: 'kanban', boardSort: 'smart', inboxMod: '', caps: {}, weekStart: null, openId: null, selected: new Set() };
+  let state = { view: 'today', project: '', scope: 'me', boardWho: '', boardFlag: '', boardMode: 'kanban', boardSort: 'smart', boardQr: '', doneDays: 7, keepFocusQ: false, inboxMod: '', caps: {}, weekStart: null, openId: null, selected: new Set() };
 
   // ---------- API ----------
   async function api(path, opts = {}, attempt = 0) {
@@ -999,9 +1025,10 @@ a.att-main:hover b { color: var(--sapphire); }
       if (['kanban', 'list'].includes(p.boardMode)) state.boardMode = p.boardMode;
       if (['me', 'all'].includes(p.scope)) state.scope = p.scope;
       if (['smart', 'new', 'due'].includes(p.boardSort)) state.boardSort = p.boardSort;
+      if ([7, 30, 45].includes(p.doneDays)) state.doneDays = p.doneDays;
     } catch (e) {}
   }
-  function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify({ boardMode: state.boardMode, scope: state.scope, boardSort: state.boardSort })); } catch (e) {} }
+  function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify({ boardMode: state.boardMode, scope: state.scope, boardSort: state.boardSort, doneDays: state.doneDays })); } catch (e) {} }
   const capOf = (key, dflt) => state.caps[key] || dflt || 100;
 
   // ---------- Luồng trạng thái: giao diện biết đúng quy tắc của máy chủ để không để người dùng thao tác rồi mới bị báo lỗi ----------
@@ -1028,6 +1055,59 @@ a.att-main:hover b { color: var(--sapphire); }
     const prev = t.status;
     if (t.status === 'todo') await update(t.id, { status: 'doing' }, { silentRender: true });
     await update(t.id, { status: 'review' }, { msg: `Đã gửi "${t.title}" cho quản lý duyệt`, undo: { status: prev } });
+  }
+
+  // ---------- Thao tác hàng loạt: giới hạn số yêu cầu chạy cùng lúc để 1.000 việc không làm nghẽn máy chủ ----------
+  async function runPool(items, worker, size, onProgress) {
+    let i = 0, done = 0; const out = [];
+    await Promise.all(Array.from({ length: Math.min(size || 6, items.length) }, async () => {
+      while (i < items.length) { const k = i++; try { out[k] = await worker(items[k]); } catch (e) { out[k] = e; } done++; if (onProgress) onProgress(done); }
+    }));
+    return out;
+  }
+  const progressToast = total => n => { if (total > 8) toast(`Đang cập nhật ${n}/${total}…`); };
+  async function bulkApplyIds(ids, patch, label) {
+    if (!ids.length) return;
+    if (ids.length > 30 && !confirm(`Cập nhật ${ids.length} việc? Có thể mất vài chục giây, vui lòng không đóng trang.`)) return;
+    await runPool(ids, id => update(id, patch, { silentRender: true }), 6, progressToast(ids.length));
+    state.selected.clear(); renderAll(); toast(label || `Đã cập nhật ${ids.length} việc`);
+  }
+  // Chuyển trạng thái một hoặc nhiều việc, tôn trọng luồng duyệt. auto = tự đi từng bước tới "Chờ duyệt" cho nhân viên.
+  async function moveTasks(ids, to, opts) {
+    opts = opts || {};
+    const tasks = ids.map(findTask).filter(t => t && t.status !== to);
+    if (!tasks.length) return;
+    const STEP = { todo: 'Cần làm', doing: 'Đang làm', review: 'Chờ duyệt', done: 'Hoàn thành' };
+    if (tasks.length === 1 && !opts.auto) {
+      const t = tasks[0]; const bm = moveBlock(t, to); if (bm) return toast(bm, { error: true });
+      if (t.status === 'review' && (to === 'doing' || to === 'todo')) {
+        const note = prompt(`Trả lại "${t.title}" để chỉnh sửa — lý do (không bắt buộc, sẽ báo cho người phụ trách):`, '');
+        if (note === null) return;
+        return update(t.id, { status: to, statusChangeNote: note }, { msg: `Đã trả lại "${t.title}"` });
+      }
+      return update(t.id, { status: to }, { msg: `Đã chuyển sang "${STEP[to]}"` });
+    }
+    const nonMgr = isMgr() === false;
+    const ok = [], skipped = []; let reason = '';
+    tasks.forEach(t => {
+      const needSteps = opts.auto && nonMgr && to === 'review' && t.status === 'todo';
+      const m = needSteps ? '' : moveBlock(t, to);
+      if (m) { skipped.push(t); reason = reason || m; } else ok.push({ t, steps: needSteps });
+    });
+    if (!ok.length) return toast(reason || 'Không có việc nào chuyển được.', { error: true });
+    if (ok.length > 30 && !confirm(`Chuyển ${ok.length} việc sang "${STEP[to]}"? Có thể mất vài chục giây, vui lòng không đóng trang.`)) return;
+    await runPool(ok, async x => { if (x.steps) await update(x.t.id, { status: 'doing' }, { silentRender: true }); return update(x.t.id, { status: to }, { silentRender: true }); }, 6, progressToast(ok.length));
+    state.selected.clear(); renderAll();
+    toast(`Đã chuyển ${ok.length} việc sang "${STEP[to]}"${skipped.length ? ` · bỏ qua ${skipped.length} việc chưa đủ điều kiện` : ''}`, skipped.length ? { error: false } : undefined);
+  }
+  async function deleteMany(ids) {
+    const gone = ids.map(findTask).filter(Boolean);
+    if (!gone.length) return;
+    const set = new Set(ids); D.tasks = D.tasks.filter(t => !set.has(t.id)); if (state.openId && set.has(state.openId)) closeDrawer();
+    state.selected.clear(); renderAll();
+    const fails = [];
+    await runPool(gone, async t => { try { await post('/api/portal-work-delete-task', { id: t.id }); } catch (e) { fails.push(t); } }, 6, progressToast(gone.length));
+    if (fails.length) { D.tasks = D.tasks.concat(fails); renderAll(); toast(`Không xoá được ${fails.length} việc, đã khôi phục.`, { error: true }); } else toast(`Đã xoá ${gone.length} việc`);
   }
 
   // ---------- Dòng việc ----------
@@ -1214,58 +1294,84 @@ a.att-main:hover b { color: var(--sapphire); }
     due: byDue,
     new: (a, b) => (a.order - b.order)
   };
+  const doneOk = t => {
+    if (t.status !== 'done' || !t.completedAt || state.doneDays >= 45) return true;
+    return (Date.now() - Date.parse(t.completedAt)) < state.doneDays * 864e5;
+  };
+  const hayOf = t => norm([t.title, t.description, (t.labels || []).join(' '), (projectBy(t.projectId) || {}).name, (t.assignees || []).map(e => staffBy(e).name).join(' ')].join(' '));
+  const qTerms = () => norm(String(state.boardQr || '').trim()).split(/\s+/).filter(Boolean);
   function boardPool() {
-    return D.tasks.filter(t => (!state.project || t.projectId === state.project) && (!state.boardWho || (state.boardWho === 'me' ? isMine(t) : t.assignees.includes(state.boardWho))) && flagOk(t));
+    const qn = qTerms();
+    return D.tasks.filter(t => (!state.project || t.projectId === state.project) && (!state.boardWho || (state.boardWho === 'me' ? isMine(t) : t.assignees.includes(state.boardWho))) && flagOk(t) && doneOk(t) && (!qn.length || (h => qn.every(w => h.includes(w)))(hayOf(t))));
   }
+  const colAll = (pool, k) => pool.filter(t => t.status === k);
+  function boardBody(pool) {
+    if (state.boardMode === 'list') {
+      return STATUS.map(([k, label]) => {
+        const items = colAll(pool, k).sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : (SORTS[state.boardSort] || SORTS.smart)(a, b));
+        return items.length ? `<div class="lgroup" style="--sc:${ST_COLOR[k]}"><div class="sec"><span class="sd"></span><h3>${label}</h3><span class="c">${items.length}</span><span class="grow"></span>${selAll(items)}</div>${list(items, '', 'l-' + k)}</div>` : '';
+      }).join('') || '<div class="empty"><b>Không có việc nào khớp bộ lọc.</b>Bỏ bớt bộ lọc hoặc thêm việc mới ở ô phía trên.</div>';
+    }
+    const baseDone = D.tasks.filter(t => (!state.project || t.projectId === state.project) && t.status === 'done' && !doneOk(t)).length;
+    return `<div class="board">${STATUS.map(([k, label]) => {
+      const all = colAll(pool, k);
+      let items = all.slice().sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : (SORTS[state.boardSort] || SORTS.smart)(a, b));
+      const step = k === 'done' ? 20 : 40; const cap = capOf('c-' + k, step); const more = items.length > cap ? items.length - cap : 0; if (more) items = items.slice(0, cap);
+      const allSel = all.length > 0 && all.every(t => state.selected.has(t.id));
+      return `<div class="col" data-col="${k}"><div class="col-head"><span class="sd"></span><b>${label}</b><span class="c">${all.length}</span><span class="grow"></span>${all.length > 1 ? `<button type="button" class="sa ${allSel ? 'on' : ''}" data-select-ids="${all.map(t => esc(t.id)).join(',')}" title="${allSel ? 'Bỏ chọn' : 'Chọn tất cả ' + all.length + ' việc trong cột'}" aria-label="Chọn tất cả việc trong cột ${label}"><i class="fa-solid fa-check-double" aria-hidden="true"></i></button>` : ''}<button data-add-status="${k}" aria-label="Thêm việc vào ${label}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></div>
+        ${k === 'done' && baseDone ? `<div class="col-hint">Đang ẩn ${baseDone} việc xong trước đó · <button type="button" data-done-days="45">xem tất cả</button></div>` : ''}
+        <div class="cards" data-cards="${k}">${items.map(card).join('')}${more ? `<button type="button" class="more-btn" data-more="c-${k}" data-step="${step}">Hiện thêm <small>(còn ${more})</small></button>` : ''}</div></div>`;
+    }).join('')}</div>`;
+  }
+  function keepScroll(fn) {
+    const sc = {}; document.querySelectorAll('#view-board .cards[data-cards]').forEach(el => { sc[el.dataset.cards] = el.scrollTop; });
+    const bd = document.querySelector('#view-board .board'); const bx = bd ? bd.scrollLeft : 0;
+    fn();
+    document.querySelectorAll('#view-board .cards[data-cards]').forEach(el => { if (sc[el.dataset.cards]) el.scrollTop = sc[el.dataset.cards]; });
+    const nb = document.querySelector('#view-board .board'); if (nb && bx) nb.scrollLeft = bx;
+  }
+  function renderBoardBody() { const el = $('boardBody'); if (!el) return; keepScroll(() => { el.innerHTML = boardBody(boardPool()); }); }
   function renderBoard() {
     const p = projectBy(state.project); const today = todayStr();
     const base = D.tasks.filter(t => (!state.project || t.projectId === state.project) && (!state.boardWho || (state.boardWho === 'me' ? isMine(t) : t.assignees.includes(state.boardWho))));
-    const pool = boardPool();
     const nOver = base.filter(t => open(t) && t.dueDate && t.dueDate < today).length;
     const nHigh = base.filter(t => open(t) && (t.priority === 'urgent' || t.priority === 'high')).length;
     const nUn = base.filter(t => open(t) && !(t.assignees || []).length).length;
     const doneN = base.filter(t => t.status === 'done').length;
     const title = p ? `<span class="pdot" style="background:${esc(p.color)}"></span>${esc(p.name)}` : 'Bảng công việc';
-    const head = phead(p ? 'Dự án' : 'Bảng công việc', title, `${base.length - doneN} việc đang chạy, ${doneN} đã xong. ${state.boardMode === 'kanban' ? 'Kéo thẻ sang cột khác để đổi trạng thái.' : 'Chạm vào một việc để mở chi tiết.'}`,
+    const head = phead(p ? 'Dự án' : 'Bảng công việc', title, `${base.length - doneN} việc đang chạy, ${doneN} đã xong. ${state.boardMode === 'kanban' ? 'Kéo thẻ sang cột khác để đổi trạng thái; chọn nhiều thẻ rồi kéo một lần, hoặc dùng nút chọn cả cột.' : 'Chạm vào một việc để mở chi tiết.'}`,
       kpi(base.length - doneN, 'đang chạy', 'blue') + kpi(nOver, 'quá hạn', nOver ? 'red' : '') + (p ? `<button class="btn" data-edit-project="${esc(p.id)}"><i class="fa-solid fa-pen" aria-hidden="true"></i> Sửa dự án</button>` : ''));
     const chip = (k, label, ic, n) => `<button type="button" class="fchip" data-board-flag="${k}" aria-pressed="${state.boardFlag === k}"><i class="fa-solid ${ic}" aria-hidden="true"></i>${label}<span class="c">${n}</span></button>`;
+    const dopt = (v, l) => `<option value="${v}" ${state.doneDays === v ? 'selected' : ''}>${l}</option>`;
     const bar = `<div class="fbar">
         <div class="seg" role="group" aria-label="Kiểu hiển thị"><button data-board-mode="kanban" aria-pressed="${state.boardMode === 'kanban'}"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Bảng</button><button data-board-mode="list" aria-pressed="${state.boardMode === 'list'}"><i class="fa-solid fa-list" aria-hidden="true"></i>Danh sách</button></div>
+        <label class="fsearch"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="sr-only">Lọc việc trên bảng</span><input id="fQ" type="search" autocomplete="off" placeholder="Lọc theo tên, nhãn, người…" value="${esc(state.boardQr || '')}"></label>
         <label class="sr-only" for="fProj">Dự án</label><span class="sel"><i class="fa-regular fa-folder" aria-hidden="true"></i><select id="fProj"><option value="">Mọi dự án</option>${D.projects.filter(x => !x.archived).map(x => `<option value="${esc(x.id)}" ${x.id === state.project ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></span>
         <label class="sr-only" for="fWho">Người làm</label><span class="sel"><i class="fa-regular fa-user" aria-hidden="true"></i><select id="fWho"><option value="">Mọi người</option><option value="me" ${state.boardWho === 'me' ? 'selected' : ''}>Của tôi</option>${D.staff.map(s => `<option value="${esc(s.email)}" ${state.boardWho === s.email ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></span>
         <label class="sr-only" for="fSort">Sắp xếp</label><span class="sel"><i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i><select id="fSort"><option value="smart" ${state.boardSort === 'smart' ? 'selected' : ''}>Ưu tiên rồi hạn chót</option><option value="due" ${state.boardSort === 'due' ? 'selected' : ''}>Hạn chót gần nhất</option><option value="new" ${state.boardSort === 'new' ? 'selected' : ''}>Mới tạo gần đây</option></select></span>
+        <label class="sr-only" for="fDone">Việc đã xong</label><span class="sel"><i class="fa-solid fa-circle-check" aria-hidden="true"></i><select id="fDone">${dopt(7, 'Xong trong 7 ngày')}${dopt(30, 'Xong trong 30 ngày')}${dopt(45, 'Xong: tất cả')}</select></span>
         <span class="sp"></span>
         ${chip('overdue', 'Quá hạn', 'fa-triangle-exclamation', nOver)}${chip('high', 'Ưu tiên cao', 'fa-bolt', nHigh)}${chip('unassigned', 'Chưa giao', 'fa-user-slash', nUn)}
         ${xlsBtn('Excel')}
       </div>`;
-    let body;
-    if (state.boardMode === 'list') {
-      body = STATUS.map(([k, label]) => {
-        const items = pool.filter(t => t.status === k).sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : (SORTS[state.boardSort] || SORTS.smart)(a, b));
-        return items.length ? `<div class="lgroup" style="--sc:${ST_COLOR[k]}"><div class="sec"><span class="sd"></span><h3>${label}</h3><span class="c">${items.length}</span></div>${list(items, '', 'l-' + k)}</div>` : '';
-      }).join('') || '<div class="empty"><b>Không có việc nào khớp bộ lọc.</b>Bỏ bớt bộ lọc hoặc thêm việc mới ở ô phía trên.</div>';
-    } else {
-      body = `<div class="board">${STATUS.map(([k, label]) => {
-        const all = pool.filter(t => t.status === k);
-        let items = all.slice().sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : (SORTS[state.boardSort] || SORTS.smart)(a, b));
-        const cap = capOf('c-' + k, k === 'done' ? 15 : 60); const more = items.length > cap ? items.length - cap : 0; if (more) items = items.slice(0, cap);
-        return `<div class="col" data-col="${k}"><div class="col-head"><span class="sd"></span><b>${label}</b><span class="c">${all.length}</span><span class="grow"></span><button data-add-status="${k}" aria-label="Thêm việc vào ${label}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></div><div class="cards">${items.map(card).join('')}${more ? `<button type="button" class="more-btn" data-more="c-${k}" data-step="${k === 'done' ? 15 : 60}">Hiện thêm <small>(còn ${more})</small></button>` : ''}</div></div>`;
-      }).join('')}</div>`;
-    }
-    $('view-board').innerHTML = head + bar + body;
+    keepScroll(() => { $('view-board').innerHTML = head + bar + `<div id="boardBody">${boardBody(boardPool())}</div>`; });
+    if (state.keepFocusQ) { const q = $('fQ'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } state.keepFocusQ = false; }
   }
   const card = t => {
     const p = projectBy(t.projectId); const today = todayStr(); const cl = t.checklist || []; const cd = cl.filter(i => i.done).length;
-    const dueCls = t.status !== 'done' && t.dueDate && t.dueDate < today ? 'red' : t.dueDate === today && t.status !== 'done' ? 'blue' : '';
+    const done = t.status === 'done'; const sel = state.selected.has(t.id);
+    const dueCls = !done && t.dueDate && t.dueDate < today ? 'red' : t.dueDate === today && !done ? 'blue' : '';
     const blocker = t.blockedBy && findTask(t.blockedBy);
-    const pr = t.priority === 'urgent' ? '<span class="pr urgent"><i class="fa-solid fa-bolt" aria-hidden="true"></i>Khẩn</span>' : t.priority === 'high' ? '<span class="pr high"><i class="fa-solid fa-star" aria-hidden="true"></i>Cao</span>' : '';
-    return `<div class="card" style="--pc:${p ? esc(p.color) : 'transparent'}" draggable="true" data-open="${esc(t.id)}" data-id="${esc(t.id)}">
-      <div class="c-top">${p && !state.project ? `<span class="proj"><span class="dot" style="background:${esc(p.color)}"></span><span class="nm">${esc(p.name)}</span></span>` : ''}${pr}</div>
+    const pr = !done && t.priority === 'urgent' ? '<span class="pr urgent"><i class="fa-solid fa-bolt" aria-hidden="true"></i>Khẩn</span>' : !done && t.priority === 'high' ? '<span class="pr high"><i class="fa-solid fa-star" aria-hidden="true"></i>Cao</span>' : '';
+    const top = (p && !state.project ? `<span class="proj"><span class="dot" style="background:${esc(p.color)}"></span><span class="nm">${esc(p.name)}</span></span>` : '') + pr;
+    return `<div class="card${done ? ' cmp' : ''}${sel ? ' sel' : ''}" style="--pc:${p ? esc(p.color) : 'transparent'}" draggable="true" data-open="${esc(t.id)}" data-id="${esc(t.id)}">
+      <button type="button" class="card-sel ${sel ? 'on' : ''}" data-select="${esc(t.id)}" aria-label="Chọn việc này"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+      ${top ? `<div class="c-top">${top}</div>` : ''}
       <div class="t-title">${esc(t.title)}</div>
-      ${(t.labels || []).length ? `<div class="c-lbls">${t.labels.slice(0, 3).map(l => `<span class="lbl" style="--h:${labelHue(l)}">${esc(l)}</span>`).join('')}</div>` : ''}
-      ${cl.length ? `<div class="c-prog"><span>${cd}/${cl.length}</span><span class="pb"><i style="width:${pctOf(cd, cl.length)}%"></i></span></div>` : ''}
-      ${blocker && blocker.status !== 'done' ? `<div class="blk"><span class="pill blocked"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ: ${esc(blocker.title.slice(0, 26))}</span></div>` : ''}
-      <div class="foot"><div class="c-meta">${t.dueDate ? `<span class="pill ${dueCls}"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(t.dueDate, t.dueTime))}</span>` : ''}${t.commentCount ? `<span class="m"><i class="fa-regular fa-comment" aria-hidden="true"></i>${t.commentCount}</span>` : ''}${(t.attachments || []).length ? `<span class="m"><i class="fa-solid fa-paperclip" aria-hidden="true"></i>${t.attachments.length}</span>` : ''}${t.recurrence ? '<span class="m"><i class="fa-solid fa-repeat" aria-hidden="true"></i></span>' : ''}${t.link ? `<span class="m" title="Liên kết tới ${esc(modOf(t.link.type)[0])}" style="color:#0369a1"><i class="fa-solid fa-link" aria-hidden="true" style="color:var(--sapphire)"></i></span>` : ''}</div>${avatars(t.assignees, 2)}</div></div>`;
+      ${!done && (t.labels || []).length ? `<div class="c-lbls">${t.labels.slice(0, 3).map(l => `<span class="lbl" style="--h:${labelHue(l)}">${esc(l)}</span>`).join('')}</div>` : ''}
+      ${!done && cl.length ? `<div class="c-prog"><span>${cd}/${cl.length}</span><span class="pb"><i style="width:${pctOf(cd, cl.length)}%"></i></span></div>` : ''}
+      ${!done && blocker && blocker.status !== 'done' ? `<div class="blk"><span class="pill blocked"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ: ${esc(blocker.title.slice(0, 26))}</span></div>` : ''}
+      <div class="foot"><div class="c-meta">${done ? `<span class="m"><i class="fa-solid fa-check" aria-hidden="true"></i>Xong ${esc(fmtDM(vnDay(t.completedAt)))}</span>` : t.dueDate ? `<span class="pill ${dueCls}"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(t.dueDate, t.dueTime))}</span>` : ''}${t.commentCount ? `<span class="m"><i class="fa-regular fa-comment" aria-hidden="true"></i>${t.commentCount}</span>` : ''}${!done && (t.attachments || []).length ? `<span class="m"><i class="fa-solid fa-paperclip" aria-hidden="true"></i>${t.attachments.length}</span>` : ''}${!done && t.recurrence ? '<span class="m"><i class="fa-solid fa-repeat" aria-hidden="true"></i></span>' : ''}${t.link ? `<span class="m" title="Liên kết tới ${esc(modOf(t.link.type)[0])}"><i class="fa-solid fa-link" aria-hidden="true" style="color:var(--sapphire)"></i></span>` : ''}</div>${avatars(t.assignees, 2)}</div></div>`;
   };
 
   // ---------- Lịch tuần ----------
@@ -1846,23 +1952,18 @@ a.att-main:hover b { color: var(--sapphire); }
     $('bulkCount').textContent = `Đã chọn ${n} việc`;
     $('bulkAssign').innerHTML = '<option value="">Gán người…</option>' + D.staff.map(s => `<option value="${esc(s.email)}">${esc(s.name)}</option>`).join('');
     $('bulkProject').innerHTML = '<option value="">Chuyển dự án…</option><option value="__none">Không dự án</option>' + D.projects.filter(p => !p.archived).map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+    $('bulkDone').innerHTML = isMgr() === false ? '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Gửi duyệt' : '<i class="fa-solid fa-check" aria-hidden="true"></i> Đánh dấu xong';
     $('bulkPriority').innerHTML = '<option value="">Đổi ưu tiên…</option>' + PRIO.map(([k, l]) => `<option value="${k}">${l}</option>`).join('');
   }
   function toggleSelect(id) {
     if (state.selected.has(id)) state.selected.delete(id); else state.selected.add(id);
     renderAll();
   }
-  async function bulkApply(patch) {
-    const ids = Array.from(state.selected);
-    await Promise.all(ids.map(id => update(id, patch, { silentRender: true })));
-    state.selected.clear(); renderAll();
-    toast(`Đã cập nhật ${ids.length} việc`);
-  }
+  async function bulkApply(patch, label) { return bulkApplyIds(Array.from(state.selected), patch, label); }
   async function bulkDelete() {
     const ids = Array.from(state.selected);
     if (!confirm(`Xoá ${ids.length} việc đã chọn? Không thể hoàn tác.`)) return;
-    for (const id of ids) await deleteTask(id, true);
-    state.selected.clear(); renderAll();
+    deleteMany(ids);
   }
 
   // ---------- Sự kiện ----------
@@ -1917,6 +2018,7 @@ a.att-main:hover b { color: var(--sapphire); }
       const item = D.inbox.find(i => i.key === ai.dataset.assignInbox); if (!item) return;
       return focusQuick({ link: { type: item.key, id: item.key, label: item.title, href: item.href }, dueDate: todayStr() }, item.title.replace(/^\d+\s/, 'Xử lý ') + ' ');
     }
+    const dd = t.closest('[data-done-days]'); if (dd) { state.doneDays = +dd.dataset.doneDays; return renderAll(); }
     const dp = t.closest('[data-dup]'); if (dp) return duplicateTask(dp.dataset.dup);
     const sa = t.closest('[data-select-ids]'); if (sa) { const ids = sa.dataset.selectIds.split(','); const all = ids.every(id => state.selected.has(id)); ids.forEach(id => all ? state.selected.delete(id) : state.selected.add(id)); return renderAll(); }
     const mo = t.closest('[data-more]'); if (mo) { const k = mo.dataset.more; state.caps[k] = (state.caps[k] || +mo.dataset.step || 100) + (+mo.dataset.step || 100); return renderAll(); }
@@ -1940,11 +2042,18 @@ a.att-main:hover b { color: var(--sapphire); }
   $('tmApply').addEventListener('click', applyTemplate);
   $('templateModal').addEventListener('click', e => { if (e.target.id === 'templateModal') $('templateModal').classList.remove('open'); });
   $('bulkClear').addEventListener('click', () => { state.selected.clear(); renderAll(); });
-  $('bulkDone').addEventListener('click', () => bulkApply({ status: 'done' }));
+  $('bulkDone').addEventListener('click', () => moveTasks(Array.from(state.selected), isMgr() === false ? 'review' : 'done', { auto: true }));
+  $('bulkStatus').addEventListener('change', e => { const v = e.target.value; e.target.value = ''; if (v) moveTasks(Array.from(state.selected), v, { auto: true }); });
   $('bulkDelete').addEventListener('click', bulkDelete);
-  $('bulkAssign').addEventListener('change', e => { const v = e.target.value; if (!v) return; const ids = Array.from(state.selected).map(findTask).filter(Boolean); Promise.all(ids.map(tk => update(tk.id, { assignees: Array.from(new Set(tk.assignees.concat(v))) }, { silentRender: true }))).then(() => { e.target.value = ''; renderAll(); }); });
+  $('bulkAssign').addEventListener('change', e => { const v = e.target.value; if (!v) return; const ids = Array.from(state.selected).map(findTask).filter(Boolean); runPool(ids, tk => update(tk.id, { assignees: Array.from(new Set(tk.assignees.concat(v))) }, { silentRender: true }), 6, progressToast(ids.length)).then(() => { e.target.value = ''; state.selected.clear(); renderAll(); }); });
   $('bulkProject').addEventListener('change', e => { const v = e.target.value; if (!v) return; bulkApply({ projectId: v === '__none' ? '' : v }); });
   $('bulkDue').addEventListener('change', e => { const v = e.target.value; if (!v) return; const td = todayStr(); const m = { today: td, tomorrow: addDays(td, 1), monday: addDays(mondayOf(td), 7), week: addDays(td, 7), none: '' }; e.target.value = ''; bulkApply({ dueDate: m[v] }); });
+  let qTimer = null;
+  document.addEventListener('input', e => { if (e.target.id === 'fQ') { state.boardQr = e.target.value; clearTimeout(qTimer); qTimer = setTimeout(renderBoardBody, 160); } });
+  document.addEventListener('scroll', e => {
+    const el = e.target; if (!el || !el.classList || !el.classList.contains('cards') || el._ld) return;
+    if (el.scrollHeight - el.scrollTop - el.clientHeight < 200) { const mb = el.querySelector('.more-btn'); if (mb) { el._ld = true; mb.click(); } }
+  }, true);
   $('bulkPriority').addEventListener('change', e => { const v = e.target.value; if (!v) return; bulkApply({ priority: v }); });
 
   $('quickInput').addEventListener('input', renderParsed);
@@ -1956,6 +2065,7 @@ a.att-main:hover b { color: var(--sapphire); }
     if (el.id === 'fProj') { state.project = el.value; renderAll(); }
     if (el.id === 'fWho') { state.boardWho = el.value; renderAll(); }
     if (el.id === 'fSort') { state.boardSort = el.value; renderAll(); }
+    if (el.id === 'fDone') { state.doneDays = +el.value; renderAll(); }
   });
   document.addEventListener('focusout', e => {
     if (!state.openId) return;
@@ -2001,23 +2111,15 @@ a.att-main:hover b { color: var(--sapphire); }
 
   // Kéo thả: đổi trạng thái (bảng) hoặc đổi ngày (lịch)
   let dragId = null, dropEl = null;
-  document.addEventListener('dragstart', e => { const c = e.target.closest && e.target.closest('.card[data-id]'); if (!c) return; dragId = c.dataset.id; c.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId); });
+  document.addEventListener('dragstart', e => { const c = e.target.closest && e.target.closest('.card[data-id]'); if (!c) return; dragId = c.dataset.id; c.classList.add('dragging'); if (state.selected.has(dragId) && state.selected.size > 1) { document.querySelectorAll('.card.sel').forEach(x => x.classList.add('dragging')); const g = document.createElement('div'); g.className = 'drag-badge'; g.textContent = state.selected.size + ' việc'; document.body.appendChild(g); try { e.dataTransfer.setDragImage(g, 16, 16); } catch (er) {} setTimeout(() => g.remove(), 0); } e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId); });
   document.addEventListener('dragend', e => { document.querySelectorAll('.dragging,.drop').forEach(x => x.classList.remove('dragging', 'drop')); dropEl = null; });
   document.addEventListener('dragover', e => { const z = e.target.closest && e.target.closest('[data-col],[data-day]'); if (!z || !dragId) return; e.preventDefault(); if (dropEl !== z) { if (dropEl) dropEl.classList.remove('drop'); dropEl = z; z.classList.add('drop'); } });
   document.addEventListener('drop', e => {
     const z = e.target.closest && e.target.closest('[data-col],[data-day]'); if (!z || !dragId) return; e.preventDefault();
-    const id = dragId; dragId = null; const t = findTask(id); if (!t) return;
-    if (z.dataset.col && z.dataset.col !== t.status) {
-      { const bm = moveBlock(t, z.dataset.col); if (bm) { toast(bm, { error: true }); return; } }
-      if (t.status === 'review' && (z.dataset.col === 'doing' || z.dataset.col === 'todo')) {
-        const note = prompt(`Trả lại "${t.title}" để chỉnh sửa — lý do (không bắt buộc, sẽ báo cho người phụ trách):`, '');
-        if (note === null) return;
-        update(id, { status: z.dataset.col, statusChangeNote: note }, { msg: `Đã trả lại "${t.title}"` });
-      } else {
-        update(id, { status: z.dataset.col }, { msg: `Đã chuyển sang "${STATUS_L[z.dataset.col]}"` });
-      }
-    }
-    if (z.dataset.day && z.dataset.day !== t.dueDate) update(id, { dueDate: z.dataset.day }, { msg: `Đã dời sang ${fmtDue(z.dataset.day)}` });
+    const id = dragId; dragId = null; if (!findTask(id)) return;
+    const ids = state.selected.has(id) && state.selected.size > 1 ? Array.from(state.selected) : [id];
+    if (z.dataset.col) return moveTasks(ids, z.dataset.col);
+    if (z.dataset.day) { const day = z.dataset.day; const todo = ids.filter(i => (findTask(i) || {}).dueDate !== day); if (todo.length === 1) return update(todo[0], { dueDate: day }, { msg: `Đã dời sang ${fmtDue(day)}` }); return bulkApplyIds(todo, { dueDate: day }, `Đã dời ${todo.length} việc sang ${fmtDue(day)}`); }
   });
 
   // ---------- Khởi động ----------
