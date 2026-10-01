@@ -1042,8 +1042,14 @@
               </select>
             </div>
             <div style="grid-column:1 / -1;">
-              <label>Ảnh đại diện (URL)</label>
-              <input type="text" id="postImage" placeholder="VD: images/uploads/ten-anh.jpg (để trống sẽ dùng ảnh ngẫu nhiên)">
+              <label>Ảnh đại diện</label>
+              <div id="postImagePasteZone" tabindex="0" style="border:2px dashed var(--border); border-radius:10px; padding:0.9rem; cursor:text; display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap;">
+                <img id="postImagePreview" style="display:none; width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--border);">
+                <div style="flex:1; min-width:200px;">
+                  <input type="text" id="postImage" placeholder="Dán ảnh (Ctrl+V) vào đây, hoặc kéo-thả ảnh vào, hoặc gõ đường dẫn thủ công" style="border:none; padding:0.2rem 0; width:100%;">
+                  <div id="postImageStatus" style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">Để trống sẽ dùng ảnh ngẫu nhiên từ kho ảnh hệ thống.</div>
+                </div>
+              </div>
             </div>
           </div>
           <div style="margin-bottom:1rem;">
@@ -4459,6 +4465,83 @@
     // ============== BÀI VIẾT ==============
     let allPostsData = [];
 
+    function showPostImagePreview(path) {
+      const img = document.getElementById('postImagePreview');
+      if (!path) { img.style.display = 'none'; img.src = ''; return; }
+      const url = /^https?:\/\//i.test(path) ? path : `https://raw.githubusercontent.com/hvhwan-debug/DRS/main/${path}`;
+      img.src = url;
+      img.style.display = 'block';
+    }
+
+    function readImageFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadPastedImage(file) {
+      const statusEl = document.getElementById('postImageStatus');
+      const maxBytes = 6 * 1024 * 1024;
+      if (file.size > maxBytes) {
+        statusEl.textContent = 'Ảnh quá nặng (tối đa khoảng 6MB), vui lòng nén bớt rồi thử lại.';
+        statusEl.style.color = '#dc2626';
+        return;
+      }
+      statusEl.textContent = 'Đang tải ảnh lên kho ảnh hệ thống...';
+      statusEl.style.color = 'var(--text-muted)';
+      try {
+        const dataUrl = await readImageFileAsDataUrl(file);
+        const result = await apiCall('/api/portal-upload-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageBase64: dataUrl })
+        });
+        document.getElementById('postImage').value = result.path;
+        showPostImagePreview(result.path);
+        statusEl.textContent = `Đã thêm vào kho ảnh: ${result.path}`;
+        statusEl.style.color = '#15803d';
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.style.color = '#dc2626';
+      }
+    }
+
+    (function setupPostImagePasteZone() {
+      const zone = document.getElementById('postImagePasteZone');
+      const input = document.getElementById('postImage');
+
+      function handlePasteOrDrop(items) {
+        for (const item of items) {
+          if (item.type && item.type.startsWith('image/')) {
+            const file = item.getAsFile ? item.getAsFile() : item;
+            if (file) { uploadPastedImage(file); return true; }
+          }
+        }
+        return false;
+      }
+
+      [zone, input].forEach(el => {
+        el.addEventListener('paste', e => {
+          const items = e.clipboardData && e.clipboardData.items;
+          if (items && handlePasteOrDrop(Array.from(items))) e.preventDefault();
+        });
+      });
+
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--accent, #2563eb)'; });
+      zone.addEventListener('dragleave', () => { zone.style.borderColor = 'var(--border)'; });
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.style.borderColor = 'var(--border)';
+        const files = e.dataTransfer && e.dataTransfer.files;
+        if (files && files.length) handlePasteOrDrop(Array.from(files));
+      });
+
+      input.addEventListener('input', () => showPostImagePreview(input.value.trim()));
+    })();
+
     async function loadPosts() {
       try {
         const { posts } = await apiCall('/api/portal-posts-list');
@@ -4506,6 +4589,9 @@
       document.getElementById('postDate').value = (p.date || '').slice(0, 10);
       document.getElementById('postLoai').value = p.loai || 'tin-tuc';
       document.getElementById('postImage').value = p.image || '';
+      showPostImagePreview(p.image || '');
+      document.getElementById('postImageStatus').textContent = 'Để trống sẽ dùng ảnh ngẫu nhiên từ kho ảnh hệ thống.';
+      document.getElementById('postImageStatus').style.color = 'var(--text-muted)';
       document.getElementById('postExcerpt').value = p.excerpt || '';
       document.getElementById('postBody').value = p.body || '';
       document.getElementById('postPublished').checked = !!p.published;
@@ -4520,6 +4606,9 @@
       document.getElementById('postOriginalSlug').value = '';
       document.getElementById('postSubmitBtn').textContent = 'Lưu Bài Viết';
       document.getElementById('postCancelEditBtn').style.display = 'none';
+      showPostImagePreview('');
+      document.getElementById('postImageStatus').textContent = 'Để trống sẽ dùng ảnh ngẫu nhiên từ kho ảnh hệ thống.';
+      document.getElementById('postImageStatus').style.color = 'var(--text-muted)';
     }
 
     async function deletePost(slugEnc, titleEnc) {
