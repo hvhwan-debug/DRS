@@ -229,7 +229,6 @@ a { color: inherit; }
 
 /* ============================== DANH SÁCH VIỆC ============================== */
 .tasks { container-type: inline-size; container-name: tasks; background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r-l); box-shadow: var(--lift); overflow: hidden; }
-.task { position: relative; display: grid; grid-template-columns: 20px 24px minmax(160px, 1fr) minmax(0, 170px) 118px 74px 78px; align-items: center; column-gap: 0.75rem; padding: 0.78rem 1.1rem 0.78rem 0.8rem; border-top: 1px solid var(--hair-2); cursor: pointer; transition: background .12s; }
 .task:first-child { border-top: none; }
 .task:hover { background: #f8fafe; }
 .task:focus-visible { outline-offset: -2px; }
@@ -271,11 +270,7 @@ a { color: inherit; }
 .t-proj { min-width: 0; }
 .chip { display: inline-flex; align-items: center; gap: 0.45rem; max-width: 100%; font-size: 0.76rem; font-weight: 550; color: var(--ink-2); background: #f4f6fb; border: 1px solid var(--hair-2); border-radius: 9px; padding: 0.14rem 0.6rem 0.14rem 0.5rem; }
 .chip .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.t-flags { display: contents; }
-.t-col-due, .t-col-prio { display: flex; }
 .col-due.pill { font-weight: 560; }
-.t-right { display: flex; justify-content: flex-end; }
-.t-right .avs { margin-right: -2px; }
 
 /* ============================== HÔM NAY ============================== */
 .hero { position: relative; overflow: hidden; border-radius: 22px; padding: 1.9rem 2.2rem 1.8rem; margin: 0.9rem 0 1.5rem; background: var(--hero-bg); color: #e7ecfb; box-shadow: 0 30px 60px -34px rgba(10,18,48,0.7); display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
@@ -438,16 +433,48 @@ a { color: inherit; }
 .tray h4 small { font-weight: 500; color: var(--muted); font-size: 0.76rem; }
 .tray-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.5rem; }
 
-@container tasks (max-width: 860px) {
-  .task { grid-template-columns: 20px 24px minmax(0, 1fr) 118px 74px 78px; }
-  .t-proj { display: none; }
+
+/* ============================== BẢNG CÔNG VIỆC: tiêu đề cột + đường kẻ ============================== */
+.tasks { --tcols: 22px 28px minmax(220px, 1fr) minmax(0, 170px) 112px 150px 92px 116px; }
+.tasks-head, .task { display: grid; grid-template-columns: var(--tcols); align-items: stretch; }
+.tasks-head { background: #f1f4fa; border-bottom: 1px solid var(--hair); color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.tasks-head > span { padding: 0.62rem 0.8rem; display: flex; align-items: center; border-left: 1px solid #e3e8f2; white-space: nowrap; }
+.tasks-head > span:nth-child(-n+2) { border-left: none; padding: 0; }
+.task { position: relative; padding: 0; min-height: 3.3rem; border-top: 1px solid #e6eaf3; cursor: pointer; transition: background .12s; }
+.task:first-child, .tasks-head + .task { border-top: none; }
+.task > .sel-box { align-self: center; justify-self: center; margin-left: 0.5rem; }
+.task > .check { align-self: center; justify-self: center; }
+.t-body, .t-proj, .t-col-st, .t-col-due, .t-col-prio, .t-right { border-left: 1px solid #e9edf5; padding: 0.6rem 0.8rem; min-width: 0; }
+.t-col-due .pill, .t-col-prio .pill, .t-col-st .pill { white-space: nowrap; }
+.t-body { display: flex; flex-direction: column; justify-content: center; }
+.t-proj, .t-col-st, .t-col-due, .t-col-prio, .t-right { display: flex; align-items: center; }
+.t-right { justify-content: flex-start; }
+.t-right .avs { margin-right: -2px; }
+.t-flags { display: contents; }
+.t-meta .m-st { display: none; }
+.task:nth-child(even):not(.done) { background: #fbfcfe; }
+.task:hover { background: #f1f7ff !important; }
+.task.done .t-col-st, .task.done .t-col-prio { opacity: 0.6; }
+@container tasks (max-width: 1000px) {
+  .tasks-head, .task { --tcols: 22px 28px minmax(200px, 1fr) 112px 150px 92px 116px; }
+  .t-proj, .tasks-head .h-proj { display: none; }
   .t-meta .m-proj { display: inline-flex; }
 }
+@container tasks (max-width: 760px) {
+  .tasks-head, .task { --tcols: 22px 28px minmax(170px, 1fr) 150px 92px 108px; }
+  .t-col-st, .tasks-head .h-st { display: none; }
+  .t-meta .m-st { display: inline-flex; }
+}
 @container tasks (max-width: 600px) {
-  .task { grid-template-columns: 20px 24px minmax(0, 1fr) auto; grid-template-areas: "sel chk body right" ". . flags flags"; row-gap: 0.4rem; align-items: start; }
-  .task .sel-box { grid-area: sel; } .task .check { grid-area: chk; } .task .t-body { grid-area: body; } .task .t-right { grid-area: right; }
-  .task .t-flags { grid-area: flags; display: flex; gap: 0.4rem; flex-wrap: wrap; }
-  .task .t-flags:not(:has(.pill)) { display: none; }
+  .tasks-head { display: none; }
+  .task { --tcols: 24px minmax(0, 1fr) auto; grid-template-columns: 24px minmax(0, 1fr) auto; grid-template-areas: "chk body right" ". flags flags"; row-gap: 0.1rem; align-items: start; padding: 0.7rem 0.8rem; }
+  .task > .sel-box { display: none; }
+  .task > .check { grid-area: chk; margin-top: 0.15rem; justify-self: start; }
+  .t-body, .t-col-st, .t-col-due, .t-col-prio, .t-right { border-left: none; padding: 0; }
+  .task .t-body { grid-area: body; } .task .t-right { grid-area: right; padding-top: 0.1rem; }
+  .task .t-flags { grid-area: flags; display: flex; gap: 0.4rem; flex-wrap: wrap; padding-top: 0.3rem; }
+  .t-col-st { display: flex; } .t-meta .m-st { display: none; }
+  .t-flags .t-col-st:empty, .t-flags .t-col-due:empty, .t-flags .t-col-prio:empty { display: none; }
 }
 
 /* ============================== ĐỘI NHÓM ============================== */
@@ -720,13 +747,6 @@ a.att-main:hover b { color: var(--sapphire); }
   .stats { gap: 0.45rem; margin-top: 1rem; } .stat { min-width: calc(50% - 0.25rem); flex: 1; padding: 0.5rem 0.7rem 0.5rem 0.55rem; } .stat b { font-size: 1.15rem; } .stat i { width: 28px; height: 28px; }
   .rail { grid-template-columns: minmax(0, 1fr); }
   .tasks { border-radius: 18px; }
-  .task { grid-template-columns: 24px minmax(0, 1fr) auto; grid-template-areas: "chk body right" ". flags flags"; row-gap: 0.4rem; padding: 0.8rem 0.9rem 0.8rem 0.8rem; align-items: start; }
-  .task .sel-box { display: none; }
-  .task .check { grid-area: chk; margin-top: 0.1rem; }
-  .task .t-body { grid-area: body; } .task .t-right { grid-area: right; padding-top: 0.1rem; }
-  .task .t-flags { grid-area: flags; display: flex; gap: 0.4rem; flex-wrap: wrap; }
-  .task .t-flags:empty, .task .t-flags:not(:has(.pill)) { display: none; }
-  .task .t-right .avs .av:nth-child(n+3) { display: none; }
   .board { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(82vw, 320px); margin: 0 -1rem; padding: 0.1rem 1rem 1rem; scroll-padding-left: 1rem; }
   .week { grid-template-columns: minmax(0, 1fr); overflow: visible; gap: 0.6rem; }
   .day { min-height: 0; padding-bottom: 0.7rem; }
@@ -1169,15 +1189,18 @@ a.att-main:hover b { color: var(--sapphire); }
   const avatars = (list, max) => { list = list || []; max = max || 3; return `<span class="avs">${list.slice(0, max).map(e => `<span class="av" style="${avTone(e)}" title="${esc(staffBy(e).name)}">${esc(initials(staffBy(e).name))}</span>`).join('')}${list.length > max ? `<span class="av more">+${list.length - max}</span>` : ''}</span>`; };
   const projChip = t => { const p = projectBy(t.projectId); return p ? `<span class="chip" title="${esc(p.name)}"><span class="dot" style="background:${esc(p.color)}"></span><span class="nm">${esc(p.name)}</span></span>` : ''; };
   const statusPill = t => t.status === 'doing' ? '<span class="pill blue">Đang làm</span>' : t.status === 'review' ? '<span class="pill violet">Chờ duyệt</span>' : '';
+  const ST_PILL = { todo: ['', 'Cần làm'], doing: ['blue', 'Đang làm'], review: ['violet', 'Chờ duyệt'], done: ['green', 'Hoàn thành'] };
+  const stCell = t => { const s = ST_PILL[t.status] || ST_PILL.todo; return `<span class="pill ${s[0]}">${s[1]}</span>`; };
   const taskRow = t => `<div class="task ${t.status === 'done' ? 'done' : ''} prio-${t.priority}" data-st="${t.status}" data-open="${esc(t.id)}" tabindex="0">
       <button class="sel-box ${state.selected.has(t.id) ? 'on' : ''}" data-select="${esc(t.id)}" aria-label="Chọn việc này"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
       <button class="check" data-toggle="${esc(t.id)}" aria-label="${checkLabel(t)}" title="${checkLabel(t)}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
-      <div class="t-body"><div class="t-title">${esc(t.title)}</div><div class="t-meta">${statusPill(t)}${metaHtml(t)}</div></div>
+      <div class="t-body"><div class="t-title">${esc(t.title)}</div><div class="t-meta"><span class="m m-st">${stCell(t)}</span>${metaHtml(t)}</div></div>
       <div class="t-proj">${projChip(t)}</div>
-      <div class="t-flags"><div class="t-col-due">${dueColHtml(t)}</div><div class="t-col-prio">${prioColHtml(t)}</div></div>
+      <div class="t-flags"><div class="t-col-st">${stCell(t)}</div><div class="t-col-due">${dueColHtml(t)}</div><div class="t-col-prio">${prioColHtml(t)}</div></div>
       <div class="t-right">${avatars(t.assignees)}</div></div>`;
+  const TASKS_HEAD = '<div class="tasks-head" aria-hidden="true"><span></span><span></span><span>Công việc</span><span class="h-proj">Dự án</span><span class="h-st">Trạng thái</span><span class="h-due">Hạn chót</span><span class="h-prio">Ưu tiên</span><span class="h-who">Phụ trách</span></div>';
   const list = (items, emptyMsg, key) => { if (!items.length) return `<div class="empty">${emptyMsg}</div>`; const cap = key ? capOf(key) : Infinity; const shown = items.length > cap ? items.slice(0, cap) : items;
-    return `<div class="tasks">${shown.map(taskRow).join('')}</div>${shown.length < items.length ? `<button type="button" class="more-btn" data-more="${key}">Hiện thêm ${Math.min(100, items.length - shown.length)} việc <small>(còn ${items.length - shown.length})</small></button>` : ''}`; };
+    return `<div class="tasks">${TASKS_HEAD}${shown.map(taskRow).join('')}</div>${shown.length < items.length ? `<button type="button" class="more-btn" data-more="${key}">Hiện thêm ${Math.min(100, items.length - shown.length)} việc <small>(còn ${items.length - shown.length})</small></button>` : ''}`; };
   const selAll = items => items.length > 1 ? `<button type="button" class="link" data-select-ids="${items.map(t => esc(t.id)).join(',')}">${items.every(t => state.selected.has(t.id)) ? 'Bỏ chọn' : 'Chọn tất cả'}</button>` : '';
   const scopeSeg = () => `<div class="seg" role="group" aria-label="Phạm vi"><button data-scope="me" aria-pressed="${state.scope === 'me'}"><i class="fa-regular fa-user" aria-hidden="true"></i>Của tôi</button><button data-scope="all" aria-pressed="${state.scope === 'all'}"><i class="fa-solid fa-people-group" aria-hidden="true"></i>Cả nhóm</button></div>`;
   const sec = (title, n, opts) => { opts = opts || {}; return `<div class="sec ${opts.cls || ''}"><h3>${title}</h3>${n !== '' && n != null ? `<span class="c">${n}</span>` : ''}${opts.sub ? `<span class="sub">${opts.sub}</span>` : ''}<span class="grow"></span>${opts.right || ''}</div>`; };
