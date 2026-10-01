@@ -124,7 +124,18 @@ button { cursor: pointer; background: none; border: none; }
 /* Danh sách việc: mỗi dòng là 1 thẻ RIÊNG có khoảng cách, không còn dính liền thành 1 khối —
    nhờ vậy tô màu theo trạng thái (bên dưới) chỉ làm rõ từng thẻ chứ không nhoè vào nhau. */
 .tasks { background: transparent; border: none; border-radius: 0; overflow: visible; box-shadow: none; display: flex; flex-direction: column; gap: 0.5rem; }
-.task { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.3rem; border: 1px solid var(--hair); border-radius: 14px; cursor: pointer; position: relative; transition: background .12s, box-shadow .15s; background: var(--surface); box-shadow: 0 1px 0 rgba(12,19,48,0.03); }
+/* Dạng bảng, cột thẳng hàng giữa các dòng (kiểu Monday): chọn | tick | nội dung | Hạn | Ưu tiên | người phụ trách */
+.task { display: grid; grid-template-columns: 24px 24px minmax(0,1fr) 128px 128px auto; align-items: center; column-gap: 1rem; padding: 0.85rem 1.3rem; border: 1px solid var(--hair); border-radius: 14px; cursor: pointer; position: relative; transition: background .12s, box-shadow .15s; background: var(--surface); box-shadow: 0 1px 0 rgba(12,19,48,0.03); }
+.task .sel-box, .task .check { align-self: center; }
+.t-col-due, .t-col-prio { display: flex; justify-content: flex-start; }
+.col-due, .col-prio { white-space: nowrap; }
+.col-due.muted { font-size: 0.82rem; color: var(--muted); padding-left: 0.2rem; }
+@media (max-width: 900px) {
+  /* Màn hẹp: bỏ bố cục cột cứng — tiêu đề chiếm hết dòng đầu (flex:1), Hạn/Ưu tiên/người phụ trách
+     hết chỗ nên tự xuống dòng gọn gàng bên dưới, không cần ép buộc. */
+  .task { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: 0.7rem; row-gap: 0.5rem; }
+  .t-right { margin-left: auto; }
+}
 .task:hover { box-shadow: 0 6px 16px -8px rgba(12,19,48,0.25); }
 .task:last-child { border-bottom: none; }
 .task:hover { background: #fafbfd; }
@@ -752,13 +763,10 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
   const labelHue = l => { let h = 0; for (const c of String(l)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
   const allLabels = () => Array.from(new Set(D.tasks.flatMap(t => t.labels || []))).sort((a, b) => a.localeCompare(b, 'vi'));
   function metaHtml(t) {
-    const today = todayStr(); const bits = [];
-    if (t.dueDate) {
-      const cls = t.status !== 'done' && t.dueDate < today ? 'red' : t.dueDate === today ? 'blue' : '';
-      bits.push(`<span class="pill ${cls}"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(t.dueDate, t.dueTime))}</span>`);
-    }
-    if (t.priority === 'urgent') bits.push('<span class="pill red"><i class="fa-solid fa-bolt" aria-hidden="true"></i>Khẩn</span>');
-    else if (t.priority === 'high') bits.push('<span class="pill gold"><i class="fa-solid fa-star" aria-hidden="true"></i>Cao</span>');
+    // Thông tin PHỤ đi dưới tiêu đề (dự án, checklist, đính kèm, bình luận, nhãn, lặp lại, liên kết,
+    // đang bị chặn). Hạn chót và Ưu tiên KHÔNG còn ở đây — đã tách thành 2 cột riêng, thẳng hàng
+    // giữa các dòng (xem cột Hạn/Ưu tiên trong taskRow) để dễ quét mắt theo hàng dọc kiểu bảng.
+    const bits = [];
     const p = projectBy(t.projectId); if (p) bits.push(`<span class="m"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</span>`);
     if (t.checklist.length) { const d = t.checklist.filter(i => i.done).length; bits.push(`<span class="m"><i class="fa-regular fa-square-check" aria-hidden="true"></i>${d}/${t.checklist.length}</span>`); }
     if ((t.attachments || []).length) bits.push(`<span class="m"><i class="fa-solid fa-paperclip" aria-hidden="true"></i>${t.attachments.length}</span>`);
@@ -770,6 +778,24 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
     if (blocker && blocker.status !== 'done') bits.push(`<span class="pill blocked"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ: ${esc(blocker.title.slice(0, 30))}</span>`);
     return bits.join('');
   }
+  // Cột "Hạn chót" riêng — luôn hiện, kể cả khi chưa đặt hạn (hiện "—") để các dòng thẳng hàng nhau.
+  function dueColHtml(t) {
+    const today = todayStr();
+    if (!t.dueDate) return `<span class="col-due muted">—</span>`;
+    const cls = t.status !== 'done' && t.dueDate < today ? 'red' : t.dueDate === today ? 'blue' : '';
+    return `<span class="col-due pill ${cls}"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(fmtDue(t.dueDate, t.dueTime))}</span>`;
+  }
+  // Cột "Ưu tiên" riêng — luôn hiện cả 4 mức (kể cả Bình thường/Thấp) để bảng đều cột như Monday.
+  const PRIO_COL = {
+    urgent: { label: 'Khẩn', cls: 'red', icon: 'fa-bolt' },
+    high: { label: 'Cao', cls: 'gold', icon: 'fa-star' },
+    normal: { label: 'Bình thường', cls: '', icon: 'fa-minus' },
+    low: { label: 'Thấp', cls: '', icon: 'fa-arrow-down' }
+  };
+  function prioColHtml(t) {
+    const c = PRIO_COL[t.priority] || PRIO_COL.normal;
+    return `<span class="col-prio pill ${c.cls}"><i class="fa-solid ${c.icon}" aria-hidden="true"></i>${c.label}</span>`;
+  }
   const AV_TONES = [['#eaf0ff', '#1f4fd6'], ['#e6f4ec', '#1f7a4d'], ['#f6efe3', '#8a6a37'], ['#efebfb', '#6246c9'], ['#fdeceb', '#c2352b'], ['#e3f4f7', '#0e7490'], ['#fdf3e2', '#b7791f']];
   const avTone = e => { let h = 0; for (const c of String(e || '')) h = (h * 31 + c.charCodeAt(0)) >>> 0; const t = AV_TONES[h % AV_TONES.length]; return `background:${t[0]};color:${t[1]}`; };
   const avatars = list => `<span class="avs">${list.slice(0, 3).map(e => `<span class="av" style="${avTone(e)}" title="${esc(staffBy(e).name)}">${esc(initials(staffBy(e).name))}</span>`).join('')}${list.length > 3 ? `<span class="av">+${list.length - 3}</span>` : ''}</span>`;
@@ -777,6 +803,8 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
       <button class="sel-box ${state.selected.has(t.id) ? 'on' : ''}" data-select="${esc(t.id)}" aria-label="Chọn việc này"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
       <button class="check" data-toggle="${esc(t.id)}" aria-label="${t.status === 'done' ? 'Đánh dấu chưa xong' : 'Hoàn thành'}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
       <div class="t-body"><div class="t-title">${esc(t.title)}</div><div class="t-meta">${metaHtml(t)}${t.status === 'doing' ? '<span class="pill blue">Đang làm</span>' : t.status === 'review' ? '<span class="pill" style="background:var(--violet-soft);color:var(--violet);border-color:transparent">Chờ duyệt</span>' : ''}</div></div>
+      <div class="t-col-due">${dueColHtml(t)}</div>
+      <div class="t-col-prio">${prioColHtml(t)}</div>
       <div class="t-right">${avatars(t.assignees)}</div></div>`;
   const list = (items, emptyMsg) => items.length ? `<div class="tasks">${items.map(taskRow).join('')}</div>` : `<div class="empty">${emptyMsg}</div>`;
 
