@@ -598,10 +598,18 @@
       }
 
       try {
+        let fm;
         const res = await fetch(`content/posts/${slug}.md`);
-        if (!res.ok) throw new Error("Không thể tải bài viết");
-        const raw = await res.text();
-        const fm = parseFrontMatter(raw);
+        if (res.ok) {
+          const raw = await res.text();
+          fm = parseFrontMatter(raw);
+        } else {
+          // Không có file tĩnh -> đây có thể là bài viết viết từ trang quản trị (lưu ở Azure Table)
+          const apiRes = await fetch(`/api/posts-get?slug=${encodeURIComponent(slug)}`);
+          if (!apiRes.ok) throw new Error("Không thể tải bài viết");
+          const data = await apiRes.json();
+          fm = { title: data.title, date: data.date, image: data.image, excerpt: data.excerpt, body: data.body };
+        }
 
         const title = fm.title || slugToTitle(slug);
         document.title = `${title} - Wisdom Vietnam Network - DR SOLUTIONS`;

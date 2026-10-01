@@ -749,17 +749,42 @@
       return results.filter(Boolean);
     }
 
+    async function loadPostsFromApi() {
+      try {
+        const res = await fetch("/api/posts-list", { cache: "no-store" });
+        if (!res.ok) return [];
+        const list = await res.json();
+        if (!Array.isArray(list)) return [];
+        return list.map(p => ({
+          slug: p.slug,
+          title: p.title || slugToTitle(p.slug),
+          date: p.date || "",
+          image: p.image || getStableImageForSlug(p.slug),
+          excerpt: p.excerpt || "Bấm để đọc toàn bộ nội dung bài viết.",
+          loai: p.loai || ""
+        }));
+      } catch (e) {
+        return []; // lỗi mạng/API -> vẫn hiển thị bình thường các bài viết tĩnh
+      }
+    }
+
     async function loadPosts() {
       const images = await fetchUploadedImages();
       uploadedImagePool = images;
 
-      let posts;
+      let staticPosts;
       try {
-        posts = await loadPostsFromIndex();
+        staticPosts = await loadPostsFromIndex();
       } catch (e) {
         console.warn("Không đọc được posts-index.json, chuyển sang cách tải chậm hơn.", e);
-        posts = await loadPostsSlowFallback();
+        staticPosts = await loadPostsSlowFallback();
       }
+
+      // Bài viết viết từ trang quản trị (lưu trong Azure Table, không phải file tĩnh) — gộp cùng,
+      // nếu trùng slug thì bài viết trong quản trị được ưu tiên (mới cập nhật hơn).
+      const dynamicPosts = await loadPostsFromApi();
+      const dynamicSlugs = new Set(dynamicPosts.map(p => p.slug));
+      const posts = [...dynamicPosts, ...staticPosts.filter(p => !dynamicSlugs.has(p.slug))];
 
       allPosts = posts.sort((a, b) => parseDateForSort(b.date) - parseDateForSort(a.date));
       renderPosts(allPosts);

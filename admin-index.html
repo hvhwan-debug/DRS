@@ -401,6 +401,7 @@
         <button class="tab-btn" data-tab="grades" data-permission="grades" onclick="switchTab('grades')"><i class="fa-solid fa-graduation-cap"></i> Bảng Điểm</button>
         <button class="tab-btn" data-tab="members" data-permission="members" onclick="switchTab('members')"><i class="fa-solid fa-users"></i> Thành Viên</button>
         <button class="tab-btn" data-tab="gifts" data-permission="gifts" onclick="switchTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
+        <button class="tab-btn" data-tab="posts" data-permission="news" onclick="switchTab('posts')"><i class="fa-solid fa-newspaper"></i> Bài Viết</button>
         <button class="tab-btn" data-tab="bulkemail" data-permission="bulkemail" onclick="switchTab('bulkemail')"><i class="fa-solid fa-paper-plane"></i> Gửi Email</button>
         <button class="tab-btn" data-tab="activitylog" data-super-only="1" onclick="switchTab('activitylog')"><i class="fa-solid fa-user-clock"></i> Lịch Sử Thao Tác</button>
         <button class="tab-btn" data-tab="staffaccounts" onclick="switchTab('staffaccounts')"><i class="fa-solid fa-users-gear"></i> Tài Khoản Quản Trị</button>
@@ -1012,6 +1013,71 @@
         <div class="empty-state" id="giftEmpty" style="display:none;">Chưa có yêu cầu đổi quà nào.</div>
       </div>
 
+    </div>
+
+    <!-- ===================== TAB: BÀI VIẾT ===================== -->
+    <div class="panel" id="panel-posts">
+      <div class="card">
+        <h3 style="margin-bottom:1rem; font-size:1rem;"><i class="fa-solid fa-pen-nib"></i> <span id="postFormTitle">Viết bài mới</span></h3>
+        <form id="postForm">
+          <input type="hidden" id="postOriginalSlug" value="">
+          <div class="form-grid">
+            <div>
+              <label>Tiêu đề *</label>
+              <input type="text" id="postTitle" required placeholder="VD: Chương trình luyện chữ đẹp cho trẻ em khó khăn tại Hà Nội">
+            </div>
+            <div>
+              <label>Đường dẫn (slug)</label>
+              <input type="text" id="postSlug" placeholder="Để trống sẽ tự tạo từ tiêu đề">
+            </div>
+            <div>
+              <label>Ngày đăng *</label>
+              <input type="date" id="postDate" required>
+            </div>
+            <div>
+              <label>Loại</label>
+              <select id="postLoai">
+                <option value="tin-tuc">Tin Tức / Bài Viết</option>
+                <option value="su-kien">Sự Kiện</option>
+              </select>
+            </div>
+            <div style="grid-column:1 / -1;">
+              <label>Ảnh đại diện (URL)</label>
+              <input type="text" id="postImage" placeholder="VD: images/uploads/ten-anh.jpg (để trống sẽ dùng ảnh ngẫu nhiên)">
+            </div>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Mô tả ngắn (hiện ở danh sách Tin Tức)</label>
+            <textarea id="postExcerpt" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="1-2 câu tóm tắt bài viết"></textarea>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nội dung bài viết (hỗ trợ Markdown: # Tiêu đề, **đậm**, - danh sách...)</label>
+            <textarea id="postBody" rows="12" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-family:ui-monospace,monospace; font-size:0.9rem;" placeholder="Viết nội dung bài ở đây..."></textarea>
+          </div>
+          <div style="margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+            <input type="checkbox" id="postPublished" style="width:auto;">
+            <label for="postPublished" style="margin:0; font-weight:600; cursor:pointer;">Đăng ngay (bỏ chọn để lưu nháp, chưa hiện công khai)</label>
+          </div>
+          <button type="submit" class="btn" id="postSubmitBtn">Lưu Bài Viết</button>
+          <button type="button" class="btn btn-outline" id="postCancelEditBtn" style="display:none;" onclick="cancelEditPost()">Huỷ Sửa / Viết Bài Mới</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <h3 style="font-size:1rem;"><i class="fa-solid fa-list"></i> Danh sách bài viết đã viết ở đây</h3>
+          <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="loadPosts()"><i class="fa-solid fa-arrows-rotate"></i> Tải lại</button>
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.9rem;">Danh sách này chỉ gồm bài viết được viết/đăng qua đây — không hiện các bài viết cũ nằm sẵn trong <code>content/posts/</code>.</p>
+        <div id="postLoading" style="text-align:center; padding:1.5rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="empty-state" id="postEmpty" style="display:none;">Chưa có bài viết nào được viết ở đây.</div>
+        <div class="table-wrap" id="postTableWrap" style="display:none;">
+          <table>
+            <thead><tr><th>Tiêu đề</th><th>Ngày</th><th>Loại</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody id="postTableBody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- ===================== TAB: GỬI EMAIL ===================== -->
@@ -4369,6 +4435,124 @@
       }
     }
 
+    // ============== BÀI VIẾT ==============
+    let allPostsData = [];
+
+    async function loadPosts() {
+      try {
+        const { posts } = await apiCall('/api/portal-posts-list');
+        allPostsData = posts;
+        document.getElementById('postLoading').style.display = 'none';
+        if (posts.length === 0) {
+          document.getElementById('postEmpty').style.display = 'block';
+          document.getElementById('postTableWrap').style.display = 'none';
+          return;
+        }
+        document.getElementById('postEmpty').style.display = 'none';
+        document.getElementById('postTableWrap').style.display = 'block';
+        renderPostsTable();
+      } catch (err) {
+        document.getElementById('postLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderPostsTable() {
+      const typeLabel = { 'tin-tuc': 'Tin Tức', 'su-kien': 'Sự Kiện' };
+      document.getElementById('postTableBody').innerHTML = allPostsData.map(p => `
+        <tr>
+          <td><strong>${escapeHtml(p.title)}</strong><br><span style="font-size:0.76rem; color:var(--text-muted);">${escapeHtml(p.slug)}</span></td>
+          <td>${formatDate(p.date)}</td>
+          <td>${typeLabel[p.loai] || escapeHtml(p.loai) || '—'}</td>
+          <td>${p.published
+            ? '<span style="font-size:0.76rem; padding:0.15rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đã đăng</span>'
+            : '<span style="font-size:0.76rem; padding:0.15rem 0.6rem; border-radius:999px; background:#f1f5f9; color:#64748b;">Nháp</span>'}</td>
+          <td style="white-space:nowrap;">
+            <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="editPost('${encodeURIComponent(p.slug)}')"><i class="fa-solid fa-pen"></i> Sửa</button>
+            <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#dc2626; border-color:#fecaca;" onclick="deletePost('${encodeURIComponent(p.slug)}', '${encodeURIComponent(p.title)}')"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function editPost(slugEnc) {
+      const slug = decodeURIComponent(slugEnc);
+      const p = allPostsData.find(x => x.slug === slug);
+      if (!p) return;
+      document.getElementById('postFormTitle').textContent = `Sửa bài: ${p.title}`;
+      document.getElementById('postOriginalSlug').value = p.slug;
+      document.getElementById('postTitle').value = p.title;
+      document.getElementById('postSlug').value = p.slug;
+      document.getElementById('postDate').value = (p.date || '').slice(0, 10);
+      document.getElementById('postLoai').value = p.loai || 'tin-tuc';
+      document.getElementById('postImage').value = p.image || '';
+      document.getElementById('postExcerpt').value = p.excerpt || '';
+      document.getElementById('postBody').value = p.body || '';
+      document.getElementById('postPublished').checked = !!p.published;
+      document.getElementById('postSubmitBtn').textContent = 'Lưu Thay Đổi';
+      document.getElementById('postCancelEditBtn').style.display = 'inline-block';
+      document.getElementById('panel-posts').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelEditPost() {
+      document.getElementById('postFormTitle').textContent = 'Viết bài mới';
+      document.getElementById('postForm').reset();
+      document.getElementById('postOriginalSlug').value = '';
+      document.getElementById('postSubmitBtn').textContent = 'Lưu Bài Viết';
+      document.getElementById('postCancelEditBtn').style.display = 'none';
+    }
+
+    async function deletePost(slugEnc, titleEnc) {
+      const slug = decodeURIComponent(slugEnc);
+      const title = decodeURIComponent(titleEnc);
+      if (!confirm(`Xoá bài viết "${title}"? Không thể hoàn tác.`)) return;
+      try {
+        await apiCall('/api/portal-delete-post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug })
+        });
+        showGlobalAlert('Đã xoá bài viết.', false);
+        if (document.getElementById('postOriginalSlug').value === slug) cancelEditPost();
+        loadPosts();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('postForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('postSubmitBtn');
+      const originalBtnText = btn.textContent;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      try {
+        const payload = {
+          originalSlug: document.getElementById('postOriginalSlug').value,
+          title: document.getElementById('postTitle').value.trim(),
+          slug: document.getElementById('postSlug').value.trim(),
+          date: document.getElementById('postDate').value,
+          loai: document.getElementById('postLoai').value,
+          image: document.getElementById('postImage').value.trim(),
+          excerpt: document.getElementById('postExcerpt').value.trim(),
+          body: document.getElementById('postBody').value,
+          published: document.getElementById('postPublished').checked
+        };
+        const result = await apiCall('/api/portal-save-post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showGlobalAlert(result.message, false);
+        cancelEditPost();
+        loadPosts();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalBtnText;
+      }
+    });
+
     // ============== GỬI EMAIL ==============
     function onBulkEmailAudienceChange() {
       const audience = document.getElementById('bulkEmailAudience').value;
@@ -4628,6 +4812,7 @@
       { key: 'grades', label: 'Bảng Điểm' },
       { key: 'members', label: 'Thành Viên' },
       { key: 'gifts', label: 'Danh Mục & Yêu Cầu Đổi Quà' },
+      { key: 'news', label: 'Viết Bài / Tin Tức' },
       { key: 'bulkemail', label: 'Gửi Email Hàng Loạt' },
       { key: 'payroll', label: 'Chấm Công & Tính Lương (quản lý)' }
     ];
@@ -4888,6 +5073,7 @@
       if (hasPermission('members')) loadMembers();
       if (hasPermission('gifts')) { loadGiftCatalog(); loadGifts(); }
       if (hasPermission('bulkemail')) loadEmailLogs();
+      if (hasPermission('news')) loadPosts();
       if (hasPermission('attendance')) { populateAttendanceProgramSelect(); loadAttendanceHistory(); loadLeaveRequests(); }
       if (hasPermission('gifts')) loadPointsDeficits();
       if (myRole === 'super') { loadActivityLog(); loadStaffAccounts(); }
