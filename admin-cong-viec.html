@@ -131,6 +131,11 @@ button { cursor: pointer; background: none; border: none; }
 .task.done .check, .check.on { background: linear-gradient(135deg, #0ea5a4, #16a34a); border-color: transparent; }
 .task.done .check i, .check.on i { opacity: 1; }
 .task.done .t-title { color: #9aa1ba; text-decoration: line-through; text-decoration-color: #c8cde0; }
+/* Kiểu Monday: cả dòng tô màu nhạt theo trạng thái, không chỉ icon nhỏ — dễ quét mắt hơn hẳn */
+.task.done { background: var(--green-soft, #e6f4ec); }
+.task.done::before { background: var(--green); }
+.task.prio-urgent { background: var(--red-soft, #fdeceb); }
+.task.prio-high:not(.done) { background: var(--gold-soft, #fef3c7); }
 .task.prio-urgent .check { border-color: var(--red); }
 .task.prio-high .check { border-color: var(--gold); }
 .t-body { flex: 1; min-width: 0; }
@@ -359,7 +364,7 @@ button { cursor: pointer; background: none; border: none; }
 .pt { margin-right: auto; min-width: 0; flex: 1 1 320px; }
 .pt .page-title { margin: 0; font-size: 2.1rem; line-height: 1.1; }
 .pt-sub { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; max-width: 64ch; }
-.pt-num { display: grid; justify-items: start; padding: 0 0 0 1.3rem; border-left: 1px solid var(--hair); min-width: 88px; }
+.pt-num { display: grid; justify-items: start; padding: 0.5rem 1.1rem; border-left: none; min-width: 88px; background: var(--porcelain); border-radius: 14px; }
 .pt-num b { font-family: var(--display); font-size: 2rem; font-weight: 600; line-height: 1; color: var(--ink); }
 .pt-num span { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
 .view .toolbar select { background-color: #fff; border-color: var(--hair); border-radius: 12px; font: inherit; font-size: 0.86rem; padding: 0.55rem 0.8rem; }
