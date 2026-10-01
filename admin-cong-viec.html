@@ -121,8 +121,11 @@ button { cursor: pointer; background: none; border: none; }
 .section-title.red h3 { color: #b42318; }
 .empty { color: var(--muted); font-size: 0.9rem; padding: 1.8rem 1.4rem; background: #fbfbfd; border: 1px dashed #d7dbe7; border-radius: 16px; text-align: center; position: relative; }
 .empty b { color: var(--ink); display: block; font-weight: 600 !important; margin-bottom: 0.3rem; font-family: var(--display); font-size: 1.2rem; }
-.tasks { background: var(--surface); border: 1px solid var(--hair); border-radius: 16px; overflow: hidden; box-shadow: var(--lift); }
-.task { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.3rem; border-bottom: 1px solid var(--line-2); cursor: pointer; position: relative; transition: background .12s; border-bottom-color: var(--hair-2); }
+/* Danh sách việc: mỗi dòng là 1 thẻ RIÊNG có khoảng cách, không còn dính liền thành 1 khối —
+   nhờ vậy tô màu theo trạng thái (bên dưới) chỉ làm rõ từng thẻ chứ không nhoè vào nhau. */
+.tasks { background: transparent; border: none; border-radius: 0; overflow: visible; box-shadow: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.task { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.3rem; border: 1px solid var(--hair); border-radius: 14px; cursor: pointer; position: relative; transition: background .12s, box-shadow .15s; background: var(--surface); box-shadow: 0 1px 0 rgba(12,19,48,0.03); }
+.task:hover { box-shadow: 0 6px 16px -8px rgba(12,19,48,0.25); }
 .task:last-child { border-bottom: none; }
 .task:hover { background: #fafbfd; }
 .check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c3c9d6; flex-shrink: 0; margin-top: 1px; display: grid; place-items: center; transition: all 0.15s; border-width: 1.5px; border-color: #c5cbdc; }
