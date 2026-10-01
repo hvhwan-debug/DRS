@@ -1,4 +1,4 @@
-const { logFamilyEvent, enrollFromRegistration, pointsDeficit } = require("../_shared/linkage");
+const { logFamilyEvent, enrollFromRegistration } = require("../_shared/linkage");
 const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
 const { requireAdmin } = require("../_shared/adminAuth");
@@ -96,15 +96,11 @@ module.exports = async function (context, req) {
       return;
     }
 
-    // Liên kết điểm: không cho duyệt/giao/trao quà khi thành viên đang THIẾU điểm (vd. khoản học phí đã bị xoá/sửa giảm)
-    if (["shipping", "fulfilled"].includes(status) && currentStatus === "pending") {
-      const deficit = await pointsDeficit(email);
-      if (deficit > 0) {
-        context.res.status = 409;
-        context.res.body = { success: false, message: `Thành viên đang thiếu ${deficit.toLocaleString("vi-VN")} điểm (điểm đã dùng nhiều hơn điểm tích luỹ, thường do khoản học phí bị xoá hoặc sửa giảm). Hãy kiểm tra lại học phí hoặc huỷ bớt yêu cầu đổi quà trước khi duyệt.` };
-        return;
-      }
-    }
+    // LƯU Ý: trước đây có chặn duyệt/giao/trao quà khi thành viên đang có "thiếu điểm" TỔNG
+    // (thường do một khoản học phí KHÁC, không liên quan tới chính yêu cầu này, bị xoá/sửa giảm).
+    // Đã bỏ chặn này — mỗi yêu cầu đã được kiểm tra đủ điểm NGAY LÚC TẠO (xem member-request-gift),
+    // nên việc duyệt yêu cầu này không nên bị ảnh hưởng bởi một vấn đề số liệu ở chỗ khác. Admin vẫn
+    // thấy và xử lý các trường hợp thiếu điểm riêng ở mục Đổi Quà → "Thành viên đang thiếu điểm".
     const meta = STATUS_META[status];
     const updatePayload = { partitionKey: email, rowKey: id, status };
     if (meta.timestampField) updatePayload[meta.timestampField] = new Date().toISOString();
