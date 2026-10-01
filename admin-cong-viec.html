@@ -290,12 +290,13 @@ button { cursor: pointer; background: none; border: none; }
 .col[data-col="done"] { --st: var(--green); }
 .col[data-col="done"] .card .t-title { color: var(--muted); text-decoration: line-through; text-decoration-color: #c3c9d6; }
 /* Thẻ đã xong: cả thẻ trông "đã lưu trữ" chứ không chỉ gạch tiêu đề — tránh nhìn giống hệt việc đang làm */
-.col[data-col="done"] .card { background: var(--porcelain); box-shadow: none; }
-.col[data-col="done"] .card:hover { box-shadow: 0 2px 10px rgba(17,26,51,0.06); border-color: #d6dbe6; transform: none; }
+.col[data-col="done"] .card { background: var(--porcelain); border-style: dashed; box-shadow: none; opacity: 0.82; }
+.col[data-col="done"] .card:hover { box-shadow: 0 2px 10px rgba(17,26,51,0.06); border-color: #d6dbe6; transform: none; opacity: 1; }
 .col[data-col="done"] .card .prio-bar { opacity: 0.3; }
-.col[data-col="done"] .card .av, .col[data-col="done"] .card .pill { opacity: 0.7; }
-/* Cột quá dài (vd. Hoàn thành tích luỹ nhiều việc) cuộn riêng, không kéo lệch chiều cao cả bảng */
-.cards { max-height: calc(100vh - 320px); overflow-y: auto; scrollbar-width: thin; padding-right: 2px; }
+.col[data-col="done"] .card .av, .col[data-col="done"] .card .pill { filter: grayscale(0.5); opacity: 0.7; }
+.col[data-col="done"] .card .t-title::before { content: "\2713"; display: inline-block; margin-right: 0.35rem; color: var(--green); font-weight: 700; }
+/* Mọi cột cao tối đa ~4 thẻ rồi tự cuộn riêng — các cột không còn lệch chiều cao nhau dù số việc chênh lệch nhiều */
+.cards { max-height: 420px; overflow-y: auto; scrollbar-width: thin; padding-right: 2px; }
 .day.today .day-head b { background: linear-gradient(135deg, #0a1230, #1e3a8a); color: #fff; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 1.1rem; box-shadow: 0 6px 16px -6px rgba(10,18,48,0.6); }
 .day.weekend { background: rgba(240,242,248,0.7); }
 .day:hover .add, .day .add:focus-visible { opacity: 1; }
