@@ -746,6 +746,20 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
 .day.weekend { background: rgba(240,242,248,0.7); }
 .day .card { box-shadow: 0 1px 0 rgba(12,19,48,0.03), 0 8px 18px -16px rgba(12,19,48,0.45); }
 
+/* Lịch tuần: bớt khoảng trống trơ, thẻ gọn gàng hơn, ngày trống có gợi ý rõ thay vì ô trắng chết */
+.week { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.day { min-height: 190px; gap: 0.5rem; }
+.day .card .t-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.35; }
+.day .card.done { background: var(--porcelain); border-color: var(--line-2); box-shadow: none; }
+.day .card.done .t-title { color: var(--muted); font-weight: 400; text-decoration: line-through; text-decoration-color: var(--line); -webkit-line-clamp: 1; }
+.day .card.done .prio-bar { opacity: 0.3; }
+.day .add { opacity: 0.45; }
+.day:hover .add, .day .add:focus-visible { opacity: 1; }
+.day:not(:has(.card)) { align-items: stretch; justify-content: center; }
+.day:not(:has(.card)) .add { opacity: 0.55; margin: auto 0 0; text-align: center; border: 1.5px dashed var(--line); padding: 0.6rem 0.3rem; }
+.day:not(:has(.card)) .add:hover { opacity: 1; border-color: var(--gold-line); background: var(--gold-soft); }
+@media (max-width: 900px) { .day { min-height: 0; } }
+
 /* Thanh bên: nhịp tiến độ hôm nay */
 .focus { margin: 1.2rem 0.2rem 0.4rem; padding: 0.9rem 0.95rem; border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); }
 .focus:empty { display: none; }
@@ -1216,7 +1230,7 @@ body { font-family: var(--sans); background: var(--canvas); color: var(--ink); f
         const items = pool.filter(t => t.dueDate === d).sort((a, b) => (a.status === 'done') - (b.status === 'done') || byDue(a, b));
         const dt = new Date(d + 'T00:00:00');
         return `<div class="day ${d === today ? 'today' : ''} ${dt.getDay() % 6 === 0 ? 'weekend' : ''}" data-day="${d}"><div class="day-head"><span>${WDs[dt.getDay()]}</span><b>${dt.getDate()}</b></div>
-          ${items.map(t => `<div class="card ${t.status === 'done' ? 'done' : ''}" draggable="true" data-open="${esc(t.id)}" data-id="${esc(t.id)}" style="${t.status === 'done' ? 'opacity:0.55' : ''}">${t.priority === 'urgent' || t.priority === 'high' ? `<div class="prio-bar" style="background:${PRIO_COLOR[t.priority]}"></div>` : ''}<div class="t-title" style="${t.status === 'done' ? 'text-decoration:line-through' : ''}">${t.dueTime ? `<b style="font-weight:600;color:var(--sapphire)">${esc(t.dueTime)}</b> ` : ''}${esc(t.title)}</div></div>`).join('')}
+          ${items.map(t => `<div class="card ${t.status === 'done' ? 'done' : ''}" draggable="true" data-open="${esc(t.id)}" data-id="${esc(t.id)}">${t.priority === 'urgent' || t.priority === 'high' ? `<div class="prio-bar" style="background:${PRIO_COLOR[t.priority]}"></div>` : ''}<div class="t-title">${t.dueTime ? `<b style="font-weight:600;color:var(--sapphire)">${esc(t.dueTime)}</b> ` : ''}${esc(t.title)}</div></div>`).join('')}
           <button class="add" data-add-day="${d}"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm</button></div>`;
       }).join('')}</div>`;
   }
