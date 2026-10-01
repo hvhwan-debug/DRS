@@ -14,8 +14,12 @@ const isMarketing = type => MARKETING_TYPES.has(String(type || "").toLowerCase()
 
 async function isMarketingOptedOut(email) {
   const e = String(email || "").trim().toLowerCase(); if (!e) return false;
-  try { const s = await (await getTableClient(SUBS_TABLE)).getEntity("sub", e); if (s.status === "unsubscribed") return true; } catch (err) {}
-  try { const p = await (await getTableClient("MemberProfiles")).getEntity("profile", e); if (JSON.parse(p.prefsJson || "{}").news === false) return true; } catch (err) {}
+  // Chỉ "không tìm thấy" (404) mới nghĩa là chưa huỷ. Lỗi khác (mạng, bảng tạm lỗi…) => coi là đã huỷ, bỏ qua lần này:
+  // bỏ sót một email quảng cáo còn hơn gửi nhầm cho người đã yêu cầu ngừng nhận.
+  try { const s = await (await getTableClient(SUBS_TABLE)).getEntity("sub", e); if (s.status === "unsubscribed") return true; }
+  catch (err) { if (err && err.statusCode !== 404) return true; }
+  try { const p = await (await getTableClient("MemberProfiles")).getEntity("profile", e); if (JSON.parse(p.prefsJson || "{}").news === false) return true; }
+  catch (err) { if (err && err.statusCode !== 404 && !(err instanceof SyntaxError)) return true; }
   return false;
 }
 

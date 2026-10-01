@@ -1321,6 +1321,7 @@ body.emp-lock { overflow: hidden; }
           <label><input type="radio" name="bulkKind" value="marketing" checked><span><b>Bản tin / khuyến mãi</b><small>Tự bỏ qua người đã huỷ nhận, có link huỷ ở cuối email</small></span></label>
           <label><input type="radio" name="bulkKind" value="notice"><span><b>Thông báo quan trọng</b><small>Nghỉ học, đổi lịch, việc cần làm ngay — gửi cho tất cả người nhận</small></span></label>
         </div>
+        <label style="display:flex; align-items:flex-start; gap:0.55rem; font-size:0.85rem; margin:-0.2rem 0 1rem; cursor:pointer;"><input type="checkbox" id="bulkEmailForce" style="margin-top:0.25rem;"><span><b>Gửi lại cả người đã nhận đúng nội dung này</b><br><small style="color:var(--text-muted);">Mặc định hệ thống bỏ qua người đã nhận đúng tiêu đề và nội dung này trong 60 ngày qua, để tránh gửi trùng. Chỉ tick khi bạn chủ động muốn gửi lại.</small></span></label>
         <div style="margin-bottom:1rem;">
           <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Tiêu đề email *</label>
           <input type="text" id="bulkEmailSubject" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px;" placeholder="VD: Thông báo lịch nghỉ lễ">
@@ -5433,19 +5434,36 @@ body.emp-lock { overflow: hidden; }
         showGlobalAlert('Vui lòng nhập đủ tiêu đề và nội dung email.', true);
         return;
       }
-      if (!confirm(`Gửi email tới ${recipients.length} người nhận?`)) return;
+      if (window.__bulkSending) return;          // chặn bấm gửi hai lần khi đang xử lý
+      window.__bulkSending = true;
+      const category = (document.querySelector('input[name="bulkKind"]:checked') || {}).value || 'marketing';
+      const force = document.getElementById('bulkEmailForce').checked;
+      const post = extra => apiCall('/api/portal-send-bulk-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ recipients, subject, message, category, force, ...extra }) });
 
+      // Bước 1: xem trước (chưa gửi gì) — cho biết ai sẽ nhận, ai bị bỏ qua và vì sao
       btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kiểm tra người nhận...';
+      let pre;
+      try { pre = await post({ dryRun: true }); }
+      catch (err) { showGlobalAlert(err.message, true); btn.disabled = false; btn.innerHTML = 'Gửi Email'; window.__bulkSending = false; return; }
+      const last = pre.lastReceivedAt ? ` (gần nhất ${formatDate(pre.lastReceivedAt)})` : '';
+      if (pre.willSend === 0) {
+        const why = pre.duplicateCount ? `${pre.duplicateCount} người đã nhận đúng nội dung này rồi${last} nên không gửi lại. Muốn gửi lại, hãy tick “Gửi lại cả người đã nhận đúng nội dung này”.` : 'tất cả người nhận đã huỷ nhận email quảng cáo.';
+        showGlobalAlert('Không có ai để gửi: ' + why, true);
+        btn.disabled = false; btn.innerHTML = 'Gửi Email'; window.__bulkSending = false; return;
+      }
+      const lines = [`Sẽ gửi email tới ${pre.willSend} người.`];
+      if (pre.optedOutCount) lines.push(`• Bỏ qua ${pre.optedOutCount} người đã huỷ nhận email quảng cáo.`);
+      if (pre.duplicateCount) lines.push(`• Bỏ qua ${pre.duplicateCount} người đã nhận đúng nội dung này${last}. Muốn gửi lại cho họ, tick ô “Gửi lại cả người đã nhận…” rồi gửi lại.`);
+      if (!confirm(lines.join('\n') + '\n\nTiếp tục gửi?')) { btn.disabled = false; btn.innerHTML = 'Gửi Email'; window.__bulkSending = false; return; }
+
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
       try {
-        const result = await apiCall('/api/portal-send-bulk-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ recipients, subject, message, category: (document.querySelector('input[name="bulkKind"]:checked') || {}).value || 'marketing' })
-        });
+        const result = await post({});
         let msg = `Đã gửi thành công tới ${result.sentCount}/${recipients.length} người nhận.`;
         if (result.failedCount > 0) msg += ` (${result.failedCount} gửi thất bại: ${result.failed.join(', ')})`;
         if (result.optedOutCount > 0) msg += ` Bỏ qua ${result.optedOutCount} người đã huỷ nhận email quảng cáo.`;
+        if (result.duplicateCount > 0) msg += ` Bỏ qua ${result.duplicateCount} người đã nhận đúng nội dung này trước đó.`;
         showGlobalAlert(msg, result.failedCount > 0);
         if (typeof loadEmailLogs === 'function') loadEmailLogs();
       } catch (err) {
@@ -5453,6 +5471,7 @@ body.emp-lock { overflow: hidden; }
       } finally {
         btn.disabled = false;
         btn.innerHTML = 'Gửi Email';
+        window.__bulkSending = false;
       }
     }
 

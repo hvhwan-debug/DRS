@@ -14,7 +14,7 @@ const EMAIL_LOGS_TABLE = "EmailLogs";
 //
 // CÁCH DÙNG CŨ (vẫn hỗ trợ, không khuyến khích): truyền thẳng `html` đầy đủ — dùng khi cần 1 email
 // có cấu trúc đặc biệt không theo khung chung (hiếm khi cần).
-async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, title, bodyHtml, ctas, footerNote }) {
+async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, title, bodyHtml, ctas, footerNote, campaignKey }) {
   let success = false;
   let errorMessage = "";
 
@@ -34,7 +34,11 @@ async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, tit
       const note = `Bạn nhận email này vì đã đăng ký nhận tin từ Tri thức Việt. <a href="${url}" style="color:#64748b;text-decoration:underline;">Huỷ nhận email quảng cáo</a>. Các thông báo về học tập, học phí và tài khoản vẫn được gửi bình thường.`;
       footerNote = footerNote ? footerNote + "<br>" + note : note;
       if (html && !/public-newsletter-unsubscribe/.test(html)) html = html.replace(/<\/body>/i, `<p style="font-size:12px;color:#94a3b8;text-align:center;margin:16px 0;">${note}</p></body>`);
-    } catch (err) {}
+    } catch (err) {
+      // Email quảng cáo BẮT BUỘC có link huỷ nhận. Không tạo được link thì không gửi (an toàn hơn là gửi thiếu link).
+      if (context && context.log) context.log.error(`Không tạo được link huỷ nhận cho ${to}:`, err.message);
+      return { success: false, errorMessage: "Không tạo được liên kết huỷ nhận email nên chưa gửi (để tránh gửi quảng cáo thiếu link huỷ). Vui lòng thử lại." };
+    }
   }
 
   let finalHtml = html;
@@ -70,7 +74,8 @@ async function sendTrackedEmail(context, { to, subject, html, type, eyebrow, tit
       type: type || "other",
       success,
       errorMessage,
-      sentAt: new Date().toISOString()
+      sentAt: new Date().toISOString(),
+      campaignKey: campaignKey || ""   // dấu vân tay nội dung — để biết người này đã nhận đúng bản tin này chưa
     });
   } catch (err) {
     if (context && context.log) context.log.error("Ghi log email thất bại:", err.message);
