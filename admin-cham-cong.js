@@ -306,12 +306,61 @@
 
   function monthPicker(id, value) { return `<input type="month" id="${id}" value="${esc(value)}" max="${esc(S.d.today.slice(0, 7))}" aria-label="Chọn tháng">`; }
 
+  // ---------- Bảng công theo tháng: lịch tháng (mặc định) hoặc danh sách ----------
+  const shiftMonth = (p, n) => { const [y, m] = p.split('-').map(Number); const d = new Date(Date.UTC(y, m - 1 + n, 1)); return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0'); };
+  const sheetMode = () => { if (!S.sheetMode) { try { S.sheetMode = localStorage.getItem('wvn_sheet_mode') === 'list' ? 'list' : 'cal'; } catch (e) { S.sheetMode = 'cal'; } } return S.sheetMode; };
+  const WDM = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']; // lịch bắt đầu từ Thứ Hai
+  function dayAgg(list) {
+    const A = {};
+    list.forEach(e => {
+      const a = A[e.date] || (A[e.date] = { ok: 0, pend: 0, n: 0, pending: false, rejected: false, open: false, items: [] });
+      a.items.push(e); a.n++;
+      if (e.status === 'ok') a.ok += e.minutes || 0;
+      else if (e.status === 'pending') { a.pend += e.minutes || 0; a.pending = true; }
+      else if (e.status === 'rejected') a.rejected = true;
+      else if (e.status === 'open') a.open = true;
+    });
+    return A;
+  }
+  function leaveOn(leaves, date) { return (leaves || []).find(l => ['approved', 'pending'].includes(l.status) && l.dateFrom <= date && l.dateTo >= date); }
+  function calHtml(d, agg) {
+    const [y, mo] = d.period.split('-').map(Number);
+    const lead = (new Date(Date.UTC(y, mo - 1, 1)).getUTCDay() + 6) % 7, nDays = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+    const cells = []; for (let i = 0; i < lead; i++) cells.push(null); for (let i = 1; i <= nDays; i++) cells.push(d.period + '-' + String(i).padStart(2, '0')); while (cells.length % 7) cells.push(null);
+    let out = WDM.map(x => `<div class="mc-h">${x}</div>`).join('') + '<div class="mc-h">Tuần</div>';
+    for (let w = 0; w < cells.length; w += 7) {
+      let wk = 0;
+      for (let i = 0; i < 7; i++) {
+        const date = cells[w + i];
+        if (!date) { out += '<div class="mc blank"></div>'; continue; }
+        const a = agg[date], lv = leaveOn(d.leaves, date); wk += a ? a.ok : 0;
+        const cls = ['mc', date === d.today ? 'today' : '', i >= 5 ? 'wk' : '', date > d.today ? 'fut' : '', a && (a.ok || a.pend || a.open) ? 'has' : '', date === S.sheetDay ? 'sel' : ''].filter(Boolean).join(' ');
+        const label = `${WDL[dow(date)]} ${dmy(date)}${a ? ': ' + hm(a.ok) + ', ' + a.n + ' ca' : ': chưa có ca'}${lv ? ', nghỉ phép' : ''}`;
+        out += `<button type="button" class="${cls}" data-day="${date}" style="--i:${a ? Math.min(1, a.ok / 480).toFixed(2) : 0}" aria-label="${esc(label)}" aria-pressed="${date === S.sheetDay}">
+          <span class="d">${Number(date.slice(8))}</span>${lv ? `<span class="lv">${lv.status === 'pending' ? 'Xin nghỉ' : 'Nghỉ phép'}</span>` : ''}
+          ${a && a.ok ? `<b class="h num">${hm(a.ok)}</b>` : a && a.open ? '<b class="h num" style="color:var(--sapphire)">Đang làm</b>' : a && a.pend ? `<b class="h num" style="color:var(--amber)">${hm(a.pend)}</b>` : ''}
+          ${a ? `<small>${a.n} ca${a.pending && a.ok ? ' · có ca chờ' : ''}</small>` : ''}${a && (a.pending || a.rejected) ? `<i class="pd ${a.rejected && !a.pending ? 'rj' : ''}" title="${a.pending ? 'Có ca chờ duyệt' : 'Có ca bị từ chối'}"></i>` : ''}</button>`;
+      }
+      out += `<div class="mw"><b class="num">${wk ? hm(wk) : '—'}</b><small>Tuần ${Math.floor(w / 7) + 1}</small></div>`;
+    }
+    return out;
+  }
   function rMySheet() {
-    const d = S.d, est = d.estimate, locked = d.periodStatus.status !== 'open';
+    const d = S.d, est = d.estimate, locked = d.periodStatus.status !== 'open', mode = sheetMode();
     const list = d.entries.filter(e => e.status !== 'replaced' && (e.date.slice(0, 7) === d.period || e.status === 'open'));
+    const inMonth = list.filter(e => e.date.slice(0, 7) === d.period);
+    const agg = dayAgg(inMonth);
+    if (S.sheetDay && S.sheetDay.slice(0, 7) !== d.period) S.sheetDay = '';
+    if (mode === 'cal' && !S.sheetDay && d.today.slice(0, 7) === d.period) S.sheetDay = d.today;
+    const curMonth = d.today.slice(0, 7), isCur = d.period === curMonth;
+    const sel = S.sheetDay, selA = sel && agg[sel], canAdd = !locked && sel && sel <= d.today;
+    const detail = !sel ? '<div class="empty"><i class="fa-regular fa-hand-pointer"></i>Chạm vào một ngày trên lịch để xem các ca của ngày đó.</div>'
+      : `<div class="card-h"><div><h3>${WDL[dow(sel)]}, ${dmy(sel)}</h3><small>${selA ? `${selA.n} ca · ${hm(selA.ok)} được tính${selA.pend ? ' · ' + hm(selA.pend) + ' chờ duyệt' : ''}` : 'Chưa có ca nào'}</small></div>${canAdd ? `<button class="btn sm" id="addDay"><i class="fa-solid fa-plus"></i> Bổ sung công ngày này</button>` : ''}</div>
+        ${selA ? `<ul class="list">${selA.items.sort((x, y) => String(x.clockIn).localeCompare(String(y.clockIn))).map(e => entryLi(e, { actions: true, editable: !locked })).join('')}</ul>` : `<div class="empty" style="padding:1.4rem 1rem">${leaveOn(d.leaves, sel) ? 'Ngày này nằm trong đơn xin nghỉ.' : 'Không có ca nào trong ngày này.'}</div>`}`;
     $('view-bang-cong').innerHTML = `
       <div class="page-head"><div><h1>Bảng công của tôi</h1><p>Ca bấm nút được tính ngay. Ca bổ sung hoặc xin sửa cần quản lý duyệt.</p></div>
-        <div class="toolbar">${monthPicker('myMonth', d.period)}<button class="btn primary" id="addReq" ${locked ? 'disabled' : ''}><i class="fa-solid fa-plus"></i> Bổ sung công</button></div></div>
+        <div class="toolbar"><div class="mnav"><button class="btn" id="mPrev" aria-label="Tháng trước"><i class="fa-solid fa-chevron-left"></i></button>${monthPicker('myMonth', d.period)}<button class="btn" id="mNext" aria-label="Tháng sau" ${d.period >= curMonth ? 'disabled' : ''}><i class="fa-solid fa-chevron-right"></i></button>${isCur ? '' : '<button class="btn" id="mNow">Tháng này</button>'}</div>
+        <button class="btn primary" id="addReq" ${locked ? 'disabled' : ''}><i class="fa-solid fa-plus"></i> Bổ sung công</button></div></div>
       ${locked ? `<div class="warn amber"><i class="fa-solid fa-lock"></i><div><b>Kỳ lương ${periodLabel(d.period)} đã chốt.</b>Nếu phát hiện sai sót, vui lòng báo trực tiếp quản lý.</div></div>` : ''}
       <div class="grid g4">
         <div class="card stat"><b class="num">${hoursDec(est.minutes)}</b><span>giờ được tính</span></div>
@@ -319,9 +368,19 @@
         <div class="card stat"><b class="num">${est.workDays}</b><span>ngày có công</span></div>
         <div class="card stat"><b class="num">${est.pendingCount}</b><span>ca chờ duyệt</span></div>
       </div>
-      <div class="card">${list.length ? `<ul class="list">${list.map(e => entryLi(e, { actions: true, editable: !locked })).join('')}</ul>` : '<div class="empty"><i class="fa-regular fa-calendar"></i>Chưa có ca nào trong ' + periodLabel(d.period) + '.</div>'}</div>`;
-    $('myMonth').onchange = async e => { if (!e.target.value) return; await loadMe(e.target.value); rMySheet(); };
+      <div class="vseg" role="group" aria-label="Kiểu xem"><button data-mode="cal" aria-pressed="${mode === 'cal'}"><i class="fa-regular fa-calendar"></i> Lịch tháng</button><button data-mode="list" aria-pressed="${mode === 'list'}"><i class="fa-solid fa-list"></i> Danh sách</button></div>
+      ${mode === 'cal' ? `<div class="card mcal"><div class="card-h" style="padding:0 0 .8rem;border:none"><h3>${esc(periodLabel(d.period).replace(/^./, c => c.toUpperCase()))}</h3><div class="mleg"><span><i style="background:#c9d6fa"></i>Đã tính</span><span><i style="background:#f59e0b"></i>Chờ duyệt</span><span><i style="background:#c4b5f5"></i>Nghỉ phép</span></div></div><div class="mc-grid">${calHtml(d, agg)}</div></div>
+        <div class="card" id="dayDetail">${detail}</div>`
+      : `<div class="card">${list.length ? `<ul class="list">${list.map(e => entryLi(e, { actions: true, editable: !locked })).join('')}</ul>` : '<div class="empty"><i class="fa-regular fa-calendar"></i>Chưa có ca nào trong ' + periodLabel(d.period) + '.</div>'}</div>`}`;
+    const go = async p => { if (!p) return; S.sheetDay = ''; await loadMe(p); rMySheet(); };
+    $('myMonth').onchange = e => go(e.target.value);
+    $('mPrev').onclick = () => go(shiftMonth(d.period, -1));
+    $('mNext').onclick = () => go(shiftMonth(d.period, 1));
+    if ($('mNow')) $('mNow').onclick = () => go(curMonth);
     $('addReq').onclick = () => requestEntryModal();
+    if ($('addDay')) $('addDay').onclick = () => requestEntryModal(null, sel);
+    $('view-bang-cong').querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { S.sheetMode = b.dataset.mode; try { localStorage.setItem('wvn_sheet_mode', S.sheetMode); } catch (e) {} rMySheet(); });
+    $('view-bang-cong').querySelectorAll('[data-day]').forEach(b => b.onclick = () => { S.sheetDay = S.sheetDay === b.dataset.day ? '' : b.dataset.day; rMySheet(); const dd = $('dayDetail'); if (dd && window.innerWidth < 900) dd.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
     $('view-bang-cong').querySelectorAll('[data-edit]').forEach(b => b.onclick = () => requestEntryModal(d.entries.find(x => x.id === b.dataset.edit)));
     $('view-bang-cong').querySelectorAll('[data-cancel]').forEach(b => b.onclick = async () => {
       if (!confirm('Huỷ yêu cầu này?')) return;
@@ -329,11 +388,11 @@
     });
   }
 
-  function requestEntryModal(orig) {
+  function requestEntryModal(orig, presetDate) {
     const d = S.d;
     modal(orig ? 'Xin sửa ca làm' : 'Bổ sung công', `
       ${orig ? `<p class="muted" style="margin-bottom:.9rem;font-size:.86rem">Bản hiện tại: ${dmy(orig.date)} · ${timeOf(orig.clockIn)} – ${timeOf(orig.clockOut)}${orig.breakMinutes ? ' · nghỉ ' + orig.breakMinutes + 'p' : ''}. Bản cũ vẫn được tính cho tới khi quản lý duyệt bản sửa.</p>` : ''}
-      <div class="field"><label for="rqDate">Ngày làm</label><input type="date" id="rqDate" max="${d.today}" value="${esc(orig ? orig.date : d.today)}"></div>
+      <div class="field"><label for="rqDate">Ngày làm</label><input type="date" id="rqDate" max="${d.today}" value="${esc(orig ? orig.date : (presetDate || d.today))}"></div>
       <div class="row3">
         <div class="field"><label for="rqStart">Giờ vào</label><input type="time" id="rqStart" value="${esc(orig ? timeOf(orig.clockIn) : '08:00')}"></div>
         <div class="field"><label for="rqEnd">Giờ ra</label><input type="time" id="rqEnd" value="${esc(orig && orig.clockOut ? timeOf(orig.clockOut) : '17:00')}"></div>
