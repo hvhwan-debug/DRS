@@ -1,19 +1,37 @@
 const { logAdminActivity, summarizeBody } = require("../_shared/activityLog");
 const { getTableClient } = require("../_shared/tableStorage");
-const { requireAdmin, getAdminIdentity } = require("../_shared/adminAuth");
+const { loadSessionAndAccount, isSuperAdmin, accountPermissions } = require("../_shared/adminAuth");
 const W = require("../_shared/work");
 
 const STATUS_LABEL = { todo: "Cần làm", doing: "Đang làm", review: "Chờ duyệt", done: "Hoàn thành" };
+// Thứ tự luồng Kanban chuẩn — dùng để chặn nhảy cóc (vd. Cần làm -> Hoàn thành thẳng).
+const STATUS_ORDER = ["todo", "doing", "review", "done"];
 
 // Tạo mới (không có id) hoặc cập nhật MỘT PHẦN (chỉ các trường gửi lên) một công việc.
 // Tự ghi lịch sử thay đổi; khi hoàn thành việc có lặp lại -> tự tạo lần kế tiếp.
+//
+// LUỒNG WORKFLOW (áp dụng cho MỌI cách đổi trạng thái: kéo-thả, tick xong, sửa form — vì tất cả
+// đều đi qua đúng 1 API này):
+//  1. Chặn nhảy cóc quá 1 bước về phía trước (todo->doing->review->done), trừ khi người thực hiện
+//     có quyền "work-manage" hoặc là Quản Trị Viên Chính — họ được quyền bỏ qua bước khi cần.
+//  2. Việc đang bị MỘT việc khác (blockedBy) chặn và việc đó CHƯA xong thì không được chuyển sang
+//     Hoàn thành (áp dụng cho tất cả, kể cả quản lý — đây là ràng buộc dữ liệu, không phải phân quyền).
+//  3. Chuyển từ "Chờ duyệt" sang "Hoàn thành" CHỈ người có quyền "work-manage" / Quản Trị Viên Chính
+//     mới làm được — đây là bước DUYỆT.
+//  4. Lùi về phía sau (demote/mở lại) luôn được phép với bất kỳ ai, không bị chặn bởi 3 quy tắc trên.
+// Tự động hoá: chuyển sang "Chờ duyệt" -> báo người tạo việc đi duyệt; bị trả lại từ "Chờ duyệt"
+// hoặc được duyệt xong -> báo người phụ trách; việc Hoàn thành có việc khác đang chờ nó (blockedBy
+// trỏ tới nó) -> báo người phụ trách việc kế tiếp là đã có thể bắt đầu.
 module.exports = async function (context, req) {
   context.res = { headers: { "Content-Type": "application/json" } };
-  if (!(await requireAdmin(context, req))) return;
+  const sess = await loadSessionAndAccount(context, req);
+  if (!sess) return;
+  const { session, account } = sess;
+  const isManager = isSuperAdmin(account) || accountPermissions(account).includes("work-manage");
 
   const b = req.body || {};
   try {
-    const who = (await getAdminIdentity(req)) || { email: "", displayName: "" };
+    const who = { email: session.adminEmail || "", displayName: session.displayName || "Không rõ" };
     const table = await getTableClient(W.TASKS_TABLE);
     const now = new Date().toISOString();
     const isNew = !b.id;
@@ -32,7 +50,36 @@ module.exports = async function (context, req) {
       if (!patch.title) { context.res.status = 400; context.res.body = { success: false, message: "Công việc cần có tên." }; return; }
     }
     if (has("description")) patch.description = W.clean(b.description, 5000);
-    if (has("status") && W.STATUSES.includes(b.status)) patch.status = b.status;
+    if (has("status") && W.STATUSES.includes(b.status)) {
+      if (!isNew && current && b.status !== current.status) {
+        const fromIdx = STATUS_ORDER.indexOf(current.status);
+        const toIdx = STATUS_ORDER.indexOf(b.status);
+        const isForward = toIdx > fromIdx;
+
+        if (b.status === "done" && current.blockedBy) {
+          try {
+            const blocker = W.toTask(await table.getEntity("task", current.blockedBy));
+            if (blocker.status !== "done") {
+              context.res.status = 409;
+              context.res.body = { success: false, message: `Việc này đang chờ "${blocker.title}" hoàn thành trước, chưa thể chuyển sang Hoàn thành.` };
+              return;
+            }
+          } catch (e) { /* việc chặn không còn tồn tại -> bỏ qua ràng buộc */ }
+        }
+
+        if (isForward && toIdx - fromIdx > 1 && !isManager) {
+          context.res.status = 409;
+          context.res.body = { success: false, message: `Cần chuyển lần lượt qua từng bước — hiện đang ở "${STATUS_LABEL[current.status]}", chưa thể nhảy thẳng sang "${STATUS_LABEL[b.status]}".` };
+          return;
+        }
+        if (isForward && current.status === "review" && b.status === "done" && !isManager) {
+          context.res.status = 409;
+          context.res.body = { success: false, message: "Cần người quản lý duyệt trước khi chuyển sang Hoàn thành." };
+          return;
+        }
+      }
+      patch.status = b.status;
+    }
     if (has("priority") && W.PRIORITIES.includes(b.priority)) patch.priority = b.priority;
     if (has("dueDate")) patch.dueDate = W.cleanDate(b.dueDate);
     if (has("dueTime")) patch.dueTime = W.cleanTime(b.dueTime);
@@ -50,7 +97,12 @@ module.exports = async function (context, req) {
     const log = text => history.push({ at: now, by: who.displayName || who.email, text });
     if (isNew) log("Tạo công việc");
     else {
-      if (patch.status && patch.status !== current.status) log(`Chuyển sang "${STATUS_LABEL[patch.status]}"`);
+      if (patch.status && patch.status !== current.status) {
+        log(`Chuyển sang "${STATUS_LABEL[patch.status]}"`);
+        if (current.status === "review" && (patch.status === "doing" || patch.status === "todo") && W.clean(b.statusChangeNote, 500)) {
+          log(`Lý do trả lại: ${W.clean(b.statusChangeNote, 500)}`);
+        }
+      }
       if (patch.assigneesJson && patch.assigneesJson !== JSON.stringify(current.assignees)) log("Cập nhật người phụ trách");
       if (has("dueDate") && patch.dueDate !== current.dueDate) log(patch.dueDate ? `Đổi hạn thành ${patch.dueDate.split("-").reverse().join("/")}` : "Bỏ hạn chót");
       if (patch.priority && patch.priority !== current.priority) log("Đổi mức ưu tiên");
@@ -122,6 +174,74 @@ module.exports = async function (context, req) {
         } catch (e) { /* best-effort */ }
       }
     } catch (e) { context.log.warn("Không gửi được email giao việc:", e.message); }
+
+    // Tự động hoá luồng trạng thái: báo đúng người cần biết ở mỗi bước chuyển, không chặn việc lưu
+    // nếu gửi lỗi. statusChangeNote (không bắt buộc): lý do khi trả lại việc từ "Chờ duyệt".
+    try {
+      if (patch.status && current && patch.status !== current.status) {
+        const esc = s => String(s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+        const note = W.clean(b.statusChangeNote, 500);
+        const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
+        const { sendPush } = require("../_shared/push");
+        const taskUrl = `/admin/cong-viec#today&task=${id}`;
+        const notify = async (recipients, { subject, title, bodyHtml }) => {
+          const to = Array.from(new Set(recipients.map(x => String(x || "").toLowerCase()).filter(x => x && /@/.test(x) && x !== String(who.email || "").toLowerCase()))).slice(0, 10);
+          for (const email of to) {
+            await sendTrackedEmail(context, { to: email, subject: subject.slice(0, 150), type: "work", eyebrow: "Công Việc", title, bodyHtml,
+              ctas: [{ label: "Mở công việc", href: `https://admin.wvn.vn${taskUrl}`, style: "primary" }] });
+          }
+          for (const email of to) { try { await sendPush(context, email, { title, body: saved.title, url: taskUrl }); } catch (e) { /* best-effort */ } }
+        };
+
+        // 1) Chuyển sang "Chờ duyệt" -> báo người TẠO việc (thường là người giao/quản lý) đi duyệt
+        if (patch.status === "review") {
+          await notify([current.createdBy], {
+            subject: `Cần duyệt: ${saved.title}`,
+            title: "Có việc đang chờ bạn duyệt",
+            bodyHtml: `<p style="margin:0 0 14px;">${esc(who.displayName)} đã hoàn tất và chuyển việc sau sang <b>Chờ duyệt</b>:</p>
+              <p style="margin:0 0 14px;font-size:17px;font-weight:700;">${esc(saved.title)}</p>`
+          });
+        }
+
+        // 2) Trả lại từ "Chờ duyệt" (lùi về Đang làm/Cần làm) -> báo người phụ trách, kèm lý do nếu có
+        if (current.status === "review" && (patch.status === "doing" || patch.status === "todo")) {
+          await notify(saved.assignees, {
+            subject: `Việc bị trả lại: ${saved.title}`,
+            title: "Việc của bạn bị trả lại để chỉnh sửa",
+            bodyHtml: `<p style="margin:0 0 14px;">${esc(who.displayName)} đã trả lại việc sau để chỉnh sửa thêm:</p>
+              <p style="margin:0 0 14px;font-size:17px;font-weight:700;">${esc(saved.title)}</p>
+              ${note ? `<p style="margin:0 0 14px;color:#334155;"><b>Lý do:</b> ${esc(note)}</p>` : ""}`
+          });
+        }
+
+        // 3) Duyệt xong ("Chờ duyệt" -> "Hoàn thành") -> báo người phụ trách đã được duyệt
+        if (current.status === "review" && patch.status === "done") {
+          await notify(saved.assignees, {
+            subject: `Đã duyệt: ${saved.title}`,
+            title: "Việc của bạn đã được duyệt",
+            bodyHtml: `<p style="margin:0 0 14px;">${esc(who.displayName)} đã duyệt việc sau, xem như hoàn tất:</p>
+              <p style="margin:0 0 14px;font-size:17px;font-weight:700;">${esc(saved.title)}</p>`
+          });
+        }
+
+        // 4) Việc vừa Hoàn thành có (các) việc khác đang chờ nó (blockedBy trỏ tới việc này)
+        //    -> báo người phụ trách việc kế tiếp là đã có thể bắt đầu
+        if (becameDone) {
+          const waiting = [];
+          const it = table.listEntities({ queryOptions: { filter: `PartitionKey eq 'task' and blockedBy eq '${id.replace(/'/g, "''")}'` } });
+          for await (const w of it) waiting.push(W.toTask(w));
+          for (const nextTask of waiting.slice(0, 10)) {
+            await notify(nextTask.assignees, {
+              subject: `Có thể bắt đầu: ${nextTask.title}`,
+              title: "Việc kế tiếp đã có thể bắt đầu",
+              bodyHtml: `<p style="margin:0 0 14px;">Việc chặn trước đó (<b>${esc(saved.title)}</b>) đã hoàn thành, bạn có thể bắt đầu:</p>
+                <p style="margin:0 0 14px;font-size:17px;font-weight:700;">${esc(nextTask.title)}</p>`
+            });
+          }
+        }
+      }
+    } catch (e) { context.log.warn("Không gửi được email luồng trạng thái:", e.message); }
+
     await logAdminActivity(req, "Công việc: lưu việc", summarizeBody(req.body));
     context.res.status = 200;
     context.res.body = { success: true, task: saved, spawned };

@@ -1403,6 +1403,14 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
     const tw = t.closest('[data-team-who]'); if (tw) return setView('board', { boardWho: tw.dataset.teamWho, project: '' });
     const set = t.closest('[data-set]'); if (set && state.openId) { const k = set.dataset.set; const v = set.dataset.v;
       if (k === 'status' && v === 'done') return toggleDone(state.openId);
+      if (k === 'status') {
+        const tk = findTask(state.openId);
+        if (tk && tk.status === 'review' && (v === 'doing' || v === 'todo')) {
+          const note = prompt(`Trả lại "${tk.title}" để chỉnh sửa — lý do (không bắt buộc, sẽ báo cho người phụ trách):`, '');
+          if (note === null) return;
+          return update(state.openId, { status: v, statusChangeNote: note }, { msg: `Đã trả lại "${tk.title}"` });
+        }
+      }
       return update(state.openId, { [k]: v }); }
     const asg = t.closest('[data-assignee]');
     if (asg && state.openId) { const tk = findTask(state.openId); const em = asg.dataset.assignee; const next = tk.assignees.includes(em) ? tk.assignees.filter(x => x !== em) : tk.assignees.concat(em); return update(state.openId, { assignees: next }); }
@@ -1497,7 +1505,15 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
   document.addEventListener('drop', e => {
     const z = e.target.closest && e.target.closest('[data-col],[data-day]'); if (!z || !dragId) return; e.preventDefault();
     const id = dragId; dragId = null; const t = findTask(id); if (!t) return;
-    if (z.dataset.col && z.dataset.col !== t.status) update(id, { status: z.dataset.col }, { msg: `Đã chuyển sang "${STATUS_L[z.dataset.col]}"` });
+    if (z.dataset.col && z.dataset.col !== t.status) {
+      if (t.status === 'review' && (z.dataset.col === 'doing' || z.dataset.col === 'todo')) {
+        const note = prompt(`Trả lại "${t.title}" để chỉnh sửa — lý do (không bắt buộc, sẽ báo cho người phụ trách):`, '');
+        if (note === null) return;
+        update(id, { status: z.dataset.col, statusChangeNote: note }, { msg: `Đã trả lại "${t.title}"` });
+      } else {
+        update(id, { status: z.dataset.col }, { msg: `Đã chuyển sang "${STATUS_L[z.dataset.col]}"` });
+      }
+    }
     if (z.dataset.day && z.dataset.day !== t.dueDate) update(id, { dueDate: z.dataset.day }, { msg: `Đã dời sang ${fmtDue(z.dataset.day)}` });
   });
 
