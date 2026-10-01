@@ -841,6 +841,31 @@ a.att-main:hover b { color: var(--sapphire); }
 /* Đồng bộ với Quản trị / CRM: thẻ phẳng, không vạch màu trên đầu */
 .d-head::before, .modal::before, .sp-box::before { display: none; }
 
+/* Lịch tháng */
+.month { background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r-l); box-shadow: var(--lift); padding: 0.7rem 0.7rem 0.8rem; }
+.mhead { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 6px; }
+.mhead span { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-align: center; letter-spacing: 0.06em; padding: 0.35rem 0; background: #f1f4fa; border-radius: 9px; }
+.mgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.day.mday { min-height: 124px; padding: 0.4rem 0.4rem 0.45rem; gap: 0.22rem; border-radius: 12px; }
+.mday.out { background: #f6f7fb; } .mday.out .mday-h b { color: var(--faint); } .mday.out .card { opacity: 0.6; }
+.mday-h { display: flex; align-items: center; gap: 0.35rem; padding: 0 0.1rem 0.1rem; min-height: 26px; }
+.mday-h b { font-size: 0.9rem; font-weight: 650; color: var(--ink); line-height: 1; padding: 0.2rem 0.35rem; border-radius: 8px; }
+.mday-h b small { font-size: 0.68rem; color: var(--muted); font-weight: 600; }
+.mday.today .mday-h b { background: var(--night); color: #fff; } .mday.today .mday-h b small { color: #b6c4ea; }
+.mday-h .ld { margin-left: 0; }
+.madd { margin-left: auto; width: 22px; height: 22px; border-radius: 7px; color: var(--faint); font-size: 0.65rem; display: grid; place-items: center; opacity: 0; transition: opacity .12s, background .12s, color .12s; }
+.mday:hover .madd, .madd:focus-visible { opacity: 1; } .madd:hover { background: #eaf4ff; color: var(--sapphire); }
+.card.ev.mini { display: flex; align-items: center; gap: 0.35rem; padding: 0.22rem 0.45rem 0.22rem 0.6rem; border-radius: 8px; min-height: 24px; cursor: grab; }
+.card.ev.mini .mt { font-size: 0.66rem; font-weight: 700; color: var(--sapphire); flex-shrink: 0; }
+.card.ev.mini .t-title { font-size: 0.76rem; font-weight: 560; -webkit-line-clamp: 1; white-space: nowrap; text-overflow: ellipsis; display: block; overflow: hidden; min-width: 0; }
+.mmore { text-align: left; font-size: 0.72rem; font-weight: 650; color: var(--sapphire); padding: 0.1rem 0.5rem; border-radius: 7px; } .mmore:hover { background: #eaf4ff; }
+@media (max-width: 900px) {
+  .day.mday { min-height: 62px; padding: 0.25rem; cursor: pointer; }
+  .mday .card.ev.mini, .mday .mmore, .madd { display: none; }
+  .mday-h { flex-direction: column; align-items: flex-start; gap: 0.15rem; } .mday-h .ld { margin: 0; }
+  .mgrid, .mhead { gap: 3px; } .month { padding: 0.5rem; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -871,7 +896,7 @@ a.att-main:hover b { color: var(--sapphire); }
     <h4>Không gian làm việc</h4>
     <nav class="nav">
       <button data-view="board"><i class="fa-solid fa-table-columns" aria-hidden="true"></i> Bảng công việc</button>
-      <button data-view="calendar"><i class="fa-solid fa-calendar-week" aria-hidden="true"></i> Lịch tuần</button>
+      <button data-view="calendar"><i class="fa-solid fa-calendar-week" aria-hidden="true"></i> Lịch</button>
       <button data-view="team"><i class="fa-solid fa-people-group" aria-hidden="true"></i> Đội nhóm</button>
       <button data-view="dashboard"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> Dashboard</button>
       <button type="button" class="nav-search" id="openSearch"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Tìm việc <kbd>/</kbd></button>
@@ -1003,7 +1028,7 @@ a.att-main:hover b { color: var(--sapphire); }
   const TONE = { blue: 'var(--sapphire)', green: 'var(--green)', gold: 'var(--gold)', red: 'var(--red)', violet: 'var(--violet)' };
 
   let D = { me: {}, tasks: [], projects: [], staff: [], inbox: [] };
-  let state = { view: 'today', project: '', scope: 'me', boardWho: '', boardFlag: '', boardMode: 'kanban', boardSort: 'smart', boardQr: '', doneDays: 7, keepFocusQ: false, inboxMod: '', caps: {}, weekStart: null, openId: null, selected: new Set() };
+  let state = { view: 'today', project: '', scope: 'me', boardWho: '', boardFlag: '', boardMode: 'kanban', boardSort: 'smart', boardQr: '', calMode: 'week', monthKey: '', doneDays: 7, keepFocusQ: false, inboxMod: '', caps: {}, weekStart: null, openId: null, selected: new Set() };
 
   // ---------- API ----------
   async function api(path, opts = {}, attempt = 0) {
@@ -1049,9 +1074,10 @@ a.att-main:hover b { color: var(--sapphire); }
       if (['me', 'all'].includes(p.scope)) state.scope = p.scope;
       if (['smart', 'new', 'due'].includes(p.boardSort)) state.boardSort = p.boardSort;
       if ([7, 30, 45].includes(p.doneDays)) state.doneDays = p.doneDays;
+      if (['week', 'month'].includes(p.calMode)) state.calMode = p.calMode;
     } catch (e) {}
   }
-  function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify({ boardMode: state.boardMode, scope: state.scope, boardSort: state.boardSort, doneDays: state.doneDays })); } catch (e) {} }
+  function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify({ boardMode: state.boardMode, scope: state.scope, boardSort: state.boardSort, doneDays: state.doneDays, calMode: state.calMode })); } catch (e) {} }
   const capOf = (key, dflt) => state.caps[key] || dflt || 100;
 
   // ---------- Luồng trạng thái: giao diện biết đúng quy tắc của máy chủ để không để người dùng thao tác rồi mới bị báo lỗi ----------
@@ -1402,7 +1428,7 @@ a.att-main:hover b { color: var(--sapphire); }
 
   // ---------- Lịch tuần ----------
   function mondayOf(s) { const d = new Date(s + 'T00:00:00'); const w = (d.getDay() + 6) % 7; d.setDate(d.getDate() - w); return ymd(d); }
-  function renderCalendar() {
+  function renderWeekView() {
     if (!state.weekStart) state.weekStart = mondayOf(todayStr());
     const days = Array.from({ length: 7 }, (_, i) => addDays(state.weekStart, i));
     const today = todayStr();
@@ -1417,7 +1443,7 @@ a.att-main:hover b { color: var(--sapphire); }
         <div class="t-title">${esc(t.title)}</div>
         <div class="ev-f">${p ? `<span class="proj"><span class="dot" style="background:${esc(p.color)}"></span><span class="nm">${esc(p.name)}</span></span>` : '<span></span>'}${avatars(t.assignees, 2)}</div></div>`; };
     $('view-calendar').innerHTML = phead('Lịch tuần', 'Lịch tuần', `${label}. Kéo thẻ sang ngày khác để dời hạn${unsched.length ? ', hoặc kéo từ khay "Chưa lên lịch" xuống để đặt hạn' : ''}.`,
-      scopeSeg() + `<div class="seg"><button data-week="-7" aria-label="Tuần trước"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><button data-week="0">Tuần này</button><button data-week="7" aria-label="Tuần sau"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div>`)
+      scopeSeg() + calModeSeg() + `<div class="seg"><button data-week="-7" aria-label="Tuần trước"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><button data-week="0">Tuần này</button><button data-week="7" aria-label="Tuần sau"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div>`)
       + `<div class="cal-note"><span><i class="fa-regular fa-calendar-check" aria-hidden="true" style="color:var(--sapphire)"></i><b style="color:var(--ink)">${weekOpen}</b> việc cần làm trong tuần</span>${weekOver ? `<span style="color:#be123c"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><b>${weekOver}</b> việc đã quá hạn</span>` : ''}</div>`
       + `<div class="week">${days.map(d => {
         const items = pool.filter(t => t.dueDate === d).sort((a, b) => (a.status === 'done') - (b.status === 'done') || byDue(a, b));
@@ -1428,6 +1454,39 @@ a.att-main:hover b { color: var(--sapphire); }
           <button class="add" data-add-day="${d}"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm</button></div>`;
       }).join('')}</div>`
       + (unsched.length ? `<div class="tray"><h4><i class="fa-regular fa-calendar-plus" aria-hidden="true" style="color:var(--sapphire)"></i>Chưa lên lịch <small>${unsched.length} việc chưa có hạn · kéo xuống một ngày để đặt hạn</small></h4><div class="tray-list">${unsched.slice(0, 12).map(ev).join('')}</div></div>` : '');
+  }
+
+  // ---------- Lịch: chuyển giữa Tuần và Tháng ----------
+  const MON_FIRST = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+  const monthShift = (ym, n) => { const [y, m] = ym.split('-').map(Number); return new Date(Date.UTC(y, m - 1 + n, 1)).toISOString().slice(0, 7); };
+  const calModeSeg = () => `<div class="seg" role="group" aria-label="Kiểu lịch"><button data-cal-mode="week" aria-pressed="${state.calMode !== 'month'}"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>Tuần</button><button data-cal-mode="month" aria-pressed="${state.calMode === 'month'}"><i class="fa-regular fa-calendar" aria-hidden="true"></i>Tháng</button></div>`;
+  function renderCalendar() { return state.calMode === 'month' ? renderMonthView() : renderWeekView(); }
+  function renderMonthView() {
+    const today = todayStr(); if (!state.monthKey) state.monthKey = today.slice(0, 7);
+    const [y, m] = state.monthKey.split('-').map(Number);
+    const nDays = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    const gridStart = mondayOf(state.monthKey + '-01'), gridEnd = addDays(mondayOf(state.monthKey + '-' + String(nDays).padStart(2, '0')), 6);
+    const days = []; for (let d = gridStart; d <= gridEnd; d = addDays(d, 1)) days.push(d);
+    const pool = D.tasks.filter(t => (!state.project || t.projectId === state.project) && (state.scope === 'me' ? isMine(t) : true));
+    const byDay = new Map();
+    pool.forEach(t => { if (t.dueDate && t.dueDate >= gridStart && t.dueDate <= gridEnd) { if (!byDay.has(t.dueDate)) byDay.set(t.dueDate, []); byDay.get(t.dueDate).push(t); } });
+    const inMonth = pool.filter(t => t.dueDate && t.dueDate.slice(0, 7) === state.monthKey);
+    const monthOpen = inMonth.filter(open).length, monthOver = inMonth.filter(t => open(t) && t.dueDate < today).length, monthDone = inMonth.filter(t => t.status === 'done').length;
+    const unsched = pool.filter(t => open(t) && !t.dueDate).length;
+    const mini = t => { const p = projectBy(t.projectId); return `<div class="card ev mini ${t.status === 'done' ? 'done' : ''}" style="--pc:${p ? esc(p.color) : '#94a3b8'}" draggable="true" data-open="${esc(t.id)}" data-id="${esc(t.id)}" title="${esc(t.title)}${p ? ' · ' + esc(p.name) : ''}">${t.dueTime ? `<span class="mt">${esc(t.dueTime)}</span>` : ''}<span class="t-title">${esc(t.title)}</span></div>`; };
+    const cells = days.map(d => {
+      const items = (byDay.get(d) || []).sort((a, b) => (a.status === 'done') - (b.status === 'done') || byDue(a, b));
+      const openN = items.filter(open).length, shown = items.slice(0, 3), more = items.length - shown.length;
+      const dd = +d.slice(8), wk = [5, 6].includes(days.indexOf(d) % 7);
+      return `<div class="day mday ${d.slice(0, 7) === state.monthKey ? '' : 'out'} ${d === today ? 'today' : ''} ${wk ? 'weekend' : ''}" data-day="${d}">
+        <div class="mday-h"><b>${dd}${dd === 1 ? `<small>/${+d.slice(5, 7)}</small>` : ''}</b>${items.length ? `<span class="ld ${d < today && openN ? 'red' : openN >= 5 ? 'hi' : ''}">${openN || items.length}</span>` : ''}<button class="madd" data-add-day="${d}" aria-label="Thêm việc ngày ${fmtDM(d)}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></div>
+        ${shown.map(mini).join('')}${more > 0 ? `<button class="mmore" data-goweek="${d}">+${more} việc nữa</button>` : ''}</div>`;
+    }).join('');
+    const label = `Tháng ${m}/${y}`;
+    $('view-calendar').innerHTML = phead('Lịch tháng', label, `Kéo thẻ sang ngày khác để dời hạn. Bấm "+N việc nữa" để mở tuần đó.`,
+      scopeSeg() + calModeSeg() + `<div class="seg"><button data-month="-1" aria-label="Tháng trước"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><button data-month="0">Tháng này</button><button data-month="1" aria-label="Tháng sau"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div>`)
+      + `<div class="cal-note"><span><i class="fa-regular fa-calendar-check" aria-hidden="true" style="color:var(--sapphire)"></i><b style="color:var(--ink)">${monthOpen}</b> việc cần làm trong tháng</span>${monthOver ? `<span style="color:#be123c"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><b>${monthOver}</b> việc đã quá hạn</span>` : ''}<span><i class="fa-regular fa-circle-check" aria-hidden="true" style="color:var(--st-done)"></i><b style="color:var(--ink)">${monthDone}</b> đã xong</span>${unsched ? `<span><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i>${unsched} việc chưa có hạn</span>` : ''}</div>`
+      + `<div class="month"><div class="mhead">${MON_FIRST.map(x => `<span>${x}</span>`).join('')}</div><div class="mgrid">${cells}</div></div>`;
   }
 
   // ---------- Thanh bên ----------
@@ -2045,6 +2104,10 @@ a.att-main:hover b { color: var(--sapphire); }
       return focusQuick({ link: { type: item.key, id: item.key, label: item.title, href: item.href }, dueDate: todayStr() }, item.title.replace(/^\d+\s/, 'Xử lý ') + ' ');
     }
     if (t.closest('#quickHelp')) { const q = t.closest('.quick'); const on = q.classList.toggle('help-open'); $('quickHelp').setAttribute('aria-expanded', on); return; }
+    const cmd = t.closest('[data-cal-mode]'); if (cmd) { state.calMode = cmd.dataset.calMode; return renderAll(); }
+    const mnb = t.closest('[data-month]'); if (mnb) { state.monthKey = +mnb.dataset.month === 0 ? todayStr().slice(0, 7) : monthShift(state.monthKey || todayStr().slice(0, 7), +mnb.dataset.month); return renderAll(); }
+    const gwk = t.closest('[data-goweek]'); if (gwk) { state.weekStart = mondayOf(gwk.dataset.goweek); state.calMode = 'week'; return renderAll(); }
+    const mdy = t.closest('.mday'); if (mdy && window.innerWidth <= 900 && !t.closest('[data-open],[data-add-day]')) { state.weekStart = mondayOf(mdy.dataset.day); state.calMode = 'week'; return renderAll(); }
     const dd = t.closest('[data-done-days]'); if (dd) { state.doneDays = +dd.dataset.doneDays; return renderAll(); }
     const dp = t.closest('[data-dup]'); if (dp) return duplicateTask(dp.dataset.dup);
     const sa = t.closest('[data-select-ids]'); if (sa) { const ids = sa.dataset.selectIds.split(','); const all = ids.every(id => state.selected.has(id)); ids.forEach(id => all ? state.selected.delete(id) : state.selected.add(id)); return renderAll(); }
