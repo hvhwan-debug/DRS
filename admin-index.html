@@ -5584,9 +5584,32 @@
             <div class="df-main"><strong>${escapeHtml(d.name || d.email)}</strong><small>${escapeHtml(d.email)}</small></div>
             <div class="df-nums"><span>Tích luỹ <b>${d.earned.toLocaleString('vi-VN')}</b></span><span>Đã đổi <b>${d.spent.toLocaleString('vi-VN')}</b></span><span class="bad">Thiếu <b>${d.deficit.toLocaleString('vi-VN')}</b></span></div>
             <div class="df-open">${d.openRedemptions.length ? d.openRedemptions.map(r => `<span>${escapeHtml(r.giftName)} · ${r.points.toLocaleString('vi-VN')} điểm · ${r.status === 'pending' ? 'chờ duyệt' : 'đang giao'}</span>`).join('') : '<span class="muted">Không có yêu cầu nào chưa trao</span>'}</div>
-            <div class="df-acts"><button type="button" class="btn btn-outline" onclick="switchTab('tuition'); setTimeout(() => { const i = document.getElementById('tuitionSearchInput'); if (i) { i.value = '${escapeHtml(d.email)}'; i.dispatchEvent(new Event('input')); } }, 200)">Xem học phí</button></div>
+            <div class="df-acts">
+              <button type="button" class="btn btn-outline" onclick="switchTab('tuition'); setTimeout(() => { const i = document.getElementById('tuitionSearchInput'); if (i) { i.value = '${escapeHtml(d.email)}'; i.dispatchEvent(new Event('input')); } }, 200)">Xem học phí</button>
+              <button type="button" class="btn btn-outline" style="color:#15803d; border-color:#bbf7d0;" onclick="quickFixPointsDeficit('${encodeURIComponent(d.email)}', ${d.deficit})"><i class="fa-solid fa-wand-magic-sparkles"></i> Cộng đủ ${d.deficit.toLocaleString('vi-VN')} điểm còn thiếu</button>
+            </div>
           </div>`).join('');
       } catch (e) {}
+    }
+
+    // Cộng đúng số điểm còn thiếu để hết cảnh báo — dùng khi đã xác nhận nguyên nhân (thường do một
+    // khoản học phí bị sửa/xoá sau khi đã trao quà) và không cần sửa lại dữ liệu học phí gốc.
+    async function quickFixPointsDeficit(emailEnc, deficit) {
+      const email = decodeURIComponent(emailEnc);
+      if (!confirm(`Cộng ${deficit.toLocaleString('vi-VN')} điểm cho ${email} để bù đúng phần đang thiếu?`)) return;
+      const reason = prompt('Lý do cộng điểm (bắt buộc, để tiện tra soát sau này):', 'Bù điểm thiếu do học phí bị sửa/xoá sau khi đã trao quà');
+      if (!reason || !reason.trim()) { showGlobalAlert('Cần nhập lý do trước khi cộng điểm.', true); return; }
+      try {
+        const result = await apiCall('/api/portal-adjust-points', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, delta: deficit, reason: reason.trim() })
+        });
+        showGlobalAlert(result.message, false);
+        loadPointsDeficits();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
     }
     window.addEventListener('hashchange', openTabFromHash);
 
