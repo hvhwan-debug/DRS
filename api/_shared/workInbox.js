@@ -92,12 +92,15 @@ async function buildInbox(context, can) {
       if (rows.length) inbox.push({ key: "birthday", count: rows.length, title: `${rows.length} học sinh sinh nhật hôm nay`, hint: rows.slice(0, 4).map(s => s.studentName).join(", "), href: "/admin/crm", tone: "gold" });
     }),
     can("gifts") && safe(async () => {
-      // Thành viên đang THIẾU điểm (đã đổi quà nhiều hơn điểm tích luỹ — thường do học phí bị xoá/sửa giảm)
+      // Thành viên đang THIẾU điểm (đã đổi quà nhiều hơn điểm tích luỹ + điểm admin đã cộng/trừ tay
+      // — thường do học phí bị xoá/sửa giảm). Phải cộng cả "adjustment" vào, nếu không thành viên đã
+      // được admin bù điểm (qua nút "Cộng/Trừ Điểm") vẫn bị báo thiếu điểm ở đây mãi.
       const { redemptionPoints } = require("./memberTier");
-      const earned = {}, spent = {};
+      const earned = {}, spent = {}, adjustment = {};
       for (const t of await listAll("TuitionPayments")) earned[t.partitionKey] = (earned[t.partitionKey] || 0) + (Number(t.pointsEarned) || 0);
       for (const r of await listAll("GiftRedemptions")) spent[r.partitionKey] = (spent[r.partitionKey] || 0) + redemptionPoints(r);
-      const short = Object.keys(spent).filter(e => spent[e] > (earned[e] || 0));
+      for (const a of await listAll("PointAdjustments")) adjustment[a.partitionKey] = (adjustment[a.partitionKey] || 0) + (Number(a.delta) || 0);
+      const short = Object.keys(spent).filter(e => spent[e] > (earned[e] || 0) + (adjustment[e] || 0));
       if (short.length) inbox.push({ key: "points", count: short.length, title: `${short.length} thành viên đang thiếu điểm`, hint: "Đã đổi quà nhiều hơn điểm tích luỹ, kiểm tra học phí hoặc huỷ bớt yêu cầu đổi quà", href: "/admin#gifts-deficit", tone: "red" });
     })
   ].filter(Boolean));
