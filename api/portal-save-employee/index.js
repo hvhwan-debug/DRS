@@ -51,7 +51,7 @@ module.exports = async function (context, req) {
     }
 
     await table.upsertEntity({
-      partitionKey: "employee", rowKey: id, ...fields, createdAt, updatedAt: now
+      partitionKey: "employee", rowKey: id, ...fields, createdAt, updatedAt: now, updatedBy: "admin"
     }, "Merge");
 
     if (isNew) {

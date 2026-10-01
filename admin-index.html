@@ -1111,9 +1111,11 @@
           <button type="button" class="btn btn-outline" onclick="closeEmployeeDetail()">Đóng</button>
         </div>
 
+        <div id="empUpdatedByBadge" style="display:none; margin-bottom:1rem; font-size:0.8rem; color:var(--text-muted);"></div>
+
         <form id="employeeForm">
           <input type="hidden" id="empId" value="">
-          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Thông tin cá nhân</h4>
+          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Thông tin cá nhân <span style="font-weight:400; text-transform:none; color:var(--text-muted);">(nhân viên có thể tự cập nhật phần này)</span></h4>
           <div class="form-grid">
             <div><label>Họ và tên *</label><input type="text" id="empFullName" required></div>
             <div><label>Ngày sinh</label><input type="date" id="empDob"></div>
@@ -1123,7 +1125,7 @@
             <div><label>SĐT khẩn cấp</label><input type="text" id="empEmergencyPhone"></div>
           </div>
 
-          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin:1.2rem 0 0.6rem;">Công việc &amp; hợp đồng</h4>
+          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin:1.2rem 0 0.6rem;">Công việc &amp; hợp đồng <span style="font-weight:400; text-transform:none;">(chỉ Quản Trị Viên Chính thiết lập)</span></h4>
           <div class="form-grid">
             <div><label>Vị trí / Chức danh</label><input type="text" id="empPosition" placeholder="VD: Giáo viên Luyện chữ"></div>
             <div>
@@ -4888,6 +4890,7 @@
       document.getElementById('empFilesSection').style.display = 'none';
       document.getElementById('empHistorySection').style.display = 'none';
       document.getElementById('empFilesGrid').innerHTML = '';
+      document.getElementById('empUpdatedByBadge').style.display = 'none';
       currentEmployeeDetail = null;
 
       if (!id) {
@@ -4918,6 +4921,14 @@
         document.getElementById('empContractEnd').value = (e.contractEnd || '').slice(0, 10);
         document.getElementById('empStatus').value = e.status || 'active';
         document.getElementById('empLinkedEmail').value = e.linkedAdminEmail || '';
+
+        const badge = document.getElementById('empUpdatedByBadge');
+        if (e.updatedAt) {
+          badge.style.display = 'block';
+          badge.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> Cập nhật lần cuối: ${formatDate(e.updatedAt)}${e.updatedBy === 'employee' ? ' — <strong>do nhân viên tự cập nhật</strong>' : (e.updatedBy === 'admin' ? ' — do quản trị viên cập nhật' : '')}`;
+        } else {
+          badge.style.display = 'none';
+        }
 
         document.getElementById('empFilesGrid').innerHTML = EMP_FILE_KINDS.map(def => empFileZoneHtml(def, e[def.urlField])).join('');
         EMP_FILE_KINDS.forEach(setupEmpFileZone);

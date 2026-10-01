@@ -64,7 +64,7 @@ module.exports = async function (context, req) {
         avatarUrl, cccdFrontUrl, cccdBackUrl, contractFileUrl,
         hasAvatar: !!e.avatarBlobName, hasCccdFront: !!e.cccdFrontBlobName,
         hasCccdBack: !!e.cccdBackBlobName, hasContractFile: !!e.contractFileBlobName,
-        createdAt: e.createdAt || "", updatedAt: e.updatedAt || ""
+        createdAt: e.createdAt || "", updatedAt: e.updatedAt || "", updatedBy: e.updatedBy || ""
       },
       notes
     };

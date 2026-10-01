@@ -65,7 +65,7 @@ module.exports = async function (context, req) {
 
     const oldBlobName = e[field];
     const newBlobName = await uploadEmployeeFile(id, kind, { content: base64Content, type: mime, filename: `${kind}.${ext}` });
-    await table.updateEntity({ partitionKey: "employee", rowKey: id, [field]: newBlobName, updatedAt: new Date().toISOString() }, "Merge");
+    await table.updateEntity({ partitionKey: "employee", rowKey: id, [field]: newBlobName, updatedBy: "admin", updatedAt: new Date().toISOString() }, "Merge");
     if (oldBlobName) await deleteBlob(oldBlobName);
 
     const url = await getAttachmentSasUrl(newBlobName, 15);

@@ -28,7 +28,7 @@
   const LEAVE_KINDS = { phep: 'Nghỉ phép (có lương)', 'khong-luong': 'Nghỉ không lương', om: 'Nghỉ ốm', khac: 'Việc riêng khác' };
   const ADJ = { bonus: 'Thưởng', deduction: 'Khấu trừ', advance: 'Tạm ứng' };
 
-  const S = { me: null, d: null, period: null, m: null, mPeriod: null, view: null, offset: 0, tick: null };
+  const S = { me: null, d: null, emp: null, period: null, m: null, mPeriod: null, view: null, offset: 0, tick: null };
 
   // ---------- Hạ tầng ----------
   async function api(path, opts) {
@@ -108,6 +108,10 @@
       if (!S.m) { $('view-' + v).innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu nhân sự…</div>'; try { await loadMgr(S.mPeriod); } catch (e) { $('view-' + v).innerHTML = `<div class="empty"><i class="fa-solid fa-triangle-exclamation"></i>${esc(e.message)}</div>`; return; } if (S.view !== v) return; }
       ({ 'hom-nay': rToday, duyet: rApprovals, 'cong-nhan-vien': rStaffSheet, 'bang-luong': rPayroll, 'nhan-su': rProfiles, 'quy-dinh': rPolicy })[v]();
     } else {
+      if (v === 'ho-so' && !S.emp) {
+        try { await loadEmp(); } catch (e) { S.emp = { employee: null }; }
+        if (S.view !== v) return;
+      }
       ({ 'cham-cong': rClock, 'bang-cong': rMySheet, 'nghi-phep': rLeave, 'phieu-luong': rSlips, 'ho-so': rProfile })[v]();
     }
     applyMoneyPref();
@@ -123,6 +127,11 @@
     $('meRole').textContent = d.me.canManage ? 'Quản lý chấm công' : 'Nhân viên';
     $('mgrNav').hidden = !d.me.canManage; $('mMgr').hidden = !d.me.canManage;
     window.WVN_EXPORT_ALLOWED = !!d.me.canManage;
+    return d;
+  }
+  async function loadEmp() {
+    const d = await api('/api/employee-me');
+    S.emp = d;
     return d;
   }
   async function loadMgr(period) {
@@ -407,10 +416,77 @@
     });
   }
 
+  function readFileAsDataUrl2(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  const EMP_SELF_FILE_KINDS = [
+    { kind: 'avatar', label: 'Ảnh đại diện' },
+    { kind: 'cccdFront', label: 'CCCD mặt trước' },
+    { kind: 'cccdBack', label: 'CCCD mặt sau' }
+  ];
+  const CONTRACT_TYPE_LABEL = { 'Thử việc': 'Thử việc', 'Xác định thời hạn': 'Xác định thời hạn', 'Không xác định thời hạn': 'Không xác định thời hạn' };
+
+  function empFileZoneHtml2(def, url) {
+    return `<div>
+      <label>${def.label}</label>
+      <div id="empZone2-${def.kind}" tabindex="0" class="pastezone" style="border:2px dashed var(--line); border-radius:10px; padding:0.7rem; cursor:pointer; display:flex; align-items:center; gap:0.6rem; min-height:40px;">
+        <img id="empPreview2-${def.kind}" src="${url || ''}" style="width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid var(--line); ${url ? '' : 'display:none;'}">
+        <div style="flex:1; font-size:0.78rem; color:var(--muted);" id="empZoneLabel2-${def.kind}">${url ? 'Bấm, dán (Ctrl+V) hoặc kéo-thả để thay ảnh khác' : 'Bấm, dán (Ctrl+V) hoặc kéo-thả ảnh vào đây'}</div>
+      </div>
+      <input type="file" id="empFileInput2-${def.kind}" accept="image/*" style="display:none;">
+    </div>`;
+  }
+
+  function setupEmpFileZone2(def) {
+    const zone = $(`empZone2-${def.kind}`);
+    const fileInput = $(`empFileInput2-${def.kind}`);
+    const label = $(`empZoneLabel2-${def.kind}`);
+    const img = $(`empPreview2-${def.kind}`);
+
+    async function doUpload(file) {
+      if (file.size > 9 * 1024 * 1024) { toast('Ảnh quá nặng (tối đa khoảng 9MB).', true); return; }
+      label.textContent = 'Đang tải lên...';
+      try {
+        const dataUrl = await readFileAsDataUrl2(file);
+        const r = await post('/api/employee-me', { action: 'uploadFile', kind: def.kind, fileBase64: dataUrl, filename: file.name });
+        img.src = r.url; img.style.display = 'block';
+        label.textContent = 'Bấm, dán (Ctrl+V) hoặc kéo-thả để thay ảnh khác';
+        toast(`Đã tải lên: ${def.label}.`);
+      } catch (err) {
+        label.textContent = 'Bấm, dán (Ctrl+V) hoặc kéo-thả ảnh vào đây';
+        toast(err.message, true);
+      }
+    }
+
+    zone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) doUpload(fileInput.files[0]); fileInput.value = ''; });
+    zone.addEventListener('paste', e => {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (item.type && item.type.startsWith('image/')) { const f = item.getAsFile(); if (f) { doUpload(f); e.preventDefault(); return; } }
+      }
+    });
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--sapphire)'; });
+    zone.addEventListener('dragleave', () => { zone.style.borderColor = 'var(--line)'; });
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.style.borderColor = 'var(--line)';
+      const files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files.length) doUpload(files[0]);
+    });
+  }
+
   function rProfile() {
     const p = S.d.profile;
+    const emp = (S.emp && S.emp.employee) || null;
     $('view-ho-so').innerHTML = `
-      <div class="page-head"><div><h1>Hồ sơ &amp; ngân hàng</h1><p>Mức lương do quản lý thiết lập. Bạn cập nhật tài khoản nhận lương tại đây.</p></div>${eyeBtn()}</div>
+      <div class="page-head"><div><h1>Hồ sơ &amp; ngân hàng</h1><p>Mức lương, hợp đồng do quản lý thiết lập. Thông tin cá nhân và ảnh/giấy tờ, bạn tự cập nhật tại đây.</p></div>${eyeBtn()}</div>
       <div class="grid g2">
         <div class="card"><div class="card-h"><h3>Thông tin lương</h3></div><div class="card-b slip">
           ${p.configured ? `<dl>
@@ -428,12 +504,53 @@
           <div class="field"><label for="bkPhone">Số điện thoại</label><input id="bkPhone" type="tel" value="${esc(p.phone)}"></div>
           <button class="btn primary" id="bkSave" style="width:100%">Lưu thông tin</button>
         </div></div>
-      </div>`;
+      </div>
+
+      <div class="card" style="margin-top:1rem;"><div class="card-h"><h3>Hợp đồng lao động</h3><small class="muted">Do quản lý thiết lập</small></div><div class="card-b slip">
+        ${emp && (emp.contractType || emp.contractStart || emp.contractEnd) ? `<dl>
+          <dt>Loại hợp đồng</dt><dd>${esc(CONTRACT_TYPE_LABEL[emp.contractType] || emp.contractType || '—')}</dd>
+          <dt>Ngày bắt đầu</dt><dd>${emp.contractStart ? dmy(emp.contractStart) : '—'}</dd>
+          <dt>Ngày kết thúc</dt><dd>${emp.contractEnd ? dmy(emp.contractEnd) : '—'}</dd>
+          <dt>Trạng thái</dt><dd>${emp.status === 'inactive' ? 'Đã nghỉ việc' : 'Đang làm việc'}</dd>
+          <dt>File hợp đồng</dt><dd>${emp.hasContractFile ? 'Đã có trên hệ thống (liên hệ quản lý nếu cần xem lại)' : 'Chưa có'}</dd>
+        </dl>` : '<p class="muted">Quản lý chưa thiết lập thông tin hợp đồng cho bạn.</p>'}
+      </div></div>
+
+      <div class="card" style="margin-top:1rem;"><div class="card-h"><h3>Thông tin cá nhân</h3></div><div class="card-b">
+        <div class="field"><label for="empFullName2">Họ và tên *</label><input id="empFullName2" value="${esc((emp && emp.fullName) || S.me.name)}"></div>
+        <div class="field"><label for="empDob2">Ngày sinh</label><input id="empDob2" type="date" value="${esc(emp && emp.dob)}"></div>
+        <div class="field"><label for="empIdNumber2">Số CCCD</label><input id="empIdNumber2" value="${esc(emp && emp.idNumber)}"></div>
+        <div class="field"><label for="empAddress2">Địa chỉ</label><input id="empAddress2" value="${esc(emp && emp.address)}"></div>
+        <div class="field"><label for="empEmergencyName2">Người liên hệ khẩn cấp</label><input id="empEmergencyName2" value="${esc(emp && emp.emergencyContactName)}" placeholder="Tên người thân"></div>
+        <div class="field"><label for="empEmergencyPhone2">SĐT khẩn cấp</label><input id="empEmergencyPhone2" type="tel" value="${esc(emp && emp.emergencyContactPhone)}"></div>
+        <button class="btn primary" id="empSave2" style="width:100%">Lưu Thông Tin Cá Nhân</button>
+      </div></div>
+
+      <div class="card" style="margin-top:1rem;"><div class="card-h"><h3>Ảnh &amp; giấy tờ</h3></div><div class="card-b">
+        <div class="grid g2" style="gap:0.8rem;">${EMP_SELF_FILE_KINDS.map(def => empFileZoneHtml2(def, emp && emp[`${def.kind}Url`])).join('')}</div>
+      </div></div>`;
+
     $('bkSave').onclick = async e => {
       const btn = e.currentTarget; busy(btn, true);
       try { await post('/api/staff-me', { action: 'updateBank', bankName: val('bkName'), bankAccount: val('bkAcc'), bankHolder: val('bkHolder'), phone: val('bkPhone') }); toast('Đã lưu thông tin ngân hàng.'); await refreshMe(); }
       catch (err) { toast(err.message, true); busy(btn, false); }
     };
+
+    $('empSave2').onclick = async e => {
+      const btn = e.currentTarget; busy(btn, true);
+      try {
+        const r = await post('/api/employee-me', {
+          action: 'save',
+          fullName: val('empFullName2'), dob: val('empDob2'), idNumber: val('empIdNumber2'),
+          address: val('empAddress2'), emergencyContactName: val('empEmergencyName2'), emergencyContactPhone: val('empEmergencyPhone2')
+        });
+        S.emp = { employee: r.employee };
+        toast('Đã lưu thông tin cá nhân.');
+        busy(btn, false);
+      } catch (err) { toast(err.message, true); busy(btn, false); }
+    };
+
+    EMP_SELF_FILE_KINDS.forEach(setupEmpFileZone2);
   }
 
   // =====================================================================
