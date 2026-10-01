@@ -69,6 +69,21 @@ async function uploadGiftImage(image) {
   return blobName;
 }
 
+// Tải 1 file hồ sơ nhân sự (ảnh đại diện, CCCD, hợp đồng...) lên Blob Storage RIÊNG TƯ — không
+// công khai, chỉ xem được qua link tạm có chữ ký (SAS) khi Quản Trị Viên Chính yêu cầu.
+async function uploadEmployeeFile(employeeId, kind, file) {
+  if (!file || !file.content) return null;
+  const containerClient = await getContainerClient();
+  const safeName = (file.filename || `${kind}.jpg`).replace(/[^a-zA-Z0-9._-]/g, "_");
+  const blobName = `employees/${employeeId}/${kind}-${Date.now()}-${safeName}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  const buffer = Buffer.from(file.content, "base64");
+  await blockBlobClient.uploadData(buffer, {
+    blobHTTPHeaders: { blobContentType: file.type || "application/octet-stream" }
+  });
+  return blobName;
+}
+
 // Xoá 1 blob đã lưu (best-effort — dùng khi thay ảnh mới hoặc xoá mục quà tặng).
 async function deleteBlob(blobName) {
   if (!blobName) return;
@@ -80,4 +95,4 @@ async function deleteBlob(blobName) {
   }
 }
 
-module.exports = { uploadAttachments, getAttachmentSasUrl, uploadGiftImage, deleteBlob };
+module.exports = { uploadAttachments, getAttachmentSasUrl, uploadGiftImage, uploadEmployeeFile, deleteBlob };

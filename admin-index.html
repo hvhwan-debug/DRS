@@ -403,6 +403,7 @@
         <button class="tab-btn" data-tab="gifts" data-permission="gifts" onclick="switchTab('gifts')"><i class="fa-solid fa-gift"></i> Đổi Quà</button>
         <button class="tab-btn" data-tab="posts" data-permission="news" onclick="switchTab('posts')"><i class="fa-solid fa-newspaper"></i> Bài Viết</button>
         <button class="tab-btn" data-tab="bulkemail" data-permission="bulkemail" onclick="switchTab('bulkemail')"><i class="fa-solid fa-paper-plane"></i> Gửi Email</button>
+        <button class="tab-btn" data-tab="employees" data-super-only="1" onclick="switchTab('employees')"><i class="fa-solid fa-id-badge"></i> Hồ Sơ Nhân Sự</button>
         <button class="tab-btn" data-tab="activitylog" data-super-only="1" onclick="switchTab('activitylog')"><i class="fa-solid fa-user-clock"></i> Lịch Sử Thao Tác</button>
         <button class="tab-btn" data-tab="staffaccounts" onclick="switchTab('staffaccounts')"><i class="fa-solid fa-users-gear"></i> Tài Khoản Quản Trị</button>
       </nav>
@@ -1082,6 +1083,85 @@
             <thead><tr><th>Tiêu đề</th><th>Ngày</th><th>Loại</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
             <tbody id="postTableBody"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== TAB: HỒ SƠ NHÂN SỰ ===================== -->
+    <div class="panel" id="panel-employees">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <h3 style="font-size:1rem;"><i class="fa-solid fa-id-badge"></i> Hồ Sơ Nhân Sự</h3>
+          <button type="button" class="btn" onclick="openEmployeeDetail('')"><i class="fa-solid fa-plus"></i> Thêm Nhân Sự Mới</button>
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.9rem;"><i class="fa-solid fa-lock"></i> Chỉ Quản Trị Viên Chính xem được mục này — chứa thông tin cá nhân và giấy tờ nhạy cảm của nhân sự.</p>
+        <div id="employeeLoading" style="text-align:center; padding:1.5rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="empty-state" id="employeeEmpty" style="display:none;">Chưa có hồ sơ nhân sự nào.</div>
+        <div class="table-wrap" id="employeeTableWrap" style="display:none;">
+          <table>
+            <thead><tr><th></th><th>Họ tên</th><th>Vị trí</th><th>Loại HĐ</th><th>HĐ hết hạn</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody id="employeeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" id="employeeDetailCard" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <h3 style="font-size:1.05rem;" id="employeeDetailTitle">Thêm nhân sự mới</h3>
+          <button type="button" class="btn btn-outline" onclick="closeEmployeeDetail()">Đóng</button>
+        </div>
+
+        <form id="employeeForm">
+          <input type="hidden" id="empId" value="">
+          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Thông tin cá nhân</h4>
+          <div class="form-grid">
+            <div><label>Họ và tên *</label><input type="text" id="empFullName" required></div>
+            <div><label>Ngày sinh</label><input type="date" id="empDob"></div>
+            <div><label>Số CCCD</label><input type="text" id="empIdNumber"></div>
+            <div><label>Địa chỉ</label><input type="text" id="empAddress"></div>
+            <div><label>Người liên hệ khẩn cấp</label><input type="text" id="empEmergencyName" placeholder="Tên người thân"></div>
+            <div><label>SĐT khẩn cấp</label><input type="text" id="empEmergencyPhone"></div>
+          </div>
+
+          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin:1.2rem 0 0.6rem;">Công việc &amp; hợp đồng</h4>
+          <div class="form-grid">
+            <div><label>Vị trí / Chức danh</label><input type="text" id="empPosition" placeholder="VD: Giáo viên Luyện chữ"></div>
+            <div>
+              <label>Loại hợp đồng</label>
+              <select id="empContractType">
+                <option value="">— Chưa có —</option>
+                <option value="Thử việc">Thử việc</option>
+                <option value="Xác định thời hạn">Xác định thời hạn</option>
+                <option value="Không xác định thời hạn">Không xác định thời hạn</option>
+              </select>
+            </div>
+            <div><label>Ngày bắt đầu HĐ</label><input type="date" id="empContractStart"></div>
+            <div><label>Ngày kết thúc HĐ</label><input type="date" id="empContractEnd"></div>
+            <div>
+              <label>Trạng thái</label>
+              <select id="empStatus">
+                <option value="active">Đang làm việc</option>
+                <option value="inactive">Đã nghỉ việc</option>
+              </select>
+            </div>
+            <div><label>Liên kết tài khoản quản trị (không bắt buộc)</label><input type="email" id="empLinkedEmail" placeholder="Email tài khoản ở mục Chấm Công & Lương"></div>
+          </div>
+
+          <button type="submit" class="btn" id="empSubmitBtn">Lưu Thông Tin</button>
+        </form>
+
+        <div id="empFilesSection" style="display:none; margin-top:1.6rem;">
+          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Ảnh &amp; giấy tờ đính kèm</h4>
+          <div class="form-grid" id="empFilesGrid"></div>
+        </div>
+
+        <div id="empHistorySection" style="display:none; margin-top:1.6rem;">
+          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Lịch sử công tác / Ghi chú đánh giá</h4>
+          <form id="empNoteForm" style="display:flex; gap:0.5rem; margin-bottom:0.9rem; flex-wrap:wrap;">
+            <textarea id="empNoteText" rows="2" style="flex:1; min-width:240px; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="VD: Hoàn thành tốt đợt đánh giá quý 3/2026, cần cải thiện thêm về..."></textarea>
+            <button type="submit" class="btn btn-outline" style="align-self:flex-start;">Thêm Ghi Chú</button>
+          </form>
+          <div id="empHistoryList"></div>
         </div>
       </div>
     </div>
@@ -4663,6 +4743,280 @@
       }
     });
 
+    // ============== HỒ SƠ NHÂN SỰ ==============
+    let allEmployeesData = [];
+    let currentEmployeeDetail = null; // dữ liệu đầy đủ của hồ sơ đang mở (để lấy SAS url hiện có)
+
+    async function loadEmployees() {
+      try {
+        const { employees } = await apiCall('/api/portal-employees-list');
+        allEmployeesData = employees;
+        document.getElementById('employeeLoading').style.display = 'none';
+        if (employees.length === 0) {
+          document.getElementById('employeeEmpty').style.display = 'block';
+          document.getElementById('employeeTableWrap').style.display = 'none';
+          return;
+        }
+        document.getElementById('employeeEmpty').style.display = 'none';
+        document.getElementById('employeeTableWrap').style.display = 'block';
+        renderEmployeesTable();
+      } catch (err) {
+        document.getElementById('employeeLoading').style.display = 'none';
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    function renderEmployeesTable() {
+      document.getElementById('employeeTableBody').innerHTML = allEmployeesData.map(e => `
+        <tr>
+          <td style="width:36px;">${e.hasAvatar ? '<i class="fa-solid fa-circle-user" style="font-size:1.3rem; color:var(--text-muted);"></i>' : ''}</td>
+          <td><strong>${escapeHtml(e.fullName)}</strong></td>
+          <td>${escapeHtml(e.position) || '—'}</td>
+          <td>${escapeHtml(e.contractType) || '—'}</td>
+          <td>${e.contractEnd ? formatDate(e.contractEnd) : '—'}</td>
+          <td>${e.status === 'active'
+            ? '<span style="font-size:0.76rem; padding:0.15rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đang làm việc</span>'
+            : '<span style="font-size:0.76rem; padding:0.15rem 0.6rem; border-radius:999px; background:#f1f5f9; color:#64748b;">Đã nghỉ việc</span>'}</td>
+          <td style="white-space:nowrap;">
+            <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="openEmployeeDetail('${encodeURIComponent(e.id)}')"><i class="fa-solid fa-eye"></i> Xem/Sửa</button>
+            <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#dc2626; border-color:#fecaca;" onclick="deleteEmployee('${encodeURIComponent(e.id)}', '${encodeURIComponent(e.fullName)}')"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    const EMP_FILE_KINDS = [
+      { kind: 'avatar', label: 'Ảnh đại diện', accept: 'image/*', urlField: 'avatarUrl' },
+      { kind: 'cccdFront', label: 'CCCD mặt trước', accept: 'image/*', urlField: 'cccdFrontUrl' },
+      { kind: 'cccdBack', label: 'CCCD mặt sau', accept: 'image/*', urlField: 'cccdBackUrl' },
+      { kind: 'contractFile', label: 'File hợp đồng (ảnh hoặc PDF)', accept: 'image/*,application/pdf', urlField: 'contractFileUrl' }
+    ];
+
+    function empFileZoneHtml(def, url) {
+      const isImg = url && def.kind !== 'contractFile';
+      return `
+        <div>
+          <label>${def.label}</label>
+          <div id="empZone-${def.kind}" tabindex="0" style="border:2px dashed var(--border); border-radius:10px; padding:0.8rem; cursor:pointer; display:flex; align-items:center; gap:0.7rem; min-height:44px;">
+            ${isImg ? `<img id="empPreview-${def.kind}" src="${url}" style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid var(--border);">` : (url ? `<a href="${url}" target="_blank" style="font-size:0.85rem;"><i class="fa-solid fa-file-pdf"></i> Xem file đã tải</a>` : '')}
+            <div style="flex:1; font-size:0.8rem; color:var(--text-muted);" id="empZoneLabel-${def.kind}">${url ? 'Bấm, dán (Ctrl+V) hoặc kéo-thả để thay file khác' : 'Bấm, dán (Ctrl+V) hoặc kéo-thả file vào đây'}</div>
+          </div>
+          <input type="file" id="empFileInput-${def.kind}" accept="${def.accept}" style="display:none;">
+        </div>`;
+    }
+
+    function setupEmpFileZone(def) {
+      const zone = document.getElementById(`empZone-${def.kind}`);
+      const fileInput = document.getElementById(`empFileInput-${def.kind}`);
+      const label = document.getElementById(`empZoneLabel-${def.kind}`);
+
+      async function doUpload(file) {
+        const id = document.getElementById('empId').value;
+        if (!id) { showGlobalAlert('Vui lòng lưu thông tin cơ bản trước khi tải file.', true); return; }
+        if (file.size > 9 * 1024 * 1024) { showGlobalAlert('File quá nặng (tối đa khoảng 9MB).', true); return; }
+        label.textContent = 'Đang tải lên...';
+        try {
+          const dataUrl = await readImageFileAsDataUrl(file);
+          const result = await apiCall('/api/portal-upload-employee-file', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, kind: def.kind, fileBase64: dataUrl, filename: file.name })
+          });
+          label.textContent = 'Bấm, dán (Ctrl+V) hoặc kéo-thả để thay file khác';
+          const isImg = def.kind !== 'contractFile';
+          if (isImg) {
+            let img = document.getElementById(`empPreview-${def.kind}`);
+            if (!img) {
+              img = document.createElement('img');
+              img.id = `empPreview-${def.kind}`;
+              img.style.cssText = 'width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid var(--border);';
+              zone.prepend(img);
+            }
+            img.src = result.url;
+          } else {
+            zone.querySelector('a')?.remove();
+            const a = document.createElement('a');
+            a.href = result.url; a.target = '_blank'; a.style.fontSize = '0.85rem';
+            a.innerHTML = '<i class="fa-solid fa-file-pdf"></i> Xem file đã tải';
+            zone.prepend(a);
+          }
+          showGlobalAlert(`Đã tải lên: ${def.label}.`, false);
+        } catch (err) {
+          label.textContent = 'Bấm, dán (Ctrl+V) hoặc kéo-thả file vào đây';
+          showGlobalAlert(err.message, true);
+        }
+      }
+
+      zone.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', () => { if (fileInput.files[0]) doUpload(fileInput.files[0]); fileInput.value = ''; });
+      zone.addEventListener('paste', e => {
+        const items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+        for (const item of Array.from(items)) {
+          if (item.type && item.type.startsWith('image/')) { const f = item.getAsFile(); if (f) { doUpload(f); e.preventDefault(); return; } }
+        }
+      });
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--accent, #2563eb)'; });
+      zone.addEventListener('dragleave', () => { zone.style.borderColor = 'var(--border)'; });
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.style.borderColor = 'var(--border)';
+        const files = e.dataTransfer && e.dataTransfer.files;
+        if (files && files.length) doUpload(files[0]);
+      });
+    }
+
+    function renderEmpHistory(notes) {
+      const list = document.getElementById('empHistoryList');
+      if (!notes || notes.length === 0) {
+        list.innerHTML = '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có ghi chú nào.</div>';
+        return;
+      }
+      list.innerHTML = notes.map(n => `
+        <div style="padding:0.5rem 0; border-top:1px solid var(--border); display:flex; justify-content:space-between; gap:0.6rem; font-size:0.85rem;">
+          <div>${escapeHtml(n.note)}</div>
+          <div style="white-space:nowrap; color:var(--text-muted); font-size:0.76rem;">
+            ${escapeHtml(n.author) || '—'} · ${formatDate(n.at)}
+            <button type="button" onclick="deleteEmployeeNote('${encodeURIComponent(currentEmployeeDetail.id)}', '${encodeURIComponent(n.id)}')" style="color:#dc2626; margin-left:0.4rem;" title="Xoá ghi chú"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`).join('');
+    }
+
+    async function openEmployeeDetail(idEnc) {
+      const id = idEnc ? decodeURIComponent(idEnc) : '';
+      document.getElementById('employeeForm').reset();
+      document.getElementById('empId').value = '';
+      document.getElementById('empFilesSection').style.display = 'none';
+      document.getElementById('empHistorySection').style.display = 'none';
+      document.getElementById('empFilesGrid').innerHTML = '';
+      currentEmployeeDetail = null;
+
+      if (!id) {
+        document.getElementById('employeeDetailTitle').textContent = 'Thêm nhân sự mới';
+        document.getElementById('employeeDetailCard').style.display = 'block';
+        document.getElementById('employeeDetailCard').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      document.getElementById('employeeDetailTitle').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+      document.getElementById('employeeDetailCard').style.display = 'block';
+      document.getElementById('employeeDetailCard').scrollIntoView({ behavior: 'smooth' });
+
+      try {
+        const { employee: e, notes } = await apiCall(`/api/portal-employee-get?id=${encodeURIComponent(id)}`);
+        currentEmployeeDetail = e;
+        document.getElementById('employeeDetailTitle').textContent = `Hồ sơ: ${e.fullName}`;
+        document.getElementById('empId').value = e.id;
+        document.getElementById('empFullName').value = e.fullName;
+        document.getElementById('empDob').value = e.dob || '';
+        document.getElementById('empIdNumber').value = e.idNumber || '';
+        document.getElementById('empAddress').value = e.address || '';
+        document.getElementById('empEmergencyName').value = e.emergencyContactName || '';
+        document.getElementById('empEmergencyPhone').value = e.emergencyContactPhone || '';
+        document.getElementById('empPosition').value = e.position || '';
+        document.getElementById('empContractType').value = e.contractType || '';
+        document.getElementById('empContractStart').value = (e.contractStart || '').slice(0, 10);
+        document.getElementById('empContractEnd').value = (e.contractEnd || '').slice(0, 10);
+        document.getElementById('empStatus').value = e.status || 'active';
+        document.getElementById('empLinkedEmail').value = e.linkedAdminEmail || '';
+
+        document.getElementById('empFilesGrid').innerHTML = EMP_FILE_KINDS.map(def => empFileZoneHtml(def, e[def.urlField])).join('');
+        EMP_FILE_KINDS.forEach(setupEmpFileZone);
+        document.getElementById('empFilesSection').style.display = 'block';
+        document.getElementById('empHistorySection').style.display = 'block';
+        renderEmpHistory(notes);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+        closeEmployeeDetail();
+      }
+    }
+
+    function closeEmployeeDetail() {
+      document.getElementById('employeeDetailCard').style.display = 'none';
+      currentEmployeeDetail = null;
+    }
+
+    async function deleteEmployee(idEnc, nameEnc) {
+      const id = decodeURIComponent(idEnc);
+      const name = decodeURIComponent(nameEnc);
+      if (!confirm(`Xoá hồ sơ nhân sự "${name}"? Toàn bộ ảnh/giấy tờ đính kèm và lịch sử sẽ bị xoá vĩnh viễn, không thể hoàn tác.`)) return;
+      try {
+        await apiCall('/api/portal-delete-employee', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id })
+        });
+        showGlobalAlert('Đã xoá hồ sơ nhân sự.', false);
+        if (document.getElementById('empId').value === id) closeEmployeeDetail();
+        loadEmployees();
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    async function deleteEmployeeNote(employeeIdEnc, noteIdEnc) {
+      if (!confirm('Xoá ghi chú này?')) return;
+      try {
+        await apiCall('/api/portal-delete-employee-note', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ employeeId: decodeURIComponent(employeeIdEnc), noteId: decodeURIComponent(noteIdEnc) })
+        });
+        openEmployeeDetail(employeeIdEnc);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    }
+
+    document.getElementById('employeeForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('empSubmitBtn');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      try {
+        const payload = {
+          id: document.getElementById('empId').value,
+          fullName: document.getElementById('empFullName').value.trim(),
+          dob: document.getElementById('empDob').value,
+          idNumber: document.getElementById('empIdNumber').value.trim(),
+          address: document.getElementById('empAddress').value.trim(),
+          emergencyContactName: document.getElementById('empEmergencyName').value.trim(),
+          emergencyContactPhone: document.getElementById('empEmergencyPhone').value.trim(),
+          position: document.getElementById('empPosition').value.trim(),
+          contractType: document.getElementById('empContractType').value,
+          contractStart: document.getElementById('empContractStart').value,
+          contractEnd: document.getElementById('empContractEnd').value,
+          status: document.getElementById('empStatus').value,
+          linkedAdminEmail: document.getElementById('empLinkedEmail').value.trim()
+        };
+        const result = await apiCall('/api/portal-save-employee', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        showGlobalAlert(result.message, false);
+        loadEmployees();
+        openEmployeeDetail(encodeURIComponent(result.id));
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+
+    document.getElementById('empNoteForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const text = document.getElementById('empNoteText').value.trim();
+      const id = document.getElementById('empId').value;
+      if (!text || !id) return;
+      try {
+        await apiCall('/api/portal-add-employee-note', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ employeeId: id, note: text })
+        });
+        document.getElementById('empNoteText').value = '';
+        openEmployeeDetail(encodeURIComponent(id));
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      }
+    });
+
     // ============== GỬI EMAIL ==============
     function onBulkEmailAudienceChange() {
       const audience = document.getElementById('bulkEmailAudience').value;
@@ -5186,7 +5540,7 @@
       if (hasPermission('news')) loadPosts();
       if (hasPermission('attendance')) { populateAttendanceProgramSelect(); loadAttendanceHistory(); loadLeaveRequests(); }
       if (hasPermission('gifts')) loadPointsDeficits();
-      if (myRole === 'super') { loadActivityLog(); loadStaffAccounts(); }
+      if (myRole === 'super') { loadActivityLog(); loadStaffAccounts(); loadEmployees(); }
       openTabFromHash();
     }
 
