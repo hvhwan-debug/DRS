@@ -605,6 +605,7 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
       <button data-view="board"><i class="fa-solid fa-table-columns" aria-hidden="true"></i> Bảng công việc</button>
       <button data-view="calendar"><i class="fa-regular fa-calendar" aria-hidden="true"></i> Lịch tuần</button>
       <button data-view="team"><i class="fa-solid fa-people-group" aria-hidden="true"></i> Đội nhóm</button>
+      <button data-view="dashboard"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> Dashboard</button>
       <button type="button" class="nav-search" id="openSearch"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Tìm việc <kbd>/</kbd></button>
     </nav>
     <h4>Dự án <span><button data-act="use-template" aria-label="Dùng mẫu dự án" title="Dùng mẫu dự án"><i class="fa-regular fa-copy" aria-hidden="true"></i></button> <button data-act="new-project" aria-label="Tạo dự án"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></span></h4>
@@ -640,6 +641,7 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
       <section class="view" id="view-board"></section>
       <section class="view" id="view-calendar"></section>
       <section class="view" id="view-team"></section>
+      <section class="view" id="view-dashboard"></section>
     </div>
   </div>
 </div>
@@ -951,7 +953,7 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
 
   function renderAll() {
     renderSide();
-    ({ today: renderToday, inbox: renderInbox, mine: renderMine, board: renderBoard, calendar: renderCalendar, team: renderTeam })[state.view]();
+    ({ today: renderToday, inbox: renderInbox, mine: renderMine, board: renderBoard, calendar: renderCalendar, team: renderTeam, dashboard: renderDashboard })[state.view]();
     if (state.openId) renderDrawer();
     renderBulkBar();
   }
@@ -991,6 +993,66 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
           <div class="tc-bar" aria-hidden="true"><i style="width:${Math.round(x.open / max * 100)}%"></i></div>
           <div class="tc-stats"><span class="${x.overdue ? 'red' : ''}"><b>${x.overdue}</b>quá hạn</span><span><b>${x.todayN}</b>hôm nay</span><span><b>${x.urgent}</b>ưu tiên cao</span><span class="ok"><b>${x.doneWeek}</b>xong tuần này</span></div>
         </button>`).join('') || '<div class="empty">Chưa có thành viên nào trong đội.</div>'}</div>`;
+  }
+
+  // ---------- Dashboard: tổng hợp theo TỪNG DỰ ÁN (Đội nhóm đã có theo TỪNG NGƯỜI rồi) ----------
+  function renderDashboard() {
+    const today = todayStr();
+    const STCOLOR = { todo: '#94a3b8', doing: 'var(--sapphire)', review: 'var(--violet)', done: 'var(--green)' };
+    const statRow = pool => STATUS.map(([k]) => pool.filter(t => t.status === k).length);
+
+    const groups = D.projects.map(p => ({ p, tasks: D.tasks.filter(t => t.projectId === p.id) }));
+    const noProject = D.tasks.filter(t => !t.projectId);
+    if (noProject.length) groups.push({ p: null, tasks: noProject });
+
+    const all = D.tasks;
+    const totalOpen = all.filter(open).length;
+    const totalOverdue = all.filter(t => open(t) && t.dueDate && t.dueDate < today).length;
+    const weekStart = mondayOf(new Date());
+    const doneWeek = all.filter(t => t.status === 'done' && t.completedAt && new Date(t.completedAt) >= weekStart).length;
+    const overallCounts = statRow(all);
+    const overallMax = Math.max(1, ...overallCounts);
+
+    const projectCard = ({ p, tasks }) => {
+      const counts = statRow(tasks);
+      const totalN = tasks.length || 1;
+      const doneN = counts[3];
+      const pct = Math.round(doneN / totalN * 100);
+      const overdueN = tasks.filter(t => open(t) && t.dueDate && t.dueDate < today).length;
+      return `<div class="card" style="cursor:pointer;" data-open-project="${p ? esc(p.id) : ''}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;margin-bottom:0.5rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;min-width:0;">
+            <span class="dot" style="background:${p ? esc(p.color) : 'var(--muted)'};flex-shrink:0;"></span>
+            <strong style="overflow-wrap:anywhere;">${p ? esc(p.name) : 'Không thuộc dự án nào'}</strong>
+          </div>
+          <span style="font-size:0.8rem;color:var(--muted);white-space:nowrap;">${doneN}/${tasks.length} xong</span>
+        </div>
+        <div style="height:8px;border-radius:5px;background:var(--line-2);overflow:hidden;display:flex;margin-bottom:0.5rem;">
+          ${STATUS.map(([k], i) => counts[i] ? `<div style="width:${counts[i] / totalN * 100}%;background:${STCOLOR[k]};"></div>` : '').join('')}
+        </div>
+        <div style="display:flex;gap:0.8rem;flex-wrap:wrap;font-size:0.78rem;color:var(--muted);">
+          <span><b style="color:var(--ink);">${pct}%</b> hoàn tất</span>
+          ${overdueN ? `<span style="color:var(--red);"><b>${overdueN}</b> quá hạn</span>` : ''}
+          ${counts[1] ? `<span><b style="color:var(--ink);">${counts[1]}</b> đang làm</span>` : ''}
+          ${counts[2] ? `<span><b style="color:var(--ink);">${counts[2]}</b> chờ duyệt</span>` : ''}
+        </div>
+      </div>`;
+    };
+
+    $('view-dashboard').innerHTML = `<div class="toolbar"><div class="pt"><h2 class="page-title">Dashboard</h2><p class="pt-sub">Tổng quan tiến độ theo từng dự án. Bấm vào 1 dự án để mở bảng công việc của nó.</p></div>
+        <div class="pt-num"><b>${totalOpen}</b><span>việc đang mở</span></div>
+        <div class="pt-num"><b>${totalOverdue}</b><span>quá hạn</span></div>
+        <div class="pt-num"><b>${doneWeek}</b><span>xong tuần này</span></div>
+      </div>
+      <div class="section-title"><h3>Tất cả công việc theo trạng thái</h3></div>
+      <div style="display:flex;align-items:flex-end;gap:0.8rem;height:100px;padding:0.6rem 1.1rem 0.2rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:1.2rem;">
+        ${STATUS.map(([k, l], i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;">
+          <span style="font-size:0.72rem;color:var(--muted);font-weight:600">${overallCounts[i] || ''}</span>
+          <div style="width:100%;max-width:40px;height:${Math.max(4, Math.round(overallCounts[i] / overallMax * 64))}px;background:${STCOLOR[k]};border-radius:4px 4px 0 0;"></div>
+          <span style="font-size:0.68rem;color:var(--muted)">${l}</span></div>`).join('')}
+      </div>
+      <div class="section-title"><h3>Theo dự án</h3></div>
+      <div class="team-grid">${groups.length ? groups.map(projectCard).join('') : '<div class="empty">Chưa có dự án nào.</div>'}</div>`;
   }
 
   // ---------- Tìm việc (phím / hoặc Ctrl/⌘ + K) ----------
@@ -1426,6 +1488,7 @@ a.att-main:hover b { color: #0284c7; text-decoration: underline; }
     if (t.closest('#digestTest')) return (async () => { try { const r = await post('/api/work-daily-digest', {}); toast(`Đã gửi ${r.sent} email tổng hợp (bỏ qua ${r.skipped} người không có việc hoặc đã nhận hôm nay)`); } catch (e) { toast(e.message, { error: true }); } })();
     if (t.closest('#exportExcelBtn')) return exportExcel();
     const tw = t.closest('[data-team-who]'); if (tw) return setView('board', { boardWho: tw.dataset.teamWho, project: '' });
+    const dop = t.closest('[data-open-project]'); if (dop) return setView('board', { project: dop.dataset.openProject || '' });
     const set = t.closest('[data-set]'); if (set && state.openId) { const k = set.dataset.set; const v = set.dataset.v;
       if (k === 'status' && v === 'done') return toggleDone(state.openId);
       if (k === 'status') {
