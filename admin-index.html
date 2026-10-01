@@ -367,6 +367,86 @@
   html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
 </style>
 <script src="/wvn-quotes.js?v=20260928a"></script>
+<style id="emp-style">
+/* ---------- Hồ sơ nhân sự ---------- */
+.emp-name, .emp-seg button, .emp-chips button, .emp-acc button.lnk, .emp-hint button, .emp-menu .pop button, .emp-note button, #empNoResult button { border: 0; background: transparent; font: inherit; cursor: pointer; padding: 0; box-shadow: none; color: inherit; }
+.emp-kpi { font: inherit; }
+.emp-head { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.emp-head h3 { font-size: 1.05rem; }
+.emp-head-r { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.emp-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.65rem; margin: 0.4rem 0 1rem; }
+.emp-kpi { text-align: left; border: 1px solid var(--border, #e6e9f1); border-radius: 14px; padding: 0.7rem 0.9rem; background: #f8f9fd; transition: border-color .15s, box-shadow .15s, transform .15s; cursor: default; }
+button.emp-kpi { cursor: pointer; }
+button.emp-kpi:hover { border-color: #93c5fd; transform: translateY(-1px); }
+.emp-kpi.on { background: #0a1230; border-color: #0a1230; color: #fff; box-shadow: 0 10px 20px -12px rgba(10,18,48,0.8); }
+.emp-kpi b { display: block; font-size: 1.5rem; font-weight: 650; letter-spacing: -0.5px; line-height: 1.15; }
+.emp-kpi span { font-size: 0.76rem; color: var(--text-muted, #6a7291); }
+.emp-kpi.on span { color: #b6c4ea; }
+.emp-kpi.warn b { color: #b45309; } .emp-kpi.bad b { color: #be123c; } .emp-kpi.on b { color: #fff; }
+.emp-toolbar { display: flex; gap: 0.55rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.9rem; }
+.emp-toolbar input[type=search] { flex: 1; min-width: 200px; max-width: 320px; padding: 0.55rem 0.8rem 0.55rem 2.2rem; border: 1px solid var(--border, #e6e9f1); border-radius: 12px; font-size: 0.88rem; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236a7291' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E") no-repeat 0.75rem center; }
+.emp-toolbar select { padding: 0.5rem 0.7rem; border: 1px solid var(--border, #e6e9f1); border-radius: 12px; font-size: 0.86rem; background: #fff; }
+.emp-seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: #eceff6; }
+.emp-seg button { padding: 0.38rem 0.85rem; border-radius: 9px; font-size: 0.82rem; font-weight: 600; color: #6a7291; }
+.emp-seg button[aria-pressed="true"] { background: #0a1230; color: #fff; }
+.emp-count { margin-left: auto; font-size: 0.8rem; color: var(--text-muted, #6a7291); }
+.emp-table th { white-space: nowrap; }
+.emp-who { display: flex; align-items: center; gap: 0.7rem; min-width: 190px; }
+.emp-av { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; background: hsl(var(--h) 80% 92%); color: hsl(var(--h) 55% 30%); }
+.emp-name { font-weight: 650; color: var(--text, #0c1330); text-align: left; font-size: 0.93rem; }
+.emp-name:hover { text-decoration: underline; color: #1d4ed8; }
+.emp-who small { display: block; color: var(--text-muted, #6a7291); font-size: 0.78rem; line-height: 1.3; }
+.emp-tag { display: inline-block; font-size: 0.68rem; font-weight: 650; padding: 0.05rem 0.45rem; border-radius: 6px; background: #dbeafe; color: #1d4ed8; margin-top: 0.15rem; }
+.emp-pill { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.74rem; font-weight: 600; padding: 0.14rem 0.6rem; border-radius: 999px; white-space: nowrap; background: #f1f5f9; color: #64748b; }
+.emp-pill.ok { background: #dcfce7; color: #15803d; } .emp-pill.warn { background: #fef3c7; color: #a15c07; } .emp-pill.bad { background: #fee2e2; color: #be123c; } .emp-pill.mut { background: #eef1f7; color: #5b6482; } .emp-pill.blue { background: #dbeafe; color: #1d4ed8; }
+.emp-contract small { display: block; color: var(--text-muted, #6a7291); font-size: 0.78rem; margin: 0.1rem 0 0.25rem; }
+.emp-prog { min-width: 120px; }
+.emp-prog .bar { height: 6px; border-radius: 4px; background: #e8ebf3; overflow: hidden; margin-bottom: 0.25rem; }
+.emp-prog .bar i { display: block; height: 100%; border-radius: 4px; background: #3b82f6; }
+.emp-prog.full .bar i { background: #10b981; }
+.emp-prog small { font-size: 0.74rem; color: var(--text-muted, #6a7291); cursor: help; }
+.emp-off td { opacity: 0.82; } .emp-off .emp-name { color: #64748b; }
+.emp-acc small { display: block; color: var(--text-muted, #6a7291); font-size: 0.74rem; margin-top: 0.15rem; }
+.emp-acc button.lnk { color: #1d4ed8; font-size: 0.76rem; font-weight: 600; } .emp-acc button.lnk:hover { text-decoration: underline; }
+.emp-acts { white-space: nowrap; display: flex; gap: 0.35rem; align-items: center; }
+.emp-menu { position: relative; }
+.emp-menu summary { list-style: none; cursor: pointer; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; border: 1.5px solid #e6e9f1; color: #5b6482; background: #fff; }
+.emp-menu summary::-webkit-details-marker { display: none; }
+.emp-menu[open] summary { background: #eef2ff; border-color: #c7d2fe; }
+.emp-menu .pop { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 220px; background: #fff; border: 1px solid #e6e9f1; border-radius: 14px; box-shadow: 0 24px 44px -20px rgba(10,18,48,0.45); padding: 0.35rem; }
+.emp-menu .pop button { display: flex; align-items: center; gap: 0.6rem; width: 100%; text-align: left; padding: 0.5rem 0.65rem; border-radius: 9px; font-size: 0.85rem; color: #0c1330; }
+.emp-menu .pop button:hover { background: #f1f5ff; } .emp-menu .pop button.danger { color: #be123c; } .emp-menu .pop button.danger:hover { background: #fff1f3; }
+.emp-menu .pop hr { border: none; border-top: 1px solid #eef1f6; margin: 0.25rem 0; }
+
+/* Ngăn chi tiết (drawer) */
+.emp-scrim { position: fixed; inset: 0; background: rgba(10,18,48,0.45); backdrop-filter: blur(3px); z-index: 890; display: none; }
+.emp-scrim.open { display: block; }
+body.wvn-admin #employeeDetailCard.emp-drawer, #employeeDetailCard.emp-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(740px, 100vw); margin: 0; padding: 0 !important; z-index: 900; border-radius: 22px 0 0 22px; overflow-y: auto; box-shadow: -40px 0 80px -40px rgba(10,18,48,0.6); animation: empIn .26s cubic-bezier(.2,.8,.2,1); overscroll-behavior: contain; }
+@keyframes empIn { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.emp-dhead { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 0.8rem; padding: 1rem 1.5rem; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); border-bottom: 1px solid #e6e9f1; }
+.emp-dhead h3 { flex: 1; min-width: 0; font-size: 1.08rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.emp-dbody { padding: 1.2rem 1.5rem 3rem; }
+.emp-complete { border: 1px solid #e6e9f1; border-radius: 16px; padding: 0.85rem 1rem; background: #f8f9fd; margin-bottom: 1.2rem; }
+.emp-complete .top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; font-size: 0.86rem; font-weight: 650; }
+.emp-complete .bar { height: 7px; border-radius: 4px; background: #e3e7f1; overflow: hidden; margin: 0.5rem 0 0.5rem; }
+.emp-complete .bar i { display: block; height: 100%; background: #3b82f6; border-radius: 4px; }
+.emp-complete.full .bar i { background: #10b981; }
+.emp-miss { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.emp-miss span { font-size: 0.74rem; font-weight: 600; padding: 0.12rem 0.55rem; border-radius: 8px; background: #fef3c7; color: #a15c07; }
+.emp-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+.emp-chips button { font-size: 0.74rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; border: 1px solid #dbe3f5; background: #fff; color: #1d4ed8; }
+.emp-chips button:hover:not(:disabled) { background: #eef4ff; border-color: #93c5fd; } .emp-chips button:disabled { opacity: 0.4; cursor: not-allowed; }
+.emp-chips em { font-style: normal; font-size: 0.72rem; color: #6a7291; align-self: center; margin-right: 0.1rem; }
+.emp-hint { font-size: 0.82rem; border-radius: 12px; padding: 0.55rem 0.8rem; line-height: 1.5; background: #eef4ff; color: #1e40af; }
+.emp-hint.warn { background: #fef3c7; color: #92400e; } .emp-hint.bad { background: #fee2e2; color: #9f1239; } .emp-hint.ok { background: #e8f8f1; color: #0b7a53; }
+.emp-hint button { font-weight: 650; text-decoration: underline; }
+.emp-note { padding: 0.6rem 0; border-top: 1px solid var(--border, #e6e9f1); display: flex; justify-content: space-between; gap: 0.7rem; font-size: 0.85rem; }
+.emp-note.sys { color: #5b6482; font-size: 0.82rem; }
+.emp-note.sys .t::before { content: "\f013"; font-family: "Font Awesome 6 Free"; font-weight: 900; margin-right: 0.45rem; color: #98a0bb; font-size: 0.72rem; }
+.emp-note .m { white-space: nowrap; color: var(--text-muted, #6a7291); font-size: 0.76rem; }
+body.emp-lock { overflow: hidden; }
+@media (max-width: 900px) { .emp-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; } .emp-kpi { padding: 0.55rem 0.7rem; } .emp-kpi b { font-size: 1.25rem; } .emp-kpi:last-child:nth-child(odd) { grid-column: 1 / -1; } .emp-dbody { padding: 1rem 1rem 3rem; } .emp-dhead { padding: 0.8rem 1rem; } #employeeDetailCard.emp-drawer { border-radius: 0; } .emp-count { margin-left: 0; width: 100%; } }
+</style>
 </head>
 <body class="wvn-admin">
 
@@ -1090,27 +1170,46 @@
     <!-- ===================== TAB: HỒ SƠ NHÂN SỰ ===================== -->
     <div class="panel" id="panel-employees">
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-          <h3 style="font-size:1rem;"><i class="fa-solid fa-id-badge"></i> Hồ Sơ Nhân Sự</h3>
-          <button type="button" class="btn" onclick="openEmployeeDetail('')"><i class="fa-solid fa-plus"></i> Thêm Nhân Sự Mới</button>
+        <div class="emp-head">
+          <h3><i class="fa-solid fa-id-badge"></i> Hồ Sơ Nhân Sự</h3>
+          <div class="emp-head-r">
+            <button type="button" class="btn btn-outline" id="empExportBtn" onclick="exportEmployees()" title="Xuất danh sách đang hiển thị (không gồm số CCCD)"><i class="fa-solid fa-file-excel"></i> Xuất Excel</button>
+            <button type="button" class="btn" onclick="openEmployeeDetail('')"><i class="fa-solid fa-plus"></i> Thêm Nhân Sự Mới</button>
+          </div>
         </div>
         <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.9rem;"><i class="fa-solid fa-lock"></i> Chỉ Quản Trị Viên Chính xem được mục này — chứa thông tin cá nhân và giấy tờ nhạy cảm của nhân sự.</p>
         <div id="employeeLoading" style="text-align:center; padding:1.5rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</div>
+        <div class="emp-kpis" id="empKpis"></div>
+        <div class="emp-toolbar" id="empToolbar" style="display:none;">
+          <input type="search" id="empSearch" placeholder="Tìm theo tên, vị trí, tài khoản…" autocomplete="off" aria-label="Tìm nhân sự">
+          <div class="emp-seg" id="empStatusSeg" role="group" aria-label="Trạng thái làm việc">
+            <button type="button" data-s="active">Đang làm</button><button type="button" data-s="inactive">Đã nghỉ</button><button type="button" data-s="">Tất cả</button>
+          </div>
+          <select id="empContractFilter" aria-label="Loại hợp đồng"></select>
+          <select id="empSort" aria-label="Sắp xếp">
+            <option value="name">Tên A → Z</option><option value="expiry">Hợp đồng sắp hết hạn trước</option><option value="complete">Hồ sơ thiếu nhiều trước</option><option value="updated">Mới cập nhật trước</option>
+          </select>
+          <span class="emp-count" id="empCount"></span>
+        </div>
         <div class="empty-state" id="employeeEmpty" style="display:none;">Chưa có hồ sơ nhân sự nào.</div>
         <div class="table-wrap" id="employeeTableWrap" style="display:none;">
-          <table>
-            <thead><tr><th></th><th>Họ tên</th><th>Vị trí</th><th>Loại HĐ</th><th>HĐ hết hạn</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <table class="emp-table">
+            <thead><tr><th>Nhân sự</th><th>Hợp đồng</th><th>Hồ sơ</th><th>Tài khoản chấm công</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
             <tbody id="employeeTableBody"></tbody>
           </table>
         </div>
+        <div class="empty-state" id="empNoResult" style="display:none;">Không có nhân sự nào khớp bộ lọc. <button type="button" class="lnk" style="color:#1d4ed8;font-weight:600" onclick="empResetFilters()">Xoá bộ lọc</button></div>
       </div>
 
-      <div class="card" id="employeeDetailCard" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-          <h3 style="font-size:1.05rem;" id="employeeDetailTitle">Thêm nhân sự mới</h3>
-          <button type="button" class="btn btn-outline" onclick="closeEmployeeDetail()">Đóng</button>
+      <div class="emp-scrim" id="empScrim" onclick="closeEmployeeDetail()"></div>
+      <div class="card emp-drawer" id="employeeDetailCard" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="employeeDetailTitle">
+        <div class="emp-dhead">
+          <h3 id="employeeDetailTitle">Thêm nhân sự mới</h3>
+          <span id="empStatusPill"></span>
+          <button type="button" class="btn btn-outline" onclick="closeEmployeeDetail()"><i class="fa-solid fa-xmark"></i> Đóng</button>
         </div>
-
+        <div class="emp-dbody">
+        <div class="emp-complete" id="empComplete" style="display:none;"></div>
         <div id="empUpdatedByBadge" style="display:none; margin-bottom:1rem; font-size:0.8rem; color:var(--text-muted);"></div>
 
         <form id="employeeForm">
@@ -1139,6 +1238,7 @@
             </div>
             <div><label>Ngày bắt đầu HĐ</label><input type="date" id="empContractStart"></div>
             <div><label>Ngày kết thúc HĐ</label><input type="date" id="empContractEnd"></div>
+            <div style="grid-column:1/-1"><div class="emp-chips" id="empEndChips" style="margin:0 0 0.5rem;"></div><div class="emp-hint" id="empContractHint" style="display:none;"></div></div>
             <div>
               <label>Trạng thái</label>
               <select id="empStatus">
@@ -1146,7 +1246,7 @@
                 <option value="inactive">Đã nghỉ việc</option>
               </select>
             </div>
-            <div><label>Liên kết tài khoản quản trị (không bắt buộc)</label><input type="email" id="empLinkedEmail" placeholder="Email tài khoản ở mục Chấm Công & Lương"></div>
+            <div style="grid-column:1/-1"><label>Tài khoản chấm công &amp; lương</label><select id="empLinkedEmail"></select><div id="empLinkHint" style="margin-top:0.4rem;"></div></div>
           </div>
 
           <button type="submit" class="btn" id="empSubmitBtn">Lưu Thông Tin</button>
@@ -1164,6 +1264,7 @@
             <button type="submit" class="btn btn-outline" style="align-self:flex-start;">Thêm Ghi Chú</button>
           </form>
           <div id="empHistoryList"></div>
+        </div>
         </div>
       </div>
     </div>
@@ -4752,39 +4853,190 @@
     async function loadEmployees() {
       try {
         const { employees } = await apiCall('/api/portal-employees-list');
-        allEmployeesData = employees;
+        // An toàn khi máy chủ chưa trả mức đầy đủ hồ sơ (bản API cũ): hiển thị "—" thay vì báo sai
+        employees.forEach(e => { if (!Array.isArray(e.missing) || !e.totalCount) { e.missing = []; e.doneCount = 0; e.totalCount = 0; } });
+        allEmployeesData = employees; empLoaded = true;
         document.getElementById('employeeLoading').style.display = 'none';
-        if (employees.length === 0) {
-          document.getElementById('employeeEmpty').style.display = 'block';
-          document.getElementById('employeeTableWrap').style.display = 'none';
-          return;
-        }
-        document.getElementById('employeeEmpty').style.display = 'none';
-        document.getElementById('employeeTableWrap').style.display = 'block';
-        renderEmployeesTable();
+        refreshEmployeeView();
       } catch (err) {
         document.getElementById('employeeLoading').style.display = 'none';
         showGlobalAlert(err.message, true);
       }
     }
 
-    function renderEmployeesTable() {
-      document.getElementById('employeeTableBody').innerHTML = allEmployeesData.map(e => `
-        <tr>
-          <td style="width:36px;">${e.hasAvatar ? '<i class="fa-solid fa-circle-user" style="font-size:1.3rem; color:var(--text-muted);"></i>' : ''}</td>
-          <td><strong>${escapeHtml(e.fullName)}</strong></td>
-          <td>${escapeHtml(e.position) || '—'}</td>
-          <td>${escapeHtml(e.contractType) || '—'}</td>
-          <td>${e.contractEnd ? formatDate(e.contractEnd) : '—'}</td>
-          <td>${e.status === 'active'
-            ? '<span style="font-size:0.76rem; padding:0.15rem 0.6rem; border-radius:999px; background:#dcfce7; color:#15803d;">Đang làm việc</span>'
-            : '<span style="font-size:0.76rem; padding:0.15rem 0.6rem; border-radius:999px; background:#f1f5f9; color:#64748b;">Đã nghỉ việc</span>'}</td>
-          <td style="white-space:nowrap;">
-            <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="openEmployeeDetail('${encodeURIComponent(e.id)}')"><i class="fa-solid fa-eye"></i> Xem/Sửa</button>
-            <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem; color:#dc2626; border-color:#fecaca;" onclick="deleteEmployee('${encodeURIComponent(e.id)}', '${encodeURIComponent(e.fullName)}')"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        </tr>`).join('');
+    // ----- Tiện ích & trạng thái bộ lọc (nhớ lựa chọn lần trước) -----
+    let empLoaded = false;
+    const empState = { q: '', status: 'active', contract: '', sort: 'name', quick: '' };
+    const EMP_PREF = 'wvn_emp_prefs_v1';
+    try { const p = JSON.parse(localStorage.getItem(EMP_PREF) || '{}'); if (['active', 'inactive', ''].includes(p.status)) empState.status = p.status; if (typeof p.contract === 'string') empState.contract = p.contract; if (['name', 'expiry', 'complete', 'updated'].includes(p.sort)) empState.sort = p.sort; } catch (e) {}
+    const empSavePrefs = () => { try { localStorage.setItem(EMP_PREF, JSON.stringify({ status: empState.status, contract: empState.contract, sort: empState.sort })); } catch (e) {} };
+    const empNorm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase();
+    const empToday = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
+    const empDays = (a, b) => Math.round((new Date(b + 'T00:00:00Z') - new Date(a + 'T00:00:00Z')) / 864e5);
+    const empAddDays = (ymd, n) => { const d = new Date(ymd + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+    const empAddMonths = (ymd, n) => { const [y, m, d] = ymd.split('-').map(Number); const t = new Date(Date.UTC(y, m - 1 + n, 1)); const last = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() + 1, 0)).getUTCDate(); t.setUTCDate(Math.min(d, last)); return t.toISOString().slice(0, 10); };
+    const empEndAfterMonths = (start, n) => empAddDays(empAddMonths(start, n), -1);   // HĐ bắt đầu 01/09, 2 tháng => hết 31/10
+    const empDmy = d => d ? String(d).slice(0, 10).split('-').reverse().join('/') : '';
+    const empInitials = n => { const p = String(n || '?').trim().split(/\s+/); return ((p.length > 1 ? p[p.length - 2][0] : '') + p[p.length - 1][0]).toUpperCase(); };
+    const empHue = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+    const empAccount = email => email ? allStaffAccountsData.find(a => String(a.email).toLowerCase() === String(email).toLowerCase()) : null;
+
+    // Tình trạng hợp đồng của người ĐANG LÀM VIỆC: còn bao lâu, đã hết hạn chưa, thiếu ngày kết thúc...
+    function empContract(e) {
+      if (e.status !== 'active') return { txt: '', cls: '', key: '' };
+      if (e.contractType === 'Không xác định thời hạn') return { txt: 'Vô thời hạn', cls: 'mut', key: 'open' };
+      if (!e.contractType) return { txt: 'Chưa có hợp đồng', cls: 'warn', key: 'none' };
+      if (!e.contractEnd) return { txt: 'Chưa đặt ngày kết thúc', cls: 'warn', key: 'noend' };
+      const d = empDays(empToday(), String(e.contractEnd).slice(0, 10));
+      if (d < 0) return { txt: `Đã hết hạn ${-d} ngày`, cls: 'bad', key: 'expired', days: d };
+      if (d === 0) return { txt: 'Hết hạn hôm nay', cls: 'bad', key: 'soon', days: 0 };
+      if (d <= 30) return { txt: `Còn ${d} ngày`, cls: d <= 7 ? 'bad' : 'warn', key: 'soon', days: d };
+      return { txt: `Còn ${d} ngày`, cls: 'ok', key: 'ok', days: d };
     }
+    const empOrphan = e => e.status !== 'active' && e.linkedAdminEmail && (empAccount(e.linkedAdminEmail) || {}).isActive !== false && !!empAccount(e.linkedAdminEmail);
+
+    function empKpiHtml() {
+      const act = allEmployeesData.filter(e => e.status === 'active');
+      const cs = act.map(empContract);
+      const n = {
+        active: act.length,
+        soon: cs.filter(c => c.key === 'soon').length,
+        expired: cs.filter(c => c.key === 'expired').length,
+        missing: act.filter(e => e.missing && e.missing.length).length,
+        orphan: allEmployeesData.filter(empOrphan).length
+      };
+      const k = (key, num, label, cls) => `<button type="button" class="emp-kpi ${cls || ''} ${empState.quick === key ? 'on' : ''}" ${key ? `data-quick="${key}" aria-pressed="${empState.quick === key}"` : ''} ${key ? '' : 'disabled style="cursor:default"'}><b>${num}</b><span>${label}</span></button>`;
+      return k('', n.active, 'đang làm việc') + k('soon', n.soon, 'hợp đồng sắp hết hạn (≤ 30 ngày)', n.soon ? 'warn' : '') + k('expired', n.expired, 'hợp đồng đã hết hạn', n.expired ? 'bad' : '')
+        + k('missing', n.missing, 'hồ sơ còn thiếu giấy tờ', n.missing ? 'warn' : '') + (n.orphan ? k('orphan', n.orphan, 'đã nghỉ nhưng tài khoản còn hoạt động', 'bad') : '');
+    }
+
+    function empFiltered() {
+      const qn = empNorm(empState.q.trim()).split(/\s+/).filter(Boolean);
+      let rows = allEmployeesData.filter(e => {
+        if (empState.quick === 'orphan') { if (!empOrphan(e)) return false; }
+        else {
+          if (empState.quick) { if (e.status !== 'active') return false; const c = empContract(e);
+            if (empState.quick === 'soon' && c.key !== 'soon') return false;
+            if (empState.quick === 'expired' && c.key !== 'expired') return false;
+            if (empState.quick === 'missing' && !(e.missing && e.missing.length)) return false; }
+          else if (empState.status && e.status !== empState.status) return false;
+        }
+        if (empState.contract === '__none' ? !!e.contractType : (empState.contract && e.contractType !== empState.contract)) return false;
+        if (qn.length) {
+          // Khớp theo ĐẦU TỪ ("ha" ra "Hà", không ra "Khánh"); từ khoá ≥ 3 ký tự còn khớp được giữa chuỗi (email, tên đệm…)
+          const hay = empNorm([e.fullName, e.position, e.linkedAdminEmail, (empAccount(e.linkedAdminEmail) || {}).displayName].join(' '));
+          const tokens = hay.split(/[^a-z0-9@._-]+/).filter(Boolean);
+          if (!qn.every(w => tokens.some(tk => tk.startsWith(w)) || (w.length >= 3 && hay.includes(w)))) return false;
+        }
+        return true;
+      });
+      const byName = (a, b) => (a.fullName || '').localeCompare(b.fullName || '', 'vi');
+      const expKey = e => { const c = empContract(e); return c.days == null ? (c.key === 'noend' || c.key === 'none' ? -0.5 : 9e9) : c.days; };
+      if (empState.sort === 'expiry') rows.sort((a, b) => expKey(a) - expKey(b) || byName(a, b));
+      else if (empState.sort === 'complete') rows.sort((a, b) => (a.doneCount - b.doneCount) || byName(a, b));
+      else if (empState.sort === 'updated') rows.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+      else rows.sort(byName);
+      return rows;
+    }
+
+    function refreshEmployeeView() {
+      if (!empLoaded) return;
+      const has = allEmployeesData.length > 0;
+      document.getElementById('employeeEmpty').style.display = has ? 'none' : 'block';
+      document.getElementById('empToolbar').style.display = has ? 'flex' : 'none';
+      document.getElementById('empKpis').style.display = has ? 'grid' : 'none';
+      if (!has) { document.getElementById('employeeTableWrap').style.display = 'none'; document.getElementById('empNoResult').style.display = 'none'; return; }
+      document.getElementById('empKpis').innerHTML = empKpiHtml();
+      const types = Array.from(new Set(allEmployeesData.map(e => e.contractType).filter(Boolean)));
+      const cf = document.getElementById('empContractFilter'), cur = empState.contract;
+      cf.innerHTML = `<option value="">Mọi loại hợp đồng</option>${types.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}<option value="__none">Chưa có hợp đồng</option>`; cf.value = cur;
+      document.getElementById('empSort').value = empState.sort;
+      document.querySelectorAll('#empStatusSeg button').forEach(b => b.setAttribute('aria-pressed', String(!empState.quick && b.dataset.s === empState.status)));
+      renderEmployeesTable();
+    }
+
+    function renderEmployeesTable() {
+      const rows = empFiltered();
+      document.getElementById('empCount').textContent = `${rows.length}/${allEmployeesData.length} nhân sự`;
+      document.getElementById('employeeTableWrap').style.display = rows.length ? 'block' : 'none';
+      document.getElementById('empNoResult').style.display = rows.length ? 'none' : 'block';
+      const now = Date.now();
+      document.getElementById('employeeTableBody').innerHTML = rows.map(e => {
+        const c = empContract(e); const id = encodeURIComponent(e.id); const nm = encodeURIComponent(e.fullName);
+        const range = e.contractStart || e.contractEnd ? `${e.contractStart ? empDmy(e.contractStart) : '…'} → ${e.contractEnd ? empDmy(e.contractEnd) : (e.contractType === 'Không xác định thời hạn' ? 'không thời hạn' : '…')}` : '';
+        const selfNew = e.updatedBy === 'employee' && now - Date.parse(e.updatedAt) < 14 * 864e5;
+        const acc = empAccount(e.linkedAdminEmail);
+        let accHtml;
+        if (!e.linkedAdminEmail) accHtml = e.status === 'active' ? `<span class="emp-pill mut">Chưa liên kết</span><small><button type="button" class="lnk" onclick="openEmployeeDetail('${id}')">Liên kết để chấm công & tính lương</button></small>` : '<span class="emp-pill mut">—</span>';
+        else if (!allStaffAccountsData.length) accHtml = `<span class="emp-pill blue">${escapeHtml(e.linkedAdminEmail)}</span>`;
+        else if (!acc) accHtml = `<span class="emp-pill bad">Tài khoản không còn tồn tại</span><small>${escapeHtml(e.linkedAdminEmail)}</small>`;
+        else if (e.status !== 'active' && acc.isActive !== false) accHtml = `<span class="emp-pill bad"><i class="fa-solid fa-triangle-exclamation"></i> Còn hoạt động</span><small>${escapeHtml(acc.displayName || acc.email)} · <button type="button" class="lnk" onclick="toggleStaffAccount('${encodeURIComponent(acc.email)}', false)">Vô hiệu hoá ngay</button></small>`;
+        else accHtml = `<span class="emp-pill ${acc.isActive === false ? 'mut' : 'blue'}"><i class="fa-solid fa-link"></i> ${escapeHtml(acc.displayName || acc.email)}</span>${acc.isActive === false ? '<small>Đã vô hiệu hoá</small>' : ''}`;
+        const full = e.doneCount === e.totalCount;
+        return `<tr class="${e.status === 'active' ? '' : 'emp-off'}">
+          <td><div class="emp-who"><span class="emp-av" style="--h:${empHue(e.fullName)}">${escapeHtml(empInitials(e.fullName))}</span><div><button type="button" class="emp-name" onclick="openEmployeeDetail('${id}')">${escapeHtml(e.fullName)}</button><small>${escapeHtml(e.position) || 'Chưa có chức danh'}</small>${selfNew ? '<span class="emp-tag" title="Nhân viên vừa tự cập nhật hồ sơ — nên xem lại">NV vừa cập nhật</span>' : ''}</div></div></td>
+          <td class="emp-contract"><b style="font-weight:600">${escapeHtml(e.contractType) || '—'}</b>${range ? `<small>${range}</small>` : ''}${c.txt ? `<span class="emp-pill ${c.cls}">${c.txt}</span>` : ''}</td>
+          <td>${!e.totalCount ? '<span class="emp-pill mut">—</span>' : ''}<div class="emp-prog ${full ? 'full' : ''}" ${!e.totalCount ? 'style="display:none"' : ''}><div class="bar"><i style="width:${Math.round(e.doneCount / e.totalCount * 100)}%"></i></div><small title="${full ? 'Hồ sơ đầy đủ' : 'Còn thiếu: ' + escapeHtml((e.missing || []).join(', '))}">${full ? 'Đầy đủ' : `${e.doneCount}/${e.totalCount} · thiếu ${e.missing.length}`}</small></div></td>
+          <td class="emp-acc">${accHtml}</td>
+          <td>${e.status === 'active' ? '<span class="emp-pill ok">Đang làm việc</span>' : '<span class="emp-pill">Đã nghỉ việc</span>'}</td>
+          <td><div class="emp-acts"><button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="openEmployeeDetail('${id}')"><i class="fa-solid fa-eye"></i> Xem/Sửa</button>
+            <details class="emp-menu"><summary aria-label="Thêm thao tác"><i class="fa-solid fa-ellipsis"></i></summary><div class="pop">
+              ${e.status === 'active' ? `<button type="button" onclick="empQuickStatus('${id}','inactive','${nm}')"><i class="fa-solid fa-user-slash"></i> Đánh dấu đã nghỉ việc</button>` : `<button type="button" onclick="empQuickStatus('${id}','active','${nm}')"><i class="fa-solid fa-user-check"></i> Khôi phục làm việc</button>`}
+              <hr><button type="button" class="danger" onclick="deleteEmployee('${id}','${nm}')"><i class="fa-solid fa-trash"></i> Xoá vĩnh viễn…</button></div></details></div></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function empResetFilters() { empState.q = ''; empState.quick = ''; empState.status = ''; empState.contract = ''; document.getElementById('empSearch').value = ''; empSavePrefs(); refreshEmployeeView(); }
+
+    // Chuyển nhanh trạng thái làm việc (chỉ gửi đúng trường trạng thái, không đụng dữ liệu khác)
+    async function empQuickStatus(idEnc, status, nameEnc) {
+      const id = decodeURIComponent(idEnc), name = decodeURIComponent(nameEnc);
+      const emp = allEmployeesData.find(x => x.id === id) || {};
+      const msg = status === 'inactive'
+        ? `Đánh dấu "${name}" đã nghỉ việc?\n\nHồ sơ, giấy tờ và lịch sử vẫn được giữ lại.${emp.linkedAdminEmail ? '\nLưu ý: tài khoản chấm công liên kết sẽ KHÔNG tự bị khoá — hãy vô hiệu hoá tài khoản đó ngay sau bước này.' : ''}`
+        : `Khôi phục "${name}" về trạng thái đang làm việc?`;
+      if (!confirm(msg)) return;
+      try {
+        await apiCall('/api/portal-save-employee', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, partial: true, status }) });
+        showGlobalAlert(status === 'inactive' ? 'Đã đánh dấu nghỉ việc.' : 'Đã khôi phục làm việc.', false);
+        if (document.getElementById('empId').value === id) document.getElementById('empStatus').value = status;
+        loadEmployees();
+      } catch (err) { showGlobalAlert(err.message, true); }
+    }
+
+    async function exportEmployees() {
+      if (window.WVN_EXPORT_ALLOWED !== true) { showGlobalAlert('Chỉ Quản trị viên chính được xuất dữ liệu ra Excel.', true); return; }
+      if (!window.WVNExcel) { showGlobalAlert('Đang tải công cụ xuất Excel, thử lại sau vài giây.', true); return; }
+      const rows = empFiltered();
+      if (!rows.length) { showGlobalAlert('Không có nhân sự nào để xuất.', true); return; }
+      try {
+        const name = await WVNExcel.download({
+          filename: `nhan-su-${empToday()}`, sheetName: 'Nhân sự', title: 'Danh sách nhân sự · Tri thức Việt',
+          subtitle: `${rows.length} nhân sự · Xuất ngày ${empDmy(empToday())} · Không bao gồm số CCCD và giấy tờ cá nhân`,
+          columns: [
+            { label: 'Họ tên', get: e => e.fullName, width: 26 }, { label: 'Vị trí', get: e => e.position, width: 26 },
+            { label: 'Loại hợp đồng', get: e => e.contractType }, { label: 'Bắt đầu HĐ', type: 'date', get: e => e.contractStart }, { label: 'Kết thúc HĐ', type: 'date', get: e => e.contractEnd },
+            { label: 'Tình trạng HĐ', get: e => empContract(e).txt, style: (v, e) => { const c = empContract(e); return c.cls === 'bad' ? { color: '#be123c', bold: true } : c.cls === 'warn' ? { color: '#a15c07', bold: true } : {}; } },
+            { label: 'Trạng thái', get: e => e.status === 'active' ? 'Đang làm việc' : 'Đã nghỉ việc' },
+            { label: 'Tài khoản chấm công', get: e => e.linkedAdminEmail, width: 30 },
+            { label: 'Mức đầy đủ hồ sơ', get: e => `${e.doneCount}/${e.totalCount}` }, { label: 'Còn thiếu', get: e => (e.missing || []).join(', '), width: 44, wrap: true }
+          ], rows
+        });
+        showGlobalAlert(`Đã xuất ${name || 'file Excel'}.`, false);
+      } catch (err) { showGlobalAlert(err.message || 'Không xuất được Excel.', true); }
+    }
+
+    // Sự kiện bộ lọc (đăng ký một lần)
+    (function () {
+      let t = null;
+      document.getElementById('empSearch').addEventListener('input', e => { empState.q = e.target.value; clearTimeout(t); t = setTimeout(renderEmployeesTable, 120); });
+      document.getElementById('empStatusSeg').addEventListener('click', e => { const b = e.target.closest('button[data-s]'); if (!b) return; empState.status = b.dataset.s; empState.quick = ''; empSavePrefs(); refreshEmployeeView(); });
+      document.getElementById('empContractFilter').addEventListener('change', e => { empState.contract = e.target.value; empSavePrefs(); renderEmployeesTable(); });
+      document.getElementById('empSort').addEventListener('change', e => { empState.sort = e.target.value; empSavePrefs(); renderEmployeesTable(); });
+      document.getElementById('empKpis').addEventListener('click', e => { const b = e.target.closest('[data-quick]'); if (!b) return; empState.quick = empState.quick === b.dataset.quick ? '' : b.dataset.quick; refreshEmployeeView(); });
+      document.addEventListener('click', e => { document.querySelectorAll('.emp-menu[open]').forEach(d => { if (!d.contains(e.target)) d.removeAttribute('open'); }); });
+    })();
 
     const EMP_FILE_KINDS = [
       { kind: 'avatar', label: 'Ảnh đại diện', accept: 'image/*', urlField: 'avatarUrl' },
@@ -4842,6 +5094,7 @@
             zone.prepend(a);
           }
           showGlobalAlert(`Đã tải lên: ${def.label}.`, false);
+          empAfterUpload(def.kind);
         } catch (err) {
           label.textContent = 'Bấm, dán (Ctrl+V) hoặc kéo-thả file vào đây';
           showGlobalAlert(err.message, true);
@@ -4867,99 +5120,179 @@
       });
     }
 
-    function renderEmpHistory(notes) {
-      const list = document.getElementById('empHistoryList');
-      if (!notes || notes.length === 0) {
-        list.innerHTML = '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có ghi chú nào.</div>';
-        return;
+    // ----- Ngăn chi tiết: mở/đóng có bảo vệ thay đổi chưa lưu -----
+    let empDirty = false;
+    const empEl = id => document.getElementById(id);
+    const empDrawerOpen = () => empEl('employeeDetailCard').style.display === 'block';
+    function empConfirmDiscard() {
+      if (empDirty && empDrawerOpen() && !confirm('Bạn có thay đổi chưa lưu. Bỏ các thay đổi này?')) return false;
+      empDirty = false; return true;
+    }
+    function empShowDrawer(show) {
+      empEl('employeeDetailCard').style.display = show ? 'block' : 'none';
+      empEl('empScrim').classList.toggle('open', show);
+      document.body.classList.toggle('emp-lock', show);
+      if (show) empEl('employeeDetailCard').scrollTop = 0;
+    }
+
+    function empCompleteChecks(e) {
+      return [
+        ['Ngày sinh & địa chỉ', !!(e.dob && e.address)], ['Số CCCD', !!e.idNumber], ['Ảnh CCCD (2 mặt)', !!(e.hasCccdFront && e.hasCccdBack)],
+        ['Liên hệ khẩn cấp', !!(e.emergencyContactName && e.emergencyContactPhone)], ['Hợp đồng (loại và ngày bắt đầu)', !!(e.contractType && e.contractStart)],
+        ['File hợp đồng', !!e.hasContractFile], ['Tài khoản chấm công', !!e.linkedAdminEmail]
+      ];
+    }
+    function empRenderComplete() {
+      const box = empEl('empComplete'), e = currentEmployeeDetail;
+      if (!e) { box.style.display = 'none'; empEl('empStatusPill').innerHTML = ''; return; }
+      const checks = empCompleteChecks(e), done = checks.filter(c => c[1]).length, miss = checks.filter(c => !c[1]).map(c => c[0]);
+      box.style.display = 'block'; box.classList.toggle('full', !miss.length);
+      box.innerHTML = `<div class="top"><span>${miss.length ? 'Hồ sơ chưa đầy đủ' : '<i class="fa-solid fa-circle-check" style="color:#10b981"></i> Hồ sơ đầy đủ'}</span><span>${done}/${checks.length}</span></div><div class="bar"><i style="width:${Math.round(done / checks.length * 100)}%"></i></div>${miss.length ? `<div class="emp-miss">${miss.map(m => `<span>${escapeHtml(m)}</span>`).join('')}</div>` : ''}`;
+      const c = empContract(e);
+      empEl('empStatusPill').innerHTML = e.status === 'active' ? `<span class="emp-pill ok">Đang làm việc</span>${c.txt && c.cls !== 'ok' && c.cls !== 'mut' ? ` <span class="emp-pill ${c.cls}">${c.txt}</span>` : ''}` : '<span class="emp-pill">Đã nghỉ việc</span>';
+    }
+    function empAfterUpload(kind) {
+      if (!currentEmployeeDetail) return;
+      const flag = { avatar: 'hasAvatar', cccdFront: 'hasCccdFront', cccdBack: 'hasCccdBack', contractFile: 'hasContractFile' }[kind];
+      if (flag) currentEmployeeDetail[flag] = true;
+      empRenderComplete(); loadEmployees();
+    }
+
+    // ----- Logic hợp đồng: gợi ý ngày kết thúc, gia hạn nhanh, cảnh báo -----
+    function empContractSync(origin) {
+      const type = empEl('empContractType').value, sEl = empEl('empContractStart'), eEl = empEl('empContractEnd');
+      const open = type === 'Không xác định thời hạn';
+      eEl.disabled = open; if (open) eEl.value = '';
+      if (origin === 'type' && !open && type && sEl.value && !eEl.value) eEl.value = type === 'Thử việc' ? empAddDays(sEl.value, 59) : empEndAfterMonths(sEl.value, 12);
+      const start = sEl.value, end = eEl.value, chips = [];
+      if (type && !open) {
+        chips.push('<em>Kết thúc sau:</em>');
+        (type === 'Thử việc' ? [['30 ngày', 'd', 29], ['60 ngày', 'd', 59]] : [['6 tháng', 'm', 6], ['12 tháng', 'm', 12], ['24 tháng', 'm', 24], ['36 tháng', 'm', 36]])
+          .forEach(([l, k, n]) => chips.push(`<button type="button" data-end-from="${k}:${n}" ${start ? '' : 'disabled title="Chọn ngày bắt đầu trước"'}>${l}</button>`));
+        if (end) { chips.push('<em style="margin-left:.5rem">Gia hạn thêm:</em>'); [3, 6, 12].forEach(n => chips.push(`<button type="button" data-extend="${n}">+${n} tháng</button>`)); }
       }
-      list.innerHTML = notes.map(n => `
-        <div style="padding:0.5rem 0; border-top:1px solid var(--border); display:flex; justify-content:space-between; gap:0.6rem; font-size:0.85rem;">
-          <div>${escapeHtml(n.note)}</div>
-          <div style="white-space:nowrap; color:var(--text-muted); font-size:0.76rem;">
-            ${escapeHtml(n.author) || '—'} · ${formatDate(n.at)}
-            <button type="button" onclick="deleteEmployeeNote('${encodeURIComponent(currentEmployeeDetail.id)}', '${encodeURIComponent(n.id)}')" style="color:#dc2626; margin-left:0.4rem;" title="Xoá ghi chú"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </div>`).join('');
+      empEl('empEndChips').innerHTML = chips.join('');
+      const status = empEl('empStatus').value; let cls = '', html = '';
+      if (start && end && end < start) { cls = 'bad'; html = 'Ngày kết thúc phải sau ngày bắt đầu hợp đồng.'; }
+      else if (status === 'inactive') { html = 'Nhân sự đã nghỉ việc — không cần theo dõi hạn hợp đồng.'; }
+      else {
+        const c = empContract({ status, contractType: type, contractEnd: end });
+        if (c.key === 'expired') { cls = 'bad'; html = `Hợp đồng đã hết hạn ${-c.days} ngày. Hãy gia hạn / ký hợp đồng mới (nút “Gia hạn thêm”) hoặc chuyển trạng thái sang “Đã nghỉ việc”.`; }
+        else if (c.key === 'soon') { cls = 'warn'; html = `Hợp đồng ${c.days === 0 ? 'hết hạn hôm nay' : 'còn ' + c.days + ' ngày'} (đến ${empDmy(end)}). Nên quyết định gia hạn, ký hợp đồng mới hoặc chấm dứt trước hạn.`; }
+        else if (c.key === 'noend') { cls = 'warn'; html = `Loại “${escapeHtml(type)}” cần có ngày kết thúc để hệ thống cảnh báo đúng hạn.`; }
+        else if (c.key === 'ok') { cls = 'ok'; html = `Hợp đồng còn ${c.days} ngày (đến ${empDmy(end)}).`; }
+        else if (c.key === 'open') { html = 'Hợp đồng không xác định thời hạn nên không có ngày kết thúc.'; }
+        if (type === 'Thử việc' && start && end && empDays(start, end) + 1 > 60) { cls = cls === 'bad' ? cls : 'warn'; html += `${html ? '<br>' : ''}Thử việc trên 60 ngày: theo Bộ luật Lao động 2019, tối đa 60 ngày với trình độ cao đẳng trở lên, 30 ngày với trung cấp, 6 ngày với công việc khác (180 ngày với quản lý doanh nghiệp). Vui lòng đối chiếu.`; }
+      }
+      const h = empEl('empContractHint'); h.className = 'emp-hint ' + cls; h.style.display = html ? 'block' : 'none'; h.innerHTML = html;
+    }
+
+    // ----- Liên kết tài khoản chấm công: chọn từ danh sách, không gõ tay; chặn gắn trùng -----
+    function empFillLinkedSelect(current) {
+      const myId = empEl('empId').value, cur = String(current || '').toLowerCase();
+      const used = new Set(allEmployeesData.filter(x => x.linkedAdminEmail && x.id !== myId).map(x => x.linkedAdminEmail.toLowerCase()));
+      const opts = ['<option value="">— Không liên kết —</option>'];
+      allStaffAccountsData.forEach(a => {
+        const em = String(a.email).toLowerCase(), taken = used.has(em);
+        opts.push(`<option value="${escapeHtml(em)}" ${taken ? 'disabled' : ''}>${escapeHtml(a.displayName || em)} · ${escapeHtml(em)}${taken ? ' (đã gắn hồ sơ khác)' : ''}${a.isActive === false ? ' (đã vô hiệu hoá)' : ''}</option>`);
+      });
+      if (cur && !allStaffAccountsData.some(a => String(a.email).toLowerCase() === cur)) opts.push(`<option value="${escapeHtml(cur)}">${escapeHtml(cur)} (tài khoản không còn tồn tại)</option>`);
+      const sel = empEl('empLinkedEmail'); sel.innerHTML = opts.join(''); sel.value = cur;
+    }
+    function empLinkHint() {
+      const sel = empEl('empLinkedEmail'), hint = empEl('empLinkHint'), name = empEl('empFullName').value.trim();
+      const box = (cls, t) => `<span class="emp-hint ${cls}" style="display:block">${t}</span>`;
+      if (sel.value) { const a = empAccount(sel.value); hint.innerHTML = a ? box('ok', `Bảng công, lương và nghỉ phép của <b>${escapeHtml(a.displayName || a.email)}</b> sẽ gắn với hồ sơ này.`) : ''; return; }
+      const myId = empEl('empId').value, used = new Set(allEmployeesData.filter(x => x.linkedAdminEmail && x.id !== myId).map(x => x.linkedAdminEmail.toLowerCase()));
+      const cand = name && allStaffAccountsData.find(a => !used.has(String(a.email).toLowerCase()) && empNorm(a.displayName) === empNorm(name));
+      if (cand) hint.innerHTML = box('', `Gợi ý: có tài khoản trùng tên <b>${escapeHtml(cand.displayName)}</b> — <button type="button" data-link-suggest="${escapeHtml(String(cand.email).toLowerCase())}">liên kết luôn</button>`);
+      else hint.innerHTML = empEl('empStatus').value === 'active' ? box('warn', 'Chưa liên kết tài khoản: nhân sự này chưa thể chấm công và chưa có phiếu lương. Tạo tài khoản ở mục “Tài Khoản Quản Trị” rồi quay lại chọn.') : '';
+    }
+
+    function renderEmpHistory(notes) {
+      const list = empEl('empHistoryList');
+      if (!notes || notes.length === 0) { list.innerHTML = '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có ghi chú nào.</div>'; return; }
+      list.innerHTML = notes.map(n => { const sys = n.type === 'system';
+        return `<div class="emp-note ${sys ? 'sys' : ''}"><div class="t">${escapeHtml(n.note)}</div><div class="m">${escapeHtml(n.author) || '—'} · ${formatDate(n.at)}${sys ? '' : `<button type="button" onclick="deleteEmployeeNote('${encodeURIComponent(currentEmployeeDetail.id)}', '${encodeURIComponent(n.id)}')" style="color:#dc2626; margin-left:0.4rem;" title="Xoá ghi chú"><i class="fa-solid fa-trash"></i></button>`}</div></div>`; }).join('');
+    }
+    // Chỉ làm mới phần lịch sử, không tải lại cả form (tránh mất những gì đang gõ dở)
+    async function refreshEmpNotes(id) {
+      try { const { notes } = await apiCall(`/api/portal-employee-get?id=${encodeURIComponent(id)}`); renderEmpHistory(notes); } catch (err) { showGlobalAlert(err.message, true); }
     }
 
     async function openEmployeeDetail(idEnc) {
+      if (!empConfirmDiscard()) return;
       const id = idEnc ? decodeURIComponent(idEnc) : '';
-      document.getElementById('employeeForm').reset();
-      document.getElementById('empId').value = '';
-      document.getElementById('empFilesSection').style.display = 'none';
-      document.getElementById('empHistorySection').style.display = 'none';
-      document.getElementById('empFilesGrid').innerHTML = '';
-      document.getElementById('empUpdatedByBadge').style.display = 'none';
-      currentEmployeeDetail = null;
+      empEl('employeeForm').reset();
+      empEl('empId').value = '';
+      empEl('empFilesSection').style.display = 'none';
+      empEl('empHistorySection').style.display = 'none';
+      empEl('empFilesGrid').innerHTML = '';
+      empEl('empUpdatedByBadge').style.display = 'none';
+      currentEmployeeDetail = null; empRenderComplete();
+      empShowDrawer(true);
 
       if (!id) {
-        document.getElementById('employeeDetailTitle').textContent = 'Thêm nhân sự mới';
-        document.getElementById('employeeDetailCard').style.display = 'block';
-        document.getElementById('employeeDetailCard').scrollIntoView({ behavior: 'smooth' });
+        empEl('employeeDetailTitle').textContent = 'Thêm nhân sự mới';
+        empFillLinkedSelect(''); empContractSync(''); empLinkHint();
+        setTimeout(() => empEl('empFullName').focus(), 60);
         return;
       }
 
-      document.getElementById('employeeDetailTitle').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
-      document.getElementById('employeeDetailCard').style.display = 'block';
-      document.getElementById('employeeDetailCard').scrollIntoView({ behavior: 'smooth' });
-
+      empEl('employeeDetailTitle').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
       try {
         const { employee: e, notes } = await apiCall(`/api/portal-employee-get?id=${encodeURIComponent(id)}`);
         currentEmployeeDetail = e;
-        document.getElementById('employeeDetailTitle').textContent = `Hồ sơ: ${e.fullName}`;
-        document.getElementById('empId').value = e.id;
-        document.getElementById('empFullName').value = e.fullName;
-        document.getElementById('empDob').value = e.dob || '';
-        document.getElementById('empIdNumber').value = e.idNumber || '';
-        document.getElementById('empAddress').value = e.address || '';
-        document.getElementById('empEmergencyName').value = e.emergencyContactName || '';
-        document.getElementById('empEmergencyPhone').value = e.emergencyContactPhone || '';
-        document.getElementById('empPosition').value = e.position || '';
-        document.getElementById('empContractType').value = e.contractType || '';
-        document.getElementById('empContractStart').value = (e.contractStart || '').slice(0, 10);
-        document.getElementById('empContractEnd').value = (e.contractEnd || '').slice(0, 10);
-        document.getElementById('empStatus').value = e.status || 'active';
-        document.getElementById('empLinkedEmail').value = e.linkedAdminEmail || '';
+        empEl('employeeDetailTitle').textContent = e.fullName;
+        empEl('empId').value = e.id;
+        empEl('empFullName').value = e.fullName;
+        empEl('empDob').value = (e.dob || '').slice(0, 10);
+        empEl('empIdNumber').value = e.idNumber || '';
+        empEl('empAddress').value = e.address || '';
+        empEl('empEmergencyName').value = e.emergencyContactName || '';
+        empEl('empEmergencyPhone').value = e.emergencyContactPhone || '';
+        empEl('empPosition').value = e.position || '';
+        empEl('empContractType').value = e.contractType || '';
+        empEl('empContractStart').value = (e.contractStart || '').slice(0, 10);
+        empEl('empContractEnd').value = (e.contractEnd || '').slice(0, 10);
+        empEl('empStatus').value = e.status || 'active';
+        empFillLinkedSelect(e.linkedAdminEmail || '');
+        empContractSync(''); empLinkHint(); empRenderComplete();
 
-        const badge = document.getElementById('empUpdatedByBadge');
+        const badge = empEl('empUpdatedByBadge');
         if (e.updatedAt) {
           badge.style.display = 'block';
           badge.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> Cập nhật lần cuối: ${formatDate(e.updatedAt)}${e.updatedBy === 'employee' ? ' — <strong>do nhân viên tự cập nhật</strong>' : (e.updatedBy === 'admin' ? ' — do quản trị viên cập nhật' : '')}`;
-        } else {
-          badge.style.display = 'none';
         }
-
-        document.getElementById('empFilesGrid').innerHTML = EMP_FILE_KINDS.map(def => empFileZoneHtml(def, e[def.urlField])).join('');
+        empEl('empFilesGrid').innerHTML = EMP_FILE_KINDS.map(def => empFileZoneHtml(def, e[def.urlField])).join('');
         EMP_FILE_KINDS.forEach(setupEmpFileZone);
-        document.getElementById('empFilesSection').style.display = 'block';
-        document.getElementById('empHistorySection').style.display = 'block';
+        empEl('empFilesSection').style.display = 'block';
+        empEl('empHistorySection').style.display = 'block';
         renderEmpHistory(notes);
+        empDirty = false;
       } catch (err) {
         showGlobalAlert(err.message, true);
-        closeEmployeeDetail();
+        empDirty = false; empShowDrawer(false);
       }
     }
 
     function closeEmployeeDetail() {
-      document.getElementById('employeeDetailCard').style.display = 'none';
+      if (!empConfirmDiscard()) return;
+      empShowDrawer(false);
       currentEmployeeDetail = null;
     }
 
     async function deleteEmployee(idEnc, nameEnc) {
-      const id = decodeURIComponent(idEnc);
-      const name = decodeURIComponent(nameEnc);
-      if (!confirm(`Xoá hồ sơ nhân sự "${name}"? Toàn bộ ảnh/giấy tờ đính kèm và lịch sử sẽ bị xoá vĩnh viễn, không thể hoàn tác.`)) return;
+      const id = decodeURIComponent(idEnc), name = decodeURIComponent(nameEnc);
+      const typed = prompt(`XOÁ VĨNH VIỄN hồ sơ "${name}"?\n\nẢnh, giấy tờ và lịch sử công tác sẽ mất hoàn toàn, không thể hoàn tác.\nNếu chỉ là nhân sự đã nghỉ việc, hãy chọn “Đánh dấu đã nghỉ việc” để vẫn giữ hồ sơ.\n\nĐể xác nhận xoá, gõ lại đúng họ tên nhân sự:`);
+      if (typed === null) return;
+      if (empNorm(typed.trim()) !== empNorm(name.trim())) { showGlobalAlert('Tên nhập chưa khớp — chưa xoá hồ sơ nào.', true); return; }
       try {
-        await apiCall('/api/portal-delete-employee', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id })
-        });
+        await apiCall('/api/portal-delete-employee', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
         showGlobalAlert('Đã xoá hồ sơ nhân sự.', false);
-        if (document.getElementById('empId').value === id) closeEmployeeDetail();
+        if (empEl('empId').value === id) { empDirty = false; closeEmployeeDetail(); }
         loadEmployees();
-      } catch (err) {
-        showGlobalAlert(err.message, true);
-      }
+      } catch (err) { showGlobalAlert(err.message, true); }
     }
 
     async function deleteEmployeeNote(employeeIdEnc, noteIdEnc) {
@@ -4969,64 +5302,70 @@
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ employeeId: decodeURIComponent(employeeIdEnc), noteId: decodeURIComponent(noteIdEnc) })
         });
-        openEmployeeDetail(employeeIdEnc);
-      } catch (err) {
-        showGlobalAlert(err.message, true);
-      }
+        refreshEmpNotes(decodeURIComponent(employeeIdEnc));
+      } catch (err) { showGlobalAlert(err.message, true); }
     }
 
-    document.getElementById('employeeForm').addEventListener('submit', async function (e) {
+    empEl('employeeForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const btn = document.getElementById('empSubmitBtn');
-      const originalText = btn.textContent;
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+      const start = empEl('empContractStart').value, end = empEl('empContractEnd').value;
+      const type = empEl('empContractType').value, status = empEl('empStatus').value, prev = currentEmployeeDetail;
+      if (start && end && end < start) { showGlobalAlert('Ngày kết thúc hợp đồng phải sau ngày bắt đầu.', true); empEl('empContractEnd').focus(); return; }
+      if (status === 'active' && (type === 'Thử việc' || type === 'Xác định thời hạn') && !end && !confirm(`Hợp đồng “${type}” chưa có ngày kết thúc nên hệ thống sẽ không cảnh báo khi hết hạn.\n\nVẫn lưu?`)) { empEl('empContractEnd').focus(); return; }
+      if (prev && prev.status === 'active' && status === 'inactive' && !confirm(`Đánh dấu “${prev.fullName}” đã nghỉ việc?${prev.linkedAdminEmail ? '\n\nTài khoản chấm công liên kết sẽ KHÔNG tự bị khoá — hãy vô hiệu hoá tài khoản đó sau khi lưu.' : ''}`)) return;
+      const btn = empEl('empSubmitBtn'), originalText = btn.textContent;
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
       try {
         const payload = {
-          id: document.getElementById('empId').value,
-          fullName: document.getElementById('empFullName').value.trim(),
-          dob: document.getElementById('empDob').value,
-          idNumber: document.getElementById('empIdNumber').value.trim(),
-          address: document.getElementById('empAddress').value.trim(),
-          emergencyContactName: document.getElementById('empEmergencyName').value.trim(),
-          emergencyContactPhone: document.getElementById('empEmergencyPhone').value.trim(),
-          position: document.getElementById('empPosition').value.trim(),
-          contractType: document.getElementById('empContractType').value,
-          contractStart: document.getElementById('empContractStart').value,
-          contractEnd: document.getElementById('empContractEnd').value,
-          status: document.getElementById('empStatus').value,
-          linkedAdminEmail: document.getElementById('empLinkedEmail').value.trim()
+          id: empEl('empId').value, fullName: empEl('empFullName').value.trim(), dob: empEl('empDob').value, idNumber: empEl('empIdNumber').value.trim(),
+          address: empEl('empAddress').value.trim(), emergencyContactName: empEl('empEmergencyName').value.trim(), emergencyContactPhone: empEl('empEmergencyPhone').value.trim(),
+          position: empEl('empPosition').value.trim(), contractType: type, contractStart: start, contractEnd: end, status, linkedAdminEmail: empEl('empLinkedEmail').value.trim()
         };
-        const result = await apiCall('/api/portal-save-employee', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-        });
+        const result = await apiCall('/api/portal-save-employee', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         showGlobalAlert(result.message, false);
-        loadEmployees();
+        empDirty = false;
+        await loadEmployees();
         openEmployeeDetail(encodeURIComponent(result.id));
       } catch (err) {
         showGlobalAlert(err.message, true);
       } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
+        btn.disabled = false; btn.textContent = originalText;
       }
     });
 
-    document.getElementById('empNoteForm').addEventListener('submit', async function (e) {
+    empEl('empNoteForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const text = document.getElementById('empNoteText').value.trim();
-      const id = document.getElementById('empId').value;
+      const text = empEl('empNoteText').value.trim(), id = empEl('empId').value;
       if (!text || !id) return;
       try {
-        await apiCall('/api/portal-add-employee-note', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ employeeId: id, note: text })
-        });
-        document.getElementById('empNoteText').value = '';
-        openEmployeeDetail(encodeURIComponent(id));
-      } catch (err) {
-        showGlobalAlert(err.message, true);
-      }
+        await apiCall('/api/portal-add-employee-note', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ employeeId: id, note: text }) });
+        empEl('empNoteText').value = '';
+        refreshEmpNotes(id);
+      } catch (err) { showGlobalAlert(err.message, true); }
     });
+
+    // Tương tác trong ngăn chi tiết
+    (function () {
+      const form = empEl('employeeForm'), card = empEl('employeeDetailCard');
+      form.addEventListener('input', e => { empDirty = true; if (e.target.id === 'empFullName') empLinkHint(); });
+      form.addEventListener('change', e => {
+        empDirty = true; const id = e.target.id;
+        if (id === 'empContractType') empContractSync('type');
+        else if (id === 'empContractStart' || id === 'empContractEnd' || id === 'empStatus') { empContractSync(''); if (id === 'empStatus') empLinkHint(); }
+        else if (id === 'empLinkedEmail') empLinkHint();
+      });
+      card.addEventListener('click', e => {
+        const a = e.target.closest('[data-end-from]'), x = e.target.closest('[data-extend]'), s = e.target.closest('[data-link-suggest]');
+        if (a) { const [k, n] = a.dataset.endFrom.split(':'); const st = empEl('empContractStart').value; if (st) { empEl('empContractEnd').value = k === 'd' ? empAddDays(st, +n) : empEndAfterMonths(st, +n); empDirty = true; empContractSync(''); } }
+        else if (x) { const end = empEl('empContractEnd').value; if (end) { empEl('empContractEnd').value = empEndAfterMonths(empAddDays(end, 1), +x.dataset.extend); empDirty = true; empContractSync(''); } }
+        else if (s) { empEl('empLinkedEmail').value = s.dataset.linkSuggest; empDirty = true; empLinkHint(); }
+      });
+      document.addEventListener('keydown', e => {
+        if (!empDrawerOpen()) return;
+        if (e.key === 'Escape') { e.preventDefault(); closeEmployeeDetail(); }
+        else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); form.requestSubmit(); }
+      });
+    })();
 
     // ============== GỬI EMAIL ==============
     function onBulkEmailAudienceChange() {
@@ -5317,6 +5656,7 @@
       try {
         const { accounts, me } = await apiCall('/api/portal-admin-list-accounts');
         allStaffAccountsData = accounts;
+        try { refreshEmployeeView(); } catch (e) {}
         window.__myAdminEmail = me || '';
         document.getElementById('staffLoading').style.display = 'none';
         document.getElementById('staffTableWrap').style.display = 'block';
