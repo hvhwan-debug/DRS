@@ -7,7 +7,7 @@
 <title>Công Việc · Tri thức Việt</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=20260927b">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="/xlsx-export.js?v=20260930a" defer></script>
 <script>if (!localStorage.getItem('wvn_admin_token')) window.location.replace('admin-dang-nhap.html');</script>
 <style>
 /* =====================================================================
@@ -183,7 +183,6 @@ a { color: inherit; }
 .pt-sub { color: var(--muted); font-size: 0.88rem; margin-top: 0.4rem; max-width: 62ch; line-height: 1.55; }
 .ph > div:first-child { flex: 1 1 360px; min-width: 0; }
 .ph-r { margin-left: auto; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-.kpis { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .kpi { min-width: 92px; padding: 0.55rem 0.9rem 0.5rem; border-radius: 14px; background: var(--tint); border: 1px solid var(--hair-2); }
 .kpi b { display: block; font-size: 1.45rem; font-weight: 650; letter-spacing: -0.5px; line-height: 1.15; color: var(--ink); }
 .kpi span { font-size: 0.72rem; color: var(--muted); font-weight: 500; }
@@ -239,8 +238,6 @@ a { color: inherit; }
 .task.done { background: #fbfcfe; }
 .task.done .t-title { color: var(--faint); text-decoration: line-through; text-decoration-color: #cbd2e4; }
 .task.done .t-meta, .task.done .t-proj, .task.done .t-col-due, .task.done .t-right { opacity: 0.55; }
-.task.just-done { animation: flashDone .7s ease-out; }
-@keyframes flashDone { 0% { background: #e8f8f1; } 100% { background: transparent; } }
 .sel-box { width: 18px; height: 18px; border-radius: 6px; border: 1.5px solid #c9d0e2; background: #fff; display: grid; place-items: center; opacity: 0; transition: opacity .12s, background .12s, border-color .12s; }
 .sel-box i { font-size: 0.55rem; color: #fff; opacity: 0; }
 .task:hover .sel-box, .sel-box.on, body.has-sel .sel-box { opacity: 1; }
@@ -460,7 +457,6 @@ a { color: inherit; }
 .panel { background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r-l); box-shadow: var(--lift); padding: 1.2rem 1.35rem 1.3rem; }
 .panel h4 { font-size: 0.95rem; font-weight: 650; letter-spacing: -0.2px; display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
 .panel h4 small { font-size: 0.76rem; font-weight: 500; color: var(--muted); letter-spacing: 0; }
-.panel .lead { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
 .trend { display: flex; align-items: flex-end; gap: 0.8rem; height: 150px; margin-top: 1rem; }
 .trend .tb { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 0.35rem; height: 100%; }
 .trend .tb .v { font-size: 0.74rem; font-weight: 650; color: var(--muted); height: 1.1em; }
@@ -782,6 +778,21 @@ a.att-main:hover b { color: var(--sapphire); }
 }
 @media (max-width: 430px) { .mobile-head .m-pill { display: none; } }
 
+/* Bổ sung bản 5.1 */
+#projectNav button .od { width: 7px; height: 7px; border-radius: 50%; background: #fb7185; box-shadow: 0 0 0 3px rgba(251,113,133,0.2); flex-shrink: 0; }
+.more-btn { display: flex; align-items: center; justify-content: center; gap: 0.4rem; width: 100%; margin-top: 0.6rem; padding: 0.6rem; border-radius: 14px; border: 1.5px dashed #c5cde0; color: var(--sapphire); font-weight: 600; font-size: 0.84rem; transition: all .15s; }
+.more-btn small { color: var(--muted); font-weight: 500; }
+.more-btn:hover { border-color: #7dd3fc; background: #f2faff; }
+.col .more-btn { background: rgba(255,255,255,0.6); }
+.opt.dis { opacity: 0.45; cursor: not-allowed; border-style: dashed; }
+.opt.dis:hover { background: #fff; border-color: var(--hair); }
+.blk-sel { max-width: 100%; width: 100%; }
+.d-foot > span { flex: 1; min-width: 0; }
+.d-foot .btn { margin-left: auto; } .d-foot .btn + .btn { margin-left: 0; }
+.pane h4 .lnk { font-size: 0.76rem; font-weight: 600; color: var(--sapphire); }
+.pane h4 .lnk:hover { text-decoration: underline; }
+.sec button.link { background: none; }
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -789,7 +800,6 @@ a.att-main:hover b { color: var(--sapphire); }
 <style id="wvn-font">
   /* Một phông chữ duy nhất cho toàn bộ website: Be Vietnam Pro (trừ biểu tượng Font Awesome) */
   :root { --wvn-font: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
-  html body, html body *:not(i):not(.fa):not([class^="fa-"]):not([class*=" fa-"]):not(code):not(pre):not(kbd) { font-family: var(--wvn-font) !important; }
 </style>
 <script src="/wvn-quotes.js?v=20260928a"></script>
 </head>
@@ -889,6 +899,7 @@ a.att-main:hover b { color: var(--sapphire); }
   <select id="bulkAssign" aria-label="Gán người phụ trách"><option value="">Gán người…</option></select>
   <select id="bulkProject" aria-label="Chuyển dự án"><option value="">Chuyển dự án…</option><option value="__none">Không dự án</option></select>
   <select id="bulkPriority" aria-label="Đổi ưu tiên"><option value="">Đổi ưu tiên…</option></select>
+  <select id="bulkDue" aria-label="Dời hạn"><option value="">Dời hạn…</option><option value="today">Sang hôm nay</option><option value="tomorrow">Sang ngày mai</option><option value="monday">Sang Thứ Hai tới</option><option value="week">Lùi 1 tuần</option><option value="none">Bỏ hạn</option></select>
   <button type="button" id="bulkDone"><i class="fa-solid fa-check" aria-hidden="true"></i> Đánh dấu xong</button>
   <button type="button" class="danger" id="bulkDelete"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xoá</button>
   <button type="button" id="bulkClear"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
@@ -914,7 +925,7 @@ a.att-main:hover b { color: var(--sapphire); }
   const DAY = 864e5;
   const pad = n => String(n).padStart(2, '0');
   const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  const todayStr = () => ymd(new Date());
+  const todayStr = () => { const n = Date.now(); if (n - _tsAt > 30000) { _tsAt = n; _tsVal = VN_FMT.format(n); } return _tsVal; };
   const addDays = (s, n) => { const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + n); return ymd(d); };
   const WD = ['Chủ nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
   const WDs = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
@@ -938,13 +949,12 @@ a.att-main:hover b { color: var(--sapphire); }
   const STATUS = [['todo', 'Cần làm'], ['doing', 'Đang làm'], ['review', 'Chờ duyệt'], ['done', 'Hoàn thành']];
   const STATUS_L = Object.fromEntries(STATUS);
   const PRIO = [['low', 'Thấp'], ['normal', 'Bình thường'], ['high', 'Cao'], ['urgent', 'Khẩn']];
-  const PRIO_COLOR = { urgent: 'var(--red)', high: 'var(--gold)', normal: 'transparent', low: 'transparent' };
   const RECUR = [['', 'Không lặp'], ['daily', 'Mỗi ngày'], ['weekdays', 'Ngày làm việc'], ['weekly', 'Mỗi tuần'], ['monthly', 'Mỗi tháng']];
   const COLORS = ['#2563eb', '#0891b2', '#059669', '#ca8a04', '#dc2626', '#db2777', '#7c3aed', '#475569'];
   const TONE = { blue: 'var(--sapphire)', green: 'var(--green)', gold: 'var(--gold)', red: 'var(--red)', violet: 'var(--violet)' };
 
   let D = { me: {}, tasks: [], projects: [], staff: [], inbox: [] };
-  let state = { view: 'today', project: '', scope: 'me', boardWho: '', boardFlag: '', boardMode: 'kanban', inboxMod: '', weekStart: null, openId: null, selected: new Set() };
+  let state = { view: 'today', project: '', scope: 'me', boardWho: '', boardFlag: '', boardMode: 'kanban', boardSort: 'smart', inboxMod: '', caps: {}, weekStart: null, openId: null, selected: new Set() };
 
   // ---------- API ----------
   async function api(path, opts = {}, attempt = 0) {
@@ -968,17 +978,64 @@ a.att-main:hover b { color: var(--sapphire); }
   }
 
   // ---------- Truy vấn ----------
-  const staffBy = email => D.staff.find(s => s.email === email) || { email, name: email ? email.split('@')[0] : '?' };
-  const projectBy = id => D.projects.find(p => p.id === id);
+  const staffBy = email => IX.s.get(email) || D.staff.find(s => s.email === email) || { email, name: email ? email.split('@')[0] : '?' };
+  const projectBy = id => IX.p.get(id) || D.projects.find(p => p.id === id);
   const isMine = t => t.assignees.includes(D.me.email);
-  const findTask = id => D.tasks.find(t => t.id === id);
+  const findTask = id => IX.t.get(id) || D.tasks.find(t => t.id === id);
   const open = t => t.status !== 'done';
   const byDue = (a, b) => (a.dueDate || '9999').localeCompare(b.dueDate || '9999') || (a.dueTime || '99').localeCompare(b.dueTime || '99') || prioRank(b) - prioRank(a);
   const prioRank = t => ({ urgent: 3, high: 2, normal: 1, low: 0 })[t.priority] || 1;
 
+  // ---------- Múi giờ Việt Nam (khớp với máy chủ), chỉ mục tra cứu nhanh, tuỳ chọn giao diện ----------
+  const VN_FMT = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit' });
+  let _tsAt = 0, _tsVal = '';
+  const vnDay = iso => iso ? VN_FMT.format(new Date(iso)) : '';
+  let IX = { t: new Map(), p: new Map(), s: new Map() };
+  const reindex = () => { IX.t = new Map(D.tasks.map(t => [t.id, t])); IX.p = new Map(D.projects.map(p => [p.id, p])); IX.s = new Map(D.staff.map(s => [s.email, s])); };
+  const PREF_KEY = 'wvn_work_prefs_v1';
+  function loadPrefs() {
+    try {
+      const p = JSON.parse(localStorage.getItem(PREF_KEY) || '{}');
+      if (['kanban', 'list'].includes(p.boardMode)) state.boardMode = p.boardMode;
+      if (['me', 'all'].includes(p.scope)) state.scope = p.scope;
+      if (['smart', 'new', 'due'].includes(p.boardSort)) state.boardSort = p.boardSort;
+    } catch (e) {}
+  }
+  function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify({ boardMode: state.boardMode, scope: state.scope, boardSort: state.boardSort })); } catch (e) {} }
+  const capOf = (key, dflt) => state.caps[key] || dflt || 100;
+
+  // ---------- Luồng trạng thái: giao diện biết đúng quy tắc của máy chủ để không để người dùng thao tác rồi mới bị báo lỗi ----------
+  // Máy chủ: không nhảy cóc quá 1 bước (trừ quản lý); Chờ duyệt -> Hoàn thành chỉ quản lý; việc đang bị chặn thì không được Hoàn thành.
+  const ORDER = ['todo', 'doing', 'review', 'done'];
+  const isMgr = () => D.me.canManage === undefined ? null : !!D.me.canManage; // null = chưa rõ, để máy chủ quyết định
+  function moveBlock(t, to) {
+    if (!t || t.status === to) return '';
+    const from = ORDER.indexOf(t.status), tgt = ORDER.indexOf(to), fwd = tgt > from;
+    if (to === 'done') { const b = t.blockedBy && findTask(t.blockedBy); if (b && b.status !== 'done') return `Việc này đang chờ "${b.title}" hoàn thành trước.`; }
+    if (isMgr() === false && fwd) {
+      if (t.status === 'review' && to === 'done') return 'Cần người quản lý duyệt trước khi chuyển sang Hoàn thành.';
+      if (tgt - from > 1) return 'Cần chuyển lần lượt từng bước: Cần làm → Đang làm → Chờ duyệt.';
+    }
+    return '';
+  }
+  function checkLabel(t) {
+    if (t.status === 'done') return 'Mở lại việc này';
+    if (isMgr() === false) return t.status === 'review' ? 'Đang chờ quản lý duyệt' : 'Gửi quản lý duyệt';
+    return t.status === 'review' ? 'Duyệt xong' : 'Hoàn thành';
+  }
+  // Nhân viên bấm "xong": đưa việc tới Chờ duyệt, lần lượt từng bước như máy chủ yêu cầu
+  async function sendForReview(t) {
+    const prev = t.status;
+    if (t.status === 'todo') await update(t.id, { status: 'doing' }, { silentRender: true });
+    await update(t.id, { status: 'review' }, { msg: `Đã gửi "${t.title}" cho quản lý duyệt`, undo: { status: prev } });
+  }
+
   // ---------- Dòng việc ----------
   const labelHue = l => { let h = 0; for (const c of String(l)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
   const allLabels = () => Array.from(new Set(D.tasks.flatMap(t => t.labels || []))).sort((a, b) => a.localeCompare(b, 'vi'));
+  // Chỉ Quản trị viên chính được xuất Excel (chính sách chung của website; bộ xuất WVNExcel đòi cờ này do trang xác nhận từ máy chủ)
+  const canExport = () => D.me.role === 'super';
+  const xlsBtn = label => canExport() ? `<button type="button" class="btn tool-btn" id="exportExcelBtn" title="Xuất các việc đang hiển thị ra Excel"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> ${label}</button>` : '';
   const pctOf = (a, b) => b ? Math.round(a / b * 100) : 0;
   const ST_COLOR = { todo: 'var(--st-todo)', doing: 'var(--st-doing)', review: 'var(--st-review)', done: 'var(--st-done)' };
   const fmtDM = d => d ? d.slice(8) + '/' + d.slice(5, 7) : '';
@@ -1030,12 +1087,14 @@ a.att-main:hover b { color: var(--sapphire); }
   const statusPill = t => t.status === 'doing' ? '<span class="pill blue">Đang làm</span>' : t.status === 'review' ? '<span class="pill violet">Chờ duyệt</span>' : '';
   const taskRow = t => `<div class="task ${t.status === 'done' ? 'done' : ''} prio-${t.priority}" data-st="${t.status}" data-open="${esc(t.id)}" tabindex="0">
       <button class="sel-box ${state.selected.has(t.id) ? 'on' : ''}" data-select="${esc(t.id)}" aria-label="Chọn việc này"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
-      <button class="check" data-toggle="${esc(t.id)}" aria-label="${t.status === 'done' ? 'Đánh dấu chưa xong' : 'Hoàn thành'}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+      <button class="check" data-toggle="${esc(t.id)}" aria-label="${checkLabel(t)}" title="${checkLabel(t)}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
       <div class="t-body"><div class="t-title">${esc(t.title)}</div><div class="t-meta">${statusPill(t)}${metaHtml(t)}</div></div>
       <div class="t-proj">${projChip(t)}</div>
       <div class="t-flags"><div class="t-col-due">${dueColHtml(t)}</div><div class="t-col-prio">${prioColHtml(t)}</div></div>
       <div class="t-right">${avatars(t.assignees)}</div></div>`;
-  const list = (items, emptyMsg) => items.length ? `<div class="tasks">${items.map(taskRow).join('')}</div>` : `<div class="empty">${emptyMsg}</div>`;
+  const list = (items, emptyMsg, key) => { if (!items.length) return `<div class="empty">${emptyMsg}</div>`; const cap = key ? capOf(key) : Infinity; const shown = items.length > cap ? items.slice(0, cap) : items;
+    return `<div class="tasks">${shown.map(taskRow).join('')}</div>${shown.length < items.length ? `<button type="button" class="more-btn" data-more="${key}">Hiện thêm ${Math.min(100, items.length - shown.length)} việc <small>(còn ${items.length - shown.length})</small></button>` : ''}`; };
+  const selAll = items => items.length > 1 ? `<button type="button" class="link" data-select-ids="${items.map(t => esc(t.id)).join(',')}">${items.every(t => state.selected.has(t.id)) ? 'Bỏ chọn' : 'Chọn tất cả'}</button>` : '';
   const scopeSeg = () => `<div class="seg" role="group" aria-label="Phạm vi"><button data-scope="me" aria-pressed="${state.scope === 'me'}"><i class="fa-regular fa-user" aria-hidden="true"></i>Của tôi</button><button data-scope="all" aria-pressed="${state.scope === 'all'}"><i class="fa-solid fa-people-group" aria-hidden="true"></i>Cả nhóm</button></div>`;
   const sec = (title, n, opts) => { opts = opts || {}; return `<div class="sec ${opts.cls || ''}"><h3>${title}</h3>${n !== '' && n != null ? `<span class="c">${n}</span>` : ''}${opts.sub ? `<span class="sub">${opts.sub}</span>` : ''}<span class="grow"></span>${opts.right || ''}</div>`; };
   const phead = (crumb, title, sub, right) => `<div class="ph"><div><div class="crumb"><span>Công việc</span><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><b>${crumb}</b></div><h2 class="page-title">${title}</h2>${sub ? `<p class="pt-sub">${sub}</p>` : ''}</div><div class="ph-r">${right || ''}</div></div>`;
@@ -1054,7 +1113,7 @@ a.att-main:hover b { color: var(--sapphire); }
     const todays = pool.filter(t => t.dueDate === today).sort((a, b) => (a.status === 'done') - (b.status === 'done') || byDue(a, b));
     const upcoming = pool.filter(t => open(t) && t.dueDate > today && t.dueDate <= addDays(today, 7)).sort(byDue);
     const noDate = pool.filter(t => open(t) && !t.dueDate && t.status === 'doing').sort(byDue);
-    const doneToday = pool.filter(t => t.status === 'done' && t.completedAt && ymd(new Date(t.completedAt)) === today).length;
+    const doneToday = pool.filter(t => t.status === 'done' && t.completedAt && vnDay(t.completedAt) === today).length;
     const totalToday = todays.filter(open).length + overdue.length + doneToday;
     const pct = pctOf(doneToday, totalToday);
     const d = new Date(); const h = d.getHours();
@@ -1099,11 +1158,11 @@ a.att-main:hover b { color: var(--sapphire); }
       ${D.inbox.length ? `${sec('Việc từ hệ thống', inboxN, { sub: 'tự cập nhật từ dữ liệu vận hành', right: '<button type="button" class="link" data-view="inbox">Xem tất cả <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>' })}<div class="inbox-strip">${D.inbox.map(inboxCard).join('')}</div>` : ''}
       <div class="tgrid">
         <div class="tmain">
-          ${overdue.length ? `${sec('Quá hạn', overdue.length, { cls: 'red', right: scopeSeg() })}${list(overdue)}` : ''}
+          ${overdue.length ? `${sec('Quá hạn', overdue.length, { cls: 'red', right: selAll(overdue) + scopeSeg() })}${list(overdue, '', 't-over')}` : ''}
           ${sec('Hôm nay', todays.length || '', { right: overdue.length ? '' : scopeSeg() })}
-          ${list(todays, '<b>Không có việc hạn hôm nay.</b>Gõ vào ô phía trên, ví dụ "Chuẩn bị tài liệu lớp chiều nay".')}
+          ${list(todays, '<b>Không có việc hạn hôm nay.</b>Gõ vào ô phía trên, ví dụ "Chuẩn bị tài liệu lớp chiều nay".', 't-today')}
           ${noDate.length ? `${sec('Đang làm', noDate.length)}${list(noDate)}` : ''}
-          ${upcoming.length ? `${sec('7 ngày tới', upcoming.length)}${list(upcoming)}` : ''}
+          ${upcoming.length ? `${sec('7 ngày tới', upcoming.length)}${list(upcoming, '', 't-up')}` : ''}
         </div>
         <aside class="rail" aria-label="Lịch trình và tiến độ">
           <div class="pane"><h4>Lịch trình hôm nay <small>${WDs[d.getDay()]}, ${d.getDate()}/${d.getMonth() + 1}</small></h4>${agenda}</div>
@@ -1134,11 +1193,11 @@ a.att-main:hover b { color: var(--sapphire); }
       ['Sau đó', mine.filter(t => t.dueDate > addDays(today, 7))],
       ['Chưa có hạn', mine.filter(t => !t.dueDate)]
     ].filter(g => g[1].length);
-    const weekStart = mondayOf(todayStr()); const doneWeek = D.tasks.filter(t => isMine(t) && t.status === 'done' && t.completedAt && t.completedAt.slice(0, 10) >= weekStart).length;
+    const weekStart = mondayOf(todayStr()); const doneWeek = D.tasks.filter(t => isMine(t) && t.status === 'done' && t.completedAt && vnDay(t.completedAt) >= weekStart).length;
     const recentDone = D.tasks.filter(t => isMine(t) && t.status === 'done').sort((a, b) => new Date(b.completedAt || 0) - new Date(a.completedAt || 0)).slice(0, 5);
     const overdueN = mine.filter(t => t.dueDate && t.dueDate < today).length;
     $('view-mine').innerHTML = phead('Việc của tôi', 'Việc của tôi', mine.length ? `Bạn đang giữ ${mine.length} việc${overdueN ? `, trong đó ${overdueN} việc đã quá hạn` : ''}. Sắp xếp theo hạn chót.` : 'Bạn chưa giữ việc nào đang mở.', kpi(mine.length, 'đang mở', 'blue') + kpi(overdueN, 'quá hạn', overdueN ? 'red' : '') + kpi(doneWeek, 'xong tuần này', 'ok'))
-      + (groups.length ? groups.map(([n, items, c]) => `${sec(n, items.length, { cls: c })}${list(items)}`).join('') : '<div class="empty"><b>Bạn không có việc nào đang mở.</b>Gõ vào ô phía trên để thêm việc mới.</div>')
+      + (groups.length ? groups.map(([n, items, c]) => `${sec(n, items.length, { cls: c, right: selAll(items) })}${list(items, '', 'm-' + n)}`).join('') : '<div class="empty"><b>Bạn không có việc nào đang mở.</b>Gõ vào ô phía trên để thêm việc mới.</div>')
       + (recentDone.length ? `${sec('Mới hoàn thành', '')}${list(recentDone)}` : '');
   }
 
@@ -1149,6 +1208,11 @@ a.att-main:hover b { color: var(--sapphire); }
     if (f === 'high') return open(t) && (t.priority === 'urgent' || t.priority === 'high');
     if (f === 'unassigned') return open(t) && !(t.assignees || []).length;
     return true;
+  };
+  const SORTS = {
+    smart: (a, b) => prioRank(b) - prioRank(a) || (a.dueDate || '9999').localeCompare(b.dueDate || '9999') || (a.dueTime || '99').localeCompare(b.dueTime || '99') || (a.order - b.order),
+    due: byDue,
+    new: (a, b) => (a.order - b.order)
   };
   function boardPool() {
     return D.tasks.filter(t => (!state.project || t.projectId === state.project) && (!state.boardWho || (state.boardWho === 'me' ? isMine(t) : t.assignees.includes(state.boardWho))) && flagOk(t));
@@ -1169,22 +1233,23 @@ a.att-main:hover b { color: var(--sapphire); }
         <div class="seg" role="group" aria-label="Kiểu hiển thị"><button data-board-mode="kanban" aria-pressed="${state.boardMode === 'kanban'}"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Bảng</button><button data-board-mode="list" aria-pressed="${state.boardMode === 'list'}"><i class="fa-solid fa-list" aria-hidden="true"></i>Danh sách</button></div>
         <label class="sr-only" for="fProj">Dự án</label><span class="sel"><i class="fa-regular fa-folder" aria-hidden="true"></i><select id="fProj"><option value="">Mọi dự án</option>${D.projects.filter(x => !x.archived).map(x => `<option value="${esc(x.id)}" ${x.id === state.project ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></span>
         <label class="sr-only" for="fWho">Người làm</label><span class="sel"><i class="fa-regular fa-user" aria-hidden="true"></i><select id="fWho"><option value="">Mọi người</option><option value="me" ${state.boardWho === 'me' ? 'selected' : ''}>Của tôi</option>${D.staff.map(s => `<option value="${esc(s.email)}" ${state.boardWho === s.email ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></span>
+        <label class="sr-only" for="fSort">Sắp xếp</label><span class="sel"><i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i><select id="fSort"><option value="smart" ${state.boardSort === 'smart' ? 'selected' : ''}>Ưu tiên rồi hạn chót</option><option value="due" ${state.boardSort === 'due' ? 'selected' : ''}>Hạn chót gần nhất</option><option value="new" ${state.boardSort === 'new' ? 'selected' : ''}>Mới tạo gần đây</option></select></span>
         <span class="sp"></span>
         ${chip('overdue', 'Quá hạn', 'fa-triangle-exclamation', nOver)}${chip('high', 'Ưu tiên cao', 'fa-bolt', nHigh)}${chip('unassigned', 'Chưa giao', 'fa-user-slash', nUn)}
-        <button type="button" class="btn tool-btn" id="exportExcelBtn" title="Xuất các việc đang hiển thị ra Excel"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Excel</button>
+        ${xlsBtn('Excel')}
       </div>`;
     let body;
     if (state.boardMode === 'list') {
       body = STATUS.map(([k, label]) => {
-        const items = pool.filter(t => t.status === k).sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : byDue(a, b));
-        return items.length ? `<div class="lgroup" style="--sc:${ST_COLOR[k]}"><div class="sec"><span class="sd"></span><h3>${label}</h3><span class="c">${items.length}</span></div>${list(items.slice(0, k === 'done' ? 30 : 500))}</div>` : '';
+        const items = pool.filter(t => t.status === k).sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : (SORTS[state.boardSort] || SORTS.smart)(a, b));
+        return items.length ? `<div class="lgroup" style="--sc:${ST_COLOR[k]}"><div class="sec"><span class="sd"></span><h3>${label}</h3><span class="c">${items.length}</span></div>${list(items, '', 'l-' + k)}</div>` : '';
       }).join('') || '<div class="empty"><b>Không có việc nào khớp bộ lọc.</b>Bỏ bớt bộ lọc hoặc thêm việc mới ở ô phía trên.</div>';
     } else {
       body = `<div class="board">${STATUS.map(([k, label]) => {
         const all = pool.filter(t => t.status === k);
-        let items = all.slice().sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : (a.order - b.order) || byDue(a, b));
-        const more = k === 'done' && items.length > 15 ? items.length - 15 : 0; if (more) items = items.slice(0, 15);
-        return `<div class="col" data-col="${k}"><div class="col-head"><span class="sd"></span><b>${label}</b><span class="c">${all.length}</span><span class="grow"></span><button data-add-status="${k}" aria-label="Thêm việc vào ${label}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></div><div class="cards">${items.map(card).join('')}${more ? `<div class="more">và ${more} việc khác đã xong</div>` : ''}</div></div>`;
+        let items = all.slice().sort((a, b) => k === 'done' ? new Date(b.completedAt || 0) - new Date(a.completedAt || 0) : (SORTS[state.boardSort] || SORTS.smart)(a, b));
+        const cap = capOf('c-' + k, k === 'done' ? 15 : 60); const more = items.length > cap ? items.length - cap : 0; if (more) items = items.slice(0, cap);
+        return `<div class="col" data-col="${k}"><div class="col-head"><span class="sd"></span><b>${label}</b><span class="c">${all.length}</span><span class="grow"></span><button data-add-status="${k}" aria-label="Thêm việc vào ${label}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button></div><div class="cards">${items.map(card).join('')}${more ? `<button type="button" class="more-btn" data-more="c-${k}" data-step="${k === 'done' ? 15 : 60}">Hiện thêm <small>(còn ${more})</small></button>` : ''}</div></div>`;
       }).join('')}</div>`;
     }
     $('view-board').innerHTML = head + bar + body;
@@ -1243,14 +1308,15 @@ a.att-main:hover b { color: var(--sapphire); }
     const mb = $('mInbox'); mb.hidden = !inboxN; mb.textContent = inboxN;
     const by = inboxByMod();
     [['mdAdmin', by.admin], ['mdCham', by.cham], ['mdCrm', by.crm]].forEach(([id, n]) => { const el = $(id); if (el) { el.textContent = n > 99 ? '99+' : n; el.classList.toggle('on', n > 0); } });
+    const pc = new Map(); D.tasks.forEach(t => { if (!t.projectId || !open(t)) return; const c = pc.get(t.projectId) || { n: 0, od: 0 }; c.n++; if (t.dueDate && t.dueDate < today) c.od++; pc.set(t.projectId, c); });
     $('projectNav').innerHTML = D.projects.filter(p => !p.archived).map(p => {
-      const n = D.tasks.filter(t => t.projectId === p.id && open(t)).length;
-      return `<button data-project="${esc(p.id)}" ${state.view === 'board' && state.project === p.id ? 'aria-current="page"' : ''}><span class="dot" style="background:${esc(p.color)}"></span><span class="pn">${esc(p.name)}</span><span class="n">${n || ''}</span></button>`;
+      const c = pc.get(p.id) || { n: 0, od: 0 };
+      return `<button data-project="${esc(p.id)}" ${state.view === 'board' && state.project === p.id ? 'aria-current="page"' : ''}><span class="dot" style="background:${esc(p.color)}"></span><span class="pn">${esc(p.name)}</span>${c.od ? `<span class="od" title="${c.od} việc quá hạn"></span>` : ''}<span class="n">${c.n || ''}</span></button>`;
     }).join('') || '<div style="font-size:0.8rem;color:var(--night-muted);padding:0.3rem 0.75rem;line-height:1.5">Chưa có dự án. Nhóm việc theo chương trình, chiến dịch…</div>';
     (() => {
       const todays = D.tasks.filter(t => isMine(t) && t.dueDate === today);
       const overdue = mineOpen.filter(t => t.dueDate && t.dueDate < today).length;
-      const doneT = D.tasks.filter(t => isMine(t) && t.status === 'done' && t.completedAt && ymd(new Date(t.completedAt)) === today).length;
+      const doneT = D.tasks.filter(t => isMine(t) && t.status === 'done' && t.completedAt && vnDay(t.completedAt) === today).length;
       const total = todays.filter(open).length + overdue + doneT; const pct = pctOf(doneT, total);
       const msg = !total ? 'Chưa có việc hạn hôm nay.' : doneT === total ? 'Xong hết việc hôm nay. Tuyệt vời!' : `Còn ${total - doneT} việc để về đích.`;
       $('sideFocus').innerHTML = `<div class="f-top"><span>Tiến độ hôm nay</span><b>${doneT}/${total}</b></div><div class="f-bar"><i style="width:${pct}%"></i></div><small>${msg}</small>`;
@@ -1265,6 +1331,7 @@ a.att-main:hover b { color: var(--sapphire); }
 
   function renderAll() {
     renderSide();
+    reindex(); savePrefs(); window.WVN_EXPORT_ALLOWED = canExport();
     ({ today: renderToday, inbox: renderInbox, mine: renderMine, board: renderBoard, calendar: renderCalendar, team: renderTeam, dashboard: renderDashboard })[state.view]();
     $('content').classList.toggle('wide', ['board', 'calendar', 'team', 'dashboard'].includes(state.view));
     document.body.classList.toggle('has-sel', state.selected.size > 0);
@@ -1278,7 +1345,7 @@ a.att-main:hover b { color: var(--sapphire); }
     const weeks = Array.from({ length: 6 }, (_, i) => mondayOf(addDays(today, -7 * (5 - i))));
     const counts = weeks.map((ws, i) => {
       const we = i < 5 ? weeks[i + 1] : addDays(ws, 7);
-      return D.tasks.filter(t => t.status === 'done' && t.completedAt && t.completedAt.slice(0, 10) >= ws && t.completedAt.slice(0, 10) < we).length;
+      return D.tasks.filter(t => t.status === 'done' && t.completedAt && vnDay(t.completedAt) >= ws && vnDay(t.completedAt) < we).length;
     });
     return { weeks, counts };
   }
@@ -1291,7 +1358,7 @@ a.att-main:hover b { color: var(--sapphire); }
       const openT = mine.filter(open);
       return { p, open: openT.length, todo: openT.filter(t => t.status === 'todo').length, doing: openT.filter(t => t.status === 'doing').length, review: openT.filter(t => t.status === 'review').length,
         overdue: openT.filter(t => t.dueDate && t.dueDate < today).length, todayN: openT.filter(t => t.dueDate === today).length,
-        urgent: openT.filter(t => t.priority === 'urgent' || t.priority === 'high').length, doneWeek: mine.filter(t => t.status === 'done' && t.completedAt && t.completedAt.slice(0, 10) >= weekStart).length };
+        urgent: openT.filter(t => t.priority === 'urgent' || t.priority === 'high').length, doneWeek: mine.filter(t => t.status === 'done' && t.completedAt && vnDay(t.completedAt) >= weekStart).length };
     }).sort((a, b) => b.overdue - a.overdue || b.open - a.open);
     const unassigned = D.tasks.filter(t => open(t) && !(t.assignees || []).length).length;
     const max = Math.max(1, ...people.map(x => x.open));
@@ -1300,7 +1367,7 @@ a.att-main:hover b { color: var(--sapphire); }
     const tag = x => x.overdue >= 2 || x.open >= 8 ? '<span class="tc-tag over">Quá tải</span>' : x.open <= 2 && !x.overdue ? '<span class="tc-tag free">Còn trống</span>' : '<span class="tc-tag ok">Cân bằng</span>';
     $('view-team').innerHTML = phead('Đội nhóm', 'Đội nhóm', 'Ai đang giữ bao nhiêu việc, ai đang quá tải. Chạm một người để xem bảng việc của họ.',
       kpi(openAll, 'việc đang mở', 'blue') + kpi(overAll, 'quá hạn', overAll ? 'red' : '')
-      + '<button type="button" class="btn tool-btn" id="exportExcelBtn"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Xuất Excel</button>'
+      + xlsBtn('Xuất Excel')
       + (D.me.role === 'super' ? '<button type="button" class="btn" id="digestTest" title="Email tự gửi lúc 7:00 mỗi sáng"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Gửi email tổng hợp</button>' : ''))
       + `<div class="team-note"><i class="fa-regular fa-sun" aria-hidden="true"></i><span>Mỗi sáng 7:00, ai có việc quá hạn hoặc đến hạn sẽ nhận email tổng hợp danh sách việc của mình.</span></div>`
       + (unassigned ? `<div class="team-note warn"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Có <b>${unassigned}</b> việc chưa giao cho ai.</span><button type="button" class="lnk" data-board-flag-go="unassigned" style="margin-left:auto;font-weight:600;white-space:nowrap">Xem các việc này</button></div>` : '')
@@ -1328,7 +1395,7 @@ a.att-main:hover b { color: var(--sapphire); }
     const totalOpen = all.filter(open).length;
     const overdueL = all.filter(t => open(t) && t.dueDate && t.dueDate < today).sort(byDue);
     const weekStart = mondayOf(today);
-    const doneWeek = all.filter(t => t.status === 'done' && t.completedAt && t.completedAt.slice(0, 10) >= weekStart).length;
+    const doneWeek = all.filter(t => t.status === 'done' && t.completedAt && vnDay(t.completedAt) >= weekStart).length;
     const counts = statRow(all); const doneAll = counts[3];
     const rate = pctOf(doneAll, all.length);
     const { counts: wk } = weeklyDone();
@@ -1352,7 +1419,7 @@ a.att-main:hover b { color: var(--sapphire); }
         <div class="hc-foot"><div class="fl">${od ? `<span class="r"><b>${od}</b> quá hạn</span>` : ''}${c[1] ? `<span><b>${c[1]}</b> đang làm</span>` : ''}${c[2] ? `<span><b>${c[2]}</b> chờ duyệt</span>` : ''}${next ? `<span>Hạn gần nhất <b>${esc(fmtDue(next.dueDate))}</b></span>` : ''}</div>${who.length ? avatars(who, 4) : ''}</div></button>`;
     };
     const dk = (cls, ic, label, n, sub, extra) => `<div class="dk ${cls}">${extra || ''}<div class="dk-ic"><i class="fa-solid ${ic}" aria-hidden="true"></i></div><div class="dk-l">${label}</div><b>${n}</b><small>${sub}</small></div>`;
-    $('view-dashboard').innerHTML = phead('Dashboard', 'Dashboard', 'Tổng quan tiến độ theo từng dự án. Bấm vào một dự án để mở bảng công việc của nó.', '<button type="button" class="btn tool-btn" id="exportExcelBtn"><i class="fa-solid fa-file-excel" aria-hidden="true"></i> Xuất Excel</button>')
+    $('view-dashboard').innerHTML = phead('Dashboard', 'Dashboard', 'Tổng quan tiến độ theo từng dự án. Bấm vào một dự án để mở bảng công việc của nó.', xlsBtn('Xuất Excel'))
       + `<div class="dkpis">
           ${dk('', 'fa-layer-group', 'Đang mở', totalOpen, `${counts[1]} đang làm · ${counts[2]} chờ duyệt`)}
           ${dk('red', 'fa-triangle-exclamation', 'Quá hạn', overdueL.length, overdueL.length ? 'cần xử lý sớm' : 'không có việc trễ hạn')}
@@ -1371,7 +1438,6 @@ a.att-main:hover b { color: var(--sapphire); }
   }
 
   // ---------- Tìm việc (phím / hoặc Ctrl/⌘ + K) ----------
-  const normVN = x => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
   function openSearch() {
     if ($('searchOverlay')) return $('searchInput').focus();
     const el = document.createElement('div'); el.id = 'searchOverlay'; el.className = 'sp-overlay';
@@ -1379,9 +1445,9 @@ a.att-main:hover b { color: var(--sapphire); }
     document.body.appendChild(el);
     let sel = 0;
     const run = () => {
-      const q = normVN($('searchInput').value.trim()).split(/\s+/).filter(Boolean);
+      const q = norm($('searchInput').value.trim()).split(/\s+/).filter(Boolean);
       const staffName = e => { const p = D.staff.find(x => String(x.email).toLowerCase() === String(e).toLowerCase()); return p ? p.name : e; };
-      const hay = t => normVN([t.title, t.description, (t.labels || []).join(' '), (projectBy(t.projectId) || {}).name, (t.assignees || []).map(staffName).join(' '), (t.checklist || []).map(i => i.text).join(' ')].join(' '));
+      const hay = t => norm([t.title, t.description, (t.labels || []).join(' '), (projectBy(t.projectId) || {}).name, (t.assignees || []).map(staffName).join(' '), (t.checklist || []).map(i => i.text).join(' ')].join(' '));
       const list = (q.length ? D.tasks.filter(t => q.every(w => hay(t).includes(w))) : D.tasks.filter(open).sort(byDue)).sort((a, b) => (a.status === 'done') - (b.status === 'done')).slice(0, 30);
       sel = Math.min(sel, Math.max(0, list.length - 1));
       $('searchRes').innerHTML = list.length ? list.map((t, i) => `<button type="button" class="sp-item${i === sel ? ' on' : ''}${t.status === 'done' ? ' done' : ''}" data-sp="${esc(t.id)}" role="option" aria-selected="${i === sel}"><strong>${esc(t.title)}</strong><span class="t-meta">${metaHtml(t)}${t.status === 'done' ? '<span class="pill">Đã xong</span>' : ''}</span></button>`).join('')
@@ -1400,6 +1466,7 @@ a.att-main:hover b { color: var(--sapphire); }
   }
 
   function setView(v, extra) {
+    if (state.view !== v) state.selected.clear();
     state.view = v; Object.assign(state, extra || {});
     if (v !== 'board' && !(extra && 'project' in extra)) state.project = v === 'calendar' ? state.project : '';
     document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.id === 'view-' + v));
@@ -1514,9 +1581,19 @@ a.att-main:hover b { color: var(--sapphire); }
   function toggleDone(id) {
     const t = findTask(id); if (!t) return;
     if (t.status === 'done') return update(id, { status: 'todo' }, { msg: 'Đã mở lại công việc' });
-    const blocker = t.blockedBy && findTask(t.blockedBy);
-    if (blocker && blocker.status !== 'done' && !confirm(`Việc này đang chờ "${blocker.title}" chưa xong. Vẫn đánh dấu xong?`)) return;
+    const bm = moveBlock(t, 'done');
+    if (isMgr() === false) {
+      if (t.status === 'review') return toast('Việc này đang chờ quản lý duyệt.');
+      return sendForReview(t);
+    }
+    if (bm && t.blockedBy) return toast(bm, { error: true });
     const prev = t.status; update(id, { status: 'done' }, { msg: `Đã hoàn thành "${t.title}"`, undo: { status: prev } });
+  }
+  async function duplicateTask(id) {
+    const t = findTask(id); if (!t) return;
+    const body = { title: ('Bản sao: ' + t.title).slice(0, 200), description: t.description || '', priority: t.priority, dueDate: t.dueDate, dueTime: t.dueTime, assignees: t.assignees, projectId: t.projectId, labels: t.labels || [], recurrence: t.recurrence || '', status: 'todo', checklist: (t.checklist || []).map(i => ({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), text: i.text, done: false })) };
+    try { const r = await post('/api/portal-work-save-task', body); D.tasks.unshift(r.task); renderAll(); toast(`Đã nhân bản "${t.title}"`, { undo: () => deleteTask(r.task.id, true) }); openDrawer(r.task.id); }
+    catch (e) { toast(e.message, { error: true }); }
   }
   async function deleteTask(id, silent) {
     const t = findTask(id); if (!t) return;
@@ -1595,7 +1672,7 @@ a.att-main:hover b { color: var(--sapphire); }
     const before = ta.value.slice(0, ta.selectionStart); const m = before.match(/(^|\s)@([^\s@]{0,20})$/);
     let menu = $('mentionMenu');
     if (!m) { if (menu) menu.remove(); return; }
-    const qn = normVN(m[2]); const hits = D.staff.filter(p => normVN(p.name).split(/\s+/).some(w => w.startsWith(qn)) || normVN(p.name).startsWith(qn)).slice(0, 6);
+    const qn = norm(m[2]); const hits = D.staff.filter(p => norm(p.name).split(/\s+/).some(w => w.startsWith(qn)) || norm(p.name).startsWith(qn)).slice(0, 6);
     if (!hits.length) { if (menu) menu.remove(); return; }
     if (!menu) { menu = document.createElement('div'); menu.id = 'mentionMenu'; menu.className = 'mention-menu'; menu.setAttribute('role', 'listbox'); ta.closest('.c-form').appendChild(menu); }
     menu.innerHTML = hits.map((p, i) => `<button type="button" class="${i === 0 ? 'on' : ''}" data-mention="${esc(p.email)}" data-name="${esc(p.name)}" role="option"><span class="av">${esc(initials(p.name))}</span>${esc(p.name)}</button>`).join('');
@@ -1629,23 +1706,20 @@ a.att-main:hover b { color: var(--sapphire); }
     const done = t.checklist.filter(i => i.done).length;
     $('drawer').innerHTML = `
       <div class="d-head">
-        <button class="check ${t.status === 'done' ? 'on' : ''}" data-toggle="${esc(t.id)}" aria-label="${t.status === 'done' ? 'Mở lại' : 'Hoàn thành'}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+        <button class="check ${t.status === 'done' ? 'on' : ''}" data-toggle="${esc(t.id)}" aria-label="${checkLabel(t)}" title="${checkLabel(t)}"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
         <textarea class="d-title" id="dTitle" rows="1" maxlength="200" aria-label="Tên công việc">${esc(t.title)}</textarea>
         <button class="d-close" data-act="close" aria-label="Đóng"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
       </div>
       <div class="d-body">
         ${t.link && t.link.href ? `<a class="link-card" href="${esc(t.link.href)}"><i class="fa-solid fa-link" aria-hidden="true"></i><span>${esc(t.link.label || 'Mở nơi xử lý')}</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" style="margin-left:auto;color:var(--muted)"></i></a>` : ''}
         <div class="props">
-        <div class="row"><label><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>Trạng thái</label><div class="opts">${STATUS.map(([k, l]) => `<button class="opt st-${k}" data-set="status" data-v="${k}" aria-pressed="${t.status === k}">${l}</button>`).join('')}</div></div>
+        <div class="row"><label><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>Trạng thái</label><div class="opts">${STATUS.map(([k, l]) => `<button class="opt st-${k}${moveBlock(t, k) ? ' dis' : ''}" data-set="status" data-v="${k}" aria-pressed="${t.status === k}" ${moveBlock(t, k) ? `aria-disabled="true" title="${esc(moveBlock(t, k))}"` : ''}>${l}</button>`).join('')}</div></div>
         <div class="row"><label><i class="fa-solid fa-user-group" aria-hidden="true"></i>Người làm</label><div class="opts">${D.staff.map(s => `<button class="opt" data-assignee="${esc(s.email)}" aria-pressed="${t.assignees.includes(s.email)}"><span class="av" style="width:20px;height:20px;font-size:0.56rem;border:none">${esc(initials(s.name))}</span>${esc(s.email === D.me.email ? 'Tôi' : s.name)}</button>`).join('')}</div></div>
         <div class="row"><label><i class="fa-solid fa-calendar-day" aria-hidden="true"></i>Hạn chót</label>${dueOptions(t)}${t.dueDate ? `<a class="gcal-link" target="_blank" rel="noopener" href="${gcalUrl(t)}"><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i> Thêm vào Google Calendar</a>` : ''}</div>
         <div class="row"><label><i class="fa-solid fa-flag" aria-hidden="true"></i>Ưu tiên</label><div class="opts">${PRIO.map(([k, l]) => `<button class="opt p-${k}" data-set="priority" data-v="${k}" aria-pressed="${t.priority === k}">${l}</button>`).join('')}</div></div>
         <div class="row"><label><i class="fa-solid fa-folder" aria-hidden="true"></i>Dự án</label><div class="opts">${D.projects.filter(p => !p.archived || p.id === t.projectId).map(p => `<button class="opt" data-set="projectId" data-v="${esc(p.id)}" aria-pressed="${t.projectId === p.id}"><span class="dot" style="background:${esc(p.color)}"></span>${esc(p.name)}</button>`).join('')}<button class="opt" data-set="projectId" data-v="" aria-pressed="${!t.projectId}">Không</button><button class="opt" data-act="new-project" style="border-style:dashed;color:var(--muted)"><i class="fa-solid fa-plus" aria-hidden="true"></i> Dự án mới</button></div></div>
         <div class="row"><label><i class="fa-solid fa-tag" aria-hidden="true"></i>Nhãn</label><div class="opts">${(t.labels || []).map(l => `<button class="opt lbl-opt" data-label-rm="${esc(l)}" style="--h:${labelHue(l)}" aria-label="Bỏ nhãn ${esc(l)}">${esc(l)} <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>`).join('')}${allLabels().filter(l => !(t.labels || []).includes(l)).slice(0, 6).map(l => `<button class="opt" data-label-add="${esc(l)}">+ ${esc(l)}</button>`).join('')}<input class="lbl-input" id="lblAdd" type="text" maxlength="30" placeholder="Nhãn mới…" aria-label="Thêm nhãn mới"></div></div>
-        <div class="row"><label><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ xong việc khác</label><div class="opts">
-          <button class="opt" data-set="blockedBy" data-v="" aria-pressed="${!t.blockedBy}">Không chờ việc nào</button>
-          ${D.tasks.filter(o => o.id !== t.id && o.status !== 'done').slice(0, 200).map(o => `<button class="opt" data-set="blockedBy" data-v="${esc(o.id)}" aria-pressed="${t.blockedBy === o.id}">${esc(o.title.slice(0, 40))}</button>`).join('')}
-        </div></div>
+        <div class="row"><label><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Chờ xong việc khác</label><div class="opts"><select class="blk-sel" data-input="blockedBy" aria-label="Chờ xong việc khác"><option value="">Không chờ việc nào</option>${D.tasks.filter(o => o.id !== t.id && (o.status !== 'done' || o.id === t.blockedBy)).sort(byDue).slice(0, 300).map(o => `<option value="${esc(o.id)}" ${t.blockedBy === o.id ? 'selected' : ''}>${esc(o.title.slice(0, 70))}${o.dueDate ? ' · ' + esc(fmtDue(o.dueDate)) : ''}</option>`).join('')}</select></div></div>
         <div class="row"><label><i class="fa-solid fa-repeat" aria-hidden="true"></i>Lặp lại</label><div class="opts">${RECUR.map(([k, l]) => `<button class="opt" data-set="recurrence" data-v="${k}" aria-pressed="${t.recurrence === k}">${l}</button>`).join('')}</div></div>
         </div>
 
@@ -1665,7 +1739,7 @@ a.att-main:hover b { color: var(--sapphire); }
 
         <div class="d-section"><h5><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Lịch sử</h5><ul class="hist">${t.history.slice().reverse().slice(0, 12).map(h => `<li><b>${esc(h.by)}</b> ${esc(h.text.charAt(0).toLowerCase() + h.text.slice(1))} · ${esc(rel(h.at))}</li>`).join('') || '<li>—</li>'}</ul></div>
       </div>
-      <div class="d-foot"><span>Tạo bởi ${esc(t.createdByName || staffBy(t.createdBy).name)} · ${esc(rel(t.createdAt))}</span>${t.createdBy === D.me.email || D.me.role === 'super' ? `<button class="btn ghost danger" data-del="${esc(t.id)}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xoá</button>` : ''}</div>`;
+      <div class="d-foot"><span>Tạo bởi ${esc(t.createdByName || staffBy(t.createdBy).name)} · ${esc(rel(t.createdAt))}</span><button class="btn ghost" data-dup="${esc(t.id)}"><i class="fa-regular fa-clone" aria-hidden="true"></i> Nhân bản</button>${t.createdBy === D.me.email || D.me.role === 'super' ? `<button class="btn ghost danger" data-del="${esc(t.id)}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xoá</button>` : ''}</div>`;
     renderComments(); renderAttachments(); autosize($('dTitle'));
   }
   function autosize(el) { if (!el) return; el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
@@ -1737,20 +1811,31 @@ a.att-main:hover b { color: var(--sapphire); }
     if (state.view === 'board') return boardPool();
     return D.tasks;
   }
-  function exportExcel() {
-    if (typeof XLSX === 'undefined') { toast('Đang tải công cụ xuất Excel, thử lại sau vài giây.', { error: true }); return; }
-    const rows = currentViewTasks().map(t => ({
-      'Tên việc': t.title, 'Trạng thái': STATUS_L[t.status] || t.status,
-      'Người phụ trách': t.assignees.map(e => staffBy(e).name).join(', '),
-      'Dự án': (projectBy(t.projectId) || {}).name || '', 'Ưu tiên': PRIO.find(p => p[0] === t.priority)?.[1] || '',
-      'Hạn': t.dueDate ? t.dueDate.split('-').reverse().join('/') + (t.dueTime ? ' ' + t.dueTime : '') : '',
-      'Hoàn thành lúc': t.completedAt ? new Date(t.completedAt).toLocaleString('vi-VN') : ''
-    }));
+  async function exportExcel() {
+    if (!window.WVNExcel) { toast('Đang tải công cụ xuất Excel, thử lại sau vài giây.', { error: true }); return; }
+    const rows = currentViewTasks().slice().sort(byDue);
     if (!rows.length) return toast('Không có việc nào để xuất.', { error: true });
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Công việc');
-    XLSX.writeFile(wb, `cong-viec-${todayStr()}.xlsx`);
+    const SC = { todo: ['#eef1f7', '#475569'], doing: ['#e0f2fe', '#0369a1'], review: ['#f1edff', '#6246c9'], done: ['#e8f8f1', '#0b7a53'] };
+    try {
+      toast('Đang tạo file Excel…');
+      const name = await WVNExcel.download({
+        filename: `cong-viec-${todayStr()}`, sheetName: 'Công việc', title: 'Danh sách công việc · Tri thức Việt',
+        subtitle: `${rows.length} việc · Xuất ngày ${todayStr().split('-').reverse().join('/')}${D.me.name ? ' · Người xuất: ' + D.me.name : ''}`,
+        columns: [
+          { label: 'Tên việc', get: t => t.title, width: 48, wrap: true },
+          { label: 'Trạng thái', get: t => STATUS_L[t.status] || t.status, style: (v, t) => ({ fill: SC[t.status][0], color: SC[t.status][1], bold: true }) },
+          { label: 'Ưu tiên', get: t => (PRIO.find(p => p[0] === t.priority) || [])[1] || '', style: (v, t) => t.priority === 'urgent' ? { color: '#be123c', bold: true } : t.priority === 'high' ? { color: '#a15c07', bold: true } : {} },
+          { label: 'Hạn chót', type: 'date', get: t => t.dueDate },
+          { label: 'Giờ', get: t => t.dueTime },
+          { label: 'Người phụ trách', get: t => t.assignees.map(e => staffBy(e).name).join(', '), width: 28 },
+          { label: 'Dự án', get: t => (projectBy(t.projectId) || {}).name || '', width: 28 },
+          { label: 'Tiến độ bước', get: t => (t.checklist || []).length ? `${t.checklist.filter(i => i.done).length}/${t.checklist.length}` : '' },
+          { label: 'Hoàn thành lúc', type: 'date', get: t => t.completedAt ? vnDay(t.completedAt) : '' }
+        ],
+        rows
+      });
+      toast(`Đã xuất ${name || 'file Excel'}`);
+    } catch (e) { toast(e.message || 'Không xuất được Excel.', { error: true }); }
   }
 
   // ---------- Chọn nhiều việc ---------- 
@@ -1769,7 +1854,7 @@ a.att-main:hover b { color: var(--sapphire); }
   }
   async function bulkApply(patch) {
     const ids = Array.from(state.selected);
-    for (const id of ids) await update(id, patch, { silentRender: true });
+    await Promise.all(ids.map(id => update(id, patch, { silentRender: true })));
     state.selected.clear(); renderAll();
     toast(`Đã cập nhật ${ids.length} việc`);
   }
@@ -1805,6 +1890,7 @@ a.att-main:hover b { color: var(--sapphire); }
     const tw = t.closest('[data-team-who]'); if (tw) return setView('board', { boardWho: tw.dataset.teamWho, project: '' });
     const dop = t.closest('[data-open-project]'); if (dop) return setView('board', { project: dop.dataset.openProject || '' });
     const set = t.closest('[data-set]'); if (set && state.openId) { const k = set.dataset.set; const v = set.dataset.v;
+      if (k === 'status') { const bm = moveBlock(findTask(state.openId), v); if (bm) return toast(bm, { error: true }); }
       if (k === 'status' && v === 'done') return toggleDone(state.openId);
       if (k === 'status') {
         const tk = findTask(state.openId);
@@ -1831,6 +1917,9 @@ a.att-main:hover b { color: var(--sapphire); }
       const item = D.inbox.find(i => i.key === ai.dataset.assignInbox); if (!item) return;
       return focusQuick({ link: { type: item.key, id: item.key, label: item.title, href: item.href }, dueDate: todayStr() }, item.title.replace(/^\d+\s/, 'Xử lý ') + ' ');
     }
+    const dp = t.closest('[data-dup]'); if (dp) return duplicateTask(dp.dataset.dup);
+    const sa = t.closest('[data-select-ids]'); if (sa) { const ids = sa.dataset.selectIds.split(','); const all = ids.every(id => state.selected.has(id)); ids.forEach(id => all ? state.selected.delete(id) : state.selected.add(id)); return renderAll(); }
+    const mo = t.closest('[data-more]'); if (mo) { const k = mo.dataset.more; state.caps[k] = (state.caps[k] || +mo.dataset.step || 100) + (+mo.dataset.step || 100); return renderAll(); }
     const im = t.closest('[data-inbox-mod]'); if (im) { state.inboxMod = im.dataset.inboxMod; return renderAll(); }
     const bf = t.closest('[data-board-flag]'); if (bf) { state.boardFlag = state.boardFlag === bf.dataset.boardFlag ? '' : bf.dataset.boardFlag; return renderAll(); }
     const bm = t.closest('[data-board-mode]'); if (bm) { state.boardMode = bm.dataset.boardMode; return renderAll(); }
@@ -1855,6 +1944,7 @@ a.att-main:hover b { color: var(--sapphire); }
   $('bulkDelete').addEventListener('click', bulkDelete);
   $('bulkAssign').addEventListener('change', e => { const v = e.target.value; if (!v) return; const ids = Array.from(state.selected).map(findTask).filter(Boolean); Promise.all(ids.map(tk => update(tk.id, { assignees: Array.from(new Set(tk.assignees.concat(v))) }, { silentRender: true }))).then(() => { e.target.value = ''; renderAll(); }); });
   $('bulkProject').addEventListener('change', e => { const v = e.target.value; if (!v) return; bulkApply({ projectId: v === '__none' ? '' : v }); });
+  $('bulkDue').addEventListener('change', e => { const v = e.target.value; if (!v) return; const td = todayStr(); const m = { today: td, tomorrow: addDays(td, 1), monday: addDays(mondayOf(td), 7), week: addDays(td, 7), none: '' }; e.target.value = ''; bulkApply({ dueDate: m[v] }); });
   $('bulkPriority').addEventListener('change', e => { const v = e.target.value; if (!v) return; bulkApply({ priority: v }); });
 
   $('quickInput').addEventListener('input', renderParsed);
@@ -1865,6 +1955,7 @@ a.att-main:hover b { color: var(--sapphire); }
     if (el.dataset && el.dataset.input && state.openId) update(state.openId, { [el.dataset.input]: el.value });
     if (el.id === 'fProj') { state.project = el.value; renderAll(); }
     if (el.id === 'fWho') { state.boardWho = el.value; renderAll(); }
+    if (el.id === 'fSort') { state.boardSort = el.value; renderAll(); }
   });
   document.addEventListener('focusout', e => {
     if (!state.openId) return;
@@ -1909,14 +2000,15 @@ a.att-main:hover b { color: var(--sapphire); }
   window.addEventListener('scroll', () => $('topbar').classList.toggle('scrolled', window.scrollY > 4), { passive: true });
 
   // Kéo thả: đổi trạng thái (bảng) hoặc đổi ngày (lịch)
-  let dragId = null;
+  let dragId = null, dropEl = null;
   document.addEventListener('dragstart', e => { const c = e.target.closest && e.target.closest('.card[data-id]'); if (!c) return; dragId = c.dataset.id; c.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId); });
-  document.addEventListener('dragend', e => { document.querySelectorAll('.dragging,.drop').forEach(x => x.classList.remove('dragging', 'drop')); });
-  document.addEventListener('dragover', e => { const z = e.target.closest && e.target.closest('[data-col],[data-day]'); if (!z || !dragId) return; e.preventDefault(); document.querySelectorAll('.drop').forEach(x => x !== z && x.classList.remove('drop')); z.classList.add('drop'); });
+  document.addEventListener('dragend', e => { document.querySelectorAll('.dragging,.drop').forEach(x => x.classList.remove('dragging', 'drop')); dropEl = null; });
+  document.addEventListener('dragover', e => { const z = e.target.closest && e.target.closest('[data-col],[data-day]'); if (!z || !dragId) return; e.preventDefault(); if (dropEl !== z) { if (dropEl) dropEl.classList.remove('drop'); dropEl = z; z.classList.add('drop'); } });
   document.addEventListener('drop', e => {
     const z = e.target.closest && e.target.closest('[data-col],[data-day]'); if (!z || !dragId) return; e.preventDefault();
     const id = dragId; dragId = null; const t = findTask(id); if (!t) return;
     if (z.dataset.col && z.dataset.col !== t.status) {
+      { const bm = moveBlock(t, z.dataset.col); if (bm) { toast(bm, { error: true }); return; } }
       if (t.status === 'review' && (z.dataset.col === 'doing' || z.dataset.col === 'todo')) {
         const note = prompt(`Trả lại "${t.title}" để chỉnh sửa — lý do (không bắt buộc, sẽ báo cho người phụ trách):`, '');
         if (note === null) return;
@@ -1932,7 +2024,7 @@ a.att-main:hover b { color: var(--sapphire); }
   async function load() {
     try {
       const r = await api('/api/portal-work-data');
-      D = { me: r.me, tasks: r.tasks, projects: r.projects, staff: r.staff.length ? r.staff : [{ email: r.me.email, name: r.me.name }], inbox: r.inbox };
+      D = { me: r.me, tasks: r.tasks, projects: r.projects, staff: r.staff.length ? r.staff : [{ email: r.me.email, name: r.me.name }], inbox: r.inbox }; lastSig = sigOf(r);
       $('loading').remove();
       const h = location.hash.slice(1); const [viewPart, taskPart] = h.split('&task=');
       const [v, pid] = (viewPart || 'today').split('=');
@@ -1986,11 +2078,22 @@ a.att-main:hover b { color: var(--sapphire); }
   }
   $('pushToggle').addEventListener('click', togglePush);
 
-  // Tự làm mới khi quay lại tab (để thấy việc đồng nghiệp vừa giao, và hộp việc hệ thống mới nhất)
-  document.addEventListener('visibilitychange', async () => {
+  // Tự làm mới: khi quay lại tab và mỗi 2 phút — chỉ khi bạn đang rảnh tay (không mở chi tiết, không kéo thả, không chọn, không gõ)
+  // và chỉ vẽ lại khi dữ liệu thật sự thay đổi, để không giật màn hình.
+  let lastSig = '';
+  const sigOf = r => r.tasks.map(x => x.id + x.updatedAt + x.status + x.commentCount).join() + '|' + r.inbox.map(i => i.key + i.count).join() + '|' + r.projects.length + r.staff.length;
+  async function refresh(force) {
     if (document.visibilityState !== 'visible' || !D.me.email) return;
-    try { const r = await api('/api/portal-work-data'); D.tasks = r.tasks; D.projects = r.projects; D.inbox = r.inbox; D.staff = r.staff.length ? r.staff : D.staff; renderAll(); } catch (e) {}
-  });
+    const busy = state.openId || dragId || state.selected.size || document.querySelector('.modal-wrap.open, .sp-overlay') || /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || '') && document.activeElement.value;
+    if (busy && !force) return;
+    try {
+      const r = await api('/api/portal-work-data'); const sig = sigOf(r); if (sig === lastSig) return; lastSig = sig;
+      D = { me: r.me, tasks: r.tasks, projects: r.projects, staff: r.staff.length ? r.staff : D.staff, inbox: r.inbox }; renderAll();
+    } catch (e) {}
+  }
+  document.addEventListener('visibilitychange', () => refresh());
+  setInterval(refresh, 120000);
+  loadPrefs();
   load();
 })();
 </script>

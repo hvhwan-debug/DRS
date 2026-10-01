@@ -24,7 +24,7 @@ module.exports = async function (context, req) {
     const superAdmin = isSuperAdmin(account);
     const perms = accountPermissions(account);
     const can = k => superAdmin || perms.includes(k);
-    const me = { email: session.adminEmail || "", name: session.displayName || "", role: superAdmin ? "super" : "staff" };
+    const me = { email: session.adminEmail || "", name: session.displayName || "", role: superAdmin ? "super" : "staff", canManage: can("work-manage") };
 
     const doneCutoff = Date.now() - 45 * 864e5;
     const [taskRows, projectRows, accountRows] = await Promise.all([
