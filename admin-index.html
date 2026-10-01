@@ -4275,7 +4275,28 @@
 
                 <div>
                   <h5 style="font-size:0.78rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem;">Bảng điểm (${studentGrades.length})</h5>
-                  ${studentGrades.length > 0 ? studentGrades.map(g => `<div style="font-size:0.86rem; padding:0.35rem 0; border-top:1px solid var(--border);">${escapeHtml(g.assessmentType)}${g.term ? ' — Buổi ' + escapeHtml(g.term) : ''} ${g.score != null ? '— <strong style="color:#0369a1;">' + g.score + '/10</strong>' : ''}${g.comment ? ' — ' + escapeHtml(g.comment) : ''}</div>`).join('') : '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có điểm nào.</div>'}
+                  ${studentGrades.length > 0 ? `
+                  <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                      <thead>
+                        <tr style="text-align:left; color:var(--text-muted); font-size:0.74rem; text-transform:uppercase;">
+                          <th style="padding:0.4rem 0.6rem; border-bottom:1px solid var(--border);">Loại đánh giá</th>
+                          <th style="padding:0.4rem 0.6rem; border-bottom:1px solid var(--border);">Buổi học</th>
+                          <th style="padding:0.4rem 0.6rem; border-bottom:1px solid var(--border);">Điểm</th>
+                          <th style="padding:0.4rem 0.6rem; border-bottom:1px solid var(--border);">Nhận xét</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${studentGrades.map(g => `
+                        <tr>
+                          <td style="padding:0.4rem 0.6rem; border-top:1px solid var(--border);">${escapeHtml(g.assessmentType)}</td>
+                          <td style="padding:0.4rem 0.6rem; border-top:1px solid var(--border); color:var(--text-muted);">${g.term ? escapeHtml(g.term) : '—'}</td>
+                          <td style="padding:0.4rem 0.6rem; border-top:1px solid var(--border); font-weight:700; color:#0369a1;">${g.score != null ? g.score + '/10' : '—'}</td>
+                          <td style="padding:0.4rem 0.6rem; border-top:1px solid var(--border);">${g.comment ? escapeHtml(g.comment) : '—'}</td>
+                        </tr>`).join('')}
+                      </tbody>
+                    </table>
+                  </div>` : '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có điểm nào.</div>'}
                 </div>
               </div>
             </div>`;
