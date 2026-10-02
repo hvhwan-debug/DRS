@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Đăng Nhập Quản Trị | Tri thức Việt</title>
+  <script>
+    // Vào từ subdomain nhanvien.wvn.vn -> đổi chữ cho đỡ cảm giác "khu quản trị hệ thống",
+    // thân thiện hơn với nhân viên (không đổi logic đăng nhập, không đổi giao diện khác).
+    if (window.location.hostname === 'nhanvien.wvn.vn') {
+      document.title = 'Đăng Nhập | Tri thức Việt';
+    }
+  </script>
   <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -55,9 +62,9 @@
   <main class="t-form">
   <div>
   <div class="card" id="loginCard">
-    <div class="badge">WVN ADMIN</div>
+    <div class="badge" id="loginBadge">WVN ADMIN</div>
     <h1>Chào mừng trở lại</h1>
-    <p class="sub">Khu vực nội bộ dành cho đội ngũ điều hành.</p>
+    <p class="sub" id="loginSub">Khu vực nội bộ dành cho đội ngũ điều hành.</p>
 
     <form id="adminLoginForm">
       <div class="form-field">
@@ -137,7 +144,7 @@
 
         localStorage.setItem('wvn_admin_token', result.token);
         localStorage.setItem('wvn_admin_display_name', result.displayName || email);
-        window.location.href = 'admin';
+        window.location.href = window.location.hostname === 'nhanvien.wvn.vn' ? '/cong-viec' : 'admin';
       } catch (err) {
         showAlert('loginAlert', err.message, true);
         btn.disabled = false;
@@ -175,7 +182,13 @@
     });
 
     if (localStorage.getItem('wvn_admin_token')) {
-      window.location.href = 'admin';
+      window.location.href = window.location.hostname === 'nhanvien.wvn.vn' ? '/cong-viec' : 'admin';
+    }
+
+    // Vào từ subdomain nhanvien.wvn.vn -> đổi chữ cho đỡ cảm giác "khu quản trị hệ thống"
+    if (window.location.hostname === 'nhanvien.wvn.vn') {
+      var badge = document.getElementById('loginBadge'); if (badge) badge.textContent = 'TRI THỨC VIỆT';
+      var sub = document.getElementById('loginSub'); if (sub) sub.textContent = 'Không gian làm việc dành cho đội ngũ Tri thức Việt.';
     }
   </script>
 </body>
