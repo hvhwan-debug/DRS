@@ -78,7 +78,7 @@
       <div id="loginAlert" style="display:none;"></div>
       <button type="submit" class="btn-continue" id="submitBtn">Đăng Nhập</button>
     </form>
-    <button type="button" class="switch-link" onclick="showBootstrap()">Lần đầu thiết lập / khôi phục tài khoản quản trị</button>
+    <button type="button" class="switch-link" id="bootstrapLink" onclick="showBootstrap()">Lần đầu thiết lập / khôi phục tài khoản quản trị</button>
   </div>
 
   <div class="card" id="bootstrapCard" style="display:none;">
@@ -189,6 +189,9 @@
     if (window.location.hostname === 'nhanvien.wvn.vn') {
       var badge = document.getElementById('loginBadge'); if (badge) badge.textContent = 'TRI THỨC VIỆT';
       var sub = document.getElementById('loginSub'); if (sub) sub.textContent = 'Không gian làm việc dành cho đội ngũ Tri thức Việt.';
+      // "Lần đầu thiết lập / khôi phục tài khoản quản trị" chỉ dành cho Quản Trị Viên Chính thiết
+      // lập ban đầu — không liên quan đến nhân viên thường, nên ẩn đi ở giao diện này.
+      var bl = document.getElementById('bootstrapLink'); if (bl) bl.style.display = 'none';
     }
   </script>
 </body>
