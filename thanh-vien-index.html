@@ -1888,11 +1888,17 @@
         }
 
         const gradesChrono = [...grades].sort((a, b) => new Date(a.recordedAt) - new Date(b.recordedAt));
-        const courseKeys = new Set();
-        gradesChrono.forEach(g => courseKeys.add(`${g.studentName}|||${g.program || 'Chưa rõ chương trình'}`));
-        const courseOptionsHtml = Array.from(courseKeys).map(k => {
-          const [student, program] = k.split('|||');
-          return `<option value="${k.replace(/"/g, '&quot;')}">${student} — ${program}</option>`;
+        // Khớp đúng cách gộp nhóm bên dưới (tên đã chuẩn hoá) để bộ lọc không bị lệch khỏi các thẻ
+        // thật sự hiển thị — nếu không, chọn 1 mục trong bộ lọc có thể không khớp thẻ nào cả.
+        const normNameForFilter = s => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
+        const courseDisplayByKey = new Map();
+        gradesChrono.forEach(g => {
+          const key = `${normNameForFilter(g.studentName)}|||${g.program || 'Chưa rõ chương trình'}`;
+          courseDisplayByKey.set(key, { student: g.studentName, program: g.program || 'Chưa rõ chương trình' });
+        });
+        const courseKeys = new Set(courseDisplayByKey.keys());
+        const courseOptionsHtml = Array.from(courseDisplayByKey.entries()).map(([k, d]) => {
+          return `<option value="${k.replace(/"/g, '&quot;')}">${d.student} — ${d.program}</option>`;
         }).join('');
         const gradeFilterHtml = courseKeys.size > 1
           ? `<div style="margin-bottom:1.2rem;">
@@ -1906,12 +1912,18 @@
 
         // Nhóm điểm theo từng (học sinh, chương trình) thành 1 khối riêng — thay vì 1 bảng
         // phẳng dồn hết mọi học sinh/khoá học lẫn lộn vào nhau, dễ gây rối mắt.
+        // Gộp theo tên đã chuẩn hoá (bỏ dấu cách thừa, không phân biệt hoa/thường) vì cùng 1 học
+        // sinh có thể được giáo viên gõ tên hoa/thường khác nhau giữa các lần ghi điểm (vd. "Trần
+        // anh Tuấn" và "Trần Anh Tuấn") — không có studentId trên bảng điểm để so khớp chính xác hơn.
+        const normName = s => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
         const gradeGroupsMap = new Map();
         gradesChrono.forEach(g => {
-          const key = `${g.studentName}|||${g.program || 'Chưa rõ chương trình'}`;
+          const key = `${normName(g.studentName)}|||${g.program || 'Chưa rõ chương trình'}`;
           if (!gradeGroupsMap.has(key)) {
             gradeGroupsMap.set(key, { key, studentName: g.studentName, program: g.program || 'Chưa rõ chương trình', entries: [] });
           }
+          // Dùng tên ở lần ghi GẦN NHẤT làm tên hiển thị (gradesChrono đã sắp theo thời gian tăng dần)
+          gradeGroupsMap.get(key).studentName = g.studentName;
           gradeGroupsMap.get(key).entries.push(g);
         });
         const gradeGroups = Array.from(gradeGroupsMap.values())
