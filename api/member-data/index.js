@@ -170,6 +170,7 @@ module.exports = async function (context, req) {
         grades.push({
           id: entity.rowKey,
           studentName: entity.studentName,
+          studentId: entity.studentId || "",
           program: entity.program,
           assessmentType: entity.assessmentType || "Buổi học",
           term: entity.term,

@@ -938,8 +938,10 @@ body.emp-lock { overflow: hidden; }
             </div>
             <div>
               <label>Tên học sinh (con em) *</label>
+              <input type="hidden" id="gradeStudentId" value="">
               <input type="text" id="gradeStudentName" required style="display:block;">
-              <select id="gradeStudentNameSelect" onchange="document.getElementById('gradeStudentName').value = this.value;" style="display:none; margin-top:0.4rem;"></select>
+              <select id="gradeStudentNameSelect" style="display:none; margin-top:0.4rem;"></select>
+              <small id="gradeStudentHint" style="display:none; color:var(--text-muted); font-size:0.76rem;">Chọn đúng từ danh sách đã ghi danh để tên luôn đồng nhất, không lệch hoa/thường giữa các lần chấm điểm.</small>
             </div>
             <div>
               <label>Chương trình học</label>
@@ -1478,23 +1480,36 @@ body.emp-lock { overflow: hidden; }
 
     function onGradeParentEmailChange() {
       const email = document.getElementById('gradeParentEmail').value.trim().toLowerCase();
-      const students = Array.from(emailToStudents[email] || []);
       const textInput = document.getElementById('gradeStudentName');
       const selectEl = document.getElementById('gradeStudentNameSelect');
+      const idInput = document.getElementById('gradeStudentId');
+      const hint = document.getElementById('gradeStudentHint');
+      idInput.value = '';
 
-      if (students.length === 1) {
-        textInput.value = students[0];
-        textInput.style.display = 'block';
-        selectEl.style.display = 'none';
-      } else if (students.length > 1) {
-        selectEl.innerHTML = '<option value="">-- Chọn học sinh --</option>' + students.map(s => `<option value="${s}">${s}</option>`).join('');
+      // Ưu tiên danh sách học sinh đã ghi danh CHÍNH THỨC (có ID cố định ở mục Học Sinh) — bắt buộc
+      // chọn từ đây để tên luôn đồng nhất giữa các lần chấm điểm, không bị lệch hoa/thường do gõ tay.
+      const canonical = (typeof allStudentsData !== 'undefined' ? allStudentsData : []).filter(s => s.parentEmail === email && s.id);
+
+      if (canonical.length > 0) {
+        selectEl.innerHTML = '<option value="">-- Chọn học sinh --</option>' + canonical.map(s => `<option value="${escapeHtml(s.id)}" data-name="${escapeHtml(s.studentName)}">${escapeHtml(s.studentName)}</option>`).join('');
+        selectEl.onchange = function () {
+          const opt = selectEl.selectedOptions[0];
+          textInput.value = (opt && opt.dataset.name) || '';
+          idInput.value = selectEl.value;
+        };
+        if (canonical.length === 1) { selectEl.value = canonical[0].id; selectEl.onchange(); }
         selectEl.style.display = 'block';
-        textInput.value = '';
         textInput.style.display = 'none';
-      } else {
-        textInput.style.display = 'block';
-        selectEl.style.display = 'none';
+        hint.style.display = 'block';
+        return;
       }
+
+      // Chưa có hồ sơ học sinh chính thức (vd. mới đăng ký, chưa duyệt/ghi danh) -> tạm cho gõ tay
+      hint.style.display = 'none';
+      selectEl.style.display = 'none';
+      textInput.style.display = 'block';
+      const students = Array.from(emailToStudents[email] || []);
+      textInput.value = students.length === 1 ? students[0] : '';
     }
 
     function onTuitionParentEmailChange() {
@@ -2762,7 +2777,7 @@ body.emp-lock { overflow: hidden; }
             <div style="padding:0.4rem 0; color:var(--text-muted);">${escapeHtml(gr.program)} — ${escapeHtml(gr.assessmentType || 'Buổi học')}: <strong style="color:#0369a1;">${gr.score != null ? gr.score : '—'}</strong> (${formatDate(gr.recordedAt)})</div>
           `).join('') : '<div style="color:var(--text-muted);">Chưa có điểm nào được ghi nhận.</div>'}
           <div style="display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap;">
-            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="jumpToGradeFor('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.studentName)}')"><i class="fa-solid fa-graduation-cap"></i> Ghi điểm mới</button>
+            <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="jumpToGradeFor('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.studentName)}','${encodeURIComponent(g.id || '')}')"><i class="fa-solid fa-graduation-cap"></i> Ghi điểm mới</button>
             <button type="button" class="btn" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="jumpToTuitionFor('${encodeURIComponent(g.parentEmail)}','${encodeURIComponent(g.studentName)}')"><i class="fa-solid fa-coins"></i> Thêm học phí</button>
             <button type="button" class="btn btn-outline" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="switchTab('schedule')"><i class="fa-solid fa-calendar-days"></i> Quản lý lịch học</button>
           </div>
@@ -2774,14 +2789,15 @@ body.emp-lock { overflow: hidden; }
       renderStudentCards();
     }
 
-    function jumpToGradeFor(emailEnc, nameEnc) {
+    function jumpToGradeFor(emailEnc, nameEnc, idEnc) {
       switchTab('grades');
-      const email = decodeURIComponent(emailEnc), name = decodeURIComponent(nameEnc);
+      const email = decodeURIComponent(emailEnc), name = decodeURIComponent(nameEnc), id = idEnc ? decodeURIComponent(idEnc) : '';
       document.getElementById('gradeParentEmail').value = email;
       onGradeParentEmailChange();
       setTimeout(() => {
         const sel = document.getElementById('gradeStudentNameSelect');
-        if (sel.style.display !== 'none') sel.value = name; else document.getElementById('gradeStudentName').value = name;
+        if (sel.style.display !== 'none' && id) { sel.value = id; sel.onchange(); }
+        else if (sel.style.display === 'none') document.getElementById('gradeStudentName').value = name;
       }, 50);
       document.getElementById('gradeForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -3609,8 +3625,10 @@ body.emp-lock { overflow: hidden; }
       editingGradeParentEmail = g.parentEmail;
       document.getElementById('gradeParentEmail').value = g.parentEmail || '';
       document.getElementById('gradeStudentName').value = g.studentName || '';
+      document.getElementById('gradeStudentId').value = g.studentId || '';
       document.getElementById('gradeStudentName').style.display = 'block';
       document.getElementById('gradeStudentNameSelect').style.display = 'none';
+      document.getElementById('gradeStudentHint').style.display = 'none';
       setProgramSelectValue('grade', g.program || 'Luyện Chữ Đẹp');
       document.getElementById('gradeAssessmentType').value = g.assessmentType || 'Buổi học';
       document.getElementById('gradeTerm').value = g.term || '';
@@ -3627,6 +3645,7 @@ body.emp-lock { overflow: hidden; }
       document.getElementById('gradeForm').reset();
       document.getElementById('gradeStudentName').style.display = 'block';
       document.getElementById('gradeStudentNameSelect').style.display = 'none';
+      document.getElementById('gradeStudentHint').style.display = 'none';
       document.getElementById('gradeProgramCustom').style.display = 'none';
       document.getElementById('gradeSubmitBtn').textContent = 'Lưu Điểm/Nhận Xét';
       document.getElementById('gradeCancelEditBtn').style.display = 'none';
@@ -3653,6 +3672,7 @@ body.emp-lock { overflow: hidden; }
         const payload = {
           parentEmail: document.getElementById('gradeParentEmail').value.trim(),
           studentName: document.getElementById('gradeStudentName').value.trim(),
+          studentId: document.getElementById('gradeStudentId').value.trim(),
           program: getProgramValue('grade'),
           assessmentType: document.getElementById('gradeAssessmentType').value,
           term: document.getElementById('gradeTerm').value.trim(),

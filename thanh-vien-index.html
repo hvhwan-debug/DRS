@@ -1893,7 +1893,7 @@
         const normNameForFilter = s => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
         const courseDisplayByKey = new Map();
         gradesChrono.forEach(g => {
-          const key = `${normNameForFilter(g.studentName)}|||${g.program || 'Chưa rõ chương trình'}`;
+          const key = `${g.studentId ? 'id:' + g.studentId : 'name:' + normNameForFilter(g.studentName)}|||${g.program || 'Chưa rõ chương trình'}`;
           courseDisplayByKey.set(key, { student: g.studentName, program: g.program || 'Chưa rõ chương trình' });
         });
         const courseKeys = new Set(courseDisplayByKey.keys());
@@ -1912,13 +1912,14 @@
 
         // Nhóm điểm theo từng (học sinh, chương trình) thành 1 khối riêng — thay vì 1 bảng
         // phẳng dồn hết mọi học sinh/khoá học lẫn lộn vào nhau, dễ gây rối mắt.
-        // Gộp theo tên đã chuẩn hoá (bỏ dấu cách thừa, không phân biệt hoa/thường) vì cùng 1 học
-        // sinh có thể được giáo viên gõ tên hoa/thường khác nhau giữa các lần ghi điểm (vd. "Trần
-        // anh Tuấn" và "Trần Anh Tuấn") — không có studentId trên bảng điểm để so khớp chính xác hơn.
+        // Ưu tiên gộp theo studentId (ID cố định của hồ sơ học sinh — chính xác tuyệt đối, có từ
+        // các lần chấm điểm MỚI chọn từ danh sách đã ghi danh). Với điểm CŨ chưa có studentId
+        // (ghi trước khi có cải tiến này), vẫn gộp theo tên đã chuẩn hoá (bỏ dấu cách thừa, không
+        // phân biệt hoa/thường) để đỡ bị tách do gõ tay lệch hoa/thường như trước đây.
         const normName = s => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
         const gradeGroupsMap = new Map();
         gradesChrono.forEach(g => {
-          const key = `${normName(g.studentName)}|||${g.program || 'Chưa rõ chương trình'}`;
+          const key = `${g.studentId ? 'id:' + g.studentId : 'name:' + normName(g.studentName)}|||${g.program || 'Chưa rõ chương trình'}`;
           if (!gradeGroupsMap.has(key)) {
             gradeGroupsMap.set(key, { key, studentName: g.studentName, program: g.program || 'Chưa rõ chương trình', entries: [] });
           }

@@ -8,6 +8,7 @@ const { sendTrackedEmail } = require("../_shared/sendTrackedEmail");
 const { SITE_URL } = require("../_shared/emailTemplate");
 
 const GRADES_TABLE = "Grades";
+const STUDENTS_TABLE = "Students";
 const ASSESSMENT_TYPES = ["Đánh giá đầu vào", "Buổi học", "Đánh giá đầu ra"];
 
 function buildGradeBodyHtml(studentName, program, assessmentType, score, comment) {
@@ -27,7 +28,8 @@ module.exports = async function (context, req) {
 
   const body = req.body || {};
   const parentEmail = String(body.parentEmail || "").trim().toLowerCase();
-  const studentName = String(body.studentName || "").trim();
+  const studentId = String(body.studentId || "").trim();
+  let studentName = String(body.studentName || "").trim();
   const program = String(body.program || "").trim();
   const assessmentType = String(body.assessmentType || "Buổi học").trim();
   const term = String(body.term || "").trim();
@@ -53,6 +55,22 @@ module.exports = async function (context, req) {
   }
 
   try {
+    // Nếu chọn từ danh sách học sinh đã ghi danh chính thức (có studentId), LUÔN dùng đúng tên
+    // chuẩn lưu trong hồ sơ học sinh — tránh lệch hoa/thường giữa các lần chấm điểm do gõ tay,
+    // vốn từng khiến cùng 1 học sinh bị tách thành nhiều "người" khác nhau ở trang thành viên.
+    let verifiedStudentId = "";
+    if (studentId) {
+      try {
+        const studentsTable = await getTableClient(STUDENTS_TABLE);
+        const student = await studentsTable.getEntity(parentEmail, studentId);
+        studentName = student.studentName || studentName;
+        verifiedStudentId = studentId;
+      } catch (e) {
+        // studentId không khớp (hồ sơ đã bị xoá/đổi phụ huynh...) -> vẫn lưu theo tên đã gõ,
+        // nhưng bỏ studentId sai để không liên kết nhầm.
+      }
+    }
+
     // Lưu ảnh bài làm của học sinh (nếu có) lên Blob Storage riêng tư
     let uploadedAttachments = [];
     let warning = null;
@@ -71,6 +89,7 @@ module.exports = async function (context, req) {
       partitionKey: parentEmail,
       rowKey,
       studentName,
+      studentId: verifiedStudentId,
       program,
       assessmentType,
       term,

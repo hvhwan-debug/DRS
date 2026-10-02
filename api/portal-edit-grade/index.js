@@ -4,6 +4,7 @@ const { requireAdmin } = require("../_shared/adminAuth");
 const { uploadAttachments } = require("../_shared/blobStorage");
 
 const GRADES_TABLE = "Grades";
+const STUDENTS_TABLE = "Students";
 const ASSESSMENT_TYPES = ["Đánh giá đầu vào", "Buổi học", "Đánh giá đầu ra"];
 
 module.exports = async function (context, req) {
@@ -14,7 +15,8 @@ module.exports = async function (context, req) {
   const body = req.body || {};
   const parentEmail = String(body.parentEmail || "").trim().toLowerCase();
   const id = String(body.id || "").trim();
-  const studentName = String(body.studentName || "").trim();
+  const studentId = String(body.studentId || "").trim();
+  let studentName = String(body.studentName || "").trim();
   const program = String(body.program || "").trim();
   const assessmentType = String(body.assessmentType || "Buổi học").trim();
   const term = String(body.term || "").trim();
@@ -55,6 +57,18 @@ module.exports = async function (context, req) {
     // Admin có toàn quyền sửa kể cả khi thành viên đã xác nhận — dữ liệu sau khi sửa
     // sẽ tự động chuyển về "chờ xác nhận" để thành viên xem lại và xác nhận đúng thông tin mới.
 
+    // Chọn từ danh sách học sinh đã ghi danh (có studentId) -> dùng đúng tên chuẩn trong hồ sơ,
+    // tránh lệch hoa/thường giữa các lần chấm điểm.
+    let verifiedStudentId = "";
+    if (studentId) {
+      try {
+        const studentsTable = await getTableClient(STUDENTS_TABLE);
+        const student = await studentsTable.getEntity(parentEmail, studentId);
+        studentName = student.studentName || studentName;
+        verifiedStudentId = studentId;
+      } catch (e) { /* studentId không khớp -> bỏ qua, vẫn lưu theo tên đã gõ */ }
+    }
+
     let attachmentsJson = entity.attachmentsJson;
     let warning = null;
     if (Array.isArray(body.attachments) && body.attachments.length > 0) {
@@ -71,6 +85,7 @@ module.exports = async function (context, req) {
       partitionKey: parentEmail,
       rowKey: id,
       studentName,
+      studentId: verifiedStudentId,
       program,
       assessmentType,
       term,

@@ -30,6 +30,7 @@ module.exports = async function (context, req) {
         id: entity.rowKey,
         parentEmail: entity.partitionKey,
         studentName: entity.studentName,
+        studentId: entity.studentId || "",
         program: entity.program,
         assessmentType: entity.assessmentType || "Buổi học",
         term: entity.term,
