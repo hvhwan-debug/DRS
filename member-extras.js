@@ -49,10 +49,10 @@
     el.innerHTML =
       '<div class="card"><h2><i class="fa-solid fa-user-check"></i> Chuyên Cần</h2>' + chips +
       '<div class="mx-stats"><div><b>' + (rate == null ? '—' : rate + '%') + '</b><span>Đi học đủ (30 ngày)</span></div><div><b>' + cnt('present') + '</b><span>Có mặt</span></div><div><b>' + cnt('late') + '</b><span>Đi muộn</span></div><div class="' + (cnt('absent') >= 3 ? 'bad' : '') + '"><b>' + cnt('absent') + '</b><span>Vắng</span></div></div>' +
-      (rows.length ? '<div class="mx-list">' + rows.slice(0, 40).map(function (a) {
+      (rows.length ? '<div class="mx-table-wrap"><table class="mx-table"><thead><tr><th>Ngày</th><th>Học sinh</th><th>Chương trình</th><th>Ghi chú</th><th>Trạng thái</th></tr></thead><tbody>' + rows.slice(0, 40).map(function (a) {
         var s = ST[a.status] || ST.present;
-        return '<div class="mx-row"><div><strong>' + esc(fmtDate(a.date)) + '</strong><small>' + esc(a.studentName) + (a.program ? ' · ' + esc(a.program) : '') + (a.note ? ' · ' + esc(a.note) : '') + '</small></div><span class="mx-pill ' + s[1] + '">' + s[0] + '</span></div>';
-      }).join('') + '</div>' : '<p class="mx-empty">Chưa có buổi điểm danh nào được ghi nhận.</p>') + '</div>' +
+        return '<tr><td data-label="Ngày">' + esc(fmtDate(a.date)) + '</td><td data-label="Học sinh">' + esc(a.studentName) + '</td><td data-label="Chương trình">' + (a.program ? esc(a.program) : '—') + '</td><td data-label="Ghi chú">' + (a.note ? esc(a.note) : '—') + '</td><td data-label="Trạng thái"><span class="mx-pill ' + s[1] + '">' + s[0] + '</span></td></tr>';
+      }).join('') + '</tbody></table></div>' : '<p class="mx-empty">Chưa có buổi điểm danh nào được ghi nhận.</p>') + '</div>' +
       '<div class="card"><h2><i class="fa-solid fa-envelope-open-text"></i> Xin Nghỉ Học</h2>' +
       (kids.length ? '<form id="mxLeaveForm" class="mx-form"><div class="mx-grid">' +
         '<div><label for="mxLeaveKid">Con</label><select id="mxLeaveKid">' + kids.map(function (k) { return '<option value="' + esc(k.id) + '"' + (childFilter === k.id ? ' selected' : '') + '>' + esc(k.studentName) + '</option>'; }).join('') + '</select></div>' +

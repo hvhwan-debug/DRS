@@ -440,6 +440,22 @@ body.wvn-member .mx-row small { font-size: 0.78rem; color: var(--text-muted, #64
 body.wvn-member .mx-pill { flex-shrink: 0; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 8px; background: #f1f5f9; color: #475569; }
 body.wvn-member .mx-pill.ok { background: #dcfce7; color: #15803d; } body.wvn-member .mx-pill.warn { background: #fef3c7; color: #a16207; }
 body.wvn-member .mx-pill.bad { background: #fee2e2; color: #b91c1c; } body.wvn-member .mx-pill.info { background: #e0f2fe; color: #0369a1; }
+body.wvn-member .mx-table-wrap { overflow-x: auto; border: 1px solid var(--border, #e2e8f0); border-radius: 14px; }
+body.wvn-member .mx-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+body.wvn-member .mx-table th { text-align: left; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.02em; color: var(--text-muted, #64748b); font-weight: 600; padding: 0.65rem 0.9rem; background: var(--bg-soft, #f8fafc); border-bottom: 1px solid var(--border, #e2e8f0); white-space: nowrap; }
+body.wvn-member .mx-table td { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border, #eef1f6); vertical-align: middle; }
+body.wvn-member .mx-table tbody tr:last-child td { border-bottom: none; }
+body.wvn-member .mx-table tbody tr:hover { background: var(--bg-soft, #f8fafc); }
+body.wvn-member .mx-table td:first-child { font-weight: 600; white-space: nowrap; }
+body.wvn-member.vip-theme .mx-table th { background: transparent; border-color: rgba(232,199,102,0.25); }
+body.wvn-member.vip-theme .mx-table td { border-color: rgba(232,199,102,0.18); }
+@media (max-width: 640px) {
+  body.wvn-member .mx-table thead { display: none; }
+  body.wvn-member .mx-table, body.wvn-member .mx-table tbody, body.wvn-member .mx-table tr, body.wvn-member .mx-table td { display: block; width: 100%; }
+  body.wvn-member .mx-table tr { border-bottom: 1px solid var(--border, #eef1f6); padding: 0.6rem 0.9rem; }
+  body.wvn-member .mx-table td { padding: 0.15rem 0; border: none; }
+  body.wvn-member .mx-table td:before { content: attr(data-label); display: inline-block; min-width: 86px; font-size: 0.72rem; color: var(--text-muted, #64748b); text-transform: uppercase; }
+}
 body.wvn-member .mx-empty { color: var(--text-muted, #64748b); font-size: 0.88rem; padding: 0.6rem 0; }
 body.wvn-member .mx-note { font-size: 0.82rem; color: var(--text-muted, #64748b); margin-top: 0.6rem; }
 body.wvn-member .mx-sub { font-size: 0.92rem; font-weight: 600; margin: 1.3rem 0 0.6rem; }
