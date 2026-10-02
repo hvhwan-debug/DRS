@@ -454,7 +454,7 @@
 <script>
   // Đã đăng nhập khu thành viên -> nút "Thành viên" dẫn thẳng vào trang của tôi
   document.addEventListener('DOMContentLoaded', function () {
-    try { if (localStorage.getItem('wvn_member_token')) document.querySelectorAll('[data-member-link]').forEach(function (a) { a.href = 'thanh-vien'; var s = a.querySelector('span'); if (s) s.textContent = 'Trang của tôi'; else a.innerHTML = 'Vào trang thành viên <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>'; }); } catch (e) {}
+    try { if (localStorage.getItem('wvn_member_token')) document.querySelectorAll('[data-member-link]').forEach(function (a) { a.href = 'thanh-vien'; var s = a.querySelector('span'); if (s) s.textContent = 'Thành viên'; else a.innerHTML = 'Vào trang thành viên <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>'; }); } catch (e) {}
   });
 </script>
 </head>
