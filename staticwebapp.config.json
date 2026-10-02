@@ -1,62 +1,76 @@
 {
-  "routes": [
-    {
-      "route": "/dang-ky-day-kem-lop-1-5.html",
-      "redirect": "/hocthem",
-      "statusCode": 301
-    },
-    {
-      "route": "/daythem",
-      "redirect": "/hocthem",
-      "statusCode": 301
-    },
-    {
-      "route": "/daythem.html",
-      "redirect": "/hocthem",
-      "statusCode": 301
-    },
-    {
-      "route": "/hocthem",
-      "rewrite": "/hocthem.html"
-    },
-    {
-      "route": "/admin",
-      "rewrite": "/admin-index.html",
-      "headers": {
-        "Cache-Control": "no-store"
-      }
-    },
-    {
-      "route": "/admin/crm",
-      "rewrite": "/admin-crm.html",
-      "headers": {
-        "Cache-Control": "no-store"
-      }
-    },
-    {
-      "route": "/admin/cong-viec",
-      "rewrite": "/admin-cong-viec.html",
-      "headers": {
-        "Cache-Control": "no-store"
-      }
-    },
-    {
-      "route": "/admin/cham-cong",
-      "rewrite": "/admin-cham-cong.html",
-      "headers": {
-        "Cache-Control": "no-store"
-      }
-    },
-    {
-      "route": "/thanh-vien",
-      "rewrite": "/thanh-vien-index.html"
+    "routes": [
+        {
+            "route": "/dang-ky-day-kem-lop-1-5.html",
+            "redirect": "/hocthem",
+            "statusCode": 301
+        },
+        {
+            "route": "/daythem",
+            "redirect": "/hocthem",
+            "statusCode": 301
+        },
+        {
+            "route": "/daythem.html",
+            "redirect": "/hocthem",
+            "statusCode": 301
+        },
+        {
+            "route": "/hocthem",
+            "rewrite": "/hocthem.html"
+        },
+        {
+            "route": "/admin",
+            "rewrite": "/admin-index.html",
+            "headers": {
+                "Cache-Control": "no-store"
+            }
+        },
+        {
+            "route": "/admin/crm",
+            "rewrite": "/admin-crm.html",
+            "headers": {
+                "Cache-Control": "no-store"
+            }
+        },
+        {
+            "route": "/admin/cong-viec",
+            "rewrite": "/admin-cong-viec.html",
+            "headers": {
+                "Cache-Control": "no-store"
+            }
+        },
+        {
+            "route": "/admin/cham-cong",
+            "rewrite": "/admin-cham-cong.html",
+            "headers": {
+                "Cache-Control": "no-store"
+            }
+        },
+        {
+            "route": "/cong-viec",
+            "rewrite": "/admin-cong-viec.html",
+            "headers": {
+                "Cache-Control": "no-store"
+            }
+        },
+        {
+            "route": "/cham-cong",
+            "rewrite": "/admin-cham-cong.html",
+            "headers": {
+                "Cache-Control": "no-store"
+            }
+        },
+        {
+            "route": "/thanh-vien",
+            "rewrite": "/thanh-vien-index.html"
+        }
+    ],
+    "globalHeaders": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "Permissions-Policy": "camera=(), microphone=(), payment=()"
     }
-  ],
-  "globalHeaders": {
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "SAMEORIGIN",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-    "Permissions-Policy": "camera=(), microphone=(), payment=()"
-  }
 }
