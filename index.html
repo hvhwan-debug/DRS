@@ -10,6 +10,8 @@
         window.location.replace('/thanh-vien');
       } else if (host === 'admin.wvn.vn' && !/^\/admin|admin-dang-nhap\.html/.test(window.location.pathname)) {
         window.location.replace('/admin');
+      } else if (host === 'nhanvien.wvn.vn' && !/^\/(cong-viec|cham-cong)|admin-dang-nhap\.html/.test(window.location.pathname)) {
+        window.location.replace('/cong-viec');
       }
     })();
   </script>
