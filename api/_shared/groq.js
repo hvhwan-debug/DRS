@@ -4,8 +4,9 @@
 // lấy miễn phí tại console.groq.com/keys.
 //
 // Model mặc định. Có thể đổi mà không cần sửa code: thêm biến GROQ_MODEL trong Azure Portal →
-// Configuration (ví dụ "llama-3.1-8b-instant" để nhanh hơn, hoặc model mới hơn khi Groq cập nhật).
-const DEFAULT_MODEL = "llama-3.3-70b-versatile";
+// Configuration (xem danh mục model mới nhất tại console.groq.com/docs/models — Groq hay đổi
+// tên/ngừng hỗ trợ model theo thời gian, ví dụ llama-3.3-70b-versatile đã ngừng từ 16/8/2026).
+const DEFAULT_MODEL = "openai/gpt-oss-120b";
 
 async function askGroq(prompt, { maxOutputTokens = 800, temperature = 0.6 } = {}) {
   const apiKey = process.env.GROQ_API_KEY;
