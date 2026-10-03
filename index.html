@@ -157,6 +157,17 @@
       background-image: linear-gradient(100deg, rgba(8,20,45,0.88) 0%, rgba(8,20,45,0.72) 38%, rgba(8,20,45,0.32) 68%, rgba(8,20,45,0.15) 100%), url('images/hero-co-giao-hoc-sinh-lop-hoc.jpg');
       background-size: cover; background-position: center;
     }
+    /* Màn hình hẹp: ảnh ngang bị cắt rất nhiều theo chiều cao nếu giữ background-position mặc định
+       (dễ lọt hết người ra ngoài khung, chỉ còn trơ nền tối) — hạ bớt khoảng đệm, cắt ảnh theo
+       đúng nhóm nhân vật ở giữa, và phủ tối ĐỀU hơn thay vì gradient trái-phải (vốn chỉ hợp màn rộng)
+       để chữ luôn đọc được dù ảnh crop vào đâu. */
+    @media (max-width: 640px) {
+      .hero-wrapper {
+        padding: 3.2rem 1.25rem 3rem;
+        background-image: linear-gradient(rgba(8,20,45,0.82), rgba(8,20,45,0.82)), url('images/hero-co-giao-hoc-sinh-lop-hoc.jpg');
+        background-position: 60% 30%;
+      }
+    }
 
     .hero-grid {
       max-width: 1240px; margin: 0 auto; display: block; position: relative; z-index: 2;
