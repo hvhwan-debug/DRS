@@ -1,5 +1,5 @@
 const { requireAdmin } = require("../_shared/adminAuth");
-const { askGemini } = require("../_shared/gemini");
+const { askGroq } = require("../_shared/groq");
 const { logAdminActivity } = require("../_shared/activityLog");
 
 // Soạn tin nhắn/email gợi ý cho phụ huynh bằng AI, dựa trên thông tin học sinh + lịch sử chăm sóc
@@ -39,7 +39,7 @@ module.exports = async function (context, req) {
   lines.push(`\nYêu cầu: ${mode === "email" ? "Trả lời ĐÚNG định dạng JSON: {\"subject\": \"...\", \"body\": \"...\"} — không thêm chữ nào khác ngoài JSON. Email khoảng 80-150 từ." : "Chỉ trả về nội dung tin nhắn (không có tiêu đề, không giải thích gì thêm), tối đa 300 ký tự, không dùng markdown."}`);
 
   try {
-    const raw = await askGemini(lines.join("\n"), { maxOutputTokens: 500 });
+    const raw = await askGroq(lines.join("\n"), { maxOutputTokens: 500 });
     let result;
     if (mode === "email") {
       const cleaned = raw.replace(/```json|```/g, "").trim();

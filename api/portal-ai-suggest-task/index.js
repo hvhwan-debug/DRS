@@ -1,5 +1,5 @@
 const { requireAdmin } = require("../_shared/adminAuth");
-const { askGemini } = require("../_shared/gemini");
+const { askGroq } = require("../_shared/groq");
 
 // Gợi ý mô tả công việc + danh sách việc nhỏ (checklist) từ tiêu đề việc — giúp nhân viên gõ nhanh
 // 1 dòng tiêu đề rồi để AI phác thảo chi tiết, sau đó tự chỉnh sửa lại cho đúng ý.
@@ -27,7 +27,7 @@ module.exports = async function (context, req) {
   ].join("\n");
 
   try {
-    const raw = await askGemini(prompt, { maxOutputTokens: 500 });
+    const raw = await askGroq(prompt, { maxOutputTokens: 500 });
     const cleaned = raw.replace(/```json|```/g, "").trim();
     let result;
     try { result = JSON.parse(cleaned); } catch (e) { result = { description: cleaned, checklist: [] }; }

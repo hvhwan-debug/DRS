@@ -1,5 +1,5 @@
 const { requireSuperAdmin } = require("../_shared/adminAuth");
-const { askGemini } = require("../_shared/gemini");
+const { askGroq } = require("../_shared/groq");
 
 // Tóm tắt nhanh lịch sử công tác/ghi chú đánh giá của 1 nhân sự bằng AI — chỉ Quản Trị Viên Chính
 // được dùng, đúng với mức bảo mật của toàn bộ mục Hồ Sơ Nhân Sự.
@@ -30,7 +30,7 @@ module.exports = async function (context, req) {
   lines.push(`\nHãy viết một đoạn tóm tắt ngắn gọn (4-6 câu, tiếng Việt) về quá trình làm việc của nhân sự này: điểm nổi bật, xu hướng tiến bộ hay cần lưu ý, và nhận xét tổng quan. Chỉ trả về đoạn tóm tắt, không thêm tiêu đề hay giải thích gì khác.`);
 
   try {
-    const summary = await askGemini(lines.join("\n"), { maxOutputTokens: 400 });
+    const summary = await askGroq(lines.join("\n"), { maxOutputTokens: 400 });
     context.res.status = 200;
     context.res.body = { success: true, summary };
   } catch (err) {
