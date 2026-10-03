@@ -334,7 +334,10 @@ html body.wvn-login .btn-continue:hover { background: var(--lx-lacquer-3); }
 @media (max-width: 600px) { .lx-pal-scrim { padding-top: 1rem; } .lx-pal-foot { display: none; } }
 
 /* Nút lên đầu trang */
-.lx-top { position: fixed; right: 1.4rem; bottom: 1.4rem; z-index: 70; width: 42px; height: 42px; border-radius: 12px; border: 1px solid rgba(125,211,252,0.35);
+/* bottom: đẩy cao hơn quả chuông thông báo (admin-alerts.js) đang chiếm cùng góc dưới-phải trên
+   admin-index.html/admin-crm.html — chuông desktop cao tới ~72px, mobile ~64px tính từ đáy màn hình,
+   nên 84px + safe-area đảm bảo luôn còn khoảng cách dù trang có chuông hay không. */
+.lx-top { position: fixed; right: 1.4rem; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); z-index: 70; width: 42px; height: 42px; border-radius: 12px; border: 1px solid rgba(125,211,252,0.35);
   background: var(--lx-lacquer-2); color: var(--lx-gold-hi); display: grid; place-items: center; cursor: pointer; font-size: 0.85rem;
   box-shadow: 0 14px 30px -16px rgba(15,23,42,0.9); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .18s, transform .18s; }
 .lx-top.show { opacity: 1; pointer-events: auto; transform: none; }
