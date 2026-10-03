@@ -1141,6 +1141,11 @@ body.emp-lock { overflow: hidden; }
             <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Mô tả ngắn (hiện ở danh sách Tin Tức)</label>
             <textarea id="postExcerpt" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="1-2 câu tóm tắt bài viết"></textarea>
           </div>
+          <div style="margin-bottom:1rem; background:#faf5ff; border:1px solid #e9d5ff; border-radius:10px; padding:0.8rem 0.9rem;">
+            <label style="display:block; font-size:0.78rem; font-weight:600; color:#7e22ce; margin-bottom:0.3rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Viết nháp bằng AI (không bắt buộc)</label>
+            <textarea id="postAiBullets" rows="3" style="width:100%; padding:0.5rem 0.6rem; border:1px solid #e9d5ff; border-radius:8px; font-family:inherit; font-size:0.86rem; margin-bottom:0.5rem;" placeholder="Gõ các ý chính, mỗi ý 1 dòng. VD:&#10;Chuyến đi tặng áo ấm ở Hà Giang tháng 10&#10;20 tình nguyện viên tham gia&#10;Tặng 150 bộ áo ấm cho 2 trường tiểu học"></textarea>
+            <button type="button" id="postAiBtn" class="btn" style="background:#a855f7; font-size:0.84rem; padding:0.4rem 0.9rem;" onclick="aiDraftPost()">Viết nháp từ các ý trên</button>
+          </div>
           <div style="margin-bottom:1rem;">
             <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nội dung bài viết (hỗ trợ Markdown: # Tiêu đề, **đậm**, - danh sách...)</label>
             <textarea id="postBody" rows="12" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-family:ui-monospace,monospace; font-size:0.9rem;" placeholder="Viết nội dung bài ở đây..."></textarea>
@@ -4834,6 +4839,31 @@ body.emp-lock { overflow: hidden; }
       }
     }
 
+    // Viết nháp bài viết bằng AI từ các gạch đầu dòng — chỉ gợi ý khung bài, nhân viên vẫn cần
+    // biên tập lại giọng văn/chi tiết trước khi đăng.
+    async function aiDraftPost() {
+      const btn = document.getElementById('postAiBtn');
+      const title = document.getElementById('postTitle').value.trim();
+      const excerpt = document.getElementById('postExcerpt').value.trim();
+      const bullets = document.getElementById('postAiBullets').value.split('\n').map(s => s.trim()).filter(Boolean);
+      if (!title) { showGlobalAlert('Nhập tiêu đề bài viết trước đã nhé.', true); return; }
+      if (!bullets.length) { showGlobalAlert('Nhập ít nhất 1 ý chính để AI viết nháp.', true); return; }
+      const bodyField = document.getElementById('postBody');
+      if (bodyField.value.trim() && !confirm('Ô nội dung đã có chữ. Bấm OK để AI GHI ĐÈ nội dung hiện tại, hoặc Cancel để huỷ.')) return;
+      const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang viết…';
+      try {
+        const data = await apiCall('/api/portal-ai-draft-post', {
+          method: 'POST',
+          body: JSON.stringify({ title, excerpt, bullets })
+        });
+        bodyField.value = data.body || bodyField.value;
+        showGlobalAlert('Đã viết nháp xong, xem lại và chỉnh sửa giọng văn trước khi đăng nhé.', false);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false; btn.innerHTML = old;
+      }
+    }
     function renderPostsTable() {
       const typeLabel = { 'tin-tuc': 'Tin Tức', 'su-kien': 'Sự Kiện' };
       document.getElementById('postTableBody').innerHTML = allPostsData.map(p => `
