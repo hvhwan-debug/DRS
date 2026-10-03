@@ -1551,6 +1551,37 @@ body.emp-lock { overflow: hidden; }
       setTimeout(() => { el.style.display = 'none'; }, isError ? 9000 : 4000);
     }
 
+    // Modal dùng chung để hiển thị bản nháp do AI soạn (thư cảm ơn, gợi ý trả lời...) kèm nút Copy —
+    // nhân viên tự copy sang email/Zalo/SMS của mình vì các khu vực này chưa có sẵn chức năng gửi.
+    function showAiDraftModal(title, bodyText, subjectText) {
+      const old = document.getElementById('aiDraftOverlay'); if (old) old.remove();
+      const wrap = document.createElement('div');
+      wrap.id = 'aiDraftOverlay';
+      wrap.style = 'position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:1200; display:flex; align-items:center; justify-content:center; padding:1.2rem;';
+      wrap.innerHTML = `
+        <div style="background:#fff; border-radius:16px; max-width:560px; width:100%; max-height:85vh; overflow:auto; padding:1.4rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.9rem;">
+            <h3 style="margin:0; font-size:1.05rem;"><i class="fa-solid fa-wand-magic-sparkles" style="color:#7e22ce;"></i> ${escapeHtml(title)}</h3>
+            <button type="button" onclick="document.getElementById('aiDraftOverlay').remove()" style="border:none; background:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          ${subjectText ? `<label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Tiêu đề</label><input id="aiDraftSubject" value="${escapeHtml(subjectText)}" style="width:100%; margin-bottom:0.8rem; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;">` : ''}
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Nội dung</label>
+          <textarea id="aiDraftBody" rows="8" style="width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-family:inherit; margin-bottom:1rem;">${escapeHtml(bodyText)}</textarea>
+          <div style="display:flex; gap:0.6rem;">
+            <button type="button" class="btn" style="flex:1;" onclick="copyAiDraftModal()"><i class="fa-solid fa-copy"></i> Copy nội dung</button>
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('aiDraftOverlay').remove()">Đóng</button>
+          </div>
+        </div>`;
+      document.body.appendChild(wrap);
+    }
+    function copyAiDraftModal() {
+      const subj = document.getElementById('aiDraftSubject');
+      const body = document.getElementById('aiDraftBody').value;
+      const text = subj ? `${subj.value}\n\n${body}` : body;
+      navigator.clipboard.writeText(text).then(() => showGlobalAlert('Đã copy, dán vào email/Zalo/SMS của bạn.', false))
+        .catch(() => showGlobalAlert('Không copy được, chọn và sao chép thủ công nhé.', true));
+    }
+
     function toggleCustomProgram(formType) {
       const select = document.getElementById(formType + 'Program');
       const customInput = document.getElementById(formType + 'ProgramCustom');
@@ -2102,11 +2133,30 @@ body.emp-lock { overflow: hidden; }
             <td>${confirmationStatusHtml(d.confirmationStatus, d.memberFeedback)}</td>
             <td style="white-space:nowrap;">
               <button type="button" class="btn ${d.confirmationStatus === 'confirmed' ? 'btn-outline' : ''}" style="padding:0.3rem 0.7rem; font-size:0.8rem;" title="${d.confirmationStatus === 'confirmed' ? 'Đã được thành viên xác nhận — sửa sẽ yêu cầu xác nhận lại' : ''}" onclick='startEditDonation(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.confirmationStatus === 'confirmed' ? '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> Sửa' : 'Sửa'}</button>
+              <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; border-color:#a855f7; color:#7e22ce;" onclick='aiDraftDonationThanks(${JSON.stringify(d).replace(/'/g, "&#39;")})' title="Soạn thư cảm ơn bằng AI"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
               <button type="button" class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.8rem; color:#b91c1c; border-color:#fecaca;" onclick="deleteDonation('${encodeURIComponent(d.id)}')">Xoá</button>
             </td>
           </tr>`).join('');
       if (donations.length === 0) {
         document.getElementById('donTableBody').innerHTML = `<tr><td colspan="11" style="text-align:center; color:var(--text-muted); padding:1.4rem;">Không tìm thấy kết quả phù hợp.</td></tr>`;
+      }
+    }
+
+    // Soạn thư cảm ơn nhà hảo tâm bằng AI — mở modal cho nhân viên xem/chỉnh sửa rồi tự copy gửi,
+    // vì khu vực Quyên Góp chưa có sẵn chức năng gửi email tích hợp.
+    async function aiDraftDonationThanks(d) {
+      try {
+        showGlobalAlert('Đang soạn thư cảm ơn…', false);
+        const data = await apiCall('/api/portal-ai-draft-donation-thanks', {
+          method: 'POST',
+          body: JSON.stringify({
+            donorName: d.donorName, donationType: d.donationType,
+            amount: d.amount, itemDescription: d.itemDescription, note: d.note
+          })
+        });
+        showAiDraftModal(`Thư cảm ơn — ${d.donorName}`, data.body, data.subject);
+      } catch (err) {
+        showGlobalAlert(err.message, true);
       }
     }
 
