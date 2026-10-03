@@ -779,6 +779,38 @@
       });
     }
 
+    // Tóm tắt bằng AI cho phụ huynh: gộp điểm + nhận xét rời rạc của 1 học sinh/khoá học thành
+    // 1 đoạn văn dễ đọc. Dữ liệu dùng để tóm tắt là chính dữ liệu đã hiển thị cho phụ huynh này.
+    async function aiSummarizeGrades(grpIdx) {
+      const grp = (window.__memberGradeGroups || [])[grpIdx];
+      const btn = document.getElementById(`gradeAiBtn-${grpIdx}`);
+      const box = document.getElementById(`gradeAiBox-${grpIdx}`);
+      if (!grp || !btn || !box) return;
+      const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tóm tắt…';
+      const token = localStorage.getItem('wvn_member_token');
+      try {
+        const res = await fetch('/api/portal-ai-summarize-progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Member-Token': token },
+          body: JSON.stringify({
+            studentName: grp.studentName,
+            program: grp.program,
+            entries: grp.entries.map(g => ({ date: g.recordedAt, type: g.assessmentType, score: g.score, comment: g.comment }))
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) throw new Error(data.message || 'Không tóm tắt được.');
+        box.style.display = 'block';
+        box.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles" style="margin-right:0.4rem;"></i>${String(data.summary || '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}`;
+      } catch (err) {
+        box.style.display = 'block';
+        box.style.color = '#b91c1c'; box.style.background = '#fef2f2'; box.style.borderColor = '#fecaca';
+        box.textContent = err.message;
+      } finally {
+        btn.disabled = false; btn.innerHTML = old;
+      }
+    }
+
     let giftRequestInFlight = false;
     // Đổi quà: mở hộp điền thông tin (số lượng, hình thức nhận, người nhận, địa chỉ, ghi chú)
     function requestGift(giftId) {
@@ -1929,6 +1961,7 @@
         });
         const gradeGroups = Array.from(gradeGroupsMap.values())
           .sort((a, b) => a.studentName.localeCompare(b.studentName) || a.program.localeCompare(b.program));
+        window.__memberGradeGroups = gradeGroups; // để nút "Tóm tắt bằng AI" bên dưới đọc lại theo index
 
         function gradeGroupTableHtml(entries) {
           return `<div style="overflow-x:auto;">
@@ -1962,7 +1995,7 @@
 
         const gradesHtml = gradeGroups.length > 0
           ? `${gradeFilterHtml}<div style="display:flex; flex-direction:column; gap:1.1rem;">
-              ${gradeGroups.map(grp => {
+              ${gradeGroups.map((grp, grpIdx) => {
                 const scored = grp.entries.filter(g => g.score != null);
                 const avgScore = scored.length > 0 ? (scored.reduce((s, g) => s + Number(g.score), 0) / scored.length) : null;
                 const latest = grp.entries[grp.entries.length - 1];
@@ -1976,11 +2009,13 @@
                         <div style="font-size:0.8rem; color:var(--text-muted);">${grp.program} · ${grp.entries.length} buổi đã ghi nhận</div>
                       </div>
                     </div>
-                    <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                    <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
                       ${avgScore != null ? `<div class="grade-stat avg" style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#eff6ff;"><div class="gs-lbl" style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">TB</div><div class="gs-val" style="font-weight:800; color:#0369a1;">${avgScore.toFixed(1)}/10</div></div>` : ''}
                       <div class="grade-stat" style="text-align:center; padding:0.3rem 0.8rem; border-radius:10px; background:#f8fafc;"><div class="gs-lbl" style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">Gần nhất</div><div class="gs-val" style="font-weight:700; color:var(--text-dark); font-size:0.85rem; white-space:nowrap;">${formatDate(latest.recordedAt)}</div></div>
+                      <button type="button" id="gradeAiBtn-${grpIdx}" onclick="aiSummarizeGrades(${grpIdx})" style="border:1px solid #a855f7; color:#7e22ce; background:#faf5ff; border-radius:999px; padding:0.35rem 0.75rem; font-size:0.78rem; font-weight:600; cursor:pointer; white-space:nowrap;"><i class="fa-solid fa-wand-magic-sparkles"></i> Tóm tắt bằng AI</button>
                     </div>
                   </div>
+                  <div id="gradeAiBox-${grpIdx}" style="display:none; background:#faf5ff; border:1px solid #e9d5ff; border-radius:12px; padding:0.8rem 1rem; margin-bottom:0.9rem; font-size:0.88rem; line-height:1.6; color:#3b0764;"></div>
                   ${gradeGroupTableHtml(grp.entries)}
                 </div>`;
               }).join('')}
