@@ -153,15 +153,15 @@
     #authBtn { font-size: 0.78rem; font-weight: 600; padding: 0.5rem 1rem; }
 
     .hero-wrapper {
-      position: relative; width: 100%; padding: 5rem 1.5rem 5.5rem; color: var(--white); overflow: hidden;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
-      background-size: 250% 250%; animation: heroGradientMove 12s ease infinite;
+      position: relative; width: 100%; padding: 6.5rem 1.5rem 6.5rem; color: var(--white); overflow: hidden;
+      background-image: linear-gradient(100deg, rgba(8,20,45,0.88) 0%, rgba(8,20,45,0.72) 38%, rgba(8,20,45,0.32) 68%, rgba(8,20,45,0.15) 100%), url('images/hero-co-giao-hoc-sinh-lop-hoc.jpg');
+      background-size: cover; background-position: center;
     }
-    @keyframes heroGradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
     .hero-grid {
-      max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3.5rem; align-items: center; position: relative; z-index: 2;
+      max-width: 1240px; margin: 0 auto; display: block; position: relative; z-index: 2;
     }
+    .hero-grid > div:first-child { max-width: 640px; }
     .hero-badge {
       display: inline-block; background: rgba(255, 255, 255, 0.15); color: #e0f2fe;
       padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
@@ -587,20 +587,8 @@
         <ul class="hero-trust">
           <li><i class="fa-solid fa-check" aria-hidden="true"></i> Học miễn phí cho trẻ em</li>
           <li><i class="fa-solid fa-check" aria-hidden="true"></i> Sao kê công khai 24/7</li>
+          <li><i class="fa-solid fa-seedling" aria-hidden="true"></i> 100% Phi Lợi Nhuận</li>
         </ul>
-      </div>
-
-      <div class="hero-media-wrapper">
-        <div class="hero-media-card">
-          <img src="banner-drs.jpg" alt="Ươm mầm tri thức cộng đồng" class="hero-main-img" id="heroDynamicImg">
-        </div>
-        <div class="floating-badge">
-          <div class="badge-icon">🌱</div>
-          <div class="badge-text">
-            <strong>100% Phi Lợi Nhuận</strong>
-            <span>Tái đầu tư vì giáo dục cộng đồng</span>
-          </div>
-        </div>
       </div>
 
     </div>
