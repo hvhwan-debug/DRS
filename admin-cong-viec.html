@@ -1786,7 +1786,7 @@ a.att-main:hover b { color: var(--sapphire); }
     try { const r = await post('/api/portal-work-save-task', body); D.tasks.unshift(r.task); renderAll(); toast(`Đã nhân bản "${t.title}"`, { undo: () => deleteTask(r.task.id, true) }); openDrawer(r.task.id); }
     catch (e) { toast(e.message, { error: true }); }
   }
-  // Gợi ý mô tả + checklist bằng AI (Gemini) từ tiêu đề việc — điền thẳng vào mô tả và thêm các
+  // Gợi ý mô tả + checklist bằng AI (Groq) từ tiêu đề việc — điền thẳng vào mô tả và thêm các
   // bước gợi ý vào checklist, người dùng xem lại/chỉnh sửa trước khi lưu như bình thường.
   async function aiSuggestTask(btn) {
     const t = findTask(state.openId); if (!t) return;
@@ -1795,7 +1795,14 @@ a.att-main:hover b { color: var(--sapphire); }
       const p = projectBy(t.projectId);
       const data = await post('/api/portal-ai-suggest-task', { title: t.title, projectName: p ? p.name : '' });
       const newChecklist = (t.checklist || []).concat((data.checklist || []).map(text => ({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), text, done: false })));
-      await update(t.id, { description: data.description || t.description, checklist: newChecklist });
+      const existingDesc = (t.description || '').trim();
+      let newDesc = data.description || t.description;
+      if (existingDesc && data.description && !confirm('Việc này đã có mô tả. Giữ cả 2 (nối gợi ý của AI vào cuối) hay Cancel để chỉ thêm checklist, giữ nguyên mô tả cũ?')) {
+        newDesc = t.description; // người dùng chọn Cancel: giữ nguyên mô tả, chỉ thêm checklist
+      } else if (existingDesc && data.description) {
+        newDesc = existingDesc + '\n\n' + data.description; // người dùng chọn OK: nối thêm
+      }
+      await update(t.id, { description: newDesc, checklist: newChecklist });
       toast('Đã gợi ý xong, xem lại mô tả và các bước nhé.');
     } catch (e) {
       toast(e.message, { error: true });

@@ -1199,7 +1199,7 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
     if (c.mode === 'email') { c.subject = fillTemplate(t.subject, s); c.body = fillTemplate(t.email, s); }
     else c.body = stripVN(fillTemplate(t.sms, s)); // mẫu SMS không dấu -> 1 tin 160 ký tự thay vì 70
   }
-  // Soạn tin nhắn/email gợi ý bằng AI (Gemini) — dựa trên tên học sinh, lưu ý hiện tại (quá hạn,
+  // Soạn tin nhắn/email gợi ý bằng AI (Groq) — dựa trên tên học sinh, lưu ý hiện tại (quá hạn,
   // vắng nhiều, học phí...) và vài lượt trao đổi gần nhất, để tin nhắn đúng ngữ cảnh thay vì chung chung.
   async function aiDraftMessage(btn) {
     const c = state.compose; if (!c) return;

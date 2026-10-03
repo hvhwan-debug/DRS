@@ -5237,7 +5237,7 @@ body.emp-lock { overflow: hidden; }
       list.innerHTML = notes.map(n => { const sys = n.type === 'system';
         return `<div class="emp-note ${sys ? 'sys' : ''}"><div class="t">${escapeHtml(n.note)}</div><div class="m">${escapeHtml(n.author) || '—'} · ${formatDate(n.at)}${sys ? '' : `<button type="button" onclick="deleteEmployeeNote('${encodeURIComponent(currentEmployeeDetail.id)}', '${encodeURIComponent(n.id)}')" style="color:#dc2626; margin-left:0.4rem;" title="Xoá ghi chú"><i class="fa-solid fa-trash"></i></button>`}</div></div>`; }).join('');
     }
-    // Tóm tắt nhanh toàn bộ lịch sử công tác/ghi chú đánh giá của 1 nhân sự bằng AI (Gemini) —
+    // Tóm tắt nhanh toàn bộ lịch sử công tác/ghi chú đánh giá của 1 nhân sự bằng AI (Groq) —
     // giúp quản lý nắm nhanh quá trình làm việc mà không cần đọc lại từng ghi chú một.
     async function aiSummarizeEmployee() {
       const btn = document.getElementById('empAiSummaryBtn'), box = document.getElementById('empAiSummaryBox');
