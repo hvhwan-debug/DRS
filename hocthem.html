@@ -946,7 +946,13 @@ window.addEventListener('load', function () { gtag_report_conversion_pageview();
     .support-submit-btn:hover { opacity: 0.92; }
     .support-note { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.9rem; text-align: center; }
 
-    .support-success { display: none; text-align: center; padding: 2.5rem 1.5rem; }
+    /* Thông báo "Đã gửi thành công" hiện dạng POPUP giữa màn hình (không còn nằm lẫn trong form,
+       khiến người dùng phải cuộn lên mới thấy) — phủ nền mờ toàn trang, thẻ trắng nổi giữa. */
+    .support-success { display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; background: rgba(15,23,42,0.6); padding: 1.25rem; animation: supportSuccessFade .2s ease; }
+    @keyframes supportSuccessFade { from { opacity: 0; } to { opacity: 1; } }
+    .support-success-card { position: relative; background: #fff; border-radius: 18px; padding: 2.5rem 1.75rem; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 30px 70px -15px rgba(0,0,0,0.35); }
+    .support-success-close { position: absolute; top: 0.7rem; right: 0.9rem; background: none; border: none; font-size: 1.3rem; color: #94a3b8; cursor: pointer; line-height: 1; padding: 0.3rem; }
+    .support-success-close:hover { color: #334155; }
     .support-success i { font-size: 2.6rem; color: #16a34a; margin-bottom: 1rem; }
     .support-success h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark); }
     .support-success p { color: var(--text-muted); font-size: 0.95rem; }
@@ -1094,9 +1100,12 @@ window.addEventListener('load', function () { gtag_report_conversion_pageview();
         </form>
 
         <div class="support-success" id="parentSuccess" style="display:none;">
-          <i class="fa-solid fa-circle-check"></i>
-          <h3>Đã gửi đăng ký thành công!</h3>
-          <p>Cảm ơn bạn đã quan tâm đến chương trình. Ban tổ chức sẽ xem xét hồ sơ và liên hệ để thông báo kết quả.</p>
+          <div class="support-success-card">
+            <button type="button" class="support-success-close" aria-label="Đóng" onclick="document.getElementById('parentSuccess').style.display='none';">&times;</button>
+            <i class="fa-solid fa-circle-check"></i>
+            <h3>Đã gửi đăng ký thành công!</h3>
+            <p>Cảm ơn bạn đã quan tâm đến chương trình. Ban tổ chức sẽ xem xét hồ sơ và liên hệ để thông báo kết quả.</p>
+          </div>
         </div>
       </div>
 
@@ -1507,7 +1516,7 @@ window.addEventListener('load', function () { gtag_report_conversion_pageview();
         })
         .then(() => {
           parentForm.style.display = 'none';
-          document.getElementById('parentSuccess').style.display = 'block';
+          document.getElementById('parentSuccess').style.display = 'flex';
           gtag_report_conversion();
         })
         .catch(() => {
@@ -1647,6 +1656,11 @@ window.addEventListener('load', function () { gtag_report_conversion_pageview();
       if (!e.target.closest('.nav-dropdown')) {
         document.querySelectorAll('.nav-dropdown.open').forEach(d => d.classList.remove('open'));
       }
+    });
+
+    // Bấm vào vùng nền tối (ngoài thẻ trắng) của popup "Đã gửi thành công" cũng đóng được luôn
+    document.querySelectorAll('.support-success').forEach(function (el) {
+      el.addEventListener('click', function (e) { if (e.target === el) el.style.display = 'none'; });
     });
 
     // Thư Viện Hình Ảnh — đồng bộ với trang chủ.
