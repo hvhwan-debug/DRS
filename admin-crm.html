@@ -628,7 +628,7 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
     if (c.mode === 'email') {
       return `<div class="compose" id="composeBox">
         <div class="compose-head"><i class="fa-regular fa-envelope" aria-hidden="true" style="color:var(--brand)"></i><b>Gửi email</b><small>tới ${esc(s.parentEmail)}</small><button type="button" data-compose-close="1" aria-label="Đóng"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
-        <div class="opts">${tplChips}</div>
+        <div class="opts">${tplChips}<button type="button" class="opt" id="aiDraftBtn" data-ai-draft="1" style="border-color:#a855f7;color:#7e22ce;"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Soạn bằng AI</button></div>
         <label class="sr-only" for="cSubject">Tiêu đề</label><input id="cSubject" maxlength="150" placeholder="Tiêu đề email" value="${esc(c.subject || '')}">
         <label class="sr-only" for="cBody">Nội dung</label><textarea id="cBody" maxlength="5000" placeholder="Nội dung email">${esc(c.body || '')}</textarea>
         <div class="meta"><span>Gửi bằng mẫu email thương hiệu của trung tâm, kèm nút mở Trang Thành Viên.</span><span>Có trong Lịch Sử Email</span></div>
@@ -640,7 +640,7 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
     const seg = smsSegments(c.body || '');
     return `<div class="compose" id="composeBox">
       <div class="compose-head"><i class="fa-solid fa-comment-sms" aria-hidden="true" style="color:var(--brand)"></i><b>Soạn tin nhắn</b><small>tới ${esc(ph)}</small><button type="button" data-compose-close="1" aria-label="Đóng"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
-      <div class="opts">${tplChips}</div>
+      <div class="opts">${tplChips}<button type="button" class="opt" id="aiDraftBtn" data-ai-draft="1" style="border-color:#a855f7;color:#7e22ce;"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Soạn bằng AI</button></div>
       <label class="sr-only" for="cBody">Nội dung tin nhắn</label><textarea id="cBody" maxlength="800" style="min-height:96px" placeholder="Nội dung tin nhắn">${esc(c.body || '')}</textarea>
       <div class="meta"><span id="cCount">${(c.body || '').length} ký tự · ${seg.n} tin${seg.unicode ? ' (có dấu, tốn gấp đôi)' : ''}</span><button type="button" class="btn-ghost btn" style="padding:0.1rem 0.4rem;font-size:0.76rem;" data-strip="1">Bỏ dấu tiếng Việt</button></div>
       ${follow}
@@ -1199,6 +1199,34 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
     if (c.mode === 'email') { c.subject = fillTemplate(t.subject, s); c.body = fillTemplate(t.email, s); }
     else c.body = stripVN(fillTemplate(t.sms, s)); // mẫu SMS không dấu -> 1 tin 160 ký tự thay vì 70
   }
+  // Soạn tin nhắn/email gợi ý bằng AI (Gemini) — dựa trên tên học sinh, lưu ý hiện tại (quá hạn,
+  // vắng nhiều, học phí...) và vài lượt trao đổi gần nhất, để tin nhắn đúng ngữ cảnh thay vì chung chung.
+  async function aiDraftMessage(btn) {
+    const c = state.compose; if (!c) return;
+    const s = findStudent(c.id); if (!s) return;
+    const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Đang soạn…';
+    try {
+      const data = await api('/api/portal-ai-draft-message', {
+        method: 'POST',
+        body: JSON.stringify({
+          mode: c.mode,
+          studentName: s.studentName,
+          parentName: eff(s).guardianName,
+          program: (s.programs || [])[0] || '',
+          flags: flagsOf(s).map(f => f.label),
+          recentInteractions: (s.interactions || []).slice(0, 5).map(i => ({ date: i.happenedAt, summary: i.content || i.type })),
+        })
+      });
+      c.tpl = null;
+      if (c.mode === 'email') { c.subject = data.subject || c.subject; c.body = data.body || c.body; }
+      else c.body = data.body || c.body;
+      renderDrawer();
+      toast('Đã soạn xong, bạn xem và chỉnh sửa lại trước khi gửi nhé.');
+    } catch (err) {
+      toast(err.message, true);
+      btn.disabled = false; btn.innerHTML = old;
+    }
+  }
   function syncCompose() {
     const c = state.compose; if (!c) return;
     const sub = $('cSubject'), body = $('cBody');
@@ -1317,6 +1345,7 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
     }
     if (t.closest('[data-compose-close]')) { state.compose = null; return renderDrawer(); }
     const tp = t.closest('[data-tpl]'); if (tp && state.compose) { syncCompose(); applyTemplate(findStudent(state.compose.id), tp.dataset.tpl); return renderDrawer(); }
+    const aiBtn = t.closest('[data-ai-draft]'); if (aiBtn && state.compose) { syncCompose(); return aiDraftMessage(aiBtn); }
     const cf = t.closest('[data-cfollow]'); if (cf && state.compose) { syncCompose(); state.compose.follow = +cf.dataset.cfollow; return renderDrawer(); }
     if (t.closest('[data-strip]') && state.compose) { syncCompose(); state.compose.body = stripVN(state.compose.body); return renderDrawer(); }
     if (t.closest('#cSend')) return sendEmail(t.closest('#cSend'));

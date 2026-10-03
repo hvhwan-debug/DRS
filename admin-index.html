@@ -1260,7 +1260,8 @@ body.emp-lock { overflow: hidden; }
         </div>
 
         <div id="empHistorySection" style="display:none; margin-top:1.6rem;">
-          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem;">Lịch sử công tác / Ghi chú đánh giá</h4>
+          <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.6rem; display:flex; align-items:center; gap:0.5rem;">Lịch sử công tác / Ghi chú đánh giá <button type="button" id="empAiSummaryBtn" onclick="aiSummarizeEmployee()" style="margin-left:auto; text-transform:none; font-size:0.76rem; font-weight:600; border:1px solid #a855f7; color:#7e22ce; background:#faf5ff; border-radius:999px; padding:0.2rem 0.6rem; cursor:pointer;"><i class="fa-solid fa-wand-magic-sparkles"></i> Tóm tắt bằng AI</button></h4>
+          <div id="empAiSummaryBox" style="display:none; background:#faf5ff; border:1px solid #e9d5ff; border-radius:10px; padding:0.7rem 0.85rem; margin-bottom:0.8rem; font-size:0.86rem; color:#581c87; white-space:pre-wrap;"></div>
           <form id="empNoteForm" style="display:flex; gap:0.5rem; margin-bottom:0.9rem; flex-wrap:wrap;">
             <textarea id="empNoteText" rows="2" style="flex:1; min-width:240px; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="VD: Hoàn thành tốt đợt đánh giá quý 3/2026, cần cải thiện thêm về..."></textarea>
             <button type="submit" class="btn btn-outline" style="align-self:flex-start;">Thêm Ghi Chú</button>
@@ -5236,9 +5237,28 @@ body.emp-lock { overflow: hidden; }
       list.innerHTML = notes.map(n => { const sys = n.type === 'system';
         return `<div class="emp-note ${sys ? 'sys' : ''}"><div class="t">${escapeHtml(n.note)}</div><div class="m">${escapeHtml(n.author) || '—'} · ${formatDate(n.at)}${sys ? '' : `<button type="button" onclick="deleteEmployeeNote('${encodeURIComponent(currentEmployeeDetail.id)}', '${encodeURIComponent(n.id)}')" style="color:#dc2626; margin-left:0.4rem;" title="Xoá ghi chú"><i class="fa-solid fa-trash"></i></button>`}</div></div>`; }).join('');
     }
+    // Tóm tắt nhanh toàn bộ lịch sử công tác/ghi chú đánh giá của 1 nhân sự bằng AI (Gemini) —
+    // giúp quản lý nắm nhanh quá trình làm việc mà không cần đọc lại từng ghi chú một.
+    async function aiSummarizeEmployee() {
+      const btn = document.getElementById('empAiSummaryBtn'), box = document.getElementById('empAiSummaryBox');
+      if (!currentEmployeeDetail) return;
+      const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tóm tắt…';
+      try {
+        const notes = (currentEmployeeDetail.notes || []).map(n => ({ at: n.at, note: n.note, type: n.type }));
+        const data = await apiCall('/api/portal-ai-summarize-employee', {
+          method: 'POST',
+          body: JSON.stringify({ fullName: currentEmployeeDetail.fullName, position: currentEmployeeDetail.position, notes })
+        });
+        box.style.display = 'block'; box.textContent = data.summary;
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false; btn.innerHTML = old;
+      }
+    }
     // Chỉ làm mới phần lịch sử, không tải lại cả form (tránh mất những gì đang gõ dở)
     async function refreshEmpNotes(id) {
-      try { const { notes } = await apiCall(`/api/portal-employee-get?id=${encodeURIComponent(id)}`); renderEmpHistory(notes); } catch (err) { showGlobalAlert(err.message, true); }
+      try { const { notes } = await apiCall(`/api/portal-employee-get?id=${encodeURIComponent(id)}`); renderEmpHistory(notes); if (currentEmployeeDetail) currentEmployeeDetail.notes = notes; } catch (err) { showGlobalAlert(err.message, true); }
     }
 
     async function openEmployeeDetail(idEnc) {
@@ -5248,6 +5268,7 @@ body.emp-lock { overflow: hidden; }
       empEl('empId').value = '';
       empEl('empFilesSection').style.display = 'none';
       empEl('empHistorySection').style.display = 'none';
+      empEl('empAiSummaryBox').style.display = 'none'; empEl('empAiSummaryBox').textContent = '';
       empEl('empFilesGrid').innerHTML = '';
       empEl('empUpdatedByBadge').style.display = 'none';
       currentEmployeeDetail = null; empRenderComplete();
@@ -5263,7 +5284,7 @@ body.emp-lock { overflow: hidden; }
       empEl('employeeDetailTitle').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
       try {
         const { employee: e, notes } = await apiCall(`/api/portal-employee-get?id=${encodeURIComponent(id)}`);
-        currentEmployeeDetail = e;
+        currentEmployeeDetail = e; currentEmployeeDetail.notes = notes;
         empEl('employeeDetailTitle').textContent = e.fullName;
         empEl('empId').value = e.id;
         empEl('empFullName').value = e.fullName;

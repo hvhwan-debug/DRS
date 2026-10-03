@@ -1786,6 +1786,23 @@ a.att-main:hover b { color: var(--sapphire); }
     try { const r = await post('/api/portal-work-save-task', body); D.tasks.unshift(r.task); renderAll(); toast(`Đã nhân bản "${t.title}"`, { undo: () => deleteTask(r.task.id, true) }); openDrawer(r.task.id); }
     catch (e) { toast(e.message, { error: true }); }
   }
+  // Gợi ý mô tả + checklist bằng AI (Gemini) từ tiêu đề việc — điền thẳng vào mô tả và thêm các
+  // bước gợi ý vào checklist, người dùng xem lại/chỉnh sửa trước khi lưu như bình thường.
+  async function aiSuggestTask(btn) {
+    const t = findTask(state.openId); if (!t) return;
+    const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Đang soạn…';
+    try {
+      const p = projectBy(t.projectId);
+      const data = await post('/api/portal-ai-suggest-task', { title: t.title, projectName: p ? p.name : '' });
+      const newChecklist = (t.checklist || []).concat((data.checklist || []).map(text => ({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), text, done: false })));
+      await update(t.id, { description: data.description || t.description, checklist: newChecklist });
+      toast('Đã gợi ý xong, xem lại mô tả và các bước nhé.');
+    } catch (e) {
+      toast(e.message, { error: true });
+    } finally {
+      btn.disabled = false; btn.innerHTML = old;
+    }
+  }
   async function deleteTask(id, silent) {
     const t = findTask(id); if (!t) return;
     if (!silent && !confirm(`Xoá công việc "${t.title}"?`)) return;
@@ -1914,7 +1931,7 @@ a.att-main:hover b { color: var(--sapphire); }
         <div class="row"><label><i class="fa-solid fa-repeat" aria-hidden="true"></i>Lặp lại</label><div class="opts">${RECUR.map(([k, l]) => `<button class="opt" data-set="recurrence" data-v="${k}" aria-pressed="${t.recurrence === k}">${l}</button>`).join('')}</div></div>
         </div>
 
-        <div class="d-section"><h5><i class="fa-solid fa-align-left" aria-hidden="true"></i>Mô tả</h5><textarea class="desc" id="dDesc" placeholder="Ghi chú, đường dẫn tài liệu, yêu cầu cụ thể…" maxlength="5000">${esc(t.description)}</textarea></div>
+        <div class="d-section"><h5><i class="fa-solid fa-align-left" aria-hidden="true"></i>Mô tả <button type="button" id="aiSuggestBtn" style="margin-left:auto;font-size:0.76rem;font-weight:600;border:1px solid #a855f7;color:#7e22ce;background:#faf5ff;border-radius:999px;padding:0.2rem 0.6rem;cursor:pointer;"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Gợi ý bằng AI</button></h5><textarea class="desc" id="dDesc" placeholder="Ghi chú, đường dẫn tài liệu, yêu cầu cụ thể…" maxlength="5000">${esc(t.description)}</textarea></div>
 
         <div class="d-section"><h5><i class="fa-solid fa-list-check" aria-hidden="true"></i>Các bước <span>${t.checklist.length ? done + '/' + t.checklist.length : ''}</span></h5>
           ${t.checklist.length ? `<div class="bar"><i style="width:${Math.round(done / t.checklist.length * 100)}%"></i></div>` : ''}
@@ -2091,6 +2108,7 @@ a.att-main:hover b { color: var(--sapphire); }
     if (asg && state.openId) { const tk = findTask(state.openId); const em = asg.dataset.assignee; const next = tk.assignees.includes(em) ? tk.assignees.filter(x => x !== em) : tk.assignees.concat(em); return update(state.openId, { assignees: next }); }
     const clt = t.closest('[data-cl-toggle]'); if (clt) { const tk = findTask(state.openId); return update(tk.id, { checklist: tk.checklist.map(i => i.id === clt.dataset.clToggle ? { ...i, done: !i.done } : i) }); }
     const cld = t.closest('[data-cl-del]'); if (cld) { const tk = findTask(state.openId); return update(tk.id, { checklist: tk.checklist.filter(i => i.id !== cld.dataset.clDel) }); }
+    const aiBtn = t.closest('#aiSuggestBtn'); if (aiBtn) return aiSuggestTask(aiBtn);
     const sc = t.closest('[data-scope]'); if (sc) { state.scope = sc.dataset.scope; return renderAll(); }
     const wk = t.closest('[data-week]'); if (wk) { state.weekStart = +wk.dataset.week === 0 ? mondayOf(todayStr()) : addDays(state.weekStart, +wk.dataset.week); return renderCalendar(); }
     const ad = t.closest('[data-add-day]'); if (ad) return focusQuick({ dueDate: ad.dataset.addDay });
