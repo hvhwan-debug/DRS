@@ -1348,21 +1348,11 @@
       const el = document.getElementById('lcChildDob');
       const errorEl = document.getElementById('lcChildDobError');
 
+      // Đã bỏ giới hạn độ tuổi theo yêu cầu — chương trình nhận đăng ký mọi độ tuổi, chỉ còn
+      // bắt buộc phải điền ngày sinh (không kiểm tra đã đủ/quá tuổi nữa).
       const update = () => {
-        if (!el.value) {
-          el.setCustomValidity('');
-          errorEl.textContent = 'Vui lòng nhập ngày sinh của trẻ.';
-          return;
-        }
-        const age = calcAge(el.value);
-        if (age < MIN_CHILD_AGE || age > MAX_CHILD_AGE || age < 0) {
-          const msg = `Không đủ điều kiện: chương trình chỉ nhận trẻ từ ${MIN_CHILD_AGE}–${MAX_CHILD_AGE} tuổi (hiện tại ${age >= 0 ? age : '—'} tuổi).`;
-          el.setCustomValidity(msg);
-          errorEl.textContent = msg;
-        } else {
-          el.setCustomValidity('');
-          errorEl.textContent = 'Vui lòng nhập ngày sinh của trẻ.';
-        }
+        el.setCustomValidity('');
+        errorEl.textContent = 'Vui lòng nhập ngày sinh của trẻ.';
       };
       el.addEventListener('input', update);
       el.addEventListener('change', update);
