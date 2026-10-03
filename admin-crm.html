@@ -1206,6 +1206,8 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
     const s = findStudent(c.id); if (!s) return;
     const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Đang soạn…';
     try {
+      const tplNow = MSG_TEMPLATES.find(x => x.key === c.tpl);
+      const goal = (tplNow && tplNow.key !== 'trong') ? tplNow.label : '';
       const data = await api('/api/portal-ai-draft-message', {
         method: 'POST',
         body: JSON.stringify({
@@ -1213,6 +1215,7 @@ body.wvn-crm .brand.brand-row { display: flex; align-items: center; gap: 0.75rem
           studentName: s.studentName,
           parentName: eff(s).guardianName,
           program: (s.programs || [])[0] || '',
+          goal,
           flags: flagsOf(s).map(f => f.label),
           recentInteractions: (s.interactions || []).slice(0, 5).map(i => ({ date: i.happenedAt, summary: i.content || i.type })),
         })
