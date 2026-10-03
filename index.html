@@ -827,50 +827,10 @@
     const GITHUB_OWNER = "hvhwan-debug";
     const GITHUB_REPO = "DRS";
     const GITHUB_BRANCH = "main";
-    const FALLBACK_POSTS_COUNT = 19;
-
-    const heroBadgeMessages = [
-      { icon: '🌱', title: '100% Phi Lợi Nhuận', sub: 'Tái đầu tư vì giáo dục cộng đồng' },
-      { icon: '🔍', title: 'Minh Bạch 24/7', sub: 'Công khai mọi giao dịch sao kê' }
-    ];
-
-    function initRotatingHeroBadge() {
-      const badgeIcon = document.querySelector('.floating-badge .badge-icon');
-      const badgeText = document.querySelector('.floating-badge .badge-text');
-      const badgeStrong = badgeText.querySelector('strong');
-      const badgeSpan = badgeText.querySelector('span');
-      let idx = 0;
-
-      setInterval(() => {
-        idx = (idx + 1) % heroBadgeMessages.length;
-        badgeText.classList.add('badge-fade');
-        setTimeout(() => {
-          const msg = heroBadgeMessages[idx];
-          badgeIcon.textContent = msg.icon;
-          badgeStrong.textContent = msg.title;
-          badgeSpan.textContent = msg.sub;
-          badgeText.classList.remove('badge-fade');
-        }, 250);
-      }, 4500);
-    }
-
-    async function addRealPostCountToBadge() {
-      let count = FALLBACK_POSTS_COUNT;
-      try {
-        const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/content/posts?ref=${GITHUB_BRANCH}`;
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error("GitHub API lỗi");
-        const files = await res.json();
-        const mdCount = files.filter(f => f.type === "file" && f.name.toLowerCase().endsWith(".md")).length;
-        if (mdCount > 0) count = mdCount;
-      } catch (e) {
-        console.warn("Không lấy được số bài viết thật, dùng số dự phòng.", e);
-      }
-      heroBadgeMessages.push({ icon: '📚', title: `${count}+ Bài Hoạt Động`, sub: 'Cập nhật liên tục từ thực tế' });
-    }
-
-    initRotatingHeroBadge();
-    addRealPostCountToBadge();
+    // Lưu ý: huy hiệu nổi (.floating-badge) trên ảnh hero đã được bỏ khi đổi sang ảnh nền toàn phần
+    // — toàn bộ đoạn JS xoay vòng nội dung huy hiệu đó (initRotatingHeroBadge/addRealPostCountToBadge)
+    // đã bị xoá vì gọi querySelector vào phần tử không còn tồn tại sẽ ném lỗi, làm hỏng toàn bộ
+    // script phía sau (từng khiến "Hoạt Động Sắp Tới" và "Bài Viết Mới Nhất" không tải được nữa).
 
     const HOME_UPCOMING_EVENTS = [
       {
