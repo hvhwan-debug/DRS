@@ -1,0 +1,6 @@
+{
+  "bindings": [
+    { "authLevel": "anonymous", "type": "httpTrigger", "direction": "in", "name": "req", "methods": ["post"], "route": "portal-ai-suggest-contact-reply" },
+    { "type": "http", "direction": "out", "name": "res" }
+  ]
+}
