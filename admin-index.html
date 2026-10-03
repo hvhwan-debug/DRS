@@ -964,7 +964,9 @@ body.emp-lock { overflow: hidden; }
             <div><label>Điểm số (0-10, có thể để trống)</label><input type="number" id="gradeScore" min="0" max="10" step="0.1"></div>
           </div>
           <div style="margin-bottom:1rem;">
-            <label style="display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Đánh giá của giáo viên</label>
+            <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:0.3rem;">Đánh giá của giáo viên
+              <button type="button" id="gradeAiBtn" onclick="aiSuggestGradeComment()" style="margin-left:auto; text-transform:none; font-size:0.74rem; font-weight:600; border:1px solid #a855f7; color:#7e22ce; background:#faf5ff; border-radius:999px; padding:0.15rem 0.55rem; cursor:pointer;"><i class="fa-solid fa-wand-magic-sparkles"></i> Gợi ý bằng AI</button>
+            </label>
             <textarea id="gradeComment" rows="2" style="width:100%; padding:0.55rem 0.6rem; border:1px solid var(--border); border-radius:8px; font-family:inherit;" placeholder="VD: Con viết đều nét hơn, cần luyện thêm tốc độ"></textarea>
           </div>
           <div style="margin-bottom:1rem;">
@@ -5236,6 +5238,28 @@ body.emp-lock { overflow: hidden; }
       if (!notes || notes.length === 0) { list.innerHTML = '<div style="font-size:0.84rem; color:var(--text-muted);">Chưa có ghi chú nào.</div>'; return; }
       list.innerHTML = notes.map(n => { const sys = n.type === 'system';
         return `<div class="emp-note ${sys ? 'sys' : ''}"><div class="t">${escapeHtml(n.note)}</div><div class="m">${escapeHtml(n.author) || '—'} · ${formatDate(n.at)}${sys ? '' : `<button type="button" onclick="deleteEmployeeNote('${encodeURIComponent(currentEmployeeDetail.id)}', '${encodeURIComponent(n.id)}')" style="color:#dc2626; margin-left:0.4rem;" title="Xoá ghi chú"><i class="fa-solid fa-trash"></i></button>`}</div></div>`; }).join('');
+    }
+    // Gợi ý 1 câu nhận xét phù hợp với điểm vừa nhập, để giáo viên không phải tự nghĩ cách viết
+    // cho từng học sinh mỗi buổi — họ vẫn xem lại và chỉnh sửa trước khi lưu như bình thường.
+    async function aiSuggestGradeComment() {
+      const btn = document.getElementById('gradeAiBtn');
+      const studentName = (document.getElementById('gradeStudentName').value || '').trim();
+      const program = (document.getElementById('gradeProgramCustom').style.display !== 'none' ? document.getElementById('gradeProgramCustom').value : document.getElementById('gradeProgram').value) || '';
+      const assessmentType = document.getElementById('gradeAssessmentType').value || '';
+      const scoreVal = document.getElementById('gradeScore').value;
+      if (!studentName) { showGlobalAlert('Nhập tên học sinh trước đã nhé.', true); return; }
+      const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gợi ý…';
+      try {
+        const data = await apiCall('/api/portal-ai-suggest-grade-comment', {
+          method: 'POST',
+          body: JSON.stringify({ studentName, program, assessmentType, score: scoreVal === '' ? null : Number(scoreVal) })
+        });
+        document.getElementById('gradeComment').value = data.comment || '';
+      } catch (err) {
+        showGlobalAlert(err.message, true);
+      } finally {
+        btn.disabled = false; btn.innerHTML = old;
+      }
     }
     // Tóm tắt nhanh toàn bộ lịch sử công tác/ghi chú đánh giá của 1 nhân sự bằng AI (Groq) —
     // giúp quản lý nắm nhanh quá trình làm việc mà không cần đọc lại từng ghi chú một.
