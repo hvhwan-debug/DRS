@@ -198,6 +198,103 @@
       padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: not-allowed;
     }
 
+    /* ===== Dải số liệu nổi bật dưới hero ===== */
+    .hero-stats-strip {
+      max-width: 1000px; margin: -54px auto 0; padding: 0 1.5rem; position: relative; z-index: 2;
+    }
+    .hero-stats-card {
+      background: #fff; border-radius: 20px; box-shadow: 0 14px 40px rgba(15, 23, 42, 0.14);
+      display: grid; grid-template-columns: repeat(4, 1fr); overflow: hidden;
+    }
+    .hero-stat { text-align: center; padding: 1.6rem 1rem; border-right: 1px solid var(--border); }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-num { font-size: 2rem; font-weight: 900; color: #0369a1; line-height: 1.1; }
+    .hero-stat-num small { font-size: 1.1rem; font-weight: 800; }
+    .hero-stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-top: 0.3rem; }
+    @media (max-width: 760px) {
+      .hero-stats-strip { margin-top: -36px; }
+      .hero-stats-card { grid-template-columns: repeat(2, 1fr); }
+      .hero-stat { border-bottom: 1px solid var(--border); }
+      .hero-stat:nth-child(odd) { border-right: 1px solid var(--border); }
+      .hero-stat:nth-last-child(-n+2) { border-bottom: none; }
+      .hero-stat-num { font-size: 1.5rem; }
+    }
+
+    /* ===== Hiệu ứng xuất hiện khi cuộn ===== */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in-view { opacity: 1; transform: none; }
+
+    /* ===== Khối Số Liệu Tài Chính: biểu đồ tròn + thẻ số liệu ===== */
+    .finance-layout { display: grid; grid-template-columns: 220px 1fr; gap: 2.2rem; align-items: center; }
+    @media (max-width: 760px) { .finance-layout { grid-template-columns: 1fr; justify-items: center; } }
+    .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; }
+    .donut-chart {
+      width: 176px; height: 176px; border-radius: 50%; position: relative;
+      background: conic-gradient(#0284c7 0% var(--donut-pct, 88%), #e2e8f0 var(--donut-pct, 88%) 100%);
+    }
+    .donut-chart::before { content: ''; position: absolute; inset: 20px; background: #fff; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--border); }
+    .donut-center {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .donut-center b { font-size: 1.5rem; color: #0369a1; font-weight: 900; }
+    .donut-center span { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-align: center; padding: 0 0.4rem; }
+    .donut-legend { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; max-width: 220px; }
+    .donut-legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.86rem; color: var(--text-dark); }
+    .donut-legend-item .dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+    .donut-legend-item b { margin-left: auto; color: #0369a1; }
+
+    /* ===== Thẻ số liệu tác động, mỗi thẻ 1 màu chủ đạo ===== */
+    .stat-card { transition: transform 0.25s, box-shadow 0.25s; }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 26px rgba(15, 23, 42, 0.1); }
+    .stat-card.c-blue .stat-icon { background: #e0f2fe; color: #0284c7; }
+    .stat-card.c-green .stat-icon { background: #dcfce7; color: #16a34a; }
+    .stat-card.c-amber .stat-icon { background: #fef3c7; color: #d97706; }
+    .stat-card.c-purple .stat-icon { background: #ede9fe; color: #7c3aed; }
+    .stat-card.c-green .stat-value-fill { color: #16a34a; }
+    .stat-card.c-amber .stat-value-fill { color: #d97706; }
+    .stat-card.c-purple .stat-value-fill { color: #7c3aed; }
+
+    /* ===== Dòng thời gian: Hoạt Động Nổi Bật ===== */
+    .timeline { position: relative; padding-left: 2.6rem; }
+    .timeline::before { content: ''; position: absolute; left: 17px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(#0284c7, #bae6fd); }
+    .timeline-item { position: relative; margin-bottom: 1.8rem; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-marker {
+      position: absolute; left: -2.6rem; top: 0; width: 36px; height: 36px; border-radius: 50%;
+      background: #0284c7; color: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; box-shadow: 0 0 0 5px #f0f9ff;
+    }
+    .timeline-content { background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.3rem; }
+    .timeline-content h4 { font-size: 1.02rem; color: var(--text-dark); margin-bottom: 0.4rem; font-weight: 700; }
+    .timeline-content p { color: var(--text-muted); font-size: 0.94rem; margin: 0; }
+
+    /* ===== Thẻ trích dẫn ===== */
+    .quote-card {
+      background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%); border-radius: 18px; padding: 2.2rem 2rem;
+      color: #fff; position: relative; overflow: hidden;
+    }
+    .quote-card .quote-icon { font-size: 1.8rem; color: rgba(255,255,255,0.35); margin-bottom: 0.6rem; }
+    .quote-card .quote-text { font-size: 1.08rem; font-style: italic; line-height: 1.7; margin-bottom: 1.2rem; }
+    .quote-author { display: flex; align-items: center; gap: 12px; }
+    .quote-avatar {
+      width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; font-size: 0.9rem;
+    }
+    .quote-author strong { display: block; font-size: 0.94rem; }
+    .quote-author span { font-size: 0.82rem; color: #bae6fd; }
+    .quote-tag { display: inline-block; margin-top: 1.1rem; font-size: 0.74rem; color: #7dd3fc; }
+
+    /* ===== Lộ trình: Định Hướng Năm Tới ===== */
+    .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.2rem; }
+    .roadmap-step {
+      position: relative; background: #f8fafc; border: 1px solid var(--border); border-left: 4px solid #0284c7;
+      border-radius: 12px; padding: 1.3rem 1.3rem 1.1rem; overflow: hidden;
+    }
+    .roadmap-num {
+      position: absolute; top: -10px; right: -4px; font-size: 3.4rem; font-weight: 900; color: #0284c7;
+      opacity: 0.08; line-height: 1;
+    }
+    .roadmap-step p { position: relative; color: var(--text-dark); font-size: 0.94rem; line-height: 1.6; margin: 0; }
 
     footer { background: var(--blue-grad-primary); color: #cbd5e1; padding: 4rem 1.5rem 2rem; font-size: 0.92rem; }
     .footer-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2.5rem; }
@@ -437,72 +534,94 @@
     <p class="hero-desc">Tổng kết tài chính, tác động giáo dục và những dấu ấn nổi bật trong năm — công khai minh bạch cùng cộng đồng đồng hành.</p>
   </section>
 
+  <div class="hero-stats-strip">
+    <div class="hero-stats-card">
+      <div class="hero-stat"><div class="hero-stat-num" data-count="620">0</div><div class="hero-stat-label">Học sinh được hỗ trợ</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" data-count="14">0</div><div class="hero-stat-label">Điểm trường tiếp cận</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" data-count="285" data-suffix="tr"><small>0</small></div><div class="hero-stat-label">Huy động (triệu đồng)</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" data-count="137">0</div><div class="hero-stat-label">Người đồng hành</div></div>
+    </div>
+  </div>
+
   <main class="container">
 
     <!-- 1. TỔNG QUAN NĂM -->
-    <div class="report-section">
+    <div class="report-section reveal">
       <div class="report-section-header">
         <h2><i class="fa-solid fa-book-open"></i> Tổng Quan Năm 2025</h2>
         <p>Điểm lại những kết quả nổi bật nhất trong năm</p>
       </div>
       <div class="fill-box">
-        <p>Năm 2025 đánh dấu một năm tăng trưởng của Tri thức Việt, với 6 chương trình được triển khai tại 6 tỉnh vùng cao, tiếp cận hơn 620 học sinh tại 14 điểm trường. Tổng nguồn lực huy động tăng khoảng 35% so với năm trước, nhờ sự đồng hành ngày càng mở rộng của các nhà tài trợ cá nhân và doanh nghiệp. Xin chân thành cảm ơn toàn thể người đồng hành đã tin tưởng và ủng hộ trong suốt năm qua.</p>
+        <p>Năm 2025 đánh dấu một năm tăng trưởng của Tri thức Việt, với <strong>6 chương trình</strong> được triển khai tại <strong>6 tỉnh vùng cao</strong>, tiếp cận hơn <strong>620 học sinh</strong> tại <strong>14 điểm trường</strong>. Tổng nguồn lực huy động tăng khoảng <strong>35%</strong> so với năm trước, nhờ sự đồng hành ngày càng mở rộng của các nhà tài trợ cá nhân và doanh nghiệp. Xin chân thành cảm ơn toàn thể người đồng hành đã tin tưởng và ủng hộ trong suốt năm qua.</p>
       </div>
     </div>
 
     <!-- 2. SỐ LIỆU TÀI CHÍNH -->
-    <div class="report-section">
+    <div class="report-section reveal">
       <div class="report-section-header">
         <h2><i class="fa-solid fa-scale-balanced"></i> Số Liệu Tài Chính</h2>
         <p>Tổng hợp thu - chi trong năm. Chi tiết từng giao dịch tại <a href="sao-ke.html" style="color:#0284c7; font-weight:600;">Tra Cứu Sao Kê</a>.</p>
       </div>
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-          <div class="stat-label">Tổng thu quyên góp</div>
-          <div class="stat-value-fill">285.000.000 đ</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fa-solid fa-chalkboard"></i></div>
-          <div class="stat-label">Chi cho chương trình giáo dục</div>
-          <div class="stat-value-fill">251.000.000 đ (~88%)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fa-solid fa-gears"></i></div>
-          <div class="stat-label">Chi phí vận hành</div>
-          <div class="stat-value-fill">34.000.000 đ (~12%)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fa-solid fa-people-group"></i></div>
-          <div class="stat-label">Số nhà tài trợ / người đồng hành</div>
-          <div class="stat-value-fill">137 người</div>
+      <div class="report-card">
+        <div class="finance-layout">
+          <div class="donut-wrap">
+            <div class="donut-chart" style="--donut-pct:88%;">
+              <div class="donut-center"><b>88%</b><span>cho chương trình giáo dục</span></div>
+            </div>
+            <div class="donut-legend">
+              <div class="donut-legend-item"><span class="dot" style="background:#0284c7;"></span> Chương trình giáo dục <b>88%</b></div>
+              <div class="donut-legend-item"><span class="dot" style="background:#e2e8f0;"></span> Chi phí vận hành <b>12%</b></div>
+            </div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card c-blue">
+              <div class="stat-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+              <div class="stat-label">Tổng thu quyên góp</div>
+              <div class="stat-value-fill">285.000.000 đ</div>
+            </div>
+            <div class="stat-card c-green">
+              <div class="stat-icon"><i class="fa-solid fa-chalkboard"></i></div>
+              <div class="stat-label">Chi cho chương trình giáo dục</div>
+              <div class="stat-value-fill">251.000.000 đ (~88%)</div>
+            </div>
+            <div class="stat-card c-amber">
+              <div class="stat-icon"><i class="fa-solid fa-gears"></i></div>
+              <div class="stat-label">Chi phí vận hành</div>
+              <div class="stat-value-fill">34.000.000 đ (~12%)</div>
+            </div>
+            <div class="stat-card c-purple">
+              <div class="stat-icon"><i class="fa-solid fa-people-group"></i></div>
+              <div class="stat-label">Số nhà tài trợ / người đồng hành</div>
+              <div class="stat-value-fill">137 người</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 3. TÁC ĐỘNG ĐẠT ĐƯỢC -->
-    <div class="report-section">
+    <div class="report-section reveal">
       <div class="report-section-header">
         <h2><i class="fa-solid fa-chart-line"></i> Tác Động Đạt Được</h2>
         <p>Kết quả cụ thể mà các chương trình đã mang lại trong năm</p>
       </div>
       <div class="stat-grid">
-        <div class="stat-card">
+        <div class="stat-card c-blue">
           <div class="stat-icon"><i class="fa-solid fa-children"></i></div>
           <div class="stat-label">Học sinh được hỗ trợ</div>
           <div class="stat-value-fill">620 em</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card c-green">
           <div class="stat-icon"><i class="fa-solid fa-school"></i></div>
           <div class="stat-label">Điểm trường / địa phương tiếp cận</div>
           <div class="stat-value-fill">14 điểm trường / 6 tỉnh</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card c-amber">
           <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
           <div class="stat-label">Sách & học liệu trao tặng</div>
           <div class="stat-value-fill">1.850 cuốn</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card c-purple">
           <div class="stat-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
           <div class="stat-label">Tình nguyện viên tham gia</div>
           <div class="stat-value-fill">45 người</div>
@@ -511,57 +630,68 @@
     </div>
 
     <!-- 4. HOẠT ĐỘNG NỔI BẬT -->
-    <div class="report-section">
+    <div class="report-section reveal">
       <div class="report-section-header">
         <h2><i class="fa-solid fa-star"></i> Hoạt Động Nổi Bật Trong Năm</h2>
         <p>Ba chương trình tiêu biểu nhất trong năm</p>
       </div>
-      <div class="report-card">
-        <div class="story-slot">
-          <h4>Chiến Dịch Áo Ấm Vùng Cao</h4>
-          <p style="color:var(--text-muted); font-size:0.94rem;">Quyên góp và trao tặng hơn 300 áo ấm, chăn bông cho học sinh tại Hà Giang trong mùa đông rét. <a href="tin-tuc.html" style="color:#0284c7;">Xem chi tiết →</a></p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker"><i class="fa-solid fa-mitten"></i></div>
+          <div class="timeline-content">
+            <h4>Chiến Dịch Áo Ấm Vùng Cao</h4>
+            <p>Quyên góp và trao tặng hơn 300 áo ấm, chăn bông cho học sinh tại Hà Giang trong mùa đông rét. <a href="tin-tuc.html" style="color:#0284c7; font-weight:600;">Xem chi tiết →</a></p>
+          </div>
         </div>
-        <div class="story-slot">
-          <h4>Hội Thảo Phương Pháp Học Tập Số</h4>
-          <p style="color:var(--text-muted); font-size:0.94rem;">Tổ chức 4 buổi tập huấn kỹ năng tự học và ứng dụng công nghệ thông tin cho hơn 150 học sinh THCS.</p>
+        <div class="timeline-item">
+          <div class="timeline-marker"><i class="fa-solid fa-laptop"></i></div>
+          <div class="timeline-content">
+            <h4>Hội Thảo Phương Pháp Học Tập Số</h4>
+            <p>Tổ chức 4 buổi tập huấn kỹ năng tự học và ứng dụng công nghệ thông tin cho hơn 150 học sinh THCS.</p>
+          </div>
         </div>
-        <div class="story-slot">
-          <h4>Học Bổng Ươm Mầm</h4>
-          <p style="color:var(--text-muted); font-size:0.94rem;">Trao 25 suất học bổng dài hạn cho học sinh có hoàn cảnh khó khăn vươn lên trong học tập.</p>
+        <div class="timeline-item">
+          <div class="timeline-marker"><i class="fa-solid fa-seedling"></i></div>
+          <div class="timeline-content">
+            <h4>Học Bổng Ươm Mầm</h4>
+            <p>Trao 25 suất học bổng dài hạn cho học sinh có hoàn cảnh khó khăn vươn lên trong học tập.</p>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 5. CÂU CHUYỆN TIÊU BIỂU -->
-    <div class="report-section">
+    <div class="report-section reveal">
       <div class="report-section-header">
         <h2><i class="fa-solid fa-quote-left"></i> Câu Chuyện Tiêu Biểu</h2>
         <p>Chia sẻ từ một học sinh được đồng hành trong năm</p>
       </div>
-      <div class="fill-box">
-        <p style="font-style:italic;">"Con rất thích cuốn sách các cô chú tặng. Đây là lần đầu tiên con có một cuốn sách mới của riêng mình."</p>
-        <p style="margin-top:0.6rem;"><strong>— Học sinh lớp 4, điểm trường tại Hà Giang</strong></p>
-        <p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-muted);">(Trích dẫn minh hoạ)</p>
+      <div class="quote-card">
+        <i class="fa-solid fa-quote-left quote-icon"></i>
+        <p class="quote-text">"Con rất thích cuốn sách các cô chú tặng. Đây là lần đầu tiên con có một cuốn sách mới của riêng mình."</p>
+        <div class="quote-author">
+          <div class="quote-avatar">HS</div>
+          <div><strong>Học sinh lớp 4</strong><span>Điểm trường tại Hà Giang</span></div>
+        </div>
+        <span class="quote-tag">(Trích dẫn minh hoạ)</span>
       </div>
     </div>
 
     <!-- 6. ĐỊNH HƯỚNG NĂM TỚI -->
-    <div class="report-section">
+    <div class="report-section reveal">
       <div class="report-section-header">
         <h2><i class="fa-solid fa-flag-checkered"></i> Định Hướng Năm Tới</h2>
         <p>Mục tiêu trọng tâm cho năm tiếp theo</p>
       </div>
-      <div class="report-card">
-        <ul class="plan-list">
-          <li><i class="fa-solid fa-circle-check"></i> <span>Mở rộng Tủ Sách Lưu Động tới thêm 5 điểm trường mới tại các tỉnh miền núi phía Bắc.</span></li>
-          <li><i class="fa-solid fa-circle-check"></i> <span>Tăng số suất Học Bổng Ươm Mầm lên 40 suất/năm, ưu tiên học sinh cuối cấp.</span></li>
-          <li><i class="fa-solid fa-circle-check"></i> <span>Tổ chức thêm các hội thảo kỹ năng số và tư duy phản biện cho thanh thiếu niên.</span></li>
-        </ul>
+      <div class="roadmap-grid">
+        <div class="roadmap-step"><span class="roadmap-num">01</span><p>Mở rộng Tủ Sách Lưu Động tới thêm 5 điểm trường mới tại các tỉnh miền núi phía Bắc.</p></div>
+        <div class="roadmap-step"><span class="roadmap-num">02</span><p>Tăng số suất Học Bổng Ươm Mầm lên 40 suất/năm, ưu tiên học sinh cuối cấp.</p></div>
+        <div class="roadmap-step"><span class="roadmap-num">03</span><p>Tổ chức thêm các hội thảo kỹ năng số và tư duy phản biện cho thanh thiếu niên.</p></div>
       </div>
     </div>
 
     <!-- 7. TẢI BÁO CÁO PDF -->
-    <div class="pdf-cta">
+    <div class="pdf-cta reveal">
       <h3><i class="fa-solid fa-file-pdf" style="color:#dc2626; margin-right:8px;"></i>Bản Báo Cáo Đầy Đủ (PDF)</h3>
       <p>Phiên bản PDF đầy đủ, kèm biểu đồ và hình ảnh minh hoạ, sẽ được đăng tải khi hoàn tất.</p>
       <span class="btn-pdf-disabled"><i class="fa-solid fa-download"></i> Tải PDF (sắp có)</span>
@@ -642,6 +772,51 @@
   </div>
 
   <script>
+    // Đếm số chạy lên khi dải số liệu dưới hero xuất hiện trong khung nhìn
+    (function () {
+      const nums = document.querySelectorAll('.hero-stat-num');
+      if (!nums.length) return;
+      const animateCount = el => {
+        const target = parseInt(el.dataset.count, 10) || 0;
+        const suffix = el.dataset.suffix || '';
+        const small = el.querySelector('small');
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now) {
+          const p = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = Math.round(target * eased);
+          const text = val.toLocaleString('vi-VN') + (suffix ? suffix : '');
+          if (small) small.textContent = text; else el.textContent = text;
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      };
+      if ('IntersectionObserver' in window) {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) { animateCount(e.target); obs.unobserve(e.target); }
+          });
+        }, { threshold: 0.4 });
+        nums.forEach(n => obs.observe(n));
+      } else {
+        nums.forEach(animateCount);
+      }
+    })();
+
+    // Hiệu ứng mờ dần/trượt lên khi từng khối báo cáo xuất hiện trong khung nhìn
+    (function () {
+      const sections = document.querySelectorAll('.reveal');
+      if (!sections.length) return;
+      if (!('IntersectionObserver' in window)) { sections.forEach(s => s.classList.add('in-view')); return; }
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      sections.forEach(s => obs.observe(s));
+    })();
+
     function toggleMobileMenu() {
       const navLinks = document.getElementById('navLinks');
       const menuBtn = document.getElementById('menuBtn');
