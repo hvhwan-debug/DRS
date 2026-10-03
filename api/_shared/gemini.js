@@ -1,7 +1,9 @@
 // Gọi Google Gemini API — dùng chung cho mọi tính năng AI trong hệ thống (CRM, Hồ Sơ Nhân Sự,
 // Công Việc...). Cần biến môi trường GEMINI_API_KEY (thêm ở Azure Portal → Static Web App →
 // Configuration), lấy miễn phí tại aistudio.google.com/apikey.
-const MODEL = "gemini-2.0-flash";
+// Model mặc định. Có thể đổi mà không cần sửa code: thêm biến GEMINI_MODEL trong Azure Portal →
+// Configuration (ví dụ "gemini-3.8-flash"). gemini-2.0-flash đã bị Google ngừng hỗ trợ.
+const DEFAULT_MODEL = "gemini-3.8-flash";
 
 async function askGemini(prompt, { maxOutputTokens = 800, temperature = 0.6 } = {}) {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -11,6 +13,7 @@ async function askGemini(prompt, { maxOutputTokens = 800, temperature = 0.6 } = 
     throw err;
   }
 
+  const MODEL = (process.env.GEMINI_MODEL || DEFAULT_MODEL).replace(/^models\//, "");
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: "POST",
